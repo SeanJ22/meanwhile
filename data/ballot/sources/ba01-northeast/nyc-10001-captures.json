@@ -1,0 +1,42 @@
+[
+  {
+    "name": "nyc-10001-settings.json",
+    "requestedUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792542241132",
+    "finalUrl": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792542241132",
+    "retrievedAt": "2026-10-21T00:24:01.303Z",
+    "httpStatus": 200,
+    "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4"
+  },
+  {
+    "name": "nyc-10001-geocode.jsonp",
+    "requestedUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=315&streetname=West%2029th%20Street&postalcode=10001&callback=jQuery35107468451987339133_1792542240985&_=1792542240986",
+    "finalUrl": "https://electionstreet.com/api/nyc/addresses?streetnumber=315&streetname=West%2029th%20Street&postalcode=10001&callback=jQuery35107468451987339133_1792542240985&_=1792542240986",
+    "retrievedAt": "2026-10-21T00:24:02.171Z",
+    "httpStatus": 200,
+    "rawHash": "17d9b1e913cf1d1a9f08d23a41393c72d45fb54ecb793423ed49706b1ae6e604"
+  },
+  {
+    "name": "nyc-10001-pollsite.json",
+    "requestedUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.749358025204096&longitude=-73.99645584016561&county=New%20York&streetnumber=315&streetname=West%2029%20Street&postalcode=10001&districtkey=037/75",
+    "finalUrl": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.749358025204096&longitude=-73.99645584016561&county=New%20York&streetnumber=315&streetname=West%2029%20Street&postalcode=10001&districtkey=037/75",
+    "retrievedAt": "2026-10-21T00:24:02.331Z",
+    "httpStatus": 200,
+    "rawHash": "965c58db5053dd2872d3ee21a0c04e1a0b6a044378817eb964b6563baca473bd"
+  },
+  {
+    "name": "nyc-10001-contests.json",
+    "requestedUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+    "finalUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+    "retrievedAt": "2026-10-21T00:24:02.517Z",
+    "httpStatus": 200,
+    "rawHash": "c703f3fa20cb0acbfb4fe52c328060908284ae9f88abbdaa24a0c7fcd47d386b"
+  },
+  {
+    "name": "nyc-10001-style491-sample.pdf",
+    "requestedUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf",
+    "finalUrl": "https://nyc-static.electionhub.com/sampleballots/387209/10/2026G1V1_ELE_NON_Style_491.pdf",
+    "retrievedAt": "2026-10-21T00:25:35.314955+00:00",
+    "httpStatus": 200,
+    "rawHash": "a8eaa6c20de03aa889e1cf0bae3717edf91e758187e7f700130ad1b60f50ad7b"
+  }
+]

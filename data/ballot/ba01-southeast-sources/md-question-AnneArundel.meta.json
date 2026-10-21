@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/AnneArundel.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/AnneArundel.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:55:38.648386+00:00",
+  "rawHash": "1af1138e76d169998a9906ed1654aa329c5ed9f11f3175e80599b562c2a80f60",
+  "bytes": 3614207,
+  "convertedTextHash": "553839e133e7944f434cfecba3c9c7dd1ba20650318acf423d959c0fe6b309d6",
+  "extraction": "pdftotext -raw; exact official certified ballot source text; original PDF identified by rawHash"
+}

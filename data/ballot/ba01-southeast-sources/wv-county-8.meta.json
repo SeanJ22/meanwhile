@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Doddridge%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Doddridge%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.823568+00:00",
+  "rawHash": "92e5c328e79a2e140060caecb0edc269aa67526642402fcbf88eba8cf8fb078a",
+  "httpStatus": 200,
+  "bytes": 713166,
+  "extractedTextHash": "26e49c57db52700e79ae9925c27468fc515be801b9b592fb2186697dc0aab146",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

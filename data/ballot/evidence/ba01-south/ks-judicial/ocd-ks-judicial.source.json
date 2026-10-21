@@ -1,0 +1,10 @@
+{
+  "url": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us.csv",
+  "finalUrl": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us.csv",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:33:07.663618+00:00",
+  "rawHash": "f1297a1d2dbe1f1b691a9ebeb0cff3808228a466d95b3d13336a4e55a9f53388",
+  "bytes": 21964847,
+  "sourceTextSha256": "e8eca1d62701a59e54aae5095f52b81b4e41c19a7d818c4050133c1be3daf1da",
+  "sourceText": "Exact Kansas county and district_court rows extracted from the captured full OCD registry; rawHash describes the full registry and sourceTextSha256 describes this excerpt."
+}

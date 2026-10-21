@@ -1,0 +1,45 @@
+ (https://www.vote.franklincountyohio.gov/getmedia/a3d9d75e-83ff-492a-98c4-a8cc09e1cd60/Notice-of-Election-Columbus-Charter-Amendment-2-Council)
+【turn533536view1】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 1; Source: open({"ref_id":"turn339854view1","lineno":null}); Total lines: 42
+L0@P0: Form No. 126 Prescribed by Secretary of State (09-17)
+L1@P0: Notice of Election on Proposition
+L2@P0: R.C. 3501.11(G)
+L3@P0: Notice is hereby given that in pursuance of an Ordinance of the City Council of Columbus, Ohio, passed on the 24th day of August,
+L4@P0: 2026, there will be submitted to a vote of the people of City of Columbus, Ohio at the General Election to be held at the regular places
+L5@P0: of voting on Tuesday, the 3rd day of November, 2026 the question of:
+L6@P0: This proposed charter amendment would limit the ability to vote for candidates for Columbus City Council to only those electors
+L7@P0: living within the districts that those candidates seek to represent.
+L8@P0: The amendment adds two (2) at-large council representatives to be elected in 2027 and seated in 2028, and an additional two (2) atlarge council representatives to be elected in 2029 and seated in 2030. All at-large council representatives will be elected for four (4)
+L9@P0: year terms.
+L10@P0: The amendment includes provisions for transitioning from the current nine (9) member Council to an eleven (11) member Council and
+L11@P0: then subsequently to a thirteen (13) member Council, allowing for the ongoing staggering of terms.
+L12@P0: The amendment allows councilmembers representing districts whose boundaries are redrawn but who still have at least two years
+L13@P0: remaining in their term to serve the remainder of their term representing a newly-drawn district.
+L14@P0: The amendment specifies that candidates for council district seats must have resided within their district for at least one year prior to
+L15@P0: the primary election.
+L16@P0: The amendment calls for a redraw of the current council district map to occur in 2027, and increases the maximum population
+L17@P0: variance between districts from 1% to 7.5%.
+L18@P0: The amendment updates the vote requirements for expelling and/or removing councilmembers for misconduct, malfeasance,
+L19@P0: misfeasance, or nonfeasance. The amendment updates the expulsion vote threshold for conduct from “six” to “2/3rds,” and the
+L20@P0: expulsion vote for absences from “three-fifths” to “2/3rds.”
+L21@P0: The amendment updates the charter to reflect the minimum number of councilmembers necessary to achieve a quorum for the
+L22@P0: purposes of meeting for business.
+L23@P0: The amendment increases the number of affirmative votes that would be needed to adopt ordinances or resolutions in concert with
+L24@P0: expanding the size of the legislature.
+L25@P0: The amendment specifies that candidates for district councilmember must collect at least 150 signatures of electors from within their
+L26@P0: district, and that at-large candidates must collect at least 250 signatures of electors from within the city limits.
+L27@P0: The amendment specifies that ballots within council districts will include both citywide races as well as the district race.
+L28@P0: The amendment allows for the initiation of a recall election of a council district representative if a petition is submitted bearing the
+L29@P0: signatures of the electors of that district in an amount equal to or greater than fifteen (15%) percent of the votes cast within the district
+L30@P0: in the preceding mayoral election. The amendment allows for the initiation of a recall election of an at-large representative if a petition
+L31@P0: is submitted bearing the signatures of the electors citywide in an amount equal to or greater than fifteen (15%) percent of the votes
+L32@P0: cast within the district in the preceding mayoral election.
+L33@P0: Shall the proposed charter amendment be approved?
+L34@P0: The polls for the election will be open at 6:30 a.m. and remain open until 7:30 p.m. on election day.
+L35@P0: By order of the Board of Elections,
+L36@P0: of Franklin County, Ohio.
+L37@P0: Douglas J. Preisse
+L38@P0: Chair
+L39@P0: Antone White
+L40@P0: Director
+L41@P0: Dated 09/14/2026
+

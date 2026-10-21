@@ -1,0 +1,115 @@
+{
+  "added": {
+    "contests": 25,
+    "candidacies": 25
+  },
+  "districts": [
+    {
+      "district": 1,
+      "counties": [
+        "Box Elder",
+        "Cache",
+        "Rich"
+      ],
+      "contests": 1,
+      "names": [
+        "KIRK MAX MORGAN"
+      ]
+    },
+    {
+      "district": 2,
+      "counties": [
+        "Davis",
+        "Morgan",
+        "Weber"
+      ],
+      "contests": 6,
+      "names": [
+        "JASON CRAIG NELSON",
+        "JENNIFER LYN VALENCIA",
+        "ELDRED BLAINE RAWSON",
+        "RICK WESTMORELAND",
+        "ROBERT GARRETT NEILL",
+        "JEFFREY J. NOLAND"
+      ]
+    },
+    {
+      "district": 3,
+      "counties": [
+        "Salt Lake",
+        "Summit",
+        "Tooele"
+      ],
+      "contests": 7,
+      "names": [
+        "MATTHEW DAVID BATES",
+        "CHARLES A. STORMONT",
+        "CORAL SANCHEZ",
+        "TODD SHAUGHNESSY",
+        "SUSAN HEATHER EISENMAN",
+        "STEVEN K. BECK",
+        "AARON WILLIAM FLATER"
+      ]
+    },
+    {
+      "district": 4,
+      "counties": [
+        "Juab",
+        "Millard",
+        "Utah",
+        "Wasatch"
+      ],
+      "contests": 5,
+      "names": [
+        "JARED WILLIAM ELDRIDGE",
+        "KRAIG POWELL",
+        "THOMAS LOW",
+        "ANTHONY LEONARD HOWELL",
+        "DOUGLAS JOHN NIELSEN"
+      ]
+    },
+    {
+      "district": 5,
+      "counties": [
+        "Beaver",
+        "Washington",
+        "Iron"
+      ],
+      "contests": 3,
+      "names": [
+        "JAY WINWARD",
+        "ERIC RUSSELL GENTRY",
+        "MATTHEW L. BELL"
+      ]
+    },
+    {
+      "district": 6,
+      "counties": [
+        "Garfield",
+        "Kane",
+        "Piute",
+        "Sanpete",
+        "Sevier",
+        "Wayne"
+      ],
+      "contests": 2,
+      "names": [
+        "MANDY SUE LARSEN",
+        "ALEX GOBLE"
+      ]
+    },
+    {
+      "district": 7,
+      "counties": [
+        "Carbon",
+        "Emery",
+        "Grand",
+        "San Juan"
+      ],
+      "contests": 1,
+      "names": [
+        "CRAIG MILES BUNNELL"
+      ]
+    }
+  ]
+}

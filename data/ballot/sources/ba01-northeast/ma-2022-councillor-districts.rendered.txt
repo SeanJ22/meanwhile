@@ -1,0 +1,539 @@
+Massachusetts Governor's Councillor Districts (https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm)
+【turn655744view0】 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm","lineno":250}); Total lines: 537
+L0: 【0†Skip to main content】
+L1: 
+L2: Secretary of the Commonwealth of Massachusetts
+L3: 
+L4: William Francis Galvin
+L5: 
+L6: [Input]
+L7: 
+L8: ﻿
+L9: 
+L10: 【1†Image: Close】
+L11: 
+L12:   * 【2†Home】
+L13:   * Popular Features
+L14: 
+L15:     * 【3†Register to Vote】
+L16:     * 【4†Financial Protection】
+L17:     * 【5†Educational Resources】
+L18:     * 【6†Levels of State Government】
+L19: 
+L20:     * 【7†Find an Elected Official】
+L21:     * 【8†Citizens Guide to State Services】
+L22:     * 【9†Holiday Information】
+L23:     * 【10†Resources for Veterans】
+L24:     * 【11†Contact a City or Town Hall】
+L25:     * 【12†Search the Corporate Database†corp.sec.state.ma.us】
+L26:     * 【13†State House Tours】
+L27:     * 【14†Voters with Disabilities】
+L28: 
+L29:     * 【15†Consumer Information】
+L30: 
+L31:   * Departments
+L32: 
+L33:     * 【16†Address Confidentiality Program】
+L34:     * 【17†Massachusetts Archives】
+L35:     * 【18†Citizen Information Service】
+L36:     * 【19†Commissions】
+L37: 
+L38:     * 【20†Commonwealth Museum】
+L39:     * 【21†Corporations】
+L40:     * 【22†Elections】
+L41:     * 【23†Historical Commission】
+L42:     * 【24†Lobbyists】
+L43:     * 【25†Public Records】
+L44:     * 【26†Publications & Regulations】
+L45:     * 【27†Registry of Deeds】
+L46: 
+L47:     * 【4†Securities】
+L48:     * 【28†State Bookstore】
+L49:     * 【13†State House Tours】
+L50: 
+L51:   * News & Events
+L52: 
+L53:     * 【29†Recent News】
+L54: 
+L55:     * 【29†Press Releases】
+L56: 
+L57:     * 【30†Press Inquiries】
+L58: 
+L59:   * Records
+L60: 
+L61:     * 【31†Digital Archives†digitalarchives.sec.state.ma.us】
+L62: 
+L63:     * 【32†Records Management】
+L64: 
+L65:     * 【33†Public Records Appeals】
+L66: 
+L67:   * Publications
+L68:     * 【34†Election Deadline Calendar】
+L69:     * 【35†Citizen Information Service Publications】
+L70: 
+L71:     * 【36†Massachusetts Historical Commission Publications】
+L72:     * 【37†Public Notices】
+L73: 
+L74:     * 【38†Publications from the Publications & Regulations Division】
+L75: 
+L76:   * Services
+L77: 
+L78:     * 【13†State House Tours】
+L79:     * 【18†Citizen Information Service】
+L80:     * 【39†Voter Registration】
+L81: 
+L82:     * 【40†One Day Solemnzation】
+L83:     * 【41†Oaths of Office】
+L84:     * 【42†Lobbyist Public Search】
+L85:     * 【43†Corporate Filings】
+L86:     * 【33†Appeal a Public Records Denial】
+L87:     * 【44†Certificates of Good Standing†corp.sec.state.ma.us】
+L88: 
+L89:     * 【45†Preservation Planning】
+L90: 
+L91:   * Learning
+L92: 
+L93:     * 【46†Did You Know?】
+L94:     * 【47†History of Massachusetts】
+L95: 
+L96:     * 【48†Archaeology Resources for Teachers & Students】
+L97:     * 【13†State House Tours】
+L98: 
+L99:     * 【20†Commonwealth Museum】
+L100:     * 【5†Find Educational Resources】
+L101: 
+L102:   * About
+L103: 
+L104:     * 【49†Office Locations】
+L105: 
+L106:     * 【50†Careers】
+L107: 
+L108:     * 【51†Contact Us】
+L109: 
+L110:     * 【52†Sitemap】
+L111: # Massachusetts Governor's Councillor Districts
+L112: 
+L113: Established by the Chapter 92 of the Acts of 2021.
+L114: ## First Councillor District
+L115:   * Acushnet
+L116:   * Aquinnah
+L117:   * Barnstable
+L118:   * Berkley
+L119:   * Bourne
+L120:   * Brewster
+L121:   * Carver
+L122:   * Chatham
+L123:   * Chilmark
+L124:   * Dartmouth
+L125:   * Dennis
+L126:   * Dighton
+L127:   * Eastham
+L128:   * Edgartown
+L129:   * Fairhaven
+L130:   * Fall River
+L131:   * Falmouth
+L132:   * Freetown
+L133:   * Gosnold
+L134:   * Harwich
+L135:   * Kingston
+L136:   * Lakeville
+L137:   * Marion
+L138:   * Mashpee
+L139:   * Mattapoisett
+L140:   * Middleborough
+L141:   * Nantucket
+L142:   * New Bedford
+L143:   * Oak Bluffs
+L144:   * Orleans
+L145:   * Pembroke
+L146:   * Plymouth
+L147:   * Plympton
+L148:   * Provincetown
+L149:   * Raynham
+L150:   * Rehoboth
+L151:   * Rochester
+L152:   * Sandwich
+L153:   * Seekonk
+L154:   * Somerset
+L155:   * Swansea
+L156:   * Taunton
+L157:   * Tisbury
+L158:   * Truro
+L159:   * Wareham
+L160:   * Wellfleet
+L161:   * West Tisbury
+L162:   * Westport
+L163:   * Yarmouth
+L164: ## Second Councillor District
+L165:   * Ashland
+L166:   * Attleboro
+L167:   * Avon
+L168:   * Bellingham
+L169:   * Braintree:
+L170: Precincts 1A, 1B, 2A, 2B, 3A, 4A, 5A, 5B, 6B;
+L171:   * Bridgewater
+L172:   * Brockton
+L173:   * Canton
+L174:   * Dover
+L175:   * East Bridgewater
+L176:   * Easton
+L177:   * Foxborough
+L178:   * Framingham
+L179:   * Franklin
+L180:   * Halifax
+L181:   * Hanson
+L182:   * Holliston
+L183:   * Hopkinton
+L184:   * Mansfield
+L185:   * Medfield
+L186:   * Medway
+L187:   * Milford
+L188:   * Millis
+L189:   * Milton
+L190:   * Natick
+L191:   * Needham
+L192:   * Norfolk
+L193:   * North Attleborough
+L194:   * Norton
+L195:   * Plainville
+L196:   * Randolph
+L197:   * Sharon
+L198:   * Sherborn
+L199:   * Stoughton
+L200:   * West Bridgewater
+L201:   * Whitman
+L202:   * Wrentham
+L203: ## Third Councillor District
+L204:   * Acton
+L205:   * Arlington
+L206:   * Ayer
+L207:   * Bedford
+L208:   * Belmont
+L209:   * Billerica
+L210:   * Boston:
+L211: Ward 4 Precincts 10, 12;
+L212: Ward 5 Precincts 2, 10, 12, 15;
+L213: Ward 21;
+L214: Ward 22;
+L215:   * Boxborough
+L216:   * Brookline
+L217:   * Burlington
+L218:   * Cambridge:
+L219: Ward 8 Precinct 2;
+L220: Ward 9;
+L221:   * Carlisle
+L222:   * Chelmsford
+L223:   * Concord
+L224:   * Harvard
+L225:   * Hudson
+L226:   * Lexington
+L227:   * Lincoln
+L228:   * Littleton
+L229:   * Marlborough
+L230:   * Maynard
+L231:   * Newton
+L232:   * Southborough
+L233:   * Stow
+L234:   * Sudbury
+L235:   * Waltham
+L236:   * Watertown
+L237:   * Wayland
+L238:   * Wellesley
+L239:   * Weston
+L240:   * Woburn
+L241: 【53†▲】 Top of page
+L242: ## Fourth Councillor District
+L243:   * Abington
+L244:   * Boston:
+L245: Ward 1 Precinct 15;
+L246: Ward 3 Precincts 7, 8, 14, 15, 16;
+L247: Ward 4 Precincts 1, 2, 3, 4, 5, 9, 11;
+L248: Ward 5 Precincts 1, 13, 14;
+L249: Ward 6;
+L250: Ward 7;
+L251: Ward 8;
+L252: Ward 9;
+L253: Ward 10;
+L254: Ward 11;
+L255: Ward 12;
+L256: Ward 13;
+L257: Ward 14;
+L258: Ward 15;
+L259: Ward 16;
+L260: Ward 17;
+L261: Ward 18;
+L262: Ward 19;
+L263: Ward 20;
+L264:   * Braintree:
+L265: Precincts 3B, 4B, 6A;
+L266:   * Cohasset
+L267:   * Dedham
+L268:   * Duxbury
+L269:   * Hanover
+L270:   * Hingham
+L271:   * Holbrook
+L272:   * Hull
+L273:   * Marshfield
+L274:   * Norwell
+L275:   * Norwood
+L276:   * Quincy
+L277:   * Rockland
+L278:   * Scituate
+L279:   * Walpole
+L280:   * Westwood
+L281:   * Weymouth
+L282: ## Fifth Councillor District
+L283:   * Amesbury
+L284:   * Andover
+L285:   * Beverly
+L286:   * Boxford
+L287:   * Danvers
+L288:   * Dracut
+L289:   * Dunstable
+L290:   * Essex
+L291:   * Georgetown
+L292:   * Gloucester
+L293:   * Groveland
+L294:   * Hamilton
+L295:   * Haverhill
+L296:   * Ipswich
+L297:   * Lawrence
+L298:   * Lowell
+L299:   * Manchester-by-the-Sea
+L300:   * Merrimac
+L301:   * Methuen
+L302:   * Middleton
+L303:   * Newbury
+L304:   * Newburyport
+L305:   * North Andover
+L306:   * North Reading
+L307:   * Peabody
+L308:   * Pepperell
+L309:   * Rockport
+L310:   * Rowley
+L311:   * Salem
+L312:   * Salisbury
+L313:   * Tewksbury
+L314:   * Topsfield
+L315:   * Tyngsborough
+L316:   * Wenham
+L317:   * West Newbury
+L318:   * Wilmington
+L319: 【53†▲】 Top of page
+L320: ## Sixth Councillor District
+L321:   * Boston:
+L322: Ward 1 Precincts 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14;
+L323: Ward 2;
+L324: Ward 3 Precincts 1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 17;
+L325: Ward 4 Precincts 6, 7, 8;
+L326: Ward 5 Precincts 3, 4, 5, 6, 7, 8, 9, 11;
+L327:   * Cambridge:
+L328: Ward 1;
+L329: Ward 2;
+L330: Ward 3;
+L331: Ward 4;
+L332: Ward 5;
+L333: Ward 6;
+L334: Ward 7;
+L335: Ward 8 Precinct 1, 3;
+L336: Ward 10;
+L337: Ward 11;
+L338:   * Chelsea
+L339:   * Everett
+L340:   * Lynn
+L341:   * Lynnfield
+L342:   * Malden
+L343:   * Marblehead
+L344:   * Medford
+L345:   * Melrose
+L346:   * Nahant
+L347:   * Reading
+L348:   * Revere
+L349:   * Saugus
+L350:   * Somerville
+L351:   * Stoneham
+L352:   * Swampscott
+L353:   * Wakefield
+L354:   * Winchester
+L355:   * Winthrop
+L356: ## Seventh Councillor District
+L357:   * Ashby
+L358:   * Auburn
+L359:   * Barre
+L360:   * Berlin
+L361:   * Blackstone
+L362:   * Bolton
+L363:   * Boylston
+L364:   * Brimfield
+L365:   * Brookfield
+L366:   * Charlton
+L367:   * Clinton
+L368:   * Douglas
+L369:   * Dudley
+L370:   * East Brookfield
+L371:   * Fitchburg
+L372:   * Gardner
+L373:   * Grafton
+L374:   * Groton
+L375:   * Hardwick
+L376:   * Holden
+L377:   * Holland
+L378:   * Hopedale
+L379:   * Hubbardston
+L380:   * Lancaster
+L381:   * Leicester
+L382:   * Leominster
+L383:   * Lunenburg
+L384:   * Mendon
+L385:   * Millbury
+L386:   * Millville
+L387:   * Monson
+L388:   * New Braintree
+L389:   * North Brookfield
+L390:   * Northborough
+L391:   * Northbridge
+L392:   * Oakham
+L393:   * Oxford
+L394:   * Paxton
+L395:   * Phillipston
+L396:   * Princeton
+L397:   * Rutland
+L398:   * Shirley
+L399:   * Shrewsbury
+L400:   * Southbridge
+L401:   * Spencer
+L402:   * Sterling
+L403:   * Sturbridge
+L404:   * Sutton
+L405:   * Templeton
+L406:   * Townsend
+L407:   * Upton
+L408:   * Uxbridge
+L409:   * Wales
+L410:   * Ware
+L411:   * Webster
+L412:   * West Boylston
+L413:   * West Brookfield
+L414:   * Westborough
+L415:   * Westford
+L416:   * Westminster
+L417:   * Worcester
+L418: 【53†▲】 Top of page
+L419: ## Eighth Councillor District
+L420:   * Adams
+L421:   * Agawam
+L422:   * Alford
+L423:   * Amherst
+L424:   * Ashburnham
+L425:   * Ashfield
+L426:   * Athol
+L427:   * Becket
+L428:   * Belchertown
+L429:   * Bernardston
+L430:   * Blandford
+L431:   * Buckland
+L432:   * Charlemont
+L433:   * Cheshire
+L434:   * Chester
+L435:   * Chesterfield
+L436:   * Chicopee
+L437:   * Clarksburg
+L438:   * Colrain
+L439:   * Conway
+L440:   * Cummington
+L441:   * Dalton
+L442:   * Deerfield
+L443:   * East Longmeadow
+L444:   * Easthampton
+L445:   * Egremont
+L446:   * Erving
+L447:   * Florida
+L448:   * Gill
+L449:   * Goshen
+L450:   * Granby
+L451:   * Granville
+L452:   * Great Barrington
+L453:   * Greenfield
+L454:   * Hadley
+L455:   * Hampden
+L456:   * Hancock
+L457:   * Hatfield
+L458:   * Hawley
+L459:   * Heath
+L460:   * Hinsdale
+L461:   * Holyoke
+L462:   * Huntington
+L463:   * Lanesborough
+L464:   * Lee
+L465:   * Lenox
+L466:   * Leverett
+L467:   * Leyden
+L468:   * Longmeadow
+L469:   * Ludlow
+L470:   * Middlefield
+L471:   * Monroe
+L472:   * Montague
+L473:   * Monterey
+L474:   * Montgomery
+L475:   * Mount Washington
+L476:   * New Ashford
+L477:   * New Marlborough
+L478:   * New Salem
+L479:   * North Adams
+L480:   * Northampton
+L481:   * Northfield
+L482:   * Orange
+L483:   * Otis
+L484:   * Palmer
+L485:   * Pelham
+L486:   * Peru
+L487:   * Petersham
+L488:   * Pittsfield
+L489:   * Plainfield
+L490:   * Richmond
+L491:   * Rowe
+L492:   * Royalston
+L493:   * Russell
+L494:   * Sandisfield
+L495:   * Savoy
+L496:   * Sheffield
+L497:   * Shelburne
+L498:   * Shutesbury
+L499:   * South Hadley
+L500:   * Southampton
+L501:   * Southwick
+L502:   * Springfield
+L503:   * Stockbridge
+L504:   * Sunderland
+L505:   * Tolland
+L506:   * Tyringham
+L507:   * Warren
+L508:   * Warwick
+L509:   * Washington
+L510:   * Wendell
+L511:   * West Springfield
+L512:   * West Stockbridge
+L513:   * Westfield
+L514:   * Westhampton
+L515:   * Whately
+L516:   * Wilbraham
+L517:   * Williamsburg
+L518:   * Williamstown
+L519:   * Winchendon
+L520:   * Windsor
+L521:   * Worthington
+L522: ﻿
+L523: ## William Francis Galvin
+L524: 
+L525: Secretary of the Commonwealth of Massachusetts
+L526: 
+L527: 【54†1 Ashburton Place Boston, MA   02108†www.google.com】
+L528: 
+L529: 1-800-392-6090
+L530: cis@sec.state.ma.us
+L531: 
+L532: ### Connect with Us
+L533: 
+L534: 【55†Terms and Conditions】
+L535: 
+L536: 【56†Accessibility Statement】

@@ -1,0 +1,405 @@
+(https://www.boe.ohio.gov/holmes/c/upload/FWAB_11November46Day.pdf)
+【turn630699view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 8; Source: open({"ref_id":"https://www.boe.ohio.gov/holmes/c/upload/FWAB_11November46Day.pdf","lineno":0}); Total lines: 403
+L0@P0: Page 1 of 8 Revised: 10/15/2026 4:02 PM
+L1@P0: ELECTION NOTICE FOR USE WITH THE FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB) R.C. 3511.16
+L2@P0: Issued by the Holmes County Board of Elections
+L3@P0: 46 Day Notice (to be posted 46 days prior to date of election)
+L4@P0: November 3, 2026 General Election
+L5@P0: All Offices
+L6@P0: Office, # To Elect, Term Candidate, Party Precincts
+L7@P0: Governor and Lieutenant Governor
+L8@P0: 1 to be elected
+L9@P0: Full 4 Year Term Commencing 01/11/2027
+L10@P0: Amy Acton and David Pepper Democratic
+L11@P0: Don Kissick and James L. Mills Libertarian
+L12@P0: Vivek Ramaswamy and Robert A. McColley
+L13@P0: Republican
+L14@P0: Timothy Grady and Andrea Neutzling (WRITE-IN)
+L15@P0: Heather Hill and Patrick Manley (WRITE-IN)
+L16@P0: Renea Turner and Jalen Turner (WRITE-IN)
+L17@P0: Ron Ula and Michael C. Lehnerd withdrawn
+L18@P0: All Precincts
+L19@P0: Attorney General
+L20@P0: 1 to be elected
+L21@P0: Full 4 Year Term Commencing 01/11/2027
+L22@P0: Keith Faber Republican
+L23@P0: John J. Kulewicz Democratic
+L24@P0: All Precincts
+L25@P0: Auditor of State
+L26@P0: 1 to be elected
+L27@P0: Full 4 Year Term Commencing 01/11/2027
+L28@P0: Annette Blackwell Democratic
+L29@P0: Frank LaRose Republican
+L30@P0: All Precincts
+L31@P0: Secretary of State
+L32@P0: 1 to be elected
+L33@P0: Full 4 Year Term Commencing 01/11/2027
+L34@P0: Tom Pruss Libertarian
+L35@P0: Allison Russo Democratic
+L36@P0: Robert Sprague Republican
+L37@P0: All Precincts
+L38@P0: Treasurer of State
+L39@P0: 1 to be elected
+L40@P0: Full 4 Year Term Commencing 01/11/2027
+L41@P0: Jay Edwards Republican
+L42@P0: Seth Walsh Democratic
+L43@P0: All Precincts
+L44@P0: U.S. Senator
+L45@P0: 1 to be elected
+L46@P0: Unexpired Term Ending 01/03/2029
+L47@P0: Sherrod Brown Democratic
+L48@P0: Jon Husted Republican
+L49@P0: Greg Levy Other-party candidate
+L50@P0: William B. Redpath Libertarian
+L51@P0: Stephen Faris (WRITE-IN)
+L52@P0: Anthony Holliman (WRITE-IN)
+L53@P0: Timothy Telymonde (WRITE-IN)
+L54@P0: All Precincts
+L55@P0: Representative to Congress
+L56@P0: (6th District)
+L57@P0: 1 to be elected
+L58@P0: Full 2 Year Term Commencing 01/03/2027
+L59@P0: Elizabeth Kirtley Democratic
+L60@P0: Michael A. Rulli Republican
+L61@P0: 003 Clark Twp,
+L62@P0: 013 Paint Twp,
+L63@P0: 01601 Saltcreek Twp,
+L64@P0: 01602 Saltcreek Twp,
+L65@P0: 017 Walnut Creek Twp
+L66@P0: Representative to Congress
+L67@P0: (12th District)
+L68@P0: 1 to be elected
+L69@P0: Troy Balderson Republican
+L70@P0: Jerrad Christian Democratic
+L71@P0: 001 Berlin North,
+L72@P0: 002 Berlin South,
+L73@P0-1: 004 Hardy Twp, Page 2 of 8 Revised: 10/15/2026 4:02 PM
+L74@P1: Full 2 Year Term Commencing 01/03/2027 005 Millersburg East,
+L75@P1: 006 Millersburg West,
+L76@P1: 007 Prairie Twp,
+L77@P1: 008 Killbuck Twp,
+L78@P1: 009 Knox Twp,
+L79@P1: 010 Mechanic Twp,
+L80@P1: 012 Monroe Twp,
+L81@P1: 014 Richland Twp,
+L82@P1: 015 Ripley Twp,
+L83@P1: 01603 Saltcreek Twp,
+L84@P1: 01604 Saltcreek Twp,
+L85@P1: 018 Washington Twp
+L86@P1: Justice of the Supreme Court
+L87@P1: 1 to be elected
+L88@P1: Full 6 Year Term Commencing 01/01/2027
+L89@P1: Daniel R. Hawkins Republican
+L90@P1: Marilyn Zayas Democratic
+L91@P1: All Precincts
+L92@P1: Justice of the Supreme Court
+L93@P1: 1 to be elected
+L94@P1: Full 6 Year Term Commencing 01/02/2027
+L95@P1: Jennifer Brunner Democratic
+L96@P1: Colleen O’Donnell Republican
+L97@P1: All Precincts
+L98@P1: Judge of the Court of Appeals (5th District)
+L99@P1: 1 to be elected
+L100@P1: Full 6 Year Term Commencing 02/09/2027
+L101@P1: Matthew George Republican All Precincts
+L102@P1: State Senator (19th District)
+L103@P1: 1 to be elected
+L104@P1: Full 4 Year Term Commencing 01/01/2027
+L105@P1: Scott Charland Democratic
+L106@P1: Ryan Rivers Republican
+L107@P1: All Precincts
+L108@P1: State Representative (98th District)
+L109@P1: 1 to be elected
+L110@P1: Full 2 Year Term Commencing 01/01/2027
+L111@P1: Scott Grund Democratic
+L112@P1: Mark Hiner Republican
+L113@P1: All Precincts
+L114@P1: Judge of the Court of Common Pleas
+L115@P1: (General and Domestic Relations Division)
+L116@P1: 1 to be elected
+L117@P1: Full 6 Year Term Commencing 02/09/2027
+L118@P1: Sean Warner Republican All Precincts
+L119@P1: Judge of the Court of Common Pleas
+L120@P1: (Probate and Juvenile Division)
+L121@P1: 1 to be elected
+L122@P1: Full 6 Year Term Commencing 02/09/2027
+L123@P1: Thomas C. Lee Republican All Precincts
+L124@P1: County Commissioner
+L125@P1: 1 to be elected
+L126@P1: Full 4 Year Term Commencing 01/01/2027
+L127@P1: Dave Hall Republican All Precincts
+L128@P1: County Auditor
+L129@P1: 1 to be elected
+L130@P1: Full 4 Year Term Commencing 03/08/2027
+L131@P1: Jackie McKee Republican All Precincts
+L132@P1: Sheriff
+L133@P1: 1 to be elected
+L134@P1: Unexpired Term Ending 12/31/2028
+L135@P1-2: Richard L. Haun, Jr. Republican All PrecinctsPage 3 of 8 Revised: 10/15/2026 4:02 PM
+L136@P2: All Issues
+L137@P2: Issue Precincts
+L138@P2: Issue 3
+L139@P2: Proposed Constitutional Amendment
+L140@P2: TO REQUIRE VOTERS TO PRESENT PHOTO IDENTIFICATION IN ORDER TO VOTE
+L141@P2: Proposed by Joint Resolution of the General Assembly
+L142@P2: To enact Section 5 of Article V of the Constitution of the State of Ohio
+L143@P2: A majority yes vote is required for the adoption of Section 5.
+L144@P2: This proposed amendment would:
+L145@P2: • Require voters to present an approved form of government-issued photo identification in order to vote.
+L146@P2: • Allow state law to provide for an alternative method of verifying a voter's identity for a voter who has a
+L147@P2: sincere religious objection to being photographed and, therefore, does not possess an approved form of
+L148@P2: government-issued photo identification.
+L149@P2: • Require that voters who do not vote in person provide an approved form of government-issued photo
+L150@P2: identification, unless the law authorizes those persons to vote by providing a signature and at least one
+L151@P2: other specified unique identifier.
+L152@P2: • Define approved forms of government-issued photo identification as an unexpired Ohio driver license or
+L153@P2: state identification card; a United States passport or passport card; or a United States military
+L154@P2: identification card, Ohio National Guard identification card, or United States Department of Veterans
+L155@P2: Affairs identification card.
+L156@P2: If approved, the amendment shall take effect immediately.
+L157@P2: A "YES" vote means approval of the amendment.
+L158@P2: A "NO" vote means disapproval of the amendment.
+L159@P2: SHALL THE AMENDMENT BE APPROVED?
+L160@P2: YES
+L161@P2: NO
+L162@P2: All Precincts
+L163@P2: Proposed Income Tax and Bond Issue
+L164@P2: Loudonville-Perrysville Exempted Village School District
+L165@P2: A majority affirmative vote is necessary for passage.
+L166@P2: Shall the Loudonville-Perrysville Exempted Village School District be authorized to do both of the
+L167@P2: following:
+L168@P2: 1. Impose an annual income tax of 0.25 per cent on the school district income of individuals, for a period
+L169@P2: of 30 years, beginning January 1, 2027, for the purpose of current expenses?
+L170@P2: 2. Issue bonds for the purpose of constructing school facilities, renovating, repairing, expanding,
+L171@P2: improving, and constructing additions to school facilities; furnishing and equipping; and improving the
+L172@P2: sites thereof the same in the principal amount of $16,400,000, to be repaid annually over a maximum
+L173@P2: period of 37 years, and levy a property tax outside of the ten-mill limitation estimated by the county
+L174@P2: auditor to average over the bond repayment period 2.85 mills for each $1 of taxable value, which
+L175@P2: amounts to $100 for each $100,000 of the county auditor's market value, to pay the annual debt charges
+L176@P2: on the bonds, and to pay debt charges on any notes issued in anticipation of those bonds?
+L177@P2: FOR THE INCOME TAX AND BOND ISSUE
+L178@P2: AGAINST THE INCOME TAX AND BOND ISSUE
+L179@P2: Portion of 009 Knox Twp,
+L180@P2: Portions of 018
+L181@P2: Washington Twp
+L182@P2-3: 00902, 01803, 01804Page 4 of 8 Revised: 10/15/2026 4:02 PM
+L183@P3: Proposed Tax Levy (Renewal)
+L184@P3: Loudonville Public Library
+L185@P3: A majority affirmative vote is necessary for passage.
+L186@P3: A renewal of a tax for the benefit of the Loudonville Public Library for the purpose of current expenses,
+L187@P3: that the county auditor estimates will collect $178,719 annually, at a rate not exceeding 0.8 mill for each
+L188@P3: $1 of taxable value, which amounts to $19 for each $100,000 of the county auditor's market value, for 5
+L189@P3: years, commencing in 2027, first due in calendar year 2028.
+L190@P3: FOR THE TAX LEVY
+L191@P3: AGAINST THE TAX LEVY
+L192@P3: Portion of 009 Knox Twp,
+L193@P3: Portions of 018
+L194@P3: Washington Twp
+L195@P3: 00902, 01803, 01804
+L196@P3: Proposed Income Tax (Additional)
+L197@P3: Triway Local School District
+L198@P3: A majority affirmative vote is necessary for passage.
+L199@P3: Shall an annual income tax of 0.75% on the earned income of individuals residing in the school district be
+L200@P3: imposed by the Triway Local School District, for 3 years, beginning January 1, 2027, for the purpose of
+L201@P3: current expenses?
+L202@P3: FOR THE TAX
+L203@P3: AGAINST THE TAX
+L204@P3: Portion of 007 Prairie Twp
+L205@P3: 00702
+L206@P3: Proposed Tax Levy (Renewal)
+L207@P3: Wayne County Joint Vocational School District
+L208@P3: A majority affirmative vote is necessary for passage.
+L209@P3: A renewal of a tax for the benefit of the Wayne County Joint Vocational School District for the purpose of
+L210@P3: general permanent improvements, that the county auditor estimates will collect $1,480,860 annually, at a
+L211@P3: rate not exceeding 0.5 mills for each $1 of taxable value, which amounts to $11 for each $100,000 of the
+L212@P3: county auditor's market value, for five years, commencing in 2027, first due in calendar year 2028.
+L213@P3: FOR THE TAX LEVY
+L214@P3: AGAINST THE TAX LEVY
+L215@P3: Portions of 007 Prairie
+L216@P3: Twp,
+L217@P3: Portions of 016 Saltcreek
+L218@P3: Twp
+L219@P3: 00701, 00702, 00704,
+L220@P3: 01602, 01604
+L221@P3: Proposed Sales and Use Tax (Renewal)
+L222@P3: Holmes County
+L223@P3: A majority affirmative vote is necessary for passage.
+L224@P3: The Board of County Commissioners of Holmes County proposes a continuation of an existing sales and
+L225@P3: use tax in the amount of 0.25 per cent for the purpose of providing additional revenue for the acquisition,
+L226@P3: construction, equipping or repair of permanent improvements, to-wit, the construction, reconstruction,
+L227@P3: resurfacing and repair of all roads and bridges within the county other than state roads and bridges for a
+L228@P3: period of 5 years.
+L229@P3: Shall the resolution of the Holmes County Commissioners proposing a continuation of an existing 0.25
+L230@P3: per cent sales and use tax be approved?
+L231@P3: YES
+L232@P3: NO
+L233@P3-4: All PrecinctsPage 5 of 8 Revised: 10/15/2026 4:02 PM
+L234@P4: Proposed Tax Levy (Renewal)
+L235@P4: Village of Holmesville
+L236@P4: A majority affirmative vote is necessary for passage.
+L237@P4: A renewal of a tax for the benefit of the Village of Holmesville for the purpose of current expenses that
+L238@P4: the county auditor estimates will collect $9,259 annually, at a rate not exceeding 2 mills for each $1 of
+L239@P4: taxable value, which amounts to $32 for each $100,000 of the county auditor's market value, for 5 years,
+L240@P4: commencing in 2027, first due in calendar year 2028.
+L241@P4: FOR THE TAX LEVY
+L242@P4: AGAINST THE TAX LEVY
+L243@P4: Portion of 007 Prairie Twp
+L244@P4: 00704
+L245@P4: Proposed Tax Levy (Renewal)
+L246@P4: Village of Holmesville
+L247@P4: A majority affirmative vote is necessary for passage.
+L248@P4: A renewal of a tax for the benefit of the Village of Holmesville for the purpose of current expenses that
+L249@P4: the county auditor estimates will collect $12,950 annually, at a rate not exceeding 2.5 mills for each $1 of
+L250@P4: taxable value, which amounts to $45 for each $100,000 of the county auditor's market value, for 5 years,
+L251@P4: commencing in 2027, first due in calendar year 2028.
+L252@P4: FOR THE TAX LEVY
+L253@P4: AGAINST THE TAX LEVY
+L254@P4: Portion of 007 Prairie Twp
+L255@P4: 00704
+L256@P4: Proposed Tax Levy (Renewal)
+L257@P4: Killbuck Township
+L258@P4: A majority affirmative vote is necessary for passage.
+L259@P4: A renewal of a tax for the benefit of Killbuck Township for the purpose of providing fire protection, the
+L260@P4: purchase of ambulance equipment, or the provision of ambulance or emergency medical services that
+L261@P4: the county auditor estimates will collect $154,348 annually, at a rate not exceeding 3.5 mills for each $1
+L262@P4: of taxable value, which amounts to $72 for each $100,000 of the county auditor's market value, for 5
+L263@P4: years, commencing in 2027, first due in calendar year 2028.
+L264@P4: FOR THE TAX LEVY
+L265@P4: AGAINST THE TAX LEVY
+L266@P4: 008 Killbuck Twp
+L267@P4: 00801, 00802
+L268@P4: Proposed Tax Levy (Additional)
+L269@P4: Killbuck Township, Excluding Killbuck Village
+L270@P4: A majority affirmative vote is necessary for passage.
+L271@P4: An additional tax for the benefit of Killbuck Township, excluding Killbuck Village for the purpose of
+L272@P4: general construction, reconstruction, resurfacing, and repair of streets, roads, and bridges that the county
+L273@P4: auditor estimates will collect $73,570 annually, at a rate not exceeding 1.55 mills for each $1 of taxable
+L274@P4: value, which amounts to $54 for each $100,000 of the county auditor's market value, for 5 years,
+L275@P4: commencing in 2026, first due in calendar year 2027.
+L276@P4: FOR THE TAX LEVY
+L277@P4: AGAINST THE TAX LEVY
+L278@P4: Portion of 008 Killbuck
+L279@P4: Twp
+L280@P4-5: 00801Page 6 of 8 Revised: 10/15/2026 4:02 PM
+L281@P5: Proposed Tax Levy (Renewal)
+L282@P5: Monroe Township
+L283@P5: A majority affirmative vote is necessary for passage.
+L284@P5: A renewal of a tax for the benefit of Monroe Township for the purpose of general construction,
+L285@P5: reconstruction, resurfacing, and repair of streets, roads, and bridges that the county auditor estimates will
+L286@P5: collect $48,462 annually, at a rate not exceeding 1.5 mills for each $1 of taxable value, which amounts to
+L287@P5: $22 for each $100,000 of the county auditor's market value, for 5 years, commencing in 2027, first due in
+L288@P5: calendar year 2028.
+L289@P5: FOR THE TAX LEVY
+L290@P5: AGAINST THE TAX LEVY
+L291@P5: 012 Monroe Twp
+L292@P5: 01200
+L293@P5: Proposed Tax Levy (Renewal)
+L294@P5: Paint Township
+L295@P5: A majority affirmative vote is necessary for passage.
+L296@P5: A renewal of a tax for the benefit of Paint Township for the purpose of general construction,
+L297@P5: reconstruction, resurfacing, and repair of streets and roads that the county auditor estimates will collect
+L298@P5: $251,579 annually, at a rate not exceeding 2 mills for each $1 of taxable value, which amounts to $37 for
+L299@P5: each $100,000 of the county auditor's market value, for 5 years, commencing in 2027, first due in
+L300@P5: calendar year 2028.
+L301@P5: FOR THE TAX LEVY
+L302@P5: AGAINST THE TAX LEVY
+L303@P5: 013 Paint Twp
+L304@P5: 01300
+L305@P5: Proposed Tax Levy (Renewal)
+L306@P5: Prairie Township
+L307@P5: A majority affirmative vote is necessary for passage.
+L308@P5: A renewal of a tax for the benefit of Prairie Township for the purpose of providing fire protection, the
+L309@P5: purchase of ambulance equipment, or the provision of ambulance or emergency medical services, that
+L310@P5: the county auditor estimates will collect $118,748 annually, at a rate not exceeding 2 mills for each $1 of
+L311@P5: taxable value, which amounts to $31 for each $100,000 of the county auditor's market value, for 5 years,
+L312@P5: commencing in 2027, first due in calendar year 2028.
+L313@P5: FOR THE TAX LEVY
+L314@P5: AGAINST THE TAX LEVY
+L315@P5: 007 Prairie Twp
+L316@P5: 00701, 00702, 00703,
+L317@P5: 00704
+L318@P5: Proposed Tax Levy (Renewal)
+L319@P5: Richland Township
+L320@P5: A majority affirmative vote is necessary for passage.
+L321@P5: A renewal of a tax for the benefit of Richland Township for the purpose of providing fire protection and
+L322@P5: emergency medical services that the county auditor estimates will collect $14,786 annually, at a rate not
+L323@P5: exceeding 0.5 mill for each $1 of taxable value, which amounts to $10 for each $100,000 of the county
+L324@P5: auditor's market value, for 5 years, commencing in 2027, first due in calendar year 2028.
+L325@P5: FOR THE TAX LEVY
+L326@P5: AGAINST THE TAX LEVY
+L327@P5: 014 Richland Twp
+L328@P5-6: 01401, 01402, 01403Page 7 of 8 Revised: 10/15/2026 4:02 PM
+L329@P6: Proposed Tax Levy (Renewal)
+L330@P6: Richland Township
+L331@P6: A majority affirmative vote is necessary for passage.
+L332@P6: A renewal of a tax for the benefit of Richland Township for the purpose of maintaining and operating
+L333@P6: cemeteries that the county auditor estimates will collect $7,393 annually, at a rate not exceeding 0.25 mill
+L334@P6: for each $1 of taxable value, which amounts to $5 for each $100,000 of the county auditor's market
+L335@P6: value, for 5 years, commencing in 2027, first due in calendar year 2028.
+L336@P6: FOR THE TAX LEVY
+L337@P6: AGAINST THE TAX LEVY
+L338@P6: 014 Richland Twp
+L339@P6: 01401, 01402, 01403
+L340@P6: Proposed Tax Levy (Renewal)
+L341@P6: Saltcreek Township
+L342@P6: A majority affirmative vote is necessary for passage.
+L343@P6: A renewal of a tax for the benefit of Saltcreek Township for the purpose of general construction,
+L344@P6: reconstruction, resurfacing, and repair of streets, roads, and bridges that the county auditor estimates will
+L345@P6: collect $139,204 annually, at a rate not exceeding 1 mill for each $1 of taxable value, which amounts to
+L346@P6: $22 for each $100,000 of the county auditor's market value, for 5 years, commencing in 2027, first due in
+L347@P6: calendar year 2028.
+L348@P6: FOR THE TAX LEVY
+L349@P6: AGAINST THE TAX LEVY
+L350@P6: 016 Saltcreek Twp
+L351@P6: 01601, 01602, 01603,
+L352@P6: 01604
+L353@P6: Proposed Tax Levy (Renewal)
+L354@P6: Washington Township
+L355@P6: A majority affirmative vote is necessary for passage.
+L356@P6: A renewal of a tax for the benefit of Washington Township for the purpose of general construction,
+L357@P6: reconstruction, resurfacing, and repair of streets, roads, and bridges that the county auditor estimates will
+L358@P6: collect $116,595 annually, at a rate not exceeding 2 mills for each $1 of taxable value, which amounts to
+L359@P6: $35 for each $100,000 of the county auditor's market value, for 5 years, commencing in 2027, first due in
+L360@P6: calendar year 2028.
+L361@P6: FOR THE TAX LEVY
+L362@P6: AGAINST THE TAX LEVY
+L363@P6: 018 Washington Twp
+L364@P6: 01801, 01802, 01803,
+L365@P6: 01804
+L366@P6: Local Liquor Option (By Petition)
+L367@P6: Washington Township Precinct
+L368@P6: A majority affirmative vote is necessary for passage.
+L369@P6: Shall the sale of beer, wine and mixed beverages, and spirituous liquor be permitted by Buckeye Deli &
+L370@P6: Pizza, LLC, an applicant for a D-5 liquor permit, who is engaged in the business of the operation of a bar,
+L371@P6: restaurant/deli, and carry-out store at 124 E Millersburg St, Nashville, OH 44661 in this precinct?
+L372@P6: YES
+L373@P6: NO
+L374@P6: 018 Washington Twp
+L375@P6: 01801, 01802, 01803,
+L376@P6-7: 01804Page 8 of 8 Revised: 10/15/2026 4:02 PM
+L377@P7: Local Liquor Option (By Petition)
+L378@P7: Washington Township Precinct
+L379@P7: A majority affirmative vote is necessary for passage.
+L380@P7: Shall the sale of beer, wine and mixed beverages, and spirituous liquor be permitted for sale on Sunday
+L381@P7: by Buckeye Deli & Pizza, LLC, an applicant for a D-6 liquor permit who is engaged in the business of the
+L382@P7: operation of a bar, restaurant/deli, and carry-out store at 124 E Millersburg St, Nashville, OH 44661 in
+L383@P7: this precinct?
+L384@P7: YES
+L385@P7: NO
+L386@P7: 018 Washington Twp
+L387@P7: 01801, 01802, 01803,
+L388@P7: 01804
+L389@P7: INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L390@P7: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L391@P7: To complete a Federal Write-In Absentee Ballot (FWAB), go to http://www.fvap.gov. You have the option of downloading a blank,
+L392@P7: hard copy FWAB to complete by hand, or proceeding through electronic completion of the FWAB using the website’s FWAB
+L393@P7: Wizard.
+L394@P7: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to count.
+L395@P7: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before the election and the
+L396@P7: updated election notice issued on the 46th day before the election as a guide to:
+L397@P7: (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L398@P7: (2) write the name of your choice of candidate or choice for or against an issue.
+L399@P7: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of elections at this
+L400@P7: address: Holmes County Board of Elections, 75 E. Clinton St., Suite 108, Millersburg, OH 44654. A complete listing of all
+L401@P7: county board of elections mailing addresses and contact information is available at https://www.sos.state.oh.us/elections/electionsofficials/county-boards-of-elections-directory/.
+L402@P7: Do not send your ballot via e-mail or fax; Ohio law prohibits electronic transmission of a voted ballot.

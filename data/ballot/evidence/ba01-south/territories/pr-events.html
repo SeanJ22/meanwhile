@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Eventos Electorales | Comisión Estatal de Elecciones</title>
+<link href="img/favicon.ico" rel="shortcut icon"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<style>
+body{background:#f5f5f5;font-family:'Montserrat',Arial,sans-serif;margin:0;color:#333;}
+.navbar-cee{background:#333;border:none;border-bottom:5px solid #ffeb00;margin-bottom:0;border-radius:0;}
+.navbar-cee .navbar-brand{color:#fff!important;width:100%;text-align:center;font-weight:bold;font-size:28px;}
+.header-cee{background:#fff;padding:30px 20px 35px;text-align:center;}
+.header-cee img{max-width:1000px;width:100%;}
+.hero-eventos{background:#6E6E6B;color:#fff;padding:45px 20px;text-align:center;}
+.hero-eventos h1{font-weight:800;margin:0 0 10px;font-size:40px;letter-spacing:.5px;}
+.hero-eventos p{font-size:17px;margin:0;color:#f3f3f3;}
+.amarillo{color:#ffeb00;}
+.eventos-content{background:#fff;padding:45px 0 65px;}
+.top-actions{text-align:center;margin-bottom:42px;}
+.btn-historicos{display:inline-block;padding:14px 24px;background:#333;color:#fff;border-bottom:4px solid #ffeb00;border-radius:8px;font-weight:700;box-shadow:0 3px 12px rgba(0,0,0,.12);transition:.25s;}
+.btn-historicos:hover,.btn-historicos:focus{background:#ffeb00;color:#111;text-decoration:none;transform:translateY(-2px);}
+.year-section{margin-bottom:42px;}
+.year-heading{border-bottom:2px solid #ececec;margin-bottom:20px;}
+.year-heading span{display:inline-block;background:#333;color:#ffeb00;font-size:24px;font-weight:800;padding:9px 18px;border-radius:8px 8px 0 0;}
+.events-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
+.event-card{background:#fff;border:1px solid #dedede;border-radius:12px;padding:22px;box-shadow:0 3px 12px rgba(0,0,0,.07);transition:.25s;}
+.event-card:hover{transform:translateY(-3px);box-shadow:0 7px 20px rgba(0,0,0,.11);border-color:#c9c9c9;}
+.event-card h3{font-size:18px;line-height:1.45;font-weight:700;margin:0 0 18px;color:#333;}
+.event-actions{display:flex;flex-wrap:wrap;gap:9px;}
+.event-btn{display:inline-block;background:#f4f4f4;color:#222;border:1px solid #d5d5d5;border-radius:7px;padding:9px 13px;font-size:14px;font-weight:700;transition:.2s;}
+.event-btn:hover,.event-btn:focus{background:#ffeb00;color:#000;text-decoration:none;border-color:#e5d300;}
+.event-btn.disabled{opacity:.5;cursor:not-allowed;background:#eee;color:#777;}
+.footer-top{background:#333;padding:30px 20px;text-align:center;}
+.footer-top img{width:48px;margin:0 10px;background:#ffeb00;padding:10px;border-radius:4px;transition:.3s;}
+.footer-top img:hover{transform:translateY(-3px);}
+.footer-bottom{background:#1f1f1f;text-align:center;padding:25px 20px;border-top:4px solid #ffeb00;}
+.footer-title{color:#ffeb00;font-size:24px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+
+.cuatrienio-section{margin-bottom:54px;}
+.cuatrienio-heading{background:#333;border-left:7px solid #ffeb00;color:#fff;padding:15px 20px;border-radius:9px;margin:0 0 24px;font-size:27px;font-weight:800;letter-spacing:.3px;}
+.cuatrienio-heading .range{color:#ffeb00;}
+.year-subheading{font-size:20px;font-weight:800;color:#333;margin:28px 0 16px;padding-bottom:8px;border-bottom:2px solid #ececec;}
+.event-meta{display:flex;flex-wrap:wrap;gap:8px;margin:-5px 0 16px;}
+.event-year,.event-date{display:inline-block;border-radius:20px;padding:6px 11px;font-size:13px;font-weight:800;}
+.event-year{background:#333;color:#ffeb00;}
+.event-date{background:#f1f1f1;color:#333;border:1px solid #ddd;}
+.event-card h3{margin-bottom:12px;}
+
+@media(max-width:768px){
+ .navbar-cee .navbar-brand{font-size:20px;white-space:normal;height:auto;padding:14px 10px;}
+ .header-cee{padding:20px 15px 25px;}
+ .hero-eventos{padding:35px 15px;}
+ .hero-eventos h1{font-size:30px;}
+ .hero-eventos p{font-size:15px;}
+ .eventos-content{padding:30px 0 45px;}
+ .events-grid{grid-template-columns:1fr;}
+ .year-heading span{font-size:21px;}
+ .event-card{padding:18px;}
+ .footer-title{font-size:18px;}
+ .footer-top img{width:44px;margin:0 5px;}
+}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-cee">
+<div class="container"><a class="navbar-brand" href="https://ww2.ceepur.org/">COMISIÓN ESTATAL DE ELECCIONES</a></div>
+</nav>
+<section class="hero-eventos">
+<div class="container">
+<h1>EVENTOS <span class="amarillo">ELECTORALES</span></h1>
+</div>
+</section>
+<main class="eventos-content">
+<div class="container">
+<div class="top-actions">
+  <a class="btn-historicos" href="https://ww2.ceepur.org/Home/EventosElectoralesResultadosHistoricos" target="_blank">
+    Resultados Históricos
+  </a>
+</div>
+
+<section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2026</span></div><div class="events-grid"><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de alcalde/alcadesa del municipio de Cataño 2026</h3><div class="event-meta"><span class="event-year">Año 2026</span></div>
+<div class="event-actions"><a class="event-btn" href="https://catano2026.ceepur.org/" rel="noopener" target="_blank">Resultados</span><a class="event-btn" href="https://ceepur.org/eleccionespecialcatano2026/" rel="noopener" target="_blank">Documentos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2025</span></div><div class="events-grid"><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de Representante Distrito 31  (PNP) 2025</h3><div class="event-meta"><span class="event-year">Año 2025</div>
+<div class="event-actions"><a class="event-btn" href="https://representantedistrito31.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/representantedistrito31/" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de alcalde/alcadesa del municipio de Gurabo 2025</h3><div class="event-meta"><span class="event-year">Año 2025</span></div>
+<div class="event-actions"><a class="event-btn" href="https://gurabo2025.ceepur.org" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/eleccionespecialgurabo2025/" rel="noopener" target="_blank">Documentos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2024</span></div><div class="events-grid"><article class="event-card">
+<h3>Elecciones Generales 2024</h3><div class="event-meta"><span class="event-year">Año 2024</span></div>
+<div class="event-actions"><a class="event-btn" href="https://elecciones2024.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://www.ceepur.org/EleccionesGenerales2024/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Primarias Locales 2024</h3><div class="event-meta"><span class="event-year">Año 2024</span></div>
+<div class="event-actions"><a class="event-btn" href="http://primarias2024.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://www.ceepur.org/primarias2024/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Primaria Presidencial Demócrata 2024</h3><div class="event-meta"><span class="event-year">Año 2024</span></div>
+<div class="event-actions"><a class="event-btn" href="http://democrata2024.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://ceepur.org/pppd2024/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2022</span></div><div class="events-grid"><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de Representante por el Distrito Núm. 3 San Juan (PNP)</h3><div class="event-meta"><span class="event-year">Año 2022</span></div>
+<div class="event-actions"><a class="event-btn" href="https://representantedistrito3.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://www.ceepur.org/RepresentanteDistrito3/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de Senador por el Distrito 1 San Juan (PNP)</h3><div class="event-meta"><span class="event-year">Año 2022</span></div>
+<div class="event-actions"><a class="event-btn" href="https://senadordistrito1.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/SenadorPorDistritoI2022/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir la vacante a la alcaldía de Trujillo Alto (PPD)</h3><div class="event-meta"><span class="event-year">Año 2022</span></div>
+<div class="event-actions"><a class="event-btn" href="https://trujilloalto2022.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/trujilloalto2022/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir las vacantes a las alcaldías de Humacao (PNP)</h3><div class="event-meta"><span class="event-year">Año 2022</span></div>
+<div class="event-actions"><a class="event-btn" href="https://abh2022.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/abh2022/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir las vacantes a las alcaldías de Aguas Buenas (PNP)</h3><div class="event-meta"><span class="event-year">Año 2022</span></div>
+<div class="event-actions"><a class="event-btn" href="https://abh2022.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/abh2022/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de alcalde de Guayama (PPD)</h3><div class="event-meta"><span class="event-year">Año 2022</span></div>
+<div class="event-actions"><a class="event-btn" href="https://guayama2022.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/guayama2022/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de alcalde de Hatillo (PPD)</h3><div class="event-meta"><span class="event-year">Año 2022</span></div>
+<div class="event-actions"><a class="event-btn" href="https://hatillo2022.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/hatillo2022/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de alcalde de Guaynabo (PNP)</h3><div class="event-meta"><span class="event-year">Año 2022</span></div>
+<div class="event-actions"><a class="event-btn" href="https://guaynabo2022.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://www.ceepur.org/guaynabo2022/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2021</span></div><div class="events-grid"><article class="event-card">
+<h3>Ley para crear la Delegación Congresional de Puerto Rico</h3><div class="event-meta"><span class="event-year">Año 2021</span></div>
+<div class="event-actions"><a class="event-btn" href="https://congresional.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/delegacioncongresional/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de Representante por Acumulación (PNP)</h3><div class="event-meta"><span class="event-year">Año 2021</span></div>
+<div class="event-actions"><a class="event-btn" href="https://eleccionespecial2021.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="https://ceepur.org/eepnp2021/Documentos.html" rel="noopener" target="_blank">Documentos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2020</span></div><div class="events-grid"><article class="event-card">
+<h3>Ley para Implementar la Petición de Estadidad del Plebiscito de 2020</h3><div class="event-meta"><span class="event-year">Año 2020</span></div>
+<div class="event-actions"><a class="event-btn" href="https://ceepur.org/plebiscito2024/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elecciones Generales 2020</h3><div class="event-meta"><span class="event-year">Año 2020</span></div>
+<div class="event-actions"><a class="event-btn" href="https://elecciones2020.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://www.ceepur.org/Elecciones/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Plebiscito para la definición final del estatus político de Puerto Rico</h3><div class="event-meta"><span class="event-year">Año 2020</span></div>
+<div class="event-actions"><a class="event-btn" href="https://elecciones2020.ceepur.org/Escrutinio_General_93/index.html#es/default/PLEBISCITO_Resumen.xml" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://plebiscito2020.ceepur.org/" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Primarias Locales 2020</h3><div class="event-meta"><span class="event-year">Año 2020</span></div>
+<div class="event-actions"><a class="event-btn" href="http://primarias2020.ceepur.org/homepage.xml" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://www.ceepur.org/primarias/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de Senador por Acumulación (PNP)</h3><div class="event-meta"><span class="event-year">Año 2020</span></div>
+<div class="event-actions"><a class="event-btn" href="http://primarias2020.ceepur.org/PRIMARIAS_LOCALES_2020_PNP_58/Escrutinio_90/index.html#es/pic_bar_list/ELECCION_ESPECIAL_-_SENADORES_POR_ACUMULACION_Resumen.xml" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="/sites/ComisionEE/es-pr/Eventos%20Electorales/Documents/EleccionEspecial2020-SenadoPNP-PapeletaModelo.pdf" rel="noopener" target="_blank">Papeleta modelo</a></div>
+</article><article class="event-card">
+<h3>Primaria Presidencial Demócrata 2020</h3><div class="event-meta"><span class="event-year">Año 2020</span></div>
+<div class="event-actions"><a class="event-btn" href="http://democrata2020.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://ceepur.org/pppd2020/index.html" rel="noopener" target="_blank">Documentos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2019</span></div><div class="events-grid"><article class="event-card">
+<h3>Elección Especial para cubrir la vacante de Senador por Acumulación y Alcalde de Barranquitas (PNP)</h3><div class="event-meta"><span class="event-year">Año 2019</span></div>
+<div class="event-actions"><a class="event-btn" href="http://eleccionesespeciales2019.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="/Home/EE2019PNP" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para cubrir la vacante surgida para el puesto de Alcalde y Presidente del Comité Municipal de Humacao (PPD)</h3><div class="event-meta"><span class="event-year">Año 2019</span></div>
+<div class="event-actions"><a class="event-btn" href="http://eleccionesespeciales2019.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="/Home/EE2019PPD" rel="noopener" target="_blank">Documentos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2017</span></div><div class="events-grid"><article class="event-card">
+<h3>Elección Especial para llenar la vacante de Representante por Distrito 35</h3><div class="event-meta"><span class="event-year">Año 2017</span></div>
+<div class="event-actions"><a class="event-btn" href="/sites/ComisionEE/es-pr/Eventos%20Electorales/Documents/EE%20DR35%20PNP%20-%20NOC.pdf" rel="noopener" target="_blank">Noche Del Evento</a><a class="event-btn" href="/sites/ComisionEE/es-pr/Eventos%20Electorales/Documents/EE%20DR35%20PNP%20-%20ESC.pdf" rel="noopener" target="_blank">Escrutino</a><a class="event-btn" href="/sites/ComisionEE/es-pr/Eventos%20Electorales/Documents/EE%20DR35%20PNP%20-%20papeleta%20modelo.pdf" rel="noopener" target="_blank">Papeleta Modelo</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para llenar la vacante de Representante por Distrito 27</h3><div class="event-meta"><span class="event-year">Año 2017</span></div>
+<div class="event-actions"><a class="event-btn" href="http://w1.ceepur.org/dist27/DistRep27.htm" rel="noopener" target="_blank">Noche del Evento</a><a class="event-btn" href="http://w1.ceepur.org/dist27/DistRep27-esc.htm" rel="noopener" target="_blank">Escrutinio</a><a class="event-btn" href="/sites/ComisionEE/es-pr/Eventos%20Electorales/Documents/PAPELETA%20MODELO%20DistRep27.pdf" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para llenar la vacante de alcalde de Guaynabo</h3><div class="event-meta"><span class="event-year">Año 2017</span></div>
+<div class="event-actions"><a class="event-btn" href="http://guaynabo.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="/Home/EleccionEspecialdeGuaynabo" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Plebiscito para la Descolonización Inmediata de Puerto Rico 2017</h3><div class="event-meta"><span class="event-year">Año 2017</span></div>
+<div class="event-actions"><a class="event-btn" href="http://plebiscito2017.ceepur.org/" rel="noopener" target="_blank">Documentos</a><a class="event-btn" href="http://resultados2017.ceepur.org/" rel="noopener" target="_blank">Resultados</a></div>
+</article><article class="event-card">
+<h3>Elección Especial para llenar la vacante de alcalde de Gurabo</h3><div class="event-meta"><span class="event-year">Año 2017</span></div>
+<div class="event-actions"><a class="event-btn" href="/Home/EleccionEspecialGurabo2017" rel="noopener" target="_blank">Documentos</a><a class="event-btn" href="/sites/ComisionEE/es-pr/Eventos%20Electorales/Documents/Gurabo%202017%20-%20Resultados.pdf" rel="noopener" target="_blank">Resultados</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2016</span></div><div class="events-grid"><article class="event-card">
+<h3>Elecciones Generales 2016</h3><div class="event-meta"><span class="event-year">Año 2016</span></div>
+<div class="event-actions"><a class="event-btn" href="http://elecciones2016.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="/Home/EleccionesGenerales2016" rel="noopener" target="_blank">Documentos</a><a class="event-btn" href="/sites/ComisionEE/es-pr/Documents/Informe%20Estadistico%20EG2016%20-%20Parte1.pdf" rel="noopener" target="_blank">Informe estadístico parte 1</a><a class="event-btn" href="/sites/ComisionEE/es-pr/Documents/Informe%20Estadistico%20EG2016%20-%20Parte2.pdf" rel="noopener" target="_blank">Informe estadístico parte 2</a></div>
+</article><article class="event-card">
+<h3>Primarias Locales 2016</h3><div class="event-meta"><span class="event-year">Año 2016</span></div>
+<div class="event-actions"><a class="event-btn" href="http://primarias2016.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="/Home/PrimariasLocales2016" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Primarias del Partido Demócrata 2016</h3><div class="event-meta"><span class="event-year">Año 2016</span></div>
+<div class="event-actions"><a class="event-btn" href="http://democratas2016.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://democratas2016.ceepur.org/escrutinio/Isla-Escrutinio.htm" rel="noopener" target="_blank">Escrutinio</a><a class="event-btn" href="/Home/PPPartidoDemocrata2016" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Consulta al Pueblo de Vieques, sobre la Construcción de un Puente entre Vieques y Ceiba</h3><div class="event-meta"><span class="event-year">Año 2016</span></div>
+<div class="event-actions"><a class="event-btn" href="http://consultavieques.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://consultavieques.ceepur.org/escrutinio/resultadosesc.aspx.htm" rel="noopener" target="_blank">Escrutinio</a></div>
+</article><article class="event-card">
+<h3>Primarias del Partido Republicano 2016</h3><div class="event-meta"><span class="event-year">Año 2016</span></div>
+<div class="event-actions"><a class="event-btn" href="http://presidenciales16.ceepur.org/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://presidenciales16.ceepur.org/escrutinio/resumenESC-1.aspx.htm" rel="noopener" target="_blank">Escrutinio</a><a class="event-btn" href="/Home/PPPartidoRepublicano2016" rel="noopener" target="_blank">Documentos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2012</span></div><div class="events-grid"><article class="event-card">
+<h3>Elecciones Generales 2012</h3><div class="event-meta"><span class="event-year">Año 2012</span></div>
+<div class="event-actions"><a class="event-btn" href="http://168.62.166.179/eg2012/main/homepage.xml" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="/Home/EleccionesGenerales2012" rel="noopener" target="_blank">Documentos</a><a class="event-btn" href="http://168.62.166.179/Informe%20Estadistico/ElecGen2012/index.html" rel="noopener" target="_blank">Informe estadístico</a></div>
+</article><article class="event-card">
+<h3>Condición Política Territorial</h3><div class="event-meta"><span class="event-year">Año 2012</span></div>
+<div class="event-actions"><a class="event-btn" href="http://168.62.166.179/eg2012/REYDI_Escrutinio/index.html#es/default/CONDICION_POLITICA_TERRITORIAL_ACTUAL_ISLA.xml" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="/Home/Plebiscito2012" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Opciones No Territoriales</h3><div class="event-meta"><span class="event-year">Año 2012</span></div>
+<div class="event-actions"><a class="event-btn" href="http://168.62.166.179/eg2012/REYDI_Escrutinio/index.html#es/default/OPCIONES_NO_TERRITORIALES_ISLA.xml" rel="noopener" target="_blank">Resultados</a></div>
+</article><article class="event-card">
+<h3>Referéndum 2012</h3><div class="event-meta"><span class="event-year">Año 2012</span></div>
+<div class="event-actions"><a class="event-btn" href="http://209.68.12.238/Referendum2012/main/homepage.xml" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="/Home/Referendum2012" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Primarias del Partido Republicano 2012</h3><div class="event-meta"><span class="event-year">Año 2012</span></div>
+<div class="event-actions"><a class="event-btn" href="http://168.62.166.179/p2012/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://209.68.12.238/Primarias2012Rep/index.htm" rel="noopener" target="_blank">Documentos</a></div>
+</article><article class="event-card">
+<h3>Primarias Locales 2012</h3><div class="event-meta"><span class="event-year">Año 2012</span></div>
+<div class="event-actions"><a class="event-btn" href="http://168.62.166.179/p2012/" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://209.68.12.238/Primarias2012/index.htm" rel="noopener" target="_blank">Documentos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2011</span></div><div class="events-grid"><article class="event-card">
+<h3>Elección Especial Distrito 16</h3><div class="event-meta"><span class="event-year">Año 2011</span></div>
+<div class="event-actions"><a class="event-btn" href="http://209.68.12.238/dist162011esc/index.htm" rel="noopener" target="_blank">Resultados</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2010</span></div><div class="events-grid"><article class="event-card">
+<h3>Elección Especial de Caguas</h3><div class="event-meta"><span class="event-year">Año 2010</span></div>
+<div class="event-actions"><a class="event-btn" href="http://209.68.12.238/eleccionespecialcaguas/EleccionEspecialAlcaldeCaguas.htm" rel="noopener" target="_blank">Resultados</a><a class="event-btn" href="http://209.68.12.238/eleccionespecialcaguas/EscrutinioEleccionEspecialAlcaldeCaguas.htm" rel="noopener" target="_blank">Escrutinio</a><a class="event-btn" href="http://209.68.12.238/eleccionespecialcaguas/index.html" rel="noopener" target="_blank">Archivos</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2008</span></div><div class="events-grid"><article class="event-card">
+<h3>Elecciones Generales 2008</h3><div class="event-meta"><span class="event-year">Año 2008</span></div>
+<div class="event-actions"><a class="event-btn" href="http://168.62.166.179/Informe%20Estadistico/ElecGen2008/index.html" rel="noopener" target="_blank">Resultados | Informe estadístico</a></div>
+</article><article class="event-card">
+<h3>Primarias del Partido Demócrata</h3><div class="event-meta"><span class="event-year">Año 2008</span></div>
+<div class="event-actions"><a class="event-btn" href="http://209.68.12.238/Presidenciales08/Div/index.aspx.htm" rel="noopener" target="_blank">Noche del Evento</a><a class="event-btn" href="http://209.68.12.238/Presidenciales08/index.html" rel="noopener" target="_blank">Archivo</a></div>
+</article><article class="event-card">
+<h3>Primarias Locales 2008</h3><div class="event-meta"><span class="event-year">Año 2008</span></div>
+<div class="event-actions"><a class="event-btn" href="http://209.68.12.238/Primarias2008/index.html" rel="noopener" target="_blank">Documentos</a><span aria-disabled="true" class="event-btn disabled">Resultados</span></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2005</span></div><div class="events-grid"><article class="event-card">
+<h3>Resultados Referéndum 2005</h3><div class="event-meta"><span class="event-year">Año 2005</span></div>
+<div class="event-actions"><a class="event-btn" href="http://168.62.166.179/referendum2005" rel="noopener" target="_blank">Resultados</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2004</span></div><div class="events-grid"><article class="event-card">
+<h3>Resultados Elecciones Generales 2004</h3><div class="event-meta"><span class="event-year">Año 2004</span></div>
+<div class="event-actions"><a class="event-btn" href="http://168.62.166.179/Informe%20Estadistico/ElecGen2004/index.html" rel="noopener" target="_blank">Resultados | Informe estadístico</a></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2003</span></div><div class="events-grid"><article class="event-card">
+<h3>Primarias Locales 2003</h3><div class="event-meta"><span class="event-year">Año 2003</span></div>
+<div class="event-actions"><span aria-disabled="true" class="event-btn disabled">Resultados</span><span aria-disabled="true" class="event-btn disabled">Escrutinio</span></div>
+</article></div></section><section class="cuatrienio-section"><div class="cuatrienio-heading">AÑO <span class="range">2000</span></div><div class="events-grid"><article class="event-card">
+<h3>Elecciones Generales 2000</h3><div class="event-meta"><span class="event-year">Año 2000</span></div>
+<div class="event-actions"><a class="event-btn" href="http://209.68.12.238/elecciones2000/escrutinio/index.html" rel="noopener" target="_blank">Abrir</a></div>
+</article></div></section></div>
+</main>
+<footer>
+<div class="footer-top">
+<a href="https://www.facebook.com/CEEPuertoRico/" rel="noopener" target="_blank"><img alt="Facebook" src="img/facebook-icon.png"/></a>
+<a href="https://x.com/ceedepuertorico" rel="noopener" target="_blank"><img alt="X" src="img/x-icon.png"/></a>
+<a href="https://www.youtube.com/channel/UCAohQLDz_FoavCBvZnXAXuw" rel="noopener" target="_blank"><img alt="YouTube" src="img/youtube-icon.png"/></a>
+<a href="https://www.instagram.com/comisionestataldeelecciones/" rel="noopener" target="_blank"><img alt="Instagram" src="img/instagram-icon.png"/></a>
+</div>
+<div class="footer-bottom"><div class="footer-title">COMISIÓN ESTATAL DE ELECCIONES</div></div>
+</footer>
+</body>
+</html>

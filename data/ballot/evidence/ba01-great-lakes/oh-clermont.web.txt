@@ -1,0 +1,341 @@
+https://cms2.revize.com/revize/clermontcounty/FWAB%2046%20day%20-%20November%203,%202026%20General%20r5.pdf?t=202610151622530
+Captured HTTP200 original PDF via public source page with ordinary browser request headers. Local pdftotext -layout extraction; original bytes saved as oh-clermont.pdf.gz.
+L0: Form No. 120 Prescribed by Secretary of State (07-22)
+L1: 
+L2: 
+L3: 
+L4: Election Notice for use with the Federal Write-In Absentee Ballot
+L5: (FWAB)
+L6: R.C. 3511.16
+L7: 
+L8:                               Issued by the Clermont County Board of Elections
+L9: 
+L10:                                Updated notification (to be posted 46 days prior to date of election)
+L11: 
+L12:                                NOVEMBER 3, 2026 GENERAL ELECTION
+L13: 
+L14: 
+L15: 
+L16: 
+L17:                                               State Executive Offices
+L18:                                    (Governor, Attorney General, Auditor of State)
+L19: 
+L20:  Office                        Name of Candidate                        Party         Precincts
+L21: 
+L22:  Governor/Lieutenant           Amy Acton and David Pepper               Democratic    All Clermont County Precincts
+L23:  Governor
+L24: 
+L25:                                Don Kissick and James L. Mills           Libertarian
+L26: 
+L27:                                Vivek Ramaswamy and Robert A.            Republican
+L28:                                McColley
+L29: 
+L30:                                Timothy Grady and Andrea Nuetzling
+L31:                                Write-In
+L32: 
+L33:                                Heather Hill and Patrick Manley
+L34:                                Write-In
+L35: 
+L36:                                Renea Turner and Jalen Turner
+L37:                                Write-In
+L38: 
+L39:                                Ron Ula and Michael C. Lehnerd
+L40:                                Write-In
+L41:                                Candidate(s) withdrew
+L42:                                votes cast for Ula/Lehnerd will not be
+L43:                                counted
+L44: 
+L45:  Attorney General              Keith Faber                              Republican    All Clermont County Precincts
+L46: 
+L47:                                John J. Kulewicz                         Democratic
+L48: 
+L49:  Auditor of State              Annette Blackwell                        Democratic    All Clermont County Precincts
+L50: 
+L51:                                Frank LaRose                             Republican
+L52: 
+L53:                                        State Executive Offices
+L54:                                 (Secretary of State, Treasurer of State)
+L55: 
+L56: Office                          Name of Candidate             Party          Precincts
+L57: 
+L58: Secretary of State              Tom Pruss                     Libertarian    All Clermont County Precincts
+L59: 
+L60:                                 Allison Russo                 Democratic
+L61: 
+L62:                                 Robert Sprague                Republican
+L63: 
+L64: Treasurer of State              Jay Edwards                   Republican     All Clermont County Precincts
+L65: 
+L66:                                 Seth Walsh                    Democratic
+L67: 
+L68: 
+L69: 
+L70:                                          Ohio Supreme Court
+L71: 
+L72: Office/Term                     Name of Candidate             Party          Precincts
+L73: 
+L74: Justice of Supreme Court                                                     All Clermont County Precincts
+L75: (Full Term Commencing 1/1/27)   Daniel R. Hawkins             Republican
+L76: 
+L77:                                 Marilyn Zayas                 Democratic
+L78: 
+L79: Justice of Supreme Court                                                     All Clermont County Precincts
+L80: (Full Term Commencing 1/2/27)   Jennifer Brunner              Democratic
+L81: 
+L82:                                 Colleen O’Donnell             Republican
+L83: 
+L84: 
+L85: 
+L86: 
+L87:                                                 U.S. Senate
+L88: 
+L89: Office / Term              Name of Candidate                   Party         Precincts
+L90: 
+L91: U. S. Senate               Sherrod Brown                       Democratic    All Clermont County Precincts
+L92: 
+L93:                            Jon Husted                          Republican
+L94: 
+L95:                            Greg Levy                           Other-party
+L96:                                                                candidate
+L97: 
+L98:                            William B. Redpath                  Libertarian
+L99: 
+L100:                            Stephen Faris – Write-In
+L101: 
+L102:                            Anthony Holliman – Write-In
+L103: 
+L104:                            Timothy Telymonde- Write-In
+L105: 
+L106:                                     U.S. Representative to Congress
+L107: 
+L108: 
+L109: Office/Term                Name of Candidate        Party               Precincts
+L110: 
+L111: 
+L112: For Representative to                                                   All Clermont County Precincts
+L113: Congress 2nd District                                                   Overlaps into Adams, Athens, Brown,
+L114:                                                                         Gallia, Hocking, Jackson, Lawrence,
+L115:                                                                         Meigs, Morgan, Perry (part), Pike, Ross,
+L116:                                                                         Scioto, Vinton & Washington Counties
+L117: 
+L118: 
+L119: 
+L120:                            Jen Mazzuckelli          Democratic
+L121: 
+L122:                            David J. Taylor          Republican
+L123: 
+L124: 
+L125: 
+L126: 
+L127:            Ohio General Assembly (Ohio Senate and Ohio House of Representatives)
+L128: 
+L129: Office/Term                Name of Candidate      Party               Precincts
+L130: 
+L131: For State Representative                                              Cities of Loveland & Milford
+L132:    62nd District                                                      Village of Owensville
+L133:                                                                       Townships of Goshen, Miami,
+L134:                                                                       Stonelick, & Union
+L135: 
+L136:                            Ron Grethel            Libertarian
+L137: 
+L138:                            Jean Schmidt           Republican
+L139: 
+L140:                            Ian Schwartz           Democratic
+L141: 
+L142: For State Representative                                              Villages of Batavia, Bethel, Chilo,
+L143:     63rd District                                                     Felicity, Moscow, Neville, New
+L144:                                                                       Richmond & Williamsburg
+L145:                                                                       Townships of Batavia, Franklin,
+L146:                                                                       Jackson, Monroe, Ohio, Pierce, Tate,
+L147:                                                                       Washington, Wayne & Williamsburg
+L148: 
+L149:                                                                       Overlaps into part of Brown County
+L150: 
+L151:                            Adam C. Bird           Republican
+L152: 
+L153:                            Debbie Davidson        Democratic
+L154: 
+L155:                                     Ohio Court of Appeals (12th District)
+L156: 
+L157: Office/Term                          Name of Candidate             Party        Precincts
+L158: 
+L159: Judge of Court of Appeals            Matthew Byrne -                            All Clermont County Precincts
+L160: (Full Term Commencing 1/1/27)            candidate withdrew
+L161:                                      votes cast for Matthew Byrne               Butler County Most Populous
+L162:                                      will not be counted          Republican
+L163: 
+L164:                                      No Valid Petition Filed       Democratic
+L165: 
+L166:                                      Willa Concannon
+L167:                                      Write-In
+L168: 
+L169:                                      Victor M. Haddad
+L170:                                      Write-In
+L171:                                         candidate withdrew
+L172:                                      votes cast for Victor M.
+L173:                                      Haddad will not be counted
+L174: 
+L175:                                      Curt Carl Hartman
+L176:                                      Write-In
+L177:                                         candidate withdrew
+L178:                                      votes cast for Curt Carl
+L179:                                      Hartman will not be counted
+L180: 
+L181: Judge of Court of Appeals                                                       All Clermont County Precincts
+L182: (Full Term Commencing 2/9/27)                                                   Butler County Most Populous
+L183:                                      Robert A Hendrickson          Republican
+L184: 
+L185:                                      No Valid Petition Filed       Democratic
+L186: 
+L187: 
+L188: 
+L189:                                County Court of Common Pleas or County Court
+L190: 
+L191: Office / Division / Term              Name of Candidate             Party       Precincts
+L192: 
+L193: Judge of Common Pleas                                                           All Clermont County Precincts
+L194:  (Probate/Juvenile Division)
+L195: (Full Term Commencing 2/9//27)        Nathan M. Little
+L196: 
+L197: 
+L198: 
+L199:               County Administrative Offices (County Commissioner, County Auditor)
+L200: 
+L201: Office / District / Term              Name of Candidate            Party        Precincts
+L202: 
+L203: County Commissioner                                                             All Clermont County Precincts
+L204: (Full Term Commencing 1/1/27)         Claire B. Corcoran           Republican
+L205: 
+L206:                                       Joe Wessels                  Democratic
+L207: 
+L208: County Auditor                                                                  All Clermont County Precincts
+L209: (Full Term Commencing 3/13/27)        John Becker                  Republican
+L210: 
+L211:                                       No Valid Petition Filed      Democratic
+L212: 
+L213:                                          Local Questions and Issues
+L214: 
+L215: Title                                                                                 Precincts
+L216: 
+L217: Issue 3            Proposed Constitutional Amendment-To require Voters
+L218: Statewide                                                                             All Clermont County Precincts
+L219:                    to present Photo Identification in order to vote
+L220: 
+L221: Bethel-Tate LSD    Proposed Tax Levy-Renewal-5.48 Mills-5 years                       Part of Franklin Township A & D
+L222:                    For the purpose of paying the current operating expenses of        Bethel Village A & B
+L223:                    the district                                                       Tate Township A & H
+L224:                                                                                       Part of Tate Township B, D, & F
+L225:                                                                                       Part of Washington Township A
+L226: 
+L227:                                                                                       Overlaps into Brown County
+L228: 
+L229: U.S. Grant Joint   1. Proposed Bond Issue-1.15 Mills-37 years                         Part of Batavia Township C
+L230: VSD                For the purpose of paying the costs of new construction,           Felicity Village
+L231:                    improvements, renovations and other additions to school            Franklin Township A, B, & D
+L232:                    facilities, as well as equipment, furnishings, site development,   Jackson Township B
+L233:                    safety and security measures, and all necessary                    Monroe Township B, C, D, & E
+L234:                    appurtenances for the forgoing, as well as land acquisition        New Richmond Village A & B
+L235:                    and capitalized interest                                           Ohio Township A & B
+L236:                                                                                       Part of Ohio Township C
+L237:                    2. Proposed Tax Levy-Additional-0.84 Mills-continuing period       Part of Pierce Township A & D
+L238:                    of time                                                            Pierce Township B, E, & M
+L239:                    To provide funds for the acquisition, construction,                Bethel Village A & B
+L240:                    enlargement, renovation, and financing of permanent                Tate Township A, D, F, & H
+L241:                    improvements                                                       Part of Tate Township B,
+L242:                                                                                       Washington Township A, B, & C
+L243:                                                                                       Williamsburg Village A & C
+L244:                                                                                       Williamsburg Township A & B
+L245:                                                                                       Part of Williamsburg Township C
+L246: 
+L247: 
+L248: Clermont County    Proposed Tax Levy-Renewal-0.8 Mills-5 years                        All Clermont County Precincts
+L249:                    For the purpose of the support of children services and the
+L250:                    care and placement of children
+L251: 
+L252: Batavia Township   Proposed Tax Levy-Additional-8.4 Mills-continuing period of        Batavia Village A
+L253:                    time                                                               Batavia Township A, B, C, D, E, F,
+L254:                    For the purpose of providing and maintaining fire apparatus,       G, H, I, J, K, L, M, N, O, & P
+L255:                    mechanical resuscitators, underwater rescue and recovery
+L256:                    equipment, or other fire equipment and appliances, buildings
+L257:                    and sites therefor, or sources of water supply and materials
+L258:                    therefor, for the establishment and maintenance of lines of
+L259:                    fire-alarm communications, for the payment of firefighting
+L260:                    companies or permanent, part-time, or volunteer firefighting,
+L261:                    emergency medical service, administrative, or
+L262:                    communications personnel to operate the same, including the
+L263:                    payment of any employer contributions required for such
+L264:                    personnel under section 145.48 or 742.34 of the Revised
+L265:                    Code, for the purchase of ambulance equipment, for the
+L266:                    provision of ambulance, paramedic, or other emergency
+L267:                    medical service operated by a fire department, or firefighting
+L268:                    company, or for the payment of other related costs
+L269: 
+L270:                                    Local Questions and Issues (cont.)
+L271: 
+L272: Title                                                                               Precincts
+L273: 
+L274: Union Township     Proposed Tax Levy-Additional-1.99 Mills-continuing period of     Union Township A, B, C, D, E, F,
+L275:                    time                                                             G, H, I, J, K, L, M, N, O, P, Q, R,
+L276:                    For the purpose of providing and maintaining fire apparatus,     T, U, W, X, Y, Z, B1B, C1C, D1D,
+L277:                    mechanical resuscitators, underwater rescue and recovery         E1E, F1F, J1J, K1K, L1L, M1M,
+L278:                    equipment, or other fire equipment and appliances, buildings     P1P, R1R, S1S, U1U, & V1V
+L279:                    and sites therefor, or sources of water supply and materials
+L280:                    therefor, for the establishment and maintenance of lines of
+L281:                    fire-alarm communications, for the payment of firefighting
+L282:                    companies or permanent, part-time, or volunteer firefighting,
+L283:                    emergency medical service, administrative, or
+L284:                    communications personnel to operate the same, including the
+L285:                    payment of any employer contributions required for such
+L286:                    personnel under section 145.48 or 742.34 of the Revised
+L287:                    Code, for the purchase of ambulance equipment, for the
+L288:                    provision of ambulance, paramedic, or other emergency
+L289:                    medical service operated by a fire department, or firefighting
+L290:                    company, or for the payment of other related costs
+L291: 
+L292: Washington         Proposed Tax Levy-Additional-5.5 Mills-5 years                   Washington Township A, B, & C
+L293: Township           For the purpose of providing and maintaining fire apparatus,
+L294:                    mechanical resuscitators, underwater rescue and recovery
+L295:                    equipment, or other fire equipment and appliances, buildings
+L296:                    and sites therefor, or sources of water supply and materials
+L297:                    therefor, for the establishment and maintenance of lines of
+L298:                    fire-alarm communications, for the payment of firefighting
+L299:                    companies or permanent, part-time, or volunteer firefighting,
+L300:                    emergency medical service, administrative, or
+L301:                    communications personnel to operate the same, including the
+L302:                    payment of any employer contributions required for such
+L303:                    personnel under section 145.48 or 742.34 of the Revised
+L304:                    Code, for the purchase of ambulance equipment, for the
+L305:                    provision of ambulance, paramedic, or other emergency
+L306:                    medical service operated by a fire department, or firefighting
+L307:                    company, or for the payment of other related costs
+L308: 
+L309: Union Township G   Local Option-Particular Use at Business Location (By Petition)   Union Township G
+L310:                    Sunday sales of wine and mixed beverages, and spirituous
+L311:                    liquor
+L312:                    Amy’s F & B L.L.C. dba Scramblers
+L313: 
+L314:          INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L315:                 FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L316: 
+L317: 
+L318: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of
+L319: downloading a blank, hard copy FWAB to complete by hand, or proceeding through electronic completion of
+L320: the FWAB using the website’s FWAB Wizard.
+L321: 
+L322: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to
+L323: count.
+L324: 
+L325: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before
+L326: the election and the updated election notice issued on the 46th day before the election as a guide to:
+L327: 
+L328:          (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L329:          (2) write the name of your choice of candidate or choice for or against an issue.
+L330: 
+L331: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of
+L332: elections at this address: 76 S. Riverside Dr., Batavia, Ohio 45103.
+L333: 
+L334: A complete listing of all county board of elections mailing addresses and contact information is available at:
+L335: https://ohiosos.gov/SOS/elections/electionsofficials/boeDirectory.aspx#dir.
+L336: 
+L337:  Do not send your ballot via e-mail or fax. Ohio law prohibits electronic transmission of a voted ballot.
+L338: 

@@ -5024,6 +5024,291 @@
             "verifiedAt": "2026-10-14T05:05:54.043974Z",
             "doorId": "fec-ga-chief"
           }
+        },
+        {
+          "id": "ga-fulton-2026-commission-chair",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Fulton County Commission Chairperson",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+            "quote": "Fulton County Commission Chairperson"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-measure-f769882f8ba84ae7",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Fulton County — Educational Special Purpose Local Option Sales and Use Tax (ESPLOST)",
+          "type": "MEASURE",
+          "measureTextUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+            "quote": "Fulton County — Educational Special Purpose Local Option Sales and Use Tax (ESPLOST)"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-measure-635dc12aa6af1d29",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:sandy_springs",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "City of Sandy Springs — Redevelopment Powers",
+          "type": "MEASURE",
+          "measureTextUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+            "quote": "City of Sandy Springs — Redevelopment Powers"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-measure-20a172404eaff4e1",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/place:palmetto",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "City of Palmetto — Ad Valorem Tax Exemption",
+          "type": "MEASURE",
+          "measureTextUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+            "quote": "City of Palmetto — Ad Valorem Tax Exemption"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-atlantic",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:atlantic",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, Atlantic Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Atlantic Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-columbia",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:columbia",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, Columbia Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Columbia Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-cordele",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:cordele",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, Cordele Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Cordele Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-enotah",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:enotah",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, Enotah Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Enotah Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-northeastern",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:northeastern",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, Northeastern Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Northeastern Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-pataula",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:pataula",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, Pataula Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Pataula Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-paulding",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:paulding",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, Paulding Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Paulding Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-rockdale",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:rockdale",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, Rockdale Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Rockdale Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-waycross",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:waycross",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, Waycross Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Waycross Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-west-georgia",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/judicial_circuit:west-georgia",
+          "divisionVintage": "GA_CODE_15_6_1",
+          "title": "District Attorney, West Georgia Judicial Circuit",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, West Georgia Judicial Circuit"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-soil-water-supervisor",
+          "electionId": "ga-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:ga/county:fulton",
+          "divisionVintage": "TIGER_GENZ2025",
+          "title": "Fulton Soil & Water Conservation District Supervisor",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:54:30.959400+00:00",
+            "verifiedAt": "2026-10-20T23:54:30.959400+00:00",
+            "quote": "Fulton Soil & Water Conservation District Supervisor | State commission lists Fulton County as the district county. Qualified roster and current sample agree on all three names."
+          }
         }
       ],
       "candidacies": [
@@ -13360,6 +13645,278 @@
             "doorId": "fec-ga-chief",
             "quote": "Defonsio Daniels"
           }
+        },
+        {
+          "id": "ga-fulton-2026-commission-chair:ca443bf62339aefb",
+          "contestId": "ga-fulton-2026-commission-chair",
+          "givenName": "",
+          "familyName": "Eric J. Tatum",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+            "quote": "Fulton County Commission Chairperson | Eric J. Tatum | Republican"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-commission-chair:9d17348097c8c842",
+          "contestId": "ga-fulton-2026-commission-chair",
+          "givenName": "",
+          "familyName": "Mo Ivory",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00",
+            "quote": "Fulton County Commission Chairperson | Mo Ivory | Democrat"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-atlantic:8ff51b19141fa417",
+          "contestId": "ga-district-attorney-2026-atlantic",
+          "givenName": "",
+          "familyName": "Richard Eugene Braun, Jr.",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://pacga.org/find-your-prosecutor/court/atlantic/",
+            "sourceOrg": "Prosecuting Attorneys' Council of Georgia; Georgia Secretary of State",
+            "collectedAt": "2026-10-21T00:00:09.789188+00:00",
+            "verifiedAt": "2026-10-21T00:00:09.789188+00:00",
+            "quote": "Richard Braun, Jr. | District Attorney | Current office role establishes incumbency; ballot name and party from https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-atlantic:9ddcc07aec86b2fe",
+          "contestId": "ga-district-attorney-2026-atlantic",
+          "givenName": "",
+          "familyName": "Laurie Elyse Baio",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Atlantic Judicial Circuit | Laurie Elyse Baio | R"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-columbia:195b1f4ee41160b7",
+          "contestId": "ga-district-attorney-2026-columbia",
+          "givenName": "",
+          "familyName": "Natalie Paine",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://pacga.org/find-your-prosecutor/court/columbia-judicial-circuit/",
+            "sourceOrg": "Prosecuting Attorneys' Council of Georgia; Georgia Secretary of State",
+            "collectedAt": "2026-10-21T00:00:09.398906+00:00",
+            "verifiedAt": "2026-10-21T00:00:09.398906+00:00",
+            "quote": "NATALIE PAINE | Acting District Attorney | Current office role establishes incumbency; ballot name and party from https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-cordele:118555a3b5995913",
+          "contestId": "ga-district-attorney-2026-cordele",
+          "givenName": "",
+          "familyName": "Lyndsey Walters",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://pacga.org/find-your-prosecutor/court/cordele/",
+            "sourceOrg": "Prosecuting Attorneys' Council of Georgia; Georgia Secretary of State",
+            "collectedAt": "2026-10-21T00:00:09.620115+00:00",
+            "verifiedAt": "2026-10-21T00:00:09.620115+00:00",
+            "quote": "Lyndsey Walters | District Attorney | Current office role establishes incumbency; ballot name and party from https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-enotah:e8f59c2d29d29a87",
+          "contestId": "ga-district-attorney-2026-enotah",
+          "givenName": "",
+          "familyName": "Jeff Langley",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Enotah Judicial Circuit | Jeff Langley | R"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-northeastern:453a2e69ecebed03",
+          "contestId": "ga-district-attorney-2026-northeastern",
+          "givenName": "",
+          "familyName": "Lee Darragh",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Northeastern Judicial Circuit | Lee Darragh | R"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-pataula:20a641fc37cf1eda",
+          "contestId": "ga-district-attorney-2026-pataula",
+          "givenName": "",
+          "familyName": "Vic McNease",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Pataula Judicial Circuit | Vic McNease | R"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-paulding:a29f611e1e167f70",
+          "contestId": "ga-district-attorney-2026-paulding",
+          "givenName": "",
+          "familyName": "Robert S. Lane",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Paulding Judicial Circuit | Robert S. Lane | R"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-rockdale:c743ce7be1108d9a",
+          "contestId": "ga-district-attorney-2026-rockdale",
+          "givenName": "",
+          "familyName": "Alisha Adams Johnson",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Rockdale Judicial Circuit | Alisha Adams Johnson | D"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-waycross:61b70728969a8cab",
+          "contestId": "ga-district-attorney-2026-waycross",
+          "givenName": "",
+          "familyName": "Marilyn Bennett",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, Waycross Judicial Circuit | Marilyn Bennett | R"
+          }
+        },
+        {
+          "id": "ga-district-attorney-2026-west-georgia:dd98df84f39418e7",
+          "contestId": "ga-district-attorney-2026-west-georgia",
+          "givenName": "",
+          "familyName": "Sarah Stimac Japour",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+            "sourceOrg": "Georgia Secretary of State",
+            "collectedAt": "2026-10-20T22:52:21.488442+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.488442+00:00",
+            "quote": "District Attorney, West Georgia Judicial Circuit | Sarah Stimac Japour | R"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-soil-water-supervisor:217e38a94f6de76f",
+          "contestId": "ga-fulton-2026-soil-water-supervisor",
+          "givenName": "",
+          "familyName": "Zane Placie",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": false,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:54:30.959400+00:00",
+            "verifiedAt": "2026-10-20T23:54:30.959400+00:00",
+            "quote": "Fulton Soil & Water Conservation District Supervisor | Zane Placie | Nonpartisan | Incumbent No"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-soil-water-supervisor:c83eaf192b652d9e",
+          "contestId": "ga-fulton-2026-soil-water-supervisor",
+          "givenName": "",
+          "familyName": "Walter S. Rekuc Jr.",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:54:30.959400+00:00",
+            "verifiedAt": "2026-10-20T23:54:30.959400+00:00",
+            "quote": "Fulton Soil & Water Conservation District Supervisor | Walter S. Rekuc Jr. | Nonpartisan | Incumbent Yes"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-soil-water-supervisor:54f53b08f52189eb",
+          "contestId": "ga-fulton-2026-soil-water-supervisor",
+          "givenName": "",
+          "familyName": "Jason Ulseth",
+          "partyLabel": "Nonpartisan",
+          "slogan": null,
+          "incumbent": true,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:54:30.959400+00:00",
+            "verifiedAt": "2026-10-20T23:54:30.959400+00:00",
+            "quote": "Fulton Soil & Water Conservation District Supervisor | Jason Ulseth | Nonpartisan | Incumbent Yes"
+          }
         }
       ],
       "measures": [
@@ -13407,16 +13964,462 @@
             "doorId": "fec-ga-chief",
             "quote": "Shall the Constitution of Georgia be amended so as to authorize the General Assembly to dedicate certain existing revenues, including revenues reallocated by law, to a nonlapsing fund to be used exclusively for the expansion, maintenance, and operation of emergency 9-1-1 systems in this state?"
           }
+        },
+        {
+          "id": "ga-fulton-2026-measure-f769882f8ba84ae7:question",
+          "contestId": "ga-fulton-2026-measure-f769882f8ba84ae7",
+          "questionText": "Shall the special one percent sales and use tax for educational purposes currently imposed in Fulton County be reimposed on July 1 2027 upon the expiration of the currently imposed tax, for not longer than 20 consecutive calendar quarters, to raise not more than $2,095,680,577.00 to be used for the following educational purposes: For the Fulton County School District: (A) for acquiring, reconfiguring and developing land for, constructing and equipping, new and replacement schools and support facilities; (B) adding to, upgrading, reconfiguring, renovating, replacing, modifying and equipping existing and replacement schools, support facilities and athletic facilities; (C) making technology improvements and safety and security improvements for schools and facilities; and (D) replacing, purchasing, upgrading or supplementing capital equipment as needed, including without limitation furniture, multi-year textbooks, instructional resources, physical educational equipment, band and music equipment, audio visual equipment, equipment that supports learning and similar equipment; and (E) acquiring and equipping school buses, school police vehicles, support vehicles, transportation vehicles and other capital equipment; in an amount not to exceed $1,306,195,350.00 for the Fulton County School District, all as more fully described in the Notice of Election. For the Atlanta Independent School System: (A) for acquiring, reconfiguring and developing land for, constructing and equipping, new 10 and replacement schools and support facilities; (B) adding to, upgrading, reconfiguring, renovating, replacing, modifying and equipping existing and replacement schools, support facilities and athletic facilities; (C) making technology improvements and safety and security improvements for schools and facilities; (D) replacing, purchasing, upgrading or supplementing capital equipment as needed, including without limitation furniture, multi-year textbooks, instructional resources, physical educational equipment, band and music equipment, audio visual equipment, equipment that supports learning and similar equipment; and (E) acquiring and equipping school buses, school police vehicles, support vehicles, transportation vehicles and other capital equipment; at a total maximum cost of $789,485,227.00 , for the Atlanta Independent School System as more fully described in the Notice of Election. If the imposition of the tax is approved by the majority of the qualified voters residing in Fulton County, such vote shall also constitute approval of the issuance of general obligation debt of the Atlanta Independent School System in the principal amount of up to $350,000,000.00 payable from its portion of the tax for the purpose of funding all or a portion of the APS Projects located in Fulton County.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-measure-635dc12aa6af1d29:question",
+          "contestId": "ga-fulton-2026-measure-635dc12aa6af1d29",
+          "questionText": "Shall the Act be approved which authorizes the City of Sandy Springs, Georgia, to exercise all redevelopment powers allowed under the ‘Redevelopment Powers Law,’ as it may be amended from time to time.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00"
+          }
+        },
+        {
+          "id": "ga-fulton-2026-measure-20a172404eaff4e1:question",
+          "contestId": "ga-fulton-2026-measure-20a172404eaff4e1",
+          "questionText": "Shall persons who are 65 years of age or older by January 1, 2026 and are a resident of Palmetto, Georgia who own and occupy as a primary residence a home situated in the City of Palmetto qualify for 100% of city ad valorem tax exemption in accordance with O.C.G.A. § 48-5-48.3?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+            "sourceOrg": "Fulton County Department of Registration and Elections",
+            "collectedAt": "2026-10-20T23:42:35.326001+00:00",
+            "verifiedAt": "2026-10-20T23:42:35.326001+00:00"
+          }
         }
       ],
       "absences": [],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "districtMemberships": [
+        {
+          "id": "ga-circuit-membership-2026-b3ff0a72349e07a377ee",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:bryan",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:atlantic",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Atlantic Judicial Circuit, composed of the Counties of Bryan, Liberty, McIntosh, Tattnall, Evans, and Long;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-5e2442afd17d76908027",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:liberty",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:atlantic",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Atlantic Judicial Circuit, composed of the Counties of Bryan, Liberty, McIntosh, Tattnall, Evans, and Long;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-d40af3e15a4be934ca73",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:mcintosh",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:atlantic",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Atlantic Judicial Circuit, composed of the Counties of Bryan, Liberty, McIntosh, Tattnall, Evans, and Long;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-faa9a83c866afc5836df",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:tattnall",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:atlantic",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Atlantic Judicial Circuit, composed of the Counties of Bryan, Liberty, McIntosh, Tattnall, Evans, and Long;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-1dfd879b24e5fad155c3",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:evans",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:atlantic",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Atlantic Judicial Circuit, composed of the Counties of Bryan, Liberty, McIntosh, Tattnall, Evans, and Long;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-1bb6e7b902dc5c361f1c",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:long",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:atlantic",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Atlantic Judicial Circuit, composed of the Counties of Bryan, Liberty, McIntosh, Tattnall, Evans, and Long;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-da14fb102b6797fee832",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:columbia",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:columbia",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Columbia Judicial Circuit, composed of the County of Columbia;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-de94ac7894654e2f4a0d",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:dooly",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:cordele",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Cordele Judicial Circuit, composed of the Counties of Dooly, Wilcox, Crisp, and Ben Hill;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-4868ca6228f04db6a205",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:wilcox",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:cordele",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Cordele Judicial Circuit, composed of the Counties of Dooly, Wilcox, Crisp, and Ben Hill;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-5d0b404dbea9659af2fb",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:crisp",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:cordele",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Cordele Judicial Circuit, composed of the Counties of Dooly, Wilcox, Crisp, and Ben Hill;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-a0066dd27a0733b96fcc",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:ben_hill",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:cordele",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Cordele Judicial Circuit, composed of the Counties of Dooly, Wilcox, Crisp, and Ben Hill;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-c5dd52b3b6f0f31653a8",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:towns",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:enotah",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Enotah Judicial Circuit, composed of the Counties of Towns, Union, Lumpkin, and White;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-87c6d9b63886a3dbba7d",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:union",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:enotah",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Enotah Judicial Circuit, composed of the Counties of Towns, Union, Lumpkin, and White;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-18533679bd7bc2161c4a",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:lumpkin",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:enotah",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Enotah Judicial Circuit, composed of the Counties of Towns, Union, Lumpkin, and White;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-2007ad16b312b7dbdc39",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:white",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:enotah",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Enotah Judicial Circuit, composed of the Counties of Towns, Union, Lumpkin, and White;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-c2e980021845ebe719b4",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:hall",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:northeastern",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Northeastern Judicial Circuit, composed of the Counties of Hall and Dawson;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-772a7052867d0fdee895",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:dawson",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:northeastern",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Northeastern Judicial Circuit, composed of the Counties of Hall and Dawson;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-65253e14af6088b2aa09",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:clay",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:pataula",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Pataula Judicial Circuit, composed of the Counties of Clay, Early, Miller, Quitman, Randolph, Terrell, and Seminole;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-973920ffde5d600a2e6a",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:early",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:pataula",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Pataula Judicial Circuit, composed of the Counties of Clay, Early, Miller, Quitman, Randolph, Terrell, and Seminole;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-183d040acaccb36d4e98",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:miller",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:pataula",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Pataula Judicial Circuit, composed of the Counties of Clay, Early, Miller, Quitman, Randolph, Terrell, and Seminole;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-fb23810da65601b6c0f9",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:quitman",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:pataula",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Pataula Judicial Circuit, composed of the Counties of Clay, Early, Miller, Quitman, Randolph, Terrell, and Seminole;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-b0c1221a6b9d5cf00719",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:randolph",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:pataula",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Pataula Judicial Circuit, composed of the Counties of Clay, Early, Miller, Quitman, Randolph, Terrell, and Seminole;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-acc2cf20ec86629fa1e5",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:terrell",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:pataula",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Pataula Judicial Circuit, composed of the Counties of Clay, Early, Miller, Quitman, Randolph, Terrell, and Seminole;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-ab92a808da98a4e38bbb",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:seminole",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:pataula",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Pataula Judicial Circuit, composed of the Counties of Clay, Early, Miller, Quitman, Randolph, Terrell, and Seminole;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-4f5790021e841ab056c8",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:paulding",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:paulding",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Paulding Judicial Circuit, composed of the County of Paulding;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-2cf14d9cbad6740d9023",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:rockdale",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:rockdale",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Rockdale Judicial Circuit, composed of the County of Rockdale;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-fedd2afed4f891cb0c5e",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:pierce",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:waycross",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Waycross Judicial Circuit, composed of the Counties of Pierce, Coffee, Charlton, Ware, Bacon, and Brantley;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-9a09f6032d17f084447f",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:coffee",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:waycross",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Waycross Judicial Circuit, composed of the Counties of Pierce, Coffee, Charlton, Ware, Bacon, and Brantley;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-d8b525ef15a512de5754",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:charlton",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:waycross",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Waycross Judicial Circuit, composed of the Counties of Pierce, Coffee, Charlton, Ware, Bacon, and Brantley;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-5ef3e3f79131c8cb6a1d",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:ware",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:waycross",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Waycross Judicial Circuit, composed of the Counties of Pierce, Coffee, Charlton, Ware, Bacon, and Brantley;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-e447f0a9c8d5e24fd00a",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:bacon",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:waycross",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Waycross Judicial Circuit, composed of the Counties of Pierce, Coffee, Charlton, Ware, Bacon, and Brantley;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-e39ef1c49e8a38c0e4fc",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:brantley",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:waycross",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "Waycross Judicial Circuit, composed of the Counties of Pierce, Coffee, Charlton, Ware, Bacon, and Brantley;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-cebaf48518e22dec46da",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:carroll",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:west-georgia",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "West Georgia Judicial Circuit, composed of the Counties of Carroll and Heard;"
+          }
+        },
+        {
+          "id": "ga-circuit-membership-2026-9eb42bf2d3cf126dbc8e",
+          "memberOcdId": "ocd-division/country:us/state:ga/county:heard",
+          "districtOcdId": "ocd-division/country:us/state:ga/judicial_circuit:west-georgia",
+          "provenance": {
+            "sourceUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+            "sourceOrg": "Georgia General Assembly",
+            "collectedAt": "2026-10-21T00:02:17.947475+00:00",
+            "verifiedAt": "2026-10-21T00:02:17.947475+00:00",
+            "quote": "West Georgia Judicial Circuit, composed of the Counties of Carroll and Heard;"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:05:54.088315Z",
-    "reviewedBy": "BL-12 scripted official-source conversion",
+    "reviewedAt": "2026-10-20T23:54:30.959400+00:00",
+    "reviewedBy": "BA-01 Fulton county-wide soil/water qualified roster replay",
     "sources": [
       {
         "requestedUrl": "https://sos.ga.gov/november-3-2026-general-election",
@@ -13457,6 +14460,186 @@
         "publisher": "Georgia Secretary of State, Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official constitutional-amendment booklet contains all three proposed amendments in full, their ballot questions, and official summaries for November 3, 2026."
+      },
+      {
+        "requestedUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+        "finalUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+        "publisher": "Fulton County Department of Registration and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:42:35.326001+00:00",
+        "httpStatus": 200,
+        "rawHash": "e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d",
+        "reviewedEvidence": "Exact chairperson candidates and three full questions replayed from the county consolidated general/special sample. Education tax and associated school debt cover the Fulton County electorate; the two municipal questions use exact city divisions. The transportation tax explicitly excludes Atlanta and is not widened to county scope. District commission seats, registered write-ins and soil/water district remain separate coverage work."
+      },
+      {
+        "requestedUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Certified%20Write-In%20Candidates_3.pdf",
+        "finalUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Certified%20Write-In%20Candidates_3.pdf",
+        "publisher": "Georgia Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:18:12.090235+00:00",
+        "httpStatus": 200,
+        "rawHash": "8d8d3b5ea4edf09e879dac608da5e82709b143d60eba2ae44a798ca18af99b2a",
+        "reviewedEvidence": "The complete certified named write-in list contains no district-attorney registration; no generic write-in choice was invented as a candidate."
+      },
+      {
+        "requestedUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+        "finalUrl": "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+        "publisher": "Georgia Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:52:21.488442+00:00",
+        "httpStatus": 200,
+        "rawHash": "7c02a1d734ac302da8249b8f3475a9a925ae13c9ad8026fcf9392989d9a527b9",
+        "reviewedEvidence": "All ten certified general-election district attorney circuits and all eleven names, printed party abbreviations and incumbent fields replayed equally. Both certified Atlantic candidates retain their printed Republican affiliation."
+      },
+      {
+        "requestedUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+        "finalUrl": "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+        "publisher": "Georgia General Assembly",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:02:17.947475+00:00",
+        "httpStatus": 200,
+        "rawHash": "d86fd6e4449f7a6256b61c6e74daab8df843da6114118de244bbfad4d7df0971",
+        "reviewedEvidence": "O.C.G.A.15-6-1 supplies each entire county in all ten circuit electorates. West Georgia is Carroll and Heard; no old Coweta footprint or partial county is inferred."
+      },
+      {
+        "requestedUrl": "https://georgia.gov/organization/prosecuting-attorneys-council-georgia",
+        "finalUrl": "https://georgia.gov/organization/prosecuting-attorneys-council-georgia",
+        "publisher": "State of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:59:45.099972+00:00",
+        "httpStatus": 200,
+        "rawHash": "51370d790e5d896ba28affa3b0843c7e96d205f200ecfa98c868fe31c1c73a2f",
+        "reviewedEvidence": "Georgia.gov identifies the Prosecuting Attorneys Council as a state agency and links its official directory."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/atlantic",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/atlantic/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:09.789188+00:00",
+        "httpStatus": 200,
+        "rawHash": "c70631178024c7a27b53b3ead8b815125b813e61cc0cb5582f991ecc38a72326",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/columbia-judicial-circuit",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/columbia-judicial-circuit/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:09.398906+00:00",
+        "httpStatus": 200,
+        "rawHash": "35cd949a2c5c9dd2964bf80af9e28f8ca8172f5abca2f817d90cc6b2569cb3c5",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/cordele",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/cordele/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:09.620115+00:00",
+        "httpStatus": 200,
+        "rawHash": "512dd572667dd1d482ad46d58fdc959c0d05eefe21dfae8a960a274431d0b765",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/union-county-courthouse",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/union-county-courthouse/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:09.920619+00:00",
+        "httpStatus": 200,
+        "rawHash": "224ac56ac67595311fe1ceea5ecfed4eeed0e428331ba31db5836096a6d1afbb",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/hall-county-courthouse",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/hall-county-courthouse/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:09.753486+00:00",
+        "httpStatus": 200,
+        "rawHash": "3f8883f6bf57a79d9de7c080e70f992fbc8620b06e2c37b7bdd4bc5524f48572",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/pataula",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/pataula/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:11.148900+00:00",
+        "httpStatus": 200,
+        "rawHash": "5c42e7deeefc92f3ffdb8e538ef6235632cb198ef3c19823d14c942d430ecf26",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/paulding-county",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/paulding-county/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:11.231859+00:00",
+        "httpStatus": 200,
+        "rawHash": "c89b5e06940f4295588b33f40807055c5f6a52ef49588ea25edcb2e8782a348e",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/rockdale-county-cour",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/rockdale-county-cour/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:10.740904+00:00",
+        "httpStatus": 200,
+        "rawHash": "56c3efb8c8e5aca8f3577f6a6e43c57b78e65f7172a1813a1d89c6beabf07d8f",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/waycross-judicial-circuit",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/waycross-judicial-circuit/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:11.720135+00:00",
+        "httpStatus": 200,
+        "rawHash": "16e47559016a0256a507cc646b021d5da586aaca547c419175b611372358b727",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://pacga.org/find-your-prosecutor/court/west-georgia",
+        "finalUrl": "https://pacga.org/find-your-prosecutor/court/west-georgia/",
+        "publisher": "Prosecuting Attorneys' Council of Georgia",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-21T00:00:11.083781+00:00",
+        "httpStatus": 200,
+        "rawHash": "dff0f6410730b70075a44a7cbda3482a2bfaf773fe0fc3ad49f78d34245759ca",
+        "reviewedEvidence": "The official circuit-specific directory was checked for each candidate contest. Current named district attorney roles update stale nonincumbent flags for Richard Braun, Natalie Paine, and Lyndsey Walters; losing source values are retained in the comparison notes."
+      },
+      {
+        "requestedUrl": "https://fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+        "finalUrl": "https://fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+        "publisher": "Fulton County Department of Registration and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:54:30.959400+00:00",
+        "httpStatus": 200,
+        "rawHash": "88ee6dfd74a0c40e04d0ad49955cc1f7d3f7c83a49994c0df7b471bbe21870a9",
+        "reviewedEvidence": "All three qualified November3 soil/water candidates replayed with identical fields, exact Nonpartisan designation and explicit incumbent flags. No vote limit is stated in the held consolidated source, so no voting instruction is invented."
+      },
+      {
+        "requestedUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+        "finalUrl": "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+        "publisher": "Fulton County Department of Registration and Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:42:35.326001+00:00",
+        "httpStatus": 200,
+        "rawHash": "e1b4186e5f8c0ff8188cc4175fe18c0a18fa6bfb158fca08cb3da190793dd60d",
+        "reviewedEvidence": "The current consolidated general sample confirms the same three names and both incumbency markers."
+      },
+      {
+        "requestedUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+        "finalUrl": "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts",
+        "publisher": "Georgia Soil and Water Conservation Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:52:30.313817+00:00",
+        "httpStatus": 200,
+        "rawHash": "f758d42959886e9e1e10689013ccd29c30c0f1966c684521fd1f0cc98969fd6c",
+        "reviewedEvidence": "RegionI district directory explicitly lists Fulton County SWCD with Fulton County as its complete county list. No larger regional jurisdiction is substituted."
       }
     ]
   }

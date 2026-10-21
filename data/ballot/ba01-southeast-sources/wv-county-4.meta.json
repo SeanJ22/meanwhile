@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Brooke%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Brooke%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.202274+00:00",
+  "rawHash": "73dc3e7628cc24f44c95f244e06207aa3e5406a8edda3b06f8bf88bd1cd21bac",
+  "httpStatus": 200,
+  "bytes": 831596,
+  "extractedTextHash": "156bcb384871f47850145d85db759aee7fcf02f5e786e6b424c83c748468fb1e",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

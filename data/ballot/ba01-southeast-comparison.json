@@ -1,0 +1,664 @@
+{
+  "checkedAt": "2026-10-21T01:09:06.575444+00:00",
+  "delivery": "Corrected repository data; production-copy publication and live runner verification are separate.",
+  "scope": "Federal, statewide and state legislative candidate contests; DC includes its main District and ward-office list. Regional and local additions are counted separately. Statewide measure counts below are held counts, not a new complete measure census.",
+  "states": [
+    {
+      "state": "FL",
+      "officialCoreCandidateContests": 175,
+      "matchedCoreCandidateContests": 175,
+      "officialCoreCandidacies": 372,
+      "matchedCoreCandidacies": 372,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-S01&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+        "https://www.miamidade.gov/elections/library/2026-11-03-general-election-master-ballot.pdf",
+        "https://www.coralgables.com/department/city-commission",
+        "https://www.miamidade.gov/resources/economy/planning/documents/commission-district-05-map.pdf",
+        "https://mainapi.dadeschools.net/resources/DADESCHOOLS/SchoolBoard/DistrictMaps/District1.pdf",
+        "https://www.miamigardens-fl.gov/836/Elections",
+        "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0100-0199/0101/Sections/0101.151.html"
+      ],
+      "remaining": "Miami-Dade master: 38 of 45 local candidate contests and 97 of 116 printed names held; seven contests / 19 names need exact scope proof (four El Portal council seats, two North Miami districts, Coronado CDD). All 55 local questions held with full text. Miami Gardens Seat 4 runoff uses exact residential-area scope. Orange clerk/mayor and full school-tax question verified in all 330 official styles; Circuit 9 Group 1 has two names and statutory Orange + Osceola whole-county memberships. Partial district and CDD scopes remain pending. Broward official candidate/contest list captured; 49 local questions still need full official wording. Hillsborough now has 7 of 30 local candidate races / 17 of 67 printed local names and all three countywide full questions; 23 CDD contests / 50 names and Country Run district question remain pending exact scope. Countywide Commission 5/7 and School Board 6 use explicit official electorate sources; Commission 1/3 and School Board 2 remain exact district scope. Temple Terrace council uses the city at-large electorate with five candidates, vote for three. No ZIP/address or live acceptance claim.",
+      "added": {
+        "contests": 107,
+        "candidacies": 120,
+        "measures": 59
+      },
+      "miamiDade": {
+        "officialLocalCandidateContests": 45,
+        "matchedLocalCandidateContests": 38,
+        "officialLocalPrintedCandidacies": 116,
+        "matchedLocalPrintedCandidacies": 97,
+        "missingLocalCandidateContests": 7,
+        "missingLocalPrintedCandidacies": 19,
+        "officialLocalQuestions": 55,
+        "matchedLocalQuestions": 55,
+        "remainingCandidateScopes": [
+          {
+            "title": "El Portal - Councilperson - Seat 1",
+            "candidacies": 4
+          },
+          {
+            "title": "El Portal - Councilperson - Seat 2",
+            "candidacies": 3
+          },
+          {
+            "title": "El Portal - Councilperson - Seat 3",
+            "candidacies": 2
+          },
+          {
+            "title": "El Portal - Councilperson - Seat 4",
+            "candidacies": 2
+          },
+          {
+            "title": "North Miami - Councilperson - District 2",
+            "candidacies": 3
+          },
+          {
+            "title": "North Miami - Councilperson - District 3",
+            "candidacies": 3
+          },
+          {
+            "title": "Coronado Community",
+            "candidacies": 2
+          }
+        ]
+      },
+      "regionalApplicability": {
+        "officialCounties": 67,
+        "matchedWholeCountyAppellateMemberships": 67,
+        "heldRegionalRetentionContests": 22,
+        "countiesByAppellateDistrict": {
+          "1": 29,
+          "2": 6,
+          "3": 2,
+          "4": 6,
+          "5": 14,
+          "6": 10
+        },
+        "sources": [
+          "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0026/Sections/0026.021.html",
+          "https://www.leg.state.fl.us/Statutes/index.cfm?App_mode=Display_Statute&URL=0000-0099/0035/0035.html"
+        ]
+      },
+      "coreCountScope": "Certified roster, including 31 unopposed records. These are not printed-ballot contest/candidate denominators. Florida Statutes 101.151(7) excludes unopposed candidates from the ballot except retention judges. All records are preserved with explicit sourced scope notes.",
+      "unopposedReconciliation": "data/ballot/ba01-southeast-florida-unopposed.json",
+      "orange": {
+        "source": "https://voteorangefl.gov/wp-content/uploads/2026/10/26GEN113-CB-EN-26-10-1-15-9-21.pdf",
+        "fullStylesSource": "https://voteorangefl.gov/wp-content/uploads/2026/09/Gen26CombinedBallots.pdf",
+        "officialFullStyles": 330,
+        "verifiedCountywideCandidateContests": 2,
+        "verifiedCountywideCandidacies": 4,
+        "verifiedCountywideQuestions": 1,
+        "regionalCircuitCandidateContests": 1,
+        "regionalCircuitCandidacies": 2,
+        "wholeCountyCircuitMemberships": [
+          "Orange",
+          "Osceola"
+        ],
+        "remainingPartialScopes": [
+          "County Commission 2/4/6/7/8",
+          "School Board 3",
+          "Soil and Water 1/3/5",
+          "Vista Lakes CDD 3"
+        ]
+      },
+      "hillsborough": {
+        "source": "https://www.votehillsborough.gov/DocumentCenter/View/2615/",
+        "scope": "Official all-races November 3 ballot; countywide offices and questions, exact county districts, and Temple Terrace at-large council. Composite is not a single precinct denominator.",
+        "officialLocalCandidateContests": 30,
+        "officialLocalPrintedCandidacies": 67,
+        "heldLocalCandidateContests": 7,
+        "heldLocalPrintedCandidacies": 17,
+        "remainingLocalCandidateContests": 23,
+        "remainingLocalPrintedCandidacies": 50,
+        "officialCountywideQuestions": 3,
+        "heldCountywideQuestions": 3,
+        "remainingPartialQuestions": [
+          "Country Run Special Tax District assessment"
+        ],
+        "remainingCandidateScopes": "23 community development district seat contests require exact district divisions; no countywide fallback."
+      }
+    },
+    {
+      "state": "GA",
+      "officialCoreCandidateContests": 261,
+      "matchedCoreCandidateContests": 261,
+      "officialCoreCandidacies": 463,
+      "matchedCoreCandidacies": 463,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://sos.ga.gov/sites/default/files/2026-09/November%202026%20Federal%20and%20State%20Candidates%202026.zip",
+        "https://sos.ga.gov/sites/default/files/forms/2026%20Certified%20Write-In%20Candidates_3.pdf",
+        "https://fultoncountyga.gov/-/media/2026-Election/November-3-Election/Sample-Ballot--Consolidated--Nov-32026-General--Special-Election--1082026.pdf",
+        "https://www.legis.ga.gov/api/document/docs/default-source/joint-features-document-library/t15-ch1-11a-%28v13%29-pdf.pdf",
+        "https://georgia.gov/organization/prosecuting-attorneys-council-georgia",
+        "https://fultoncountyga.gov/-/media/2026-Election/List-of-Qualified-Candidates--GA-Soil--Water--November-3-2026-6292026.pdf",
+        "https://gaswcc.georgia.gov/soil-water-conservation-districts/region-i-conservation-districts"
+      ],
+      "remaining": "All 10 certified district-attorney circuit contests and 11 candidates are now projected through 34 statutory whole-county memberships. Fulton includes the county chair, the county-wide soil/water race with all three certified printed candidates, the full county-wide ESPLOST and school-debt question, and the Sandy Springs and Palmetto city questions. Four commission-district contests, their two registered district-5 write-ins, and the transportation tax that excludes Atlanta remain scoped acquisition work. The two official Fulton soil/water documents omit the vote limit, which remains null.",
+      "added": {
+        "contests": 15,
+        "candidacies": 16,
+        "measures": 3
+      },
+      "districtAttorneyCircuits": {
+        "addedDistrictMemberships": 34,
+        "circuits": {
+          "Atlantic": {
+            "counties": [
+              "Bryan",
+              "Liberty",
+              "McIntosh",
+              "Tattnall",
+              "Evans",
+              "Long"
+            ],
+            "certifiedCandidates": 2
+          },
+          "Columbia": {
+            "counties": [
+              "Columbia"
+            ],
+            "certifiedCandidates": 1
+          },
+          "Cordele": {
+            "counties": [
+              "Dooly",
+              "Wilcox",
+              "Crisp",
+              "Ben Hill"
+            ],
+            "certifiedCandidates": 1
+          },
+          "Enotah": {
+            "counties": [
+              "Towns",
+              "Union",
+              "Lumpkin",
+              "White"
+            ],
+            "certifiedCandidates": 1
+          },
+          "Northeastern": {
+            "counties": [
+              "Hall",
+              "Dawson"
+            ],
+            "certifiedCandidates": 1
+          },
+          "Pataula": {
+            "counties": [
+              "Clay",
+              "Early",
+              "Miller",
+              "Quitman",
+              "Randolph",
+              "Terrell",
+              "Seminole"
+            ],
+            "certifiedCandidates": 1
+          },
+          "Paulding": {
+            "counties": [
+              "Paulding"
+            ],
+            "certifiedCandidates": 1
+          },
+          "Rockdale": {
+            "counties": [
+              "Rockdale"
+            ],
+            "certifiedCandidates": 1
+          },
+          "Waycross": {
+            "counties": [
+              "Pierce",
+              "Coffee",
+              "Charlton",
+              "Ware",
+              "Bacon",
+              "Brantley"
+            ],
+            "certifiedCandidates": 1
+          },
+          "West Georgia": {
+            "counties": [
+              "Carroll",
+              "Heard"
+            ],
+            "certifiedCandidates": 1
+          }
+        },
+        "incumbencySourceDifferences": [
+          {
+            "candidate": "Richard Eugene Braun, Jr.",
+            "field": "incumbent",
+            "certifiedWorkbookValue": false,
+            "currentAgencyDirectoryValue": true,
+            "source": "https://pacga.org/find-your-prosecutor/court/atlantic/"
+          },
+          {
+            "candidate": "Natalie Paine",
+            "field": "incumbent",
+            "certifiedWorkbookValue": false,
+            "currentAgencyDirectoryValue": true,
+            "source": "https://pacga.org/find-your-prosecutor/court/columbia-judicial-circuit/"
+          },
+          {
+            "candidate": "Lyndsey Walters",
+            "field": "incumbent",
+            "certifiedWorkbookValue": false,
+            "currentAgencyDirectoryValue": true,
+            "source": "https://pacga.org/find-your-prosecutor/court/cordele/"
+          }
+        ],
+        "officialCircuitContests": 10,
+        "matchedCircuitContests": 10,
+        "officialCertifiedCandidates": 11,
+        "matchedCertifiedCandidates": 11
+      }
+    },
+    {
+      "state": "NC",
+      "officialCoreCandidateContests": 189,
+      "matchedCoreCandidateContests": 189,
+      "officialCoreCandidacies": 366,
+      "matchedCoreCandidacies": 366,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv"
+      ],
+      "remaining": "769 distinct source-listed candidate contest titles remain outside the held projection, chiefly district, court and local contests. Mecklenburg sample B0009 still lacks Superior Court District 26F Seat 1. Commissioner District 4 now uses its exact canonical OCD division; no district contest was widened to the county.",
+      "added": {
+        "contests": 369,
+        "candidacies": 633,
+        "measures": 3
+      }
+    },
+    {
+      "state": "SC",
+      "officialCoreCandidateContests": 140,
+      "matchedCoreCandidateContests": 140,
+      "officialCoreCandidacies": 281,
+      "matchedCoreCandidacies": 281,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 0,
+      "sources": [
+        "https://vrems.scvotes.sc.gov/Candidate/ExportSearchResults",
+        "https://vrems.scvotes.sc.gov/Candidate/ExportSearchResults"
+      ],
+      "remaining": "676 active local candidacy rows in the official general-election export remain outside the held projection, chiefly electoral districts, school districts and special districts. Local referendum acquisition remains open.",
+      "added": {
+        "contests": 158,
+        "candidacies": 220,
+        "measures": 0
+      }
+    },
+    {
+      "state": "VA",
+      "officialCoreCandidateContests": 13,
+      "matchedCoreCandidateContests": 13,
+      "officialCoreCandidacies": 40,
+      "matchedCoreCandidacies": 40,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-All-Offices-Candidate-List-(rev-10-9-2026).xlsx"
+      ],
+      "remaining": "135 local candidate office/locality/district source groups have unresolved or ambiguous geographic scope; 3 district-scoped referendums also remain. All 61 locality-wide questions with exact registered locality matches were added.",
+      "added": {
+        "contests": 411,
+        "candidacies": 1028,
+        "measures": 61
+      }
+    },
+    {
+      "state": "WV",
+      "officialCoreCandidateContests": 122,
+      "matchedCoreCandidateContests": 122,
+      "officialCoreCandidacies": 243,
+      "matchedCoreCandidacies": 243,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 1,
+      "sources": [
+        "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Barbour%20261103%20General%20-%2014inch.pdf",
+        "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf"
+      ],
+      "remaining": "Printed federal and legislative counts match all55county bundles. The official named write-in portal returned503 for both regular and write-in routes; registered write-in completeness remains unmeasured. Nonpartisan and local measure work remains outside the completed Kanawha reference sample.",
+      "added": {
+        "contests": 73,
+        "candidacies": 117,
+        "measures": 2
+      },
+      "sourceCountScope": "Printed sample-ballot names, including independently filed candidates printed in any county. Six named independents are present; county ballot omissions do not delete a name supported elsewhere. Registered write-ins remain unknown.",
+      "registeredWriteInComparison": "UNMEASURED: official portal returned503."
+    },
+    {
+      "state": "DC",
+      "officialCoreCandidateContests": 15,
+      "matchedCoreCandidateContests": 15,
+      "officialCoreCandidacies": 51,
+      "matchedCoreCandidacies": 51,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 1,
+      "sources": [
+        "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+        "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en"
+      ],
+      "remaining": "The official ANC roster lists345districts and356printed candidates; the current separate write-in list includes29ANC rows. These require ANC-SMD geographic mapping and are not yet in the ballot projection.",
+      "added": {
+        "contests": 0,
+        "candidacies": 1,
+        "measures": 0
+      },
+      "partyCorrections": [
+        {
+          "candidate": "Rebekkah Green",
+          "contest": "Delegate to the House of Representatives",
+          "before": "Independent",
+          "officialCurrentValue": "Libertarian",
+          "source": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en"
+        }
+      ]
+    },
+    {
+      "state": "MD",
+      "officialCoreCandidateContests": 130,
+      "matchedCoreCandidateContests": 130,
+      "officialCoreCandidacies": 322,
+      "matchedCoreCandidacies": 322,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 3,
+      "sources": [
+        "https://www.elections.maryland.gov/elections/2026/general_candidates/2026_GG_statewide_candidatelist.csv",
+        "https://www.elections.maryland.gov/elections/2026/ballot_questions.html"
+      ],
+      "remaining": "All 33 active circuit-court candidates in the statewide certified roster are projected across 11 county-specific contests, verified against every official county ballot style. All 48 county/city questions on the state election authority index are projected with complete certified ballot wording across nine jurisdictions. 294 active local candidate rows remain outside the projection. Montgomery BS1 matches all 22 contests for its explicit source divisions, including council7. Remaining local electoral districts and municipal questions outside the statewide county-question index remain open.",
+      "added": {
+        "contests": 203,
+        "candidacies": 349,
+        "measures": 48
+      },
+      "princeGeorges": {
+        "verifiedBallotStyles": 327,
+        "countyQuestions": 10,
+        "matchedCountyQuestions": 10,
+        "countyCircuitCandidates": 9,
+        "matchedCountyCircuitCandidates": 9
+      },
+      "countyCircuitCourts": {
+        "officialCertifiedCandidates": 33,
+        "matchedCertifiedCandidates": 33,
+        "matchedCountyContests": 11,
+        "newlyVerifiedCountyBundles": {
+          "Worcester County": {
+            "styles": 22,
+            "candidates": 1,
+            "circuit": "Circuit 1"
+          },
+          "Cecil County": {
+            "styles": 28,
+            "candidates": 1,
+            "circuit": "Circuit 2"
+          },
+          "Talbot County": {
+            "styles": 19,
+            "candidates": 1,
+            "circuit": "Circuit 2"
+          },
+          "Baltimore County": {
+            "styles": 258,
+            "candidates": 5,
+            "circuit": "Circuit 3"
+          },
+          "Anne Arundel County": {
+            "styles": 196,
+            "candidates": 3,
+            "circuit": "Circuit 5"
+          },
+          "Howard County": {
+            "styles": 67,
+            "candidates": 1,
+            "circuit": "Circuit 5"
+          },
+          "Frederick County": {
+            "styles": 66,
+            "candidates": 1,
+            "circuit": "Circuit 6"
+          },
+          "Saint Mary's County": {
+            "styles": 27,
+            "candidates": 1,
+            "circuit": "Circuit 7"
+          },
+          "Baltimore City": {
+            "styles": 295,
+            "candidates": 6,
+            "circuit": "Circuit 8"
+          }
+        },
+        "priorVerifiedCountyBundles": {
+          "Montgomery": {
+            "styles": 257,
+            "candidates": 4
+          },
+          "Prince Georges": {
+            "styles": 327,
+            "candidates": 9
+          }
+        },
+        "scope": "County ballot bundles establish the county-specific races; a shared numbered judicial circuit does not expose another county's judges."
+      },
+      "countyQuestions": {
+        "verifiedCounties": {
+          "Baltimore County": {
+            "styles": 258,
+            "questions": 14,
+            "matchedQuestions": 14
+          },
+          "Baltimore City": {
+            "styles": 295,
+            "questions": 9,
+            "matchedQuestions": 9
+          },
+          "Anne Arundel County": {
+            "styles": 196,
+            "questions": 3,
+            "matchedQuestions": 3
+          },
+          "Howard County": {
+            "styles": 67,
+            "questions": 2,
+            "matchedQuestions": 2
+          },
+          "Frederick County": {
+            "styles": 66,
+            "questions": 1,
+            "matchedQuestions": 1
+          },
+          "Wicomico County": {
+            "styles": 69,
+            "questions": 4,
+            "matchedQuestions": 4
+          },
+          "Cecil County": {
+            "styles": 28,
+            "questions": 1,
+            "matchedQuestions": 1
+          },
+          "Dorchester County": {
+            "styles": 44,
+            "questions": 4,
+            "matchedQuestions": 4
+          }
+        },
+        "countyQuestionsStatewide": 48,
+        "previouslyVerifiedPrinceGeorgesQuestions": 10,
+        "titleSourceDifferences": [
+          {
+            "county": "Baltimore City",
+            "question": "G",
+            "indexTitle": "LEGISLATION, BUDGET, AND BOARD OF ESTIMATES",
+            "certifiedBallotTitle": "Franchises and Minor Privileges",
+            "selectedSource": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf"
+          }
+        ],
+        "wordingSourceDifferences": [
+          "Baltimore County A: certified ballot prints \"five (5)\" where the question index prints \"5\".",
+          "Baltimore County F: certified ballot includes the full refuse-facility project list omitted by the question index.",
+          "Baltimore County I: question index contains a stray #6 before the FOR explanation; certified ballot has no #6."
+        ],
+        "matchedCountyQuestionsStatewide": 48
+      }
+    },
+    {
+      "state": "DE",
+      "officialCoreCandidateContests": 57,
+      "matchedCoreCandidateContests": 57,
+      "officialCoreCandidacies": 103,
+      "matchedCoreCandidacies": 103,
+      "missingSourceListedCoreContests": 0,
+      "missingSourceListedCoreCandidacies": 0,
+      "heldStatewideMeasures": 0,
+      "sources": [
+        "https://elections.delaware.gov/candidates/candidatelist/genl_fcddt_2026.html",
+        "https://elections.delaware.gov/candidates/candidatelist/genl_wcddt_2026.html",
+        "https://www.newcastlede.gov/226/County-Council",
+        "https://gis.nccde.org/entserver/rest/services/Initiatives/County_Council/MapServer/0",
+        "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0",
+        "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2",
+        "https://elections.delaware.gov/elections/general/sampleballots/GE2026/01-01.html"
+      ],
+      "remaining": "All eleven county district contests with sixteen qualified candidates are now projected through exact canonical OCD IDs and official current county district polygons. No qualified county-district write-ins appear in the complete official write-in list. Together with the nine county-wide offices already added, all source-listed county candidate offices are held. Official sample01-01 matches eleven contests and all twenty printed names for its explicit divisions. Other sample-ballot measure and municipal comparisons remain open. Exact local district resolution from a reader address remains a separate dependency.",
+      "added": {
+        "contests": 20,
+        "candidacies": 27,
+        "measures": 0
+      },
+      "countyDistricts": {
+        "state": "DE",
+        "added": {
+          "contests": 11,
+          "candidacies": 16
+        },
+        "officialCountyDistrictContests": 11,
+        "officialQualifiedCountyDistrictCandidates": 16,
+        "countyDistrictQualifiedWriteIns": 0,
+        "districts": {
+          "Kent County Levy Court District 2": {
+            "ocdId": "ocd-division/country:us/state:de/county:kent/council_district:2",
+            "qualifiedCandidates": 1
+          },
+          "Kent County Levy Court District 4": {
+            "ocdId": "ocd-division/country:us/state:de/county:kent/council_district:4",
+            "qualifiedCandidates": 1
+          },
+          "Kent County Levy Court District 6": {
+            "ocdId": "ocd-division/country:us/state:de/county:kent/council_district:6",
+            "qualifiedCandidates": 1
+          },
+          "New Castle County Council District 1": {
+            "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:1",
+            "qualifiedCandidates": 1
+          },
+          "New Castle County Council District 2": {
+            "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:2",
+            "qualifiedCandidates": 2
+          },
+          "New Castle County Council District 3": {
+            "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:3",
+            "qualifiedCandidates": 2
+          },
+          "New Castle County Council District 4": {
+            "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:4",
+            "qualifiedCandidates": 1
+          },
+          "New Castle County Council District 5": {
+            "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:5",
+            "qualifiedCandidates": 1
+          },
+          "New Castle County Council District 6": {
+            "ocdId": "ocd-division/country:us/state:de/county:new_castle/council_district:6",
+            "qualifiedCandidates": 2
+          },
+          "Sussex County Council District 4": {
+            "ocdId": "ocd-division/country:us/state:de/county:sussex/council_district:4",
+            "qualifiedCandidates": 2
+          },
+          "Sussex County Council District 5": {
+            "ocdId": "ocd-division/country:us/state:de/county:sussex/council_district:5",
+            "qualifiedCandidates": 2
+          }
+        }
+      }
+    }
+  ],
+  "referenceBallots": [
+    {
+      "source": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Full.pdf",
+      "scope": "Fairfax County, 11th Congressional District full ballot",
+      "officialContests": 7,
+      "heldForSourceDivisions": 7,
+      "missing": []
+    },
+    {
+      "source": "https://www.fairfaxcounty.gov/elections/sites/elections/files/Assets/Documents/PDF/2026_November_11thCD_Herndon_Full.pdf",
+      "scope": "Herndon full ballot",
+      "officialContests": 9,
+      "heldForSourceDivisions": 9,
+      "missing": []
+    },
+    {
+      "source": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf",
+      "scope": "Kanawha sample precinct103: CD1, Senate17regular+special, Delegate52",
+      "officialContests": 10,
+      "heldForSourceDivisions": 10,
+      "missing": []
+    },
+    {
+      "source": "https://apps.meckboe.org/pages/SampleBallots/SampleBallots/B0009.pdf",
+      "scope": "Mecklenburg official address lookup1800EThePlaza, Charlotte28205, precinct015; CD12, Senate41, House102, commissioner4, superior26F",
+      "officialContests": 31,
+      "heldForSourceDivisions": 30,
+      "missing": [
+        "NC Superior Court Judge District 26F Seat 1"
+      ]
+    },
+    {
+      "source": "https://www.elections.maryland.gov/elections/2026/general_ballots/Montgomery.pdf",
+      "scope": "Montgomery official BS1: CD8, Senate14, Delegate14, county council7",
+      "officialContests": 22,
+      "heldForSourceDivisions": 22,
+      "missing": []
+    },
+    {
+      "source": "https://elections.delaware.gov/elections/general/sampleballots/GE2026/01-01.html",
+      "scope": "Official Delaware Election District01-01: CDat-large, Senate1, Representative1, New Castle County Council4. Sample counts use source-identified divisions; no ZIP address or live acceptance claim.",
+      "officialContests": 11,
+      "heldForSourceDivisions": 11,
+      "officialPrintedCandidacies": 20,
+      "matchedPrintedCandidacies": 20,
+      "missing": []
+    }
+  ],
+  "evidence": "data/ballot/ba01-southeast-sources: gzip original captures or exact pdftotext source documents, with original byte hashes and converted text hashes. Source documents are not loaded by the reader application.",
+  "replay": "python scripts/ba01-southeast-compare.py; source importers scripts/ba01-southeast-local-ballots.py, scripts/ba01-southeast-west-virginia.py, scripts/ba01-southeast-miami-dade.py, and scripts/ba01-southeast-district-gaps.py replay with --captures data/ballot/ba01-southeast-sources. New county importers scripts/ba01-southeast-prince-georges.py and scripts/ba01-southeast-fulton.py use the same saved captures. Florida applicability importer: scripts/ba01-southeast-florida-appellate.py. Third chunk: scripts/ba01-southeast-maryland-courts.py, scripts/ba01-southeast-georgia-circuits.py, and scripts/ba01-southeast-fulton-soil.py, all replayable against the same durable source captures. All remaining Maryland county questions: scripts/ba01-southeast-maryland-questions.py (full-text equality across every style). Delaware county districts: scripts/ba01-southeast-delaware-districts.py. Official sample01-01 web capture and race-by-race comparison saved as de-sample-01-01.web.json; direct state HTTP returned WAF rejections, so this converted web-tool capture explicitly records unknown HTTP status and is used only for the comparison. Florida next counties: scripts/ba01-southeast-miami-gardens.py, scripts/ba01-southeast-orange.py, scripts/ba01-southeast-florida-unopposed.py; same durable captures. Hillsborough local import: scripts/ba01-southeast-hillsborough.py; same durable captures.",
+  "validation": "Twenty-seven actual focused tests pass using the required network-enabled execution sandbox, including real runBallotPublication assembly/promotion/readback of the complete Florida package. That test checks all source contest/candidate/measure counts and exact MEASURE types. Earlier invalid REFERENDUM types and null optional officialNumber in four new measures are corrected in input and importers. Prior IDs and candidates are preserved; 31 Florida unopposed core records have sourced explanatory context. Florida memberships: 67 appellate plus 2 Circuit 9 whole-county; Georgia DA memberships: 34. Migration-built production-copy checks owned by the parent lane.",
+  "scopeResolutionLimitation": "Reference counts use exact divisions identified by the official sample. Local council district IDs are stored precisely; upstream address/ZIP resolver support for those IDs remains a separate dependency. These figures do not claim live ZIP acceptance."
+}

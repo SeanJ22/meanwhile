@@ -1,0 +1,149 @@
+{
+  "state": "ME",
+  "before": [
+    278,
+    470
+  ],
+  "after": [
+    278,
+    470
+  ],
+  "localContests": 88,
+  "localCandidacies": 108,
+  "countyOfficeCycleContests": 86,
+  "namedCountyContests": 85,
+  "remainingCycleOffice": "Washington County Treasurer",
+  "districtMemberships": 246,
+  "unresolvedCanonicalPlaces": [
+    {
+      "county": "lincoln",
+      "district": "2",
+      "name": "Louds Island"
+    },
+    {
+      "county": "penobscot",
+      "district": "3",
+      "name": "Penobscot Indian Island"
+    }
+  ],
+  "supersedingOfficialValues": [
+    {
+      "candidateId": "me-sos-2026-us:4",
+      "field": "partyLabel",
+      "previousValue": "Democrat",
+      "previousProvenance": {
+        "sourceUrl": "https://www.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List.pdf",
+        "sourceOrg": "Maine Secretary of State, Division of Elections",
+        "collectedAt": "2026-10-14T05:10:11.581Z",
+        "verifiedAt": "2026-10-14T05:10:11.581Z"
+      },
+      "currentValue": "Democratic",
+      "supersedingProvenance": {
+        "sourceUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List%20-%20Updated%2010.15.26.pdf",
+        "sourceOrg": "Maine Secretary of State, Division of Elections",
+        "collectedAt": "2026-10-21T00:49:29.889706+00:00",
+        "verifiedAt": "2026-10-21T00:57:53.449631+00:00",
+        "quote": "Sigrid Ann Olson | Democratic"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "requestedUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20General%20Candidate%20List%20-%20FINAL.xlsx",
+      "finalUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20General%20Candidate%20List%20-%20FINAL.xlsx",
+      "retrievedAt": "2026-10-21T00:52:25.353318+00:00",
+      "httpStatus": 200,
+      "rawHash": "c628e48fa6298b6862e709166adf3145f7bc4a3f60929c3e6ef5a3ea324e03ea",
+      "sourceFile": "me-final-current.xlsx"
+    },
+    {
+      "requestedUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Special%20Cty%20Elect%20Candidate%20List%20-%20posting%2072226.xlsx",
+      "finalUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Special%20Cty%20Elect%20Candidate%20List%20-%20posting%2072226.xlsx",
+      "retrievedAt": "2026-10-21T00:49:29.942809+00:00",
+      "httpStatus": 200,
+      "rawHash": "08b0e828b301f02e4a57e346ca2a173ad8387d4587bf716cd7007d570a056a15",
+      "sourceFile": "me-special-county-candidates.xlsx"
+    },
+    {
+      "requestedUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List%20-%20Updated%2010.15.26.pdf",
+      "finalUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Nov26%20Declared%20Write%20in%20List%20-%20Updated%2010.15.26.pdf",
+      "retrievedAt": "2026-10-21T00:49:29.889706+00:00",
+      "httpStatus": 200,
+      "rawHash": "86ab6cfc5d38d4c36c907b291d737d8c0b3863e05446ede0e307fa8d15682ee9",
+      "sourceFile": "me-writeins-2026-10-15.pdf"
+    },
+    {
+      "requestedUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20Candidate%20Office%20Order.pdf",
+      "finalUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20Candidate%20Office%20Order.pdf",
+      "retrievedAt": "2026-10-21T00:43:34.341018+00:00",
+      "httpStatus": 200,
+      "rawHash": "9245f464172b6e358a1dfad20653672a4a5fa9fa2db5ec92a05cc58c36fb187e",
+      "sourceFile": "me-office-code-order.pdf"
+    },
+    {
+      "requestedUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20County%20Offices%20Appearing%20on%20Ballot%20By%20Election%20Cycle%202%2012%2026.pdf",
+      "finalUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/2026%20County%20Offices%20Appearing%20on%20Ballot%20By%20Election%20Cycle%202%2012%2026.pdf",
+      "retrievedAt": "2026-10-21T00:43:34.470530+00:00",
+      "httpStatus": 200,
+      "rawHash": "112b8329004fcfaf85a105c4fd32543dbf054fb39ae3ce7b4eb3eefee6726ce2",
+      "sourceFile": "me-county-office-cycle.pdf"
+    },
+    {
+      "requestedUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+      "url": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+      "retrievedAt": "2026-10-21T00:47:00.808370+00:00",
+      "httpStatus": 200,
+      "rawHash": "b59d8049c1f1ced0e317fc9d18fd663226287c0f0abdaba311337f9dedec3870",
+      "sourceFile": "me-county-districts.html"
+    },
+    {
+      "requestedUrl": "https://legis.maine.gov/legis/statutes/30-A/title30-Asec254.html",
+      "finalUrl": "https://legis.maine.gov/legis/statutes/30-A/title30-Asec254.html",
+      "retrievedAt": "2026-10-21T00:43:34.569308+00:00",
+      "httpStatus": 200,
+      "rawHash": "11775a59351e50e6e137131c06ef31ebe1f1928913dc945aa417e2df98dcef38",
+      "sourceFile": "me-da-districts.html"
+    },
+    {
+      "requestedUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec757.html",
+      "finalUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec757.html",
+      "retrievedAt": "2026-10-21T00:49:06.372966+00:00",
+      "httpStatus": 200,
+      "rawHash": "0b5f6381ea9465d3cfd4d8c92eee1529451eac60334f52280ba73ac752764074",
+      "sourceFile": "me-knox-budget-districts757.html"
+    },
+    {
+      "requestedUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Candidates%20Guide%20Aroostook%20Charter%20CommissionFINAL.pdf",
+      "finalUrl": "https://www1.maine.gov/sos/sites/maine.gov.sos/files/inline-files/Candidates%20Guide%20Aroostook%20Charter%20CommissionFINAL.pdf",
+      "retrievedAt": "2026-10-21T00:49:05.968632+00:00",
+      "httpStatus": 200,
+      "rawHash": "b8c01d633ce54da1a962de42b327e91518dbc60d254d8d26b4a997a265d8a02c",
+      "sourceFile": "me-aroostook-charter-guide.pdf"
+    },
+    {
+      "requestedUrl": "https://www1.maine.gov/ethics/sites/ethics/files/2026-09/active-candidates-09082026_1039AM.pdf",
+      "finalUrl": "https://www1.maine.gov/ethics/sites/ethics/files/2026-09/active-candidates-09082026_1039AM.pdf",
+      "retrievedAt": "2026-10-21T00:49:07.014119+00:00",
+      "httpStatus": 200,
+      "rawHash": "e4f2406400eb3e6fe29a24abed0b33f7e0f32c93c2fe4fe1592601e8b3c3f168",
+      "sourceFile": "me-ethics-active-candidates.pdf"
+    },
+    {
+      "requestedUrl": "https://www.legislature.maine.gov/legis/statutes/33/title33sec703.html",
+      "finalUrl": "https://www.legislature.maine.gov/legis/statutes/33/title33sec703.html",
+      "retrievedAt": "2026-10-21T00:51:44.471384+00:00",
+      "httpStatus": 200,
+      "rawHash": "4e0f9edbda880ef90e1f49f3f099a519a618979ddb9811b15f4dda93638dbab0",
+      "sourceFile": "me-aroostook-registry-law.html"
+    },
+    {
+      "requestedUrl": "https://www1.maine.gov/sos/elections-voting/upcoming-elections",
+      "finalUrl": "https://www1.maine.gov/sos/elections-voting/upcoming-elections",
+      "retrievedAt": "2026-10-21T00:48:00.585188+00:00",
+      "httpStatus": 200,
+      "rawHash": "d9ba07a5bd87f107bb8cd71c59cc4b211941f9e8699f6b48289038e5dfd7b051",
+      "sourceFile": "me-upcoming-index.html"
+    }
+  ],
+  "remaining": "Municipal contests and questions, partial census-block memberships, Aroostook registry matching and live delivery remain open."
+}

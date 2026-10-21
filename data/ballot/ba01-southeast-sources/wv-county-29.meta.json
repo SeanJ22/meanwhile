@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mingo%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mingo%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:36.657891+00:00",
+  "rawHash": "744d757784f081502027313431e0263fe532b241db62098ff850e5bd26feca09",
+  "httpStatus": 200,
+  "bytes": 853945,
+  "extractedTextHash": "359c1f68360e653a4e4f86b43366c0dbe3276780ec1b0f5b6442738260045b78",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

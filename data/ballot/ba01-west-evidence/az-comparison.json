@@ -1,0 +1,1260 @@
+{
+  "status": "MATCHES_SOURCES_CHECKED_WITH_CERTIFICATION_LIMIT",
+  "checkedAt": "2026-10-20T23:51:10.132167+00:00",
+  "officialContestCount": 77,
+  "officialCandidacyCount": 218,
+  "scope": "30 Senate + 30 House + 9 federal House + 7 executive + 1 statewide Supreme Court retention; four lieutenant-governor ticket mates verified separately against the Pima general list",
+  "sourceCounts": {
+    "printedLegislative": 158,
+    "certifiedLegislativeWriteIns": 4,
+    "printedExecutive": 20,
+    "certifiedExecutiveWriteIns": 4,
+    "federalPrintedRoster": 24,
+    "certifiedFederalWriteIns": 7,
+    "statewideJudicialRetention": 1
+  },
+  "missingCandidates": 0,
+  "extraHeldCandidates": 0,
+  "partyDifferences": 0,
+  "certificationLimit": "The SOS general certified portal returned403. General printed guide and full SOS write-in certification provide the legislative and executive comparison. Federal printed names match the current official Clean Elections roster, whose webpage warns profiles are optional; an exhaustive general certification is still needed. Official general samples independently confirm printed federal districts1,2,5,6,7,9. Districts3,4,8 have fresh official roster confirmation but their actual official general sample has not been acquired.",
+  "zipChecks": [
+    {
+      "zip": "85003",
+      "status": "PARTIAL",
+      "verifiedCommonCountyContests": 59,
+      "remaining": "Actual precinct sample requires registered-voter dashboard access. Justice/constable, Phoenix council, school/special-district choices and local measures still require address-specific division matching; all-ZIP completeness is not established."
+    }
+  ],
+  "contests": [
+    {
+      "contestId": "ballot-az-pima:governor",
+      "title": "Governor",
+      "officialCandidates": [
+        "Andy Biggs",
+        "Katie Hobbs",
+        "Teri Ann Hourihan",
+        "Risa Lombardo",
+        "Gertritrude Gonzalez",
+        "Alice Novoa"
+      ],
+      "heldCandidateCount": 6,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:secretary-of-state",
+      "title": "Secretary of State",
+      "officialCandidates": [
+        "Duwayne Collier",
+        "Adrian Fontes",
+        "Alexander Kolodin"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:attorney-general",
+      "title": "Attorney General",
+      "officialCandidates": [
+        "Kris Mayes",
+        "Warren Petersen"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:state-treasurer",
+      "title": "State Treasurer",
+      "officialCandidates": [
+        "Nick Mansour",
+        "Elijah Norton"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:superintendent",
+      "title": "Superintendent of Public Instruction",
+      "officialCandidates": [
+        "Teresa Leyba Ruiz",
+        "Kimberly Yee",
+        "Gerard Davis",
+        "Stephen Neal Jr."
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:mine-inspector",
+      "title": "State Mine Inspector",
+      "officialCandidates": [
+        "Brian Matlock",
+        "Walter \"Les\" Presmyk"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:corporation-commissioner",
+      "title": "Corporation Commissioner",
+      "officialCandidates": [
+        "Mike Cease",
+        "Ralph Heap",
+        "Jonathon Hill",
+        "Clara Pratte",
+        "Kevin Thompson"
+      ],
+      "heldCandidateCount": 5,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-1",
+      "title": "State Senator, District 1",
+      "officialCandidates": [
+        "Christine Ellen Dargon",
+        "Mark Finchem"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-1",
+      "title": "State Representative, District 1",
+      "officialCandidates": [
+        "Selina Bliss",
+        "Quang Huu Nguyen",
+        "Sandy Zalecki",
+        "Charles \"Charlie\" Eakins"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-2",
+      "title": "State Senator, District 2",
+      "officialCandidates": [
+        "Shawnna Bolick",
+        "Amelia Gallitano"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-2",
+      "title": "State Representative, District 2",
+      "officialCandidates": [
+        "Paul Carver",
+        "Stephanie Simacek",
+        "Justin Wilmeth"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-3",
+      "title": "State Senator, District 3",
+      "officialCandidates": [
+        "Jeffrey Fortney",
+        "John Kavanagh",
+        "Frank Bertone"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-3",
+      "title": "State Representative, District 3",
+      "officialCandidates": [
+        "Julie Gable",
+        "George Khalaf",
+        "Cody Reim",
+        "John Skirbst",
+        "Richard \"Rick\" Robert Spargo"
+      ],
+      "heldCandidateCount": 5,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-4",
+      "title": "State Senator, District 4",
+      "officialCandidates": [
+        "Aaron Lieberman",
+        "Carine Werner"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-4",
+      "title": "State Representative, District 4",
+      "officialCandidates": [
+        "Tammy Caputi",
+        "Pamela Carter",
+        "Karen Gresham",
+        "Matt Gress"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-5",
+      "title": "State Senator, District 5",
+      "officialCandidates": [
+        "Jason LaForest",
+        "Christine Marsh"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-5",
+      "title": "State Representative, District 5",
+      "officialCandidates": [
+        "Sarah Liguori",
+        "Aaron Marquez"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-6",
+      "title": "State Senator, District 6",
+      "officialCandidates": [
+        "Lloyd Johnson",
+        "Jamescita Peshlakai"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-6",
+      "title": "State Representative, District 6",
+      "officialCandidates": [
+        "Mae Peshlakai",
+        "Ian Teller",
+        "Brendan Trachsel",
+        "Royce \"Rj\" Mark Jenkins"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-7",
+      "title": "State Senator, District 7",
+      "officialCandidates": [
+        "Michiel \"Mike\" Montiel",
+        "Wendy Rogers"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-7",
+      "title": "State Representative, District 7",
+      "officialCandidates": [
+        "Walter \"Walt\" Blackman",
+        "David Cook Sr.",
+        "Richard Grayson",
+        "Samuel \"Sam\" Martin"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-8",
+      "title": "State Senator, District 8",
+      "officialCandidates": [
+        "Lauren Kuby",
+        "Bill Loughrige"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-8",
+      "title": "State Representative, District 8",
+      "officialCandidates": [
+        "Janeen Connolly",
+        "Brian Garcia",
+        "Donald Hawker"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-9",
+      "title": "State Senator, District 9",
+      "officialCandidates": [
+        "Bridget Fitzgibbons",
+        "Kiana Maria Sears"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-9",
+      "title": "State Representative, District 9",
+      "officialCandidates": [
+        "Lorena Austin",
+        "Bradley D. Bettencourt",
+        "Jacob D. Martinez"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-10",
+      "title": "State Senator, District 10",
+      "officialCandidates": [
+        "David Christian Farnsworth",
+        "Nick Fierro",
+        "Blair Moses"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-10",
+      "title": "State Representative, District 10",
+      "officialCandidates": [
+        "Brian Calaway",
+        "Helen Hunter",
+        "Justin Olson",
+        "James Rogers",
+        "David Scott"
+      ],
+      "heldCandidateCount": 5,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-11",
+      "title": "State Senator, District 11",
+      "officialCandidates": [
+        "Joshua Ayala",
+        "Catherine Miranda"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-11",
+      "title": "State Representative, District 11",
+      "officialCandidates": [
+        "Cesar Aleman",
+        "Junelle Cavero",
+        "Joseph Charles Dailey",
+        "Oscar De Los Santos"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-12",
+      "title": "State Senator, District 12",
+      "officialCandidates": [
+        "Patricia \"Patty\" Contreras",
+        "Anthony Jason Ramirez",
+        "Gary Hatch"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-12",
+      "title": "State Representative, District 12",
+      "officialCandidates": [
+        "Armando Montero",
+        "David Richardson",
+        "Stacey Travers"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-13",
+      "title": "State Senator, District 13",
+      "officialCandidates": [
+        "Kristie O'Brien",
+        "Julie Willoughby"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-13",
+      "title": "State Representative, District 13",
+      "officialCandidates": [
+        "Racquel \"Rockee\" Armstrong",
+        "Kevin Hartke",
+        "Jacob Weinberg",
+        "Janet Weninger"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-14",
+      "title": "State Senator, District 14",
+      "officialCandidates": [
+        "Mylie Biggs",
+        "Stephanie Walsh"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-14",
+      "title": "State Representative, District 14",
+      "officialCandidates": [
+        "Tyler Andrew Farnsworth",
+        "Laurin Hendrix",
+        "Mary Rose"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-15",
+      "title": "State Senator, District 15",
+      "officialCandidates": [
+        "Jayme Accalia",
+        "Jake Hoffman"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-15",
+      "title": "State Representative, District 15",
+      "officialCandidates": [
+        "Neal Carter",
+        "Michael Way"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-16",
+      "title": "State Senator, District 16",
+      "officialCandidates": [
+        "Elaine Aldrete",
+        "Thomas \"T.J.\" Shope"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-16",
+      "title": "State Representative, District 16",
+      "officialCandidates": [
+        "Julia Romero Gusse",
+        "Chris Lopez",
+        "Teresa Martinez"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:state-senate-17",
+      "title": "State Senator, District 17",
+      "officialCandidates": [
+        "Christopher King",
+        "Edgar Soto"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:state-house-17",
+      "title": "State Representative, District 17",
+      "officialCandidates": [
+        "Rachel \"Jones\" Keshel",
+        "Hollace \"Holly\" Lyon",
+        "Kevin Volk",
+        "John Winchester"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-18",
+      "title": "State Senator, District 18",
+      "officialCandidates": [
+        "Douglas Everett",
+        "Priya Sundareshan"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-18",
+      "title": "State Representative, District 18",
+      "officialCandidates": [
+        "Bob Dohse",
+        "Nancy Gutierrez",
+        "Chris Mathis"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:state-senate-19",
+      "title": "State Senator, District 19",
+      "officialCandidates": [
+        "Gail Griffin",
+        "Bob Karp"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:state-house-19",
+      "title": "State Representative, District 19",
+      "officialCandidates": [
+        "Jackie O'Donnell Anderson",
+        "Lupe Diaz",
+        "David Gowan",
+        "Aiden Nicholette Swallow"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:state-senate-20",
+      "title": "State Senator, District 20",
+      "officialCandidates": [
+        "Alma Hernandez"
+      ],
+      "heldCandidateCount": 1,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:state-house-20",
+      "title": "State Representative, District 20",
+      "officialCandidates": [
+        "Sally Ann Gonzales",
+        "Betty Villegas"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-21",
+      "title": "State Senator, District 21",
+      "officialCandidates": [
+        "Esteban Flores",
+        "Rosanna Gabaldon"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-21",
+      "title": "State Representative, District 21",
+      "officialCandidates": [
+        "Consuelo Hernandez",
+        "Christopher Kibbey",
+        "Miranda Lopez"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-22",
+      "title": "State Senator, District 22",
+      "officialCandidates": [
+        "Eva Diaz"
+      ],
+      "heldCandidateCount": 1,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-22",
+      "title": "State Representative, District 22",
+      "officialCandidates": [
+        "Elda Luna-Nájera",
+        "Betsy Munoz"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-23",
+      "title": "State Senator, District 23",
+      "officialCandidates": [
+        "Michelle Altherr",
+        "Brian Fernandez"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-23",
+      "title": "State Representative, District 23",
+      "officialCandidates": [
+        "Emilia Cortez",
+        "Gary Garcia Snyder",
+        "Michele Pena",
+        "Mariana Sandoval"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-24",
+      "title": "State Senator, District 24",
+      "officialCandidates": [
+        "Analise Ortiz",
+        "Frank Steele"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-24",
+      "title": "State Representative, District 24",
+      "officialCandidates": [
+        "Lisbeth Arescurenaga",
+        "Alberto Flores",
+        "Delores McLaughlin"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-25",
+      "title": "State Senator, District 25",
+      "officialCandidates": [
+        "Timothy \"Tim\" Dunn",
+        "Laura Huber"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-25",
+      "title": "State Representative, District 25",
+      "officialCandidates": [
+        "Tiffany Byrne",
+        "Michael Carbone",
+        "Nickolas \"Nick\" Kupper"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-26",
+      "title": "State Senator, District 26",
+      "officialCandidates": [
+        "Jim Bishop",
+        "Flavio Bravo"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-26",
+      "title": "State Representative, District 26",
+      "officialCandidates": [
+        "Cesar Aguilar",
+        "Quanta Crews",
+        "Hector Gomez",
+        "Jonathan McKenna",
+        "Frank Roberts"
+      ],
+      "heldCandidateCount": 5,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-27",
+      "title": "State Senator, District 27",
+      "officialCandidates": [
+        "Kyle Clayton",
+        "Kevin Payne"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-27",
+      "title": "State Representative, District 27",
+      "officialCandidates": [
+        "Lisa Fink",
+        "Deborah Howard",
+        "Tony Rivero"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-28",
+      "title": "State Senator, District 28",
+      "officialCandidates": [
+        "Michael Braun",
+        "Frank Carroll"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-28",
+      "title": "State Representative, District 28",
+      "officialCandidates": [
+        "Barbara Fike",
+        "Marc Graham",
+        "David Livingston",
+        "Beverly Pingerelli"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-29",
+      "title": "State Senator, District 29",
+      "officialCandidates": [
+        "Janae Shamp",
+        "Eric Stafford"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-29",
+      "title": "State Representative, District 29",
+      "officialCandidates": [
+        "Steve Montenegro",
+        "Christine Marie Scianna",
+        "James Taylor"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-senate-30",
+      "title": "State Senator, District 30",
+      "officialCandidates": [
+        "Leo Biasiucci"
+      ],
+      "heldCandidateCount": 1,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-state-house-30",
+      "title": "State Representative, District 30",
+      "officialCandidates": [
+        "Mike Gannuscio",
+        "Brian McMahan",
+        "David Rose"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-us-house-1",
+      "title": "U.S. Representative, District 1",
+      "officialCandidates": [
+        "Amish Shah",
+        "Monica Alponte",
+        "Thomas \"Jay\" Feely IV",
+        "Dev Gupta",
+        "Gage Dylan Thunder"
+      ],
+      "heldCandidateCount": 5,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-us-house-2",
+      "title": "U.S. Representative, District 2",
+      "officialCandidates": [
+        "Curtis Goodwin",
+        "Eli Crane",
+        "Jonathan Nez"
+      ],
+      "heldCandidateCount": 3,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-us-house-3",
+      "title": "U.S. Representative, District 3",
+      "officialCandidates": [
+        "Alan Aversa",
+        "David Redkey",
+        "Yassamin Ansari",
+        "Jacob Parkman"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-us-house-4",
+      "title": "U.S. Representative, District 4",
+      "officialCandidates": [
+        "Greg Stanton",
+        "Tisha Benoit",
+        "Zuhdi Jasser",
+        "Steven Sanders"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-us-house-5",
+      "title": "U.S. Representative, District 5",
+      "officialCandidates": [
+        "Elizabeth Lee",
+        "Mark Lamb"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:us-house-6",
+      "title": "U.S. Representative, District 6",
+      "officialCandidates": [
+        "Gary Swing",
+        "Jereme Lance Peters",
+        "JoAnna Mendoza",
+        "Juan Ciscomani",
+        "Michael Dorland"
+      ],
+      "heldCandidateCount": 5,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined"
+      ]
+    },
+    {
+      "contestId": "ballot-az-pima:us-house-7",
+      "title": "U.S. Representative, District 7",
+      "officialCandidates": [
+        "Adelita Grijalva",
+        "Daniel Francis Butierez Sr."
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-us-house-8",
+      "title": "U.S. Representative, District 8",
+      "officialCandidates": [
+        "Abraham \"Abe\" Hamadeh",
+        "Bernadette Greene-Placentia"
+      ],
+      "heldCandidateCount": 2,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined"
+      ]
+    },
+    {
+      "contestId": "az-2026-general-us-house-9",
+      "title": "U.S. Representative, District 9",
+      "officialCandidates": [
+        "Danielle \"Dani\" Sterbinsky",
+        "Paul Gosar",
+        "G. Seville Hatch",
+        "William Perry"
+      ],
+      "heldCandidateCount": 4,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
+        "https://www.azcleanelections.gov/Custom/CandidateList?location=undefined"
+      ]
+    },
+    {
+      "contestId": "ballot-az-2026-general-supreme-court-john-lopez-iv",
+      "title": "Justice of the Arizona Supreme Court — John Lopez IV — Retention",
+      "officialCandidates": [
+        "JOHN LOPEZ IV"
+      ],
+      "heldCandidateCount": 1,
+      "missing": [],
+      "extraHeld": [],
+      "partyDifferences": [],
+      "sources": [
+        "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799"
+      ]
+    }
+  ]
+}

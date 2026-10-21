@@ -1,0 +1,165 @@
+[
+  [
+    "Representative in Congress District 3",
+    "ocd-division/country:us/state:wi/cd:3",
+    [
+      [
+        "Derrick Van Orden",
+        "Republican"
+      ],
+      [
+        "Rebecca Cooke",
+        "Democratic"
+      ],
+      [
+        "Alexander Valiensi Kent",
+        "Independent"
+      ],
+      [
+        "Rustin Provance",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 96",
+    "ocd-division/country:us/state:wi/sldl:96",
+    [
+      [
+        "Jim Green",
+        "Republican"
+      ],
+      [
+        "Tara Johnson",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Vernon County Sheriff",
+    "ocd-division/country:us/state:wi/county:vernon",
+    [
+      [
+        "Roy Torgerson",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Vernon County Coroner",
+    "ocd-division/country:us/state:wi/county:vernon",
+    [
+      [
+        "Betty Nigh",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Vernon County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:vernon",
+    [
+      [
+        "Sheila Olson",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 17",
+    "ocd-division/country:us/state:wi/sldu:17",
+    [
+      [
+        "Howard Marklein",
+        "Republican"
+      ],
+      [
+        "Jenna Jacobson",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 49",
+    "ocd-division/country:us/state:wi/sldl:49",
+    [
+      [
+        "Travis Tranel",
+        "Republican"
+      ],
+      [
+        "John Rindy",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Crawford County Sheriff",
+    "ocd-division/country:us/state:wi/county:crawford",
+    [
+      [
+        "Dale McCullick",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Crawford County Coroner",
+    "ocd-division/country:us/state:wi/county:crawford",
+    [
+      [
+        "Joe Morovits",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Crawford County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:crawford",
+    [
+      [
+        "Holly R. Tanner",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 41",
+    "ocd-division/country:us/state:wi/sldl:41",
+    [
+      [
+        "Tony Kurtz",
+        "Republican"
+      ],
+      [
+        "Zach Commons",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Richland County Sheriff",
+    "ocd-division/country:us/state:wi/county:richland",
+    [
+      [
+        "Clay J. Porter",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Richland County Coroner",
+    "ocd-division/country:us/state:wi/county:richland",
+    []
+  ],
+  [
+    "Richland County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:richland",
+    [
+      [
+        "Stacy S. Kleist",
+        "Republican"
+      ]
+    ]
+  ]
+]

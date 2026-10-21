@@ -1,0 +1,657 @@
+
+
+ 
+ 
+ 
+	FEDERAL GENERAL 2026 Candidate List
+ 
+     
+     
+     
+     
+     
+     
+     
+        .RadGrid input {
+            display: inline-block;
+        }
+
+        table.rgCommandTable > tbody > tr:first-child > td:first-child {
+            display: none;
+        }
+     
+
+     
+        ul.navbar-nav a:hover {
+            color: #f00 !important;
+        }
+
+        .bg {
+            min-width: 100%; 
+            min-height: 100%; 
+            background-image: url(/Images/background-pic.jpg); 
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-attachment: fixed; 
+            background-position: center;
+        }
+
+/*            .bg::before {
+                content: "";
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                bottom: 0px;
+                left: 0px;
+                background-color: rgba(255,255,255,0.6);
+            }
+*/     
+     
+     
+     
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-50445087-8');
+     
+     
+        @font-face {
+            font-family: "Montserrat";
+            src: url('/fonts/Montserrat-Bold.ttf') format('truetype')
+        }
+        @font-face {
+            font-family: "Source Sans Pro";
+            src: url('/fonts/SourceSansPro-Regular.ttf') format('truetype')
+        }
+        h1, h2, h3, h4, h5 {
+            font-family: "Montserrat","MS Gothic";
+        }
+        body {
+            font-family: "Source Sans Pro";
+            font-size: 18px;
+        }
+     
+ 
+ 
+     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+//<![CDATA[
+var theForm = document.forms['frmMain'];
+if (!theForm) {
+    theForm = document.frmMain;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+ 
+
+
+ 
+
+
+ 
+ 
+
+	 
+	 
+ 
+         
+             
+                 
+                     
+                         
+                             
+                                 
+                                 
+                             
+                         
+                     
+                     
+                              
+                         
+                             
+                             Toggle Menu 
+                         
+                         
+                             
+                                 Home 
+                                 About the Office 
+                                 Secretary of State Bio 
+                                 Contact Us 
+                             
+                             
+                             
+                             
+                             
+                             Languages 
+                             
+                            
+                            
+                         
+                     
+                     
+                         Home  
+                     
+
+                    
+                     
+                     
+                        
+     
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ContentPlaceHolder1$RadScriptManager1', 'frmMain', ['tctl00$ContentPlaceHolder1$ctl00$ContentPlaceHolder1$RadAjaxPanel1Panel',''], [], ['ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl00$ExportToExcelButton','','ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl00$ExportToPdfButton','','ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl02$ctl00$ExportToCsvButton',''], 90, 'ctl00');
+//]]>
+ 
+
+     
+	
+    
+ 
+     
+         
+             FEDERAL GENERAL 2026 
+         
+         
+             
+                 
+                     
+                 
+                 
+                     
+                         FEDERAL GENERAL 2026 
+                         
+	
+                             
+                                 
+                                     Election: 
+                                     
+                                         
+		 FEDERAL PRIMARY 2026 (06/02/2026) (Primary) 
+		 FEDERAL GENERAL 2026 (11/03/2026) (General) 
+
+	 
+                                 
+                                 
+                                     County: 
+                                     
+                                         
+		 
+		 BEAVERHEAD 
+		 BIG HORN 
+		 BLAINE 
+		 BROADWATER 
+		 CARBON 
+		 CARTER 
+		 CASCADE 
+		 CHOUTEAU 
+		 CUSTER 
+		 DANIELS 
+		 DAWSON 
+		 DEER LODGE 
+		 FALLON 
+		 FERGUS 
+		 FLATHEAD 
+		 GALLATIN 
+		 GARFIELD 
+		 GLACIER 
+		 GOLDEN VALLEY 
+		 GRANITE 
+		 HILL 
+		 JEFFERSON 
+		 JUDITH BASIN 
+		 LAKE 
+		 LEWIS AND CLARK 
+		 LIBERTY 
+		 LINCOLN 
+		 MADISON 
+		 MCCONE 
+		 MEAGHER 
+		 MINERAL 
+		 MISSOULA 
+		 MUSSELSHELL 
+		 PARK 
+		 PETROLEUM 
+		 PHILLIPS 
+		 PONDERA 
+		 POWDER RIVER 
+		 POWELL 
+		 PRAIRIE 
+		 RAVALLI 
+		 RICHLAND 
+		 ROOSEVELT 
+		 ROSEBUD 
+		 SANDERS 
+		 SHERIDAN 
+		 SILVER BOW 
+		 STATE 
+		 STILLWATER 
+		 SWEET GRASS 
+		 TETON 
+		 TOOLE 
+		 TREASURE 
+		 VALLEY 
+		 WHEATLAND 
+		 WIBAUX 
+		 YELLOWSTONE 
+
+	 
+                                 
+                                
+                                 
+                                     Number of offices: 
+                                     
+                                         143 
+                                 
+                                 
+                                     Number of candidates: 
+                                     
+                                         272 
+                                 
+                                                         
+                        
+ 
+                     
+                         
+                     
+                         Section 2-6-1017, MCA prohibits, under penalty of law, the use of these lists for unsolicited mass mailings, house calls, distributions and/or telephone calls. 
+                         Political Party Legend:  
+                          DEM = Democratic, REP = Republican, LIB = Libertarian, IND = Independent, MP = Minor Party, NON = Non Partisan 
+                         * = Incumbent 
+                     
+                 
+                 
+                     
+                         
+                     
+                 
+                 
+                     
+                        
+                     
+                 
+                 
+                     
+                         
+	 
+		 
+                             
+
+		 
+			 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+	 
+ 
+				 
+					 
+						 
+							 Command item 
+						 
+							 
+								 Command item 
+							 
+						 
+							 
+								       |             
+							 
+						 
+					 
+				 
+					 Status District Type District Race Term Type Term Length Name Mailing Address Email/Web Address Phone Filing Date Party Preference Ballot Order Status 
+				 
+					               
+				 
+			 
+				 
+					 
+						 
+							 Data pager 
+						 
+							 
+								 Data pager 
+							 
+						 
+							 
+								 
+									 
+								 
+									 1 2 3 
+								 
+									 
+								 
+									 Page size: 
+										 
+											 
+												PageSizeComboBox
+											 
+												 select 
+											 
+										 10 20 50 100 
+									 
+								 
+									   272  items in  3  pages
+								 
+							 
+						 
+					 
+				 
+			 
+			 
+				 FILED Statewide STATE UNITED STATES SENATOR REGULAR 6 KURT ALME 1820 N. LAST CHANCE GULCH, HELENA, MT, 59601 INFO@ALMEFORSENATE.COM WWW.ALMEFORSENATE.COM 4069243840 7/10/2026 11:34:02 AM REP   FILED 
+			 
+				 FILED Statewide STATE UNITED STATES SENATOR REGULAR 6 KYLE AUSTIN 1410 38TH ST W STE A, BILLINGS, MT, 59102 KYLE@PHARM406.COM WWW.KYLEAUSTINMT.COM 4062623098 7/10/2026 11:35:51 AM LIB   FILED 
+			 
+				 FILED Statewide STATE UNITED STATES SENATOR REGULAR 6 ALANI BANKHEAD PO BOX 4424, HELENA, MT, 59604 ALANI@ALANIBANKHEADFORSENATE.COM WWW.ALANIFORMT.COM 4062133217 7/10/2026 11:38:07 AM DEM   FILED 
+			 
+				 FILED Statewide STATE UNITED STATES SENATOR REGULAR 6 SETH BODNAR PO BOX 7188, MISSOULA, MT, 59807 INFO@SETHFORMONTANA.COM WWW.SETHFORMONTANA.COM   7/20/2026 11:38:56 AM IND   FILED 
+			 
+				 FILED Statewide STATE UNITED STATES SENATOR REGULAR 6 JAMI DEE WOODMAN PO BOX 99, DODSON, MT, 59524 JAMIWOODMAN@GMAIL.COM WRITE-IN   8/7/2026 2:30:07 PM NON   FILED 
+			 
+				 FILED Congressional 1ST CONGRESSIONAL UNITED STATES REPRESENTATIVE REGULAR 2 AARON FLINT 175 HUTTON RANCH RD, SUITE 103 PMB#319, KALISPELL, MT, 59901 INFO@FLINTFORMONTANA.COM FLINTFORMONTANA.COM 4062197506 7/10/2026 11:12:51 AM REP   FILED 
+			 
+				 FILED Congressional 1ST CONGRESSIONAL UNITED STATES REPRESENTATIVE REGULAR 2 SAM FORSTAG PO BOX 7224, MISSOULA, MT, 59807 INFO@SAMFORMONTANA.COM SAMFORMONTANA.COM   7/10/2026 11:22:03 AM DEM   FILED 
+			 
+				 FILED Congressional 1ST CONGRESSIONAL UNITED STATES REPRESENTATIVE REGULAR 2 NICK SHEEDY 2130 9TH ST W, COLUMBIA FALL, MT, 59912 NICKOLAS.SHEEDY@YAHOO.COM Not Provided 4062098342 7/10/2026 11:23:35 AM LIB   FILED 
+			 
+				 FILED Congressional 2ND CONGRESSIONAL UNITED STATES REPRESENTATIVE REGULAR 2 *TROY DOWNING PO BOX 20333, BILLINGS, MT, 59104 INFO@TROYDOWNING.COM TROYDOWNING.COM 4068617819 7/10/2026 11:26:18 AM REP   FILED 
+			 
+				 FILED Congressional 2ND CONGRESSIONAL UNITED STATES REPRESENTATIVE REGULAR 2 PATRICK MCCRACKEN 31 WAVING GRASS WAY, MT, 59912 MCCRACKEN.PATRICK@GMAIL.COM Not Provided 4062607576 7/10/2026 11:28:30 AM LIB   FILED 
+			 
+				 FILED Congressional 2ND CONGRESSIONAL UNITED STATES REPRESENTATIVE REGULAR 2 BRIAN J MILLER PO BOX 742, HELENA, MT, 59624 BRIAN@MILLER4CONGRESS.COM WWW.MILLER4CONGRESS.COM 4064371023 7/10/2026 11:29:56 AM DEM   FILED 
+			 
+				 FILED Congressional 2ND CONGRESSIONAL UNITED STATES REPRESENTATIVE REGULAR 2 MICHAEL D EISENHAUER 1720 10TH AVE S, STE 4, MAILSTOP 416, GREAT FALLS, MT, 59405 MICHAEL@EISENHAUERFORCONGRESS.COM EISENHAUERFORCONGRESS.COM 4068682277 7/20/2026 11:41:17 AM IND   FILED 
+			 
+				 FILED Public Service Commission PUBLIC SERVICE COMMISSIONER DISTRICT 1 PUBLIC SERVICE COMMISSIONER, DISTRICT 1 REGULAR 4 ANGELINE CHEEK 752 7TH ST, BROCKTON, MT, 59213 ANGELINECHEEK@GMAIL.COM Not Provided 6057864454 7/10/2026 11:40:30 AM DEM   FILED 
+			 
+				 FILED Public Service Commission PUBLIC SERVICE COMMISSIONER DISTRICT 1 PUBLIC SERVICE COMMISSIONER, DISTRICT 1 REGULAR 4 JEFF PATTISON PO BOX 5315, HELENA, MT, 59604 PATTISON@NEMONT.NET PATTISONFORMONTANA 4062635333 7/10/2026 11:42:13 AM REP   FILED 
+			 
+				 FILED Public Service Commission PUBLIC SERVICE COMMISSIONER DISTRICT 5 PUBLIC SERVICE COMMISSIONER, DISTRICT 5 REGULAR 4 *ANNIE BUKACEK 1701 PROSPECT AVE, HELENA, MT, 59601 ANNIE@HHCKALISPELL.COM Not Provided 4062706320 7/10/2026 3:08:54 PM REP   FILED 
+			 
+				 FILED Public Service Commission PUBLIC SERVICE COMMISSIONER DISTRICT 5 PUBLIC SERVICE COMMISSIONER, DISTRICT 5 REGULAR 4 KEVIN HAMM 810 FRONT ST, HELENA, 59601 CAMPAIGN@KEVINHAMM.COM KEVINHAMM.COM 4064170070 7/10/2026 3:10:30 PM DEM   FILED 
+			 
+				 FILED Supreme Court Justice SUPREME COURT JUSTICE SUPREME COURT JUSTICE #4 REGULAR 8 AMY EDDY PO BOX 1503, KALISPELL, MT, 59903 JUDGEAMYEDDY@ICLOUD.COM AMYEDDYFORJUSTICE.COM   7/10/2026 3:13:53 PM NON   FILED 
+			 
+				 FILED Supreme Court Justice SUPREME COURT JUSTICE SUPREME COURT JUSTICE #4 REGULAR 8 DAN WILSON PO BOX 2181, KALISPELL, MT, 59903 WILSONFORJUSTICE@GMAIL.COM HTTPS://WWW.WILSONFORJUSTICE.COM/ 4069441699 7/10/2026 3:15:59 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 1 DISTRICT COURT JUDGE DISTRICT 1, DEPT 3 REGULAR 6 DANIEL GUZYNSKI PO BOX 4774, HELENA, MT, 59604 DANFORD1@GMAIL.COM HTTPS://WWW.DANFORMTJUDGE.COM/ 4064611431 7/10/2026 3:19:12 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 4 DISTRICT COURT JUDGE DISTRICT 4, DEPT 5 REGULAR 6 *SHANE A VANNATTA 3405 NORTH AVE W, MISSOULA, 59804 VANNATTA4JUDGE@GMAIL.COM Not Provided 4063702123 7/10/2026 3:23:44 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 7 DISTRICT COURT JUDGE DISTRICT 7, DEPT 2 REGULAR 6 *SCOTT W HERRING 303 2ND AVE SW, SIDNEY, 59270 HERR@MIDRIVERS.COM Not Provided 4069391531 7/10/2026 3:29:25 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 7 DISTRICT COURT JUDGE DISTRICT 7, DEPT 2 REGULAR 6 BRETT IRIGOIN PO BOX 154, GLENDIVE, MT, 59330 IRIGOINFORDISTRICTJUDGE@GMAIL.COM Not Provided 4064892759 7/10/2026 3:31:37 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 8 DISTRICT COURT JUDGE DISTRICT 8, DEPT 4 REGULAR 6 *JOHN W PARKER 24 MISSOURI BND, GREAT FALLS, MT, 59404 PARKMONT@HOTMAIL.COM Not Provided 4068683695 7/10/2026 3:35:08 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 13 DISTRICT COURT JUDGE DISTRICT 13, DEPT 4 REGULAR 6 *BRETT LINNEWEBER PO BOX 81274, BILLINGS, MT, 59108 INFO@BRETTLINNEWEBER.COM BRETTLINNEWEBER.COM 4062339121 7/10/2026 3:37:57 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 13 DISTRICT COURT JUDGE DISTRICT 13, DEPT 5 REGULAR 6 *ROD SOUZA PO BOX 50058, BILLINGS, MT, 59105 CONTACT@JUDGESOUZA.COM Not Provided   7/10/2026 3:41:04 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 13 DISTRICT COURT JUDGE DISTRICT 13, DEPT 9 REGULAR 6 *SETH CUNNINGHAM PO BOX 81515, BILLINGS, MT, 59108 INFO@SETHCUNNINGHAMMT.COM SETHCUNNNINGHAMMT.COM 4062339121 7/10/2026 3:43:40 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 13 DISTRICT COURT JUDGE DISTRICT 13, DEPT 10 REGULAR 6 *ED ZINK PO BOX 81515, BILLINGS, MT, 59108 INFO@ZINK4JUDGE.COM WWW.ZINK4JUDGE.COM 4062339121 7/10/2026 3:46:22 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 18 DISTRICT COURT JUDGE DISTRICT 18, DEPT 2 REGULAR 6 *RIENNE H MCELYEA 1627 W MAIN ST PMB 241, BOZEMAN, MT, 59715 RIENNEMCELYEA@GMAIL.COM Not Provided 4065822140 7/10/2026 3:49:04 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 20 DISTRICT COURT JUDGE DISTRICT 20, DEPT 1 REGULAR 6 *MOLLY OWEN 118 ORCHARD PARK LN, POLSON, 59860 MOLLY8709@GMAIL.COM Not Provided 6027511971 7/10/2026 4:37:46 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 20 DISTRICT COURT JUDGE DISTRICT 20, DEPT 2 UNEXPIRED UNEXPIRED 6 *JOHN A MERCER PO BOX 430, POLSON, MT, 59860 JAMERCER2@OUTLOOK.COM Not Provided 4062616030 7/10/2026 4:39:48 PM NON   FILED 
+			 
+				 FILED Judicial JUDICIAL DISTRICT 21 DISTRICT COURT JUDGE DISTRICT 21, DEPT 2 REGULAR 6 *JENNIFER LINT 2976 MITTOWER RD, VICTOR, MT, 59875 JBOATWRIGHTLINT@GMAIL.COM Not Provided   7/10/2026 4:42:11 PM NON   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 1 STATE SENATOR DISTRICT 1 REGULAR 4 STEVE GUNDERSON 167 SKYLINE RD, LIBBY, 59923 GUNDERSONSD1@GMAIL.COM GUNDERSON4SENATE.COM 4063344370 7/10/2026 4:44:13 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 1 STATE SENATOR DISTRICT 1 REGULAR 4 JONATHAN RUSSELL JAMESON 1414 UTAH AVE, LIBBY, 59923 JONATHAN.R.JAMESON@GMAIL.COM Not Provided 5098445207 7/10/2026 4:45:44 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 4 STATE SENATOR DISTRICT 4 REGULAR 4 AMY REGIER PO BOX 10466, KALISPELL, MT, 59904 REGIERMT@GMAMIL.COM AMYFORMONTANA.COM 4062538421 7/10/2026 4:47:43 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 4 STATE SENATOR DISTRICT 4 REGULAR 4 KYLE WATERMAN PO BOX 681, KALISPELL, MT, 59901 KYLE4KALISPELL@GMAIL.COM KYLE4KALISPELL.COM 4068714885 7/10/2026 4:49:20 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 6 STATE SENATOR DISTRICT 6 REGULAR 4 PATRICK FITZPATRICK PO BOX, BIGFORK, MT, 59911 FITZPATRICKRN@GMAIL.COM Not Provided 4064075513 7/16/2026 10:03:30 AM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 6 STATE SENATOR DISTRICT 6 REGULAR 4 *MARK NOLAND PO BOX 1852, BIGFORK, MT, 59911 MARKNOLAND50@GMAIL.COM Not Provided 4062538982 7/16/2026 10:05:05 AM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 8 STATE SENATOR DISTRICT 8 REGULAR 4 CHRISTOPHER PAUL BUCKLES 32306 ST IGNATIUS AIRPORT RD, ST IGNATIUS, 59865 BUCKLESCO@LIVE.COM Not Provided 4068800184 7/16/2026 10:07:18 AM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 8 STATE SENATOR DISTRICT 8 REGULAR 4 TYSON T RUNNING WOLF PO BOX 377, BROWNING, MT, 59417 TRWOLVES@GMAIL.COM Not Provided 4068452115 7/16/2026 10:08:41 AM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 9 STATE SENATOR DISTRICT 9 REGULAR 4 NOY HOLLAND PO BOX 767, CHOTEAU, MT, 59422 Not Provided Not Provided   7/16/2026 10:11:01 AM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 9 STATE SENATOR DISTRICT 9 REGULAR 4 LLEW JONES 1102 4TH AVE SW, CONRAD, 59425 LJONES@MTBUS.NET Not Provided 4062713104 7/16/2026 10:12:10 AM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 9 STATE SENATOR DISTRICT 9 REGULAR 4 NATE WHITE PO BOX 74, AUGUSTA, MT, 59410 NRONWHITE@GMAIL.COM WRITE IN 4064500141 8/10/2026 9:18:47 AM NON   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 10 STATE SENATOR DISTRICT 10 REGULAR 4 JESSICA DYRDAHL PO BOX 201410 PMBJD1153, HELENA, MT, 59620 JESSICA@JESSICAFORMONTANA.COM JESSICAFORMONTANA.COM 4065906071 7/16/2026 10:14:01 AM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 10 STATE SENATOR DISTRICT 10 REGULAR 4 MARGARET MITCHELL PO BOX 1007, GREAT FALLS, MT, 59405 MITCHELL@MITCHELL406.COM MITCHELL406.COM 4065181462 7/16/2026 10:16:14 AM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 11 STATE SENATOR DISTRICT 11 REGULAR 4 STEVEN GALLOWAY 202 SUN PRAIRIE RD, GREAT FALLS, MT, 59404 GALLOWAY4MT@GMAIL.COM STEVENFORMONTANA.COM 4067504723 7/16/2026 10:18:39 AM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 11 STATE SENATOR DISTRICT 11 REGULAR 4 VALYNDA HOLLAND 605 PARK DR N, GREAT FALLS, MT, 59401 VALYNDAFORMT@OUTLOOK.COM Not Provided 4064385089 7/16/2026 10:20:05 AM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 12 STATE SENATOR DISTRICT 12 REGULAR 4 MINDY LEACH 313 FOX DR, GREAT FALLS, 59404 MINDY@MINDY4MT.COM MINDY4MT.COM 4068369055 7/16/2026 2:38:52 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 12 STATE SENATOR DISTRICT 12 REGULAR 4 GEORGE NIKOLAKAKOS 5112 4TH AVE N, GREAT FALLS, MT, 59405 GEORGE.NIKO@OUTLOOK.COM Not Provided 4068230363 7/16/2026 2:46:13 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 14 STATE SENATOR DISTRICT 14 REGULAR 4 ERIC ALBUS BOX 289, GLASGOW, MT, 59230 EALBUS@NEMONT.NET ALBUS FOR SENATE 4066487494 7/16/2026 2:48:45 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 14 STATE SENATOR DISTRICT 14 REGULAR 4 BLAKE BORST 11006 RIVER RD N, HAVRE, MT, 59501 BSBRANCH@MTINTOUCH.NET Not Provided   7/16/2026 2:50:40 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 18 STATE SENATOR DISTRICT 18 REGULAR 4 GREG KMETZ 70 SPRANDEL LN, MILES CITY, MT, 59301 NOLLEY@MIDRIVERS.COM WWW.GREGKMETZFORSENATE.COM 4068531636 7/16/2026 2:52:39 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 18 STATE SENATOR DISTRICT 18 REGULAR 4 STAN TAYLOR 66 SPRANDEL LN, MILES CITY, MT, 59301 Not Provided Not Provided   7/16/2026 2:53:59 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 19 STATE SENATOR DISTRICT 19 REGULAR 4 DEANNA J DAIGREPONT 705 MAIN ST, ROUNDUP, MT, 59072 DRDEANNAFORMONTANA@GMAIL.COM Not Provided 7026865679 7/16/2026 2:56:10 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 19 STATE SENATOR DISTRICT 19 REGULAR 4 CHRIS RINDAL 103 SAPPHIRE DR, LEWISTOWN, MT, 59457 RINDAL4SENATE@GMAIL.COM Not Provided 4063661187 7/16/2026 2:57:53 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 22 STATE SENATOR DISTRICT 22 REGULAR 4 *DANIEL ZOLNIKOV PO BOX 50403, BILLINGS, MT, 59105 Not Provided DANIELZOLNIKOV.COM   7/16/2026 2:59:42 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 22 STATE SENATOR DISTRICT 22 REGULAR 4 ELIJAH TIDSWELL PO BOX 20425, BILLINGS, MT, 59104 ELIJAHTIDSWELLFORMT@GMAIL.COM WRITE IN 4066713066 8/10/2026 9:21:21 AM NON   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 22 STATE SENATOR DISTRICT 22 REGULAR 4 CARI LYNN OLSON PO BOX 22561, BILLINGS, MT, 59104 MONTANANSFORCORIOLSON@GMAIL.COM WRITE IN 4062003335 8/10/2026 9:23:22 AM NON   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 23 STATE SENATOR DISTRICT 23 REGULAR 4 *EMMA KERR-CARPENTER PO BOX 22062, BILLINGS, MT, 59101 EMMAFORMONTANA@GMAIL.COM EMMAFORMONTANA.ORG 4068940377 7/16/2026 3:01:51 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 23 STATE SENATOR DISTRICT 23 REGULAR 4 JOANNA OBLANDER 5010 LEWIES WAY, SHEPHERD, MT, 59079 JOANNAOBLANDERFORMT@GMAIL.COM Not Provided 4065307010 7/16/2026 3:03:31 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 25 STATE SENATOR DISTRICT 25 REGULAR 4 JULIE HIPPLER 2602 1ST AVE N, BILLINGS, MT, 59101 JULIE@HIPPLERFORMONTANA.COM HIPPLERFORMONTANA.COM 4066715875 7/16/2026 3:05:23 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 25 STATE SENATOR DISTRICT 25 REGULAR 4 *DENNIS LENZ PO BOX 20752, BILLINGS, MT, 59102 Not Provided Not Provided   7/16/2026 3:07:00 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 28 STATE SENATOR DISTRICT 28 REGULAR 4 KELLY HALE PO BOX 90, RED LODGE, MT, 59068 KELLYTHALE@GMAIL.COM KELLYHALEFORMONTANA.COM 4068181566 7/16/2026 3:09:01 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 28 STATE SENATOR DISTRICT 28 REGULAR 4 *FORREST J MANDEVILLE PO BOX 337, COLUMBUS, MT, 59019 FORRESTMANDEVILLE@GMAIL.COM HTTPS://WWW.FACEBOOK.COM/MANDEVILLEFORMONTANA 4066901933 7/16/2026 3:10:44 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 29 STATE SENATOR DISTRICT 29 REGULAR 4 JASON GUNDERSON 1108 RIDGEVIEW TRL, LIVINGSTON, 59047 JGUNDERSONMT@GMAIL.COM JGUNDERSONMT.COM   7/16/2026 3:12:55 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 29 STATE SENATOR DISTRICT 29 REGULAR 4 SCOTT ROSENZWEIG PO BOX 134, BOZEMAN, MT, 59771 Not Provided ROSENZWEIGFORMONTANA.COM   7/20/2026 11:36:08 AM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 31 STATE SENATOR DISTRICT 31 REGULAR 4 RICHARD AUNGIER 1215 DURSTON RD, BOZEMAN, MT, 59715 CONTACTS@RICHARDFORMONTANA.COM HTTPS://RICHARDFORMONTANA.COM 4065707558 7/16/2026 3:27:43 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 31 STATE SENATOR DISTRICT 31 REGULAR 4 KATHLEEN WILLIAMS PO BOX 548, BOZEMAN, MT, 59771 KATHLEEN@KATHLEENFORMONTANA.COM KATHLEENFORMONTANA.COM 4065701917 7/16/2026 3:31:43 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 32 STATE SENATOR DISTRICT 32 REGULAR 4 NEAL GANSER 32406 FRONTAGE ROAD, BOZEMAN, MT, 59715 NEAL@GANSERLLC.COM GANSERFORTHEGALLATIN.COM 4065870309 7/16/2026 3:34:06 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 32 STATE SENATOR DISTRICT 32 REGULAR 4 KELLY KORTUM PO BOX 942, BOZEMAN, MT, 59718 KELLYFORMT@GMAIL.COM KELLYFORMT.COM 4064046643 7/16/2026 3:36:13 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 34 STATE SENATOR DISTRICT 34 REGULAR 4 CARL ANDERSON 426 N RIVER ROCK DR, BELGRADE, MT, 59714 Not Provided Not Provided   7/16/2026 3:38:33 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 34 STATE SENATOR DISTRICT 34 REGULAR 4 CALEB HINKLE PO BOX 468, BELGRADE, MT, 59714 CALEBFORMONTANA@OUTLOOK.COM Not Provided 4065247091 7/16/2026 3:39:41 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 41 STATE SENATOR DISTRICT 41 REGULAR 4 ERIN FARRIS-OLSEN PO BOX 141, HELENA, MT, 59624 ERIN4MONTANA@GMAIL.COM WWW.ERIN4MONTANA.COM 4064618530 7/16/2026 3:41:39 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 41 STATE SENATOR DISTRICT 41 REGULAR 4 DRU KOESTER PO BOX 1583, EAST HELENA, MT, 59635 DRU.KOESTER@OUTLOOK.COM Not Provided   7/16/2026 3:43:11 PM LIB   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 42 STATE SENATOR DISTRICT 42 REGULAR 4 *MARY ANN DUNWELL PO BOX 4656, HELENA, MT, 59604 MARYANNDUNWELLSD42@GMAIL.COM MARYANNDUNWELL.COM 4064615358 7/16/2026 3:45:04 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 42 STATE SENATOR DISTRICT 42 REGULAR 4 STEPHEN LAPRAIM 940 DENALI RD, HELENA, MT, 59602 LAPRAIMFORMONTANA@GMAIL.COM LAPRAIM4MT.COM 4064658509 7/16/2026 3:46:43 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 43 STATE SENATOR DISTRICT 43 REGULAR 4 DAVID BEDEY PO BOX 692, HAMILTON, MT, 59840 D.F.BEDEY@GMAIL.COM DAVIDBEDEY.COM 4063812059 7/16/2026 3:48:28 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 43 STATE SENATOR DISTRICT 43 REGULAR 4 STEPHEN LEUCHTMAN 1103 S 4TH ST, HAMILTON, MT, 59840 SNLEUCHTMAN@GMAIL.COM Not Provided 4063602480 7/16/2026 3:49:56 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 48 STATE SENATOR DISTRICT 48 REGULAR 4 *ANDREA OLSEN 622 ROLLINS ST, MISSOULA, MT, 59801 ANDREA4SENATE@GMAIL.COM Not Provided 4065432666 7/16/2026 3:51:34 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 49 STATE SENATOR DISTRICT 49 REGULAR 4 *WILLIS CURDY 11280 KONA RANCH RD, MISSOULA, MT, 59804 WILLCURDY@GMAIL.COM Not Provided 4065460523 7/16/2026 3:53:15 PM DEM   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 49 STATE SENATOR DISTRICT 49 REGULAR 4 BRAD TSCHIDA 10825 MULLAN RD, MISSOULA, MT, 59808 BRAD@TSCHIDA.ORG Not Provided 4065464349 7/16/2026 3:54:43 PM REP   FILED 
+			 
+				 FILED Senate SENATE DISTRICT 50 STATE SENATOR DISTRICT 50 REGULAR 4 *SHANE A MORIGEAU 10643 UPLAND TRL, MISSOULA, MT, 59804 SHANE@SHANEFORMT.COM Not Provided 4065464290 7/16/2026 3:56:34 PM DEM   FILED 
+			 
+				 FILED House HOUSE DISTRICT 1 STATE REPRESENTATIVE DISTRICT 1 REGULAR 2 MICHELLE BIANCO PO BOX 266, FORTINE, MT, 59918 BIANCO4MT@GMAIL.COM HTTPS://BIANCO4MT2026.COM 4069161041 7/17/2026 11:41:18 AM REP   FILED 
+			 
+				 FILED House HOUSE DISTRICT 1 STATE REPRESENTATIVE DISTRICT 1 REGULAR 2 DAKOTA V ADAMS 421 US HIGHWAY 93 N, EUREKA, MT, 59917 DAKOTARHODES97@GMAIL.COM ADAMSFORLEGISLATURE.COM 4062911364 7/17/2026 11:39:51 AM DEM 1 FILED 
+			 
+				 FILED House HOUSE DISTRICT 2 STATE REPRESENTATIVE DISTRICT 2 REGULAR 2 JANE MAAHS 554 SHALOM DR, LIBBY, MT, 59923 MONTANA.JM554@GMAIL.COM Not Provided   7/17/2026 11:43:16 AM DEM   FILED 
+			 
+				 FILED House HOUSE DISTRICT 2 STATE REPRESENTATIVE DISTRICT 2 REGULAR 2 *TOM MILLETT PO BOX 1075, MARION, MT, 59925 TOM@MILLETT4MONTANA.COM MILLETT4MONTANA.COM 4062123613 7/17/2026 11:44:13 AM REP   FILED 
+			 
+				 FILED House HOUSE DISTRICT 3 STATE REPRESENTATIVE DISTRICT 3 REGULAR 2 DEREK PEACHEY 704C EAST 13TH ST, PMB 628, WHITEFISH, MT, 59937 DEREK@PEACHEYFORMONTANA.COM WWW.PEACHEYFORMONTANA.COM 8173009397 7/17/2026 2:20:55 PM REP   FILED 
+			 
+				 FILED House HOUSE DISTRICT 3 STATE REPRESENTATIVE DISTRICT 3 REGULAR 2 *DEBO POWERS PO BOX 792, WHITEFISH, MT, 59937 DEBOPOWERS@GMAIL.COM WWW.POWERSFORTHEPEOPLE.US 4064070787 7/17/2026 2:23:12 PM DEM   FILED 
+			 
+				 FILED House HOUSE DISTRICT 4 STATE REPRESENTATIVE DISTRICT 4 REGULAR 2 PAULA KOCH PO BOX 471, COLUMBIA FALLS, MT, 59912 KOCHBESTFORMONTANAHD4@GMAIL.COM KOCHBESTFORMONTANAHD4.ORG   7/17/2026 2:25:13 PM DEM   FILED 
+			 
+				 FILED House HOUSE DISTRICT 4 STATE REPRESENTATIVE DISTRICT 4 REGULAR 2 SHAUN PANDINA PO BOX 2433, COLUMBIA FALLS, MT, 59912 PANDINAFORMONTANA@PM.ME PANDINAFORMONTANA.COM 4063094727 7/17/2026 2:26:35 PM REP   FILED 
+			 
+				 FILED House HOUSE DISTRICT 5 STATE REPRESENTATIVE DISTRICT 5 REGULAR 2 *BRAXTON MITCHELL PO BOX 1765, COLUMBIA FALLS, MT, 59912 BRAXTONMMITCHELL@GMAIL.COM Not Provided 4062008384 7/17/2026 2:28:58 PM REP   FILED 
+			 
+				 FILED House HOUSE DISTRICT 5 STATE REPRESENTATIVE DISTRICT 5 REGULAR 2 LUCA WELLE PO BOX 136, COLUMBIA FALLS, MT, 59912 CONTACT@LUCAFORMONTANA.COM LUCAFORMONTANA.COM 4068905214 7/17/2026 2:30:41 PM DEM   FILED 
+			 
+				 FILED House HOUSE DISTRICT 6 STATE REPRESENTATIVE DISTRICT 6 REGULAR 2 DARREN FIX PO BOX 8273, KALISPELL, MT, 59903 DARREN.FIX@GMAIL.COM WWW.FIX4HD6.COM 4063142046 7/17/2026 2:32:31 PM DEM   FILED 
+			 
+				 FILED House HOUSE DISTRICT 6 STATE REPRESENTATIVE DISTRICT 6 REGULAR 2 JIM RILEY 58 MORNING VIEW WAY, KALISPELL, MT, 59901 JIMRILEYFORHD6@GMAIL.COM WWW.JIMRILEYFORHD6.COM 4066075746 7/17/2026 2:33:55 PM REP   FILED 
+			 
+				 FILED House HOUSE DISTRICT 7 STATE REPRESENTATIVE DISTRICT 7 REGULAR 2 MADISON EVANS PO BOX 272, KALISPELL, MT, 59903 VOTE@MADISONFORMONTANA.COM MADISONFORMONTANA.COM 4062908445 7/17/2026 2:35:31 PM DEM   FILED 
+			 
+				 FILED House HOUSE DISTRICT 7 STATE REPRESENTATIVE DISTRICT 7 REGULAR 2 *COURTENAY SPRUNGER PO BOX 8315, KALISPELL, MT, 59904 COURTENAYSPRUNGER@GMAIL.COM COURTENAYSPRUNGER.COM 4064071151 7/17/2026 2:37:30 PM REP   FILED 
+			 
+				 FILED House HOUSE DISTRICT 8 STATE REPRESENTATIVE DISTRICT 8 REGULAR 2 CALVIN LIME 313 PARLIAMENT DR, KALISPELL, 59901 CALVINMTHD8@GMAIL.COM Not Provided 4068454243 7/17/2026 2:40:14 PM DEM   FILED 
+			 
+				 FILED House HOUSE DISTRICT 8 STATE REPRESENTATIVE DISTRICT 8 REGULAR 2 *LUKAS SCHUBERT PO BOX 8091, KALISPELL, MT, 59904 LUKASSCHUBERTMT@GMAIL.COM LUKASSCHUBERTMT.COM 4066096099 7/17/2026 2:58:07 PM REP   FILED 
+			 
+				 FILED House HOUSE DISTRICT 9 STATE REPRESENTATIVE DISTRICT 9 REGULAR 2 *STEVEN C KELLY PO BOX 2146, KALISPELL, MT, 59903 STEVE@KELLYFORHD9.COM WWW.KELLYFORHD9.COM 4063090275 7/17/2026 4:05:20 PM REP   FILED 
+			 
+				 FILED House HOUSE DISTRICT 9 STATE REPRESENTATIVE DISTRICT 9 REGULAR 2 KATE MCLAUGHLIN 175 HUTTON RANCH RD, KALISPELL, MT, 59901 VOTE@K84MT.COM K84MT.COM 4062909597 7/17/2026 4:08:08 PM DEM   FILED 
+			 
+				 FILED House HOUSE DISTRICT 10 STATE REPRESENTATIVE DISTRICT 10 REGULAR 2 CATHERINE C ALLEN PO BOX 7872, KALISPELL, MT, 59904 CATHERINEALLENFORMONTANA@GMAIL.COM WWW.CATHERINEALLENFORMONTANA.COM 4069090175 7/17/2026 4:10:02 PM DEM   FILED 
+			 
+			 
+
+		 
+
+		 
+			 
+				 
+					 NoFilter Contains DoesNotContain StartsWith EndsWith EqualTo NotEqualTo GreaterThan LessThan GreaterThanOrEqualTo LessThanOrEqualTo Between NotBetween IsEmpty NotIsEmpty IsNull NotIsNull Custom 
+				 
+			 
+		 	 
+		
+                        
+	 
+ 
+                     
+                 
+             
+             
+
+             
+         
+     
+
+                     
+                     
+                     
+                     
+                 
+                 
+                     
+                         
+                         Toggle Menu 
+                     
+                     
+                         
+                             
+                                 
+                                 Services 
+                                 Montana Secretary of State 
+                                 Elections Division 
+                                 Privacy & Security 
+                                 Accessibility 
+                                 Contact Us 
+                                 
+                             
+                         
+                         
+
+                     
+                 
+             
+         
+    
+
+ 
+//<![CDATA[
+window.__TsmHiddenField = $get('RadScriptManager1_TSM');Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadAjaxLoadingPanel, {"initialDelayTime":0,"isSticky":false,"minDisplayTime":0,"skin":"","uniqueID":"ctl00$ContentPlaceHolder1$RadAjaxLoadingPanel1","zIndex":90000}, null, null, $get("RadAjaxLoadingPanel1"));
+});
+
+var callBackFrameUrl='/WebResource.axd?d=beToSAE3vdsL1QUQUxjWdWeO_TeAcgC0aphS5_idHr-F2lvr530ZMs0JrBM7-SIKxbDzp9ql66uH5Jv3OfxUYQ2&t=639190617332169432';
+WebForm_InitCallback();Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":0,"_skin":"Default","_text":"100","_uniqueId":"ctl00$ContentPlaceHolder1$grdCandidates$ctl00$ctl03$ctl01$PageSizeComboBox","_value":"100","clientStateFieldID":"ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl03_ctl01_PageSizeComboBox_ClientState","collapseAnimation":"{\"duration\":450}","expandAnimation":"{\"duration\":450}","itemData":[{"value":"10","attributes":{"ownerTableViewId":"ctl00_ContentPlaceHolder1_grdCandidates_ctl00"}},{"value":"20","attributes":{"ownerTableViewId":"ctl00_ContentPlaceHolder1_grdCandidates_ctl00"}},{"value":"50","attributes":{"ownerTableViewId":"ctl00_ContentPlaceHolder1_grdCandidates_ctl00"}},{"value":"100","selected":true,"attributes":{"ownerTableViewId":"ctl00_ContentPlaceHolder1_grdCandidates_ctl00"}}],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","selectedIndex":3}, {"selectedIndexChanged":Telerik.Web.UI.Grid.ChangePageSizeComboHandler,"selectedIndexChanging":Telerik.Web.UI.Grid.ChangingPageSizeComboHandler}, null, $get("ctl00_ContentPlaceHolder1_grdCandidates_ctl00_ctl03_ctl01_PageSizeComboBox"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadContextMenu, {"_childListElementCssClass":null,"_skin":"Default","clickToOpen":true,"clientStateFieldID":"ctl00_ContentPlaceHolder1_grdCandidates_rfltMenu_ClientState","collapseAnimation":"{\"duration\":450}","expandAnimation":"{\"duration\":450}","itemData":[{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NoFilter"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"Contains"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"DoesNotContain"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"StartsWith"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"EndsWith"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"EqualTo"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NotEqualTo"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"GreaterThan"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"LessThan"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"GreaterThanOrEqualTo"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"LessThanOrEqualTo"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"Between"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NotBetween"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"IsEmpty"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NotIsEmpty"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"IsNull"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"NotIsNull"},{"attributes":{"columnUniqueName":"","tableID":""},"postBack":0,"value":"Custom"}],"targets":[],"webServiceSettings":"{\"ODataSettings\":{\"ResponseType\":0,\"InitialContainerName\":\"\",\"Entities\":[],\"EntityContainer\":[]},\"Path\":\"\",\"Method\":\"\",\"UseHttpGet\":false,\"ViewState\":{}}"}, null, null, $get("ctl00_ContentPlaceHolder1_grdCandidates_rfltMenu"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadGrid, {"ClientID":"ctl00_ContentPlaceHolder1_grdCandidates","ClientSettings":{"AllowAutoScrollOnDragDrop":true,"ShouldCreateRows":true,"DataBinding":{},"Selecting":{"CellSelectionMode":0},"Scrolling":{},"Resizing":{},"ClientMessages":{},"KeyboardNavigationSettings":{"AllowActiveRowCycle":false,"EnableKeyboardShortcuts":true,"FocusKey":89,"InitInsertKey":73,"RebindKey":82,"ExitEditInsertModeKey":27,"UpdateInsertItemKey":13,"DeleteActiveRow":127,"ExpandDetailTableKey":39,"CollapseDetailTableKey":37,"MoveDownKey":40,"MoveUpKey":38,"SaveChangesKey":85,"CancelChangesKey":81},"Animation":{},"Virtualization":{}},"Skin":"Default","UniqueID":"ctl00$ContentPlaceHolder1$grdCandidates","_activeRowIndex":"","_controlToFocus":"","_currentPageIndex":0,"_defaultDateTimeFormat":"M/d/yyyy h:mm:ss tt","_editIndexes":"[]","_embeddedSkin":true,"_freezeText":"Freeze","_gridTableViewsData":"[{\"ClientID\":\"ctl00_ContentPlaceHolder1_grdCandidates_ctl00\",\"UniqueID\":\"ctl00$ContentPlaceHolder1$grdCandidates$ctl00\",\"PageSize\":100,\"PageCount\":3,\"EditMode\":\"EditForms\",\"AllowPaging\":true,\"CurrentPageIndex\":0,\"VirtualItemCount\":0,\"AllowMultiColumnSorting\":false,\"AllowNaturalSort\":true,\"AllowFilteringByColumn\":true,\"PageButtonCount\":10,\"HasDetailTables\":false,\"HasMultiHeaders\":false,\"CheckListWebServicePath\":\"\",\"GroupLoadMode\":\"Server\",\"PagerAlwaysVisible\":false,\"IsItemInserted\":false,\"clientDataKeyNames\":[],\"hasDetailItemTemplate\":false,\"_dataBindTemplates\":false,\"_selectedItemStyle\":\"\",\"_selectedItemStyleClass\":\"rgSelectedRow\",\"isFilterItemExpanded\":true,\"_columnsData\":[{\"UniqueName\":\"Status\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"Status\",\"Display\":true},{\"UniqueName\":\"DistrictType\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"DistrictType\",\"Display\":true},{\"UniqueName\":\"Jurisdiction\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"Jurisdiction\",\"ReadOnly\":true,\"Display\":true},{\"UniqueName\":\"Race\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"Race\",\"Display\":true},{\"UniqueName\":\"TermText\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"TermText\",\"Display\":true},{\"UniqueName\":\"TermLength\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.Int32\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"EqualTo\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"TermLength\",\"Display\":true},{\"UniqueName\":\"BallotName\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"BallotName\",\"ReadOnly\":true,\"Display\":true},{\"UniqueName\":\"MailingAddress\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"MailingAddress\",\"Display\":true},{\"UniqueName\":\"EmailWeb\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"EmailWeb\",\"Display\":true},{\"UniqueName\":\"Phone\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"Phone\",\"DataFormatString\":\"{0:###-###-####}\",\"Display\":true},{\"UniqueName\":\"PetitionFilingDate\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"PetitionFilingDate\",\"Display\":true},{\"UniqueName\":\"PoliticalPartyID\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":1,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"Contains\",\"DataField\":\"PoliticalPartyID\",\"Display\":true},{\"UniqueName\":\"BallotOrder\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.Int32\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"EqualTo\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"BallotOrder\",\"Display\":true},{\"UniqueName\":\"Status\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"DataTypeName\":\"System.String\",\"FilterListOptions\":0,\"CurrentFilterFunction\":0,\"CurrentFilterValue\":\"\",\"AndCurrnetFilterFunction\":0,\"AndCurrentFilterValue\":\"\",\"Acff\":\"Contains\",\"CurrentFilterFunctionName\":\"NoFilter\",\"AndCurrentFilterFunctionName\":\"NoFilter\",\"DataField\":\"Status\",\"Display\":false}]}]","_masterClientID":"ctl00_ContentPlaceHolder1_grdCandidates_ctl00","_shouldFocusOnPage":false,"_unfreezeText":"Unfreeze","allowMultiRowSelection":false,"clientStateFieldID":"ctl00_ContentPlaceHolder1_grdCandidates_ClientState","expandItems":{},"renderMode":1}, null, null, $get("ctl00_ContentPlaceHolder1_grdCandidates"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadAjaxPanel, {"clientEvents":{OnRequestStart:"",OnResponseEnd:""},"enableAJAX":true,"enableHistory":false,"links":[],"loadingPanelID":"RadAjaxLoadingPanel1","styles":[],"uniqueID":"ctl00$ContentPlaceHolder1$RadAjaxPanel1"}, null, null, $get("ctl00_ContentPlaceHolder1_RadAjaxPanel1"));
+});
+//]]>
+ 
+ 
+
+    
+     
+        $(document).ready(function() {
+            $('body').css("overflow", "auto");
+        });
+     
+
+ 
+ 
+ 
+    $('input[type=text]').blur(function () {
+        $(this).val($(this).val().trim());
+    });
+ 

@@ -1,0 +1,9 @@
+{
+  "url": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+  "finalUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+  "httpStatus": 200,
+  "contentType": "application/tab-separated-values",
+  "retrievedAt": "2026-10-20T22:52:21.487981+00:00",
+  "rawHash": "a6115b68fd504b0888871f511a995069a222f7963dc7b7ba1cb6550800d092f0",
+  "bytes": 235476
+}

@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/PrinceGeorges.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/PrinceGeorges.pdf",
+  "retrievedAt": "2026-10-20T23:03:25.389962+00:00",
+  "rawHash": "0eb31c8dc7034f73caabd66f534bd19c5aaaedc4a898899eaffe9b97f97a40d3",
+  "httpStatus": 200,
+  "bytes": 16176870,
+  "convertedTextHash": "2fd4917c92414bbfb8fdba00ce7e721a75732b22866112afd6ad769a606896cc",
+  "extraction": "pdftotext -layout; exact converted official ballot source text; original rawHash identifies PDF capture"
+}

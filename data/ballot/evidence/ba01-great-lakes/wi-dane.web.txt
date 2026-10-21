@@ -1,0 +1,179 @@
+What's on the Ballot Nov 2026.pdf (https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf)
+【turn977338view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 4; Source: open({"ref_id":"turn675911view0","lineno":null}); Total lines: 176
+L0@P0: 1
+L1@P0: What’s on the Ballot (Dane County) – November 3, 2026
+L2@P0: Listed below are candidates from these parties who have been certified to be on the November 5th General
+L3@P0: Election ballot.
+L4@P0: OFFICE / CANDIDATES MUNICIPALITY(IES) INVOLVED
+L5@P0: Governor/Lieutenant Governor
+L6@P0: Tom Tiffay/David Varnam (REP)
+L7@P0: David Crowley/Sarah Godlewski (DEM) Statewide
+L8@P0: Attorney General
+L9@P0: Eric Toney (REP)
+L10@P0: Josh Kaul (DEM) Statewide
+L11@P0: Secretary of State
+L12@P0: Jay Schroeder (REP)
+L13@P0: JoCasta Zamarripa (DEM)
+L14@P0: Pete Karas (GRN)
+L15@P0: Statewide
+L16@P0: State Treasurer
+L17@P0: John S. Leiber (REP)
+L18@P0: Yee Leng Xiong (DEM) Statewide
+L19@P0: Representative in Congress
+L20@P0: District 2
+L21@P0: Mark Pocan (DEM) Dane County
+L22@P0: State Senator – District 15
+L23@P0: Scott Fleming (REP)
+L24@P0: Mark Spreitzer (DEM)
+L25@P0: Christopher Dean (Serving People Not Parties)
+L26@P0: City of Edgerton
+L27@P0: State Senator – District 17
+L28@P0: Howard Marklein (REP)
+L29@P0: Jenna Jacobson (DEM)
+L30@P0: Towns of Blue Mounds, Montrose, Oregon, Perry,
+L31@P0: Primrose, Springdale and Vermont; Villages of Belleville,
+L32@P0: Blue Mounds, Brooklyn wards 1 and 3, Mount Horeb and
+L33@P0: Oregon
+L34@P0: State Senator – District 27
+L35@P0: Diane Hesselbein (DEM)
+L36@P0: Towns of Berry, Black Earth, Cross Plains, Dane,
+L37@P0: Mazomanie, Middleton, Roxbury, Springfield, Verona and
+L38@P0: Westport; Villages of Black Earth, Cross Plains, Dane,
+L39@P0: Mazomanie and Waunakee; City of Madison wards 34-35,
+L40@P0: 39, 66-67, 81-107, 108-114, 115-120, 124, 130-131 and 134-
+L41@P0: 137, Middleton and Verona
+L42@P0: State Assembly – District 42
+L43@P0: Keith F. Miller (REP)
+L44@P0: Maureen McCarville (DEM)
+L45@P0: Towns of Burke wards 5-6 and Vienna; Villages of
+L46@P0: DeForest and Windsor; Cities of Madison wards 23-26,
+L47@P0: 122, 129 and 133 and Sun Prairie ward 30
+L48@P0: State Assembly – District 43
+L49@P0: Paul McGraw (REP)
+L50@P0: Brienne Brown (DEM)
+L51@P0-1: City of Edgerton 2
+L52@P1: State Assembly – District 46
+L53@P1: John Donohue (REP)
+L54@P1: Joan Fitzgerald (DEM)
+L55@P1: Towns of Albion wards 2-3, Christiana, Cottage Grove,
+L56@P1: Deerfield and Medina; Villages of Cambridge, Cottage
+L57@P1: Grove wards 1-9, Deerfield, Marshall, McFarland ward 13
+L58@P1: and Rockdale; City of Madison ward 125
+L59@P1: State Assembly – District 47
+L60@P1: Sandy Bakk (REP)
+L61@P1: Randy Udell (DEM)
+L62@P1: Towns of Albion wards 1, 4, Dunkirk, Dunn, Pleasant Springs
+L63@P1: and Rutland; Villages of Brooklyn ward 4 and McFarland
+L64@P1: wards 7-12; Cities of Fitchburg wards 1-21 and Stoughton
+L65@P1: State Assembly – District 48
+L66@P1: Mark Kjorlie (REP)
+L67@P1: Andrew Hysell (DEM)
+L68@P1: Towns of Bristol, Burke wards 1-4, 7, Sun Prairie and York;
+L69@P1: Village of Cottage Grove ward 10, Cities of Madison wards 7,
+L70@P1: 13, 20-22 and 123 and Sun Prairie wards 1-29 and 31
+L71@P1: State Assembly – District 50
+L72@P1: Jon Aleckson (REP)
+L73@P1: Bill Oemichen (DEM)
+L74@P1: Towns of Montrose, Oregon, Perry, Primrose and
+L75@P1: Springdale; Villages of Belleville, Brooklyn wards 1 and 3,
+L76@P1: Mount Horeb ward 12 and Oregon
+L77@P1: State Assembly - District 51
+L78@P1: Todd Novak (REP)
+L79@P1: Ben Gruber (DEM)
+L80@P1: Nathan Tataje (American Solidarity Party)
+L81@P1: Towns of Blue Mounds and Vermont; Villages of Blue
+L82@P1: Mounds and Mount Horeb wards 1-11
+L83@P1: State Assembly – District 76
+L84@P1: Nina Chat (REP)
+L85@P1: Dina Nina Martinez-Rutherford (DEM)
+L86@P1: Town of Blooming Grove wards 1-2; Village of Maple Bluff;
+L87@P1: City of Madison wards 16-19, 27-33, 36-38, 40-46, 51-53,
+L88@P1: 55 and 128
+L89@P1: State Assembly – District 77
+L90@P1: Jane McCormick (REP)
+L91@P1: Renuka Mayadev (DEM)
+L92@P1: Village of Shorewood Hills; Cities of Fitchburg ward 22 and
+L93@P1: Madison wards 47-50, 54, 56-65, 68-72, 78-80 and 127
+L94@P1: State Assembly – District 78
+L95@P1: Henry Johnson (REP)
+L96@P1: Shelia Stubbs (DEM)
+L97@P1: Town of Blooming Grove wards 3-7; Village of McFarland
+L98@P1: wards 1-6; Cities of Fitchburg wards 23-25, Madison wards
+L99@P1: 1-6, 8-12, 14-15, 73-77, 121, 126 and 132 and Monona
+L100@P1: State Assembly – District 79
+L101@P1: John Fons (REP)
+L102@P1: Lisa Subeck (DEM)
+L103@P1: Town of Middleton ward 8A; City of Madison wards 66-67,
+L104@P1: 81-100, 102-103, 108, 115-116 and 130
+L105@P1: State Assembly – District 80
+L106@P1: Simran Arora (REP)
+L107@P1: Mike Bare (DEM)
+L108@P1: Towns of Cross Plains, Middleton wards 1, 3-8 and Verona;
+L109@P1: Village of Cross Plains wards 1-6; Cities of Madison wards
+L110@P1: 101, 104-107, 109-114, 117-120, 124 and 134-137,
+L111@P1: Middleton wards 20 and 23 and Verona
+L112@P1: State Assembly – District 81
+L113@P1: Mark S. Maier (REP)
+L114@P1: Alex Joers (DEM)
+L115@P1: Towns of Berry, Black Earth, Dane, Mazomanie, Middleton
+L116@P1: wards 2 and 4A, Roxbury, Springfield and Westport;
+L117@P1: Villages of Black Earth, Cross Plains ward 7, Dane,
+L118@P1: Mazomanie and Waunakee; and Cities of Madison wards
+L119@P1: 34-35, 39 and 131 and Middleton wards 1-19, 21-22 and 24
+L120@P1: Sheriff
+L121@P1: Kalvin D. Barrett (DEM) Dane County
+L122@P1: Clerk of Circuit Court
+L123@P1: Jeff Okazaki (DEM) Dane County
+L124@P1-2: Statewide Referendum3
+L125@P2: Question 1: Partial veto. Shall section 10 (1) (c) of article V of the constitution be amended to prohibit the
+L126@P2: governor, in exercising his or her partial veto authority, from creating or increasing or authorizing the creation
+L127@P2: or increase of any tax or
+L128@P2: fee?
+L129@P2: Question 2: Freedom to gather in places of worship during an emergency. Shall section 18 of article I of
+L130@P2: the constitution, which deals with religious liberty, be amended to prohibit the state or a political subdivision of
+L131@P2: the state from ordering the closure of, or forbidding gatherings in, places of worship in response to a state of
+L132@P2: emergency, including a public health emergency?
+L133@P2: Question 3: Governmental entity discrimination prohibited. Shall section 27 of article I of the constitution
+L134@P2: be created to prohibit governmental entities in the state from discriminating against, or granting preferential
+L135@P2: treatment to, any individual or group on the basis of race, sex, color, ethnicity, or national origin in public
+L136@P2: employment, public education, public contracting, or public administration?
+L137@P2: School District Referendum
+L138@P2: Evansville Community School District
+L139@P2: Shall the Evansville Community School District, Rock, Green and Dane Counties, Wisconsin be authorized to
+L140@P2: exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,300,000 per year for four
+L141@P2: years, beginning with the 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring
+L142@P2: purposes consisting of operational and maintenance expenses, including to provide student resources and
+L143@P2: educational programming and to address facility maintenance?
+L144@P2: School District of Lodi
+L145@P2: Question 1: Shall the School District of Lodi, Columbia and Dane Counties, Wisconsin be authorized to
+L146@P2: exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $5,980,000 per year for five
+L147@P2: years, beginning with the 2027-2028 school year and ending with the 2031-2032 school year, for non-recurring
+L148@P2: purposes consisting of operational expenses for instructional and educational programming, technology
+L149@P2: updates and staff compensation?
+L150@P2: Question 2: Shall the School District of Lodi, Columbia and Dane Counties, Wisconsin be authorized to issue
+L151@P2: pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed
+L152@P2: $13,200,000 for the public purpose of paying the cost of a school facility improvement project consisting of:
+L153@P2: renovations at the High School, including to the career and technical educational spaces, indoor pool, and
+L154@P2: athletic pool locker rooms; construction of athletic practice fields, a varsity baseball field and corresponding
+L155@P2: site improvements at the Primary School; and acquisition of furnishings, fixtures and equipment?
+L156@P2: Middleton-Cross Plains Area School District
+L157@P2: Shall the Middleton-Cross Plains Area School District, Dane County, Wisconsin be authorized to exceed the
+L158@P2: revenue limit specified in Section 121.91, Wisconsin Statutes, by $24,900,000 for the 2027- 2028 school year,
+L159@P2: by $27,900,000 for the 2028-2029 school year, by $31,100,000 for the 2029-2030 school year and by
+L160@P2: $34,600,000 for the 2030-2031 school year, for non-recurring purposes consisting of expenses related to
+L161@P2-3: ongoing educational and extracurricular programming, and compensation, and other operational expenses? 4
+L162@P3: Waunakee Community School District
+L163@P3: Question 1: Shall the Waunakee Community School District, Dane County, Wisconsin be authorized to
+L164@P3: exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by $4,200,000 for the 2027-2028
+L165@P3: school year; by an additional $2,100,000 for the 2028-2029 school year; by an additional $2,100,000 for the
+L166@P3: 2029-2030 school year; and by an additional $2,100,000 for the 2030-2031 school year (for a total of
+L167@P3: $10,500,000 and to remain at that amount thereafter), for recurring purposes consisting of ongoing operational
+L168@P3: expenses and employee compensation expenses?
+L169@P3: Question 2: Shall the Waunakee Community School District, Dane County, Wisconsin be authorized to issue
+L170@P3: pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed
+L171@P3: $97,500,000 for the public purpose of paying the cost of a school facility improvement project consisting of:
+L172@P3: removal of an older portion of the High School and construction of additions and renovations at the High
+L173@P3: School; renovations at the old middle school (known as the High School South Campus); outdoor athletic field
+L174@P3: renovations and improvements at the High School Campus; district-wide renovations, capital maintenance
+L175@P3: and site improvements; and acquisition of furnishings, fixtures and equipment?
+

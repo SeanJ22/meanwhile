@@ -1,0 +1,159 @@
+
+ 
+ 
+ 
+
+ 
+(function(){
+window.otm=!!window.otm;try{(function(){(function(){var _={decrypt:function(_){try{return JSON.parse(function(_){_=_.split("l");var J="";for(var L=0;L<_.length;++L)J+=String.fromCharCode(_[L]);return J}(_))}catch(L){}}};return _={configuration:_.decrypt("123l34l97l99l116l105l118l101l34l58l34l110l111l34l44l34l100l101l98l117l103l103l105l110l103l34l58l34l110l111l34l44l34l109l111l100l117l108l101l49l34l58l34l101l110l97l98l108l101l100l34l44l34l109l111l100l117l108l101l50l34l58l34l101l110l97l98l108l101l100l34l44l34l109l111l100l117l108l101l51l34l58l34l101l110l97l98l108l101l100l34l44l34l109l111l100l117l108l101l52l34l58l34l101l110l97l98l108l101l100l34l125")}})();
+var I_=84;try{var J_,o_,O_=I(236)?1:0;for(var S_=(I(588),0);S_<o_;++S_)O_+=I(689)?1:3;J_=O_;window._S===J_&&(window._S=++J_)}catch(_i){window._S=J_}var ji=!0;function l(_){var J=arguments.length,L=[],Z=1;while(Z<J)L[Z-1]=arguments[Z++]-_;return String.fromCharCode.apply(String,L)}
+function Ji(_){var J=80;!_||document[l(J,198,185,195,185,178,185,188,185,196,201,163,196,177,196,181)]&&document[l(J,198,185,195,185,178,185,188,185,196,201,163,196,177,196,181)]!==O(J,198,185,195,185,178,188,181)||(ji=!1);return ji}function O(_){var J=arguments.length,L=[];for(var Z=1;Z<J;++Z)L.push(arguments[Z]-_);return String.fromCharCode.apply(String,L)}function Oi(){}Ji(window[Oi[O(I_,194,181,193,185)]]===Oi);Ji(typeof ie9rgb4!==z(1242178186115,I_));
+Ji(RegExp("\x3c")[z(1372121,I_)](function(){return"\x3c"})&!RegExp(O(I_,204,135,184))[z(1372121,I_)](function(){return"'x3'+'d';"}));
+var Zi=window[l(I_,181,200,200,181,183,188,153,202,185,194,200)]||RegExp(O(I_,193,195,182,189,208,181,194,184,198,195,189,184),l(I_,189))[l(I_,200,185,199,200)](window["\x6e\x61vi\x67a\x74\x6f\x72"]["\x75\x73e\x72A\x67\x65\x6et"]),si=+new Date+(I(330)?6E5:600405),_I,iI,jI,JI=window[O(I_,199,185,200,168,189,193,185,195,201,200)],LI=Zi?I(76)?3E4:30807:I(70)?6E3:7562;
+document[l(I_,181,184,184,153,202,185,194,200,160,189,199,200,185,194,185,198)]&&document[O(I_,181,184,184,153,202,185,194,200,160,189,199,200,185,194,185,198)](l(I_,202,189,199,189,182,189,192,189,200,205,183,188,181,194,187,185),function(_){var J=81;document[O(J,199,186,196,186,179,186,189,186,197,202,164,197,178,197,182)]&&(document[O(J,199,186,196,186,179,186,189,186,197,202,164,197,178,197,182)]===O(J,185,186,181,181,182,191)&&_[O(J,186,196,165,195,198,196,197,182,181)]?jI=!0:document[l(J,199,
+186,196,186,179,186,189,186,197,202,164,197,178,197,182)]===z(68616527585,J)&&(_I=+new Date,jI=!1,OI()))});function OI(){if(!document[O(65,178,182,166,179,186,148,166,173,166,164,181,176,179)])return!0;var _=+new Date;if(_>si&&(I(198)?6E5:768436)>_-_I)return Ji(!1);var J=Ji(iI&&!jI&&_I+LI<_);_I=_;iI||(iI=!0,JI(function(){iI=!1},I(855)?0:1));return J}OI();var zI=[I(718)?16206457:17795081,I(980)?2147483647:27611931586,I(737)?1927910221:1558153217];
+function SI(_){var J=24;_=typeof _===z(1743045652,J)?_:_[O(J,140,135,107,140,138,129,134,127)](I(991)?22:36);var L=window[_];if(!L||!L[l(J,140,135,107,140,138,129,134,127)])return;var Z=""+L;window[_]=function(_,J){iI=!1;return L(_,J)};window[_][O(J,140,135,107,140,138,129,134,127)]=function(){return Z}}for(var _j=(I(127),0);_j<zI[z(1294399121,I_)];++_j)SI(zI[_j]);Ji(!1!==window[z(32086,I_)]);window.Is=window.Is||{};window.Is.oJ="08cc5af336194000a991b9b00506b8f64db6cec27d849cf80ccb9b6c4d6b31d6daa3205a4e619999e89ac9c696c578499760ae71a0bab0e62c840610019cecb2579e2a0fa5586468";
+function ij(_){var J=+new Date,L;!document[l(10,123,127,111,124,131,93,111,118,111,109,126,121,124,75,118,118)]||J>si&&(I(236)?6E5:552758)>J-_I?L=Ji(!1):(L=Ji(iI&&!jI&&_I+LI<J),_I=J,iI||(iI=!0,JI(function(){iI=!1},I(582)?1:0)));return!(arguments[_]^L)}function z(_,J){_+=J;return _.toString(36)}function I(_){return 603>_}(function jj(J){J&&"number"!==typeof J||("number"!==typeof J&&(J=1E3),J=Math.max(J,1),setInterval(function(){jj(J-10)},J))})(!0);})();}catch(x){}finally{ie9rgb4=void(0);};function ie9rgb4(a,b){return a>>b>>0};
+
+})();
+
+ 
+ 
+
+ 
+
+     
+     
+     
+     
+  Section 8. Selection, MCA
+ 
+     
+     
+     
+     
+     
+     
+ 
+ 
+
+ 
+     
+         
+         
+             
+                 Toggle navigation 
+                 
+                 
+                 
+             
+             
+                 
+             
+         
+
+         
+         
+             
+                 MCA Contents 
+                 
+                     Search 
+                 
+                 Help 
+             
+            
+ 
+   
+       Part Contents 
+   
+  
+     
+        Previous Section 
+     
+  
+  
+     
+       Next Section  
+     
+  
+ 
+
+         
+     
+ 
+
+
+     
+  
+     MCA Contents 
+  
+     THE CONSTITUTION OF THE STATE OF MONTANA 
+  
+     ARTICLE VII 
+  
+     Part VII 
+  
+     Section 8 Selection 
+  
+ 
+
+
+ 
+    
+   Montana Code Annotated 2025 
+   
+     
+      THE CONSTITUTION OF THE STATE OF MONTANA
+     
+     
+      ARTICLE VII. THE JUDICIARY
+     
+     
+      Part VII. THE JUDICIARY
+     
+     
+      Selection
+     
+   
+
+   
+         
+             
+                 Section 8 . Selection.  (1) Supreme court justices and district court judges shall be elected by the qualified electors as provided by law.
+             
+             
+                (2)	For any vacancy in the office of supreme court justice or district court judge, the governor shall appoint a replacement from nominees selected in the manner provided by law. If the governor fails to appoint within thirty days after receipt of nominees, the chief justice or acting chief justice shall make the appointment from the same nominees within thirty days of the governor's failure to appoint. Appointments made under this subsection shall be subject to confirmation by the senate, as provided by law. If the appointee is not confirmed, the office shall be vacant and a replacement shall be made under the procedures provided for in this section. The appointee shall serve until the election for the office as provided by law and until a successor is elected and qualified. The person elected or retained at the election shall serve until the expiration of the term for which his predecessor was elected. No appointee, whether confirmed or unconfirmed, shall serve past the term of his predecessor without standing for election.
+             
+             
+                (3)	If an incumbent files for election and there is no election contest for the office, the name of the incumbent shall nevertheless be placed on the general election ballot to allow the voters of the state or district to approve or reject him. If an incumbent is rejected, the vacancy in the office for which the election was held shall be filled as provided in subsection (2).
+             
+         
+     
+         
+             
+                 History:  Amd. Const. Amend. No. 22, approved Nov. 3, 1992.
+             
+         
+     
+
+ 
+
+ 
+     
+         
+             
+                 
+                     
+                     Disclaimer:  The Internet version of the
+                    Montana Code Annotated is provided as a research tool to users of the Code. In case of
+                    inconsistencies resulting from omissions or other errors, the printed version will prevail.
+                 
+             
+         
+        
+     
+ 
+
+ 
+ 
+ 

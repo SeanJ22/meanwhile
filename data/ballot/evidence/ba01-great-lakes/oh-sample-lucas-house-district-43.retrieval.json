@@ -1,0 +1,8 @@
+{
+  "url": "https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001B__2&bpty=X",
+  "status": 200,
+  "bytes": 179639,
+  "publisher": "Lucas County Board of Elections",
+  "publicSelection": "POST ballotlist.aspx cmbelectionlist=20261103G, cmbDistrictCat=3, then select exact state-house district and Find Ballots. Fetch first returned sample link.",
+  "extraction": "pdftotext -f1 -l1 -x306 -y0 -W306 -H1368 -layout; remove isolated Sample watermark fragments only"
+}

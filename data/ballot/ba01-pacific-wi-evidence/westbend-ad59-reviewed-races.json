@@ -1,0 +1,50 @@
+[
+  [
+    "Representative in Congress District 5",
+    "ocd-division/country:us/state:wi/cd:5",
+    [
+      [
+        "Scott Fitzgerald",
+        "Republican"
+      ],
+      [
+        "Andrew Beck",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 59",
+    "ocd-division/country:us/state:wi/sldl:59",
+    [
+      [
+        "Bradley Petersen",
+        "Republican"
+      ],
+      [
+        "Jack Holzman",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Washington County Sheriff",
+    "ocd-division/country:us/state:wi/county:washington",
+    [
+      [
+        "Martin R. Schulteis",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Washington County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:washington",
+    [
+      [
+        "Sherry Coykendall",
+        "Republican"
+      ]
+    ]
+  ]
+]

@@ -1,0 +1,9 @@
+{
+  "requestedUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+  "finalUrl": "https://www.boe.ohio.gov/summit/c/upload/Election_CandidateList.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:19:41.685541+00:00",
+  "rawHash": "a5dcd8d8c2035442b1690e7293566fc0e8201a888859b627976cffe89c699d84",
+  "contentType": "application/pdf",
+  "lastModified": "Fri, 16 Oct 2026 19:51:54 GMT"
+}

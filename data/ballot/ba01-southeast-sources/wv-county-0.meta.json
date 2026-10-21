@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Barbour%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Barbour%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.085950+00:00",
+  "rawHash": "ab932f3427fae3c18bd4e09cfb789349bc517bf09f9ee7ea595086fb2193c19b",
+  "httpStatus": 200,
+  "bytes": 752653,
+  "extractedTextHash": "ed6d5c556223a53815eab97f0d5e13ad2f0e14357378393791869fbea920bc5b",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

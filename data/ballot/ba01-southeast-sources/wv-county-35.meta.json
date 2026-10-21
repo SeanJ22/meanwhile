@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pendleton%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pendleton%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:37.357615+00:00",
+  "rawHash": "5e1474d478a5d89e34b58699f5e0c6c6684091dcfc2d63d92005bb9de8cea03f",
+  "httpStatus": 200,
+  "bytes": 693138,
+  "extractedTextHash": "ebc53f26cc924feeccd0ac84c9272ee120c0f757a98b3e6b2dba82954e66cd28",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

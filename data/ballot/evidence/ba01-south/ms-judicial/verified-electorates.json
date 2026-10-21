@@ -1,0 +1,526 @@
+[
+  {
+    "kind": "chancery",
+    "district": "1",
+    "counties": [
+      "Alcorn",
+      "Itawamba",
+      "Lee",
+      "Monroe",
+      "Pontotoc",
+      "Prentiss",
+      "Tishomingo",
+      "Union"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:1",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "18",
+    "counties": [
+      "Benton",
+      "Calhoun",
+      "Lafayette",
+      "Marshall",
+      "Tippah"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:18",
+    "symmetricDifferenceFraction": 3.13477867593435e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "8",
+    "counties": [
+      "Hancock",
+      "Harrison"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:8",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "16",
+    "counties": [
+      "George",
+      "Jackson"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:16",
+    "symmetricDifferenceFraction": 1.5652404758255685e-13,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "10",
+    "counties": [
+      "Lamar",
+      "Marion",
+      "Pearl River",
+      "Walthall"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:10",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "4",
+    "counties": [
+      "Adams",
+      "Amite",
+      "Franklin",
+      "Jefferson",
+      "Pike",
+      "Wilkinson"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:4",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "19",
+    "counties": [
+      "Greene",
+      "Jones",
+      "Wayne"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:19",
+    "symmetricDifferenceFraction": 9.437223625411149e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "13",
+    "counties": [
+      "Forrest",
+      "Perry",
+      "Stone"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:13",
+    "symmetricDifferenceFraction": 2.929342008906232e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "12",
+    "counties": [
+      "Clarke",
+      "Lauderdale"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:12",
+    "symmetricDifferenceFraction": 1.2436047544784758e-13,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "20",
+    "counties": [
+      "Rankin"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:20",
+    "symmetricDifferenceFraction": 5.4175281672145817e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "15",
+    "counties": [
+      "Claiborne",
+      "Copiah",
+      "Lawrence",
+      "Lincoln"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:15",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "6",
+    "counties": [
+      "Attala",
+      "Choctaw",
+      "Kemper",
+      "Neshoba",
+      "Webster",
+      "Winston"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:6",
+    "symmetricDifferenceFraction": 5.634161436861056e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "2",
+    "counties": [
+      "Covington",
+      "Jasper",
+      "Jefferson Davis",
+      "Newton",
+      "Scott",
+      "Simpson",
+      "Smith"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:2",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "chancery",
+    "district": "3",
+    "counties": [
+      "Carroll",
+      "Grenada",
+      "Montgomery",
+      "Panola",
+      "Tallahatchie",
+      "Tate",
+      "Yalobusha"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/chancery_court:3",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Chancery.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "1",
+    "counties": [
+      "Alcorn",
+      "Itawamba",
+      "Lee",
+      "Monroe",
+      "Pontotoc",
+      "Prentiss",
+      "Tishomingo"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:1",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "3",
+    "counties": [
+      "Benton",
+      "Calhoun",
+      "Chickasaw",
+      "Lafayette",
+      "Marshall",
+      "Tippah",
+      "Union"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:3",
+    "symmetricDifferenceFraction": 3.168110435238048e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "17",
+    "counties": [
+      "Panola",
+      "Tallahatchie",
+      "Tate",
+      "Yalobusha"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:17",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "16",
+    "counties": [
+      "Clay",
+      "Lowndes",
+      "Noxubee",
+      "Oktibbeha"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:16",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "5",
+    "counties": [
+      "Attala",
+      "Carroll",
+      "Choctaw",
+      "Grenada",
+      "Montgomery",
+      "Webster",
+      "Winston"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:5",
+    "symmetricDifferenceFraction": 2.654810686676115e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "8",
+    "counties": [
+      "Leake",
+      "Neshoba",
+      "Newton",
+      "Scott"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:8",
+    "symmetricDifferenceFraction": 2.3133790403495405e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "10",
+    "counties": [
+      "Clarke",
+      "Kemper",
+      "Lauderdale"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:10",
+    "symmetricDifferenceFraction": 1.2874000257971207e-13,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "18",
+    "counties": [
+      "George",
+      "Greene",
+      "Jones",
+      "Wayne"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:18",
+    "symmetricDifferenceFraction": 1.0180270054902461e-13,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "12",
+    "counties": [
+      "Forrest",
+      "Perry"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:12",
+    "symmetricDifferenceFraction": 3.4365827319713394e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "13",
+    "counties": [
+      "Covington",
+      "Jasper",
+      "Simpson",
+      "Smith"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:13",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "19",
+    "counties": [
+      "Jackson"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:19",
+    "symmetricDifferenceFraction": 1.6792382722407078e-13,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "2",
+    "counties": [
+      "Hancock",
+      "Harrison",
+      "Stone"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:2",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "15",
+    "counties": [
+      "Lamar",
+      "Marion",
+      "Pearl River",
+      "Walthall"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:15",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "14",
+    "counties": [
+      "Copiah",
+      "Jefferson Davis",
+      "Lawrence",
+      "Lincoln"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:14",
+    "symmetricDifferenceFraction": 0.0,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "20",
+    "counties": [
+      "Madison",
+      "Rankin"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:20",
+    "symmetricDifferenceFraction": 4.500603551211556e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "6-3",
+    "counties": [
+      "Pike"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/county:pike",
+    "symmetricDifferenceFraction": 6.144719096503594e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "circuit",
+    "district": "22",
+    "counties": [
+      "Holmes",
+      "Humphreys",
+      "Yazoo"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/circuit_court:22",
+    "symmetricDifferenceFraction": 4.1072294557473644e-14,
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Redistricting/JudicialRedistricting/2027_Circuit.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip"
+  },
+  {
+    "kind": "appeals",
+    "district": "1",
+    "counties": [
+      "Lafayette",
+      "Lee",
+      "Pontotoc",
+      "Prentiss",
+      "Union",
+      "Yalobusha"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/court_of_appeals:1",
+    "countyUncoveredFractions": {
+      "Pontotoc": 0.0,
+      "Prentiss": 0.0,
+      "Lee": 0.0,
+      "Union": 0.0,
+      "Lafayette": 0.0,
+      "Yalobusha": 0.0
+    },
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Political/MS_CongressionalDistricts_1990.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip",
+    "limitation": "Only counties fully covered by the official district polygon are included; all other counties are excluded."
+  },
+  {
+    "kind": "appeals",
+    "district": "2",
+    "counties": [
+      "Humphreys",
+      "Leflore",
+      "Sharkey",
+      "Sunflower",
+      "Yazoo"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/court_of_appeals:2",
+    "countyUncoveredFractions": {
+      "Yazoo": 0.0,
+      "Humphreys": 0.0,
+      "Leflore": 0.0,
+      "Sunflower": 0.0,
+      "Sharkey": 0.0
+    },
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Political/MS_CongressionalDistricts_1990.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip",
+    "limitation": "Only counties fully covered by the official district polygon are included; all other counties are excluded."
+  },
+  {
+    "kind": "appeals",
+    "district": "3",
+    "counties": [
+      "Neshoba",
+      "Newton"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/court_of_appeals:3",
+    "countyUncoveredFractions": {
+      "Neshoba": 0.0,
+      "Newton": 0.0
+    },
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Political/MS_CongressionalDistricts_1990.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip",
+    "limitation": "Only counties fully covered by the official district polygon are included; all other counties are excluded."
+  },
+  {
+    "kind": "appeals",
+    "district": "4",
+    "counties": [
+      "Lawrence"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/court_of_appeals:4",
+    "countyUncoveredFractions": {
+      "Lawrence": 0.0
+    },
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Political/MS_CongressionalDistricts_1990.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip",
+    "limitation": "Only counties fully covered by the official district polygon are included; all other counties are excluded."
+  },
+  {
+    "kind": "appeals",
+    "district": "5",
+    "counties": [
+      "Stone"
+    ],
+    "ocdId": "ocd-division/country:us/state:ms/court_of_appeals:5",
+    "countyUncoveredFractions": {
+      "Stone": 0.0
+    },
+    "sourceUrl": "https://maris.mississippi.edu/MARISdata/Political/MS_CongressionalDistricts_1990.zip",
+    "countySourceUrl": "https://maris.mississippi.edu/MARISdata/Census/MS_CENSUSCountiesPopulationHousing_2020/MS_CENSUSCountiesPopulationHousing_2020.zip",
+    "limitation": "Only counties fully covered by the official district polygon are included; all other counties are excluded."
+  }
+]

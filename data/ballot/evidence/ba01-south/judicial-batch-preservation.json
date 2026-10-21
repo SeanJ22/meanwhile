@@ -1,0 +1,76 @@
+[
+  {
+    "state": "KS",
+    "baselineCommit": "7e54e6ac5",
+    "counts": {
+      "contests": {
+        "before": 150,
+        "after": 248,
+        "added": 98,
+        "existingUnchanged": true
+      },
+      "candidacies": {
+        "before": 263,
+        "after": 362,
+        "added": 99,
+        "existingUnchanged": true
+      },
+      "measures": {
+        "before": 1,
+        "after": 1,
+        "added": 0,
+        "existingUnchanged": true
+      },
+      "absences": {
+        "before": 0,
+        "after": 0,
+        "added": 0,
+        "existingUnchanged": true
+      },
+      "fieldAbsences": {
+        "before": 0,
+        "after": 0,
+        "added": 0,
+        "existingUnchanged": true
+      }
+    },
+    "districtMemberships": 78
+  },
+  {
+    "state": "MS",
+    "baselineCommit": "7e54e6ac5",
+    "counts": {
+      "contests": {
+        "before": 7,
+        "after": 102,
+        "added": 95,
+        "existingUnchanged": true
+      },
+      "candidacies": {
+        "before": 22,
+        "after": 148,
+        "added": 126,
+        "existingUnchanged": true
+      },
+      "measures": {
+        "before": 0,
+        "after": 0,
+        "added": 0,
+        "existingUnchanged": true
+      },
+      "absences": {
+        "before": 0,
+        "after": 0,
+        "added": 0,
+        "existingUnchanged": true
+      },
+      "fieldAbsences": {
+        "before": 0,
+        "after": 0,
+        "added": 0,
+        "existingUnchanged": true
+      }
+    },
+    "districtMemberships": 139
+  }
+]

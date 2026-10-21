@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pocahontas%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Pocahontas%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:37.358436+00:00",
+  "rawHash": "d709659df38dab9b3978bd510daddb044fbc162823a36ccf6e4f735a67b6a4f3",
+  "httpStatus": 200,
+  "bytes": 748380,
+  "extractedTextHash": "cc70d98f2a0c21072db500b3212ac27aaec4e9c429994f43685936756eb2dc0a",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

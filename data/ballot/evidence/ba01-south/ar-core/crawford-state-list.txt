@@ -1,0 +1,27 @@
+CountyName OfficeName CandidateBallotName PartyName
+Crawford U.S. Senate Hallie Shoffner DEM
+Crawford U.S. Senate Senator Tom Cotton REP
+Crawford U.S. Senate Jeff Wadlin LIB
+Crawford U.S. Congress District 03 Robb Ryerse Dem
+Crawford U.S. Congress District 03 Congressman Steve Womack Rep
+Crawford U.S. Congress District 03 Bobby Wilson LIB
+Crawford Governor State Senator Fred Love DEM
+Crawford Governor Governor Sarah Huckabee Sanders REP
+Crawford Governor Colt Shelby LIB
+Crawford Lieutenant Governor Lieutenant Governor Leslie Rutledge REP
+Crawford Lieutenant Governor Michael Kalagias LIB
+Crawford Attorney General Attorney General Tim Griffin REP
+Crawford Secretary of State Senator Kim Hammer REP
+Crawford Secretary of State Kelly Grappe DEM
+Crawford Secretary of State Michael Pakko LIB
+Crawford State Treasurer State Treasurer John Thurston REP
+Crawford Auditor of State Auditor of State Dennis Milligan REP
+Crawford Commissioner of State Lands Secretary of State Cole Jester REP
+Crawford Commissioner of State Lands Christopher Olson LIB
+Crawford State Representative District 24 Ryan Intchauspe DEM
+Crawford State Representative District 24 Charlene Fite REP
+Crawford State Representative District 25 State Representative Chad Puryear REP
+Crawford State Representative District 25 Courtney King DEM
+Crawford State Representative District 48 State Representative Ryan A. Rose REP
+Crawford State Representative District 48 Orion Jackson LIB
+

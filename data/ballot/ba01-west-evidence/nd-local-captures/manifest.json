@@ -1,0 +1,35 @@
+[
+  {
+    "name": "nd-county-election-law",
+    "sourceUrl": "https://ndlegis.gov/cencode/t11c10.pdf",
+    "finalUrl": "https://ndlegis.gov/cencode/t11c10.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-21T00:45:40.783Z",
+    "rawHash": "0e104b1ac8e71931ec5fdbaef00c99686036490d00555911d871e3fd3dbd94d6",
+    "file": "nd-county-election-law.pdf.gz",
+    "textSnapshot": "nd-county-election-law.txt",
+    "textHash": "ef1a7a13afabb7c88ecb2ab05aa9deb2a482bc06c02a79b87ffe5fbbd18d18f1"
+  },
+  {
+    "name": "nd-commission-election-law",
+    "sourceUrl": "https://ndlegis.gov/cencode/t11c07.pdf",
+    "finalUrl": "https://ndlegis.gov/cencode/t11c07.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-21T00:45:40.883Z",
+    "rawHash": "29bb9fa2fe42c6b75789364a7f3baa84826e4f0621b2575a11eead5b581124bb",
+    "file": "nd-commission-election-law.pdf.gz",
+    "textSnapshot": "nd-commission-election-law.txt",
+    "textHash": "99efd0809f7804d6af08e1e7e249c4ef5beb877c2abd31307f5ead71d7db810d"
+  },
+  {
+    "name": "nd-district-court-law",
+    "sourceUrl": "https://ndlegis.gov/cencode/t27c05.pdf",
+    "finalUrl": "https://ndlegis.gov/cencode/t27c05.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-21T00:45:40.848Z",
+    "rawHash": "41585ddb45cef17f051e882b5163fe7429b2dc445e43a14af14ee50d30e28587",
+    "file": "nd-district-court-law.pdf.gz",
+    "textSnapshot": "nd-district-court-law.txt",
+    "textHash": "e8d85ca8b4ed74af77ee7fff9dcc5be7576b503b693e268c0b765a5aa1400f3f"
+  }
+]

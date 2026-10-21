@@ -1,0 +1,252 @@
+ (https://www.unioncountyohio.gov/media/Agencies/Board%20of%20Elections/46%20Day%20notice%20with%20candidates.pdf)
+【turn351491view1】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 6; Source: click({"ref_id":"turn360155view3","id":3}); Total lines: 249
+L0@P0: Page 1 of 6 Revised: 9/15/2026 8:18 AM
+L1@P0: ELECTION NOTICE FOR USE WITH THE
+L2@P0: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB)
+L3@P0: R.C. 3511.16
+L4@P0: Issued by the Union County Board of Elections
+L5@P0: 46 Day Notice
+L6@P0: (to be posted 46 days prior to date of election)
+L7@P0: November 3, 2026 General Election
+L8@P0: All Offices
+L9@P0: Name of Candidate (Party) Office, To Elect, Term Precincts
+L10@P0: AMY ACTON (Dem)
+L11@P0: DON KISSICK (Lib)
+L12@P0: VIVEK RAMASWAMY (Rep)
+L13@P0: WRITE-IN CANDIDATES
+L14@P0: • TIMOTHY GRADY AND ANDREA
+L15@P0: NEUTZLING
+L16@P0: • HEATHER HILL AND PATRICK
+L17@P0: MANLEY
+L18@P0: • RENEA TURNER AND JALEN
+L19@P0: TURNER
+L20@P0: GOVERNOR
+L21@P0: 1 to be elected
+L22@P0: Full 4 Year Term Commencing
+L23@P0: 01/11/2027
+L24@P0: All Precincts
+L25@P0: JOHN J. KULEWICZ (Dem)
+L26@P0: KEITH FABER (Rep)
+L27@P0: ATTORNEY GENERAL
+L28@P0: 1 to be elected
+L29@P0: Full 4 Year Term Commencing
+L30@P0: 01/11/2027
+L31@P0: All Precincts
+L32@P0: ANNETTE BLACKWELL (Dem)
+L33@P0: FRANK LAROSE (Rep)
+L34@P0: AUDITOR OF STATE
+L35@P0: 1 to be elected
+L36@P0: Full 4 Year Term Commencing
+L37@P0: 01/11/2027
+L38@P0-1: All PrecinctsPage 2 of 6 Revised: 9/15/2026 8:18 AM
+L39@P1: ALLISON RUSSO (Dem)
+L40@P1: TOM PRUSS (Lib)
+L41@P1: ROBERT SPRAGUE (Rep)
+L42@P1: SECRETARY OF STATE
+L43@P1: 1 to be elected
+L44@P1: Full 4 Year Term Commencing
+L45@P1: 01/11/2027
+L46@P1: All Precincts
+L47@P1: SETH WALSH (Dem)
+L48@P1: JAY EDWARDS (Rep)
+L49@P1: TREASURER OF STATE
+L50@P1: 1 to be elected
+L51@P1: Full 4 Year Term Commencing
+L52@P1: 01/11/2027
+L53@P1: All Precincts
+L54@P1: SHERROD BROWN (Dem)
+L55@P1: JON HUSTED (Rep)
+L56@P1: GREG LEVY
+L57@P1: WILLIAM B. REDPATH (Lib)
+L58@P1: WRITE-IN CANDIDATES
+L59@P1: • STEPHEN FARIS
+L60@P1: • ANTHONY HOLLIMAN
+L61@P1: • TIMOTHY TELYMONDE
+L62@P1: U.S. SENATOR
+L63@P1: 1 to be elected
+L64@P1: Unexpired Term Ending
+L65@P1: 01/02/2029
+L66@P1: All Precincts
+L67@P1: MARILYN ZAYAS (Dem)
+L68@P1: DANIEL R. HAWKINS (Rep)
+L69@P1: JUSTICE OF THE SUPREME
+L70@P1: COURT
+L71@P1: 1 to be elected
+L72@P1: Full 6 Year Term Commencing
+L73@P1: 01/01/2027
+L74@P1: All Precincts
+L75@P1: JENNIFER BRUNNER (Dem)
+L76@P1: COLLEEN O'DONNELL (Rep)
+L77@P1: JUSTICE OF THE SUPREME
+L78@P1: COURT
+L79@P1: 1 to be elected
+L80@P1: Full 6 Year Term Commencing
+L81@P1: 01/02/2027
+L82@P1: All Precincts
+L83@P1: SHAUN M. BAILEY (Rep) COUNTY COMMISSIONER
+L84@P1: 1 to be elected
+L85@P1: Full 4 Year Term Commencing
+L86@P1: 01/01/2027
+L87@P1-2: All PrecinctsPage 3 of 6 Revised: 9/15/2026 8:18 AM
+L88@P2: ANDREA L. WEAVER (Rep) COUNTY AUDITOR
+L89@P2: 1 to be elected
+L90@P2: Full 4 Year Term Commencing
+L91@P2: 03/08/2027
+L92@P2: All Precincts
+L93@P2: RICK RODGER JUDGE OF THE COURT OF
+L94@P2: COMMON PLEAS (PROBATE
+L95@P2: AND JUVENILE DIVISIONS)
+L96@P2: 1 to be elected
+L97@P2: Full 6 Year Term Commencing
+L98@P2: 02/09/2027
+L99@P2: All Precincts
+L100@P2: DAVID PHILLIPS JUDGE OF THE COURT OF
+L101@P2: COMMON PLEAS (GENERAL
+L102@P2: DIVISION)
+L103@P2: 1 to be elected
+L104@P2: Full 6 Year Term Commencing
+L105@P2: 02/09/2027
+L106@P2: All Precincts
+L107@P2: JOSHUA D. KOLASINSKI (Dem)
+L108@P2: JIM JORDAN (Rep)
+L109@P2: TRACEY TACKETT
+L110@P2: REPRESENTATIVE TO
+L111@P2: CONGRESS (4TH DISTRICT)
+L112@P2: 1 to be elected
+L113@P2: Full 2 Year Term Commencing
+L114@P2: 01/03/2027
+L115@P2: All Precincts
+L116@P2: KENT HALLORAN (Dem)
+L117@P2: BEN WEBER (Rep)
+L118@P2: STATE REPRESENTATIVE
+L119@P2: (86TH DISTRICT)
+L120@P2: 1 to be elected
+L121@P2: Full 2 Year Term Commencing
+L122@P2: 01/01/2027
+L123@P2: All Precincts
+L124@P2: MARK C MILLER (Rep) JUDGE OF THE COURT OF
+L125@P2: APPEALS (3RD DISTRICT)
+L126@P2: 1 to be elected
+L127@P2: Full 6 Year Term Commencing
+L128@P2: 02/09/2027
+L129@P2-3: All PrecinctsPage 4 of 6 Revised: 9/15/2026 8:18 AM
+L130@P3: All Issues
+L131@P3: State Issues Precincts
+L132@P3: Proposed Constitutional Amendment
+L133@P3: TO REQUIRE VOTERS TO PRESENT PHOTO IDENTIFICATION IN
+L134@P3: ORDER TO VOTE
+L135@P3: Proposed by Joint Resolution of the General Assembly
+L136@P3: To enact Section 5 of Article V of the Constitution of the State of Ohio
+L137@P3: A majority yes vote is required for the adoption of Section 5.
+L138@P3: All Precincts
+L139@P3: This proposed amendment would:
+L140@P3: Require voters to present an approved form of government-issued photo identification in order to vote.
+L141@P3: Allow state law to provide for an alternative method of verifying a voter’s identity for a voter who has a sincere religious
+L142@P3: objection to being photographed and, therefore, does not possess an approved form of government-issued photo
+L143@P3: identification.
+L144@P3: Require that voters who do not vote in person provide an approved form of government-issued photo identification,
+L145@P3: unless the law authorizes those persons to vote by providing a signature and at least one other specified unique identifier.
+L146@P3: Define approved forms of government-issued photo identification as an unexpired Ohio driver license or state
+L147@P3: identification card; a United States passport or passport card; or a United States military identification card, Ohio
+L148@P3: National Guard identification card, or United States Department of Veterans Affairs identification card.
+L149@P3: If approved, the amendment shall take effect immediately.
+L150@P3: A “YES” vote means approval of the amendment.
+L151@P3: A “NO” vote means disapproval of the amendment.
+L152@P3: SHALL THE AMENDMENT BE APPROVED?
+L153@P3: District Issue Precincts
+L154@P3: City of Marysville -
+L155@P3: Marysville Charter
+L156@P3: Amendment
+L157@P3: TO ENACT ARTICLE IV, LEGISLATION,
+L158@P3: SECTION 4.03 REFERENDUM PETITION,
+L159@P3: OF THE CHARTER OF THE CITY OF
+L160@P3: MARYSVILLE
+L161@P3: DARBY 1/5, DOVER 2/3,
+L162@P3: MARYSVILLE 1/1,
+L163@P3: MARYSVILLE 1/2,
+L164@P3: MARYSVILLE 2/1,
+L165@P3: MARYSVILLE 3/1,
+L166@P3: MARYSVILLE 4/1,
+L167@P3: MARYSVILLE 4/2,
+L168@P3: MARYSVILLE 5/1,
+L169@P3: MARYSVILLE 6/1,
+L170@P3: MARYSVILLE 7/1,
+L171@P3: MARYSVILLE 8/1,
+L172@P3: MARYSVILLE 9/1,
+L173@P3: MARYSVILLE 10/1,
+L174@P3: MARYSVILLE 11/1,
+L175@P3: MARYSVILLE 12/1,
+L176@P3: MARYSVILLE 13/1,
+L177@P3: MARYSVILLE 14/1,
+L178@P3: MARYSVILLE 15/1,
+L179@P3-4: MARYSVILLE 16/1, Page 5 of 6 Revised: 9/15/2026 8:18 AM
+L180@P4: MARYSVILLE 17/1,
+L181@P4: MARYSVILLE 17/2,
+L182@P4: MARYSVILLE 18/1,
+L183@P4: MARYSVILLE 18/2
+L184@P4: Village of Richwood Renewal – Roads - 3mills for 5 years RICHWOOD 1/1, RICHWOOD
+L185@P4: 2/1
+L186@P4: Village of Magnetic Springs Renewal - current operating expenses – 5 mills
+L187@P4: for 5 years
+L188@P4: LEESBURG/3
+L189@P4: Jerome Township
+L190@P4: (Unincorporated Area)
+L191@P4: Renewal – Police /PSO - 1.2mills for 5 years JEROME 1/1, JEROME 1/2,
+L192@P4: JEROME 2/1, JEROME 2/2,
+L193@P4: JEROME 2/3, JEROME 3/1,
+L194@P4: JEROME 4/1, JEROME 4/2,
+L195@P4: JEROME 5/1, JEROME 5/2,
+L196@P4: JEROME 6/1, JEROME 6/2,
+L197@P4: JEROME 7/1, JEROME 8/1,
+L198@P4: JEROME 9/1, JEROME 9/2,
+L199@P4: JEROME 10/1, JEROME 10/2
+L200@P4: Millcreek Township Renewal – Police - 2.15mills for 5 years MILLCREEK/1,
+L201@P4: MILLCREEK/2,
+L202@P4: MILLCREEK/3
+L203@P4: Paris Township
+L204@P4: (Unincorporated Area)
+L205@P4: Renewal – Fire -5.9mills for 3 years PARIS/1
+L206@P4: Union Township
+L207@P4: (Including the Village of
+L208@P4: Milford Center)
+L209@P4: Renewal – Current Expenses - 1 mill for 5 years MILFORD CENTER/1,
+L210@P4: UNION/1
+L211@P4: York Township Renewal – Current Expenses - 1 mill for 5 years YORK/1, YORK/2, YORK/3,
+L212@P4: YORK/4, YORK/5
+L213@P4: Northern Union County
+L214@P4: Joint Fire and EMS District
+L215@P4: Additional – Fire - 3mills for a continuing
+L216@P4: period of time
+L217@P4: RICHWOOD 1/1, RICHWOOD
+L218@P4: 2/1, CLAIBOURNE/1
+L219@P4: Delaware Area Career
+L220@P4: Center
+L221@P4: Renewal and Decrease - improving, renovating,
+L222@P4: remodeling, enlarging, furnishing and equipping
+L223@P4: school buildings and facilities at a rate not
+L224@P4: exceeding 0.40 mill and for the purpose of
+L225@P4: current expenses at a rate not exceeding 0.35
+L226@P4: mill - for 10 years
+L227@P4: MILLCREEK/3
+L228@P4: Precinct Richwood 2 Chefs' Parlour – Sunday sales RICHWOOD 2/1
+L229@P4-5: Precinct Marysville 6 Happenstance Brewing Project - Sunday sales MARYSVILLE 6/1Page 6 of 6 Revised: 9/15/2026 8:18 AM
+L230@P5: Precinct Jerome 10 Meijer - Spirituous Liquor - Weekday JEROME 10/1, JEROME 10/2
+L231@P5: Precinct Jerome 10 Meijer - Spirituous Liquor – Sunday Sales JEROME 10/1, JEROME 10/2
+L232@P5: Precinct Jerome 10 Meijer – Wine and Mixed Beverages – Sunday
+L233@P5: Sales
+L234@P5: JEROME 10/1, JEROME 10/2
+L235@P5: INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L236@P5: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L237@P5: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of downloading a blank, hard
+L238@P5: copy FWAB to complete by hand, or proceeding through electronic completion of the FWAB using the website’s FWAB Wizard.
+L239@P5: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to count.
+L240@P5: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before the election and the
+L241@P5: updated election notice issued on the 46th day before the election as a guide to:
+L242@P5: (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L243@P5: (2) write the name of your choice of candidate or choice for or against an issue.
+L244@P5: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of elections at this
+L245@P5: address: Union County Board of Elections, 835 E. 5th St, Suite A, Marysville, Ohio 43040.
+L246@P5: A complete listing of all county board of elections mailing addresses and contact information is available at
+L247@P5: https://ohiosos.gov/SOS/elections/electionsofficials/boeDirectory.aspx#dir.
+L248@P5: Do not send your ballot via e-mail or fax; Ohio law prohibits electronic transmission of a voted ballot.
+

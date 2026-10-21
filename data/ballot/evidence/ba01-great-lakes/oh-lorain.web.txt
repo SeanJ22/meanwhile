@@ -1,0 +1,180 @@
+(https://www.voteloraincountyohio.gov/_files/ugd/2568d0_ef2bd7f0adc244659d5357bfa1879d07.pdf)
+【turn982174view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 5; Source: open({"ref_id":"turn648666view0","lineno":105}); Total lines: 178
+L0@P0: Lorain County Board of Elections
+L1@P0:  General
+L2@P0: Candidate List
+L3@P0: Per ORC 3513.30 (E) Candidates who withdraw less than 70 days before election day will have their names
+L4@P0: printed on the ballot but no votes will be tallied.
+L5@P0: 09/14/2026
+L6@P0: 9:44 AM
+L7@P0: 2026
+L8@P0: Certified
+L9@P0-1: Page 1 of 5Governor and Lt. Governor
+L10@P1: Candidate Party Office
+L11@P1: Vote For Not
+L12@P1: more than...
+L13@P1: Term In
+L14@P1: Years Filed Contact Info
+L15@P1: Certified by the Secretary of State
+L16@P1: Amy Acton / David Pepper Democratic 1 4 , ,
+L17@P1: Timothy Grady / Andrea Neutzling Write-In 1 4 , ,
+L18@P1: Heather Hill / Patrick Manley Write-In 1 4 , ,
+L19@P1: Don Kissick / James L. Mills Libertarian 1 4 , ,
+L20@P1: Vivek Ramaswamy / Republican 1 4 , ,
+L21@P1: Robert A. McColley Republican 1 4 , ,
+L22@P1: Renea Turner / Jalen Turner Write-In 1 4 , ,
+L23@P1: Ron Ula / Michael C. Lehnerd Write-In 1 4 , ,
+L24@P1: Attorney General
+L25@P1: Candidate Party Office
+L26@P1: Vote For Not
+L27@P1: more than...
+L28@P1: Term In
+L29@P1: Years Filed Contact Info
+L30@P1: Certified by the Secretary of State
+L31@P1: Keith Faber Republican 1 4 , ,
+L32@P1: John J. Kulewicz Democratic 1 4 , ,
+L33@P1: Auditor of State
+L34@P1: Candidate Party Office
+L35@P1: Vote For Not
+L36@P1: more than...
+L37@P1: Term In
+L38@P1: Years Filed Contact Info
+L39@P1: Certified by the Secretary of State
+L40@P1: Annette Blackwell Democratic 1 4 , ,
+L41@P1: Frank LaRose Republican 1 4 , ,
+L42@P1: Secretary of State
+L43@P1: Candidate Party Office
+L44@P1: Vote For Not
+L45@P1: more than...
+L46@P1: Term In
+L47@P1: Years Filed Contact Info
+L48@P1: Certified by the Secretary of State
+L49@P1: Tom Pruss Libertarian 1 4 , ,
+L50@P1: Allison Russo Democratic 1 4 , ,
+L51@P1: Robert Sprague Republican 1 4 , ,
+L52@P1-2: Page 2 of 5Treasurer of State
+L53@P2: Candidate Party Office
+L54@P2: Vote For Not
+L55@P2: more than...
+L56@P2: Term In
+L57@P2: Years Filed Contact Info
+L58@P2: Certified by the Secretary of State
+L59@P2: Jay Edwards Republican 1 4 , ,
+L60@P2: Seth Walsh Democratic 1 4 , ,
+L61@P2: Justice of the Supreme Court - Full Term Commencing 1/1/2027
+L62@P2: Candidate Party Office
+L63@P2: Vote For Not
+L64@P2: more than...
+L65@P2: Term In
+L66@P2: Years Filed Contact Info
+L67@P2: Certified by the Secretary of State
+L68@P2: Daniel R. Hawkins Republican 1 6 , ,
+L69@P2: Marilyn Zayas Democratic 1 6 , ,
+L70@P2: Justice of the Supreme Court - Full Term Commencing 1/2/2027
+L71@P2: Candidate Party Office
+L72@P2: Vote For Not
+L73@P2: more than...
+L74@P2: Term In
+L75@P2: Years Filed Contact Info
+L76@P2: Certified by the Secretary of State
+L77@P2: Jennifer Brunner Democratic 1 6 , ,
+L78@P2: Colleen O'Donnell Republican 1 6 , ,
+L79@P2: United States Senator Unexpired Term Ends 1/3/2029
+L80@P2: Candidate Party Office
+L81@P2: Vote For Not
+L82@P2: more than...
+L83@P2: Term In
+L84@P2: Years Filed Contact Info
+L85@P2: Certified by the Secretary of State
+L86@P2: Sherrod Brown Democratic 1 6 , ,
+L87@P2: Stephen Faris Write-In 1 6 , ,
+L88@P2: Anthony Holliman Write-In 1 6 , ,
+L89@P2: Jon Husted Republican 1 6 , ,
+L90@P2: Greg Levy Other Party 1 6 , ,
+L91@P2: William B. Redpath Libertarian 1 6 , ,
+L92@P2: Timothy Telymonde Write-In 1 6 , ,
+L93@P2-3: Page 3 of 5Representative to Congress 5th District
+L94@P3: Candidate Party Office
+L95@P3: Vote For Not
+L96@P3: more than...
+L97@P3: Term In
+L98@P3: Years Filed Contact Info
+L99@P3: Bob Latta Republican 1 2 1/26/2026 516 Hillcrest Dr., Bowling Green, OH 43402
+L100@P3: Brian A. Shaver Democratic 1 2 2/3/2026 10700 W. SR 12, Fostoria, OH 44830
+L101@P3: Michael J. Veloff Libertarian 1 2 2/20/2026 1059 Bucyrus Rd., Galion, OH 44833
+L102@P3: State Senator 13th District
+L103@P3: Candidate Party Office
+L104@P3: Vote For Not
+L105@P3: more than...
+L106@P3: Term In
+L107@P3: Years Filed Contact Info
+L108@P3: Gayle Manning Republican 1 4 2/2/2026 4631 St Joseph Way, Avon, OH 44011
+L109@P3: Joe Miller Democratic 1 4 2/2/2026 433 NorthPointe Blvd., Amherst, OH 44001
+L110@P3: State Representative - 52nd District
+L111@P3: Candidate Party Office
+L112@P3: Vote For Not
+L113@P3: more than...
+L114@P3: Term In
+L115@P3: Years Filed Contact Info
+L116@P3: Mike Baker Democratic 1 2 11/26/2025 1027 Oakwood Dr., Elyria, OH 44035
+L117@P3: Cliff Winkel Republican 1 2 5640 Broad Blvd., N. Ridgeville, OH 44039
+L118@P3: State Representative - 53rd District
+L119@P3: Candidate Party Office
+L120@P3: Vote For Not
+L121@P3: more than...
+L122@P3: Term In
+L123@P3: Years Filed Contact Info
+L124@P3: Bradley Lacko Republican 1 2 1/15/2026 516 Maple Creek Dr., Amherst, OH 44001
+L125@P3: Matt Lundy Democratic 1 2 1/9/2026 149 Berkshire Rd., Avon Lake, OH 44012
+L126@P3: State Representative - 54th District
+L127@P3: Candidate Party Office
+L128@P3: Vote For Not
+L129@P3: more than...
+L130@P3: Term In
+L131@P3: Years Filed Contact Info
+L132@P3: Brenda Buchanan Democratic 1 2 1/2/2026 12576 W River Rd., Columbia Sta, OH 44028
+L133@P3: Kellie Deeter Republican 1 2 1/20/2026 1171 Pioneer Pass, Norwalk, OH 44857
+L134@P3-4: Page 4 of 5Judge of the Court of Appeals 9th District Full Term Commencing 2/9/2027
+L135@P4: Candidate Party Office
+L136@P4: Vote For Not
+L137@P4: more than...
+L138@P4: Term In
+L139@P4: Years Filed Contact Info
+L140@P4: Judge Certified by the Summit County Board of
+L141@P4: Elections
+L142@P4: Cynthia Curtin Republican 1 6 , ,
+L143@P4: Betty Sutton Democratic 1 6 , ,
+L144@P4: Judge of the Court of Appeals 9th District Unexpired Term Ends 2/9/2029
+L145@P4: Candidate Party Office
+L146@P4: Vote For Not
+L147@P4: more than...
+L148@P4: Term In
+L149@P4: Years Filed Contact Info
+L150@P4: Judge Donna J. Carr, Retired
+L151@P4: Tavia Galonski Democratic 1 6 , ,
+L152@P4: Nathan Manning Republican 1 6 , ,
+L153@P4: Judge Ct. of Com Pleas - Probate - FT Commencing 2/9/2027
+L154@P4: Candidate Party Office
+L155@P4: Vote For Not
+L156@P4: more than...
+L157@P4: Term In
+L158@P4: Years Filed Contact Info
+L159@P4: James T. Walther 1 6 1/30/2026 , ,
+L160@P4: County Commissioner - Full Term Commencing 1/1/2027
+L161@P4: Candidate Party Office
+L162@P4: Vote For Not
+L163@P4: more than...
+L164@P4: Term In
+L165@P4: Years Filed Contact Info
+L166@P4: Andrew Lipian Write-In 1 4 7/24/2026 614 Garford Ave., Elyria, OH 44035
+L167@P4: Jeff Riddell Republican 1 4 1/14/2026 9611 Dean Rd., Vermilion, OH 44089
+L168@P4: Carolyn Y. White Democratic 1 4 1/16/2026 4390 Westmont Dr, Sheffield Vil., OH 44054
+L169@P4: County Auditor - Full Term Commencing 3/8/2027
+L170@P4: Candidate Party Office
+L171@P4: Vote For Not
+L172@P4: more than...
+L173@P4: Term In
+L174@P4: Years Filed Contact Info
+L175@P4: Elaine M. Seguin Republican 1 4 1/30/2026 42345 Adelbert St., Elyria, OH 44035
+L176@P4: Craig Snodgrass Democratic 1 4 12/8/2025 6323 Oak Pt Estates, Lorain, OH 44053
+L177@P4: Page 5 of 5

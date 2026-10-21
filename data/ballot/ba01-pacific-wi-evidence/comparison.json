@@ -1,0 +1,338 @@
+{
+  "state": "WI",
+  "contests": 195,
+  "candidacies": 322,
+  "explicitJointTickets": 2,
+  "officialCountyCaptures": 54,
+  "normalizedCoreContestsHeld": 114,
+  "coreChoiceDenominatorStatus": "The government-published March 20 Type A election notice establishes 128 normalized regular core races: 8 House + 17 Senate + 99 Assembly + 4 statewide joint-ticket-normalized contests. Official samples/lists currently support 114/128 races and 232 candidate choices; 14 Assembly races remain missing. The full statewide certified-candidate denominator remains unverified because the WEC official-host PDF returns HTTP 403. The WEC-authored nongovernment mirror remains a discovery lead only.",
+  "missingDistrictIds": {
+    "congress": [],
+    "senate": [],
+    "assembly": [
+      13,
+      22,
+      24,
+      26,
+      30,
+      44,
+      60,
+      66,
+      68,
+      82,
+      85,
+      91,
+      93,
+      98
+    ]
+  },
+  "officialCountyComparisons": [
+    {
+      "sourceUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+      "contests": 11,
+      "candidacies": 26
+    },
+    {
+      "sourceUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+      "contests": 7,
+      "candidacies": 14
+    },
+    {
+      "sourceUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+      "contests": 12,
+      "candidacies": 23
+    },
+    {
+      "sourceUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+      "contests": 7,
+      "candidacies": 13
+    },
+    {
+      "sourceUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+      "contests": 5,
+      "candidacies": 7
+    },
+    {
+      "sourceUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+      "contests": 16,
+      "candidacies": 31
+    },
+    {
+      "sourceUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+      "contests": 4,
+      "candidacies": 7
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=210",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=202",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=300",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=260",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=201",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=356",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=320",
+      "contests": 4,
+      "candidacies": 7
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=280",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=200",
+      "contests": 4,
+      "candidacies": 7
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=180",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=140",
+      "contests": 4,
+      "candidacies": 7
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=120",
+      "contests": 4,
+      "candidacies": 7
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=20",
+      "contests": 4,
+      "candidacies": 7
+    },
+    {
+      "sourceUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=1",
+      "contests": 4,
+      "candidacies": 6
+    },
+    {
+      "sourceUrl": "https://www.lacrossecounty.org/docs/default-source/county-clerk/sample-ballots/hc1-samp.pdf?sfvrsn=39d2a3a_1",
+      "contests": 4,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://www.lacrossecounty.org/docs/default-source/county-clerk/sample-ballots/hc2-samp.pdf?sfvrsn=bf232549_1",
+      "contests": 4,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://townofbrookfieldwi.gov/wp-content/uploads/2026/09/Type-B-Notice-2026-General-Election.pdf",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://www.superiorwi.gov/DocumentCenter/View/16687/Sample-Ballots-20261103",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+      "contests": 6,
+      "candidacies": 10
+    },
+    {
+      "sourceUrl": "https://www.clarkcountywi.gov/_files/ugd/02a99f_77e841c4af2c44bfadad41214c575b5a.pdf",
+      "contests": 6,
+      "candidacies": 11
+    },
+    {
+      "sourceUrl": "https://www.co.portage.wi.gov/DocumentCenter/View/7365/2026-General-Election-Sample-Ballot---web",
+      "contests": 9,
+      "candidacies": 18
+    },
+    {
+      "sourceUrl": "https://www.menomonie-wi.gov/DocumentCenter/View/1929/2026-November-General-Election-Sample-Ballots-PDF",
+      "contests": 5,
+      "candidacies": 10
+    },
+    {
+      "sourceUrl": "https://cdn.townweb.com/moselwi.gov/wp-content/uploads/2026/10/Nov-3rd-Sample-Ballot.pdf",
+      "contests": 5,
+      "candidacies": 11
+    },
+    {
+      "sourceUrl": "https://newberlinwi.gov/DocumentCenter/View/26904/C-New-Berlin-Sample-Ballots_November-3-2026-Election",
+      "contests": 4,
+      "candidacies": 5
+    },
+    {
+      "sourceUrl": "https://www.villageofhartland.wi.gov/DocumentCenter/View/12203/Swallow-Sample-Ballot-Nov-26",
+      "contests": 5,
+      "candidacies": 7
+    },
+    {
+      "sourceUrl": "https://www.co.walworth.wi.us/DocumentCenter/View/20544/Vote-for-One--Candidates-for-CongressionalLegisState-110326",
+      "contests": 11,
+      "candidacies": 21
+    },
+    {
+      "sourceUrl": "https://www.outagamie.gov/files/3c9edf3f-eeac-433e-ab98-bc8fb178b1f3/2026-November-Election-Outagamie-County-Type-B-C-D-Notice-Final.pdf",
+      "contests": 19,
+      "candidacies": 40
+    },
+    {
+      "sourceUrl": "https://drive.google.com/file/d/1E2_XL83xteNo7AQ3esflN2rVPeKPyuGD/view?usp=sharing",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://drive.google.com/file/d/1vce7CX13Wx_d8lsiLZmLoG4Epjn8-o2r/view?usp=sharing",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://cdn.townweb.com/grandrapidswi.gov/wp-content/uploads/2026/10/20260915104455.pdf",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/330/2026/09/Sample%20Ballot%20Both%20Sides.pdf",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://townofstcroixfallswi.gov/wp-content/uploads/2026/09/Sample-Ballot-St.-Croix-Falls-School-District.pdf",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://www.townofbeloitwi.gov/media/12751",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+      "contests": 14,
+      "candidacies": 20
+    },
+    {
+      "sourceUrl": "https://www.townofmountain.com/elections/",
+      "contests": 4,
+      "candidacies": 6
+    },
+    {
+      "sourceUrl": "https://www.westbendwi.gov/clerk/Sample%20Ballots/D1%20Wards%201,%203%20-%20Ballot%204132.pdf?t=202609171528540",
+      "contests": 4,
+      "candidacies": 6
+    },
+    {
+      "sourceUrl": "https://www.westbendwi.gov/clerk/Sample%20Ballots/D1%20Wards%202,%2024,%2027%20-%20Ballot%204133.pdf?t=202609171529120",
+      "contests": 4,
+      "candidacies": 6
+    },
+    {
+      "sourceUrl": "https://aptg.co/1BHfr0",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://www.randomlakewi.com/DocumentCenter/View/1871",
+      "contests": 6,
+      "candidacies": 12
+    },
+    {
+      "sourceUrl": "https://windpoint.org/November%203%20-%20Sample%20Ballot.pdf?t=202609171245310",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/627/2026/10/20261103_TypeC_SampleBallot_Website.pdf",
+      "contests": 4,
+      "candidacies": 6
+    },
+    {
+      "sourceUrl": "https://drive.google.com/file/d/1DASeGS5lmQ_e6-R8Eh_tSP-mXdr4V9It/view?usp=sharing",
+      "contests": 5,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://www.spartawisconsin.org/sites/g/files/vyhlif14126/files/media/finance-and-administration/file/13761/11_03_2026_general_election_sample_ballot_wd_1-5.pdf",
+      "contests": 4,
+      "candidacies": 9
+    },
+    {
+      "sourceUrl": "https://cdn.townweb.com/townofricelake.com/wp-content/uploads/2026/09/Sample-Ballot-11.3.26.pdf",
+      "contests": 5,
+      "candidacies": 8
+    },
+    {
+      "sourceUrl": "https://img1.wsimg.com/blobby/go/4192b007-d27c-4592-beb5-7f6a28d2006f/downloads/d7f76949-7f94-4870-8c17-292db23e2350/Notice%20of%20General%20Election%20and%20Sample%20Ballot%20N.pdf?ver=1792523749051",
+      "contests": 4,
+      "candidacies": 8
+    }
+  ],
+  "remaining": "Missing districts, remaining local contests/measures, and live ZIP sample-ballot verification remain open.",
+  "normalizedCoreChoicesHeld": 232,
+  "heldContests": 1,
+  "heldOfficeDependencies": [
+    {
+      "contest": "Richland County Coroner",
+      "officialEvidence": "Vernon packet front110/back111, Viola Ward2, Richland County",
+      "sourceNamedCandidates": 0,
+      "reason": "Generic publication currently requires at least one named candidacy; explicitly held without inventing a candidate."
+    }
+  ],
+  "regularCoreRaceDenominator": 128,
+  "regularCoreRaceCoverage": {
+    "held": 114,
+    "expected": 128,
+    "missing": 14,
+    "components": {
+      "house": {
+        "held": 8,
+        "expected": 8
+      },
+      "stateSenate": {
+        "held": 17,
+        "expected": 17
+      },
+      "stateAssembly": {
+        "held": 85,
+        "expected": 99
+      },
+      "normalizedStatewide": {
+        "held": 4,
+        "expected": 4
+      }
+    },
+    "sourceUrl": "https://www.townofbearcreek.org/Elections/",
+    "receiptFile": "race-schedule-capture.json"
+  }
+}

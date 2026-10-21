@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Tucker%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Tucker%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.589086+00:00",
+  "rawHash": "9fee03c88751682447a8a28bfe91a5795ea106d1593853a20e20611cea2235d4",
+  "httpStatus": 200,
+  "bytes": 723152,
+  "extractedTextHash": "f190bd3ecd7e0589506404a3e29d7897ff442358f12d9aae0ac7965f7c1ac33f",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

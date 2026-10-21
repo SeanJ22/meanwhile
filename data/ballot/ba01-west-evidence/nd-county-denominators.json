@@ -1,0 +1,278 @@
+{
+  "added": {
+    "contests": 332,
+    "candidacies": 450,
+    "heldContests": 6
+  },
+  "countyDenominators": {
+    "Cass": {
+      "contests": 6,
+      "namedChoices": 7,
+      "emptyContests": 0
+    },
+    "Burleigh": {
+      "contests": 6,
+      "namedChoices": 12,
+      "emptyContests": 0
+    },
+    "Grand Forks": {
+      "contests": 5,
+      "namedChoices": 10,
+      "emptyContests": 0
+    },
+    "Ward": {
+      "contests": 5,
+      "namedChoices": 7,
+      "emptyContests": 0
+    },
+    "Williams": {
+      "contests": 5,
+      "namedChoices": 6,
+      "emptyContests": 0
+    },
+    "Stark": {
+      "contests": 6,
+      "namedChoices": 7,
+      "emptyContests": 0
+    },
+    "Morton": {
+      "contests": 7,
+      "namedChoices": 9,
+      "emptyContests": 0
+    },
+    "Stutsman": {
+      "contests": 5,
+      "namedChoices": 8,
+      "emptyContests": 0
+    },
+    "Adams": {
+      "contests": 6,
+      "namedChoices": 6,
+      "emptyContests": 0
+    },
+    "Barnes": {
+      "contests": 6,
+      "namedChoices": 8,
+      "emptyContests": 0
+    },
+    "Benson": {
+      "contests": 10,
+      "namedChoices": 11,
+      "emptyContests": 0
+    },
+    "Billings": {
+      "contests": 7,
+      "namedChoices": 10,
+      "emptyContests": 1
+    },
+    "Bottineau": {
+      "contests": 6,
+      "namedChoices": 6,
+      "emptyContests": 0
+    },
+    "Bowman": {
+      "contests": 7,
+      "namedChoices": 10,
+      "emptyContests": 0
+    },
+    "Burke": {
+      "contests": 6,
+      "namedChoices": 6,
+      "emptyContests": 0
+    },
+    "Cavalier": {
+      "contests": 7,
+      "namedChoices": 11,
+      "emptyContests": 0
+    },
+    "Dickey": {
+      "contests": 9,
+      "namedChoices": 12,
+      "emptyContests": 0
+    },
+    "Divide": {
+      "contests": 7,
+      "namedChoices": 10,
+      "emptyContests": 0
+    },
+    "Dunn": {
+      "contests": 6,
+      "namedChoices": 12,
+      "emptyContests": 0
+    },
+    "Eddy": {
+      "contests": 5,
+      "namedChoices": 7,
+      "emptyContests": 0
+    },
+    "Emmons": {
+      "contests": 7,
+      "namedChoices": 10,
+      "emptyContests": 0
+    },
+    "Foster": {
+      "contests": 4,
+      "namedChoices": 4,
+      "emptyContests": 0
+    },
+    "Golden Valley": {
+      "contests": 5,
+      "namedChoices": 5,
+      "emptyContests": 0
+    },
+    "Grant": {
+      "contests": 4,
+      "namedChoices": 6,
+      "emptyContests": 0
+    },
+    "Griggs": {
+      "contests": 5,
+      "namedChoices": 5,
+      "emptyContests": 0
+    },
+    "Hettinger": {
+      "contests": 6,
+      "namedChoices": 7,
+      "emptyContests": 0
+    },
+    "Kidder": {
+      "contests": 7,
+      "namedChoices": 10,
+      "emptyContests": 1
+    },
+    "LaMoure": {
+      "contests": 5,
+      "namedChoices": 4,
+      "emptyContests": 1
+    },
+    "Logan": {
+      "contests": 6,
+      "namedChoices": 8,
+      "emptyContests": 0
+    },
+    "McHenry": {
+      "contests": 7,
+      "namedChoices": 7,
+      "emptyContests": 1
+    },
+    "McIntosh": {
+      "contests": 7,
+      "namedChoices": 12,
+      "emptyContests": 0
+    },
+    "McKenzie": {
+      "contests": 6,
+      "namedChoices": 9,
+      "emptyContests": 0
+    },
+    "McLean": {
+      "contests": 8,
+      "namedChoices": 9,
+      "emptyContests": 0
+    },
+    "Mercer": {
+      "contests": 8,
+      "namedChoices": 15,
+      "emptyContests": 0
+    },
+    "Mountrail": {
+      "contests": 9,
+      "namedChoices": 12,
+      "emptyContests": 0
+    },
+    "Nelson": {
+      "contests": 6,
+      "namedChoices": 6,
+      "emptyContests": 0
+    },
+    "Oliver": {
+      "contests": 8,
+      "namedChoices": 12,
+      "emptyContests": 0
+    },
+    "Pembina": {
+      "contests": 5,
+      "namedChoices": 6,
+      "emptyContests": 0
+    },
+    "Pierce": {
+      "contests": 5,
+      "namedChoices": 6,
+      "emptyContests": 0
+    },
+    "Ramsey": {
+      "contests": 9,
+      "namedChoices": 12,
+      "emptyContests": 0
+    },
+    "Ransom": {
+      "contests": 7,
+      "namedChoices": 10,
+      "emptyContests": 0
+    },
+    "Renville": {
+      "contests": 6,
+      "namedChoices": 8,
+      "emptyContests": 0
+    },
+    "Richland": {
+      "contests": 5,
+      "namedChoices": 7,
+      "emptyContests": 0
+    },
+    "Rolette": {
+      "contests": 5,
+      "namedChoices": 6,
+      "emptyContests": 0
+    },
+    "Sargent": {
+      "contests": 6,
+      "namedChoices": 11,
+      "emptyContests": 0
+    },
+    "Sheridan": {
+      "contests": 8,
+      "namedChoices": 8,
+      "emptyContests": 1
+    },
+    "Sioux": {
+      "contests": 4,
+      "namedChoices": 5,
+      "emptyContests": 0
+    },
+    "Slope": {
+      "contests": 8,
+      "namedChoices": 10,
+      "emptyContests": 1
+    },
+    "Steele": {
+      "contests": 4,
+      "namedChoices": 4,
+      "emptyContests": 0
+    },
+    "Towner": {
+      "contests": 6,
+      "namedChoices": 7,
+      "emptyContests": 0
+    },
+    "Traill": {
+      "contests": 8,
+      "namedChoices": 10,
+      "emptyContests": 0
+    },
+    "Walsh": {
+      "contests": 4,
+      "namedChoices": 9,
+      "emptyContests": 0
+    },
+    "Wells": {
+      "contests": 6,
+      "namedChoices": 8,
+      "emptyContests": 0
+    }
+  },
+  "judicialContests": 19,
+  "judicialCandidates": 20,
+  "excludedDistrictOnlyCommissionerContests": 40,
+  "excludedDistrictOnlyCommissionerNames": 56
+}

@@ -1,0 +1,10 @@
+{
+  "url": "https://templeterrace.gov/Archive.aspx?ADID=8463",
+  "finalUrl": "https://templeterrace.gov/ArchiveCenter/ViewFile/Item/8463",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:55:43.873527+00:00",
+  "rawHash": "ae5239fbb9b5dfbcce7f1b51e25adb51efda52d837d9376a04f1e6b52c43f22d",
+  "bytes": 15601438,
+  "convertedTextHash": "2dce2af705a26c0baf3afbda110a9cf4d33d1b85b8a8a07cf0ab6b1754e2932f",
+  "extraction": "pdftotext -layout; official annual city report, original PDF identified by rawHash"
+}

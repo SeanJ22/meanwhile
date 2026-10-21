@@ -141,7 +141,7 @@ export function ReaderCard({
             >
               {kicker}
             </span>
-            {zipContext && <span className="mw-card-zipctx">{zipContext}</span>}
+            {zipContext && <span className="mw-card-zipctx">{zip ? `Near ${zip}` : zipContext}</span>}
           </div>
           <button
             ref={closeRef}

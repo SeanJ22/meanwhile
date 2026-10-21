@@ -84,3 +84,21 @@ test("readers see each sitting with its live facts and the saved page every one 
   assert.deepEqual([seen!.fieldSources?.title?.sourceUrl, seen!.fieldSources?.startsAt?.quote], [FEED, "2026-05-12T00:00:00 1:00 PM"]);
   assert.deepEqual(withSittingFacts([first], []), [first], "with no facts the partition row stands");
 });
+
+test("platform meeting bodies and sittings retain their registered district or territory state", async () => {
+  for (const [state, division] of [["DC", "district:dc"], ["PR", "territory:pr"]]) {
+    const db = await factDb();
+    try {
+      const ocdId = `ocd-division/country:us/${division}`, bodyId = `government:US-${state}:cog:fixture#governing`;
+      await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Fixture place',$2)", [ocdId, state]);
+      const text = "BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Regular Council Meeting\nDTSTART;TZID=America/New_York:20260812T190000\nEND:VEVENT\nEND:VCALENDAR";
+      const meeting = { id: `ical:fixture:${state}`, ocdId, bodyId, bodyName: "Fixture Council", title: "Regular Council Meeting",
+        startsAt: "2026-08-12T19:00:00-04:00", timeZone: "America/New_York", location: null, agendaUrl: null,
+        provenance: { sourceUrl: "https://publisher.example.gov/calendar.ics", sourceOrg: "Fixture Government", collectedAt: NOW.toISOString(), verifiedAt: null } } as Meeting;
+      const report = await publishMeetingFacts(db, { meeting, capture: capture(text, meeting.provenance.sourceUrl!), producedBy: "platform-door" }, factClocks(null), NOW);
+      assert.equal(report.live, 2);
+      const rows = await db.query("SELECT id,state FROM entity WHERE id=ANY($1::text[]) ORDER BY id", [[bodyId, meetingEntityId(meeting.id)]]);
+      assert.equal(rows.length, 2); assert.ok(rows.every(row => row.state === state));
+    } finally { await db.pg.close(); }
+  }
+});

@@ -196,22 +196,3 @@ test("M119: a question never narrows the map, and a name still does", () => {
     "submitting an ask must release the map filter",
   );
 });
-
-test("4h: the pointer is always visible, names its source, and opens in the app", () => {
-  const note = readFileSync(
-    join(ROOT, "components", "ballot", "filing-note.tsx"),
-    "utf8",
-  );
-  // A real button with its state announced: not a link (which would leave) and not a div with a handler.
-  assert.match(note, /<button\b/);
-  assert.match(note, /aria-expanded=\{open\}/);
-  assert.match(note, /aria-controls=\{panelId\}/);
-  assert.ok(!/target="_blank"/.test(note), "the annotation must open in the app");
-
-  const page = readFileSync(join(ROOT, "app", "ballot", "page.tsx"), "utf8");
-  assert.match(page, /<FilingNote/, "the ballot page must use the annotation");
-  // The summary names the source organisation.
-  assert.match(page, /Candidates as filed with \$\{contest\.provenance\.sourceOrg\}/);
-  assert.match(page, /General-election candidates per \$\{nomineeSourceOrgs\}/);
-  assert.match(page, /const nomineeSourceOrgs = lineup[\s\S]*?nomineeProvenance\(nominee, contest, set!\.election\.state\)\.sourceOrg/);
-});

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "../gateway/contract.ts";
 import { gatewayActionKind } from "../../../app/(admin)/_mw/admin-v6/actions.ts";
 import type { ActionKind } from "../../../app/(admin)/_mw/admin-v6/model.ts";
-import { confirmReceipt, type Confirmation } from "../gateway/confirmation.ts";
+import { confirmationReadSession, confirmReceipt, type Confirmation } from "../gateway/confirmation.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 
 export const ADMIN_V6_HISTORY_CONTRACT = "admin-v6/history@1" as const;
@@ -18,7 +18,7 @@ export interface V6HistoryReceipt {
   readonly steps: readonly { readonly label: string; readonly at: string }[];
   readonly says: string; readonly items: readonly { readonly name: string; readonly status: V6ReceiptStatus; readonly note: string; readonly label?: string }[];
   readonly lifecycle: { readonly saved: string | null; readonly workersReceived: string | null;
-    readonly workStarted: null; readonly workFinished: null; readonly factsChecked: null;
+    readonly workStarted: string | null; readonly workFinished: string | null; readonly factsChecked: null;
     readonly published: null; readonly checkedOnPublicPage: null };
   readonly simulated: false; readonly gatewayType: string; readonly gatewayReceiptId: string;
   readonly readBackAt: string | null; readonly replayed: false; readonly sentAt: string;
@@ -69,6 +69,9 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
   const status = receipt.outcome==="REFUSED" ? "refused" : confirmed ? "done" : confirmation?.state === "in-progress" || confirmation?.state === "working" ? "running" : confirmation && ["waiting","unread","not-picked-up"].includes(confirmation.state) ? "queued" : receipt.huntScores?.length ? "queued" : statusOf(receipt);
   const completed = eventTime(receipt.completedAt);
   const confirmedAt = confirmed ? eventTime(confirmation!.at) ?? completed : null;
+  const runningAt = status === "running" ? eventTime(confirmation?.at ?? null) : null;
+  const stage = status === "done" ? "Done" : status === "running" ? "In progress"
+    : confirmation?.plan?.resultsBy ? "Scheduled" : confirmation?.plan ? "Accepted" : "Received";
   return {
     key: receipt.idempotencyKey,
     notPickedUp:confirmation?.state==="not-picked-up", finishBy:receipt.scheduleOrigin?.finishBy??null,
@@ -76,15 +79,17 @@ function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmatio
     kind,
     target: kind.startsWith("global-runner-") ? "runner" : target, targetName: targetWords(kind), label: receipt.label,
     scopeKey: place, scopeName: place === "us" ? "United States" : place === "unknown" ? "Place not recorded" : "—", level: place === "us" ? "global" : "local", status,
-    statusWords: confirmation?.state==="not-picked-up" ? "Not picked up" : status === "queued" ? "Request saved; runner response unknown" :
-      status === "refused" ? "Request refused" : confirmed ? "Done" : status === "done" ? "Gateway action recorded" :
-      status === "running" ? (confirmation?.state === "working" ? "Running" : "Gateway action in progress") : "Outcome unknown",
-    steps: [{ label: "Sent", at: receipt.startedAt },
-      ...(completed ? [{ label: status === "refused" ? "Refused" : "Gateway receipt recorded", at: completed }] : []),
-      ...(confirmedAt ? [{ label: "Runner confirmed", at: confirmedAt }] : [])],
+    statusWords: status === "refused" ? "Request refused" : confirmation?.state === "not-picked-up" ? "Not picked up"
+      : status === "unknown" ? "Outcome unknown" : stage,
+    steps: [{ label: "Received", at: receipt.startedAt },
+      ...(completed ? [{ label: status === "refused" ? "Refused" : "Accepted", at: completed }] : []),
+      ...(confirmation?.plan?.resultsBy ? [{ label: "Scheduled", at: confirmation.plan.resultsBy }] : []),
+      ...(runningAt ? [{ label: "In progress", at: runningAt }] : []),
+      ...(status === "done" && (confirmedAt ?? completed) ? [{ label: "Done", at: (confirmedAt ?? completed)! }] : [])],
     says: confirmation ? confirmation.words : receipt.says, items: confirmation?.items ?? [],
-    lifecycle: { saved: status === "queued" || status === "done" ? completed : null,
-      workersReceived: confirmedAt, workStarted: null, workFinished: null, factsChecked: null,
+    lifecycle: { saved: status === "refused" ? null : completed,
+      workersReceived: confirmedAt ?? runningAt, workStarted: runningAt,
+      workFinished: status === "done" ? confirmedAt ?? completed : null, factsChecked: null,
       published: null, checkedOnPublicPage: null },
     simulated: false, gatewayType: receipt.type, gatewayReceiptId: receipt.receiptId,
     readBackAt: receipt.readBackAt, replayed: false, sentAt: receipt.startedAt,
@@ -154,7 +159,8 @@ export async function readV6History(repos: ControlPlaneRepositories, query: V6Hi
   const rows = await page({ scope: query.scope, limit: limit + 1, beforePosition: cursor?.beforePosition });
   const window = rows.slice(0, limit);
   const confirmations = new Map<string, Confirmation>();
-  await Promise.all(window.map(async row => { confirmations.set(row.receipt.receiptId, await confirmReceipt(repos, row.receipt)); }));
+  const reading = confirmationReadSession(repos);
+  await Promise.all(window.map(async row => { confirmations.set(row.receipt.receiptId, await confirmReceipt(reading, row.receipt)); }));
   const receipts = window.map(row => query.scope === "us" ? row.receipt : { ...row.receipt, requestedSubject: query.scope });
   const section = projectV6History(receipts, { ...query, cursor: null }, confirmations);
   const nextCursor = rows.length > limit && window.length ? Buffer.from(JSON.stringify({ v: 2, scope: query.scope,

@@ -172,5 +172,6 @@ export async function primeBallotStateMoneyRead(state: StateCampaignFinanceJuris
 export async function primeBallotFundingRead(set: BallotSet, contests: readonly Contest[]): Promise<void> {
   if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
   const keys = ballotCandidateKeys(set,contests);
-  if (keys.length) await primeReaderProjection("FEC_FUNDING",requiredRoutineContract("fec-funding").scope,keys);
+  if (keys.length) await primeReaderProjection("FEC_FUNDING",requiredRoutineContract("fec-funding").scope,
+    [...currentReaderSelection()!.keys,...keys],{exactKeys:true});
 }

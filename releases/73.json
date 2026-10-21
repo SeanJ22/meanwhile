@@ -1,0 +1,21 @@
+{
+  "n": 73,
+  "branch": "release/73",
+  "river_sha": "7f96d05423677abf0729ddcba7c40521bfbf5c5a",
+  "tested_sha": "7f96d05423677abf0729ddcba7c40521bfbf5c5a",
+  "steps": [
+    "DT-01",
+    "VS-05"
+  ],
+  "lanes": [
+    "dt-01",
+    "vs-05"
+  ],
+  "integration_from": 273,
+  "integration_count": 275,
+  "pr": {
+    "number": 783,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/783"
+  },
+  "at": "2026-10-21T21:39:10Z"
+}

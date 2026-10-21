@@ -7,6 +7,7 @@ import { decodeVotingBytes, delimitedVotingRows, htmlVotingTables, pdfVotingTabl
 import { readVotingPages } from "./voting-source-pages.ts";
 import { votingFetchSession, type VotingCapture, type VotingFetchSession } from "./voting-source-fetch.ts";
 import { readVotingBoundaries } from "./voting-source-boundaries.ts";
+import { votingPdfText } from "./voting-source-evidence.ts";
 
 const normalized = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 const ALIASES: Partial<Record<VotingColumn, string[]>> = {
@@ -84,13 +85,15 @@ export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingS
     const stated = (field: VotingColumn) => !config.constants?.[field] || (row.__verifiedConstants as string[] | undefined)?.includes(field) || rowEvidence
       .some(text => normalized(text).includes(normalized(config.constants![field]!)));
     if (!stated("name") || !stated("address")) { recordMissing(`${name}: configured location value is absent from the saved page`); continue; }
+    const election = stated("election") ? get("election") : "";
+    if (get("election") && !election) recordMissing(`${name}: configured election is absent from the saved page`);
     const rowSource = { ...source,
       ...(typeof row.__captureHash === "string" ? { documentHash: row.__captureHash } : {}),
       ...(typeof row.__captureUrl === "string" ? { documentUrl: row.__captureUrl } : {}) };
     const kind = kindFrom(get("kind") || String(row.__tableTitle ?? ""), config.kind ?? door.covers.find(isVotingSiteKind) ?? "ELECTION_DAY");
     const id = `voting-${createHash("sha256").update([door.scope.state, get("countyFips") || door.scope.countyFips || get("countyName") || door.scope.ocdId,
       get("countySubdivisionGeoid") || door.scope.countySubdivisionGeoid || get("town"), address, get("room")].map(normalized).join("\0")).digest("hex").slice(0, 24)}`;
-    const site: VotingSite = { id, name, address, room: get("room") || null, lat: null, lng: null, kind, election: get("election") || door.title || null, electionDate: door.electionAssociationVerified === true || (electionDateNamed(get("election"), door.electionDate) || /general/i.test(get("election")) && get("election").includes(door.electionDate.slice(0, 4))) ? door.electionDate : undefined, serves: get("precinct") || get("ward") || null, sources: [rowSource] };
+    const site: VotingSite = { id, name, address, room: get("room") || null, lat: null, lng: null, kind, election: election || door.title || null, electionDate: door.electionAssociationVerified === true || (electionDateNamed(election, door.electionDate) || /general/i.test(election) && election.includes(door.electionDate.slice(0, 4))) ? door.electionDate : undefined, serves: get("precinct") || get("ward") || null, sources: [rowSource] };
     const stringFields = ["days", "hours", "precinct", "town", "countyName", "countyFips", "countySubdivisionGeoid", "ward", "tribalNation", "reservation", "aiannhGeoid", "locationNotes", "accessibilityNotes", "lastUpdated"] as const;
     for (const field of stringFields) { const value = get(field); if (value && stated(field as VotingColumn)) site[field] = value;
       else if (value) recordMissing(`${name}: published ${field}`); }
@@ -255,14 +258,12 @@ async function parseVotingCaptureRows(capture: VotingCapture, door: VotingSource
   if (format === "xlsx") return xlsxVotingTables(capture.bytes, config).flatMap(tableRecords);
   if (format === "pdf") {
     if (config.records) {
-      const { extractTextLayer } = await import("../extract/text-layer.ts");
-      const extracted = await extractTextLayer(new Uint8Array(capture.bytes), capture.url);
-      return configuredVotingRecords(extracted.items.map(page => page.text).join("\n"), config);
+      const extracted = await votingPdfText(capture.bytes, capture.url);
+      return configuredVotingRecords(extracted.text, config).map(row => ({ ...row, __extractionMethod: extracted.method }));
     }
     if (config.textAssertions?.length) {
-      const { extractTextLayer } = await import("../extract/text-layer.ts");
-      const extracted = await extractTextLayer(new Uint8Array(capture.bytes), capture.url);
-      const text = extracted.items.map(page => page.text).join(" ").replace(/\s+/g, " ").toLowerCase();
+      const extracted = await votingPdfText(capture.bytes, capture.url);
+      const text = extracted.text.replace(/\s+/g, " ").toLowerCase();
       if (config.textAssertions.every(assertion => text.includes(assertion.replace(/\s+/g, " ").toLowerCase()))) return [{ __documentText: text }];
       throw new Error("The PDF's published location assertions no longer match; retain prior facts and re-extract this notice");
     }
@@ -354,6 +355,7 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
       const extraction = door.extraction ?? {}, target = new URL(extraction.dataUrl ?? door.url, door.url);
       const init: RequestInit = extraction.dataBody ? { method: extraction.dataMethod ?? "POST", headers: { "content-type": "application/json", ...extraction.requestHeaders }, body: JSON.stringify(extraction.dataBody) } : {};
       const capture = await session.get(target.href, init); readStage = "extraction"; rows = await parseVotingCapture(capture, door);
+      if (rows.some(row => row.__extractionMethod === "OCR")) result.attempts.push({ url: capture.url, route: "direct", outcome: "Saved scanned PDF read with the installed OCR engine" });
       const text = new TextDecoder().decode(capture.bytes);
       if (/html/.test(capture.contentType) && door.electionPageUrl === door.url) effectiveDoor = { ...door, electionAssociationVerified: officialElectionLinkMatches(text, capture.url, door) };
       if (/html/.test(capture.contentType)) {

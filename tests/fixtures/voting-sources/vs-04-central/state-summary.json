@@ -1,13 +1,14 @@
 {
-  "capturedAt": "2026-10-21T04:51:03.502430+00:00",
-  "scope": "VS-04 first-batch source acquisition, not a production publication receipt",
+  "capturedAt": "2026-10-21T04:59:52.664478+00:00",
+  "scope": "VS-04 source acquisition including validated final OCR source; production-copy publication is recorded separately.",
   "states": [
     {
       "state": "AR",
-      "acquiredPhysicalSites": 3,
+      "acquiredPhysicalSites": 36,
       "servicesByKind": {
         "EARLY_VOTING": 1,
-        "ELECTION_DAY": 2
+        "ELECTION_DAY": 2,
+        "VOTE_CENTER": 35
       },
       "countiesRepresented": 1,
       "sources": [
@@ -31,10 +32,17 @@
           "sites": 2,
           "scope": "Benton County",
           "readBlanks": 0
+        },
+        {
+          "id": "ar-benton-general-vote-centers-2026",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "sites": 35,
+          "scope": "Benton County",
+          "readBlanks": 0
         }
       ],
       "coverage": "Partial; independently verified published locations",
-      "remaining": "State root read succeeded. Sebastian 8-page current notice and Benton current location PDFs are scans; exact PDFs and OCR outputs are saved. Native Benton GIS 3 locations are acquired. Final OCR 35-center config awaits normal runtime fallback before promotion."
+      "remaining": "Benton County current General Election scan now returns 35 vote centers through the normal OCR reader, with original PDF bytes and hash retained; together with native county GIS, 36 physical sites are acquired. The separate early-voting PDF has 15 locations and OCR artifacts still to resolve. Other Arkansas counties and current hours/boundaries remain open."
     },
     {
       "state": "IA",

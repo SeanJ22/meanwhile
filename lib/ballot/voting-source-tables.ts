@@ -148,7 +148,14 @@ export async function pdfVotingTables(bytes: Uint8Array, config: VotingExtractio
       const content = await (await doc.getPage(p)).getTextContent();
       const pageWords = content.items.filter(item => "str" in item).map(item => (item as { str: string }).str).join(" ");
       documentPages.push(pageWords);
-      if (p === 1) documentTitle = pageWords.match(/[^.]{0,80}(?:20\d{2}[^.]{0,60}(?:election|polling|voting)|(?:election|polling|voting)[^.]{0,60}20\d{2})/i)?.[0]?.trim();
+      if (p === 1) {
+        const headingItems = content.items.flatMap(item => "str" in item && item.str.trim()
+          ? [{ text: item.str, x: item.transform[4]!, y: item.transform[5]! }] : [])
+          .sort((a, b) => b.y - a.y || a.x - b.x);
+        const top = headingItems[0]?.y ?? 0;
+        const heading = headingItems.filter(item => item.y >= top - 72).map(item => item.text).join(" ");
+        documentTitle = heading.match(/[^.]{0,80}(?:20\d{2}[^.]{0,60}(?:election|polling|voting)|(?:election|polling|voting)[^.]{0,60}20\d{2})/i)?.[0]?.trim();
+      }
       lastUpdated ??= pageWords.match(/(?:last\s+)?updated[:\s]+([^;\n]{0,45}20\d{2})/i)?.[1]?.trim();
       const items = content.items.flatMap(item => {
         if (!("str" in item) || !item.str.trim()) return [];

@@ -4,7 +4,10 @@
   "sourcePages": 1,
   "checkedAt": "2026-10-21T04:49:13.135Z",
   "expectedFacilities": 35,
-  "review": "Rendered full originalPDF at2200px and visually checked all35 facility names, street addresses and uniform7:30AM-7:30PMhours. OCR emitted a strayA before415 and dot beforeN.; field extraction discards those marks and preserves the printed415 N.6thPlace and836 N.CurtisAve. Case differences are kept asrecognized. PDF-source runtime OCR fallback still required; this file is a reviewed extraction configuration, not a production publication.",
-  "previewRows": 35,
-  "previewSites": 35
+  "review": "Rendered the full original PDF at 2200px and visually checked all 35 facility names, street addresses and uniform 7:30 AM\u20137:30 PM hours. Address fields discard the OCR stray A before 415 and dot before N., preserving the printed 415 N. 6th Place and 836 N. Curtis Ave. Normal readVotingSource reads this original PDF through the existing OCR engine, returning 35 locations and zero blanks with original source hash and explicit OCR attempt provenance.",
+  "runtimeValidatedAt": "2026-10-21T04:59:52.665340+00:00",
+  "runtime": "Normal readVotingSource with original saved PDF now returns 35 sites, zero blanks, original source bytes/hash, and explicit OCR attempt provenance.",
+  "runtimeRows": 35,
+  "runtimeSites": 35,
+  "runtimeBlanks": 0
 }

@@ -118,13 +118,14 @@ test("a same-source street abbreviation keeps the existing site's identity and p
   assert.equal(read.sites.length, 1);
   const legacy = (JSON.parse(readFileSync("data/reference/voting-legacy-doors.json", "utf8")) as VotingSourceDoor[]).find(row => row.id === "legacy:nh:new-london:town-clerk")!;
   const previous = mergeVotingSourceRead(undefined, source, read, at);
-  previous.sites = [{ ...previous.sites[0]!, id: "previously-published-site", address: legacy.extraction!.constants!.address!, hours: undefined, schedules: [] }];
+  previous.sites = [{ ...previous.sites[0]!, id: "previously-published-site", address: legacy.extraction!.constants!.address!, hours: undefined, schedules: [], lat: 43.413148146571, lng: -71.980241633663 }];
   const next = mergeVotingSourceRead(previous, source, read, at);
   assert.equal(next.sites.length, 1);
   assert.equal(next.sites[0]!.id, "previously-published-site");
   assert.equal(next.sites[0]!.hours, "7:00am to 7:00pm");
   assert.equal(next.sites[0]!.address, "25 Seamans Rd");
-  const legacyShape = { ...previous, sites: [{ ...previous.sites[0]!, town: undefined, countyFips: undefined, sources: undefined }] };
+  assert.deepEqual([next.sites[0]!.lat, next.sites[0]!.lng], [previous.sites[0]!.lat, previous.sites[0]!.lng], "the known same-facility point survives an incomplete coordinate refresh");
+  const legacyShape = { ...previous, countyFips: undefined, sites: [{ ...previous.sites[0]!, town: undefined, countyFips: undefined, sources: undefined }] };
   assert.equal(mergeVotingSourceRead(legacyShape, source, read, at).sites[0]!.id, "previously-published-site", "legacy scope fields remain authoritative at jurisdiction level");
   const moved = { ...read, sites: [{ ...read.sites[0]!, address: "27 Seamans Rd" }] };
   assert.equal(mergeVotingSourceRead(previous, source, moved, at).sites[0]!.id, read.sites[0]!.id, "a different house number is a different location");

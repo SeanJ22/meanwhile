@@ -57,22 +57,27 @@ function numberedStreet(address: string): string | null {
 
 /** A publisher's spelling change must not turn one unambiguous existing facility into a deletion. */
 function retainVotingSourceSiteIds(prior: VotingJurisdiction, door: VotingSourceDoor, read: VotingSourceRead): VotingSite[] {
+  if (prior.ocdId !== door.scope.ocdId) return read.sites;
   const urls = new Set([door.url, ...read.sources.map(sourceKey)]);
+  const byId = new Map(prior.sites.map(site => [site.id, site]));
   const same = (old: VotingSite, next: VotingSite) => {
     const street = numberedStreet(next.address);
     const town = old.town ?? (door.matchingUnit === "TOWN" && /\/(?:place|cousub):[^/]+$/.test(prior.ocdId)
       ? prior.name.replace(/^(?:town|city|township|village|borough) of\s+|\s+(?:town|city|township|village|borough)$/gi, "") : undefined);
     return street !== null && street === numberedStreet(old.address) && identityText(old.name) === identityText(next.name) &&
       identityText(old.room) === identityText(next.room) && identityText(town) === identityText(next.town) &&
-      identityText(old.countyFips ?? prior.countyFips) === identityText(next.countyFips ?? door.scope.countyFips) &&
-      identityText(old.countySubdivisionGeoid ?? prior.countySubdivisionGeoid) === identityText(next.countySubdivisionGeoid ?? door.scope.countySubdivisionGeoid) &&
+      identityText(old.countyFips ?? prior.countyFips ?? (/\/county:[^/]+(?:\/|$)/.test(prior.ocdId) ? door.scope.countyFips : undefined)) === identityText(next.countyFips ?? door.scope.countyFips) &&
+      identityText(old.countySubdivisionGeoid ?? prior.countySubdivisionGeoid ?? door.scope.countySubdivisionGeoid) === identityText(next.countySubdivisionGeoid ?? door.scope.countySubdivisionGeoid) &&
       (old.sources?.length ? old.sources.some(source => urls.has(source.url)) : urls.has(prior.sourceUrl));
   };
+  const retainPoint = (old: VotingSite, next: VotingSite): VotingSite => next.lat === null && next.lng === null && old.lat !== null && old.lng !== null
+    ? { ...next, lat: old.lat, lng: old.lng, geocodeSource: old.geocodeSource } : next;
   return read.sites.map(site => {
-    if (prior.sites.some(old => old.id === site.id)) return site;
+    const exact = byId.get(site.id);
+    if (exact) return identityText(exact.address) === identityText(site.address) || same(exact, site) ? retainPoint(exact, site) : site;
     const matches = prior.sites.filter(old => same(old, site));
     if (matches.length !== 1 || read.sites.filter(next => same(matches[0]!, next)).length !== 1) return site;
-    return { ...site, id: matches[0]!.id };
+    return retainPoint(matches[0]!, { ...site, id: matches[0]!.id });
   });
 }
 

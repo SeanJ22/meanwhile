@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-21T04:52:52.285161+00:00",
+  "checkedAt": "2026-10-21T05:10:42.155145+00:00",
   "proof": "Saved official source responses parsed and grouped by document and jurisdiction, published through the registered MANUAL_CONTRACT to actual isolated production copies, then read back through the normal public data model. These are copy results, not production publication. Exact binary files and sanitizer-normalized text are distinguished in each source manifest. Reader totals may retain prior verified records; acquisition observations are separate. Unique IDs are software facility identities, not a claim that every physical building has been geographically deduplicated.",
   "productionWrites": 0,
   "copyBranches": {
@@ -43,18 +43,18 @@
     },
     {
       "state": "AR",
-      "checkedAt": "2026-10-21T04:44:58.321Z",
+      "checkedAt": "2026-10-21T05:00:08.399Z",
       "copyBranches": {
         "reader": "br-purple-fire-axpd56ml",
         "control": "br-gentle-fog-aebfnn9f"
       },
       "candidateState": "PROMOTED",
       "readerReadback": "PASS",
-      "versionId": "cv-153f0d9b26d25208f577882e41f64914",
-      "readerSiteRows": 3,
-      "uniqueSiteIds": 3,
-      "sourceSiteObservations": 3,
-      "sourceCount": 3,
+      "versionId": "cv-0a5465a811d82aa7162139f674b0330e",
+      "readerSiteRows": 36,
+      "uniqueSiteIds": 36,
+      "sourceSiteObservations": 38,
+      "sourceCount": 4,
       "sourceResults": [
         {
           "id": "ar-sebastian-general-election-notice-2026",
@@ -75,16 +75,22 @@
           "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
           "observations": 2,
           "blankCounts": {}
+        },
+        {
+          "id": "ar-benton-general-vote-centers-2026",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "observations": 35,
+          "blankCounts": {}
         }
       ],
-      "savedCaptureCount": 5,
-      "publisherBytes": 3123,
+      "savedCaptureCount": 6,
+      "publisherBytes": 112462,
       "meteredResponseBytes": {
-        "reader": 6849648,
+        "reader": 6917235,
         "control-plane": 0
       },
-      "peakRssBytes": 486313984,
-      "configHash": "0376491962860e2b090399c318272dcf2d7489c0120b511052fd182b78fbf6f4"
+      "peakRssBytes": 467787776,
+      "configHash": "202f37bbcd3caae49a63da7064d0880133cb2dc668f4a939c615b3463f26ed4a"
     },
     {
       "state": "AS",
@@ -334,14 +340,14 @@
     },
     {
       "state": "FL",
-      "checkedAt": "2026-10-21T04:38:36.508Z",
+      "checkedAt": "2026-10-21T04:58:18.034Z",
       "copyBranches": {
         "reader": "br-purple-fire-axpd56ml",
         "control": "br-gentle-fog-aebfnn9f"
       },
       "candidateState": "PROMOTED",
       "readerReadback": "PASS",
-      "versionId": "cv-22d3e949b02219333fc56b7659cff0f1",
+      "versionId": "cv-18a83b6702ef02630be8d0e4c62943d3",
       "readerSiteRows": 463,
       "uniqueSiteIds": 463,
       "sourceSiteObservations": 924,
@@ -363,81 +369,61 @@
           "id": "fl-volusia-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 9,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-volusia-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 9,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-wakulla-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-wakulla-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-walton-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 4,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-walton-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 4,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-washington-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-washington-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-alachua-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 8,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-alachua-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 8,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-baker-early-general-2026",
@@ -455,97 +441,73 @@
           "id": "fl-bay-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 8,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-bay-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 8,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-bradford-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-bradford-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-brevard-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 10,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-brevard-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 10,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-broward-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 30,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-broward-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 30,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-calhoun-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-calhoun-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-charlotte-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 4,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-charlotte-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 4,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-citrus-early-general-2026",
@@ -575,65 +537,49 @@
           "id": "fl-collier-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 11,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-collier-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 11,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-columbia-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-columbia-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-miami_dade-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 28,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-miami_dade-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 28,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-desoto-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-desoto-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-dixie-early-general-2026",
@@ -652,7 +598,7 @@
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 24,
           "blankCounts": {
-            "earlier-election": 2
+            "missing-sites": 24
           }
         },
         {
@@ -660,7 +606,7 @@
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 24,
           "blankCounts": {
-            "earlier-election": 2
+            "missing-sites": 24
           }
         },
         {
@@ -679,17 +625,13 @@
           "id": "fl-flagler-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 5,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-flagler-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 5,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-franklin-early-general-2026",
@@ -707,17 +649,13 @@
           "id": "fl-gadsden-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-gadsden-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-gilchrist-early-general-2026",
@@ -735,17 +673,13 @@
           "id": "fl-glades-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-glades-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-gulf-early-general-2026",
@@ -775,33 +709,25 @@
           "id": "fl-hardee-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-hardee-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-hendry-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-hendry-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-hernando-early-general-2026",
@@ -819,33 +745,25 @@
           "id": "fl-highlands-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 3,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-highlands-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 3,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-hillsborough-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 27,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-hillsborough-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 27,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-holmes-early-general-2026",
@@ -869,33 +787,25 @@
           "id": "fl-jackson-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 3,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-jackson-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 2,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-jefferson-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-jefferson-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 1,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-lafayette-early-general-2026",
@@ -925,33 +835,25 @@
           "id": "fl-lee-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 12,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-lee-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 12,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-leon-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 10,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-leon-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 10,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-levy-early-general-2026",
@@ -993,33 +895,25 @@
           "id": "fl-manatee-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 8,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-manatee-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 8,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-monroe-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 5,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-monroe-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 5,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-marion-early-general-2026",
@@ -1061,17 +955,13 @@
           "id": "fl-okaloosa-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 5,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-okaloosa-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 5,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-okeechobee-early-general-2026",
@@ -1089,88 +979,68 @@
           "id": "fl-orange-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 27,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-orange-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 27,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-osceola-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 11,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-osceola-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 11,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-palm_beach-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 28,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-palm_beach-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 28,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-pasco-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 12,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-pasco-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 12,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-pinellas-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 7,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-pinellas-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 7,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-polk-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 10,
           "blankCounts": {
-            "earlier-election": 2
+            "missing-sites": 10
           }
         },
         {
@@ -1178,40 +1048,32 @@
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 10,
           "blankCounts": {
-            "earlier-election": 2
+            "missing-sites": 10
           }
         },
         {
           "id": "fl-putnam-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 3,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-putnam-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 3,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-santa_rosa-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 6,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-santa_rosa-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 6,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-sarasota-early-general-2026",
@@ -1229,17 +1091,13 @@
           "id": "fl-seminole-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 7,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-seminole-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 7,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-st_johns-early-general-2026",
@@ -1257,17 +1115,13 @@
           "id": "fl-st_lucie-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 8,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-st_lucie-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 8,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-sumter-early-general-2026",
@@ -1285,17 +1139,13 @@
           "id": "fl-suwannee-early-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 3,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-suwannee-ballot-intake-general-2026",
           "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
           "observations": 3,
-          "blankCounts": {
-            "earlier-election": 2
-          }
+          "blankCounts": {}
         },
         {
           "id": "fl-taylor-early-general-2026",
@@ -1313,41 +1163,42 @@
       "savedCaptureCount": 2,
       "publisherBytes": 5162225,
       "meteredResponseBytes": {
-        "reader": 7324365,
+        "reader": 8679324,
         "control-plane": 0
       },
-      "peakRssBytes": 1012461568
+      "peakRssBytes": 1005330432,
+      "configHash": "205f3d6565123f3b78f9bedbd7dad8fd88f9c15bb4e14ec1077446aee9d63122"
     },
     {
       "state": "GA",
-      "checkedAt": "2026-10-21T04:43:39.121Z",
+      "checkedAt": "2026-10-21T05:00:56.470Z",
       "copyBranches": {
-        "reader": "br-purple-fire-axpd56ml",
+        "reader": "br-frosty-truth-axq7rdql",
         "control": "br-gentle-fog-aebfnn9f"
       },
       "candidateState": "PROMOTED",
       "readerReadback": "PASS",
-      "versionId": "cv-57ee0a1981864c05043e4f3674a0ca85",
-      "readerSiteRows": 121,
-      "uniqueSiteIds": 121,
-      "sourceSiteObservations": 121,
+      "versionId": "cv-edfeacc04b9ed926f13adfb056924d60",
+      "readerSiteRows": 132,
+      "uniqueSiteIds": 132,
+      "sourceSiteObservations": 132,
       "sourceCount": 1,
       "sourceResults": [
         {
           "id": "ga-cobb-public-precincts-2026",
           "url": "https://assets.cobbcounty.gov/files/2026-09/2026%20Precinct%20Codes%20and%20Locations_Facility%20name__REV%2009-15-2026_148.pdf",
-          "observations": 121,
+          "observations": 132,
           "blankCounts": {}
         }
       ],
       "savedCaptureCount": 4,
       "publisherBytes": 170390,
       "meteredResponseBytes": {
-        "reader": 6082056,
+        "reader": 6106874,
         "control-plane": 0
       },
-      "peakRssBytes": 389918720,
-      "configHash": "73eec7bc141abafa21dee7076c60eb9d25ee1dfa4c25f916663b5d4de64f3c29"
+      "peakRssBytes": 406339584,
+      "configHash": "324ba0ed34ddbfead68b31ee73cb0387d6a35335833e9d31ddf12a514c8438c5"
     },
     {
       "state": "HI",
@@ -2260,6 +2111,37 @@
       "peakRssBytes": 368230400
     },
     {
+      "state": "NH",
+      "checkedAt": "2026-10-21T04:59:12.137Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-bc1ff68de7271214fedb6a43c6d610d3",
+      "readerSiteRows": 1,
+      "uniqueSiteIds": 1,
+      "sourceSiteObservations": 1,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-nh-new-london",
+          "url": "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC",
+          "observations": 1,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 52773,
+      "meteredResponseBytes": {
+        "reader": 2699581,
+        "control-plane": 0
+      },
+      "peakRssBytes": 317181952,
+      "configHash": "a89d389144172203edaaf082c09697b363287f08a00c883416883b5cbb9ffd10"
+    },
+    {
       "state": "NJ",
       "checkedAt": "2026-10-21T04:43:37.164Z",
       "copyBranches": {
@@ -2409,6 +2291,43 @@
       },
       "peakRssBytes": 388431872,
       "configHash": "8ea6403dca3061bb105760ae7cf8af8c23d436d11efd2abee5a8e9052371fecc"
+    },
+    {
+      "state": "NM",
+      "checkedAt": "2026-10-21T04:53:31.249Z",
+      "copyBranches": {
+        "reader": "br-frosty-truth-axq7rdql",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-02ceb3e5051167b776702242fab264ce",
+      "readerSiteRows": 37,
+      "uniqueSiteIds": 37,
+      "sourceSiteObservations": 42,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "nm-santa-fe-early_voting-2026",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "observations": 8,
+          "blankCounts": {}
+        },
+        {
+          "id": "nm-santa-fe-vote_center-2026",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "observations": 34,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 36133,
+      "meteredResponseBytes": {
+        "reader": 3527719,
+        "control-plane": 0
+      },
+      "peakRssBytes": 365400064,
+      "configHash": "0b6a266157dfb8acb4b11606904d64c421a229939dbc96fbbad8fc0cc985f934"
     },
     {
       "state": "NV",
@@ -2723,14 +2642,14 @@
     },
     {
       "state": "TN",
-      "checkedAt": "2026-10-21T04:43:39.187Z",
+      "checkedAt": "2026-10-21T04:58:16.808Z",
       "copyBranches": {
-        "reader": "br-purple-fire-axpd56ml",
+        "reader": "br-frosty-truth-axq7rdql",
         "control": "br-gentle-fog-aebfnn9f"
       },
       "candidateState": "PROMOTED",
       "readerReadback": "PASS",
-      "versionId": "cv-438b98a8200dc8b9d6ba549ae1b77e4f",
+      "versionId": "cv-1a1d7ee721fe93a782e42c89cca16286",
       "readerSiteRows": 15,
       "uniqueSiteIds": 15,
       "sourceSiteObservations": 15,
@@ -2740,17 +2659,19 @@
           "id": "tn-davidson-early-general-2026",
           "url": "https://www.nashville.gov/departments/elections/voters/find-early-voting-information",
           "observations": 15,
-          "blankCounts": {}
+          "blankCounts": {
+            "missing-sites": 15
+          }
         }
       ],
       "savedCaptureCount": 2,
       "publisherBytes": 90822,
       "meteredResponseBytes": {
-        "reader": 4782413,
+        "reader": 4793310,
         "control-plane": 0
       },
-      "peakRssBytes": 334684160,
-      "configHash": "cacbb80a63421509e5159839b1258098abb10949b6946962acf131214b8cf1cf"
+      "peakRssBytes": 329416704,
+      "configHash": "8e22cd0ea5b21238fdbcc57b7e533c4972a46bd163436c83ea84d7a8aec4bb40"
     },
     {
       "state": "TX",
@@ -3101,11 +3022,11 @@
       "state": "AR",
       "copyBranch": "br-purple-fire-axpd56ml",
       "kind": "PROMOTED",
-      "siteRows": 3,
-      "uniqueFacilities": 3,
+      "siteRows": 36,
+      "uniqueFacilities": 36,
       "lookup": {
         "zip": "72704",
-        "sites": 3,
+        "sites": 36,
         "jurisdictions": 2
       }
     },
@@ -3203,13 +3124,13 @@
     },
     {
       "state": "GA",
-      "copyBranch": "br-purple-fire-axpd56ml",
+      "copyBranch": "br-frosty-truth-axq7rdql",
       "kind": "PROMOTED",
-      "siteRows": 121,
-      "uniqueFacilities": 121,
+      "siteRows": 132,
+      "uniqueFacilities": 132,
       "lookup": {
         "zip": "30008",
-        "sites": 121,
+        "sites": 132,
         "jurisdictions": 1
       }
     },
@@ -3484,7 +3405,7 @@
     },
     {
       "state": "NM",
-      "copyBranch": "br-purple-fire-axpd56ml",
+      "copyBranch": "br-frosty-truth-axq7rdql",
       "kind": "PROMOTED",
       "siteRows": 37,
       "uniqueFacilities": 37,
@@ -3616,7 +3537,7 @@
     },
     {
       "state": "TN",
-      "copyBranch": "br-purple-fire-axpd56ml",
+      "copyBranch": "br-frosty-truth-axq7rdql",
       "kind": "PROMOTED",
       "siteRows": 15,
       "uniqueFacilities": 15,
@@ -3735,22 +3656,9 @@
       }
     }
   ],
-  "pendingPublication": [
-    {
-      "state": "NH",
-      "candidateState": "HORIZON_UNRESOLVED",
-      "reason": "The incomplete OPEN_FACT_SET horizon removed 1 record(s) without a record-class removal contract.",
-      "retainedReaderSiteRows": 1
-    },
-    {
-      "state": "NM",
-      "candidateState": "HORIZON_UNRESOLVED",
-      "reason": "The incomplete OPEN_FACT_SET horizon removed 1 record(s) without a record-class removal contract.",
-      "retainedReaderSiteRows": 37
-    }
-  ],
+  "pendingPublication": [],
   "http": {
-    "build": "Fresh optimized production build of River plus allowed current source changes; actual copy data, no mocked reader answers. Route code is unchanged by this acquisition step.",
+    "build": "Optimized production build with actual isolated-copy data and no mocked reader answers. First-submission checks use the earlier successful build; final-build smoke checks use NH and GA on their respective actual copies. The voting-sites reader/API code is unchanged by source-acquisition changes.",
     "firstSubmissions": [
       {
         "state": "AL",
@@ -5353,7 +5261,365 @@
         "passed": true
       }
     ],
-    "updatedPublicationChecks": [],
+    "updatedPublicationChecks": [
+      {
+        "state": "NC",
+        "zip": "27217",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 1507.844969,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 50,
+        "uniqueSiteIds": 50,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+          "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-860fd9678cbd12c94340b3d8",
+          "name": "ELMIRA COMMUNITY CENTER",
+          "address": "810 WICKER ST, BURLINGTON, NC, 27217",
+          "kinds": [
+            "EARLY_VOTING",
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NH",
+        "zip": "03233",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 196.70806100000001,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 1,
+        "uniqueSiteIds": 1,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "nh-new-london-1",
+          "name": "Whipple Memorial Town Hall",
+          "address": "25 Seamans Rd",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "AR",
+        "zip": "72704",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 408.049716,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 36,
+        "uniqueSiteIds": 36,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+          "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+          "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-6935690099e6ebe142802c4c",
+          "name": "County Clerk's Office - Bentonville",
+          "address": "215 E. Central Ave., Bentonville",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "GA",
+        "zip": "30008",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 594.7129659999999,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 132,
+        "uniqueSiteIds": 132,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://assets.cobbcounty.gov/files/2026-09/2026%20Precinct%20Codes%20and%20Locations_Facility%20name__REV%2009-15-2026_148.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-b85a21996c32ddfd6fab8c3c",
+          "name": "ACWORTH COMMUNITY CENTER",
+          "address": "4361 CHEROKEE ST, ACWORTH GA 30101",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "FL",
+        "zip": "32044",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 791.3347249999999,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 9,
+        "uniqueSiteIds": 9,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-6ac64987fe3bbcec4cbbaba3",
+          "name": "EV1 - SOE Office",
+          "address": "515 North Main Street, Gainesville, Florida 32601",
+          "kinds": [
+            "EARLY_VOTING",
+            "DROP_BOX"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "TN",
+        "zip": "37013",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 409.70245,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 15,
+        "uniqueSiteIds": 15,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.nashville.gov/departments/elections/voters/find-early-voting-information"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-9226296a3f07d439bc38d4c8",
+          "name": "Bellevue Library",
+          "address": "720 Baugh Road, Nashville 37221",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NM",
+        "zip": "87010",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 181.86394000000018,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 37,
+        "uniqueSiteIds": 37,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-a924f78771bf4b8d313f6655",
+          "name": "Abedon Lopez Comm. Center",
+          "address": "155 Camino De Quintana\n\nEspa\u00f1ola, NM 87532",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "VA",
+        "zip": "23005",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 1140.0909689999999,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 37,
+        "uniqueSiteIds": 37,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-0ae6c5895a94d21eca1d4b97",
+          "name": "Ashland Town Hall",
+          "address": "121 Thompson St., Ashland, VA, 23005-2081",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "TX",
+        "zip": "79821",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 241.7557499999998,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 129,
+        "uniqueSiteIds": 129,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+          "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-ca26254de77f367698ffced7",
+          "name": "Agua Dulce Community Center",
+          "address": "15371 Kentwood Ave. 79928",
+          "kinds": [
+            "VOTE_CENTER",
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "LA",
+        "zip": "70526",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 113.00905599999987,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 2,
+        "uniqueSiteIds": 2,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://voterportal.sos.la.gov/earlyvoting"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-f4f7114958d2a7dae8c94dea",
+          "name": "568 NW COURT CIRCLE",
+          "address": "568 NW COURT CIRCLE\nCROWLEY, LA 70526-4363",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NH",
+        "zip": "03233",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 1322.622848,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 1,
+        "uniqueSiteIds": 1,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "nh-new-london-1",
+          "name": "Whipple Memorial Town Hall",
+          "address": "25 Seamans Rd",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true,
+        "buildPhase": "final-production-build"
+      },
+      {
+        "state": "GA",
+        "zip": "30008",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 1476.6133220000002,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 132,
+        "uniqueSiteIds": 132,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://assets.cobbcounty.gov/files/2026-09/2026%20Precinct%20Codes%20and%20Locations_Facility%20name__REV%2009-15-2026_148.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-b85a21996c32ddfd6fab8c3c",
+          "name": "ACWORTH COMMUNITY CENTER",
+          "address": "4361 CHEROKEE ST, ACWORTH GA 30101",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true,
+        "buildPhase": "final-production-build"
+      }
+    ],
     "firstSubmissionCount": 56,
     "firstSubmissionPassCount": 56,
     "maximumFirstSubmissionMs": 1959.003971
@@ -5388,11 +5654,229 @@
       "peakRssBytes": 395866112
     }
   },
-  "knownCopyCorrectionLimitation": "Earlier test-copy OR/MA/NJ and CO parsing or identity changes removed old test record IDs; the standing generic OPEN_FACT_SET removal check held the replacements. Corrected source first-publication proofs use a fresh child of actual production, without changing candidate pointers or relaxing admission. Generic voting member-removal support remains outside the allowed files.",
+  "knownCopyCorrectionLimitation": "Corrected OR/MA/NJ/NM candidates were held by the generic OPEN_FACT_SET removal check in the earlier test copy. Corrected first-publication and scope proofs use a fresh child of actual production, without changing candidate pointers or relaxing admission. The real NH legacy refresh now preserves its existing ID and point and promotes current hours. Generic voting member-removal support remains outside the allowed files.",
   "remainingSourceGaps": {
     "AK": "Fresh state source routes return HTTP 503; saved borough alternatives describe municipal elections and do not establish November 3 general applicability.",
     "AS": "Fresh official absentee rule/contact captured and published; no current public voting-place list acquired.",
     "GU": "No publishable public voting-place source acquired from the checked official routes.",
     "PR": "Official Electoral Code verifies the general-election cycle; no regularly scheduled November 2026 general election. Special-election coverage is not claimed."
+  },
+  "productionCapacity": {
+    "observedHeartbeatAt": "2026-10-21T05:03:44.013Z",
+    "readMethod": "One read-only SELECT of the pilot-runner row on the actual production control-plane branch br-tiny-frog-aeufpjeq through the Neon connector. No production write or worker launch.",
+    "testedSha": "4c4f7f8fd528f6f5d435829dad4d1efbb3b9186f",
+    "lastCycleOk": false,
+    "memory": {
+      "at": "2026-10-21T05:03:43.905Z",
+      "totalBytes": 8326938624,
+      "availableBytes": 4756287488,
+      "headroomBytes": 805306368,
+      "reservedGrowthBytes": 5733105664,
+      "runnerTreeRssBytes": 4603289600,
+      "runnerTreeProcesses": 27,
+      "leaseWorkerPeakBytes": 358612992,
+      "fitLeaseWorkers": 0
+    },
+    "largestMeasuredVotingSourceJobRssBytes": 1012461568,
+    "unreservedBytesAfterMargin": -1782124544,
+    "additionalVotingJobsAtMeasuredPeak": 0,
+    "interpretation": "At this observed production heartbeat, existing growth reservations plus the unchanged 0.75 GiB margin leave no capacity for an additional measured voting-source job. This does not claim the source change is running in production. The routine runner remains on the shown deployed SHA with lastCycleOk=false.",
+    "metering": "The connector does not expose database wire-byte accounting for this one-row read; copy-job and HTTP response accounting is recorded separately."
+  },
+  "productionBuild": {
+    "status": "PASS",
+    "exitCode": 0,
+    "buildCompletedAt": "2026-10-21T05:07:21.784952+00:00",
+    "baseCommit": "9a47b20abc89c0ec431fb93760dae01bfedf7e5a",
+    "candidateSourceHash": "765dc7f8e919916b9c3fb4aab5b9839796b502cc0e8e9d380d0a8aa88345ceec",
+    "buildLogSha256": "336173eff6e08443ca6e043b830b22eece4f97bbd0c84f6b639878d64a0eb568",
+    "overlay": [
+      {
+        "path": "lib/ballot/voting-source-blanks.ts",
+        "sha256": "40f54acf40649599b64ee3609eab0c96e4bcdd8bd2638ffbed92784c4eb61004"
+      },
+      {
+        "path": "lib/ballot/voting-source-boundaries.ts",
+        "sha256": "5c072252c291d0f7587c3b6dbf5cb851d635a7fa7d7f1d7a9b142fb05595b5d6"
+      },
+      {
+        "path": "lib/ballot/voting-source-discovery.ts",
+        "sha256": "9c2a01978f42ec8e8441a846b74e7746acf8cbf865a553026d43ae504a8f41b2"
+      },
+      {
+        "path": "lib/ballot/voting-source-fetch.ts",
+        "sha256": "88bdd721e4f55ac72dd9a550a707a812309c0b9c0b0978c63a099ffa06ca3c09"
+      },
+      {
+        "path": "lib/ballot/voting-source-pages.ts",
+        "sha256": "9081ea683bbec8bc5fe28ef6d19af6495e21196789df000aadea476256094e2e"
+      },
+      {
+        "path": "lib/ballot/voting-source-population.ts",
+        "sha256": "3e34068acecbc9a5b1e917d9195c2aed84e2f2ce4c2e4c5fc0d4f09b6aa9f822"
+      },
+      {
+        "path": "lib/ballot/voting-source-publication.ts",
+        "sha256": "cbf0eb96b6c4bd5f8377a0aa1fcbc23ce92cbcf26241ff2e6185bfffaf4cbcbe"
+      },
+      {
+        "path": "lib/ballot/voting-source-readers.ts",
+        "sha256": "821f8da99d8ac7ab468728a1bbcfe35353a4e843b3ae00d277a1f25dfb819e72"
+      },
+      {
+        "path": "lib/ballot/voting-source-tables.ts",
+        "sha256": "2e86078a388784b36b939faee26f17dfddba3863ea2840f6a690d7c211ddb48f"
+      },
+      {
+        "path": "lib/ballot/voting-source-types.ts",
+        "sha256": "63f2ac48cd04a375f5a041e7608539563b98da580e6185fb785835967e99a1b5"
+      },
+      {
+        "path": "lib/ballot/voting-source-evidence.ts",
+        "sha256": "e25151537bcefedc88ca44dc3bb21019ab20548e7886ceb806f476453e437663"
+      },
+      {
+        "path": "tests/voting-source-discovery.test.ts",
+        "sha256": "7bf09897f0e09d906cc33c796bae0efe48199e570b959f9583a54477a3d2a5a9"
+      },
+      {
+        "path": "tests/voting-source-publication.test.ts",
+        "sha256": "1694434009a412e01a8331185cc6020b89f9f309d7ab8c1fca7304056f8ab84f"
+      },
+      {
+        "path": "tests/voting-source-readers.test.ts",
+        "sha256": "30a0068756a61a830b198cd815eca78b5a075c3ee7fdbd92e1ae06435e9cc39c"
+      },
+      {
+        "path": "tests/voting-source-refresh.test.ts",
+        "sha256": "c7457fa36848ee343e28395131faaa8ff3d2b0a46c759432027517e60cdd72d3"
+      },
+      {
+        "path": "tests/voting-source-isolation.test.ts",
+        "sha256": "5fa7dba626a4f4ce2ec56f43ee2730412f097d7b9074a09ac5ff133701086ab5"
+      },
+      {
+        "path": "tests/voting-source-territories.test.ts",
+        "sha256": "eb7118f22dbc5bcfe4ca873a24c2c840bacdeb2094aac3231d6d5f2def52e750"
+      },
+      {
+        "path": "tests/voting-source-central.test.ts",
+        "sha256": "b659106e0b0182dbc6c133d89569618219801ecc6bf42050f38b3910da962c84"
+      },
+      {
+        "path": "tests/voting-source-southeast.test.ts",
+        "sha256": "b60215446c2a5fca683c300c91a9bbce169efe30aa4158a2a83e679ea56d8721"
+      },
+      {
+        "path": "tests/voting-source-west.test.ts",
+        "sha256": "015692f7c4a3596b698dff2e1cca8f0eeaf69f3138db43039861014cbad6e4e4"
+      },
+      {
+        "path": "tests/voting-source-northeast.test.ts",
+        "sha256": "4a6d8aa8ba772f1794963c601a85109e40b56729c36aafc3f3f920fc57902430"
+      },
+      {
+        "path": "scripts/fetch-voting-sites.mts",
+        "sha256": "6b16f2a78c1d8f345198a1951e5681d2475cdd45a63421afdcc6364b6efd01f3"
+      },
+      {
+        "path": "data/reference/voting-source-doors.json",
+        "sha256": "29fba89ea26a42148f1fadfc655b8edbffd21ecd3412a542758a75199194f0c2"
+      }
+    ],
+    "postOverlaySourceDeltas": [
+      {
+        "path": "scripts/fetch-voting-sites.mts",
+        "builtSha256": "6b16f2a78c1d8f345198a1951e5681d2475cdd45a63421afdcc6364b6efd01f3",
+        "currentSha256": "fc9154b4830e545f9bd4b49c372e4f0e2bee46af816513c15a4ac19c04456d5d"
+      },
+      {
+        "path": "data/reference/voting-source-doors.json",
+        "builtSha256": "29fba89ea26a42148f1fadfc655b8edbffd21ecd3412a542758a75199194f0c2",
+        "currentSha256": "76842b5f0a4009937e7a9cda103bd0048faa257ebe1fd78abe41132b7c57c6e5"
+      }
+    ],
+    "postOverlayScope": "The subsequent source-script discovery/scope fixes and source-door ordering are outside the /api/voting-sites runtime dependency closure; current source tests and typecheck are reported separately in READY. This build does not claim to include those subsequent file versions.",
+    "readerDependencyTraceHasVotingSourceFiles": false,
+    "smokeChecks": [
+      {
+        "state": "NH",
+        "zip": "03233",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 1322.622848,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 1,
+        "uniqueSiteIds": 1,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "nh-new-london-1",
+          "name": "Whipple Memorial Town Hall",
+          "address": "25 Seamans Rd",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true,
+        "buildPhase": "final-production-build"
+      },
+      {
+        "state": "GA",
+        "zip": "30008",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": false,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 1476.6133220000002,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 132,
+        "uniqueSiteIds": 132,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://assets.cobbcounty.gov/files/2026-09/2026%20Precinct%20Codes%20and%20Locations_Facility%20name__REV%2009-15-2026_148.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-b85a21996c32ddfd6fab8c3c",
+          "name": "ACWORTH COMMUNITY CENTER",
+          "address": "4361 CHEROKEE ST, ACWORTH GA 30101",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true,
+        "buildPhase": "final-production-build"
+      }
+    ]
+  },
+  "siteInventory": {
+    "file": "vs-04-sites-by-state.json",
+    "sha256": "ae7808a155607bd1d9618183a5e10448a702f8a923b7a50fa563619bef9312ea",
+    "bytes": 5492232,
+    "siteRows": 15595,
+    "jurisdictions": 56,
+    "siteBearingJurisdictions": 52,
+    "sourceEvidenceCounts": {
+      "VS04_CAPTURE": 15271,
+      "RETAINED_PRIOR": 324
+    },
+    "exportReadMeter": {
+      "readerResponseBytes": 38175252,
+      "controlPlaneResponseBytes": 0,
+      "readerRequests": 56,
+      "method": "One state-scoped typed projection read per jurisdiction, four states at once. No nationwide projection load, source fetch, publication, or production write."
+    }
   }
 }

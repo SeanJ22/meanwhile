@@ -103,7 +103,10 @@
         "precinct": "precinct_name",
         "election": "election_dt"
       }
-    }
+    },
+    "supersedes": [
+      "https://dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv"
+    ]
   },
   {
     "id": "va-statewide-polling-general-2026",
@@ -7162,8 +7165,6 @@
     "discoveredFrom": "https://www.cobbcounty.gov/elections/voting/election-day",
     "extraction": {
       "format": "pdf",
-      "pdfTop": 690,
-      "pdfBottom": 50,
       "pdfColumns": [
         {
           "name": "precinct",
@@ -7180,13 +7181,18 @@
       ],
       "pdfRecordStart": {
         "column": "code",
-        "pattern": "^(?=[A-Z0-9]*\\d)[A-Z0-9]{3,6}$"
+        "pattern": "^[A-Z]{2}\\d[A-Z0-9]$"
       },
       "columns": {
         "precinct": "precinct",
         "election": "__fileTitle"
       },
       "transforms": {
+        "precinct": {
+          "column": "code",
+          "pattern": "^([A-Z]{2}\\d[A-Z0-9])",
+          "group": 1
+        },
         "name": {
           "column": "location",
           "pattern": "^(.+?),\\s*(?=\\d)",
@@ -7194,7 +7200,7 @@
         },
         "address": {
           "column": "location",
-          "pattern": "^.+?,\\s*(\\d[\\s\\S]+)$",
+          "pattern": "^.+?,\\s*(\\d[\\s\\S]*?\\bGA\\s+\\d{5})(?:\\s|$)",
           "group": 1
         }
       }

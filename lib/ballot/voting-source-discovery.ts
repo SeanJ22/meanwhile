@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { classifySourceContent, sourceBody, sourceLinks, SOURCE_FAMILIES, type SourceDisposition } from "../doors/source-content.ts";
 import { pageAddress } from "../doors/page-doors.ts";
-import { extractTextLayer } from "../extract/text-layer.ts";
+import { votingPdfText } from "./voting-source-evidence.ts";
 import { decodeVotingBytes, xlsxVotingTables } from "./voting-source-tables.ts";
 import type { SiteKind } from "./voting-sites.ts";
 import { fingerprintVotingPlatform } from "./voting-source-readers.ts";
@@ -78,8 +78,7 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
       source.url = final;
       text = decodeVotingBytes(capture.bytes);
       if (/pdf/i.test(capture.contentType) || text.startsWith("%PDF")) {
-        const extracted = await extractTextLayer(new Uint8Array(capture.bytes), capture.url);
-        text = extracted.items.map(page => page.text).join(" ");
+        text = (await votingPdfText(capture.bytes, capture.url)).text;
       } else if (capture.bytes[0] === 80 && capture.bytes[1] === 75) {
         text = xlsxVotingTables(capture.bytes).flatMap(table => [table.headers.join(" "), ...table.rows.map(row => row.join(" "))]).join("\n");
       }

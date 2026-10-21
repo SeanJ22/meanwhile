@@ -51,7 +51,22 @@ const typedPlaceName = (value: string): string => value.toLowerCase().replace(/&
 /** FEC roots carry their directory provenance; that does not make them child pages. */
 export function votingChiefRoots(doors: readonly VotingSourceDoor[]): VotingSourceDoor[] {
   return doors.filter(door => statewide(door) &&
-    (/(?:^|\/)fec_state_election_offices\.csv$/.test(door.discoveredFrom ?? "") || !door.discoveredFrom && !door.covers.length));
+    (/(?:^|\/)fec_state_election_offices\.csv$/.test(door.discoveredFrom ?? "") ||
+      normalizeUrl(door.discoveredFrom ?? "") === "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices" ||
+      !door.discoveredFrom && !door.covers.length));
+}
+
+/** An older file remains a fallback until the replacement has actually reached the holding. */
+export function votingSupersededSources(doors: readonly VotingSourceDoor[], held: VotingSitesFile | null): Set<string> {
+  const urls = new Set<string>();
+  for (const door of doors) {
+    if (!door.supersedes?.length) continue;
+    const current = held?.jurisdictions.find(jurisdiction => jurisdiction.ocdId === door.scope.ocdId);
+    if (current?.sites.some(site => site.electionDate === door.electionDate && site.sources?.some(source => normalizeUrl(source.url) === normalizeUrl(door.url)))) {
+      for (const url of door.supersedes) urls.add(normalizeUrl(url));
+    }
+  }
+  return urls;
 }
 
 function divisionScope(division: Division, divisions: readonly Division[]): VotingDoorScope {
@@ -98,7 +113,8 @@ export function votingScopeResolvers(registry: Pick<Registry, "divisions" | "bod
       const directIds = new Set(direct.map(body => body.ocdId));
       let candidates = divisions.filter(division => directIds.has(division.ocdId));
       if (!candidates.length) {
-        const exact = divisions.filter(division => typedPlaceName(division.label) === typedPlaceName(label));
+        const exact = /\b(?:county|city|town|township|borough|village)\b/i.test(label)
+          ? divisions.filter(division => typedPlaceName(division.label) === typedPlaceName(label)) : [];
         candidates = exact.length ? exact : divisions.filter(division => localName(division.label) === localName(label) &&
           (!/\bcounty\b/i.test(label) || division.divisionType === "county") &&
           (!/\b(?:township|town|city|borough|village)\b/i.test(label) || division.divisionType !== "county"));
@@ -226,6 +242,7 @@ async function main() {
       const localRegistry = { divisions, bodies };
       const stateDoors = registered.filter(door => door.scope.state === state);
       const roots = votingChiefRoots(stateDoors);
+      const superseded = votingSupersededSources(stateDoors, held);
       const doors = new Map<string, VotingSourceDoor>();
       const reads = new Map<string, VotingSourceRead>(), walked = new Set<string>();
       const evidenceSources = new Map<string, VotingSourceDoor>();
@@ -263,6 +280,7 @@ async function main() {
       };
       const acquire = async (door: VotingSourceDoor, captures: VotingSourceRead["rawBodies"] = [], persistent = true) => {
         if (door.scope.state !== state) throw new Error("Voting source crossed its state publication scope.");
+        if (superseded.has(normalizeUrl(door.url))) return;
         if (reads.has(door.id)) return;
         const at = now();
         const mappings = [door, ...stateDoors.filter(other => other.id !== door.id && other.scope.ocdId === door.scope.ocdId &&
@@ -312,6 +330,7 @@ async function main() {
         if (outcome.promoted) {
           held = outcome.promoted.payload as VotingSitesFile; version = outcome.promoted.versionId;
           rememberStatePublicationPrior(store, outcome.promoted);
+          for (const url of votingSupersededSources([door], held)) superseded.add(url);
           terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }; publications++;
         } else {
           if (!terminal) terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
@@ -331,6 +350,7 @@ async function main() {
           const sameSource = stateDoors.filter(door => pageAddress(door.url)?.url === pageAddress(found.url)?.url);
           const targets = sameSource.length ? sameSource : [found];
           for (const existing of targets) {
+            if (superseded.has(normalizeUrl(existing.url))) continue;
             const door = existing === found ? found : { ...found, ...existing,
               officialLinkingPage: found.officialLinkingPage ?? existing.officialLinkingPage,
               electionPageUrl: found.electionAssociationVerified ? found.electionPageUrl : existing.electionPageUrl,
@@ -342,6 +362,16 @@ async function main() {
       };
       runtime.onDiscoveredSource = async ({ source, disposition, capture, linkingCaptures }) => {
         const url = pageAddress(source.url)!.url;
+        if (superseded.has(normalizeUrl(url))) {
+          const recorded = await recordVotingDiscoveryObservation(context.repos, { url, ocdId: source.scope.ocdId, state,
+            names: [source.scope.name, source.publisher], capture, disposition: {
+              kind: "SKIP", family: "voting", recordClass: "VOTING_SITE", belongs: true, quote: "",
+              reason: "An official current-election file has replaced this older list and is already published",
+            } }, now(), vault);
+          observations.set(url, "SKIP");
+          if (recorded === "HELD") { holdDocument(source, url); return "HELD"; }
+          return;
+        }
         const recorded = await recordVotingDiscoveryObservation(context.repos, { url, ocdId: source.scope.ocdId, state,
           names: [source.scope.name, source.publisher], disposition, capture }, now(), vault);
         observations.set(url, recorded === "HELD" ? "SKIP" : disposition.kind);
@@ -359,6 +389,7 @@ async function main() {
         }
       };
       const walk = async (root: VotingSourceDoor) => {
+        if (superseded.has(normalizeUrl(root.url))) return;
         const key = pageAddress(root.url)!.url;
         if (walked.has(key)) return;
         const discovery = await discoverVotingDoors(root, runtime);
@@ -368,7 +399,8 @@ async function main() {
       // Publish registered bulk files before broad discovery; state files lead county files.
       for (const source of stateDoors.filter(door => ["file", "json", "map-service"].includes(door.shape) &&
         (door.covers.some(kind => kind !== "CANDIDATE_LIST" && kind !== "BALLOT_MEASURES") || door.boundaryLayer))
-        .sort((a, b) => Number(statewide(b)) - Number(statewide(a)))) {
+        .sort((a, b) => Number(statewide(b)) - Number(statewide(a)) || Number(Boolean(b.supersedes?.length)) - Number(Boolean(a.supersedes?.length)))) {
+        if (superseded.has(normalizeUrl(source.url))) continue;
         doors.set(source.id, source);
         await saveVotingSourceDoor(context.repos.doors, source, now());
         await acquire(source);

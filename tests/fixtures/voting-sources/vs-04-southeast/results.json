@@ -3,7 +3,7 @@
   "productionPublication": false,
   "productionCopyReceipt": "tests/fixtures/voting-sources/vs-04-copy-proof.json",
   "configuredSources": 146,
-  "siteTotal": 9925,
+  "siteTotal": 9936,
   "states": [
     {
       "state": "AL",
@@ -21,7 +21,7 @@
     },
     {
       "state": "GA",
-      "sites": 121,
+      "sites": 132,
       "counties": 1,
       "sourceCount": 1,
       "remaining": "Cobb County only. Other counties, early-voting schedule extraction and precinct boundaries remain open."

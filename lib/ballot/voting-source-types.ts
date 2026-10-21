@@ -82,6 +82,8 @@ export interface VotingSourceDoor {
   rules?: VotingRule[];
   access?: { status: "open" | "robots" | "bot-wall" | "identity-locked" | "unreachable"; detail?: string; checkedAt?: string };
   discoveredFrom?: string;
+  /** Older file URLs replaced once this source's current-election sites have published. */
+  supersedes?: string[];
 }
 export interface VotingSourceBlank {
   id: string;

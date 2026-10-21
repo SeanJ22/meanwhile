@@ -3626,6 +3626,51 @@
     }
   },
   {
+    "id": "ar-benton-general-vote-centers-2026",
+    "publisher": "Benton County Election Commission",
+    "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+    "shape": "file",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "AR",
+      "ocdId": "ocd-division/country:us/state:ar/county:benton",
+      "name": "Benton County",
+      "countyFips": "05007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://bentoncountyar.gov/vote/elections/",
+    "extraction": {
+      "format": "pdf",
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "election": "2026 GENERAL ELECTION",
+        "hours": "7:30 AM - 7:30 PM"
+      },
+      "templates": {
+        "address": "{streetNumber} {streetRest}"
+      },
+      "records": {
+        "pattern": "(?:^|\\n\\n)[A-Za-z][^\\n]+\\n+(?:ADDRESS\\n+)?A?\\d+[^\\n]+\\n+(?:ELECTION DAY HOURS\\n+)?7:30[^\\n]+",
+        "fields": {
+          "name": {
+            "pattern": "^\\s*([A-Za-z][^\\n]+)",
+            "group": 1
+          },
+          "streetNumber": {
+            "pattern": "\\nA?(\\d+)[^\\n]*\\n",
+            "group": 1
+          },
+          "streetRest": {
+            "pattern": "\\nA?\\d+\\s+\\.?([^\\n]+)\\n",
+            "group": 1
+          }
+        }
+      }
+    }
+  },
+  {
     "id": "vs04-ri-dropboxes",
     "publisher": "Rhode Island Board of Elections",
     "url": "https://elections.ri.gov/voter-resources/mail-ballot-drop-boxes",
@@ -6785,7 +6830,10 @@
         "precinct": "precinct_name",
         "election": "election_dt"
       }
-    }
+    },
+    "supersedes": [
+      "https://dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv"
+    ]
   },
   {
     "id": "va-statewide-polling-general-2026",
@@ -13844,8 +13892,6 @@
     "discoveredFrom": "https://www.cobbcounty.gov/elections/voting/election-day",
     "extraction": {
       "format": "pdf",
-      "pdfTop": 690,
-      "pdfBottom": 50,
       "pdfColumns": [
         {
           "name": "precinct",
@@ -13862,13 +13908,18 @@
       ],
       "pdfRecordStart": {
         "column": "code",
-        "pattern": "^(?=[A-Z0-9]*\\d)[A-Z0-9]{3,6}$"
+        "pattern": "^[A-Z]{2}\\d[A-Z0-9]$"
       },
       "columns": {
         "precinct": "precinct",
         "election": "__fileTitle"
       },
       "transforms": {
+        "precinct": {
+          "column": "code",
+          "pattern": "^([A-Z]{2}\\d[A-Z0-9])",
+          "group": 1
+        },
         "name": {
           "column": "location",
           "pattern": "^(.+?),\\s*(?=\\d)",
@@ -13876,7 +13927,7 @@
         },
         "address": {
           "column": "location",
-          "pattern": "^.+?,\\s*(\\d[\\s\\S]+)$",
+          "pattern": "^.+?,\\s*(\\d[\\s\\S]*?\\bGA\\s+\\d{5})(?:\\s|$)",
           "group": 1
         }
       }
@@ -13905,7 +13956,6 @@
     },
     "delegation": "county",
     "title": "November 3, 2026 early voting locations",
-    "model": "VOTE_CENTER",
     "matchingUnit": "COUNTY",
     "extraction": {
       "format": "html",
@@ -16485,6 +16535,50 @@
         "locationNotes": "Information"
       },
       "kind": "ELECTION_DAY"
+    }
+  },
+  {
+    "id": "nc-statewide-polling-primary-2026",
+    "publisher": "North Carolina State Board of Elections",
+    "url": "https://dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "NC",
+      "ocdId": "ocd-division/country:us/state:nc",
+      "name": "North Carolina"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "electionAssociationVerified": false,
+    "title": "March 3, 2026 polling places",
+    "fileUpdatedAt": "2026-03-01T10:25:04Z",
+    "matchingUnit": "PRECINCT",
+    "discoveredFrom": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "extraction": {
+      "format": "csv",
+      "delimiter": "\t",
+      "kind": "ELECTION_DAY",
+      "columns": {
+        "id": "polling_place_id",
+        "name": "polling_place_name",
+        "address": [
+          "street_address",
+          "city",
+          "state",
+          "zip"
+        ],
+        "countyName": "county_name",
+        "precinct": "precinct_name",
+        "election": "election_dt"
+      }
+    },
+    "access": {
+      "status": "open",
+      "detail": "Native UTF-16LE tab-delimited CSV captured. Latest official archive link is March primary; find general-election replacement without suppressing the current official archive.",
+      "checkedAt": "2026-10-13"
     }
   }
 ]

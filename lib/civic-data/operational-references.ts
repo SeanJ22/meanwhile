@@ -264,6 +264,20 @@ export function installedRegistrationJurisdictionRegistries(): {
   return { registries: new Map(installedRegistration), refused: new Map(refusedRegistration) };
 }
 
+/** A state planner borrows its one immutable registry. Registration is sufficient
+ * when that state has no reviewed bundle; another state's absence is irrelevant. */
+export function planningJurisdictionRegistries(state: string): {
+  readonly registries: ReadonlyMap<string, JurisdictionRegistry>;
+  readonly refused: ReadonlyMap<string, string>;
+} {
+  const key = state.toLowerCase();
+  if (key === "system") return { registries: new Map(), refused: new Map() };
+  const reviewed = installedStateRegistries[key] ?? installedAzBundle?.registries[key as "az"] ?? installedBundle?.registries[key];
+  const registry = reviewed ?? installedRegistration.get(key);
+  return registry ? { registries: new Map([[key, registry]]), refused: new Map() }
+    : { registries: new Map(), refused: new Map([[key, refusedRegistration.get(key) ?? `JURISDICTION_REGISTRY_NOT_READ:${key}`]]) };
+}
+
 /** The reviewed registry, else the one installed from registration; otherwise throws by name, never an empty registry. */
 export function requiredJurisdictionRegistry(state: string): JurisdictionRegistry {
   const key = state.toLowerCase();
@@ -293,7 +307,7 @@ export async function preloadOperationalReferenceState(state: string, query?: Pa
   } else if (hasReviewedRegistry(key)) {
     throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_PROMOTED:${key}`);
   }
-  return result;
+  return { ...result, registry: installedStateRegistries[key] ?? null };
 }
 
 export async function preloadOperationalReferenceBundle(

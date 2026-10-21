@@ -2,17 +2,16 @@ import { normalizedHash, sha256, failedAcquisitionCandidate } from "../../civic-
 import { civicRecordsFor } from "../../civic-data/changes.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
 import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_PARSER_VERSION, GOOGLE_CIVIC_RECORD_CLASS, GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
-import { assertCivicProjection, civicElectionRows, civicLookupFromRaw, type CivicProjection } from "./model.ts";
+import { assertCivicProjection, civicElectionRows, type CivicProjection } from "./model.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { holdRawCapture } from "../../civic-data/raw-capture-vault.ts";
 
 export async function civicCandidate(vault: EvidenceStore, scope: string, projection: CivicProjection, raw: string, route: "elections" | "voterinfo"): Promise<RoutineCandidate> {
+  if (route === "voterinfo" || projection.kind === "LOOKUP") throw new Error("Google voting answers are transient and cannot be published or saved.");
   assertCivicProjection(projection);
   const checkedAt = projection.checkedAt;
   const joined = new Set(projection.rows.flatMap(row => row.joinedDivisionId ?? []));
-  const sourceRows = projection.kind === "LOOKUP"
-    ? civicLookupFromRaw(raw, projection.electionId, checkedAt, joined).rows
-    : civicElectionRows(raw, checkedAt, joined);
+  const sourceRows = civicElectionRows(raw, checkedAt, joined);
   if (normalizedHash(sourceRows) !== normalizedHash(projection.rows)) throw new Error("Google Civic facts differ from the saved source response.");
   const records = civicRecordsFor(GOOGLE_CIVIC_RECORD_CLASS, projection);
   // Saved public-source evidence only; transient reader lookups never enter publication.
@@ -40,13 +39,4 @@ export async function civicCandidate(vault: EvidenceStore, scope: string, projec
 export function failureCandidate(scope: string, reason: string, at: string): RoutineCandidate {
   return failedAcquisitionCandidate({ sourceId: GOOGLE_CIVIC_SOURCE_ID, recordClass: GOOGLE_CIVIC_RECORD_CLASS, scope,
     requestedUrl: `${GOOGLE_CIVIC_API}voterinfo`, attemptedAt: at, failureDetail: reason, parserVersion: GOOGLE_CIVIC_PARSER_VERSION });
-}
-
-export async function parseFailureCandidate(vault: EvidenceStore, scope: string, raw: string, reason: string, at: string): Promise<RoutineCandidate> {
-  const base = failureCandidate(scope, reason, at);
-  const rawCapture = await holdRawCapture(vault, GOOGLE_CIVIC_SOURCE_ID, raw, "application/json");
-  return { ...base, id: `cv-${sha256(`${scope}:${rawCapture.rawHash}:${at}:parse-failure`).slice(0, 32)}`,
-    retrieval: { ...base.retrieval, succeeded: true, finalUrl: `${GOOGLE_CIVIC_API}voterinfo`, httpStatus: 200, rawHash: rawCapture.rawHash },
-    normalization: { ...base.normalization, normalizedPayloadHash: normalizedHash({ rawCapture }), failureDetail: reason },
-    normalizedPayload: { rawCapture } };
 }

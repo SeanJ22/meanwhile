@@ -11,10 +11,10 @@ import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { projectCampaignSiteChains, type CampaignSiteSubject } from "../lib/control-plane/promotion/campaign-site-chain.ts";
-import { publishBoxFindings } from "../lib/facts/box-publication.ts";
+import { officeNameOn, publishBoxFindings } from "../lib/facts/box-publication.ts";
 import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
+import { ensureEntity, ensureFactEntities, ensureGoverningBody } from "../lib/facts/entities.ts";
 import { FINDING_SLOTS_VERSION, slotFor } from "../lib/facts/finding-slots.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
 import type { RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
@@ -69,10 +69,25 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("commentPeriod", "Yes"), { class: "comment rules", slot: "comment:period" });
   assert.deepEqual(slot("publicComment.timeLimit"), { class: "comment rules", slot: "comment:time_limit" });
   assert.deepEqual(slot("body.name"), { class: "other", waiting: "NO_FACT_SLOT" });
-  assert.deepEqual(slot("recorder.phone", "(928) 865-2632"), { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" });
-  assert.deepEqual(slot("contact.phone", "(520) 724-4330", null, "Contact Pima County Recorder Voter Services at (520) 724-4330"), { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" });
-  assert.deepEqual(slot("office.phone", "520-225-4800", null, "You can also call Transportation at 520-225-4800."), { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" });
-  assert.deepEqual(slotFor("office.email", "bnavarro@coolidgeaz.com", null, "Email: bnavarro@coolidgeaz.com", "https://www.coolidgeaz.com/publicworks"), { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" });
+  assert.deepEqual(slot("recorder.phone", "(928) 865-2632"), { class: "other offices", slot: "office_phone", office: "recorder" });
+  assert.deepEqual(slot("contact.phone", "(520) 724-4330", null, "Contact Pima County Recorder Voter Services at (520) 724-4330"), { class: "other offices", slot: "office_phone", office: "recorder" });
+  assert.deepEqual(slot("office.phone", "520-225-4800", null, "You can also call Transportation at 520-225-4800."), { class: "other offices", slot: "office_phone", office: "transportation" });
+  assert.deepEqual(slotFor("office.email", "bnavarro@coolidgeaz.com", null, "Email: bnavarro@coolidgeaz.com", "https://www.coolidgeaz.com/publicworks"), { class: "other offices", slot: "office_email", office: "public works" });
+  // Names, addresses, schedules and comment rules sort by what they are.
+  assert.deepEqual(slot("bodyName", "Board of Adjustment"), { class: "bodies", slot: "body_name" });
+  assert.deepEqual(slot("subordinateBody.name", "4-Day School Week Committee"), { class: "bodies", slot: "body_name" });
+  assert.deepEqual(slot("district.name", "Elfrida Elementary District (4185)"), { class: "other", waiting: "NO_FACT_SLOT" });
+  assert.deepEqual(slot("townClerk.name", "Cecilia Jernigan", null, "Cecilia Jernigan, Town Clerk"), { class: "other", waiting: "NO_FACT_SLOT" });
+  assert.deepEqual(slot("trustee.name", "Dana Example", null, "Dana Example, Board Member"), { class: "rosters", slot: "member_name" });
+  assert.deepEqual(slot("townHall.address", "110 W. Center"), { class: "office contacts", slot: "office_address" });
+  assert.deepEqual(slot("clerk.office.address", "1011 N. Coronado Drive Sierra Vista, AZ 85635"), { class: "office contacts", slot: "office_address" });
+  assert.deepEqual(slot("officeholder.address", "701 W. Wetmore Road Tucson, AZ 85705"), { class: "other", waiting: "NO_FACT_SLOT" });
+  assert.deepEqual(slot("elections.address", "1415 Melody Lane Bisbee AZ 85603"), { class: "other offices", slot: "office_address", office: "election" });
+  assert.deepEqual(slot("governingBoard.meetingSchedule", "first Wednesday, following the first Monday, of each month"), { class: "schedules", slot: "meeting_cadence" });
+  assert.deepEqual(slot("governingBoard.meetingLocation", "360 S. Patagonia St., Benson, AZ 85602"), { class: "other", waiting: "NO_FACT_SLOT" });
+  assert.deepEqual(slot("publicComment.signupRule", "Any individual desiring to address the Board shall complete a request to speak form"), { class: "comment rules", slot: "comment:signup" });
+  assert.deepEqual(slot("publicComment.actionLimit", "three minutes per speaker"), { class: "comment rules", slot: "comment:time_limit" });
+  assert.deepEqual(slot("publicComment.policyAdopted", "Adopted: September 27, 2021"), { class: "other", waiting: "NO_FACT_SLOT" });
   assert.deepEqual(slot("office.email", "CityClerk@SierraVistaAZ.gov"), { class: "office contacts", slot: "office_email" });
   assert.deepEqual(slot("townHall.phone", "(520) 487-2331"), { class: "office contacts", slot: "office_phone" });
   assert.deepEqual(slot("office.fax", "(520) 487-2331"), { class: "other", waiting: "NO_FACT_SLOT" });
@@ -151,10 +166,10 @@ test("Box findings publish on their own page with no model turn: a held copy ins
 
   const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 },
-    publishedByRoute: { "office contacts": 1, rosters: 3 },
-    waitingByClass: { other: 1, rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
-  assert.deepEqual(report.byPlace[TCCC], { published: 3, refused: 0, waiting: 2 });
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 },
+    publishedByRoute: { "office contacts": 1, rosters: 3, bodies: 1 },
+    waitingByClass: { rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
+  assert.deepEqual(report.byPlace[TCCC], { published: 4, refused: 0, waiting: 1 });
   assert.deepEqual(report.byPlace[AGENDA], { published: 1, refused: 1, waiting: 0 });
   assert.deepEqual(fetched.sort(), [AGENDA_URL, "https://unreachable.tucsonaz.gov/agenda"], "the held TCCC copy is inside its clock; the stale agenda copy is read again once");
 
@@ -167,7 +182,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
   assert.deepEqual(await facts.query("SELECT stage, reason FROM blank WHERE entity_id = $1 AND field = 'member_name'", [AGENDA]), [{ stage: "ACQUIRE", reason: "SOURCE_BLOCKED" }]);
 
   const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
-  assert.deepEqual(waiting, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "DETECTIVE_SPAN_NAMES_NO_FIELD", "NO_FACT_SLOT", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
+  assert.deepEqual(waiting, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "DETECTIVE_SPAN_NAMES_NO_FIELD", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
   assert.equal((await publishBoxFindings(input)).looked, 0, "a held finding is looked at again only when the slot map moves");
 });
 
@@ -356,4 +371,66 @@ test("two addresses that serve the same bytes in one pass are both saved", async
   for (const url of ["https://www.cliftonaz.gov/board", "https://www.cliftonaz.gov/board/"]) {
     assert.ok("capture" in await fetchCapture({ url, repos, vault, fetch, now: NOW }), url);
   }
+});
+
+test("a board name with no board is added and named; a recorder's phone goes on a recorder office that is added", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const CLIFTON = "az:city:town-of-clifton", URL = "https://www.cliftonaz.gov/boards";
+  const page = await hold(URL, "<html><body><h1>Clifton, AZ</h1><p>Board of Adjustment meets as needed.</p><p>Greenlee County Recorder: (928) 865-2632</p><p>Mayor Pat Doe (928) 865-4146</p></body></html>", "2026-09-01T15:00:00.000Z");
+  let index = 0;
+  const drop = (field: string, value: string, quote: string) => indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-clifton",
+    missionPart: null, finding: { subjectId: CLIFTON, field, value, exactQuote: quote, sourceUrl: URL, artifactIds: [page], subjectHint: null, index: index++ } }, NOW);
+  await drop("subordinateBody.name", "Board of Adjustment", "Board of Adjustment meets as needed.");
+  await drop("recorder.phone", "(928) 865-2632", "Greenlee County Recorder: (928) 865-2632");
+  await drop("officeholder.phone", "(928) 865-4146", "Mayor Pat Doe (928) 865-4146");
+  const fetch: ProbeFetch = async () => { throw new Error("the cited page is held inside its clock"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 });
+  assert.equal(report.published, 3, JSON.stringify(report));
+  assert.deepEqual(await facts.query(`SELECT e.id, e.name, f.field, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id
+    WHERE e.parent_id = $1 AND f.status = 'live' ORDER BY e.id, f.field`, [CLIFTON]), [
+    { id: `${CLIFTON}#board-of-adjustment`, name: "Board of Adjustment", field: "name", value_text: "Board of Adjustment" },
+    { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "name", value_text: "Greenlee County Recorder" },
+    { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "office_phone", value_text: "(928) 865-2632" },
+    { id: "ocd-division/country:us/state:az/place:clifton#governing", name: "Clifton town governing", field: "office_phone", value_text: "(928) 865-4146" }]);
+  assert.equal((await facts.query("SELECT 1 FROM entity_place WHERE entity_id = $1", [`${CLIFTON}#board-of-adjustment`])).length, 1);
+});
+
+test("a dependent school system the fact store lacks is added on its district's place, with its board", async () => {
+  const { facts } = await setup();
+  const place = "ocd-division/country:us/state:az/school_district:fort_example_school_district";
+  await ensureEntity(facts.query, { id: place, kind: "place", name: "Fort Example School District", state: "AZ", parentId: "ocd-division/country:us/state:az" });
+  await ensureGoverningBody(facts.query, "az:depschool:fort-example-school-district#board");
+  assert.deepEqual(await facts.query("SELECT id, kind, parent_id FROM entity WHERE id = 'az:depschool:fort-example-school-district'"), [{ id: "az:depschool:fort-example-school-district", kind: "government", parent_id: place }]);
+  assert.deepEqual(await facts.query("SELECT id, parent_id FROM entity WHERE kind = 'body' AND parent_id = 'az:depschool:fort-example-school-district'"), [{ id: `${place}#board`, parent_id: "az:depschool:fort-example-school-district" }]);
+  await ensureGoverningBody(facts.query, "az:depschool:not-a-held-district#board");
+  assert.deepEqual(await facts.query("SELECT id FROM entity WHERE id = 'az:depschool:not-a-held-district'"), [], "no place, no government");
+});
+
+test("a state's boards are added under the state even though the state has no governing board", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const STATE = "az:state:arizona", URL = "https://boards.az.gov/list";
+  const page = await hold(URL, "<html><body><h1>Arizona Boards and Commissions</h1><ul><li>Accountancy, State Board of</li></ul></body></html>", "2026-09-01T15:00:00.000Z");
+  await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-state", missionPart: null, finding: { subjectId: STATE, field: "bodyName",
+    value: "Accountancy, State Board of", exactQuote: "Accountancy, State Board of", sourceUrl: URL, artifactIds: [page], subjectHint: null, index: 0 } }, NOW);
+  const fetch: ProbeFetch = async () => { throw new Error("held"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  assert.equal(report.published, 1, JSON.stringify(report));
+  assert.deepEqual(await facts.query("SELECT e.id, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1 AND f.field = 'name' AND f.status = 'live'", [STATE]),
+    [{ id: `${STATE}#accountancy-state-board-of`, value_text: "Accountancy, State Board of" }]);
+});
+
+test("an office is named from the saved page when the finding's own sentence is only its number", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const CLIFTON = "az:city:town-of-clifton", URL = "https://www.cliftonaz.gov/contact";
+  const page = await hold(URL, "<html><body><h1>Clifton, AZ</h1><h2>Greenlee County Recorder</h2><p>Voter registration</p><p>(928) 865-2632</p></body></html>", "2026-09-01T15:00:00.000Z");
+  await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-clifton", missionPart: null, finding: { subjectId: CLIFTON, field: "recorder.phone",
+    value: "(928) 865-2632", exactQuote: "(928) 865-2632", sourceUrl: URL, artifactIds: [page], subjectHint: null, index: 0 } }, NOW);
+  const fetch: ProbeFetch = async () => { throw new Error("held"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  assert.equal(report.published, 1, JSON.stringify(report));
+  assert.equal(officeNameOn("Contact Duderstadt Graham County Elections at 928-792-5037", "", "928-792-5037")?.name, "Graham County Elections");
+  assert.equal(officeNameOn("Scotty Davis Food Service Manager 520-384-8665", "", "520-384-8665")?.name, "Food Service");
+  assert.deepEqual(await facts.query("SELECT e.id, e.name, f.field, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.id = $1 AND f.status = 'live' ORDER BY f.field", [`${CLIFTON}#office-recorder`]),
+    [{ id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "name", value_text: "Greenlee County Recorder" },
+      { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "office_phone", value_text: "(928) 865-2632" }]);
 });

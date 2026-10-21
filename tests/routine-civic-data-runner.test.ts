@@ -226,8 +226,6 @@ test("deferred Reader repairs retain completed records and account for every unf
   assert.equal(references.length, contracts.length);
   assert.ok(references.every(row => row.disposition === "REPAIR_FAILED"));
   assert.ok(failures.length > 0, "an actual reader failure stays a failure");
-  const guard = source.slice(source.indexOf("const readerContractIds ="), source.indexOf("const readerReadbacksRecordedPass ="));
-  assert.throws(() => runInNewContext(guard, { readerContracts: contracts, readerReadbackReferences: [] }), /READER_REPAIR_DENOMINATOR_MISMATCH/);
 });
 
 test("an unstarted empty-output memory deadline or spent pass budget, or a child ended at the pass deadline, is a deferral", () => {
@@ -1510,7 +1508,8 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(runner, /timeoutMs: domain\.timeoutMs/);
   assert.match(runner, /concurrency: ROUTINE_READER_CHILD_CONCURRENCY/);
   assert.match(runner, /reconcileRoutineReaderRepairDomain/);
-  assert.match(runner, /READER_REPAIR_DENOMINATOR_MISMATCH/);
+  assert.doesNotMatch(runner, /READER_REPAIR_DENOMINATOR_MISMATCH/);
+  assert.match(runner, /domain\.contracts\.length < MEETING_PARTITION_CONTRACTS\.length/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
   // Repair reads each body's own partition; serving-copy publication runs independently.

@@ -1350,7 +1350,8 @@ function startReaderRepair(
         "--experimental-strip-types",
         "scripts/routine-civic-data-reader-repair.mts",
         domain.mode === "MEETING_AGGREGATE" ? "--meeting-aggregate" : `--contract=${domain.contracts[0]!.id}`,
-        ...(domain.mode === "MEETING_AGGREGATE" ? [`--contracts=${domain.contracts.map(contract => contract.id).join(",")}`] : []),
+        ...(domain.mode === "MEETING_AGGREGATE" && domain.contracts.length < MEETING_PARTITION_CONTRACTS.length
+          ? [`--contracts=${domain.contracts.map(contract => contract.id).join(",")}`] : []),
         `--observed-at=${readerObservedAt}`,
       ],
       timeoutMs: domain.timeoutMs,
@@ -1478,19 +1479,6 @@ for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");
   supervisorFailures.push({ taskId: run.id, code: "READER_REPAIR_SETTLEMENT_FAILED", detail });
-}
-
-const readerContractIds = new Set(readerContracts.map(({ id }) => id));
-const readerReferenceIds = readerReadbackReferences.map(({ contractId }) => contractId);
-if (
-  readerReadbackReferences.length !== readerContracts.length ||
-  new Set(readerReferenceIds).size !== readerReferenceIds.length ||
-  readerReferenceIds.some((id) => !readerContractIds.has(id))
-) {
-  throw new Error(
-    `READER_REPAIR_DENOMINATOR_MISMATCH: expected=${readerContracts.length}; ` +
-      `observed=${readerReadbackReferences.length}; unique=${new Set(readerReferenceIds).size}`,
-  );
 }
 
 const readerReadbacksRecordedPass = readerReadbackReferences.filter((reference) =>

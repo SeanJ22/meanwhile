@@ -35,12 +35,14 @@ import { parsePrimeGovCommittees, parsePrimeGovMeetings } from "../../sources/pr
 import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/boarddocs/index.ts";
 import { parseNovusMeetings } from "../../sources/novusagenda/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
+import { parseCalendarRows as parseInSiteCalendarRows } from "../../sources/legistar-insite/calendar.ts";
 
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
 
 /** Bytes the vault holds, as text, with their citation. */
 export interface HeldBytes {
   readonly text: string;
+  readonly contentType?: string;
   /** Bare hex sha256 of the bytes: what a crosswalk row cites. */
   readonly sha256: string;
   readonly evidence: VaultedEvidence;
@@ -48,6 +50,9 @@ export interface HeldBytes {
 
 /** The government's body as its state's promoted registration pairs it. */
 export interface RegisteredGovernment {
+  readonly governmentId?: string;
+  readonly governmentClass?: string;
+  readonly website?: string | null;
   /** `<ocdId>#governing`, or `<ocdId>#board` for a school district. */
   readonly bodyId: string;
   readonly ocdId: string;
@@ -75,7 +80,7 @@ export interface AutoCrosswalkReviewInput {
 const KIND_OF_VENDOR: Readonly<Record<string, CrosswalkKind>> = {
   ical: "ICAL", "official-page-events": "OFFICIAL_PAGE_EVENTS", diligent: "DILIGENT", "legistar-api": "LEGISTAR",
   boardbook: "BOARDBOOK", "civicclerk-api": "CIVICCLERK", iqm2: "IQM2", "civicplus-agendacenter": "CIVICPLUS", boarddocs: "BOARDDOCS", "municode-meetings": "MUNICODE", granicus: "GRANICUS", swagit: "SWAGIT", primegov: "PRIMEGOV", escribe: "ESCRIBE",
-  novusagenda: "NOVUSAGENDA",
+  novusagenda: "NOVUSAGENDA", "legistar-insite": "LEGISTAR_INSITE",
 };
 export const AUTO_CROSSWALK_VENDORS: ReadonlySet<string> = new Set(Object.keys(KIND_OF_VENDOR));
 
@@ -702,7 +707,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       hold(route, attested.held === "EVIDENCE_NOT_VAULTED" ? "EVIDENCE_NOT_VAULTED" : "HOST_NOT_ATTESTED", attested.detail);
       continue;
     }
-    const linkedPublisher = ["DILIGENT", "LEGISTAR", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "MUNICODE", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "SWAGIT", "PRIMEGOV"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
+    const linkedPublisher = ["DILIGENT", "LEGISTAR", "LEGISTAR_INSITE", "BOARDBOOK", "CIVICCLERK", "IQM2", "CIVICPLUS", "BOARDDOCS", "MUNICODE", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "SWAGIT", "PRIMEGOV"].includes(kind) && attested.attestation.kind === "LINKED_FROM_ATTESTED_PAGE";
     if (homeHost === null || (bare(homeHost) !== bare(routeHost) && !linkedPublisher)) {
       hold(route, "HOST_NOT_OWN", `the calendar is on ${routeHost}; the walk attested ${homeHost ?? "no homepage"} as the government's own`);
       continue;
@@ -726,6 +731,10 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       continue;
     }
     const registered = input.registered;
+    const governmentClass = registered.governmentClass?.toUpperCase() ?? "";
+    const registeredKind: GovernmentKind = /SCHOOL|EDUCATION/.test(governmentClass) ? "school" : /COUNTY/.test(governmentClass) ? "county"
+      : /SPECIAL|DISTRICT|AUTHORITY|AGENCY/.test(governmentClass) ? "special" : governmentKind(jurisdictionId);
+    const bodyRoot = registered.bodyId.startsWith("government:") ? registered.bodyId.split("#")[0]! : registered.ocdId;
     const stateZone = governmentTimeZone(attempt.stateCode, registered.countyFips);
     let events: CalendarEvent[];
     let calendarZone: string | null = null;
@@ -744,6 +753,11 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       events = rows.filter(r => Number.isInteger(r.EventBodyId) && r.EventBodyName && r.EventDate)
         .map(r => ({ title: flat(r.EventBodyName), context: "", categories: [String(r.EventBodyId)],
           identity: `${r.EventId}|${r.EventDate}`, tzid: stateZone, utc: false, floating: true, url: r.EventInSiteURL ?? route }));
+    } else if (kind === "LEGISTAR_INSITE") {
+      events = parseInSiteCalendarRows(calendar.text).filter(row => row.date && row.bodyName).map(row => ({
+        title: row.bodyName, context: "", categories: [row.bodyName], identity: `${row.insiteId}|${row.date}|${row.time}`,
+        tzid: stateZone, utc: false, floating: true, url: route,
+      }));
     } else if (kind === "DILIGENT") {
       const rows = parseDiligentMeetings(calendar.text);
       if (!rows?.length) { hold(route, "CALENDAR_UNREADABLE", "the held public Diligent response has no dated meetings"); continue; }
@@ -821,33 +835,53 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     }
     const addListedBody = (name: string, filter: Readonly<Record<string, string>>, page: HeldBytes, pageUrl: string, selected: number, suffix = ""): void => {
       if (!stateZone || !name) return;
-      const governing = governingNames(governmentKind(jurisdictionId)).some(label => low(name) === low(label) || low(name).endsWith(` ${low(label)}`));
-      const role = governing ? (registered.bodyId.endsWith("#board") ? "BOARD" : "GOVERNING") : "SUB_BODY";
-      const bodyId = role === "SUB_BODY" ? `${subBodyId(registered.ocdId, name)}${suffix}` : registered.bodyId;
+      const governing = governingNames(registeredKind).some(label => low(name) === low(label) || low(name).endsWith(` ${low(label)}`));
+      const role = governing && !suffix ? (registered.bodyId.endsWith("#board") ? "BOARD" : "GOVERNING") : "SUB_BODY";
+      const bodyId = role === "SUB_BODY" ? `${subBodyId(bodyRoot, name)}${suffix}` : registered.bodyId;
       if (input.handWired(bodyId)) return;
       const row: MeetingBodyCrosswalkRow = { id: crosswalkRowId(bodyId, kind, route), jurisdictionId, bodyId,
+        ...(registered.governmentId ? { governmentId: registered.governmentId } : {}),
+        ...(registered.website ? { governmentWebsite: registered.website } : {}),
         ocdId: registered.ocdId, bodyName: name, bodyRole: role, kind, route, officialHost: routeHost,
         publishingOrg: registered.publishingOrg, timeZone: stateZone, filter,
         evidence: { bodyPage: { url: pageUrl, sha256: page.sha256, quote: name },
-          calendar: { url: route, sha256: calendar.sha256, selected, total: selected }, readAt: attempt.finishedAt },
+          calendar: { url: route, sha256: calendar.sha256, selected, total: selected }, readAt: [calendar.evidence.retrievedAt, page.evidence.retrievedAt].sort().at(-1)! },
         status: "ACTIVE", reviewedBy: input.reviewer, reviewedAt: input.now, authorization: CROSSWALK_CITATION };
-      if (crosswalkRowIssue(row) === null) accepted.push({ row, inputs: [attemptInput, registered.input, calendar.evidence, page.evidence] });
+      const issue = crosswalkRowIssue(row);
+      if (issue === null) accepted.push({ row, inputs: [attemptInput, registered.input, calendar.evidence, page.evidence] });
+      else hold(route, "ROW_CHECK_FAILED", issue, name, bodyId);
     };
-    if (kind === "LEGISTAR" && /EventBodyId eq \d+/.test(new URL(route).searchParams.get("$filter") ?? "")) {
-      const bodyId = /^EventBodyId eq (\d+)(?: and|$)/.exec(new URL(route).searchParams.get("$filter") ?? "")?.[1];
-      const via = find.via?.artifactId ? input.held(find.via.artifactId) : null;
-      if (bodyId && via) {
-        let bodies: { BodyId: number; BodyName: string }[] = [];
-        try { bodies = JSON.parse(via.text); } catch { bodies = []; }
-        const body = Array.isArray(bodies) ? bodies.find(body => String(body.BodyId) === bodyId) : null;
-        if (body && typeof body.BodyName === "string") {
-          const allSelected = events.every(event => event.categories.includes(bodyId));
-          const duplicates = bodies.filter(other => other.BodyName === body.BodyName).length > 1;
-          if (allSelected) addListedBody(body.BodyName, { eventBodyId: bodyId }, via, find.via!.page, events.length, duplicates ? `-legistar-${bodyId}` : "");
-          else hold(route, "AMBIGUOUS_TITLE", "the native body filter returned another body's events", body.BodyName);
-        }
+    if (kind === "LEGISTAR_INSITE") {
+      const groups = new Map<string, Set<string>>();
+      for (const event of events) {
+        const governing = governingNames(registeredKind).find(label => low(event.title) === low(label)
+          || low(event.title).startsWith(`${low(label)} `) && /^(?:(?:stated|regular|special|emergency|joint|work|study)\s+)*(?:meeting|session)$/i.test(event.title.slice(label.length).trim()));
+        const name = governing ?? event.title;
+        if (!governing && !/^(?:sub)?committee\s+(?:on|of)\s+\S/i.test(name) && "unmatched" in categoryBodyOf(name, jurisdictionId)) { hold(route, "SEPARATE_GOVERNMENT_NAME", `The printed calendar body ${name} needs its own government match.`, name); continue; }
+        const labels = groups.get(name) ?? new Set<string>(); labels.add(event.title); groups.set(name, labels);
       }
+      for (const [name, labels] of groups) addListedBody(name, { insiteBodyNames: [...labels].join("|"), insiteBodyName: name }, calendar, route,
+        events.filter(event => labels.has(event.title)).length);
       continue;
+    }
+    if (kind === "LEGISTAR" && find.via?.artifactId) {
+      const via = input.held(find.via.artifactId);
+      let bodies: { BodyId: number; BodyName: string }[] = [];
+      try { if (via) bodies = JSON.parse(via.text); } catch { /* A malformed inventory cannot name a body. */ }
+      if (via && Array.isArray(bodies) && bodies.some(body => Number.isSafeInteger(body.BodyId) && typeof body.BodyName === "string")) {
+        const selector = /^EventBodyId eq (\d+)(?: and|$)/.exec(new URL(route).searchParams.get("$filter") ?? "")?.[1];
+        for (const body of bodies) {
+          const bodyId = String(body.BodyId), own = events.filter(event => event.categories.includes(bodyId));
+          if (selector && selector !== bodyId || !own.length && !selector || typeof body.BodyName !== "string") continue;
+          if (selector && events.some(event => !event.categories.includes(selector))) {
+            hold(route, "AMBIGUOUS_TITLE", "The native body filter returned another body's events.", body.BodyName); continue;
+          }
+          if (own.some(event => low(event.title) !== low(body.BodyName))) { hold(route, "AMBIGUOUS_TITLE", "The native event and body inventory disagree on this body's name.", body.BodyName); continue; }
+          const duplicates = bodies.filter(other => other.BodyName === body.BodyName).length > 1;
+          addListedBody(body.BodyName, { eventBodyId: bodyId }, via, find.via.page, own.length, duplicates ? `-legistar-${bodyId}` : "");
+        }
+        continue;
+      }
     }
     if (kind === "CIVICCLERK" && /^categoryId eq \d+$/.test(new URL(route).searchParams.get("$filter") ?? "")) {
       const categoryId = /^categoryId eq (\d+)$/.exec(new URL(route).searchParams.get("$filter") ?? "")?.[1];
@@ -913,7 +947,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     };
 
     /* What the government prints: its governing body by its kind's names, and every other body its events name. */
-    const kindOfGovernment = governmentKind(jurisdictionId);
+    const kindOfGovernment = registeredKind;
     if ((kind === "DILIGENT" || kind === "BOARDBOOK") && kindOfGovernment === "school") {
       // "Regular Board Meeting" is meaningful only on an attested school
       // portal that independently prints one unambiguous governing-board name.
@@ -1003,7 +1037,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       // Keep the printed suffix so a jurisdiction prefix does not create a second identity for the same body.
       const nameAt = proposal.role === "SUB_BODY" ? wordAt(printed.bodyName, proposal.key) : -1;
       const bodyName = nameAt < 0 ? printed.bodyName : printed.bodyName.slice(nameAt);
-      const bodyId = proposal.role === "SUB_BODY" ? subBodyId(registered.ocdId, bodyName) : proposal.bodyId;
+      const bodyId = proposal.role === "SUB_BODY" ? subBodyId(bodyRoot, bodyName) : proposal.bodyId;
       if (input.handWired(bodyId)) {
         hold(route, "ALREADY_WIRED", `a hand-wired route serves ${bodyId}`, printed.bodyName, bodyId);
         continue;
@@ -1017,6 +1051,8 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       const row: MeetingBodyCrosswalkRow = {
         id: crosswalkRowId(bodyId, kind, route),
         jurisdictionId,
+        ...(registered.governmentId ? { governmentId: registered.governmentId } : {}),
+        ...(registered.website ? { governmentWebsite: registered.website } : {}),
         ocdId: registered.ocdId,
         bodyId,
         bodyRole: proposal.role,

@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
+import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
-import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
+import type { VotingRawCapture } from "../lib/ballot/voting-sites-data-plane.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
@@ -26,27 +26,26 @@ const fetchSource: typeof fetch = async input => new Response(String(input).ends
 test("saved official tables reach the existing public read model with hours, local phone and source bytes", async () => {
   const read = await readVotingSource(door, { fetch: fetchSource, now: () => at });
   const jurisdiction = mergeVotingSourceRead(undefined, door, read, at);
-  assert.equal(jurisdiction.sites.length, 40); // 30 site rows plus 10 published precinct assignments.
-  assert.equal(new Set(jurisdiction.sites.map(site => `${site.name}\n${site.address}\n${site.kind}`)).size, 30);
-  const drop = jurisdiction.sites.find(site => site.name === "Barnes County Courthouse (Dropbox)")!;
-  assert.match(drop.hours!, /7:00 pm/);
+  assert.equal(jurisdiction.sites.length, 26); // Physical locations retain all their precinct assignments.
+  assert.equal(new Set(jurisdiction.sites.map(site => `${site.name}\n${site.address}\n${site.kind}`)).size, 26);
+  const drop = jurisdiction.sites.find(site => site.countyName === "Barnes" && site.kinds?.includes("DROP_BOX"))!;
+  assert.match(drop.schedules!.find(schedule => schedule.kind === "DROP_BOX")!.hours!, /7:00 pm/);
   assert.equal(drop.office?.phone, "(701) 845-8500 Ext. 6666");
   const current = replaceVotingJurisdiction(null, jurisdiction, at);
-  const vault = new MemoryEvidenceStore();
-  const candidate = votingSitesCandidate({ state: "ND", current, prior: null, failures: [], acquisition: await holdVotingRawEvidence(vault, read),
+  const candidate = votingSitesCandidate({ state: "ND", current, prior: null, failures: [], acquisition: await holdVotingRawEvidence(read),
     successfulAuthorityReads: read.sources.length, requestedUrl: door.url, finalUrl: door.url, retrievedAt: at });
   const store = new MemoryRoutineDataStore();
   const outcome = await processRegisteredManualCandidate(store, "voting-sites:ND", candidate, at);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "the saved official table should publish");
-  assert.equal(outcome.readerReadback?.status, "PASS");
+  assert.equal(outcome.readerReadback?.status, "PASS", outcome.readerReadback?.detail);
   const projection = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "ND"), { store, now: at, bypassCache: true });
   assert.equal(projection.kind, "PROMOTED");
   if (projection.kind === "PROMOTED") assert.deepEqual(projection.value, JSON.parse(JSON.stringify(current)));
   const saved = (await store.readCandidate(candidate.id))!.candidate;
-  assert.ok(!JSON.stringify(saved).includes(bytes.toString("base64")) && !JSON.stringify(saved).includes("rgMasterTable"),
-    "the stored candidate holds refs, not the page bytes");
-  const page = (saved.normalizedPayload as { acquisition: (RawCaptureRef & { url: string })[] }).acquisition.find(ref => ref.url === door.url)!;
-  assert.deepEqual(Buffer.from((await vault.get(page.vaultKey))!.bytes), bytes);
+  const page = (saved.normalizedPayload as { acquisition: VotingRawCapture[] }).acquisition.find(ref => ref.url === door.url)!;
+  assert.ok(page.savedDocument);
+  assert.deepEqual(gunzipSync(Buffer.from(page.savedDocument.body, "base64")), bytes);
+  assert.equal(JSON.stringify(saved.readModel).includes(bytes.toString("base64")), false, "source documents stay outside the reader payload");
 });
 
 test("a failed reread leaves all verified sites intact and keeps its attempted route as open work", async () => {
@@ -59,6 +58,16 @@ test("a failed reread leaves all verified sites intact and keeps its attempted r
   assert.ok(next.blanks?.some(blank => blank.status === "open" && blank.tried.length > 0 && blank.next.length > 0));
 });
 
+test("an extraction failure keeps the retained source check date", async () => {
+  const read = await readVotingSource(door, { fetch: fetchSource, now: () => at });
+  const prior = mergeVotingSourceRead(undefined, door, read, at);
+  const failed = { ...read, sites: [], blanks: [{ id: "protocol-failed-parse", doorId: door.id, scope: door.scope,
+    reason: "extraction" as const, status: "open" as const, owed: "Protocol changed source", tried: [door.url], next: [door.url] }] };
+  const next = mergeVotingSourceRead(prior, door, failed, "2026-10-14T00:00:00.000Z");
+  assert.equal(next.collectedAt, prior.collectedAt);
+  assert.deepEqual(next.sites, prior.sites);
+});
+
 test("source rows replace themselves while independently published site kinds remain visible", async () => {
   const read = await readVotingSource(door, { fetch: fetchSource, now: () => at });
   const prior = mergeVotingSourceRead(undefined, door, read, at);
@@ -66,6 +75,23 @@ test("source rows replace themselves while independently published site kinds re
   const next = mergeVotingSourceRead({ ...prior, sites: [...prior.sites, otherSource] }, door, read, at);
   assert.equal(next.sites.length, prior.sites.length + 1);
   assert.deepEqual(next.sites.find(site => site.id === otherSource.id), otherSource);
+});
+
+test("rereading one source preserves a shared facility's independently published service", async () => {
+  const read = await readVotingSource(door, { fetch: fetchSource, now: () => at });
+  const prior = mergeVotingSourceRead(undefined, door, read, at);
+  // Controlled second-source envelope exercises replacement of an already parsed physical location.
+  const independent = { publisher: "Protocol second publisher", url: "https://protocol.example.gov/drop-boxes", checkedAt: at };
+  const shared = { ...prior.sites[0], kind: "DROP_BOX" as const, kinds: ["DROP_BOX" as const], sources: [independent],
+    assignments: [], precincts: [], precinct: undefined, schedules: [{ kind: "DROP_BOX" as const, hours: "Protocol hours", source: independent }] };
+  const held = mergeVotingSourceRead({ ...prior, sites: [shared, ...prior.sites.slice(1)] }, door, read, at);
+  const facility = held.sites.find(site => site.id === shared.id)!;
+  assert.equal(held.sites.length, prior.sites.length);
+  assert.ok(facility.kinds?.includes("DROP_BOX"));
+  assert.ok(facility.sources?.some(source => source.url === independent.url));
+  assert.ok(facility.schedules?.some(schedule => schedule.hours === "Protocol hours"));
+  const again = mergeVotingSourceRead(held, door, read, at);
+  assert.ok(again.sites.find(site => site.id === shared.id)!.schedules?.some(schedule => schedule.source.url === independent.url));
 });
 
 test("candidate and measure doors retain shared mappings and reread their official source bytes", async () => {

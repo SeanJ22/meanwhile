@@ -121,6 +121,27 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
   }
 });
 
+test("candidate findings missing a place stay visible without failing unrelated source passes, while an unreadable Box still fails", async () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const code = source.slice(source.indexOf("let candidateFindingTasks:"), source.indexOf("const selectedTasks ="));
+  const failures: { code: string }[] = [];
+  const task = { id: "candidate-profiles:CA" };
+  const context = { controlPlaneUrlFromEnv: () => "postgres://fixture", neon: () => ({ query: () => {} }),
+    readCandidateProfilePublicationTasks: async () => ({ tasks: [task], unscoped: 156 }),
+    RUN_STARTED_AT: "2026-10-21T00:00:00.000Z", supervisorFailures: failures,
+    console: { log: () => {} }, safeFailure: String, sanitizedErrorDiagnostic: String };
+  const run = () => runInNewContext(transpileModule(`(async () => { ${code}; return { tasks: candidateFindingTasks, lines: candidateFindingLines }; })()`, {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText, context);
+  const result = await run();
+  assert.equal(result.tasks[0], task);
+  assert.equal(failures.length, 0);
+  assert.match(result.lines[0], /156.*Box work remains open/);
+  context.readCandidateProfilePublicationTasks = async () => { throw Error("Box unavailable"); };
+  await run();
+  assert.equal(failures[0].code, "CANDIDATE_FINDING_ADMISSION_UNREAD");
+});
+
 test("Reader repairs can acquire memory after the source launch deadline", async () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const deadlines: number[] = [];

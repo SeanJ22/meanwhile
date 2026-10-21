@@ -745,12 +745,16 @@ try {
   console.error(`RCD_TASK hunt-source-admission: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 let candidateFindingTasks: readonly RoutineSourceTask[] = [];
+const candidateFindingLines: string[] = [];
 if (controlPlaneUrlFromEnv()) try {
   const sql = neon(controlPlaneUrlFromEnv()!);
   const waiting = await readCandidateProfilePublicationTasks((text, params) => sql.query(text, params), RUN_STARTED_AT);
   candidateFindingTasks = waiting.tasks;
-  if (waiting.unscoped) supervisorFailures.push({ taskId: "candidate-profile-findings", code: "CANDIDATE_FINDING_JURISDICTION_UNRESOLVED",
-    detail: `${waiting.unscoped} waiting findings have no recorded work jurisdiction; their Box rows remain waiting.` });
+  if (waiting.unscoped) {
+    const detail = `${waiting.unscoped} candidate findings are waiting for their place to be identified. Their Box work remains open.`;
+    candidateFindingLines.push(detail);
+    console.log(`RCD_CANDIDATE_GAPS ${detail}`);
+  }
 } catch (error) {
   supervisorFailures.push({ taskId: "candidate-profile-findings", code: "CANDIDATE_FINDING_ADMISSION_UNREAD", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
 }
@@ -849,7 +853,7 @@ if (!FORCE && selectedTasks.some(task => task.id === "meeting-body-crosswalk-der
 }
 
 const campaignPublicationInputs = new Map<string, CampaignPublicationInputs>();
-const publicationInputLines: string[] = [];
+const publicationInputLines: string[] = [...candidateFindingLines];
 const ballotStamps = new Map<BallotState, string>();
 const priorBallotPublications = new Map<BallotState, BallotPublicationSummary>();
 const ballotPublications = new Map<BallotState, BallotPublicationSummary>();

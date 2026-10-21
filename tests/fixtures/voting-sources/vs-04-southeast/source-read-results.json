@@ -1378,7 +1378,7 @@
       "id": "nc-statewide-polling-general-2026",
       "state": "NC",
       "sites": 2610,
-      "capture": "nc-november-polling.txt",
+      "capture": "nc-november-polling.csv.bin",
       "blanks": [],
       "attempts": [
         {

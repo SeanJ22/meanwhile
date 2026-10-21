@@ -427,7 +427,7 @@
     "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
     "status": 200,
     "contentType": "binary/octet-stream",
-    "file": "nc-november-polling.txt",
+    "file": "nc-november-polling.csv.bin",
     "byteLength": 519984,
     "rawHash": "9dd25308dbe40561ba77b73e3b07a3f78d484597ddf8dcc91309e04cd6731001",
     "savedHash": "9dd25308dbe40561ba77b73e3b07a3f78d484597ddf8dcc91309e04cd6731001",

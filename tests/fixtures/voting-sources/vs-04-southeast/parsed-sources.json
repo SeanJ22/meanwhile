@@ -517,7 +517,7 @@
   {
     "id": "nc-statewide-polling-general-2026",
     "state": "NC",
-    "capture": "nc-november-polling.txt",
+    "capture": "nc-november-polling.csv.bin",
     "rows": 2626,
     "sites": 2610,
     "counties": 100,

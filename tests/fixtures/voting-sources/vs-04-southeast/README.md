@@ -1,5 +1,7 @@
 These are fresh public official responses acquired for VS-04. `manifest.json` records the requested and final URLs, response status, capture time, original response hash, saved hash, and credential-redaction count. Text responses enter through `writeCapturedFixture`; binary files retain their exact bytes. HTTP 200 alone is not evidence of a polling list: several saved county URLs returned ordinary error pages or unrelated content, and none became configured location sources.
 
+`nc-november-polling.csv.bin` preserves the original UTF-16 CSV response, including its NUL bytes and one decoded NUL placeholder. The binary extension keeps those publisher bytes outside source-text searches; decoding and placeholder removal happen only in the reader. Renaming this capture leaves its saved SHA-256 unchanged.
+
 `config-fragment.json` contains the successful state-file and county-file mappings. `parsed-sources.json` records the first five-state extraction pass. `source-read-results.json` records saved-response reader runs using the real captured robots responses. The production-copy worker owns publication/readback proof; these local extraction results do not claim production publication.
 
 Working routes:

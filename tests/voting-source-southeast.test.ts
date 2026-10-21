@@ -16,7 +16,7 @@ const door = (id: string) => configured.find(row => row.id === id)!;
 test("November's published North Carolina file replaces March without losing a fallback before publication", async () => {
   const current = door("nc-statewide-polling-general-2026");
   const source = { publisher: current.publisher, url: current.url };
-  const rows = await parseVotingCapture({ url: current.url, contentType: "text/csv", bytes: fixture("nc-november-polling.txt") }, current);
+  const rows = await parseVotingCapture({ url: current.url, contentType: "text/csv", bytes: fixture("nc-november-polling.csv.bin") }, current);
   const parsed = votingRowsToSites(rows, current, source);
   const at = "2026-10-21T05:00:00.000Z";
   const read = { doorId: current.id, sites: parsed.sites, sources: [source], rules: [], blanks: [], attempts: [], rawBodies: [] };
@@ -62,7 +62,7 @@ test("Virginia's namespaced SpreadsheetML with implicit coordinates preserves al
 
 test("North Carolina's NUL placeholder cannot make the statewide polling publication invalid JSONB", async () => {
   const current = door("nc-statewide-polling-general-2026");
-  const bytes = fixture("nc-november-polling.txt");
+  const bytes = fixture("nc-november-polling.csv.bin");
   const hashBefore = createHash("sha256").update(bytes).digest("hex");
   assert.ok(new TextDecoder("utf-16le").decode(bytes).includes("\u0000"));
   const rows = await parseVotingCapture({ url: current.url, contentType: "text/csv", bytes }, current);

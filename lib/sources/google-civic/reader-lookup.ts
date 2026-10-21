@@ -3,6 +3,7 @@ import { GOOGLE_CIVIC_DOCS, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
 import type { CivicJson, CivicLookup } from "./model.ts";
 import { GOOGLE_VOTING_DATA_LABEL, type VotingReaderPlace } from "../../ballot/voting-answer.ts";
 import type { VotingJurisdiction, VotingSite } from "../../ballot/voting-sites.ts";
+import { recordVotingFailure } from "../../ballot/voting-errors.ts";
 
 const words = (value: unknown): string => typeof value === "string" ? value : "";
 export const GOOGLE_CIVIC_ATTRIBUTION = "Voting information powered by the Civic Information API";
@@ -34,5 +35,7 @@ function civicVotingJurisdictions(lookup: CivicLookup, place: VotingReaderPlace)
 /** Request-only fallback after the held-source check. No cache, publication, or address retention. */
 export async function readGoogleVotingAnswer(address: string, place: VotingReaderPlace, options: CivicReadOptions = {}): Promise<VotingJurisdiction[]> {
   const lookup = await lookupCivicAddress(address, new Set(place.divisionIds), { ...options, signal: options.signal ?? AbortSignal.timeout(2200) });
+  if (lookup.status === "OUTAGE") recordVotingFailure({ stage: "google-fallback", precision: place.precision, state: place.states[0] },
+    new Error(lookup.reason ?? "Google voting information could not be read."));
   return civicVotingJurisdictions(lookup, place);
 }

@@ -62,7 +62,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       if (data.address === "Stalled request") {
         response.writeHead(200, { "content-type": "application/x-ndjson" });
         response.write('{"pending":true}\n');
-        finishStalled = () => response.end(JSON.stringify({ answer: answers.get(cases[0].zip) }) + "\n");
+        finishStalled = () => response.end(JSON.stringify({ answer: { ...answers.get(cases[0].zip), expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() } }) + "\n");
         return;
       }
       const answer = answers.get(data.address); assert.ok(answer);
@@ -145,6 +145,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       // Protocol failures assert no civic facts and use no database or invented SQL schema.
       await page.goto(`${origin}/adams`);
       for (const input of ["Server failure", "Stalled request"]) {
+        if (input === "Stalled request") await page.clock.install();
         await page.getByLabel("Your street address or ZIP").fill(input);
         await page.evaluate(() => {
           const state = { started: 0, elapsed: 0 };
@@ -162,14 +163,16 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
           const pending = page.getByRole("status");
           await pending.waitFor({ state: "visible", timeout: 2500 });
           assert.match(await pending.innerText(), /working on getting this info/i);
-          const initial = await pending.innerText();
-          await page.waitForFunction(text => document.querySelector("[role=status]")?.textContent !== text, initial);
+          const initial = await pending.locator("[aria-hidden]").textContent();
+          await page.waitForFunction(text => document.querySelector("[role=status] [aria-hidden]")?.textContent !== text, initial);
           // Cross the old request timeout, then prove the same request still delivers its answer.
           await page.waitForTimeout(3100);
           assert.equal(await page.locator("[data-voting-site]").count(), 0);
           finishStalled!();
           await page.locator("[data-voting-site]").first().waitFor({ state: "visible", timeout: 1000 });
           assert.equal(await pending.count(), 0);
+          await page.clock.fastForward(24 * 60 * 60 * 1000 + 1000);
+          assert.equal(await page.locator("[data-voting-site]").count(), 0, "an open panel must discard Google answers within 24 hours");
           continue;
         }
         const gap = page.locator("[data-voting-coverage-gap]");

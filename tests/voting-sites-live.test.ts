@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { PGlite } from "@electric-sql/pglite";
 import { fillVotingSitesAnswer } from "../lib/ballot/voting-sites-live.ts";
 import { recordVotingLookupCount } from "../lib/ballot/voting-sites-counts.ts";
 import { votingSitesResponse } from "../lib/ballot/voting-sites-stream.ts";
@@ -71,6 +72,18 @@ test("anonymous counts atomically increment only day, ZIP and deduplicated divis
   assert.match(calls[0].text, /events = reader_event_totals.events \+ 1/);
   assert.doesNotMatch(calls[0].text, /reader_event_members|reader_event_batches|reader_hash|source|address/i);
   await assert.rejects(recordVotingLookupCount({ day: "2026-10-20", zip: "123 Private St", districts: [] }, async () => { assert.fail("invalid count must not be written"); }));
+  const db = new PGlite();
+  try {
+    await db.exec(readFileSync(new URL("../lib/db/migrations/0034_reader_events.sql", import.meta.url), "utf8"));
+    const query = async (text: string, params: string[]) => { await db.query(text, params); };
+    const count = { day: "2026-10-20", zip: "48933", districts: [district, district] };
+    await recordVotingLookupCount(count, query);
+    await recordVotingLookupCount(count, query);
+    const result = await db.query<{ events: number; users: number; zip: string; district: string }>("SELECT events::int, users::int, zip, district FROM reader_event_totals");
+    assert.deepEqual(result.rows, [{ events: 2, users: 0, zip: "48933", district }]);
+    assert.deepEqual((await db.query("SELECT * FROM reader_event_members")).rows, []);
+    assert.deepEqual((await db.query("SELECT * FROM reader_event_batches")).rows, []);
+  } finally { await db.close(); }
 });
 
 test("a slow result streams pending immediately and presents its eventual answer on the same request", async () => {

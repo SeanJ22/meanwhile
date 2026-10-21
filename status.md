@@ -4,8 +4,8 @@ build_state: IDLE; RELEASES 72 AND 73 SHIPPED AND LIVE (main 2753ca92b); WAITING
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
-lock: none
-heartbeat: 2026-10-21T21:30:28Z
+lock: session_017bJhG9VbQvb1KubNxKCKjA
+heartbeat: 2026-10-21T22:04:28Z
 
 ## Where things stand (Oct 21, 6:05 PM EDT)
 

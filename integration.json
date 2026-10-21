@@ -3605,5 +3605,29 @@
     "tested_sha": "f4a3a289d84db170322dcacda398f56aa2e40dbf",
     "gates": "pass",
     "at": "2026-10-21T21:09:08Z"
+  },
+  {
+    "lane": "dt-01",
+    "steps": [
+      "DT-01"
+    ],
+    "ready_sha": "9017d2c163ad53f819635bcb727e49d843f5c221",
+    "merge_sha": "0bb786c76268d43921d505f0db8673baf4deb0ee",
+    "river_sha": "7f96d05423677abf0729ddcba7c40521bfbf5c5a",
+    "tested_sha": "7f96d05423677abf0729ddcba7c40521bfbf5c5a",
+    "gates": "pass",
+    "at": "2026-10-21T21:38:57Z"
+  },
+  {
+    "lane": "vs-05",
+    "steps": [
+      "VS-05"
+    ],
+    "ready_sha": "fd1daab0ad125ca6819fcc561f5d77174f0f1b04",
+    "merge_sha": "54c0327b9184270778f403b65abc059a43f53500",
+    "river_sha": "7f96d05423677abf0729ddcba7c40521bfbf5c5a",
+    "tested_sha": "7f96d05423677abf0729ddcba7c40521bfbf5c5a",
+    "gates": "pass",
+    "at": "2026-10-21T21:38:57Z"
   }
 ]

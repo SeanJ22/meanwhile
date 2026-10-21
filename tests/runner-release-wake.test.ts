@@ -7,6 +7,7 @@ import * as nodeModule from "node:module";
 import { test } from "node:test";
 import { createContext, runInContext } from "node:vm";
 import { spawnSync } from "node:child_process";
+import ts from "typescript";
 import { DEFAULT_HANG_KILL_MS } from "../scripts/runner-hang-watchdog.mts";
 import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
 
@@ -105,22 +106,78 @@ test("every completed handoff exits despite a retained timer or socket", () => {
   }
 });
 
-test("CURRENT reopens held admissions and both clocks only after contracts succeed", async () => {
+test("runtime contract initialization precedes every startup path that can use it", () => {
+  const tree = ts.createSourceFile("pilot-runner.mts", source, ts.ScriptTarget.Latest, true);
+  const initialization = tree.statements.find(statement => ts.isVariableStatement(statement)
+    && statement.declarationList.declarations.some(declaration => declaration.name.getText(tree) === "runtimeContracts"));
+  assert.ok(initialization);
+  const functions = new Map(tree.statements.filter(ts.isFunctionDeclaration)
+    .filter(fn => fn.name && fn.body).map(fn => [fn.name!.text, fn.body!]));
+  const visited = new Set<string>();
+  const inspect = (node: ts.Node): void => {
+    if (ts.isFunctionDeclaration(node)) return; // declarations run only when referenced
+    if (ts.isIdentifier(node)) {
+      assert.notEqual(node.text, "runtimeContracts", "startup must initialize the helper before using it");
+      const body = functions.get(node.text);
+      if (body && !visited.has(node.text)) { visited.add(node.text); inspect(body); }
+    }
+    ts.forEachChild(node, inspect);
+  };
+  for (const statement of tree.statements) {
+    if (statement === initialization) break;
+    inspect(statement);
+  }
+  const firstBoundary = source.indexOf("let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();");
+  assert.ok(firstBoundary > initialization.end, "the first release boundary runs after helper construction");
+});
+
+test("CURRENT uses initialized contracts with the running SHA and directory while both clocks keep running", async () => {
   const fn = source.match(/async function reconcileRuntimeReleaseAtBoundary\([\s\S]*?\n\}/)?.[0];
+  const initialization = source.match(/const runtimeContracts = runtimeContractRetry\(\{[\s\S]*?\n\}\);/)?.[0];
   assert.ok(fn);
+  assert.ok(initialization);
   for (const contractsOk of [false, true]) {
     const calls: string[] = [];
-    const context = createContext({ AUTO_RELEASE_HANDOFF: true, ROOT: ".", RUNNING_CODE_SHA: "a".repeat(40),
+    const requests: [string, string][] = [];
+    let initialized = false;
+    let resolved = false;
+    let finish!: (ok: boolean) => void;
+    const contractWork = new Promise<boolean>(resolve => { finish = resolve; });
+    const applyRuntimeContracts = async () => {
+      calls.push("contracts");
+      const ok = await contractWork;
+      resolved = true;
+      return ok;
+    };
+    const context = createContext({ AUTO_RELEASE_HANDOFF: true, ROOT: ".", CODE_ROOT: "/running-release", RUNNING_CODE_SHA: "a".repeat(40),
       runtimeAdmissionsHeld: true, resumeRuntimeReleaseInstall: () => { calls.push("install recovery"); return null; },
       inspectRuntimeRelease: async () => { calls.push("inspect"); return { state: "CURRENT" }; },
-      applyRuntimeContracts: async () => { calls.push("contracts"); return contractsOk; },
+      applyRuntimeContracts,
+      runtimeContractRetry: ({ run }: { run: typeof applyRuntimeContracts }) => {
+        assert.equal(run, applyRuntimeContracts);
+        initialized = true;
+        calls.push("contracts initialized");
+        return { request: (sha: string, directory: string) => {
+          assert.equal(initialized, true);
+          assert.equal(context.runtimeAdmissionsHeld, false);
+          assert.deepEqual(calls.slice(-2), ["routine clock", "Admin copy clock"]);
+          requests.push([sha, directory]);
+          calls.push("contracts requested");
+          void run();
+        } };
+      },
       startStandingRuntimeClock: () => calls.push("routine clock"), startAdminCopyClock: () => calls.push("Admin copy clock"),
     });
-    const result = await runInContext(stripTypeScriptTypes(fn) + "\nreconcileRuntimeReleaseAtBoundary()", context);
-    assert.equal(result, contractsOk ? null : 2);
-    assert.equal(context.runtimeAdmissionsHeld, !contractsOk);
-    assert.deepEqual(calls, contractsOk ? ["install recovery", "inspect", "contracts", "routine clock", "Admin copy clock"]
-      : ["install recovery", "inspect", "contracts"]);
+    const result = await runInContext(stripTypeScriptTypes(`${fn}\n${initialization}`) + "\nreconcileRuntimeReleaseAtBoundary()", context);
+    assert.equal(result, null);
+    assert.equal(context.runtimeAdmissionsHeld, false);
+    assert.equal(resolved, false, "a pending migration cannot block collection");
+    assert.deepEqual(requests, [["a".repeat(40), "/running-release"]]);
+    assert.deepEqual(calls, ["contracts initialized", "install recovery", "inspect", "routine clock", "Admin copy clock", "contracts requested", "contracts"]);
+    finish(contractsOk);
+    await contractWork;
+    assert.equal(resolved, true);
+    assert.equal(context.runtimeAdmissionsHeld, false, "a failed migration cannot close collection");
     console.log(`CURRENT contracts=${contractsOk}: admissionsHeld=${context.runtimeAdmissionsHeld}; ${calls.join(" -> ")}`);
   }
 });

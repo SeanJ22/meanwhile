@@ -7,7 +7,72 @@ import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { PromotionPipelineRecord } from "../promotion/types.ts";
 import { assertFleetResult, type WorkerResultRecord } from "./types.ts";
 import { assertResearchWalk, type EvidenceWalkStep, type ResearchWalkState } from "./research-types.ts";
-import { canonicalJson, readByKeys, type AppendOnlyRepository } from "../repository/types.ts";
+import { canonicalJson, projectRecord, readByKeys, type AppendOnlyRepository } from "../repository/types.ts";
+import type { Sql } from "../repository/pg-store.ts";
+
+type ActivityCapture = Pick<ArtifactRecord, "artifactId" | "workItemId" | "partial" | "canonicalUrl">;
+export const LEGACY_ACTIVITY_CAPTURES_SQL = `SELECT a.log_key, a.position,
+  jsonb_build_object('artifactId',a.record->'artifactId','workItemId',a.record->'workItemId',
+    'partial',a.record->'partial','canonicalUrl',a.record->'canonicalUrl') AS capture
+  FROM cp_log_artifacts a WHERE EXISTS (SELECT 1 FROM cp_work_items_history w
+    WHERE w.id=coalesce(a.record->>'workItemId',a.log_key) AND cp_control_state(w.value)=$1)
+  AND (a.log_key,a.position)>($2::text,$3::bigint) ORDER BY a.log_key,a.position LIMIT 100`;
+
+/** This projection happens in Postgres. readAllNarrowed on a held log narrows
+ * only after downloading its full records, which is too late for this probe. */
+export async function readLegacyActivityCaptures(state: string, sql?: Sql): Promise<ActivityCapture[]> {
+  if (!/^(?:[a-z]{2}|system)$/.test(state)) throw new Error("LEGACY_ACTIVITY_STATE_INVALID");
+  if (!sql) {
+    const [{ neon }, { controlPlaneUrlFromEnv }] = await Promise.all([import("@neondatabase/serverless"), import("../repository/pg-store.ts")]);
+    const url = controlPlaneUrlFromEnv();
+    if (!url) throw new Error("LEGACY_ACTIVITY_STORE_UNCONFIGURED");
+    sql = neon(url) as unknown as Sql;
+  }
+  const { boundedQuery } = await import("../repository/request-bounds.ts");
+  const captures: ActivityCapture[] = [];
+  let key = "", position = -1;
+  for (;;) {
+    const rows = await boundedQuery(sql, { operation: "cp_log_artifacts.legacyActivityCaptures", callClass: "PAGE" },
+      LEGACY_ACTIVITY_CAPTURES_SQL, [state, key, position]) as { log_key: string; position: string | number; capture: ActivityCapture }[];
+    captures.push(...rows.map(row => row.capture));
+    if (rows.length < 100) return captures;
+    key = rows.at(-1)!.log_key; position = Number(rows.at(-1)!.position);
+  }
+}
+
+/** Legacy catch-up starts from saved pages. Read only the work and histories
+ * those pages belong to; modern and unrelated archived plans stay in Postgres.
+ * All mutation and point-read methods retain their original repository. */
+export async function legacyArtifactActivityRepositories(repos: ControlPlaneRepositories,
+  eligible: (artifact: Pick<ArtifactRecord, "partial" | "canonicalUrl">) => boolean,
+  readCaptures: () => Promise<readonly ActivityCapture[]> = () => repos.artifacts.readAllNarrowed({ artifactId: true, workItemId: true, partial: true, canonicalUrl: true }) as Promise<ActivityCapture[]>,
+): Promise<ControlPlaneRepositories | null> {
+  const captures = (await readCaptures()).filter(eligible);
+  const owners = [...new Set(captures.map(row => row.workItemId))].sort();
+  if (!owners.length) return null;
+  if (!repos.workItems.readManyNarrowed || !repos.workItems.readMany) throw new Error("LEGACY_ACTIVITY_INDEXED_READ_UNAVAILABLE");
+  const metadata = await repos.workItems.readManyNarrowed(owners, { autonomousPlan: ["contract"] });
+  const legacyIds = metadata.filter(row => (row.value as Pick<WorkItem, "autonomousPlan">).autonomousPlan?.contract.schemaVersion !== 2).map(row => row.id);
+  if (!legacyIds.length) return null;
+  const selected = new Set(legacyIds);
+  const captureIds = new Set(captures.filter(row => selected.has(row.workItemId)).map(row => row.artifactId));
+  const items = await repos.workItems.readMany(legacyIds);
+  const log = async <T,>(repository: AppendOnlyRepository<T>): Promise<T[]> =>
+    [...(await readByKeys(repository, legacyIds)).values()].flat();
+  return { ...repos,
+    workItems: { ...repos.workItems, list: async () => items },
+    artifacts: { ...repos.artifacts,
+      readAll: async () => (await log(repos.artifacts)).filter(row => captureIds.has(row.artifactId)),
+      readAllNarrowed: async projection => captures.filter(row => captureIds.has(row.artifactId)).map(row => projectRecord(row, projection)),
+    },
+    attempts: { ...repos.attempts, list: async () => {
+      if (!repos.attempts.listWhereIn || !repos.attempts.readMany) throw new Error("LEGACY_ACTIVITY_INDEXED_READ_UNAVAILABLE");
+      const ids = await repos.attempts.listWhereIn(["workItemId"], legacyIds, { id: true });
+      return repos.attempts.readMany(ids.map(row => row.id));
+    } },
+    workerResults: { ...repos.workerResults, readAll: () => log(repos.workerResults) },
+  };
+}
 
 export interface AutonomousActivitySnapshot {
   readonly workItems: readonly WorkItem[];

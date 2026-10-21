@@ -24,6 +24,7 @@ import {
   operationalReferenceBundle,
 } from "../lib/civic-data/operational-references.ts";
 import { methodFixture } from "./method-store-fixture.ts";
+import { legacyArtifactActivityRepositories } from "../lib/control-plane/workers/activity.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const REGISTRIES = JSON.parse(readFileSync(path.join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8"));
@@ -45,7 +46,9 @@ test("held planning enqueues every captured document without running a computati
   const h = await harness(t);
   for (let id = 1; id <= 20; id++) await h.hold(feed(id));
   const before = (await h.repos.attempts.list()).length;
-  const tasks = await planHeldWorkerFleet(ROOT, h.runtime, true);
+  const selected = await legacyArtifactActivityRepositories(h.repos, artifact => heldEventContract(ROOT, artifact) !== null);
+  assert.ok(selected);
+  const tasks = await planHeldWorkerFleet(ROOT, { ...h.runtime, repos: selected }, true);
   assert.equal(tasks.length, 20);
   assert.ok(tasks.every(task => task.workerTask?.role === "PARSER" && task.state === "PENDING"));
   assert.equal((await h.repos.attempts.list()).length, before);
@@ -61,7 +64,7 @@ test("the round's legacy held plan runs only when a registered event capture sti
   await h.hold(feed(1));
   assert.equal(await legacyHeldWorkOwed(ROOT, h.runtime), true, "a registered event capture with no Parser result is owed");
   const round = readFileSync(path.join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
-  assert.match(round, /await legacyHeldWorkOwed\(ROOT, fleet\) \? await planHeldWorkerFleet\(ROOT, fleet, true\) : \[\]/,
+  assert.match(round, /legacyFleet && await legacyHeldWorkOwed\(ROOT, legacyFleet\) \? await planHeldWorkerFleet\(ROOT, legacyFleet, true\) : \[\]/,
     "the round plans legacy held work only when it is owed, with no switch");
   assert.doesNotMatch(round, /WTP_HELD_FLEET_PLAN/);
 });

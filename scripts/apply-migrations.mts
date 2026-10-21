@@ -31,6 +31,56 @@ import { neon } from "@neondatabase/serverless";
 import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
 import { declaredPhase, phaseFromSql } from "../lib/db/migration-phases.ts";
 
+export const RUNTIME_CONTRACT_RETRY_MS = 15 * 60_000;
+export const RUNTIME_CONTRACT_ATTEMPT_MS = 5 * 60_000;
+// Contracts can take exclusive reader-table locks (0045 does). The complete
+// journalled DO statement must release them inside the reader query deadline.
+export const RUNTIME_CONTRACT_SQL_SETTINGS = ["SET LOCAL lock_timeout = '250ms'", "SET LOCAL statement_timeout = '1000ms'"] as const;
+
+/** Migrations have their own clock. Asking for them never waits for DDL and
+ * repeated cycle boundaries cannot hammer a failed migration or overlap it. */
+export function runtimeContractRetry(input: {
+  readonly run: (sha: string, cwd: string) => Promise<boolean>;
+  readonly onError: (error: unknown, sha: string) => void | Promise<void>;
+  readonly cancelActive?: () => Promise<void>;
+  readonly retryMs?: number;
+  readonly schedule?: (run: () => void, delayMs: number) => () => void;
+}) {
+  const completed = new Set<string>();
+  let target: { sha: string; cwd: string } | null = null;
+  let active: Promise<void> | null = null;
+  let cancel: (() => void) | null = null;
+  let stopped = false;
+  const schedule = input.schedule ?? ((run, delay) => {
+    const timer = setTimeout(run, delay); timer.unref();
+    return () => clearTimeout(timer);
+  });
+  const start = (): void => {
+    if (stopped || active || !target || completed.has(target.sha)) return;
+    const current = target;
+    active = Promise.resolve().then(() => stopped ? false : input.run(current.sha, current.cwd)).then(ok => {
+      if (ok) completed.add(current.sha);
+    }).catch(error => input.onError(error, current.sha)).catch(error => {
+      console.error(`Contract migration failure could not be recorded: ${error instanceof Error ? error.name : "error"}`);
+    }).finally(() => {
+      active = null;
+      if (stopped || !target || completed.has(target.sha)) return;
+      if (target.sha !== current.sha) start();
+      else cancel = schedule(() => { cancel = null; start(); }, input.retryMs ?? RUNTIME_CONTRACT_RETRY_MS);
+    });
+  };
+  return {
+    request(sha: string | null, cwd: string): void {
+      if (stopped || sha === null || completed.has(sha)) return;
+      if (target?.sha === sha) return;
+      target = { sha, cwd };
+      cancel?.(); cancel = null;
+      start();
+    },
+    async stop(): Promise<void> { stopped = true; cancel?.(); cancel = null; await input.cancelActive?.(); await active; },
+  };
+}
+
 export async function applyMigrations(args: string[], options: { beforeContract?: () => Promise<void> } = {}): Promise<void> {
   const PRODUCTION_BUILD = args.includes("--production-build");
   if (PRODUCTION_BUILD && (process.env.CONTEXT !== "production" || process.env.BRANCH !== "main" || process.env.NETLIFY !== "true")) {
@@ -184,6 +234,7 @@ export async function applyMigrations(args: string[], options: { beforeContract?
     // An absent journal means contracts are pending; verify before any bootstrap DDL.
     await beforeContract();
     const setup = await sql.transaction((transaction) => [
+      ...(PRODUCTION && PHASE === "contract" ? RUNTIME_CONTRACT_SQL_SETTINGS.map(statement => transaction.query(statement)) : []),
       transaction`SELECT pg_advisory_xact_lock(1835360622, 1)`,
       transaction`CREATE SCHEMA IF NOT EXISTS drizzle`,
       transaction`CREATE TABLE IF NOT EXISTS drizzle.__drizzle_migrations (
@@ -191,7 +242,7 @@ export async function applyMigrations(args: string[], options: { beforeContract?
       )`,
       transaction`SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at`,
     ]);
-    applied = setup[3] as AppliedMigration[];
+    applied = setup.at(-1) as AppliedMigration[];
   }
   for (const row of applied) {
     const expected = committedHashes.get(Number(row.created_at));
@@ -280,13 +331,14 @@ export async function applyMigrations(args: string[], options: { beforeContract?
           END IF;
         END ${delimiter};`;
         const results = await sql.transaction((transaction) => [
+          ...(PRODUCTION && PHASE === "contract" ? RUNTIME_CONTRACT_SQL_SETTINGS.map(statement => transaction.query(statement)) : []),
           transaction`SELECT pg_advisory_xact_lock(1835360622, 1)`,
           transaction.query(apply),
           transaction`SELECT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations
             WHERE created_at = ${entry.when} AND hash = ${hash}
             AND xmin = pg_current_xact_id()::xid) AS applied`,
         ]);
-        appliedHere = (results[2] as { applied: boolean }[])[0]?.applied === true;
+        appliedHere = (results.at(-1) as { applied: boolean }[])[0]?.applied === true;
       } catch (error) {
         console.error(`  FAIL  transaction rolled back before the journal row was written`);
         console.error(`        ${(error as Error).message}`);

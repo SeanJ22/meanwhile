@@ -1,0 +1,73 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import test from "node:test";
+import { memoryReading, RESEARCH_PARENT_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, routineProcessSlots,
+  WORKER_ENTRY_PEAK_MIB, workerMemoryHost, workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+
+const mib = 1024 ** 2;
+
+test("the round supervisor cannot reserve the state planner's old full research peak a second time", () => {
+  const source = readFileSync("scripts/freshness-shadow.mts", "utf8");
+  assert.ok(source.indexOf("const hostWorkerSlots =") > source.indexOf("const PLANNING_STATE=STATE;"));
+  const peak = RESEARCH_PARENT_PEAK_MIB * mib;
+  // Controlled replay of the reported available/growth totals, evenly split
+  // between the two old parent reservations. OS availability includes every lane.
+  const rss = (2 * peak - 5.77e9) / 2;
+  const rows = [{ pid: 1, parentPid: 0, rss }, { pid: 2, parentPid: 1, rss }];
+  const input = { at: "2026-10-20T22:19:00Z", totalBytes: 8192 * mib, availableBytes: 5.78e9, rootPid: 1, rows };
+  const before = memoryReading({ ...input, state: { reservations: [], parents: [{ pid: 1, peak }, { pid: 2, peak }] } });
+  const after = memoryReading({ ...input, state: { reservations: [], parents: [{ pid: 2, peak }] } });
+  assert.equal(before.fitLeaseWorkers, 0);
+  assert.equal(after.fitLeaseWorkers, 5);
+  assert.equal(after.headroomBytes, 768 * mib);
+  console.log(`RN-01 controlled admission: ${before.fitLeaseWorkers} -> ${after.fitLeaseWorkers} lease workers; ${after.headroomBytes / mib} MiB margin`);
+});
+
+test("the exact 7:09 PM production reservation snapshot fits five leases after removing the duplicate parent", () => {
+  const input = { at: "2026-10-20T23:09:49Z", totalBytes: 8326938624, availableBytes: 5717168128, rootPid: 876022,
+    rows: [
+      { pid: 876022, parentPid: 0, rss: 230027264 }, { pid: 923370, parentPid: 876022, rss: 374734848 },
+      { pid: 924070, parentPid: 876022, rss: 281899008 }, { pid: 925313, parentPid: 924070, rss: 447660032 },
+      { pid: 100, parentPid: 876022, rss: 149188608 }, { pid: 101, parentPid: 876022, rss: 296165376 },
+    ] };
+  const state = { parents: [{ pid: 876022, peak: 0 }, { pid: 923370, peak: 0 },
+    { pid: 924070, peak: 3070230528 }, { pid: 925313, peak: 3070230528 }],
+    reservations: [{ pid: 100, entry: "ingest.ts", peak: 390070272 }, { pid: 101, entry: "platform-census-runner.mts", peak: 328204288 }] };
+  const before = memoryReading({ ...input, state });
+  assert.equal(before.reservedGrowthBytes, 5683822592);
+  assert.equal(before.fitLeaseWorkers, 0);
+  const after = memoryReading({ ...input, state: { ...state, parents: state.parents.filter(parent => parent.pid !== 924070) } });
+  assert.equal(after.fitLeaseWorkers, 5);
+  assert.equal(after.headroomBytes, 805306368);
+  assert.equal(after.parents[0].peakRssBytes, null, "missing OS evidence remains unknown");
+});
+
+test("heartbeat parent high-water RSS is separate from its reservation and current RSS", () => {
+  const reading = memoryReading({ at: "2026-10-20T23:09:49Z", totalBytes: 8192 * mib, availableBytes: 5000 * mib, rootPid: 1,
+    rows: [{ pid: 1, parentPid: 0, rss: 300 * mib, peakRss: 650 * mib }],
+    state: { parents: [{ pid: 1, peak: 2928 * mib, entry: "freshness-shadow.mts:az" }], reservations: [] } });
+  assert.equal(reading.parents[0].peakRssBytes, 650 * mib);
+  assert.equal(reading.parents[0].rssBytes, 300 * mib);
+  assert.equal(reading.parents[0].peakBytes, 2928 * mib);
+  assert.equal(reading.parents[0].entry, "freshness-shadow.mts:az");
+});
+
+test("four lease workers acquire memory alongside a standing job and the full research parent on 8 GiB", async () => {
+  const host = workerMemoryHost({ processes: () => [{ pid: process.pid, parentPid: process.ppid, rss: 768 * mib }] });
+  const memory = { host, availableBytes: () => (8192 - 768) * mib, parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * mib };
+  const standing = await routineProcessSlots(memory).acquire("legiscan-votes-refresh.mts");
+  const leases = await Promise.all(Array.from({ length: 4 }, () => workerProcessSlots(() => 1, memory).acquire("lease-worker.ts")));
+  assert.ok(RESEARCH_PARENT_PEAK_MIB + ROUTINE_ENTRY_PEAK_MIB["legiscan-votes-refresh.mts"] + 4 * WORKER_ENTRY_PEAK_MIB.lease! + 768 <= 8192);
+  leases.forEach(release => release()); standing();
+});
+
+test("small-state observations cannot lower complete native vote or ACS reservations", async () => {
+  const host = workerMemoryHost({ processes: () => [] });
+  host.transact(state => { state.peaks = { "openstates-votes-refresh.mts": [100 * mib], "legiscan-votes-refresh.mts": [100 * mib] }; }, false);
+  const slots = routineProcessSlots({ host, availableBytes: () => 10000 * mib });
+  for (const [entry, expected] of [["openstates-votes-refresh.mts", 3574], ["legiscan-votes-refresh.mts", 1312], ["acs-population-promote.mts", 3928]] as const) {
+    const release = await slots.acquire(entry);
+    host.transact(state => assert.equal(state.reservations[0].peak, expected * mib), false);
+    release();
+  }
+});

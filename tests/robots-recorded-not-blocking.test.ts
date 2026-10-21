@@ -24,6 +24,8 @@ import { SourceHttpError, politeGetBytes, politeGetText, sourceUserAgent } from 
 import { identifiedResearchGet } from "../lib/hunt/research-transport.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { InSiteSession } from "../lib/sources/legistar-insite/http.ts";
+import { placePageReader } from "../lib/hunt/source-page-reader.ts";
+import { MemoryEvidenceStore, putArtifact } from "../lib/control-plane/evidence/store.ts";
 
 const DISALLOW_ALL = "User-agent: *\nDisallow: /\n";
 
@@ -66,6 +68,39 @@ test("THE RESEARCH FETCH reads robots.txt first, records a Disallow: / with its 
     assert.equal(carriesCredential(s.headers), false);
     assert.equal(s.headers["user-agent"], DEFAULT_USER_AGENT);
   }
+});
+
+test("THE HUNTER PAGE READER saves the Disallow rule and still reads the government's page", async () => {
+  const vault = new MemoryEvidenceStore();
+  const saved: { url: string; key: string }[] = [];
+  const seen: string[] = [];
+  const pageUrl = "https://council.example.gov/meetings";
+  const reader = placePageReader({
+    now: () => "2026-10-20T12:00:00.000Z", workItemId: "wi-robots-hunter",
+    attemptId: "att-robots-hunter", routeId: "own-site-meetings", canRead: () => true,
+    spaceOut: async () => {},
+    open: async ({ url }) => {
+      seen.push(url);
+      const body = url.endsWith("/robots.txt") ? DISALLOW_ALL : "<h1>City Council meetings</h1>";
+      return { status: 200, body, bytes: Buffer.byteLength(body), contentType: url.endsWith(".txt") ? "text/plain" : "text/html",
+        durationMs: 1, transportError: null };
+    },
+    vault: async (artifact, body) => {
+      const stored = await putArtifact(vault, "freshness", artifact, Buffer.from(body));
+      saved.push({ url: artifact.canonicalUrl, key: stored.key });
+      return { stored: true, where: stored.key, why: "saved" };
+    },
+  });
+  const page = await reader.read(pageUrl);
+  assert.deepEqual(seen, ["https://council.example.gov/robots.txt", pageUrl]);
+  assert.match(page?.html ?? "", /City Council meetings/);
+  const robots = saved.find(record => record.url.endsWith("/robots.txt"));
+  assert.ok(robots, "the robots response is retained in the evidence vault");
+  const written = await vault.get(robots.key);
+  assert.ok(written);
+  assert.match(Buffer.from(written.bytes).toString("utf8"), /Disallow: \//);
+  assert.equal(reader.cost.requestCount, 2);
+  assert.ok(saved.some(record => record.url === pageUrl), "the disallowed public page is saved too");
 });
 
 test("THE ADAPTER PERMISSION GATE reads robots.txt once per origin, records the Disallow, and the page is read", async () => {
@@ -330,7 +365,7 @@ const ROBOTS_CONSUMERS: Readonly<Record<string, string>> = {
   "lib/control-plane/scheduler/robots.ts": "the evaluator itself (tests/scout-tools.test.ts evaluator cases)",
   "lib/ballot/voting-source-fetch.ts": "VS-01 honors robots.txt: tests/voting-source-readers.test.ts blocks disallowed pages and keeps their hunter blanks open",
   "lib/hunt/robots-first-fetch.ts": "tests/robots-first-fetch.test.ts, this file",
-  "lib/hunt/source-page-reader.ts": "tests/hunters-read-to-reader.test.ts reads a disallowed page, retains its source and publishes through the existing Box",
+  "lib/hunt/source-page-reader.ts": "this file: THE HUNTER PAGE READER saves the Disallow rule and still reads the government's page",
   "lib/sources/permission-gate.ts": "this file, tests/pima-edu-source.test.ts",
   "lib/sources/pima-edu/index.ts": "via the gate: tests/pima-edu-source.test.ts",
   "lib/sources/suiteone/index.ts": "via the gate: tests/suiteone-source.test.ts",

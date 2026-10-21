@@ -13,7 +13,7 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { parseVotingCapture, votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
 import { mergeVotingSourceRead, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
-import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { gunzipSync } from "node:zlib";
 import type { VotingSourceDoor, VotingSourceRead } from "../lib/ballot/voting-source-types.ts";
 
 const PDF = readFileSync(join(process.cwd(), "tests/fixtures/cochise-2026-vote-centers.pdf"));
@@ -57,8 +57,8 @@ test("the generic PDF mapping reads all 18 official countywide vote centers, hou
   assert.equal(read.rules[0]?.text, "Voters may vote at any of the Vote Centers listed below.");
   assert.equal(createHash("sha256").update(PDF).digest("hex"), "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c");
   assert.equal((await capturedJurisdiction()).model, "VOTE_CENTER");
-  const vault = new MemoryEvidenceStore(), evidence = await holdVotingRawEvidence(vault, read);
-  assert.deepEqual(Buffer.from((await vault.get(evidence[0]!.vaultKey))!.bytes), PDF);
+  const evidence = await holdVotingRawEvidence(read);
+  assert.deepEqual(gunzipSync(Buffer.from(evidence[0]!.savedDocument!.body, "base64")), PDF);
 });
 
 test("an incomplete PDF fails without producing a replacement list", async () => {
@@ -68,8 +68,7 @@ test("an incomplete PDF fails without producing a replacement list", async () =>
 test("a scoped county successor promotes through the existing pointer and leaves every other county exact", async () => {
   const store = new MemoryRoutineDataStore();
   const prior = priorFile();
-  const vault = new MemoryEvidenceStore();
-  const original = await holdVotingRawEvidence(vault, { rawBodies: [{ url: "https://elections.az-example.gov/vote-centers",
+  const original = await holdVotingRawEvidence({ rawBodies: [{ url: "https://elections.az-example.gov/vote-centers",
     contentType: "text/html", bytes: new TextEncoder().encode("original official bytes") }] });
   const base = votingSitesCandidate({ state: "AZ", current: prior, prior: null, failures: [], acquisition: original,
     successfulAuthorityReads: 1, requestedUrl: "https://elections.az-example.gov/vote-centers", finalUrl: "https://elections.az-example.gov/vote-centers", retrievedAt: T0 });
@@ -78,17 +77,16 @@ test("a scoped county successor promotes through the existing pointer and leaves
   const successor = votingSitesScopedSuccessor(prior, cochise, "2026-09-28");
   assert.deepEqual(successor.jurisdictions.filter(row => row.ocdId !== COCHISE),
     [...prior.jurisdictions].sort((left, right) => left.ocdId.localeCompare(right.ocdId)));
-  const acquisition = await holdVotingRawEvidence(vault, await capturedRead());
+  const acquisition = await holdVotingRawEvidence(await capturedRead());
   const candidate = votingSitesCandidate({ state: "AZ", current: successor, prior, failures: [], acquisition,
     successfulAuthorityReads: 1, requestedUrl: cochise.sourceUrl, finalUrl: cochise.sourceUrl, retrievedAt: T1,
     carriedFromVersionId: base.id });
   const payload = candidate.normalizedPayload as { acquisition: VotingRawCapture[]; carriedFromVersionId: string; projection: VotingSitesFile };
   assert.equal(payload.carriedFromVersionId, base.id);
   assert.deepEqual(payload.projection, successor);
-  assert.deepEqual(payload.acquisition, [{ url: DOOR.url, contentType: "application/pdf", vaultKey: payload.acquisition[0]!.vaultKey,
-    rawHash: "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c", byteLength: PDF.byteLength }]);
-  assert.ok(JSON.stringify(candidate).length < 64 * 1024, "the candidate holds refs, not the PDF");
-  assert.deepEqual(Buffer.from((await vault.get(payload.acquisition[0]!.vaultKey))!.bytes), PDF);
+  assert.equal(payload.acquisition[0]!.url, DOOR.url);
+  assert.equal(payload.acquisition[0]!.rawHash, "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c");
+  assert.deepEqual(gunzipSync(Buffer.from(payload.acquisition[0]!.savedDocument!.body, "base64")), PDF);
   const published = await processRegisteredManualCandidate(store, "voting-sites:AZ", candidate, T1);
   assert.ok(published.promoted);
   assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
@@ -154,7 +152,7 @@ test("voting successors release unchanged prior rows and retain exact changed or
   const store = new MemoryRoutineDataStore(), original = priorFile();
   original.jurisdictions[0].sites.push({ ...original.jurisdictions[0].sites[0], id: "retired-site", name: "Retired site" });
   const url = original.jurisdictions[0].sourceUrl;
-  const acquisition = await holdVotingRawEvidence(new MemoryEvidenceStore(), { rawBodies: [{ url,
+  const acquisition = await holdVotingRawEvidence({ rawBodies: [{ url,
     contentType: "text/plain", bytes: new TextEncoder().encode("Fixture official sites") }] });
   const base = votingSitesCandidate({ state: "AZ", current: original, prior: null, failures: [], acquisition,
     successfulAuthorityReads: 1, requestedUrl: url, finalUrl: url, retrievedAt: T0 });

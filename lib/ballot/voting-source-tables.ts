@@ -1,7 +1,7 @@
 import { inflateRawSync } from "node:zlib";
 import type { VotingExtraction } from "./voting-source-types.ts";
 
-export type VotingTable = { headers: string[]; rows: string[][]; title?: string; documentTitle?: string; lastUpdated?: string };
+export type VotingTable = { headers: string[]; rows: string[][]; title?: string; documentTitle?: string; documentText?: string; lastUpdated?: string };
 export function decodeVotingBytes(bytes: Uint8Array): string {
   return new TextDecoder(bytes[0] === 0xff && bytes[1] === 0xfe ? "utf-16le" : bytes[0] === 0xfe && bytes[1] === 0xff ? "utf-16be" : "utf-8").decode(bytes);
 }
@@ -126,10 +126,12 @@ export async function pdfVotingTables(bytes: Uint8Array, config: VotingExtractio
   try {
     const { rowsFromItems, cellsFromRow } = await import("../extract/tables.ts");
     const allRows: string[][] = [];
+    const documentPages: string[] = [];
     let documentTitle: string | undefined, lastUpdated: string | undefined;
     for (let p = 1; p <= doc.numPages; p++) {
       const content = await (await doc.getPage(p)).getTextContent();
       const pageWords = content.items.filter(item => "str" in item).map(item => (item as { str: string }).str).join(" ");
+      documentPages.push(pageWords);
       if (p === 1) documentTitle = pageWords.match(/[^.]{0,80}(?:20\d{2}[^.]{0,60}(?:election|polling|voting)|(?:election|polling|voting)[^.]{0,60}20\d{2})/i)?.[0]?.trim();
       lastUpdated ??= pageWords.match(/(?:last\s+)?updated[:\s]+([^;\n]{0,45}20\d{2})/i)?.[1]?.trim();
       const items = content.items.flatMap(item => {
@@ -173,8 +175,8 @@ export async function pdfVotingTables(bytes: Uint8Array, config: VotingExtractio
         if (start.test(row[index] ?? "")) records.push(row);
         else if (records.length) for (let c = 0; c < row.length; c++) if (row[c]) records[records.length - 1]![c] = `${records[records.length - 1]![c] ?? ""} ${row[c]}`.trim();
       }
-      tables.push({ headers: config.pdfColumns.map(c => c.name), rows: records, documentTitle, lastUpdated });
-    } else tables.push({ ...tableFromRows(allRows, { ...config, headers: config.headers ?? config.pdfColumns?.map(c => c.name) }), documentTitle, lastUpdated });
+      tables.push({ headers: config.pdfColumns.map(c => c.name), rows: records, documentTitle, documentText: documentPages.join(" "), lastUpdated });
+    } else tables.push({ ...tableFromRows(allRows, { ...config, headers: config.headers ?? config.pdfColumns?.map(c => c.name) }), documentTitle, documentText: documentPages.join(" "), lastUpdated });
   } finally { await doc.cleanup(); }
   return tables;
 }

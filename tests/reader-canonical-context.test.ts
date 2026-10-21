@@ -75,11 +75,13 @@ test("a failed canonical batch stays a failed read and never falls back to anoth
 test("settled state and geography reads stay consistent within one request while the next request sees a new publication", async () => {
   const city = "ocd-division/country:us/state:az/place:tucson", county = "ocd-division/country:us/state:az/county:pima";
   let version = "request-state:one", reads = 0, block: Promise<void> | undefined, release: (() => void) | undefined;
+  let queryStarted: (() => void) | undefined;
   installReaderDatabaseQuery(async statements => {
     assert.equal(statements.length, 1);
     const statement = statements[0], keys = statement.params[0] as string[];
     if (!keys.some(key => key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
     reads++;
+    queryStarted?.();
     const currentVersion = version, divisions = statement.params.at(-1) as readonly string[];
     await block;
     return [stateRows(currentVersion, divisions)];
@@ -97,9 +99,11 @@ test("settled state and geography reads stay consistent within one request while
 
       version = "request-state:two";
       block = new Promise<void>(resolve => { release = resolve; });
+      const started = new Promise<void>(resolve => { queryStarted = resolve; });
       const next = withReaderSelection(selection("AZ"), () => readStatePackage("AZ"));
       const concurrent = withReaderSelection(selection("AZ"), () => readStatePackage("AZ"));
       assert.equal(next, concurrent, "different requests share the same state only while it is in flight");
+      await started;
       assert.equal(reads, 2);
       assert.equal(await readStateDistricts("AZ"), first.districts, "another request's newer in-flight geography cannot replace this request's settled geography");
       release!(); block = undefined;

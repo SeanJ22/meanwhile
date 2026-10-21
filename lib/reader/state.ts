@@ -15,7 +15,7 @@ import { readStateFederalDirectory, withFederalPortraits } from "../officials/fe
 import { stateLegislatorCoverageAuthority, type StateLegislatorCoverageAuthority } from "../registry/coverage.ts";
 import { BOUNDARY_ARCHIVE_FALLBACK } from "../map/districts.ts";
 import { serverReaderValue } from "./memory.ts";
-import { readCanonicalShelf } from "./canonical.ts";
+import { readCanonicalShelf, readCanonicalPackages } from "./canonical.ts";
 import { PEOPLE_SOURCE_IDS, peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
 import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
@@ -24,7 +24,7 @@ import { mergePeopleSets } from "../officials/merge-people.ts";
 import { readCuratedReaderProjection, type CampaignSiteProjectionRecord } from "../civic-data/curated-reader-read-model.ts";
 import { EVERYDAY_ROUTING_POINTER, readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
-import { readNationalPresident, readZipPlace } from "./national.ts";
+import { readNationalPresident, nationalPresidentPointers, readZipPlace } from "./national.ts";
 import type { MemberOfficeRecord } from "../officials/member-offices.ts";
 import type { Division } from "../registry/types.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
@@ -83,7 +83,11 @@ export function readStateDistricts(value: string): Promise<Slice<GeographySlice>
 
 async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, key: string): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
-  const presidentRead = readNationalPresident().catch(() => null);
+  let needsPresident = false;
+  const presidentRead = readNationalPresident(() => {
+    needsPresident = true;
+    return groupsRead.then(groups => groups.readGroup(1));
+  }).catch(() => null);
   const entries = [
     ...(!zip ? [{ recordClass: "REGISTRY_RUNTIME_BINDING" as const, scope: stateRegistryRuntimeScope(state) }] : []),
     ...(!zip ? [{ recordClass: "FEDERAL_DIRECTORY" as const, scope: federalDirectoryScope(state) }] : []),
@@ -94,8 +98,11 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     ...(!zip ? [{ recordClass: "STATE_LEGISLATOR" as const, scope: `${jurisdiction}:openstates-people:v1` }] : []),
     ...(!zip ? PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })) : []),
   ];
-  const load = (ids: readonly string[]) => readCanonicalShelf(entries, readerDatabaseQuery(), statePackageStatement(state, ids, zip));
-  const canonicalRead = zip && !divisionIds.length ? readZipPlace(zip).then(entry => load(entry?.ids ?? [])) : load(divisionIds);
+  const load = (ids: readonly string[]) => readCanonicalPackages([entries, needsPresident ? nationalPresidentPointers() : []],
+    readerDatabaseQuery(), statePackageStatement(state, ids, zip));
+  // The resident President reader requests its group only on a cache miss or refresh.
+  const groupsRead = Promise.resolve().then(async () => load(zip && !divisionIds.length ? (await readZipPlace(zip))?.ids ?? [] : divisionIds));
+  const canonicalRead = groupsRead.then(groups => groups.readGroup(0));
   const districtsRead = canonicalRead.then((canonical): Slice<GeographySlice> => {
     const geoVersion = canonical.additionalRows[0]?.version_id;
     return typeof geoVersion === "string"

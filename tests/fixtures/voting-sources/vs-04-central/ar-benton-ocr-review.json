@@ -1,0 +1,10 @@
+{
+  "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+  "sourceSha256": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+  "sourcePages": 1,
+  "checkedAt": "2026-10-21T04:49:13.135Z",
+  "expectedFacilities": 35,
+  "review": "Rendered full originalPDF at2200px and visually checked all35 facility names, street addresses and uniform7:30AM-7:30PMhours. OCR emitted a strayA before415 and dot beforeN.; field extraction discards those marks and preserves the printed415 N.6thPlace and836 N.CurtisAve. Case differences are kept asrecognized. PDF-source runtime OCR fallback still required; this file is a reviewed extraction configuration, not a production publication.",
+  "previewRows": 35,
+  "previewSites": 35
+}

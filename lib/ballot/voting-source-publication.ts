@@ -7,6 +7,7 @@ import { upsertDerivedDoor, type DoorRepository } from "../doors/registry.ts";
 import type { VotingRawCapture } from "./voting-sites-data-plane.ts";
 import { mergeVotingSiteRows, type VotingJurisdiction, type VotingSitesFile, type VotingSource, type VotingSite } from "./voting-sites.ts";
 import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
+import { assertVotingEvidenceCanPublish } from "./voting-source-evidence.ts";
 
 export const VOTING_SOURCE_DOOR_KIND = "official-voting-source";
 
@@ -46,9 +47,58 @@ export async function registeredVotingSourceDoors(repo: DoorRepository, state: s
 const unique = <T>(rows: readonly T[], key: (row: T) => string): T[] => [...new Map(rows.map(row => [key(row), row])).values()];
 const sourceKey = (source: VotingSource) => source.url;
 const complete = (read: VotingSourceRead) => !read.blanks.some(blank => ["access", "extraction", "missing-sites"].includes(blank.reason));
+const identityText = (value: string | null | undefined) => (value ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+function numberedStreet(address: string): string | null {
+  const street = address.split(",")[0]!.trim().toLowerCase().replace(/\./g, "");
+  if (!/^\d+[a-z]?\s/.test(street)) return null;
+  const suffixes: Record<string, string> = { rd: "road", st: "street", ave: "avenue", blvd: "boulevard", dr: "drive", ln: "lane", ct: "court", hwy: "highway", pkwy: "parkway", pl: "place" };
+  return identityText(street.replace(/\b(rd|st|ave|blvd|dr|ln|ct|hwy|pkwy|pl)$/, value => suffixes[value]!));
+}
+
+/** A publisher's spelling change must not turn one unambiguous existing facility into a deletion. */
+function retainVotingSourceSiteIds(prior: VotingJurisdiction, door: VotingSourceDoor, read: VotingSourceRead): VotingSite[] {
+  const urls = new Set([door.url, ...read.sources.map(sourceKey)]);
+  const same = (old: VotingSite, next: VotingSite) => {
+    const street = numberedStreet(next.address);
+    const town = old.town ?? (door.matchingUnit === "TOWN" && /\/(?:place|cousub):[^/]+$/.test(prior.ocdId)
+      ? prior.name.replace(/^(?:town|city|township|village|borough) of\s+|\s+(?:town|city|township|village|borough)$/gi, "") : undefined);
+    return street !== null && street === numberedStreet(old.address) && identityText(old.name) === identityText(next.name) &&
+      identityText(old.room) === identityText(next.room) && identityText(town) === identityText(next.town) &&
+      identityText(old.countyFips ?? prior.countyFips) === identityText(next.countyFips ?? door.scope.countyFips) &&
+      identityText(old.countySubdivisionGeoid ?? prior.countySubdivisionGeoid) === identityText(next.countySubdivisionGeoid ?? door.scope.countySubdivisionGeoid) &&
+      (old.sources?.length ? old.sources.some(source => urls.has(source.url)) : urls.has(prior.sourceUrl));
+  };
+  return read.sites.map(site => {
+    if (prior.sites.some(old => old.id === site.id)) return site;
+    const matches = prior.sites.filter(old => same(old, site));
+    if (matches.length !== 1 || read.sites.filter(next => same(matches[0]!, next)).length !== 1) return site;
+    return { ...site, id: matches[0]!.id };
+  });
+}
+
+/** All configured sections of one document form one replacement of its earlier facts. */
+export function combineVotingSourceReads(reads: readonly VotingSourceRead[]): VotingSourceRead {
+  if (!reads.length) throw new Error("A voting source group needs at least one read");
+  const sites = new Map<string, VotingSite>();
+  for (const read of reads) for (const site of read.sites) {
+    const prior = sites.get(site.id);
+    sites.set(site.id, prior ? mergeVotingSiteRows(prior, site) : site);
+  }
+  return { ...reads[0]!, sites: [...sites.values()],
+    office: reads.find(read => read.office)?.office,
+    contacts: reads.flatMap(read => read.contacts ?? []),
+    boundaries: reads.some(read => read.boundaries) ? reads.flatMap(read => read.boundaries ?? []) : undefined,
+    rules: unique(reads.flatMap(read => read.rules), rule => `${rule.source.url}\n${rule.text}`),
+    sources: unique(reads.flatMap(read => read.sources), sourceKey),
+    blanks: unique(reads.flatMap(read => read.blanks), blank => blank.id),
+    attempts: reads.flatMap(read => read.attempts),
+    rawBodies: unique(reads.flatMap(read => read.rawBodies), body => `${body.url}#${createHash("sha256").update(body.bytes).digest("hex")}`),
+  };
+}
 
 /** Replace a successfully re-read source only. A failed sibling door cannot hide a new fact. */
 export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, door: VotingSourceDoor, read: VotingSourceRead, now: string): VotingJurisdiction {
+  if (prior) read = { ...read, sites: retainVotingSourceSiteIds(prior, door, read) };
   const currentUrls = new Set([door.url, ...read.sources.map(sourceKey)]);
   const sourceSucceeded = read.rawBodies.length > 0 && !read.blanks.some(blank => blank.reason === "access" || blank.reason === "extraction");
   const previousSites = (prior?.sites ?? []).flatMap(previous => {
@@ -107,6 +157,7 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
 
 /** Save original bytes with the publication, atomically, in the standing data system. */
 export async function holdVotingRawEvidence(read: Pick<VotingSourceRead, "rawBodies">): Promise<VotingRawCapture[]> {
+  assertVotingEvidenceCanPublish(read.rawBodies);
   return read.rawBodies.map(body => ({ url: body.url, contentType: body.contentType,
     rawHash: createHash("sha256").update(body.bytes).digest("hex"), byteLength: body.bytes.byteLength,
     savedDocument: { encoding: "gzip-base64", body: gzipSync(body.bytes).toString("base64") } }));

@@ -1,0 +1,114 @@
+[
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/ballot",
+    "label": "mobile menu"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/contact/braille_voter_request_form",
+    "label": "Braille Voter Guide"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/register-to-vote",
+    "label": "Voter Registration"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/sites/default/files/form-files/FeeSchedule.pdf",
+    "label": "Fee Schedule"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/sites/default/files/CHARTFORFUNDS-12-20-22.pdf",
+    "label": "Funds Guide"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/sites/default/files/voter-pdfs/VR%20LIST%20REQUEST%20FORM.pdf",
+    "label": "Voter List Fee Schedule"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/sites/default/files/Boards-Commissions-Committees/BoardsandCommissions(withAmendments)02-08-2023.pdf",
+    "label": "Committees Guide"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/student-poll-worker-internship",
+    "label": "Student Poll Worker Internship"
+  },
+  {
+    "url": "http://www.alabamavotes.gov",
+    "label": "Elections"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/sites/default/files/2022-01/2021FeeSchedule.pdf",
+    "label": "Fees"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/sites/default/files/form-files/Chapter-820-4-3.pdf",
+    "label": "Procedures"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/media/campaign-finance-reports",
+    "label": "Campaign Finance Records"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/city-county-lookup",
+    "label": "County Election Officials"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes",
+    "label": "Alabama Votes"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/faqs",
+    "label": "FAQ"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/election-information",
+    "label": "Election Information"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/candidates/candidate-resources",
+    "label": "Candidates"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/pac-resources",
+    "label": "PACs"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/contact-us",
+    "label": "Contact Us"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/absentee-voting",
+    "label": "Absentee Voting"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/assistance-disability",
+    "label": "Assistance for Voters with Disabilities"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/election-data",
+    "label": "Elections Data"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/elected-official-map",
+    "label": "Find Your Elected Official Map"
+  },
+  {
+    "url": "https://myinfo.alabamavotes.gov",
+    "label": "Provisional Ballot Status"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/military-overseas-voting",
+    "label": "Military/Overseas Voting"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/pollworker",
+    "label": "Poll Worker Information"
+  },
+  {
+    "url": "https://arc-sos.state.al.us/cgi/vetform.mbr/form",
+    "label": "Vote in Honor of a Veteran"
+  },
+  {
+    "url": "https://www.sos.alabama.gov/alabama-votes/voter/voter-id",
+    "label": "Voter ID requirements"
+  }
+]

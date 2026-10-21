@@ -1,0 +1,241 @@
+{
+  "capturedAt": "2026-10-21T04:51:03.502430+00:00",
+  "scope": "VS-04 first-batch source acquisition, not a production publication receipt",
+  "states": [
+    {
+      "state": "AR",
+      "acquiredPhysicalSites": 3,
+      "servicesByKind": {
+        "EARLY_VOTING": 1,
+        "ELECTION_DAY": 2
+      },
+      "countiesRepresented": 1,
+      "sources": [
+        {
+          "id": "ar-sebastian-general-election-notice-2026",
+          "url": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+          "sites": 0,
+          "scope": "Sebastian County",
+          "readBlanks": 1
+        },
+        {
+          "id": "ar-benton-county-gis-early",
+          "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+          "sites": 1,
+          "scope": "Benton County",
+          "readBlanks": 0
+        },
+        {
+          "id": "ar-benton-county-gis-election-day",
+          "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+          "sites": 2,
+          "scope": "Benton County",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "State root read succeeded. Sebastian 8-page current notice and Benton current location PDFs are scans; exact PDFs and OCR outputs are saved. Native Benton GIS 3 locations are acquired. Final OCR 35-center config awaits normal runtime fallback before promotion."
+    },
+    {
+      "state": "IA",
+      "acquiredPhysicalSites": 64,
+      "servicesByKind": {
+        "ELECTION_DAY": 64
+      },
+      "countiesRepresented": 1,
+      "sources": [
+        {
+          "id": "ia-scott-precinct-polling",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "sites": 64,
+          "scope": "Scott County",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "Scott County 64 physical polling facilities and printed precincts are acquired. The state route links an address lookup rather than a bulk file; othercounty files remain open."
+    },
+    {
+      "state": "KS",
+      "acquiredPhysicalSites": 23,
+      "servicesByKind": {
+        "EARLY_VOTING": 12,
+        "DROP_BOX": 16
+      },
+      "countiesRepresented": 1,
+      "sources": [
+        {
+          "id": "ks-johnson-general-advance-2026",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "sites": 23,
+          "scope": "Johnson County",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "Johnson County 12 early and 16 drop services are acquired at 23 physical facilities. Statewide county acquisition and extracting the separate day/hour table into schedules remain open."
+    },
+    {
+      "state": "LA",
+      "acquiredPhysicalSites": 112,
+      "servicesByKind": {
+        "EARLY_VOTING": 112
+      },
+      "countiesRepresented": 64,
+      "sources": [
+        {
+          "id": "la-statewide-early-voting",
+          "url": "https://voterportal.sos.la.gov/earlyvoting",
+          "sites": 112,
+          "scope": "Louisiana",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "The state early list publishes 112 locations across all 64 parishes. Date/hour schedules, election-dayfiles and boundaries remain open."
+    },
+    {
+      "state": "MN",
+      "acquiredPhysicalSites": 25,
+      "servicesByKind": {
+        "ELECTION_DAY": 25
+      },
+      "countiesRepresented": 1,
+      "sources": [
+        {
+          "id": "mn-renville-polling",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "sites": 25,
+          "scope": "Renville County",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "The state public TXT link is an eight-row 2008 sample, not a 2026 statewide file. Renville County current GIS 25 state/federal sites are acquired; other counties/current datedhours remain open."
+    },
+    {
+      "state": "MO",
+      "acquiredPhysicalSites": 57,
+      "servicesByKind": {
+        "VOTE_CENTER": 57
+      },
+      "countiesRepresented": 1,
+      "sources": [
+        {
+          "id": "mo-st-louis-current-polling-centers",
+          "url": "https://services6.arcgis.com/HZXbCkpCSqbGd0vK/arcgis/rest/services/Polling_Centers_WFL1/FeatureServer/1",
+          "sites": 57,
+          "scope": "St. Louis city",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "State chief office returned 403. City of St. Louis currentofficial map yielded 57 active centers (status 1); inactive historic rows were excluded. Othercounties remain open."
+    },
+    {
+      "state": "ND",
+      "acquiredPhysicalSites": 209,
+      "servicesByKind": {
+        "ELECTION_DAY": 167,
+        "DROP_BOX": 63,
+        "EARLY_VOTING": 16
+      },
+      "countiesRepresented": 53,
+      "sources": [
+        {
+          "id": "nd-statewide-general-2026",
+          "url": "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "sites": 209,
+          "scope": "North Dakota",
+          "readBlanks": 193
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "The state file is fully paginated. County/precinct matching, coordinates and current per-precinct schedules still need standing refresh and source boundaries."
+    },
+    {
+      "state": "NE",
+      "acquiredPhysicalSites": 13,
+      "servicesByKind": {
+        "DROP_BOX": 13
+      },
+      "countiesRepresented": 1,
+      "sources": [
+        {
+          "id": "ne-douglas-drop-boxes",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "sites": 13,
+          "scope": "Douglas County",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "Douglas County 13 drop boxes are acquired; the statewide voter lookup is not a bulk list. Douglas election-day map lacks a usable text list; remainingcounty lists are open."
+    },
+    {
+      "state": "OK",
+      "acquiredPhysicalSites": 93,
+      "servicesByKind": {
+        "EARLY_VOTING": 93
+      },
+      "countiesRepresented": 77,
+      "sources": [
+        {
+          "id": "ok-statewide-early-voting-2026",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "sites": 93,
+          "scope": "Oklahoma",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "The state early-voting file covers all 77 counties. Election-day locations and precinct assignments still need county files; no voter identity was submitted."
+    },
+    {
+      "state": "SD",
+      "acquiredPhysicalSites": 456,
+      "servicesByKind": {
+        "ELECTION_DAY": 456
+      },
+      "countiesRepresented": 65,
+      "sources": [
+        {
+          "id": "sd-statewide-general-polling-2026",
+          "url": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Election%20Assets/General/PrecinctPollingPlaces_10.06.2026.pdf",
+          "sites": 456,
+          "scope": "South Dakota",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "The current state General Election PDF covers all 66 counties. Precinct boundaries and publisher-absent hours/coordinates remain open."
+    },
+    {
+      "state": "TX",
+      "acquiredPhysicalSites": 129,
+      "servicesByKind": {
+        "EARLY_VOTING": 39,
+        "VOTE_CENTER": 123
+      },
+      "countiesRepresented": 1,
+      "sources": [
+        {
+          "id": "tx-el-paso-vote-centers-2026",
+          "url": "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+          "sites": 123,
+          "scope": "El Paso County",
+          "readBlanks": 0
+        },
+        {
+          "id": "tx-el-paso-early-voting-2026",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "sites": 39,
+          "scope": "El Paso County",
+          "readBlanks": 0
+        }
+      ],
+      "coverage": "Partial; independently verified published locations",
+      "remaining": "El Paso 123 election-day and 39 early services are acquired at 129 physical facilities. State portal requires name/birthdate; official county directory is captured for remainingcounties."
+    }
+  ]
+}

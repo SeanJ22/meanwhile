@@ -1,0 +1,3042 @@
+[
+  {
+    "state": "AK",
+    "url": "https://www.elections.alaska.gov/",
+    "finalUrl": "https://www.elections.alaska.gov/",
+    "status": 503,
+    "capturedAt": "2026-10-21T04:24:14.104Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-chief.html",
+    "rawHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "saved": {
+      "bytes": 216,
+      "sha256": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": []
+  },
+  {
+    "state": "AZ",
+    "url": "https://azsos.gov/elections",
+    "finalUrl": "https://azsos.gov/elections",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:14.043Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/az-chief.html",
+    "rawHash": "708dac1f6651d97bae70ad77242b639edae73e140cc735b340b99456de3f6f7f",
+    "saved": {
+      "bytes": 252041,
+      "sha256": "708dac1f6651d97bae70ad77242b639edae73e140cc735b340b99456de3f6f7f",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://azsos.gov/elections",
+        "label": "Tracking Pixel Disclaimer"
+      },
+      {
+        "url": "https://azsos.gov/elections/voters/register-vote-update-voter-information/registerupdate-vote",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://azsos.gov/elections/calendar-dates",
+        "label": "Elections Calendar & Upcoming Events"
+      },
+      {
+        "url": "https://azsos.gov/elections/voters",
+        "label": "Voters"
+      },
+      {
+        "url": "https://azsos.gov/elections/voters/registration-requirements",
+        "label": "Registration Requirements"
+      },
+      {
+        "url": "https://azsos.gov/elections/voters/registering-vote",
+        "label": "Registering to Vote"
+      },
+      {
+        "url": "https://azsos.gov/elections/voters/early-voting",
+        "label": "Early Voting"
+      },
+      {
+        "url": "https://azsos.gov/elections/voters/voting-elections",
+        "label": "Voting in Elections"
+      },
+      {
+        "url": "https://azsos.gov/elections/voters/canceling-voter-registration",
+        "label": "Canceling Voter Registration"
+      },
+      {
+        "url": "https://azsos.gov/elections/candidates",
+        "label": "Candidates"
+      },
+      {
+        "url": "https://azsos.gov/elections/candidates/candidate-filing",
+        "label": "Candidate Filing"
+      },
+      {
+        "url": "https://azsos.gov/elections/candidates/candidate-legal-challenges",
+        "label": "Candidate Legal Challenges"
+      },
+      {
+        "url": "https://azsos.gov/elections/candidates/elected-office-terms",
+        "label": "Elected Office Terms"
+      },
+      {
+        "url": "https://azsos.gov/elections/candidates/unique-url",
+        "label": "Online Voter Registration Unique URL Program"
+      },
+      {
+        "url": "https://azsos.gov/elections/candidates/running-office",
+        "label": "Running for Office"
+      },
+      {
+        "url": "https://azsos.gov/elections/candidates/statements-interest",
+        "label": "Statements of Interest"
+      },
+      {
+        "url": "https://azsos.gov/elections/lobbying",
+        "label": "Lobbying"
+      },
+      {
+        "url": "https://azsos.gov/elections/campaign-finance-reporting",
+        "label": "Campaign Finance"
+      },
+      {
+        "url": "https://azsos.gov/elections/campaign-finance/campaign-finance-complaint-process",
+        "label": "Campaign Finance Complaint Process"
+      },
+      {
+        "url": "https://azsos.gov/elections/campaign-finance/campaign-finance-reporting-dates",
+        "label": "Campaign Finance Reporting Dates"
+      },
+      {
+        "url": "https://azsos.gov/elections/campaign-finance/contribution-limits",
+        "label": "Contribution Limits"
+      },
+      {
+        "url": "https://azsos.gov/elections/campaign-finance/filing-information",
+        "label": "Filing Information"
+      },
+      {
+        "url": "https://azsos.gov/elections/campaign-finance/officeholder-fds",
+        "label": "Financial Disclosure Statements"
+      },
+      {
+        "url": "https://azsos.gov/elections/campaign-finance/vrka-reporting",
+        "label": "Voters Right to Know Act (VRKA) Reporting"
+      },
+      {
+        "url": "https://azsos.gov/elections/ballot-measures",
+        "label": "Ballot Measures"
+      },
+      {
+        "url": "https://azsos.gov/elections/ballot-measures/circulators",
+        "label": "Circulators"
+      },
+      {
+        "url": "https://azsos.gov/elections/ballot-measures/irr",
+        "label": "Initiative, Referendum and Recall"
+      },
+      {
+        "url": "https://azsos.gov/elections/ballot-measures/initiative-referendum-recall/initiatives",
+        "label": "Initiatives"
+      },
+      {
+        "url": "https://azsos.gov/elections/ballot-measures/initiative-referendum-recall/referendum",
+        "label": "Referendum"
+      },
+      {
+        "url": "https://azsos.gov/elections/ballot-measures/initiative-referendum-recall/recall",
+        "label": "Recall"
+      },
+      {
+        "url": "https://azsos.gov/elections/election-information",
+        "label": "Election Information"
+      },
+      {
+        "url": "https://azsos.gov/elections/election-information/2026-election-info",
+        "label": "2026 Election Info"
+      },
+      {
+        "url": "https://azsos.gov/elections/election-information/voter-registration-statistics",
+        "label": "Voter Registration Statistics"
+      },
+      {
+        "url": "https://azsos.gov/elections/election-information/voter-registration-counts",
+        "label": "Voter Registration Counts"
+      },
+      {
+        "url": "https://azsos.gov/elections/election-information/legislative-quarterly-report",
+        "label": "Legislative Quarterly Report"
+      },
+      {
+        "url": "https://azsos.gov/elections/election-information/unofficial-enr",
+        "label": "Unofficial Election Night Results"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections",
+        "label": "About Elections"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/county-election-contact-info",
+        "label": "County Election Officials Contact Information"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/county-poll-worker-information",
+        "label": "County Poll Worker Information"
+      },
+      {
+        "url": "https://azsos.gov/webform/poll-worker-volunteer-request",
+        "label": "Poll Worker Volunteer Request"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/election-laws-pubs",
+        "label": "Election Laws & Publications"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/elections-procedures",
+        "label": "Elections Procedures"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/elections-procedures/vr-procedures",
+        "label": "Voter Registration Procedures"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/elections-procedures/epm",
+        "label": "Elections Procedures Manual"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/elections-procedures/voting-equipment",
+        "label": "Voting Equipment"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/elections-procedures/pre-election-procedures",
+        "label": "Pre-Election Procedures"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/elections-procedures/early-voting-procedures",
+        "label": "Early Voting Procedures"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/elections-procedures/election-day-operations",
+        "label": "Election Day Operations"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/elections-procedures/ballot-processing",
+        "label": "Ballot Processing"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/elections-procedures/post-election-procedures",
+        "label": "Post-Election Procedures"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/guidance-voting-location-conduct",
+        "label": "Guidance on Voting Location Conduct"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/hava",
+        "label": "Help America Vote Act (HAVA)"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/information-about-political-parties",
+        "label": "Information about Political Parties"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/information-about-political-parties/creating-political-party",
+        "label": "Creating a Political Party"
+      },
+      {
+        "url": "https://azsos.gov/elections/about-elections/securing-elections",
+        "label": "Securing Elections"
+      },
+      {
+        "url": "https://azsos.gov/elections/vote",
+        "label": "Vote"
+      },
+      {
+        "url": "https://azsos.gov/elections/vote/all",
+        "label": "ALL IN"
+      },
+      {
+        "url": "https://azsos.gov/elections/vote/resources",
+        "label": "Resources"
+      },
+      {
+        "url": "https://azsos.gov/elections/vote/resources/2024-july-primary-election-resources",
+        "label": "2024 July Primary Election Resources"
+      },
+      {
+        "url": "https://azsos.gov/services/address-confidentiality-program/protected-voter-registration",
+        "label": "Protected Voter Registration"
+      },
+      {
+        "url": "https://azsos.gov/webform/america-vote250-pledge",
+        "label": "America Vote250 Pledge"
+      },
+      {
+        "url": "https://azsos.gov/node/107",
+        "label": "Election Dates"
+      },
+      {
+        "url": "https://results.arizona.vote",
+        "label": "Unofficial 2024 General Election Results"
+      },
+      {
+        "url": "https://azsos.gov/events/general-election-day/915",
+        "label": "General Election Day"
+      },
+      {
+        "url": "https://azsos.gov/events/official-statewide-canvass-november-3-2026-general/921",
+        "label": "Official Statewide Canvass of the November 3, 2026 General Election"
+      },
+      {
+        "url": "https://azsos.gov/node/876",
+        "label": "2026 Primary Election Canvass"
+      },
+      {
+        "url": "https://arizona.vote",
+        "label": "arizona.vote"
+      },
+      {
+        "url": "https://azsos.gov/node/58",
+        "label": "Voters\nRegistering and voting in upcoming statewide elections.\n\n\nRegistering to Vote"
+      },
+      {
+        "url": "https://azsos.gov/node/108",
+        "label": "Early Voting"
+      },
+      {
+        "url": "https://azsos.gov/node/110",
+        "label": "Election Day Voting"
+      },
+      {
+        "url": "https://my.arizona.vote/PortalList.aspx",
+        "label": "my.arizona.vote"
+      },
+      {
+        "url": "https://app.enhancedvoting.com/ebd/voter/arizona",
+        "label": "Uniformed/Military and Overseas Citizens Information"
+      },
+      {
+        "url": "https://azsos.gov/node/118",
+        "label": "Election Schedule"
+      },
+      {
+        "url": "https://apps.azsos.gov/apps/election/candidateportal",
+        "label": "Candidate Portal"
+      },
+      {
+        "url": "https://beacon.arizona.vote/Account/Login?ReturnUrl=%2F",
+        "label": "Beacon"
+      },
+      {
+        "url": "https://azsos.gov/node/64",
+        "label": "Results & Data\nStatewide voter registration statistics and election results.\n\n\n2026 Election Information"
+      },
+      {
+        "url": "https://azsos.gov/node/175",
+        "label": "Historical Election Information"
+      },
+      {
+        "url": "https://azsos.gov/node/129",
+        "label": "Voter Registration Statistics"
+      },
+      {
+        "url": "https://azsos.gov/node/84",
+        "label": "Election Laws & Publications"
+      },
+      {
+        "url": "https://azsos.gov/node/90",
+        "label": "County Elections Contact Information"
+      },
+      {
+        "url": "https://azsos.gov/node/165",
+        "label": "County Poll Worker Information"
+      },
+      {
+        "url": "https://www.azcleanelections.gov",
+        "label": "Citizens Clean Elections Commission"
+      },
+      {
+        "url": "https://www.eac.gov",
+        "label": "U.S. Election Assistance Commission"
+      },
+      {
+        "url": "https://azsos.gov/node/458",
+        "label": "Voter & Community Outreach"
+      },
+      {
+        "url": "https://my.arizona.vote/Early/ApplicationLogin.aspx",
+        "label": "Voter Information Portal"
+      },
+      {
+        "url": "https://azmvdnow.gov/vr",
+        "label": "AZMVDNow EZ Voter Registration"
+      },
+      {
+        "url": "https://azsos.gov/media/77",
+        "label": "Voter Registration Form"
+      },
+      {
+        "url": "https://my.arizona.vote",
+        "label": "my.arizona.vote"
+      },
+      {
+        "url": "https://elections.maricopa.gov/voting/where-to-vote.html",
+        "label": "locations.maricopa.vote"
+      },
+      {
+        "url": "https://www.recorder.pima.gov/VoterStats/PollingInfo",
+        "label": "here"
+      },
+      {
+        "url": "https://web1.pima.gov/applications/votingcenters",
+        "label": "pima.gov"
+      },
+      {
+        "url": "https://my.arizona.vote/WhereToVote.aspx?s=address",
+        "label": "Voter Information Portal"
+      },
+      {
+        "url": "https://azsos.gov/node/23?department=1005",
+        "label": "Email Elections"
+      }
+    ]
+  },
+  {
+    "state": "CA",
+    "url": "https://www.sos.ca.gov/elections",
+    "finalUrl": "https://www.sos.ca.gov/elections",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:14.094Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ca-chief.html",
+    "rawHash": "810c8521308525d5722396729b19f68a5e28e2650d05a53915f35f040ca1682b",
+    "saved": {
+      "bytes": 92229,
+      "sha256": "810c8521308525d5722396729b19f68a5e28e2650d05a53915f35f040ca1682b",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://www.sos.ca.gov/elections",
+        "label": "Top of Page"
+      },
+      {
+        "url": "https://www.sos.ca.gov/voters-choice-act",
+        "label": "Voter's Choice Act"
+      },
+      {
+        "url": "https://twitter.com/CASOSvote",
+        "label": "Twitter"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/upcoming-elections/general-election-november-3-2026",
+        "label": "General Election - November 3, 2026"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voter-registration/same-day-reg",
+        "label": "Same Day Voter Registration (Conditional Voter Registration)"
+      },
+      {
+        "url": "https://california.ballottrax.net/voter",
+        "label": ""
+      },
+      {
+        "url": "https://caearlyvoting.sos.ca.gov",
+        "label": ""
+      },
+      {
+        "url": "https://voterstatus.sos.ca.gov",
+        "label": "My Voter Status"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voter-registration",
+        "label": ""
+      },
+      {
+        "url": "http://registertovote.ca.gov",
+        "label": "Online pre-registration"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/who-can-vote-california",
+        "label": "Who Can Vote in California"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-rights-restored",
+        "label": "Voting Rights Restored"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voter-registration/conservatorship",
+        "label": "Voting Rights: Persons Subject to Conservatorship"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/pre-register-16-vote-18",
+        "label": "Pre-register at 16. Vote at 18."
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voter-registration/military-overseas-voters",
+        "label": "Military & Overseas Voters"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/political-parties",
+        "label": "Political Parties"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/publications-and-resources/guide-vr-drives",
+        "label": "Guide to Voter Registration Drives"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voter-registration/nvra",
+        "label": "National Voter Registration Act (NVRA)"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voter-registration/votecal-project",
+        "label": "VoteCal"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/frequently-asked-questions",
+        "label": "Frequently Asked Questions"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/contact/email-elections-division",
+        "label": "email"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voter-registration/vote-mail",
+        "label": "Vote By Mail"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/language-requirements",
+        "label": "Language Requirements for Election Materials"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/remote-accessible-vote-mail",
+        "label": "Remote Accessible Vote-by-Mail (RAVBM)"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voters-disabilities",
+        "label": "Voters with Disabilities"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california",
+        "label": ""
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/ovsta",
+        "label": "Voting Technology"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/where-and-how",
+        "label": "Where and How to Vote"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/studentmockelection",
+        "label": "California Student Mock Election"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/democracy-ambassador",
+        "label": "Democracy Ambassador"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/high-school-programs",
+        "label": "Be a Student Poll Worker"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/poll-worker-information",
+        "label": "Poll Worker Information"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/promote-vote-ca",
+        "label": "Promote the Vote California"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/castudentsvote",
+        "label": "Students Vote Project"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/svr",
+        "label": "Student Voter Registration"
+      },
+      {
+        "url": "https://www.sos.ca.gov/voters-choice-act/vca-outreach-program",
+        "label": "Voter's Choice Act Outreach Program"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/help-strengthen-our-democracy/video-resources",
+        "label": "Election Video Resources"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/publications-and-resources",
+        "label": "Publications and Resources"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/advisories-county-elections-officials/2026-advisories-county-elections-officials/october",
+        "label": "Advisories to County Elections Officials"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/statistics",
+        "label": "Elections Statistics"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/resources-and-historical-information",
+        "label": "Ballot Measures Historical Information"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/recalls",
+        "label": "Recalls"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/upcoming-elections",
+        "label": "Upcoming Elections"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/prior-elections",
+        "label": "Prior Elections"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/committees-and-boards",
+        "label": "Committees and Taskforces"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/contact/contact-information",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+        "label": "County Elections Officials Contact Information"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/map",
+        "label": "County Elections Map"
+      },
+      {
+        "url": "https://www.sos.ca.gov/es/elections/voting-resources/voting-california",
+        "label": "Información para nuevos votantes"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/chinese",
+        "label": "新選民資訊"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/hindi",
+        "label": "नए मतदाता के लिए जानकारी"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/japanese",
+        "label": "新しい投票者情報"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/khmer",
+        "label": "ព័ត៌មានសំរាប់អ្នកបោះឆ្នោតថ្មី"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/korean",
+        "label": "새 유권자를 위한 정보"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/tagalog",
+        "label": "Impormasyon Para sa Bagong Botante"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/thai",
+        "label": "ข้อมูลสำหรับผู้ลงคะแนนเสียงรายใหม่"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california/vietnamese",
+        "label": "Thông Tin cho Cử Tri Mới"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/language-requirements/translated-publications",
+        "label": "Translated Publications"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/how-qualify-initiative",
+        "label": "How to Qualify an Initiative"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/initiative-and-referendum-status",
+        "label": "Initiative and Referendum Qualification Status"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/qualified-ballot-measures",
+        "label": "Qualified Statewide Ballot Measures"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/ballot-measures/referendum",
+        "label": "Referendum"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voter-information-guides",
+        "label": "Voter Information Guides"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/prior-elections/statewide-election-results/primary-election-june-2-2026/2026-california-election-guide",
+        "label": "2026 California Election Guide"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/regulations/current-regulations/elections/ballot-designations",
+        "label": "Ballot Designations Regulations"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/candidate-statements",
+        "label": "Candidate Statements"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/prior-elections/statewide-election-results/primary-election-june-2-2026/qualifications",
+        "label": "Qualifications for Running for Office in 2026"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/randomized-alphabet",
+        "label": "Randomized Alphabet"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/election-cybersecurity",
+        "label": "Election Security"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/post-election-audits",
+        "label": "Post-Election Audits"
+      },
+      {
+        "url": "https://voterguide.sos.ca.gov",
+        "label": ""
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/polling-place",
+        "label": ""
+      },
+      {
+        "url": "https://elections.cdn.sos.ca.gov/pdfs/life-cycle-of-a-ballot.pdf",
+        "label": ""
+      },
+      {
+        "url": "https://x.com/casosvote",
+        "label": "Twitter"
+      }
+    ]
+  },
+  {
+    "state": "CO",
+    "url": "https://www.sos.state.co.us/pubs/elections/main.html",
+    "finalUrl": "https://www.sos.state.co.us/pubs/elections/main.html",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:14.169Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/co-chief.html",
+    "rawHash": "4995d81902ddb6e26b84d613fafcfce9964df7492774d90552af30022e33e6fe",
+    "saved": {
+      "bytes": 31904,
+      "sha256": "4995d81902ddb6e26b84d613fafcfce9964df7492774d90552af30022e33e6fe",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/main.html",
+        "label": "Menu"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/main.html",
+        "label": "Elections & voting"
+      },
+      {
+        "url": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+        "label": "Voters"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/CampaignFinance/home.html",
+        "label": "Campaign finance"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/Candidates/CandidateHome.html",
+        "label": "Candidates"
+      },
+      {
+        "url": "https://www.coloradosos.gov/ccorner",
+        "label": "Clerk's corner"
+      },
+      {
+        "url": "https://www.coloradosos.gov/voter/pages/secured/voterSearch.xhtml",
+        "label": "Election administrator login"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/Initiatives/InitiativesHome.html",
+        "label": "Initiatives"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/UOCAVA.html",
+        "label": "Military & overseas"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/NVRA/NVRAHome.html",
+        "label": "NVRA agency resources"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/Initiatives/titleBoard/index.html",
+        "label": "Title board"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/VoterRegDrive/VRDhome.html",
+        "label": "Voter registration drives"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/VotingSystems/VSHomePage1.html",
+        "label": "Voting systems"
+      },
+      {
+        "url": "https://www.vayavotarcolorado.gov",
+        "label": "Votante información en Español (Vaya Votar Colorado)"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/UOCAVA.html",
+        "label": "Military and overseas voting"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/electionInfo.html",
+        "label": "Election information"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/highSchoolRegistration.html",
+        "label": "High school registration"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/allInChallenge.html",
+        "label": "Colorado campus voting challenge"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/accessibleVoting.html",
+        "label": "Accessible voting"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/auditCenter.html",
+        "label": "Audit center"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/CampaignFinance/home.html",
+        "label": "Campaign finance"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/Candidates/CandidateHome.html",
+        "label": "Candidates"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/ElectionIntegrity/index.html",
+        "label": ""
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/FAQs/FAQsMain.html",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/Initiatives/InitiativesHome.html",
+        "label": "Initiatives & title board"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/lawsRulesResources.html",
+        "label": "Laws, rules, & resources"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/petitionEntities/home.html",
+        "label": "Petition entities, circulators & proponents"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/Candidates/PoliticalPartyInformation.html",
+        "label": "Political party information"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/recallPetitions.html",
+        "label": "Recall petitions"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/referendumPetitions.html",
+        "label": "Referendum petitions"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/resultsData.html",
+        "label": "Results & data"
+      }
+    ]
+  },
+  {
+    "state": "HI",
+    "url": "https://elections.hawaii.gov/",
+    "finalUrl": "https://elections.hawaii.gov/",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:14.001Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/hi-chief.html",
+    "rawHash": "bdea1df8ac44e68e1182ec352b14c56088196b873811db30484b790d146eb5eb",
+    "saved": {
+      "bytes": 169345,
+      "sha256": "bdea1df8ac44e68e1182ec352b14c56088196b873811db30484b790d146eb5eb",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://elections.hawaii.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://twitter.com/elections808",
+        "label": "X icon"
+      },
+      {
+        "url": "https://www.facebook.com/elections808",
+        "label": "Facebook icon"
+      },
+      {
+        "url": "https://www.instagram.com/elections808",
+        "label": "Instagram icon"
+      },
+      {
+        "url": "https://elections.hawaii.gov/chinese-main",
+        "label": "中文 Chinese"
+      },
+      {
+        "url": "https://elections.hawaii.gov/ilocano-main",
+        "label": "Ilocano"
+      },
+      {
+        "url": "https://elections.hawaii.gov/tagalog-main",
+        "label": "Tagalog"
+      },
+      {
+        "url": "https://elections.hawaii.gov/japanese-main",
+        "label": "日本語 Japanese"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us",
+        "label": "About Us"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/contact-us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/calendar",
+        "label": "Calendar"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions",
+        "label": "Boards and Commissions"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/boards-of-registration",
+        "label": "Boards of Registration"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/elections-commission",
+        "label": "Elections Commission"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/reapportionment",
+        "label": "Reapportionment"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/elections-accessibility-needs-advisory-committee",
+        "label": "Statewide Elections Accessibility Needs Advisory Committee"
+      },
+      {
+        "url": "https://elections.hawaii.gov/reports",
+        "label": "Reports"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote/registration",
+        "label": "Registration"
+      },
+      {
+        "url": "https://olvr.hawaii.gov",
+        "label": "Register to Vote or Check and Update Your Voter Registration\nRead More"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote/voter-registration-drives",
+        "label": "Voter Registration Drives"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting",
+        "label": "Voting"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/voting-in-hawaii",
+        "label": "Voting in Hawaii"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/absentee-voting",
+        "label": "Absentee Voting"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/contest-schedule",
+        "label": "Contest Schedule"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/county-election-divisions",
+        "label": "County Elections Divisions"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/election-security",
+        "label": "Election Security"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/political-parties",
+        "label": "Political Parties"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/provisional-voting",
+        "label": "Provisional Voting"
+      },
+      {
+        "url": "https://elections.hawaii.gov/2026-primary-election-provisional-ballot-dispositions",
+        "label": "2026 Primary Election Provisional Ballot Dispositions"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/replacement-ballot",
+        "label": "Replacement Ballot"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/rumors-vs-facts",
+        "label": "Rumors Vs. Facts"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/volunteer",
+        "label": "Volunteer"
+      },
+      {
+        "url": "https://olvr.hawaii.gov/altballotsearch3.aspx",
+        "label": "View the 2026 General Election Voter Guide\nRead More"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_English.pdf",
+        "label": "English"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Chinese.pdf",
+        "label": "Chinese"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Hawaiian.pdf",
+        "label": "Hawaiian"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Ilocano.pdf",
+        "label": "Ilocano"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Tagalog.pdf",
+        "label": "Tagalog"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit",
+        "label": "Find a Voter Service Center or Ballot Drop Box near you"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution",
+        "label": "2026 Proposed Amendments to the Hawaii State Constitution"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates",
+        "label": "Candidates"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates/candidate-filing",
+        "label": "Become a Candidate"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates/candidate-reports",
+        "label": "Candidate Reports"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates/nonpartisan-candidates-in-partisan-contests",
+        "label": "Nonpartisan Candidates in Partisan Contests"
+      },
+      {
+        "url": "https://elections.hawaii.gov/presidential",
+        "label": "Presidential"
+      },
+      {
+        "url": "https://elections.hawaii.gov/electoral-college",
+        "label": "Electoral College"
+      },
+      {
+        "url": "https://elections.hawaii.gov/presidential-elections",
+        "label": "Presidential Elections"
+      },
+      {
+        "url": "https://elections.hawaii.gov/election-results",
+        "label": "Results"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources",
+        "label": "Resources"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/archives-2",
+        "label": "Archives"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/campaign-signs",
+        "label": "Campaign Signs Regulations"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/cast-your-vote-in-comfort",
+        "label": "Cast Your Vote in Comfort\nRead More"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/districts-and-precincts",
+        "label": "Districts and Precincts"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/elected-officials",
+        "label": "Elected Officials & Terms of Office"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/election-laws",
+        "label": "Election Laws"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/election-objections",
+        "label": "Election Objections"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/hawaii-votes-program",
+        "label": "Hawaii Votes Program"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/maps",
+        "label": "Maps"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/registration-voter-turnout-statistics",
+        "label": "Registration and Turnout Statistics"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/absentee-voting-report",
+        "label": "Voting Report"
+      },
+      {
+        "url": "https://elections.hawaii.gov/news",
+        "label": "News"
+      },
+      {
+        "url": "https://elections.hawaii.gov/category/newsletters",
+        "label": "Newsletters"
+      },
+      {
+        "url": "https://elections.hawaii.gov/category/news-release",
+        "label": "click here"
+      },
+      {
+        "url": "https://elections.hawaii.gov/proclamations",
+        "label": "Proclamations"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote/register-online-to-vote",
+        "label": "Check or Update your Voter Registration"
+      },
+      {
+        "url": "https://hawaii.ballottrax.net/voter",
+        "label": "Sign up for Ballot Notifications"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/voters-requiring-assistance",
+        "label": "Learn about Voter Accessibility"
+      },
+      {
+        "url": "https://elections.hawaii.gov/main/notice-of-public-hearing-on-proposed-administrative-rule-2",
+        "label": "Notice of Public Hearing on Proposed Administrative Rule"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/Results-from-State-Senate-20-Drawing.pdf",
+        "label": "State Senate District 20 Drawing Result"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/Results-from-State-Rep-43-Drawing.pdf",
+        "label": "State Representative District 43 Drawing Result"
+      },
+      {
+        "url": "https://elections.hawaii.gov/state-senate-district-18-proclamation",
+        "label": "State Senate District 18 Proclamation"
+      },
+      {
+        "url": "https://elections.hawaii.gov/2026-proclamation",
+        "label": "2026 Proclamation"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/Chair-Vacancy-Announcement-Published-2026-03-16.pdf",
+        "label": "Notice of Anticipated Vacancy (Chair, Elections Commission)"
+      },
+      {
+        "url": "https://elections.hawaii.gov/news-release/candidate-filing-for-2026-elections-begins-february-2",
+        "label": "Candidate Filing for 2026 Elections Begins February 2"
+      },
+      {
+        "url": "https://elections.hawaii.gov/state-senate-19-proclamation-2",
+        "label": "State Senate District 19 Proclamation"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/OE-25-114.pdf",
+        "label": "Response to the Elections Commission Permitted Interaction Group's Report on Complaints Relating to the Chain of Custody of Election Ballots and Reported Irregularities in the Administration of the 2024 General Election"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/2025-08-22-Response-to-Kauai-PIG-Report.pdf",
+        "label": "Response to the Elections Commission Permitted Interaction Group’s Report on the Investigation into State and Kauai Compliance with HAR3-177 and Discrepancies in Ballot Counts and Recommendation to the State of Hawaii Elections Commission"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/Notice-of-Intention-to-Disqualify-Political-Parties-2025-03-04.pdf",
+        "label": "Notice of Intention For Party Disqualification"
+      },
+      {
+        "url": "https://www.surveymonkey.com/r/TJ566BL",
+        "label": "2024 Elections Accessibility Survey"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/EANAC-Recruitment-Notice-FINAL.pdf",
+        "label": "Statewide Elections Accessibility Needs Advisory Committee Vacancy Announcement"
+      },
+      {
+        "url": "https://calendar.google.com/calendar/embed?color=%233f51b5&ctz=Pacific%2FHonolulu&height=500&mode=AGENDA&showCalendars=0&showPrint=0&showTabs=0&src=c3ZjLmdvb2dsZS1jYWxlbmRhci5lbGVjdGlvbnNAZXRzLmhhd2FpaS5nb3Y&title=Elections+Calendar&wkst=1",
+        "label": ""
+      },
+      {
+        "url": "https://facebook.com/230508456979904",
+        "label": "State of Hawaii, Office of Elections\n\n\n\n\n3 months ago"
+      },
+      {
+        "url": "https://elections.hawaii.gov/cdn-cgi/l/email-protection",
+        "label": "[email protected]"
+      },
+      {
+        "url": "https://elections.hawaii.gov/browser-requirements",
+        "label": "Browser Requirements"
+      },
+      {
+        "url": "https://elections.hawaii.gov/adobe-acrobat-reader-dc",
+        "label": "Adobe Acrobat Reader DC"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Felections.hawaii.gov%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-json/wp/v2/pages/6",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "state": "ID",
+    "url": "https://sos.idaho.gov/elections-division/",
+    "finalUrl": "https://voteidaho.gov/",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:14.294Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/id-chief.html",
+    "rawHash": "5501c01f53ee4649f3854c2f0cbd4423bb68beef0db799c29d652b99e7cddf8d",
+    "saved": {
+      "bytes": 163493,
+      "sha256": "5501c01f53ee4649f3854c2f0cbd4423bb68beef0db799c29d652b99e7cddf8d",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://voteidaho.gov",
+        "label": "Mailchimp"
+      },
+      {
+        "url": "https://voteidaho.gov/voter-registration",
+        "label": "Registering To Vote"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/electionlink/electionlink/VoterSearch.aspx",
+        "label": "Check Your Voter Record"
+      },
+      {
+        "url": "https://voteidaho.gov/casting-your-ballot",
+        "label": "Absentee Voting"
+      },
+      {
+        "url": "https://voteidaho.gov/guide-to-vote-in-person",
+        "label": "Guide to Voting in Person"
+      },
+      {
+        "url": "https://voteidaho.gov/on-the-ballots",
+        "label": "Upcoming Ballots"
+      },
+      {
+        "url": "https://voteidaho.gov/making-voting-secure",
+        "label": "Making Voting Secure"
+      },
+      {
+        "url": "https://voteidaho.gov/accessible-voting",
+        "label": "Accessible Voting"
+      },
+      {
+        "url": "https://voteidaho.gov/election-results",
+        "label": "Election Results"
+      },
+      {
+        "url": "https://voteidaho.gov/election-information",
+        "label": "Election Information"
+      },
+      {
+        "url": "https://voteidaho.gov/data-and-dashboards",
+        "label": "Data & Dashboards"
+      },
+      {
+        "url": "https://voteidaho.gov/initiatives-amendments",
+        "label": "Initiatives & Amendments"
+      },
+      {
+        "url": "https://voteidaho.gov/election-results/election-audits",
+        "label": "Election Audits"
+      },
+      {
+        "url": "https://voteidaho.gov/12-principles-of-idaho-elections",
+        "label": "12 Principles of Idaho Elections"
+      },
+      {
+        "url": "https://voteidaho.gov/candidate-filing",
+        "label": "Candidate Filing"
+      },
+      {
+        "url": "https://sunshine.voteidaho.gov",
+        "label": "Campaign Finance Portal"
+      },
+      {
+        "url": "https://voteidaho.gov/campaign-finance-portal",
+        "label": "Campaign Finance 101"
+      },
+      {
+        "url": "https://voteidaho.gov/how-to-run-for-office",
+        "label": "How to Run for Office"
+      },
+      {
+        "url": "https://voteidaho.gov/idaho-elected-officials",
+        "label": "Idaho Elected Officials"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/TEDElectionLink/ElectionVault/login",
+        "label": "Candidate VAULT"
+      },
+      {
+        "url": "https://voteidaho.gov/county-clerk",
+        "label": "Find Your County Clerk"
+      },
+      {
+        "url": "https://voteidaho.gov/become-an-election-worker",
+        "label": "Become an Election Worker"
+      },
+      {
+        "url": "https://voteidaho.gov/training-resources",
+        "label": "Training Resources"
+      },
+      {
+        "url": "https://press.voteidaho.gov",
+        "label": "Press Releases"
+      },
+      {
+        "url": "https://voteidaho.gov/media",
+        "label": "Media"
+      },
+      {
+        "url": "https://voteidaho.gov/frequently-asked-questions",
+        "label": "Frequently Asked Questions"
+      },
+      {
+        "url": "https://voteidaho.gov/calendar",
+        "label": "Calendar"
+      },
+      {
+        "url": "https://voteidaho.gov/registrate-para-votar",
+        "label": "Regístrate para Votar"
+      },
+      {
+        "url": "https://voteidaho.gov/informacion-electoral",
+        "label": "Información Electoral"
+      },
+      {
+        "url": "https://voteidaho.gov/emite-tu-voto",
+        "label": "Emite tu Voto"
+      },
+      {
+        "url": "https://voteidaho.gov/votacion-accesible",
+        "label": "Votación Accesible"
+      },
+      {
+        "url": "https://voteidaho.gov/encuentra-a-tu-secretario-del-condado",
+        "label": "Encuentra a tu secretario/a del Condado"
+      },
+      {
+        "url": "https://voteidaho.gov/preguntas-frecuentes-faq",
+        "label": "Preguntas Frecuentes (FAQ)"
+      },
+      {
+        "url": "https://voteidaho.gov/idaho-general-election",
+        "label": "2026 General Election Information"
+      },
+      {
+        "url": "https://press.voteidaho.gov/press-release/secretary-of-state-phil-mcgrane-and-idahos-county-clerks-affirm-commitment-to-secure-and-accessible-elections",
+        "label": "View the Press Release"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/id/elections/may2026",
+        "label": "Statewide Results Page"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/ada-county-id/elections/may2026",
+        "label": "Ada"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/adams-county-id/elections/may2026",
+        "label": "Adams"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/bannock-county-id/elections/may2026",
+        "label": "Bannock"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/bear-lake-county-id/elections/may2026",
+        "label": "Bear Lake"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/benewah-county-id/elections/may2026",
+        "label": "Benewah"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/bingham-county-id/elections/may2026",
+        "label": "Bingham"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/blaine-county-id/elections/may2026",
+        "label": "Blaine"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/boise-county-id/elections/may2026",
+        "label": "Boise"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/bonner-county-id/elections/may2026",
+        "label": "Bonner"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/bonneville-county-id/elections/may2026",
+        "label": "Bonneville"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/boundary-county-id/elections/may2026",
+        "label": "Boundary"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/butte-county-id/elections/may2026",
+        "label": "Butte"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/camas-county-id/elections/may2026",
+        "label": "Camas"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/canyon-county-id/elections/may2026",
+        "label": "Canyon"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/caribou-county-id/elections/may2026",
+        "label": "Caribou"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/cassia-county-id/elections/may2026",
+        "label": "Cassia"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/clark-county-id/elections/may2026",
+        "label": "Clark"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/clearwater-county-id/elections/may2026",
+        "label": "Clearwater"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/custer-county-id/elections/may2026",
+        "label": "Custer"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/elmore-county-id/elections/may2026",
+        "label": "Elmore"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/franklin-county-id/elections/may2026",
+        "label": "Franklin"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/fremont-county-id/elections/may2026",
+        "label": "Fremont"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/gem-county-id/elections/may2026",
+        "label": "Gem"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/gooding-county-id/elections/may2026",
+        "label": "Gooding"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/idaho-county-id/elections/may2026",
+        "label": "Idaho"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/jefferson-county-id/elections/may2026",
+        "label": "Jefferson"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/jerome-county-id/elections/may2026",
+        "label": "Jerome"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/kootenai-county-id/elections/may2026",
+        "label": "Kootenai"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/latah-county-id/elections/may2026",
+        "label": "Latah"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/lemhi-county-id/elections/may2026",
+        "label": "Lemhi"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/lewis-county-id/elections/may2026",
+        "label": "Lewis"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/lincoln-county-id/elections/may2026",
+        "label": "Lincoln"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/madison-county-id/elections/may2026",
+        "label": "Madison"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/minidoka-county-id/elections/may2026",
+        "label": "Minidoka"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/nez-perce-county-id/elections/may2026",
+        "label": "Nez Perce"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/oneida-county-id/elections/may2026",
+        "label": "Oneida"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/owyhee-county-id/elections/may2026",
+        "label": "Owyhee"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/payette-county-id/elections/may2026",
+        "label": "Payette"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/power-county-id/elections/may2026",
+        "label": "Power"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/shoshone-county-id/elections/may2026",
+        "label": "Shoshone"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/teton-county-id/elections/may2026",
+        "label": "Teton"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/twin-falls-county-id/elections/may2026",
+        "label": "Twin Falls"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/valley-county-id/elections/may2026",
+        "label": "Valley"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/washington-county-id/elections/may2026",
+        "label": "Washington"
+      },
+      {
+        "url": "https://archive.voteidaho.gov/results/2026/primary/audit_report_2026_primary.pdf",
+        "label": "Election Audit Report"
+      },
+      {
+        "url": "https://archive.voteidaho.gov/results/2026/primary/canvass_report_2026_primary.pdf",
+        "label": "Canvass Report"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/id/elections/may2026/voters",
+        "label": "Launch Voter Statistics"
+      },
+      {
+        "url": "https://results.voteidaho.gov/results/public/id/elections/may2026/reports",
+        "label": "Data & Reports"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/wizard/ovr",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter-search/oabr-voter-search?returnUrl=VoterServices%2Fwizard%2Frequest-my-vote-by-mail",
+        "label": "Request an Absentee Ballot"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter/where-do-I-vote",
+        "label": "Where Do I Vote?"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter-search/ovr-voter-search?returnUrl=VoterServices%2Fvoter%2Fvoter-profile",
+        "label": "Check Voter Record"
+      },
+      {
+        "url": "https://voteidaho.gov/election-audits",
+        "label": "Election Audits"
+      },
+      {
+        "url": "https://voteidaho.gov/press-releases",
+        "label": "Press Releases"
+      },
+      {
+        "url": "https://voteidaho.gov/cdn-cgi/l/email-protection",
+        "label": "[email protected]"
+      },
+      {
+        "url": "https://voteidaho.gov/calendar?ical=1",
+        "label": "VoteIdaho.Gov &raquo; iCal Feed"
+      },
+      {
+        "url": "https://voteidaho.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvoteidaho.gov%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://voteidaho.gov/wp-json/tribe/events/v1",
+        "label": ""
+      }
+    ]
+  },
+  {
+    "state": "MT",
+    "url": "https://sosmt.gov/elections/",
+    "finalUrl": "https://sosmt.gov/elections/",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:14.052Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/mt-chief.html",
+    "rawHash": "fb39402fc97326594ae7e9920afaa03af2de2b58096650d7ef02359ca32702af",
+    "saved": {
+      "bytes": 296610,
+      "sha256": "fb39402fc97326594ae7e9920afaa03af2de2b58096650d7ef02359ca32702af",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://sosmt.gov/elections",
+        "label": ""
+      },
+      {
+        "url": "https://voterportal.mt.gov/WhereToVote.aspx",
+        "label": "Confirm Voter Registration Information"
+      },
+      {
+        "url": "https://sosmt.gov/es/elections",
+        "label": ""
+      },
+      {
+        "url": "https://sosmt.gov/civics-youthvote",
+        "label": "Civics & Youth Vote"
+      },
+      {
+        "url": "https://votemt.gov",
+        "label": "Visit VoteMT.gov"
+      },
+      {
+        "url": "https://sosmt.gov/elections/forms",
+        "label": "Election Forms"
+      },
+      {
+        "url": "https://sosmt.gov/elections/military-overseas",
+        "label": "Military and Overseas Voter"
+      },
+      {
+        "url": "https://sosmt.gov/elections/disabilities",
+        "label": "Voters With a Disability"
+      },
+      {
+        "url": "https://sosmt.gov/elections/official-forms",
+        "label": "Election Official Forms"
+      },
+      {
+        "url": "https://sosmt.gov/elections/resources",
+        "label": "Election Official Resources"
+      },
+      {
+        "url": "https://sosmt.gov/elections/results",
+        "label": "Visit Election Results Website"
+      },
+      {
+        "url": "https://sosmt.gov/elections/voter-file",
+        "label": "Statewide Voter File"
+      },
+      {
+        "url": "https://sosmt.gov/elections/faq",
+        "label": "Frequently Asked Questions"
+      },
+      {
+        "url": "https://sosmt.gov/elections/filing",
+        "label": "File for Office"
+      },
+      {
+        "url": "https://sosmt.gov/elections/parties",
+        "label": "Political Parties"
+      },
+      {
+        "url": "https://sosmt.gov/elections/write-ins",
+        "label": "Write-In Candidate Information"
+      },
+      {
+        "url": "https://sosmt.gov/elections/term_limits",
+        "label": "Term Limits"
+      },
+      {
+        "url": "https://sosmt.gov/elections/ballot_issues/proposed-2026-ballot-issues",
+        "label": "Current Ballot Measures"
+      },
+      {
+        "url": "https://sosmt.gov/elections/ballot_issues",
+        "label": "Ballot Measures"
+      },
+      {
+        "url": "https://sosmt.gov/elections/calendars",
+        "label": "Election Calendars"
+      },
+      {
+        "url": "https://votemt.gov/poll-worker-application",
+        "label": "Poll Worker Application Form"
+      },
+      {
+        "url": "https://sosmt.gov/elections/fairelections",
+        "label": "Fair Elections Center"
+      },
+      {
+        "url": "https://sosmt.gov/elections/systems",
+        "label": "County Voting Systems"
+      },
+      {
+        "url": "https://sosmt.gov/elections/election-administrators-contact-list",
+        "label": "Update Voter Registration Info With Your County"
+      },
+      {
+        "url": "https://sosmt.gov/wp-admin/admin-ajax.php?juwpfisadmin=false",
+        "label": "County Election Administrator"
+      },
+      {
+        "url": "https://voterportal.mt.gov",
+        "label": "My Voter Information"
+      },
+      {
+        "url": "http://voterportal.mt.gov",
+        "label": "Check Your Voter Registration Status"
+      },
+      {
+        "url": "https://sosmt.gov/docs/23/elections/73011/death-of-a-loved-one-brochure",
+        "label": "Cancel Deceased Voter Registration"
+      },
+      {
+        "url": "https://sosmt.gov/elections/regvotercounty",
+        "label": "Voter Registration Totals by County"
+      },
+      {
+        "url": "https://sosmt.gov/elections/absentee-ballot-count",
+        "label": "Absentee Counts by County"
+      },
+      {
+        "url": "http://mtelectionresults.gov",
+        "label": "Election Night Reporting"
+      },
+      {
+        "url": "https://sosmt.gov/wp-admin/admin-ajax.php?action=wpfd&juwpfisadmin=false&preview=1&task=file.download&token=66a4e51fe430bf116dd82874544ca861&wpfd_category_id=46&wpfd_file_id=59393",
+        "label": "Voter Registration Application"
+      },
+      {
+        "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+        "label": "Polling Location Satellite Offices (MS Excel Download)"
+      }
+    ]
+  },
+  {
+    "state": "NV",
+    "url": "https://www.nvsos.gov/sos/elections",
+    "finalUrl": "https://www.nvsos.gov/sos/elections",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:13.982Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/nv-chief.html",
+    "rawHash": "d439ff92244670fd9ab397899debfb36de87a2f46362c9e7e62e19e9b7aa9fbc",
+    "saved": {
+      "bytes": 1044,
+      "sha256": "d439ff92244670fd9ab397899debfb36de87a2f46362c9e7e62e19e9b7aa9fbc",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": []
+  },
+  {
+    "state": "NM",
+    "url": "https://www.sos.state.nm.us/",
+    "finalUrl": "https://www.sos.nm.gov/",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:17.027Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/nm-chief.html",
+    "rawHash": "9c7f84a866f23947926deddc0f1ccb6650d3a4907510aae3cb26de3a1c2e20bb",
+    "saved": {
+      "bytes": 145632,
+      "sha256": "9c7f84a866f23947926deddc0f1ccb6650d3a4907510aae3cb26de3a1c2e20bb",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections",
+        "label": "Go"
+      },
+      {
+        "url": "https://electionresults.sos.state.nm.us/resultsSW.aspx?eid=2796&map=CTY&type=FED",
+        "label": "Election Results Homepage"
+      },
+      {
+        "url": "https://electionresults.sos.state.nm.us/resultsSW.aspx?eid=2791&map=CTY&type=FED",
+        "label": "Congressional District  l"
+      },
+      {
+        "url": "https://nmresults.azurewebsites.net/resultsList.aspx?map=CTY&type=cty",
+        "label": "County Office"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/voter-information-portal",
+        "label": "NMVOTE.ORG"
+      },
+      {
+        "url": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+        "label": "Find My Registration & Election Information"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/voting-faqs",
+        "label": "Voter FAQs"
+      },
+      {
+        "url": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?cty=99&eid=2796",
+        "label": "2021 Regular Local Election Candidate List"
+      },
+      {
+        "url": "https://www.sos.nm.gov/wp-content/uploads/2026/10/IT-1154-1A136B72A63-23022F0271C82C7018-13102026PR_Sec.-Toulouse-Oliver-and-AG-Torrez-Issue-Voter-Information-Advisory-for-the-2026-General-Election.pdf",
+        "label": "Read the advisory"
+      },
+      {
+        "url": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+        "label": "Click HERE for 2026 Voter Guide in English."
+      },
+      {
+        "url": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-Spanish.pdf",
+        "label": "Haga clic AQUÍ para la Guía del Votante 2026 en español."
+      },
+      {
+        "url": "https://electionresults.sos.nm.gov",
+        "label": "2026 Primary Election Results"
+      },
+      {
+        "url": "https://portal1.sos.nm.gov/OVR/(S(ghs3we1jnqvok3jogn0puqkm))/WebPages/InstructionsStep1.aspx",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://voterportal.servis.sos.state.nm.us/VRASearch.aspx?AspxAutoDetectCookieSupport=1",
+        "label": "Find a Voter Registration Agent"
+      },
+      {
+        "url": "https://voterportal.servis.sos.state.nm.us/WhereToVoteAddress.aspx",
+        "label": "Search Voting Location Data"
+      },
+      {
+        "url": "https://www.nmvote.org",
+        "label": "NMVote"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/native-american-election-information-program/native-american-voting-task-force",
+        "label": "HERE"
+      }
+    ]
+  },
+  {
+    "state": "OR",
+    "url": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
+    "finalUrl": "https://sos.oregon.gov/elections/pages/default.aspx",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:15.208Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/or-chief.html",
+    "rawHash": "322e550f5fcd4952ca9c36ec65a7bc7aff1cb668cf1e766ba95ca24e352eeb1e",
+    "saved": {
+      "bytes": 109996,
+      "sha256": "322e550f5fcd4952ca9c36ec65a7bc7aff1cb668cf1e766ba95ca24e352eeb1e",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://sos.oregon.gov/elections/pages/default.aspx",
+        "label": "\" + langvalue + \""
+      },
+      {
+        "url": "https://sos.oregon.gov/elections",
+        "label": "Elections"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/current-election.aspx",
+        "label": "Upcoming Elections"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/registration.aspx",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/myvote.aspx?lang=en",
+        "label": "Update Registration"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/track-your-ballot.aspx",
+        "label": "Track Your Ballot"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Voters-Pamphlet/Pages/default.aspx",
+        "label": "Voters' Pamphlets"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/county-officials.aspx",
+        "label": "County Elections Officials"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/historical-data.aspx",
+        "label": "Election Results & History"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/security.aspx",
+        "label": "Election Integrity"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/special.aspx",
+        "label": "Special Voting Circumstances"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/faq.aspx",
+        "label": "Frequently Asked Questions"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/campaign-finance/Pages/default.aspx",
+        "label": "Campaign Finance"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/get-involved/Pages/run-for-office.aspx",
+        "label": "Run for Public Office"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/initiatives-referendums-referrals.aspx",
+        "label": "Initiatives, Referendums, Referrals & Recall"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/get-involved/Pages/file-voters-pamphlet.aspx",
+        "label": "Voters' Pamphlet Statements & Arguments"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/manuals-tutorials.aspx",
+        "label": "Manuals & Quick Guides"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/forms.aspx",
+        "label": "Election Forms"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/laws-rules.aspx",
+        "label": "Laws, Rules & Directives"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/Candidate-Filings-Local-Measures.aspx",
+        "label": "Search Local Measures"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/get-involved/Pages/default.aspx",
+        "label": "Get Involved Home"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/tac/Pages/default.aspx",
+        "label": "Translation Advisory Council"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/get-involved/Pages/form-political-party.aspx",
+        "label": "Form a Political Party"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/rulemaking.aspx",
+        "label": "Elections Division Rulemaking"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/election-dates.aspx",
+        "label": "Important Election Dates"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/calendar-all-election-dates.aspx",
+        "label": "See All Election Deadlines"
+      },
+      {
+        "url": "https://www.facebook.com/oregonelections",
+        "label": "Find us on Facebook"
+      },
+      {
+        "url": "https://bsky.app/profile/oregonelections.bsky.social",
+        "label": "Subscribe to us on Bluesky"
+      },
+      {
+        "url": "https://twitter.com/OregonElections",
+        "label": "Follow us on Twitter"
+      },
+      {
+        "url": "https://www.youtube.com/@OregonElections",
+        "label": "Subscribe to us on YouTube"
+      }
+    ]
+  },
+  {
+    "state": "UT",
+    "url": "https://vote.utah.gov/",
+    "finalUrl": "https://vote.utah.gov/",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:13.990Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ut-chief.html",
+    "rawHash": "982f5553ec23618da72506620b6d5936698cdae74837077ba7810ac3e8756ffb",
+    "saved": {
+      "bytes": 21365,
+      "sha256": "982f5553ec23618da72506620b6d5936698cdae74837077ba7810ac3e8756ffb",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://vote.utah.gov",
+        "label": "Back to Top"
+      },
+      {
+        "url": "https://vote.utah.gov/safe",
+        "label": ""
+      },
+      {
+        "url": "https://votesearch.utah.gov/voter-search/search/search-by-address/how-and-where-can-i-vote",
+        "label": "How can I vote?"
+      },
+      {
+        "url": "https://vote.utah.gov/track-my-ballot",
+        "label": "Track my mail or provisional ballot"
+      },
+      {
+        "url": "https://votesearch.utah.gov/voter-search/search/search-by-address/candidates-and-issues",
+        "label": "Learn about candidates & issues"
+      },
+      {
+        "url": "https://vote.utah.gov/interactive-data-hub",
+        "label": "Interactive Data Hub"
+      },
+      {
+        "url": "https://vote.utah.gov/voter-registration-portal",
+        "label": "Voter Registration Portal"
+      },
+      {
+        "url": "https://vote.utah.gov/track-petitions",
+        "label": "Petitions"
+      },
+      {
+        "url": "https://vote.utah.gov/current-election-information",
+        "label": "2026 Election Information"
+      },
+      {
+        "url": "https://vote.utah.gov/resources-for-candidates-political-groups-parties",
+        "label": "Resources for Candidates, Political Groups & Parties"
+      },
+      {
+        "url": "https://vote.utah.gov/election-results-data-historical-information",
+        "label": "Election Results, Historical Information & Data"
+      },
+      {
+        "url": "https://vote.utah.gov/additional-resources-for-voters",
+        "label": "Additional Resources for Voters"
+      },
+      {
+        "url": "https://vote.utah.gov/securing-your-mail-ballot",
+        "label": "Securing Your Mail Ballot"
+      },
+      {
+        "url": "https://vote.utah.gov/learn-about-judicial-retention-elections",
+        "label": "Learn About Judges on the Ballot"
+      },
+      {
+        "url": "https://vote.utah.gov/county-clerk-contact-information",
+        "label": "county clerk"
+      },
+      {
+        "url": "https://electionresults.utah.gov/results/public/Utah/elections/Primary06232026",
+        "label": "2026 Primary Election Results"
+      },
+      {
+        "url": "https://vote.utah.gov/feed",
+        "label": "Utah Voter Information &raquo; Feed"
+      },
+      {
+        "url": "https://vote.utah.gov/comments/feed",
+        "label": "Utah Voter Information &raquo; Comments Feed"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvote.utah.gov%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-json/wp/v2/pages/4622",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "state": "WA",
+    "url": "https://www.sos.wa.gov/elections/",
+    "finalUrl": "https://www.sos.wa.gov/elections",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:14.563Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/wa-chief.html",
+    "rawHash": "9ad3949de88348bf74e87f820550503018cd4f7e9c683db10c40e6f81983895a",
+    "saved": {
+      "bytes": 246084,
+      "sha256": "9ad3949de88348bf74e87f820550503018cd4f7e9c683db10c40e6f81983895a",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://www.sos.wa.gov/elections",
+        "label": ""
+      },
+      {
+        "url": "https://voter.votewa.gov/WhereToVote.aspx",
+        "label": "Online Voter Registration"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/federal-impacts-washington-state-elections",
+        "label": "Federal Impacts on Washington State Elections"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington",
+        "label": "Register to Vote in Washington"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/voter-eligibility",
+        "label": "Voter Eligibility"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/how-receive-absentee-ballot",
+        "label": "How to Receive a Ballot"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/future-voter-program",
+        "label": "Future Voter Program"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/military-and-overseas-voters",
+        "label": "Military and Overseas Voters"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/voters-disabilities",
+        "label": "Voters with Disabilities"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/voting-assisted-living-facilities",
+        "label": "Voting in Assisted Living Facilities"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/felony-convictions-and-voting-rights",
+        "label": "Felony Convictions and Voting Rights"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/voters-away-college",
+        "label": "Voters Away at College"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/new-washington-resident",
+        "label": "New Washington Resident"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/seasonal-resident-snowbird",
+        "label": "Seasonal Resident - Snowbird"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/residency-requirements",
+        "label": "Residency Requirements"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/print-voter-registration-form",
+        "label": "Print a Voter Registration Form"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/requesting-voter-registration-by-forms-mail",
+        "label": "Requesting Voter Registration Forms By Mail"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/avr",
+        "label": "Automatic Voter Registration (AVR)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/county-elections-offices",
+        "label": "County Elections Offices"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations",
+        "label": "Drop Box and Voting Center Locations"
+      },
+      {
+        "url": "https://youtu.be/1K52-_IZzS8",
+        "label": "3 Ways to Register to Vote"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/forms-voters/agency-based-voter-registration-forms",
+        "label": "Agency-based Voter Registration Forms"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-07/VoterRegistrationCancellationForm_English.pdf",
+        "label": "Voter Registration Cancellation Form"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
+        "label": "Current Election Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/frequently-asked-questions-voting-mail",
+        "label": "Frequently Asked Questions on Voting By Mail"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/rumor-has-it",
+        "label": "Rumor Has It"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/top-two-primary-faqs-voters",
+        "label": "Top 2 Primary: FAQs for Voters"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+        "label": "Current Federal & State Elected Officials"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/information/descriptions-elected-offices",
+        "label": "Descriptions of Elected Offices"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/natural-disasters-and-voting",
+        "label": "Wildfires and voting"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/electoral-college",
+        "label": "Electoral College"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/presidential-primary-faq",
+        "label": "Presidential Primary FAQ"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2026-02/StateCandidatesGuide2026.pdf",
+        "label": "State Candidates Guide to the Ballot and General Election Voters' Pamphlet"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/filing-resources/file-office",
+        "label": "File for Office"
+      },
+      {
+        "url": "https://voter.votewa.gov/CandidateList.aspx?e=899",
+        "label": "Candidates Who Have Filed"
+      },
+      {
+        "url": "https://voter.votewa.gov/ScheduledRaces.aspx?c=99&y=2026",
+        "label": "State Offices Open for Election (filing fees)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/filing-resources/running-president-united-states",
+        "label": "Running for President of the United States"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/filing-resources/withdrawal-candidacy",
+        "label": "Withdrawal of Candidacy"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/securing-your-vote",
+        "label": "Securing Your Vote"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/2024-court-designated-legislativecongressional-maps",
+        "label": "2024 Court Designated Legislative/Congressional Maps"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/reports-data-and-statistics/washington-state-voter-registration-database-vrdb",
+        "label": "Voter Registration Database"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voter-registration-drive-tools/voter-outreach-and-education-materials",
+        "label": "Voter Outreach and Education Materials"
+      },
+      {
+        "url": "https://www.belfercenter.org/publication/state-and-local-election-cybersecurity-playbook",
+        "label": "Cybersecurity Campaign Playbook (Belfer Center)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voters/outreach-and-voter-registration-handouts",
+        "label": "Outreach and Voter Registration Handouts"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/frequently-asked-questions/candidate-filing-frequently-asked-questions",
+        "label": "Candidate Filing FAQ"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/frequently-asked-questions/write-candidates",
+        "label": "Write-in Candidacy"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/frequently-asked-questions/top-two-primary-faqs-candidates",
+        "label": "Top Two Primary: FAQs for Candidates"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/frequently-asked-questions/recount-faq",
+        "label": "Recount FAQ"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/frequently-asked-questions-about-elections",
+        "label": "Frequently Asked Questions about Elections"
+      },
+      {
+        "url": "http://www.fec.gov",
+        "label": "Federal Elections Commission"
+      },
+      {
+        "url": "https://voter.votewa.gov/candidatefiling/candidatelogin.aspx",
+        "label": "File Online"
+      },
+      {
+        "url": "https://voter.votewa.gov/Initiatives.aspx?t=l&y=2026",
+        "label": "Current and Past Initiatives & Referenda Filings (Present to 1996)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/submitted-signature-statistics",
+        "label": "Submitted Initiative Signature Statistics"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/petition-observer-resources",
+        "label": "Petition Observer Resources"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-instructions",
+        "label": "How to Sponsor an Initiative"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/filing-initiative",
+        "label": "File Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/filing-initiative/frequently-asked-questions-about-circulating-initiative-and-referendum-petitions",
+        "label": "FAQ - Circulating Initiative and Referendum Petitions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/mock/about-student-mock-election.aspx",
+        "label": "Student Mock Election"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-07/TeachingElectionsWA.pdf",
+        "label": "Teaching Elections in Washington State"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/k-12-college/teaching-elections-curriculum-guide",
+        "label": "Request copy of Teaching Elections in WA State"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/k-12-college/temperance-and-good-citizenship-day",
+        "label": "Temperance and Good Citizenship Day"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/k-12-college/washington-campus-voting-challenge",
+        "label": "Washington Campus Voting Challenge"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-09/GuideToRegisteringVoters.pdf",
+        "label": "Guide to Registering Voters"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=QfU7fH9gAg8",
+        "label": "Voter Registration Partners Training Video"
+      },
+      {
+        "url": "https://www.votewa.gov",
+        "label": "Online Voter Registration"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/civics/request-voter-registration-event-materials",
+        "label": "Request a Voter Registration Starter Kit"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=1K52-_IZzS8",
+        "label": "3 Ways to Register to Vote [Video]"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=x7tur6GzTVw",
+        "label": "Voting in Washington State and Why Your Signature is Important [ASL Video]"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/ballot-return-statistics",
+        "label": "Current Election Ballot Return Statistics"
+      },
+      {
+        "url": "https://www.sos.wa.gov/form/washington-ballot-status",
+        "label": "Current Election Ballot Status Reports"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics",
+        "label": "Reports, Data, and Statistics"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets",
+        "label": "Election Results and Voters' Pamphlets"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/2024-court-designated-legislative-maps",
+        "label": "2024 Court Designated Legislative Maps"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voters/language-access-voters",
+        "label": "Section 203 Language Access for Voters Map"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/history-laws-and-litigation/election-laws",
+        "label": "State & Federal Election Laws and Checklists"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/history-laws-and-litigation/history-washington-state-primary",
+        "label": "History of the Washington State Primary"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/history-laws-and-litigation/constitutional-amendment-ballot-measures",
+        "label": "Constitutional Amendment Ballot Measures"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/history-laws-and-litigation/income-tax-ballot-measures",
+        "label": "Income Tax Ballot Measures"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-technology/understanding-voter-registration-data",
+        "label": "Understanding Voter Registration Data"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-technology/voting-systems-county",
+        "label": "Voting Systems by County"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-technology/voting-system-testing-and-certification",
+        "label": "Voting System Testing and Certification"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-technology/post-election-audits",
+        "label": "Post-Election Audits"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/public-notices/public-hearings-and-meetings",
+        "label": "Public Hearings and Meetings"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/public-notices/elections-rulemaking",
+        "label": "Recent Rulemaking"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/certification-training/election-administrator-certification",
+        "label": "Election Administrator Certification"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/certification-training/certification-and-training",
+        "label": "About Certification and Training"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/certification-training/training-materials-and-videos",
+        "label": "Training Materials and Videos"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/certification-training/elections-101",
+        "label": "Elections 101"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-11/ElectionAdminCertExam.pdf",
+        "label": "Certification Exam"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-voters",
+        "label": "Forms for Voters"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-templates/candidate-filing-forms",
+        "label": "Forms for Candidates"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-templates/voter-registration-challenges",
+        "label": "Voter Registration Challenges"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-templates/certification-la-tests-and-recounts",
+        "label": "Certification, L&A Tests, and Recounts"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-templates/election-cost-allocation-and-reimbursement",
+        "label": "Election Cost Allocation and Reimbursement"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2026-09/ElectionAdminAuthorityBooklet.pdf",
+        "label": "Election Administration: A Guide to State and Federal Authority"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/ada-doj_ballot_box_access.pdf",
+        "label": "ADA Ballot Drop Box Accessibility"
+      },
+      {
+        "url": "https://archive.ada.gov/votingck.htm",
+        "label": "ADA Checklist for Voting Centers"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/election-laws/clearinghouse-notices-elections-advisories",
+        "label": "Clearinghouse Notices & Elections Advisories"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/canvassing%20board%20handbook%2002.2022.pdf",
+        "label": "Introduction to County Canvassing Boards"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/RecordsManagement/Managing-County-Auditor-Records.aspx",
+        "label": "County"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-05/2018_voter-intent_web.pdf",
+        "label": "Statewide Standards on What is a Vote"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/contact-info/contact-us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://voter.votewa.gov/portal2023/login.aspx",
+        "label": "Voter Portal"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/elections-calendar/dates-and-deadlines",
+        "label": "Election Dates & Deadlines"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/calendar/month",
+        "label": "Elections calendar."
+      },
+      {
+        "url": "https://www.facebook.com/WashingtonStateElections?fref=ts&ref=ts",
+        "label": "Elections on Facebook."
+      },
+      {
+        "url": "https://www.instagram.com/wastateelections?fref=ts&ref=ts",
+        "label": "Elections on Instagram."
+      },
+      {
+        "url": "https://youtube.com/playlist?list=PL9oXZcOwq8vk-zp_8zd6rGfN3xj_Mbj5a&si=CPQ0W83RfRqzRQlk",
+        "label": "Elections on YouTube."
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-general-election-voters-guide",
+        "label": "2026 General Election Voters' Guide"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/proposed-ballot-measure-information",
+        "label": "Proposed Ballot Measure Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/MarkTheBallot",
+        "label": "Mark the Ballot"
+      },
+      {
+        "url": "https://www.facebook.com/WashingtonStateElections",
+        "label": "Elections on Facebook."
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/apostilles-program/contact-information-and-location-apostilles",
+        "label": "Contact Information and Location - Apostilles"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters",
+        "label": "Voters"
+      },
+      {
+        "url": "https://youtu.be/NkuhRpP-TY4",
+        "label": "3 Ways to Register to Vote"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/electoral-college/electoral-college-electors",
+        "label": "Electoral College Electors"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/2021-voters-pamphlet-audio",
+        "label": "2021 Voters' Pamphlet Audio"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates",
+        "label": "Candidates"
+      },
+      {
+        "url": "https://voter.votewa.gov/CandidateList.aspx",
+        "label": "Candidates Who Have Filed"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/washington-state-voter-registration-database-vrdb",
+        "label": "Washington State Voter Registration Database"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda",
+        "label": "Initiatives & Referenda"
+      },
+      {
+        "url": "https://apps.sos.wa.gov/elections/initiatives/referenda.aspx",
+        "label": "Current Initiatives & Referenda"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/past-initiatives-referendum",
+        "label": "Past Initiatives"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/past-initiatives/2024-initiatives-legislature-measure-assignments",
+        "label": "2024 Initiatives to the Legislature Measure Assignments"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/2025-initiatives-people-measure-assignments",
+        "label": "Initiatives to the People Measure Assignments"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/2025-initiatives-legislature-measure-assignments",
+        "label": "Initiatives to the Legislature Measure Assignments"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach",
+        "label": "Education & Outreach"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/k-12-college/student-mock-election/student-mock-election-dashboard",
+        "label": "Student Mock Election Dashboard"
+      },
+      {
+        "url": "https://youtu.be/Vve1clkk044",
+        "label": "3 Ways to Register to Vote Video"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-09/GuideToRegisteringVoters.pdf?uid=65416287086dc",
+        "label": "Guide to Registering Voters"
+      },
+      {
+        "url": "https://votewa.gov",
+        "label": "Online Voter Registration"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/requesting-voter-registration-forms-mail",
+        "label": "Requesting Voter Registration Forms By Mail"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voter-registration-drive-tools/request-voter-registration-starter-kit",
+        "label": "Request a Voter Registration Starter Kit"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voter-registration-drive-tools/elections-toolkit",
+        "label": "Elections Toolkit"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/same-day-registration",
+        "label": "Same Day Registration"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research",
+        "label": "Data & Research"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/ballot-status-reports",
+        "label": "Current Election Ballot Status Reports"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/voter-demographics",
+        "label": "Voter Demographics"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/monthly-voter-registration-transactions",
+        "label": "Monthly Voter Registration Transactions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/ballot-drop-box-usage-year",
+        "label": "Ballot Drop Box Usage by Year"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/reports-data-and-statistics/voter-participation-statistics",
+        "label": "Voter Participation Statistics"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/voter-turnout-election",
+        "label": "Voter Turnout by Election"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/general-election-turnout",
+        "label": "General Election Turnout"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/redistricting-census-information",
+        "label": "Redistricting & Census Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/precinct-shapefiles",
+        "label": "Precinct Shapefiles"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-april-special-election",
+        "label": "2026 April Special Election"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-february-special-election",
+        "label": "2026 February Special Election"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-general-election-voters-guide/2026-general-election-voters-pamphlet-audio-guide",
+        "label": "2026 General Election Voters' Pamphlet Audio Guide"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-general-election-voters-guide/2026-voters-pamphlet-pdfs",
+        "label": "2026 Voters' Pamphlet PDFs"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-primary-election",
+        "label": "2026"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/washington-state-election-results-archive",
+        "label": "Washington State Election Results Archive"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators",
+        "label": "Administrators"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/election-resources/presidential-primary-resources-training-materials",
+        "label": "Presidential Primary Resources & Training Materials"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/election-laws/accessibility-resources",
+        "label": "Accessibility Resources"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/contact-info",
+        "label": "Contact Info"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/calendar",
+        "label": "Elections Calendar"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-county-records",
+        "label": "Managing County Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/records-retention-schedules/previous-versions-county-assessors-and-treasurers-schedule",
+        "label": "Previous Versions - County Assessors and Treasurers Schedule"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/county-directories",
+        "label": "County Directories"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/voter-registration-acp",
+        "label": "Voter Registration - ACP"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/civic-engagement-program-cep/ballot-drop-boxes-or-near-tribal-reservations",
+        "label": "Ballot Drop Boxes On or Near Tribal Reservations"
+      }
+    ]
+  },
+  {
+    "state": "WY",
+    "url": "https://sos.wyo.gov/Elections/Default.aspx",
+    "finalUrl": "https://sos.wyo.gov/Elections/Default.aspx",
+    "status": 200,
+    "capturedAt": "2026-10-21T04:24:14.097Z",
+    "path": "tests/fixtures/voting-sources/vs-04-west/wy-chief.html",
+    "rawHash": "d0d9649e5ddbb19a826141561444d31392dc3129283dfb84da2a3ce1f171e741",
+    "saved": {
+      "bytes": 53164,
+      "sha256": "d0d9649e5ddbb19a826141561444d31392dc3129283dfb84da2a3ce1f171e741",
+      "replaced": 0,
+      "classes": [],
+      "redactions": []
+    },
+    "links": [
+      {
+        "url": "https://sos.wyo.gov/Elections/Default.aspx",
+        "label": "Elections Home"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/2026ElectionInformation.aspx",
+        "label": "2026 Election"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/ElectionAdministration.aspx",
+        "label": "Administration"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/CandidateInformation.aspx",
+        "label": "Candidate Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/ElectionHistory.aspx",
+        "label": "Election History"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/ElectionInformation.aspx",
+        "label": "Election Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/ElectionResults.aspx",
+        "label": "Election Results"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/EthicsDisclosure.aspx",
+        "label": "Ethics Disclosure"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Default.aspx?root=Elections",
+        "label": "Forms"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/InitiativeReferendumInfo.aspx",
+        "label": "Current Initiatives"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Voting.aspx",
+        "label": "Voting"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Key_Election_Dates.pdf",
+        "label": "2026 Key Election Dates"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Election_Calendar.pdf",
+        "label": "2025 - 2026 Election Calendar"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.pdf",
+        "label": "General Election Candidates Roster"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+        "label": "General Election Candidates Excel Data File"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+        "label": "2026 Statewide Ballot Propositions"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Campaign_Guide.pdf",
+        "label": "2026 Campaign Guide"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Districts_and_Precincts_by_County.pdf",
+        "label": "By County"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Districts_and_Precincts_by_Legislative_District.pdf",
+        "label": "By Legislative District"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_Withdrawn_General_Election_Candidates.pdf",
+        "label": "General Election Withdrawn Candidates Roster"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Winners.pdf",
+        "label": "General Election Winners"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Winners.csv",
+        "label": "General Election Winners Excel Data File"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2024/Signature_requirement_2023-24.pdf",
+        "label": "For 2023-2024"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/Signature_requirement_2025-26.pdf",
+        "label": "For 2025-2026"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Judges_Standing_for_Retention.pdf",
+        "label": "Judges Standing for Retention"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Legislation/2025.aspx",
+        "label": "New Election Integrity Laws"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Offices_Up_for_Election.pdf",
+        "label": "Offices Up for Election"
+      },
+      {
+        "url": "https://myelectionday.sos.wyo.gov/WYVOTES/Pages/VOSearch.aspx",
+        "label": "Where do I vote?"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_Primary_Election_Candidates.pdf",
+        "label": "Primary Election Candidates Roster (PDF file)"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_Primary_Election_Candidates.csv",
+        "label": "Primary Election Candidates (Excel data file)"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026PrimaryResults.aspx",
+        "label": "Primary Election - Official Results"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_Withdrawn_Primary_Election_Candidates.pdf",
+        "label": "Withdrawn Primary Election Candidates Roster"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Voter_Guide.pdf",
+        "label": "2026 Voter Guide"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/IndependentCandidates.aspx",
+        "label": "Independent Candidate Information"
+      },
+      {
+        "url": "https://letsvotewyo.org",
+        "label": "Wyoming Votes - Voter Information Website"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/VoterID",
+        "label": "Voter ID Law"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/State/RegisteringToVote.aspx",
+        "label": "Registering to Vote"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/State/AbsenteeVoting.aspx",
+        "label": "Absentee Voting"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/MOVE_Overview.aspx",
+        "label": "Military/Overseas Citizens Voting"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Elections/General/Complaint.pdf",
+        "label": "HAVA Complaint"
+      },
+      {
+        "url": "https://corrections.wyo.gov/about-us/restoration-of-rights",
+        "label": "Restoration of Voting Rights"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Default.aspx?root=Elections&startwith=PUBLICOFFICE",
+        "label": "Filing for Office"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Elections/General/2026_Federal_Independent_Candidate_Petition.pdf",
+        "label": "Federal Petition"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Elections/General/2026_Independent_Candidate_Petition_State_Office.pdf",
+        "label": "Statewide Petition"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Elections/General/2026_Legislature_or_County_Independent_Candidate_Petition.pdf",
+        "label": "Legislative and County Petitions"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/LegislativeDistrictsHome.aspx",
+        "label": "Legislative Districts"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Elections/General/VoterProductOrderForm.pdf",
+        "label": "Wyoming Voter Registry List Request Form"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Elections/General/DailyAbsenteeFileRequestForm.pdf",
+        "label": "Daily Absentee File Request Form"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/FirstAmendmentExpenditures.aspx",
+        "label": "First Amendment Independent Expenditures"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Statistics.aspx",
+        "label": "Voter Registration/Voting Statistics"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/PoliticalPartyInfo.aspx",
+        "label": "Political Parties in Wyoming"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Publications/ElectionCode.pdf",
+        "label": "Wyoming Election Code (booklet format)"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Publications/ElectionCode_8.5x11.pdf",
+        "label": "Wyoming Election Code"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/HAVA.aspx",
+        "label": "Help America Vote Act (HAVA)"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Elections/General/ElectionComplaintForm.pdf",
+        "label": "Election Complaint Form"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/WYCountyClerks.pdf",
+        "label": "County Clerks"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/OtherElecSites.aspx",
+        "label": "Election Related Websites"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Election50.aspx",
+        "label": "50 States' Elections Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/Election_Division_Fees.pdf",
+        "label": "Election Division Fees"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Ethics.aspx",
+        "label": "Overview"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/INSERT%20LINK%20HERE",
+        "label": ""
+      }
+    ]
+  }
+]

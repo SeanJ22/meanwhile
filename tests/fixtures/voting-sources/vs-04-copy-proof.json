@@ -1,0 +1,5398 @@
+{
+  "checkedAt": "2026-10-21T04:52:52.285161+00:00",
+  "proof": "Saved official source responses parsed and grouped by document and jurisdiction, published through the registered MANUAL_CONTRACT to actual isolated production copies, then read back through the normal public data model. These are copy results, not production publication. Exact binary files and sanitizer-normalized text are distinguished in each source manifest. Reader totals may retain prior verified records; acquisition observations are separate. Unique IDs are software facility identities, not a claim that every physical building has been geographically deduplicated.",
+  "productionWrites": 0,
+  "copyBranches": {
+    "originalReader": "br-purple-fire-axpd56ml",
+    "correctedReader": "br-frosty-truth-axq7rdql",
+    "control": "br-gentle-fog-aebfnn9f",
+    "correctedReaderParent": "br-delicate-lab-ax02xuo5",
+    "correctedReaderExpiresAt": "2026-10-22T13:00:00Z"
+  },
+  "states": [
+    {
+      "state": "AL",
+      "checkedAt": "2026-10-21T04:43:38.884Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-0060965e138f6ee80a5073a480ee989b",
+      "readerSiteRows": 78,
+      "uniqueSiteIds": 78,
+      "sourceSiteObservations": 78,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "al-mobile-public-polling-centers-2026",
+          "url": "https://probate.mobilecountyal.gov/uploads/PRECINCTS.pdf",
+          "observations": 78,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 106648,
+      "meteredResponseBytes": {
+        "reader": 4741507,
+        "control-plane": 0
+      },
+      "peakRssBytes": 375418880,
+      "configHash": "23385dd47d3b159afee28ebe8c0bf5a65013124e84a9ed6ad5cec6ea62023ab0"
+    },
+    {
+      "state": "AR",
+      "checkedAt": "2026-10-21T04:44:58.321Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-153f0d9b26d25208f577882e41f64914",
+      "readerSiteRows": 3,
+      "uniqueSiteIds": 3,
+      "sourceSiteObservations": 3,
+      "sourceCount": 3,
+      "sourceResults": [
+        {
+          "id": "ar-sebastian-general-election-notice-2026",
+          "url": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+          "observations": 0,
+          "blankCounts": {
+            "missing-sites": 1
+          }
+        },
+        {
+          "id": "ar-benton-county-gis-early",
+          "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "ar-benton-county-gis-election-day",
+          "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+          "observations": 2,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 5,
+      "publisherBytes": 3123,
+      "meteredResponseBytes": {
+        "reader": 6849648,
+        "control-plane": 0
+      },
+      "peakRssBytes": 486313984,
+      "configHash": "0376491962860e2b090399c318272dcf2d7489c0120b511052fd182b78fbf6f4"
+    },
+    {
+      "state": "AS",
+      "checkedAt": "2026-10-21T04:34:09.295Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-bc270a368567b18aa8ec37f42c28bd80",
+      "readerSiteRows": 0,
+      "uniqueSiteIds": 0,
+      "sourceSiteObservations": 0,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "fec-as-chief",
+          "url": "https://www.aselectionoffice.gov/",
+          "observations": 0,
+          "blankCounts": {}
+        },
+        {
+          "id": "as-local-absentee-2026",
+          "url": "https://www.aselectionoffice.gov/absentee-voting",
+          "observations": 0,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 147140,
+      "meteredResponseBytes": {
+        "reader": 349316,
+        "control-plane": 0
+      },
+      "peakRssBytes": 349220864
+    },
+    {
+      "state": "AZ",
+      "checkedAt": "2026-10-21T04:38:09.520Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-83b6f67ea05dc7a8ea00b713237e0e31",
+      "readerSiteRows": 191,
+      "uniqueSiteIds": 191,
+      "sourceSiteObservations": 23,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "legacy:cochise:vote-center-pdf",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "observations": 18,
+          "blankCounts": {
+            "missing-sites": 1
+          }
+        },
+        {
+          "id": "cochise:ballot-box-table",
+          "url": "https://www.cochise.az.gov/509/Voter-Information",
+          "observations": 5,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 5,
+      "publisherBytes": 415030,
+      "meteredResponseBytes": {
+        "reader": 4691818,
+        "control-plane": 0
+      },
+      "peakRssBytes": 389869568
+    },
+    {
+      "state": "CA",
+      "checkedAt": "2026-10-21T04:38:37.837Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-d574045178022d87648d2f64e20a8ed6",
+      "readerSiteRows": 100,
+      "uniqueSiteIds": 100,
+      "sourceSiteObservations": 100,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "ca-alameda-vote-centers-2026",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "observations": 100,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 124350,
+      "meteredResponseBytes": {
+        "reader": 19408745,
+        "control-plane": 0
+      },
+      "peakRssBytes": 473735168
+    },
+    {
+      "state": "CO",
+      "checkedAt": "2026-10-21T04:43:50.210Z",
+      "copyBranches": {
+        "reader": "br-frosty-truth-axq7rdql",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-1e19eeda3f68c75b5103403f3c0e647d",
+      "readerSiteRows": 56,
+      "uniqueSiteIds": 56,
+      "sourceSiteObservations": 73,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "co-arapahoe-drop-boxes-2026",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "observations": 39,
+          "blankCounts": {}
+        },
+        {
+          "id": "co-arapahoe-vote-centers-2026",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+          "observations": 34,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 357431,
+      "meteredResponseBytes": {
+        "reader": 9172371,
+        "control-plane": 0
+      },
+      "peakRssBytes": 384565248,
+      "configHash": "1a43851463a29632086f10c5d953220c238c4d43bcd274437a34dd0e181d305b"
+    },
+    {
+      "state": "CT",
+      "checkedAt": "2026-10-21T04:40:33.036Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-d02b2bb12d9925d7c91da5ee6570d2e4",
+      "readerSiteRows": 174,
+      "uniqueSiteIds": 174,
+      "sourceSiteObservations": 174,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-ct-state-early",
+          "url": "https://portal.ct.gov/-/media/sots/electionservices/early-voting/2026/early-voting-locations--november-3--2026.pdf?rev=d5562e4275dd4d1f8e9ec93e8e62d0d7&hash=FB351F2ECA0C7B1DBC22210AEB4D2092",
+          "observations": 174,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 3,
+      "publisherBytes": 1279667,
+      "meteredResponseBytes": {
+        "reader": 3461977,
+        "control-plane": 0
+      },
+      "peakRssBytes": 397737984
+    },
+    {
+      "state": "DC",
+      "checkedAt": "2026-10-21T04:50:47.109Z",
+      "copyBranches": {
+        "reader": "br-frosty-truth-axq7rdql",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-62322942566f99848507c14fc016855b",
+      "readerSiteRows": 129,
+      "uniqueSiteIds": 129,
+      "sourceSiteObservations": 129,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "vs04-dc-centers",
+          "url": "https://www.dcboe.org/voters/find-out-where-to-vote/election-day-vote-centers",
+          "observations": 75,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-dc-dropboxes",
+          "url": "https://www.dcboe.org/voters/find-out-where-to-vote/mail-ballot-drop-box-locations",
+          "observations": 54,
+          "blankCounts": {
+            "missing-sites": 1
+          }
+        }
+      ],
+      "savedCaptureCount": 5,
+      "publisherBytes": 226061,
+      "meteredResponseBytes": {
+        "reader": 514248,
+        "control-plane": 0
+      },
+      "peakRssBytes": 314474496,
+      "configHash": "ca77d792ef7bf95989fff8d3e429619eb11225f912234dd11d845809c040b4e2"
+    },
+    {
+      "state": "DE",
+      "checkedAt": "2026-10-21T04:40:31.733Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-e0a04cec04edcf507b4ddfaa6289f13b",
+      "readerSiteRows": 297,
+      "uniqueSiteIds": 297,
+      "sourceSiteObservations": 297,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "vs04-de-de-current-election-sites",
+          "url": "https://gis.elections.delaware.gov/apps/5bc1fa9352464944be601441655e36a0/explore",
+          "observations": 278,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-de-de-current-early-sites",
+          "url": "https://gis.elections.delaware.gov/apps/5bc1fa9352464944be601441655e36a0/explore",
+          "observations": 19,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 3,
+      "publisherBytes": 195372,
+      "meteredResponseBytes": {
+        "reader": 1823626,
+        "control-plane": 0
+      },
+      "peakRssBytes": 332435456
+    },
+    {
+      "state": "FL",
+      "checkedAt": "2026-10-21T04:38:36.508Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-22d3e949b02219333fc56b7659cff0f1",
+      "readerSiteRows": 463,
+      "uniqueSiteIds": 463,
+      "sourceSiteObservations": 924,
+      "sourceCount": 133,
+      "sourceResults": [
+        {
+          "id": "fl-union-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-union-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-volusia-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 9,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-volusia-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 9,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-wakulla-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-wakulla-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-walton-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 4,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-walton-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 4,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-washington-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-washington-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-alachua-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 8,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-alachua-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 8,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-baker-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-baker-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-bay-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 8,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-bay-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 8,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-bradford-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-bradford-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-brevard-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-brevard-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-broward-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 30,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-broward-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 30,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-calhoun-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-calhoun-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-charlotte-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 4,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-charlotte-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 4,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-citrus-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-citrus-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-clay-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 7,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-clay-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 7,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-collier-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 11,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-collier-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 11,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-columbia-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-columbia-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-miami_dade-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 28,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-miami_dade-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 28,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-desoto-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-desoto-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-dixie-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-dixie-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-duval-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 24,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-duval-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 24,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-escambia-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-escambia-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-flagler-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-flagler-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-franklin-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-franklin-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-gadsden-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-gadsden-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-gilchrist-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-gilchrist-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-glades-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-glades-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-gulf-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-gulf-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-hamilton-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-hamilton-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-hardee-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-hardee-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-hendry-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-hendry-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-hernando-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-hernando-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-highlands-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 3,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-highlands-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 3,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-hillsborough-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 27,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-hillsborough-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 27,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-holmes-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-indian_river-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 4,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-indian_river-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 4,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-jackson-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 3,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-jackson-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-jefferson-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-jefferson-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-lafayette-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-lafayette-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-lake-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 12,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-lake-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 12,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-lee-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 12,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-lee-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 12,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-leon-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-leon-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-levy-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-levy-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-liberty-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-liberty-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-madison-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 4,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-madison-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 4,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-manatee-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 8,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-manatee-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 8,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-monroe-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-monroe-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-marion-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 9,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-marion-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 9,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-martin-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 6,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-martin-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 6,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-nassau-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-nassau-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-okaloosa-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-okaloosa-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 5,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-okeechobee-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-okeechobee-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-orange-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 27,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-orange-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 27,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-osceola-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 11,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-osceola-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 11,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-palm_beach-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 28,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-palm_beach-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 28,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-pasco-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 12,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-pasco-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 12,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-pinellas-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 7,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-pinellas-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 7,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-polk-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-polk-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-putnam-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 3,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-putnam-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 3,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-santa_rosa-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 6,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-santa_rosa-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 6,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-sarasota-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 11,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-sarasota-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 11,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-seminole-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 7,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-seminole-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 7,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-st_johns-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-st_johns-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 10,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-st_lucie-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 8,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-st_lucie-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 8,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-sumter-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 7,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-sumter-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 7,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-suwannee-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 3,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-suwannee-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 3,
+          "blankCounts": {
+            "earlier-election": 2
+          }
+        },
+        {
+          "id": "fl-taylor-early-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "fl-taylor-ballot-intake-general-2026",
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "observations": 1,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 5162225,
+      "meteredResponseBytes": {
+        "reader": 7324365,
+        "control-plane": 0
+      },
+      "peakRssBytes": 1012461568
+    },
+    {
+      "state": "GA",
+      "checkedAt": "2026-10-21T04:43:39.121Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-57ee0a1981864c05043e4f3674a0ca85",
+      "readerSiteRows": 121,
+      "uniqueSiteIds": 121,
+      "sourceSiteObservations": 121,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "ga-cobb-public-precincts-2026",
+          "url": "https://assets.cobbcounty.gov/files/2026-09/2026%20Precinct%20Codes%20and%20Locations_Facility%20name__REV%2009-15-2026_148.pdf",
+          "observations": 121,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 4,
+      "publisherBytes": 170390,
+      "meteredResponseBytes": {
+        "reader": 6082056,
+        "control-plane": 0
+      },
+      "peakRssBytes": 389918720,
+      "configHash": "73eec7bc141abafa21dee7076c60eb9d25ee1dfa4c25f916663b5d4de64f3c29"
+    },
+    {
+      "state": "HI",
+      "checkedAt": "2026-10-21T04:31:12.087Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-5e1b794029473b3c4556b5a6cc9148af",
+      "readerSiteRows": 60,
+      "uniqueSiteIds": 60,
+      "sourceSiteObservations": 71,
+      "sourceCount": 16,
+      "sourceResults": [
+        {
+          "id": "hi-hawaii-centers-1",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-maui-centers-2",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-maui-centers-3",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 3,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-maui-centers-4",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-kauai-centers-5",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-honolulu-centers-6",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-honolulu-centers-7",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-hawaii-dropboxes-8",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 10,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-hawaii-dropboxes-9",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-maui-dropboxes-10",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 17,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-maui-dropboxes-11",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-kauai-dropboxes-12",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 10,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-kauai-dropboxes-13",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-kauai-dropboxes-14",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-honolulu-dropboxes-15",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 15,
+          "blankCounts": {}
+        },
+        {
+          "id": "hi-honolulu-dropboxes-16",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "observations": 2,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 177864,
+      "meteredResponseBytes": {
+        "reader": 534524,
+        "control-plane": 0
+      },
+      "peakRssBytes": 360394752
+    },
+    {
+      "state": "IA",
+      "checkedAt": "2026-10-21T04:33:42.036Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-66587c1cb7a66fe8c79ce7e788d76972",
+      "readerSiteRows": 64,
+      "uniqueSiteIds": 64,
+      "sourceSiteObservations": 64,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "ia-scott-precinct-polling",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "observations": 64,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 65570,
+      "meteredResponseBytes": {
+        "reader": 9393256,
+        "control-plane": 0
+      },
+      "peakRssBytes": 377786368
+    },
+    {
+      "state": "ID",
+      "checkedAt": "2026-10-21T04:33:41.930Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-f820c7e54696c38589b43c454ca44b07",
+      "readerSiteRows": 2,
+      "uniqueSiteIds": 2,
+      "sourceSiteObservations": 2,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "id-canyon-early-voting-2026",
+          "url": "https://elections.canyoncounty.id.gov/upcoming/",
+          "observations": 2,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 31400,
+      "meteredResponseBytes": {
+        "reader": 3578442,
+        "control-plane": 0
+      },
+      "peakRssBytes": 332476416
+    },
+    {
+      "state": "IL",
+      "checkedAt": "2026-10-21T04:40:33.241Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-8e0ad32490731c5be2b0ce8401da0a20",
+      "readerSiteRows": 24,
+      "uniqueSiteIds": 24,
+      "sourceSiteObservations": 24,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-il-dupage-early",
+          "url": "https://www.dupagecounty.gov/elected_officials/election_and_voter_information/voting_information/early_voting_locations.php",
+          "observations": 24,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 1,
+      "publisherBytes": 70002,
+      "meteredResponseBytes": {
+        "reader": 23030931,
+        "control-plane": 0
+      },
+      "peakRssBytes": 540381184
+    },
+    {
+      "state": "IN",
+      "checkedAt": "2026-10-21T04:34:08.671Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-a652a3fbabf10dfb7b9da5d475ca7a31",
+      "readerSiteRows": 182,
+      "uniqueSiteIds": 182,
+      "sourceSiteObservations": 182,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-in-marion-centers",
+          "url": "https://vote.indy.gov/vote-centers/",
+          "observations": 182,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 829674,
+      "meteredResponseBytes": {
+        "reader": 10390371,
+        "control-plane": 0
+      },
+      "peakRssBytes": 397381632
+    },
+    {
+      "state": "KS",
+      "checkedAt": "2026-10-21T04:44:58.280Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-9bc117566a56c679f01a4fd84b3af16b",
+      "readerSiteRows": 23,
+      "uniqueSiteIds": 23,
+      "sourceSiteObservations": 23,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "ks-johnson-general-advance-2026",
+          "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+          "observations": 23,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 3,
+      "publisherBytes": 39590,
+      "meteredResponseBytes": {
+        "reader": 12305802,
+        "control-plane": 0
+      },
+      "peakRssBytes": 404901888,
+      "configHash": "8bc2684e777a2b3374241f433f9a4d215d65d862c5dee6b92763120ebc8daf2e"
+    },
+    {
+      "state": "KY",
+      "checkedAt": "2026-10-21T04:31:13.412Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-8152c616d164ba2503e7e028dbd60b63",
+      "readerSiteRows": 1690,
+      "uniqueSiteIds": 1690,
+      "sourceSiteObservations": 1899,
+      "sourceCount": 4,
+      "sourceResults": [
+        {
+          "id": "ky-statewide-election-day-general-2026",
+          "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+          "observations": 1409,
+          "blankCounts": {}
+        },
+        {
+          "id": "ky-statewide-excused-in-person-general-2026",
+          "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+          "observations": 120,
+          "blankCounts": {}
+        },
+        {
+          "id": "ky-statewide-no-excuse-in-person-general-2026",
+          "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+          "observations": 202,
+          "blankCounts": {}
+        },
+        {
+          "id": "ky-statewide-dropbox-general-2026",
+          "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+          "observations": 168,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 140628,
+      "meteredResponseBytes": {
+        "reader": 9124907,
+        "control-plane": 0
+      },
+      "peakRssBytes": 404635648
+    },
+    {
+      "state": "LA",
+      "checkedAt": "2026-10-21T04:47:51.568Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-ffb95847721d48a5121113841db8462d",
+      "readerSiteRows": 112,
+      "uniqueSiteIds": 112,
+      "sourceSiteObservations": 112,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "la-statewide-early-voting",
+          "url": "https://voterportal.sos.la.gov/earlyvoting",
+          "observations": 112,
+          "blankCounts": {
+            "missing-sites": 119
+          }
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 46834,
+      "meteredResponseBytes": {
+        "reader": 3727127,
+        "control-plane": 0
+      },
+      "peakRssBytes": 345337856,
+      "configHash": "2b01f3aa93db33ee9fd9133c2c5d0425f114297eb23556ec119ee697d6b1667c"
+    },
+    {
+      "state": "MA",
+      "checkedAt": "2026-10-21T04:43:37.169Z",
+      "copyBranches": {
+        "reader": "br-frosty-truth-axq7rdql",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-80cdd5226db00ba458b535624bc0113c",
+      "readerSiteRows": 164,
+      "uniqueSiteIds": 164,
+      "sourceSiteObservations": 164,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-ma-boston-polls",
+          "url": "https://www.boston.gov/departments/elections/city-boston-polling-locations",
+          "observations": 164,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 147475,
+      "meteredResponseBytes": {
+        "reader": 5344215,
+        "control-plane": 0
+      },
+      "peakRssBytes": 371343360,
+      "configHash": "0b1234470d690e68d471a7b1be411ad82ed8f0b2a92e056ff2cf97a7f3e9ca2e"
+    },
+    {
+      "state": "MD",
+      "checkedAt": "2026-10-21T04:34:09.921Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-36c0a84939b9b22fdd84b4faabdd4527",
+      "readerSiteRows": 102,
+      "uniqueSiteIds": 102,
+      "sourceSiteObservations": 102,
+      "sourceCount": 24,
+      "sourceResults": [
+        {
+          "id": "vs04-md-24001-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24003-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 10,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24510-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 9,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24005-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 11,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24009-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 3,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24011-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24013-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 3,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24015-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24017-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 3,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24019-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24021-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 5,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24023-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24025-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 4,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24027-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 5,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24029-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24031-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 14,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24033-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 13,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24035-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24037-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 3,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24039-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24041-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24043-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 4,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24045-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 2,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-md-24047-early",
+          "url": "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf",
+          "observations": 1,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 175719,
+      "meteredResponseBytes": {
+        "reader": 2248352,
+        "control-plane": 0
+      },
+      "peakRssBytes": 461410304
+    },
+    {
+      "state": "ME",
+      "checkedAt": "2026-10-21T04:40:57.821Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-c1c095c3b271fd830274d7f493469929",
+      "readerSiteRows": 1,
+      "uniqueSiteIds": 1,
+      "sourceSiteObservations": 1,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-me-bangor-election",
+          "url": "https://www.bangormaine.gov/m/newsflash/home/detail/414",
+          "observations": 1,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 90483,
+      "meteredResponseBytes": {
+        "reader": 4418530,
+        "control-plane": 0
+      },
+      "peakRssBytes": 324718592
+    },
+    {
+      "state": "MI",
+      "checkedAt": "2026-10-21T04:40:32.680Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-b658fe21acdc05a248f8238e4ecf9aa3",
+      "readerSiteRows": 4,
+      "uniqueSiteIds": 4,
+      "sourceSiteObservations": 4,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-mi-grand-rapids-early",
+          "url": "https://www.grandrapidsmi.gov/departments/clerks-office/elections/early-voting/",
+          "observations": 4,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 60357,
+      "meteredResponseBytes": {
+        "reader": 12792442,
+        "control-plane": 0
+      },
+      "peakRssBytes": 402415616
+    },
+    {
+      "state": "MN",
+      "checkedAt": "2026-10-21T04:33:42.067Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-676d80d8e5fbbcf6d06959a8e6a13923",
+      "readerSiteRows": 25,
+      "uniqueSiteIds": 25,
+      "sourceSiteObservations": 25,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "mn-renville-polling",
+          "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+          "observations": 25,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 3,
+      "publisherBytes": 12185,
+      "meteredResponseBytes": {
+        "reader": 15026949,
+        "control-plane": 0
+      },
+      "peakRssBytes": 452939776
+    },
+    {
+      "state": "MO",
+      "checkedAt": "2026-10-21T04:39:20.758Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-a1bf3855574853a0cb26f3589fe7d66e",
+      "readerSiteRows": 57,
+      "uniqueSiteIds": 57,
+      "sourceSiteObservations": 57,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "mo-st-louis-current-polling-centers",
+          "url": "https://services6.arcgis.com/HZXbCkpCSqbGd0vK/arcgis/rest/services/Polling_Centers_WFL1/FeatureServer/1",
+          "observations": 57,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 5,
+      "publisherBytes": 128870,
+      "meteredResponseBytes": {
+        "reader": 13889447,
+        "control-plane": 0
+      },
+      "peakRssBytes": 404598784
+    },
+    {
+      "state": "MP",
+      "checkedAt": "2026-10-21T04:50:56.329Z",
+      "copyBranches": {
+        "reader": "br-frosty-truth-axq7rdql",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-b35e3cfc22344990c952efec587e61f0",
+      "readerSiteRows": 15,
+      "uniqueSiteIds": 15,
+      "sourceSiteObservations": 15,
+      "sourceCount": 7,
+      "sourceResults": [
+        {
+          "id": "fec-mp-chief",
+          "url": "https://www.votecnmi.gov.mp/",
+          "observations": 0,
+          "blankCounts": {}
+        },
+        {
+          "id": "mp-election-day-saipan-2026",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "observations": 10,
+          "blankCounts": {}
+        },
+        {
+          "id": "mp-election-day-tinian-2026",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "mp-election-day-rota-2026",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "mp-early-voting-saipan-2026",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "mp-early-voting-tinian-2026",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "mp-early-voting-rota-2026",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "observations": 1,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 3,
+      "publisherBytes": 159772,
+      "meteredResponseBytes": {
+        "reader": 295489,
+        "control-plane": 0
+      },
+      "peakRssBytes": 379367424,
+      "configHash": "7ab0cb51fc88aab633b321431c948ea8e4b48341caf8bea1ba1371457cbaf6a3"
+    },
+    {
+      "state": "MS",
+      "checkedAt": "2026-10-21T04:43:38.900Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-bf06f9c28bdf1ea68bfd98c133d55b3d",
+      "readerSiteRows": 46,
+      "uniqueSiteIds": 46,
+      "sourceSiteObservations": 46,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "ms-desoto-current-polling-map",
+          "url": "https://www.desotocountyms.gov/DocumentCenter/View/49",
+          "observations": 46,
+          "blankCounts": {
+            "earlier-election": 1
+          }
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 17536577,
+      "meteredResponseBytes": {
+        "reader": 4019737,
+        "control-plane": 0
+      },
+      "peakRssBytes": 509603840,
+      "configHash": "c9fa438e5d385d17adb0eab4f918f637c3e8435c0f3e9783940a6ca9a6547f25"
+    },
+    {
+      "state": "MT",
+      "checkedAt": "2026-10-21T04:27:52.350Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-c016fd0b9d37b3c4b6b0a09aded7f4c9",
+      "readerSiteRows": 335,
+      "uniqueSiteIds": 335,
+      "sourceSiteObservations": 335,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "mt-statewide-polling-2026",
+          "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+          "observations": 304,
+          "blankCounts": {
+            "missing-sites": 2
+          }
+        },
+        {
+          "id": "mt-statewide-satellite-2026",
+          "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+          "observations": 31,
+          "blankCounts": {
+            "missing-sites": 14
+          }
+        }
+      ],
+      "savedCaptureCount": 4,
+      "publisherBytes": 263842,
+      "meteredResponseBytes": {
+        "reader": 6641308,
+        "control-plane": 0
+      },
+      "peakRssBytes": 352722944
+    },
+    {
+      "state": "NC",
+      "checkedAt": "2026-10-21T04:48:16.003Z",
+      "copyBranches": {
+        "reader": "br-frosty-truth-axq7rdql",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-befdae170396cfe7810931f585b33efe",
+      "readerSiteRows": 2806,
+      "uniqueSiteIds": 2806,
+      "sourceSiteObservations": 2977,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "nc-statewide-early-voting-2026",
+          "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+          "observations": 367,
+          "blankCounts": {}
+        },
+        {
+          "id": "nc-statewide-polling-general-2026",
+          "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
+          "observations": 2610,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 5,
+      "publisherBytes": 1340180,
+      "meteredResponseBytes": {
+        "reader": 16342336,
+        "control-plane": 0
+      },
+      "peakRssBytes": 470839296,
+      "configHash": "eebc8fc2a0e108cfe75537e098347c15c8b5330b54c43037490a5d520f7a152c"
+    },
+    {
+      "state": "ND",
+      "checkedAt": "2026-10-21T04:28:00.488Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-36ec3c893e55206dab42ea51741c4f9a",
+      "readerSiteRows": 209,
+      "uniqueSiteIds": 209,
+      "sourceSiteObservations": 209,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "nd-statewide-general-2026",
+          "url": "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "observations": 209,
+          "blankCounts": {
+            "missing-sites": 58
+          }
+        }
+      ],
+      "savedCaptureCount": 173,
+      "publisherBytes": 32914867,
+      "meteredResponseBytes": {
+        "reader": 11330661,
+        "control-plane": 0
+      },
+      "peakRssBytes": 486289408
+    },
+    {
+      "state": "NE",
+      "checkedAt": "2026-10-21T04:39:20.528Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-91c4d4f055efd0cc49d078cb55abada4",
+      "readerSiteRows": 13,
+      "uniqueSiteIds": 13,
+      "sourceSiteObservations": 13,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "ne-douglas-drop-boxes",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "observations": 13,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 60966,
+      "meteredResponseBytes": {
+        "reader": 8789818,
+        "control-plane": 0
+      },
+      "peakRssBytes": 368230400
+    },
+    {
+      "state": "NJ",
+      "checkedAt": "2026-10-21T04:43:37.164Z",
+      "copyBranches": {
+        "reader": "br-frosty-truth-axq7rdql",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-97e0f54fb184f91af8b45f653b202e56",
+      "readerSiteRows": 614,
+      "uniqueSiteIds": 614,
+      "sourceSiteObservations": 458,
+      "sourceCount": 21,
+      "sourceResults": [
+        {
+          "id": "vs04-nj-atlantic-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 20,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-bergen-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 35,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-burlington-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 29,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-camden-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 30,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-cape-may-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 12,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-cumberland-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 14,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-essex-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 28,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-gloucester-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 17,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-hudson-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 21,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-hunterdon-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 12,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-mercer-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 19,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-middlesex-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 34,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-monmouth-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 35,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-morris-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 31,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-ocean-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 20,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-passaic-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 21,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-salem-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 14,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-somerset-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 17,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-sussex-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 14,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-union-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 24,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-nj-warren-dropboxes",
+          "url": "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml",
+          "observations": 11,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 158969,
+      "meteredResponseBytes": {
+        "reader": 9098783,
+        "control-plane": 0
+      },
+      "peakRssBytes": 388431872,
+      "configHash": "8ea6403dca3061bb105760ae7cf8af8c23d436d11efd2abee5a8e9052371fecc"
+    },
+    {
+      "state": "NV",
+      "checkedAt": "2026-10-21T04:30:03.902Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-5400be693a5d25138de3792c38cc6c57",
+      "readerSiteRows": 48,
+      "uniqueSiteIds": 48,
+      "sourceSiteObservations": 48,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "nv-washoe-vote-centers-2026",
+          "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+          "observations": 48,
+          "blankCounts": {
+            "missing-sites": 1
+          }
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 13422,
+      "meteredResponseBytes": {
+        "reader": 891656,
+        "control-plane": 0
+      },
+      "peakRssBytes": 352833536
+    },
+    {
+      "state": "NY",
+      "checkedAt": "2026-10-21T04:40:33.156Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-0543919bf47cc2de6e2f3361a36e6bc7",
+      "readerSiteRows": 25,
+      "uniqueSiteIds": 25,
+      "sourceSiteObservations": 25,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-ny-westchester-early",
+          "url": "https://citizenparticipation.westchestercountyny.gov/voting/early-voting-2026",
+          "observations": 25,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 50317,
+      "meteredResponseBytes": {
+        "reader": 14759380,
+        "control-plane": 0
+      },
+      "peakRssBytes": 413835264
+    },
+    {
+      "state": "OH",
+      "checkedAt": "2026-10-21T04:32:44.355Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-cc54cc8e6da4c49629c0b37a332da2c3",
+      "readerSiteRows": 88,
+      "uniqueSiteIds": 88,
+      "sourceSiteObservations": 88,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-oh-state-early",
+          "url": "https://www.ohiosos.gov/directories/early-voting-locations",
+          "observations": 88,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 655042,
+      "meteredResponseBytes": {
+        "reader": 16660881,
+        "control-plane": 0
+      },
+      "peakRssBytes": 448233472
+    },
+    {
+      "state": "OK",
+      "checkedAt": "2026-10-21T04:33:11.390Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-40eb53529752cd7ae24359b21db76216",
+      "readerSiteRows": 93,
+      "uniqueSiteIds": 93,
+      "sourceSiteObservations": 93,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "ok-statewide-early-voting-2026",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "observations": 93,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 141982,
+      "meteredResponseBytes": {
+        "reader": 8268964,
+        "control-plane": 0
+      },
+      "peakRssBytes": 385105920
+    },
+    {
+      "state": "OR",
+      "checkedAt": "2026-10-21T04:43:36.971Z",
+      "copyBranches": {
+        "reader": "br-frosty-truth-axq7rdql",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-38501391d5754a00372a697dc5393587",
+      "readerSiteRows": 334,
+      "uniqueSiteIds": 334,
+      "sourceSiteObservations": 334,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "or-statewide-drop-sites-2026",
+          "url": "https://sos.oregon.gov/elections/Documents/GE26-Oregon-Drop-Sites.pdf",
+          "observations": 334,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 203844,
+      "meteredResponseBytes": {
+        "reader": 5552813,
+        "control-plane": 0
+      },
+      "peakRssBytes": 400056320,
+      "configHash": "c59397d43a8cfbf75905bf6c0f4a164b3118e8ba2aff3a8278ef20e46510863d"
+    },
+    {
+      "state": "PA",
+      "checkedAt": "2026-10-21T04:40:31.765Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-796179b7a810fe8d03613f4da7d5b9f6",
+      "readerSiteRows": 683,
+      "uniqueSiteIds": 683,
+      "sourceSiteObservations": 683,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-pa-philadelphia-polls",
+          "url": "https://vote.phila.gov/media/2026_General_Polling_Places.xlsx",
+          "observations": 683,
+          "blankCounts": {
+            "missing-sites": 1
+          }
+        }
+      ],
+      "savedCaptureCount": 3,
+      "publisherBytes": 147910,
+      "meteredResponseBytes": {
+        "reader": 21317757,
+        "control-plane": 0
+      },
+      "peakRssBytes": 469975040
+    },
+    {
+      "state": "PR",
+      "checkedAt": "2026-10-21T04:38:36.501Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-f5f9ddab549a4df0c6b05ffa82d60362",
+      "readerSiteRows": 0,
+      "uniqueSiteIds": 0,
+      "sourceSiteObservations": 0,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "pr-general-election-cycle",
+          "url": "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf",
+          "observations": 0,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 3,
+      "publisherBytes": 2034242,
+      "meteredResponseBytes": {
+        "reader": 1948114,
+        "control-plane": 0
+      },
+      "peakRssBytes": 438325248
+    },
+    {
+      "state": "RI",
+      "checkedAt": "2026-10-21T04:40:57.878Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-db0db96b2c613ffdede00f635d364c05",
+      "readerSiteRows": 55,
+      "uniqueSiteIds": 55,
+      "sourceSiteObservations": 80,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "vs04-ri-dropboxes",
+          "url": "https://elections.ri.gov/voter-resources/mail-ballot-drop-boxes",
+          "observations": 41,
+          "blankCounts": {}
+        },
+        {
+          "id": "vs04-ri-early",
+          "url": "https://elections.ri.gov/voter-resources/person-early-voting-emergency-mail-ballots",
+          "observations": 39,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 3,
+      "publisherBytes": 163458,
+      "meteredResponseBytes": {
+        "reader": 951855,
+        "control-plane": 0
+      },
+      "peakRssBytes": 314626048
+    },
+    {
+      "state": "SC",
+      "checkedAt": "2026-10-21T04:30:31.952Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-01b4aa92f30017f43044bf0634df6cdb",
+      "readerSiteRows": 1956,
+      "uniqueSiteIds": 1956,
+      "sourceSiteObservations": 1956,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "sc-statewide-public-polling-directory",
+          "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+          "observations": 1956,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 1,
+      "publisherBytes": 221922,
+      "meteredResponseBytes": {
+        "reader": 7530724,
+        "control-plane": 0
+      },
+      "peakRssBytes": 395436032
+    },
+    {
+      "state": "SD",
+      "checkedAt": "2026-10-21T04:33:11.523Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-9d6700323d64911c71f9d5133f998439",
+      "readerSiteRows": 456,
+      "uniqueSiteIds": 456,
+      "sourceSiteObservations": 456,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "sd-statewide-general-polling-2026",
+          "url": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Election%20Assets/General/PrecinctPollingPlaces_10.06.2026.pdf",
+          "observations": 456,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 368357,
+      "meteredResponseBytes": {
+        "reader": 9431144,
+        "control-plane": 0
+      },
+      "peakRssBytes": 417521664
+    },
+    {
+      "state": "TN",
+      "checkedAt": "2026-10-21T04:43:39.187Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-438b98a8200dc8b9d6ba549ae1b77e4f",
+      "readerSiteRows": 15,
+      "uniqueSiteIds": 15,
+      "sourceSiteObservations": 15,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "tn-davidson-early-general-2026",
+          "url": "https://www.nashville.gov/departments/elections/voters/find-early-voting-information",
+          "observations": 15,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 90822,
+      "meteredResponseBytes": {
+        "reader": 4782413,
+        "control-plane": 0
+      },
+      "peakRssBytes": 334684160,
+      "configHash": "cacbb80a63421509e5159839b1258098abb10949b6946962acf131214b8cf1cf"
+    },
+    {
+      "state": "TX",
+      "checkedAt": "2026-10-21T04:47:51.544Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-a5b78ad968f4c2b7df66dfebca92d273",
+      "readerSiteRows": 129,
+      "uniqueSiteIds": 129,
+      "sourceSiteObservations": 162,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "tx-el-paso-vote-centers-2026",
+          "url": "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+          "observations": 123,
+          "blankCounts": {}
+        },
+        {
+          "id": "tx-el-paso-early-voting-2026",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "observations": 39,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 3,
+      "publisherBytes": 287530,
+      "meteredResponseBytes": {
+        "reader": 21028368,
+        "control-plane": 0
+      },
+      "peakRssBytes": 471916544,
+      "configHash": "e692b80f3c69347e6da6d37d0296d98dae3d3b8f4fb328fc7663ed1ac22eb41c"
+    },
+    {
+      "state": "UT",
+      "checkedAt": "2026-10-21T04:30:03.945Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-18deb5debf965d3a903cda3e5e545de2",
+      "readerSiteRows": 38,
+      "uniqueSiteIds": 38,
+      "sourceSiteObservations": 38,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "ut-utah-county-locations-2026",
+          "url": "https://vote.utahcounty.gov/voting-locations",
+          "observations": 38,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 207481,
+      "meteredResponseBytes": {
+        "reader": 2404358,
+        "control-plane": 0
+      },
+      "peakRssBytes": 336424960
+    },
+    {
+      "state": "VA",
+      "checkedAt": "2026-10-21T04:52:03.422Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-ff1760be583a5be2c22fd44f6e493dcd",
+      "readerSiteRows": 2651,
+      "uniqueSiteIds": 2651,
+      "sourceSiteObservations": 2651,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "va-statewide-polling-general-2026",
+          "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx",
+          "observations": 2651,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 142602,
+      "meteredResponseBytes": {
+        "reader": 16842642,
+        "control-plane": 0
+      },
+      "peakRssBytes": 509304832,
+      "configHash": "b54ec34db5b73faaa710dbfe5a8ebf4ee6062ecabe7c9846a8f63b172fc99f17"
+    },
+    {
+      "state": "VI",
+      "checkedAt": "2026-10-21T04:50:56.340Z",
+      "copyBranches": {
+        "reader": "br-frosty-truth-axq7rdql",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-f60cd58ad6d8e34ac2db910167dbc1ab",
+      "readerSiteRows": 14,
+      "uniqueSiteIds": 14,
+      "sourceSiteObservations": 14,
+      "sourceCount": 7,
+      "sourceResults": [
+        {
+          "id": "fec-vi-chief",
+          "url": "https://www.vivote.gov/",
+          "observations": 0,
+          "blankCounts": {}
+        },
+        {
+          "id": "vi-early-st-croix-2026",
+          "url": "https://vivote.gov/elections/early-voting/",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "vi-early-st-thomas-2026",
+          "url": "https://vivote.gov/elections/early-voting/",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "vi-early-st-john-2026",
+          "url": "https://vivote.gov/elections/early-voting/",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "vi-general-st-croix-2026",
+          "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+          "observations": 5,
+          "blankCounts": {}
+        },
+        {
+          "id": "vi-general-st-thomas-2026",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+          "observations": 4,
+          "blankCounts": {}
+        },
+        {
+          "id": "vi-general-st-john-2026",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+          "observations": 2,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 5,
+      "publisherBytes": 811553,
+      "meteredResponseBytes": {
+        "reader": 134491,
+        "control-plane": 0
+      },
+      "peakRssBytes": 367153152,
+      "configHash": "203965be84fa8400957ee642452588bc105b159245ff89ec228788354c67b876"
+    },
+    {
+      "state": "VT",
+      "checkedAt": "2026-10-21T04:40:32.876Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-b175c34e89d5420baa3ce0ff397c644c",
+      "readerSiteRows": 8,
+      "uniqueSiteIds": 8,
+      "sourceSiteObservations": 8,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-vt-burlington-polls",
+          "url": "https://www.burlingtonvt.gov/CT/Maps-Wards-State-Districts-and-Polling-Places",
+          "observations": 8,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 100791,
+      "meteredResponseBytes": {
+        "reader": 2596823,
+        "control-plane": 0
+      },
+      "peakRssBytes": 317579264
+    },
+    {
+      "state": "WA",
+      "checkedAt": "2026-10-21T04:29:03.247Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-b0cd933faedb32b74dbf3c41ffe4e3c2",
+      "readerSiteRows": 627,
+      "uniqueSiteIds": 627,
+      "sourceSiteObservations": 627,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "wa-statewide-dropboxes-2026",
+          "url": "https://www.sos.wa.gov/sites/default/files/2026-01/Drop%20Boxes_0.xlsx",
+          "observations": 627,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 78522,
+      "meteredResponseBytes": {
+        "reader": 7506876,
+        "control-plane": 0
+      },
+      "peakRssBytes": 369475584
+    },
+    {
+      "state": "WI",
+      "checkedAt": "2026-10-21T04:40:33.147Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-917a91d4978524a7d36f43c1477e4591",
+      "readerSiteRows": 11,
+      "uniqueSiteIds": 11,
+      "sourceSiteObservations": 11,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "vs04-wi-milwaukee-early",
+          "url": "https://city.milwaukee.gov/earlyvoting",
+          "observations": 11,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 162916,
+      "meteredResponseBytes": {
+        "reader": 12384861,
+        "control-plane": 0
+      },
+      "peakRssBytes": 405405696
+    },
+    {
+      "state": "WV",
+      "checkedAt": "2026-10-21T04:31:38.238Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-b2b8d0f4d2807f8062b22081940fd40c",
+      "readerSiteRows": 99,
+      "uniqueSiteIds": 99,
+      "sourceSiteObservations": 99,
+      "sourceCount": 1,
+      "sourceResults": [
+        {
+          "id": "wv-statewide-early-general-2026",
+          "url": "https://sos.wv.gov/early-voting-locations",
+          "observations": 99,
+          "blankCounts": {
+            "missing-sites": 5
+          }
+        }
+      ],
+      "savedCaptureCount": 2,
+      "publisherBytes": 178597,
+      "meteredResponseBytes": {
+        "reader": 2740991,
+        "control-plane": 0
+      },
+      "peakRssBytes": 385503232
+    },
+    {
+      "state": "WY",
+      "checkedAt": "2026-10-21T04:40:22.679Z",
+      "copyBranches": {
+        "reader": "br-purple-fire-axpd56ml",
+        "control": "br-gentle-fog-aebfnn9f"
+      },
+      "candidateState": "PROMOTED",
+      "readerReadback": "PASS",
+      "versionId": "cv-4af62aa916ac44e5d7947b5cb43ddbff",
+      "readerSiteRows": 23,
+      "uniqueSiteIds": 23,
+      "sourceSiteObservations": 23,
+      "sourceCount": 2,
+      "sourceResults": [
+        {
+          "id": "wy-natrona-early-voting-2026",
+          "url": "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+          "observations": 1,
+          "blankCounts": {}
+        },
+        {
+          "id": "wy-natrona-polling-precincts",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "observations": 22,
+          "blankCounts": {}
+        }
+      ],
+      "savedCaptureCount": 6,
+      "publisherBytes": 134624,
+      "meteredResponseBytes": {
+        "reader": 2358588,
+        "control-plane": 0
+      },
+      "peakRssBytes": 384978944
+    }
+  ],
+  "stateReaderInventory": [
+    {
+      "state": "AK",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 0,
+      "uniqueFacilities": 0,
+      "lookupGap": "No held ZIP entry matched the acquired sites"
+    },
+    {
+      "state": "AL",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 78,
+      "uniqueFacilities": 78,
+      "lookup": {
+        "zip": "36505",
+        "sites": 78,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "AR",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 3,
+      "uniqueFacilities": 3,
+      "lookup": {
+        "zip": "72704",
+        "sites": 3,
+        "jurisdictions": 2
+      }
+    },
+    {
+      "state": "AS",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 0,
+      "uniqueFacilities": 0,
+      "lookupGap": "No held ZIP entry matched the acquired sites"
+    },
+    {
+      "state": "AZ",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 191,
+      "uniqueFacilities": 191,
+      "lookup": {
+        "zip": "85602",
+        "sites": 191,
+        "jurisdictions": 2
+      }
+    },
+    {
+      "state": "CA",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 100,
+      "uniqueFacilities": 100,
+      "lookup": {
+        "zip": "94501",
+        "sites": 100,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "CO",
+      "copyBranch": "br-frosty-truth-axq7rdql",
+      "kind": "PROMOTED",
+      "siteRows": 56,
+      "uniqueFacilities": 56,
+      "lookup": {
+        "zip": "80010",
+        "sites": 56,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "CT",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 174,
+      "uniqueFacilities": 174,
+      "lookup": {
+        "zip": "06232",
+        "sites": 1,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "DC",
+      "copyBranch": "br-frosty-truth-axq7rdql",
+      "kind": "PROMOTED",
+      "siteRows": 129,
+      "uniqueFacilities": 129,
+      "lookup": {
+        "zip": "20001",
+        "sites": 129,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "DE",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 297,
+      "uniqueFacilities": 297,
+      "lookup": {
+        "zip": "19802",
+        "sites": 6,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "FL",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 463,
+      "uniqueFacilities": 463,
+      "lookup": {
+        "zip": "32044",
+        "sites": 9,
+        "jurisdictions": 2
+      }
+    },
+    {
+      "state": "GA",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 121,
+      "uniqueFacilities": 121,
+      "lookup": {
+        "zip": "30008",
+        "sites": 121,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "GU",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "NOT_RECORDED"
+    },
+    {
+      "state": "HI",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 60,
+      "uniqueFacilities": 60,
+      "lookup": {
+        "zip": "96704",
+        "sites": 12,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "IA",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 64,
+      "uniqueFacilities": 64,
+      "lookup": {
+        "zip": "52722",
+        "sites": 64,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "ID",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 2,
+      "uniqueFacilities": 2,
+      "lookup": {
+        "zip": "83605",
+        "sites": 2,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "IL",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 24,
+      "uniqueFacilities": 24,
+      "lookup": {
+        "zip": "60007",
+        "sites": 24,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "IN",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 182,
+      "uniqueFacilities": 182,
+      "lookup": {
+        "zip": "46077",
+        "sites": 182,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "KS",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 23,
+      "uniqueFacilities": 23,
+      "lookup": {
+        "zip": "66013",
+        "sites": 23,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "KY",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 1690,
+      "uniqueFacilities": 1690,
+      "lookup": {
+        "zip": "42728",
+        "sites": 33,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "LA",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 112,
+      "uniqueFacilities": 112,
+      "lookup": {
+        "zip": "70526",
+        "sites": 2,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "MA",
+      "copyBranch": "br-frosty-truth-axq7rdql",
+      "kind": "PROMOTED",
+      "siteRows": 164,
+      "uniqueFacilities": 164,
+      "lookup": {
+        "zip": "02108",
+        "sites": 164,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "MD",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 102,
+      "uniqueFacilities": 102,
+      "lookup": {
+        "zip": "21502",
+        "sites": 1,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "ME",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 1,
+      "uniqueFacilities": 1,
+      "lookup": {
+        "zip": "04401",
+        "sites": 1,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "MI",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 4,
+      "uniqueFacilities": 4,
+      "lookup": {
+        "zip": "48809",
+        "sites": 4,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "MN",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 25,
+      "uniqueFacilities": 25,
+      "lookup": {
+        "zip": "55310",
+        "sites": 25,
+        "jurisdictions": 2
+      }
+    },
+    {
+      "state": "MO",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 57,
+      "uniqueFacilities": 57,
+      "lookup": {
+        "zip": "63110",
+        "sites": 57,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "MP",
+      "copyBranch": "br-frosty-truth-axq7rdql",
+      "kind": "PROMOTED",
+      "siteRows": 15,
+      "uniqueFacilities": 15,
+      "lookup": {
+        "zip": "96951",
+        "sites": 2,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "MS",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 46,
+      "uniqueFacilities": 46,
+      "lookup": {
+        "zip": "38611",
+        "sites": 46,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "MT",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 335,
+      "uniqueFacilities": 335,
+      "lookup": {
+        "zip": "59034",
+        "sites": 2,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "NC",
+      "copyBranch": "br-frosty-truth-axq7rdql",
+      "kind": "PROMOTED",
+      "siteRows": 2806,
+      "uniqueFacilities": 2806,
+      "lookup": {
+        "zip": "27217",
+        "sites": 50,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "ND",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 209,
+      "uniqueFacilities": 209,
+      "lookup": {
+        "zip": "56744",
+        "sites": 13,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "NE",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 13,
+      "uniqueFacilities": 13,
+      "lookup": {
+        "zip": "68007",
+        "sites": 13,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "NH",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 1,
+      "uniqueFacilities": 1,
+      "lookup": {
+        "zip": "03233",
+        "sites": 1,
+        "jurisdictions": 2
+      }
+    },
+    {
+      "state": "NJ",
+      "copyBranch": "br-frosty-truth-axq7rdql",
+      "kind": "PROMOTED",
+      "siteRows": 614,
+      "uniqueFacilities": 614,
+      "lookup": {
+        "zip": "08037",
+        "sites": 67,
+        "jurisdictions": 3
+      }
+    },
+    {
+      "state": "NM",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 37,
+      "uniqueFacilities": 37,
+      "lookup": {
+        "zip": "87010",
+        "sites": 37,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "NV",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 48,
+      "uniqueFacilities": 48,
+      "lookup": {
+        "zip": "89402",
+        "sites": 48,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "NY",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 25,
+      "uniqueFacilities": 25,
+      "lookup": {
+        "zip": "10501",
+        "sites": 25,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "OH",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 88,
+      "uniqueFacilities": 88,
+      "lookup": {
+        "zip": "45693",
+        "sites": 1,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "OK",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 93,
+      "uniqueFacilities": 93,
+      "lookup": {
+        "zip": "74960",
+        "sites": 2,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "OR",
+      "copyBranch": "br-frosty-truth-axq7rdql",
+      "kind": "PROMOTED",
+      "siteRows": 334,
+      "uniqueFacilities": 334,
+      "lookup": {
+        "zip": "97814",
+        "sites": 13,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "PA",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 683,
+      "uniqueFacilities": 683,
+      "lookup": {
+        "zip": "19102",
+        "sites": 683,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "PR",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 0,
+      "uniqueFacilities": 0,
+      "lookup": {
+        "zip": "00601",
+        "sites": 0,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "RI",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 55,
+      "uniqueFacilities": 55,
+      "lookup": {
+        "zip": "02802",
+        "sites": 1,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "SC",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 1956,
+      "uniqueFacilities": 1956,
+      "lookup": {
+        "zip": "29620",
+        "sites": 27,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "SD",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 456,
+      "uniqueFacilities": 456,
+      "lookup": {
+        "zip": "51001",
+        "sites": 7,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "TN",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 15,
+      "uniqueFacilities": 15,
+      "lookup": {
+        "zip": "37013",
+        "sites": 15,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "TX",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 129,
+      "uniqueFacilities": 129,
+      "lookup": {
+        "zip": "79821",
+        "sites": 129,
+        "jurisdictions": 2
+      }
+    },
+    {
+      "state": "UT",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 38,
+      "uniqueFacilities": 38,
+      "lookup": {
+        "zip": "84003",
+        "sites": 38,
+        "jurisdictions": 2
+      }
+    },
+    {
+      "state": "VA",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 2651,
+      "uniqueFacilities": 2651,
+      "lookup": {
+        "zip": "23005",
+        "sites": 37,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "VI",
+      "copyBranch": "br-frosty-truth-axq7rdql",
+      "kind": "PROMOTED",
+      "siteRows": 14,
+      "uniqueFacilities": 14,
+      "lookup": {
+        "zip": "00820",
+        "sites": 6,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "VT",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 8,
+      "uniqueFacilities": 8,
+      "lookup": {
+        "zip": "05401",
+        "sites": 8,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "WA",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 627,
+      "uniqueFacilities": 627,
+      "lookup": {
+        "zip": "99169",
+        "sites": 11,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "WI",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 11,
+      "uniqueFacilities": 11,
+      "lookup": {
+        "zip": "53110",
+        "sites": 11,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "WV",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 99,
+      "uniqueFacilities": 99,
+      "lookup": {
+        "zip": "26416",
+        "sites": 3,
+        "jurisdictions": 1
+      }
+    },
+    {
+      "state": "WY",
+      "copyBranch": "br-purple-fire-axpd56ml",
+      "kind": "PROMOTED",
+      "siteRows": 23,
+      "uniqueFacilities": 23,
+      "lookup": {
+        "zip": "82601",
+        "sites": 23,
+        "jurisdictions": 1
+      }
+    }
+  ],
+  "pendingPublication": [
+    {
+      "state": "NH",
+      "candidateState": "HORIZON_UNRESOLVED",
+      "reason": "The incomplete OPEN_FACT_SET horizon removed 1 record(s) without a record-class removal contract.",
+      "retainedReaderSiteRows": 1
+    },
+    {
+      "state": "NM",
+      "candidateState": "HORIZON_UNRESOLVED",
+      "reason": "The incomplete OPEN_FACT_SET horizon removed 1 record(s) without a record-class removal contract.",
+      "retainedReaderSiteRows": 37
+    }
+  ],
+  "http": {
+    "build": "Fresh optimized production build of River plus allowed current source changes; actual copy data, no mocked reader answers. Route code is unchanged by this acquisition step.",
+    "firstSubmissions": [
+      {
+        "state": "AL",
+        "zip": "36505",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 975.589177,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 78,
+        "uniqueSiteIds": 78,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://probate.mobilecountyal.gov/uploads/PRECINCTS.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-0028291f0c1d37c3ed241296",
+          "name": "Memorial Baptist Church",
+          "address": "19655 Mobile Street N Citronelle 36522",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "AK",
+        "zip": "99501",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": false,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 303.7028399999999,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 0,
+        "uniqueSiteIds": 0,
+        "outsideCoverage": true,
+        "notice": false,
+        "sources": [],
+        "siteChecks": true,
+        "example": null,
+        "passed": true
+      },
+      {
+        "state": "AZ",
+        "zip": "85602",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 407.52707599999985,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 191,
+        "uniqueSiteIds": 191,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "https://www.cochise.az.gov/509/Voter-Information"
+        ],
+        "siteChecks": false,
+        "example": {
+          "id": "voting-7ae731a79527b21b9628ab11",
+          "name": "Cochise County Douglas Service Center",
+          "address": "1012 N. G Ave",
+          "kinds": [
+            "VOTE_CENTER"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "CA",
+        "zip": "94501",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 297.26059899999996,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 100,
+        "uniqueSiteIds": 100,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://alamedacountyca.gov/rov_app/vcalist"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-ff272fd307e66e8cf6715f18",
+          "name": "Independence Plaza",
+          "address": "703 Atlantic Avenue Alameda",
+          "kinds": [
+            "VOTE_CENTER"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "CO",
+        "zip": "80010",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 776.281262,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 56,
+        "uniqueSiteIds": 56,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-7ee24e07c6f112468f6ecd7d",
+          "name": "Arapahoe County CentrePoint Plaza",
+          "address": "14980 E Alameda Dr,\nAurora, CO 80012",
+          "kinds": [
+            "DROP_BOX",
+            "VOTE_CENTER"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "CT",
+        "zip": "06232",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 286.87878899999987,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 1,
+        "uniqueSiteIds": 1,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://portal.ct.gov/-/media/sots/electionservices/early-voting/2026/early-voting-locations--november-3--2026.pdf?rev=d5562e4275dd4d1f8e9ec93e8e62d0d7&hash=FB351F2ECA0C7B1DBC22210AEB4D2092"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-c6b812944ff959ff1fbd7843",
+          "name": "Town Hall Meeting Room",
+          "address": "17 School Road, Andover CT 06232",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "DE",
+        "zip": "19802",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 586.8073010000003,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 6,
+        "uniqueSiteIds": 6,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://gis.elections.delaware.gov/apps/5bc1fa9352464944be601441655e36a0/explore"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-aaffabaf35f285fa1b5471da",
+          "name": "CLAYMONT COMMUNITY CENTER",
+          "address": "3301 GREEN ST, CLAYMONT, DE, 19703",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "FL",
+        "zip": "32044",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 301.2329850000001,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 9,
+        "uniqueSiteIds": 9,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-6ac64987fe3bbcec4cbbaba3",
+          "name": "EV1 - SOE Office",
+          "address": "515 North Main Street, Gainesville, Florida 32601",
+          "kinds": [
+            "EARLY_VOTING",
+            "DROP_BOX"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "GA",
+        "zip": "30008",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 135.68366100000003,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 121,
+        "uniqueSiteIds": 121,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://assets.cobbcounty.gov/files/2026-09/2026%20Precinct%20Codes%20and%20Locations_Facility%20name__REV%2009-15-2026_148.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-b85a21996c32ddfd6fab8c3c",
+          "name": "ACWORTH COMMUNITY CENTER",
+          "address": "4361 CHEROKEE ST, ACWORTH GA 30101",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "HI",
+        "zip": "96704",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 107.30441100000007,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 12,
+        "uniqueSiteIds": 12,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-ee49f9ed5da66819580f1411",
+          "name": "County of Hawaii Aupuni Center",
+          "address": "Conference Room\n\n101 Pauahi Street, #1\n\nHilo, HI 96720",
+          "kinds": [
+            "VOTE_CENTER",
+            "DROP_BOX"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "ID",
+        "zip": "83605",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 130.2127959999998,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 2,
+        "uniqueSiteIds": 2,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://elections.canyoncounty.id.gov/upcoming/"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-6ec82bfb91e1a12902552ea7",
+          "name": "Canyon County Elections Office",
+          "address": "5815 Graye Lane. Caldwell, ID 83607",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "IL",
+        "zip": "60007",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 93.26585699999941,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 24,
+        "uniqueSiteIds": 24,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.dupagecounty.gov/elected_officials/election_and_voter_information/voting_information/early_voting_locations.php"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-8875650bfc1d0ebd93aac8b4",
+          "name": "Addison Township Office",
+          "address": "401 N Addison Rd, Addison, IL 60101",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "IN",
+        "zip": "46077",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 312.31547799999953,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 182,
+        "uniqueSiteIds": 182,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://vote.indy.gov/vote-centers/"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-ff0fe48b8c9de51e97bab3d4",
+          "name": "Acton United Methodist Church",
+          "address": "5650 Senour Rd. Indianapolis IN 46239",
+          "kinds": [
+            "VOTE_CENTER"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "IA",
+        "zip": "52722",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 94.13999299999978,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 64,
+        "uniqueSiteIds": 64,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://elections.scottcountyiowa.gov/vote/precincts/"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-b67b592019e60402c6fa283f",
+          "name": "Quad City Area Realtors",
+          "address": "1900 State St.\nBettendorf, IA 52722",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "KY",
+        "zip": "42728",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 525.9875820000007,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 33,
+        "uniqueSiteIds": 33,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-51e1c0c4bf8f4f4e3756694e",
+          "name": "BEARWALLOW FELLOWSHIP HALL",
+          "address": "6090 LIBERTY RD, COLUMBIA, 42728",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "LA",
+        "zip": "70526",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 124.49695400000019,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 2,
+        "uniqueSiteIds": 2,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://voterportal.sos.la.gov/earlyvoting"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-f4f7114958d2a7dae8c94dea",
+          "name": "568 NW COURT CIRCLE",
+          "address": "568 NW COURT CIRCLE\nCROWLEY, LA 70526-4363",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "ME",
+        "zip": "04401",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 126.29666399999951,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 1,
+        "uniqueSiteIds": 1,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.bangormaine.gov/m/newsflash/home/detail/414"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-57b16b6c3d7b3594127a836e",
+          "name": "Cross Insurance Center",
+          "address": "515 Main St.",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "MD",
+        "zip": "21502",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 331.6028289999995,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 1,
+        "uniqueSiteIds": 1,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-1d17e4c85b80a8bf88dd938d",
+          "name": "Allegany County Office Complex",
+          "address": "701 Kelly Road, Room 100 Cumberland, MD 21502",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "MA",
+        "zip": "02108",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 221.63679899999988,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 164,
+        "uniqueSiteIds": 164,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.boston.gov/departments/elections/city-boston-polling-locations"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-3ad9886784ce0fdfa81ebefc",
+          "name": "Samuel Adams Elementary School",
+          "address": "165 Webster Street",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "MI",
+        "zip": "48809",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 135.9490740000001,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 4,
+        "uniqueSiteIds": 4,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.grandrapidsmi.gov/departments/clerks-office/elections/early-voting/"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-c52f4872dcfb672f9f6383f8",
+          "name": "St. Peter and Paul School",
+          "address": "1430 Quarry NW",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "MN",
+        "zip": "55310",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 127.96465100000023,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 25,
+        "uniqueSiteIds": 25,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-8c52745fc495b6b21cf2e877",
+          "name": "Beaver Falls Town Hall",
+          "address": "31461 County Road 2, Morton, MN, 56270",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "MS",
+        "zip": "38611",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 111.80287099999987,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 46,
+        "uniqueSiteIds": 46,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.desotocountyms.gov/DocumentCenter/View/49"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-912bfc4ab52e80173213bcaf",
+          "name": "Ingrams Mill Community Center",
+          "address": "2283 Red Banks Rd S",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "MO",
+        "zip": "63110",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 204.33519199999955,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 57,
+        "uniqueSiteIds": 57,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://services6.arcgis.com/HZXbCkpCSqbGd0vK/arcgis/rest/services/Polling_Centers_WFL1/FeatureServer/1"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-7f9e55d5bfda882a5ed654a6",
+          "name": "Adams Elementary School",
+          "address": "1311 TOWER GROVE AVE, 63110",
+          "kinds": [
+            "VOTE_CENTER"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "MT",
+        "zip": "59034",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 320.6657500000001,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 2,
+        "uniqueSiteIds": 2,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-128ae74ade866ffe821e7d53",
+          "name": "Student Union Building of the Little Big Horn College",
+          "address": "8645 S. Weaver Dr., Crow Agency, MT",
+          "kinds": [
+            "SATELLITE"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NE",
+        "zip": "68007",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 122.55402799999956,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 13,
+        "uniqueSiteIds": 13,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-971ce90d142305270c0ce5fe",
+          "name": "Douglas County Election Commission",
+          "address": "12220 W Center Road, Omaha",
+          "kinds": [
+            "DROP_BOX"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NV",
+        "zip": "89402",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 103.9781950000006,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 48,
+        "uniqueSiteIds": 48,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-14f0063f9def61dc9a8db08c",
+          "name": "Bartley Ranch Regional Park",
+          "address": "6000 Bartley Ranch Rd, Reno, NV 89511",
+          "kinds": [
+            "VOTE_CENTER"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NH",
+        "zip": "03233",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 126.99111799999991,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 1,
+        "uniqueSiteIds": 1,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [],
+        "siteChecks": false,
+        "example": {
+          "id": "nh-new-london-1",
+          "name": "Whipple Memorial Town Hall",
+          "address": "25 Seamans Road, New London, NH 03257",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NJ",
+        "zip": "08037",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 351.7423260000005,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 67,
+        "uniqueSiteIds": 67,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-22b3d0ec7cfc95b83f984903",
+          "name": "ABSECON MUNICIPAL BUILDING",
+          "address": "500 Mill Road\nAbsecon 08201",
+          "kinds": [
+            "DROP_BOX"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NM",
+        "zip": "87010",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 175.1405619999996,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 37,
+        "uniqueSiteIds": 37,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-dd73dd676dcf22ac6d98a415",
+          "name": "Abedon Lopez Comm. Center",
+          "address": "155 Camino De Quintana\n\nEspa&ntilde;ola, NM 87532",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NY",
+        "zip": "10501",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 101.23644799999965,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 25,
+        "uniqueSiteIds": 25,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://citizenparticipation.westchestercountyny.gov/voting/early-voting-2026"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-e859aff26258c35e0fec1374",
+          "name": "Croton Municipal Building",
+          "address": "1 Van Wyck Street, Croton on Hudson, NY 10520",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "NC",
+        "zip": "27217",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 1959.003971,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 54,
+        "uniqueSiteIds": 54,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+          "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-ab92ce647b2865aef3045a64",
+          "name": "ELMIRA COMMUNITY CENTER",
+          "address": "810 WICKER ST, BURLINGTON, NC 27217",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "ND",
+        "zip": "56744",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 568.2378680000002,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 13,
+        "uniqueSiteIds": 13,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-21d3b9b6be26c2cf8f179eb9",
+          "name": "Alerus Center Early Voting",
+          "address": "1200 42nd St S",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "OH",
+        "zip": "45693",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 203.26709200000005,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 1,
+        "uniqueSiteIds": 1,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.ohiosos.gov/directories/early-voting-locations"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-7006f44990abdf02a9501b02",
+          "name": "Adams County Board of Elections",
+          "address": "923 Sunrise Ave Room 101\nWest Union, OH 45693",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "OK",
+        "zip": "74960",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 229.35229400000026,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 2,
+        "uniqueSiteIds": 2,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://hosting.okelections.gov/earlyvote.html"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-07b3e1a5300b09263357a3cd",
+          "name": "ADAIR COUNTY ELECTION BOARD",
+          "address": "220 W Division St \r\nCounty Courthouse \r\nStilwell, OK 74960",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "OR",
+        "zip": "97814",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 418.458462999999,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 13,
+        "uniqueSiteIds": 13,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://sos.oregon.gov/elections/Documents/GE26-Oregon-Drop-Sites.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-4c9bfd12aa99b356830ac4be",
+          "name": "Baker County Clerk's Office & Drive Up Drop Site",
+          "address": "1995 3rd St Suite 150 Baker City OR 97814",
+          "kinds": [
+            "DROP_BOX"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "PA",
+        "zip": "19102",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 572.2954979999995,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 683,
+        "uniqueSiteIds": 683,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://vote.phila.gov/media/2026_General_Polling_Places.xlsx"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-3a67e5b9405a9bdf871fd92a",
+          "name": "SOUTH PHILA OLDER ADULT CENTER",
+          "address": "1430 E PASSYUNK AVE",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "RI",
+        "zip": "02802",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 147.48159100000157,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 1,
+        "uniqueSiteIds": 1,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://elections.ri.gov/voter-resources/mail-ballot-drop-boxes",
+          "https://elections.ri.gov/voter-resources/person-early-voting-emergency-mail-ballots"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-812b9f34293c5d21fbc1643f",
+          "name": "TOWN HALL",
+          "address": "100 OLD RIVER RD",
+          "kinds": [
+            "DROP_BOX",
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "SC",
+        "zip": "29620",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 767.0522659999988,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 27,
+        "uniqueSiteIds": 27,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-a8175752baa89ff6f79e1da3",
+          "name": "Abbeville Civic Center",
+          "address": "404 N Main St Abbeville  SC 29620",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "SD",
+        "zip": "51001",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 684.2874499999998,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 7,
+        "uniqueSiteIds": 7,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Election%20Assets/General/PrecinctPollingPlaces_10.06.2026.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-f5a7716eb40ae72f548954a8",
+          "name": "Alcester City Hall",
+          "address": "500 Dakota St., Alcester",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "TN",
+        "zip": "37013",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 137.063623,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 15,
+        "uniqueSiteIds": 15,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.nashville.gov/departments/elections/voters/find-early-voting-information"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-9226296a3f07d439bc38d4c8",
+          "name": "Bellevue Library",
+          "address": "720 Baugh Road, Nashville 37221",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "TX",
+        "zip": "79821",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 225.48346300000048,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 129,
+        "uniqueSiteIds": 129,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+          "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-ca26254de77f367698ffced7",
+          "name": "Agua Dulce Community Center",
+          "address": "15371 Kentwood Ave. 79928",
+          "kinds": [
+            "VOTE_CENTER",
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "UT",
+        "zip": "84003",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 259.08601199999976,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 38,
+        "uniqueSiteIds": 38,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://vote.utahcounty.gov/voting-locations"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-7a8dc618bc9228252e7e67b8",
+          "name": "American Fork Library",
+          "address": "64 S 100 E, American Fork, UT 84003, USA",
+          "kinds": [
+            "VOTE_CENTER"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "VT",
+        "zip": "05401",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 95.62362099999882,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 8,
+        "uniqueSiteIds": 8,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.burlingtonvt.gov/CT/Maps-Wards-State-Districts-and-Polling-Places"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-7b342e82c69ca2c6c4a8aa72",
+          "name": "Mater Christi School",
+          "address": "50 Mansfield Avenue",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "VA",
+        "zip": "23005",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 1156.661850999999,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 37,
+        "uniqueSiteIds": 37,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-0ae6c5895a94d21eca1d4b97",
+          "name": "Ashland Town Hall",
+          "address": "121 Thompson St., Ashland, VA, 23005-2081",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "WA",
+        "zip": "99169",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 374.6358140000011,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 11,
+        "uniqueSiteIds": 11,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.sos.wa.gov/sites/default/files/2026-01/Drop%20Boxes_0.xlsx"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-8f6a6529bf0a85c706c27964",
+          "name": "Adams County Auditor's Office",
+          "address": "210 W Broadway Ave. Ste 200, Ritzville, WA 99169",
+          "kinds": [
+            "DROP_BOX"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "WV",
+        "zip": "26416",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 221.37859200000094,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 3,
+        "uniqueSiteIds": 3,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://sos.wv.gov/early-voting-locations"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-e91b85dc626ce4e2749e1885",
+          "name": "Barbour County Courthouse",
+          "address": "26 N Main St, Philippi, WV 26416",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "WI",
+        "zip": "53110",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 91.99828299999899,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 11,
+        "uniqueSiteIds": 11,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://city.milwaukee.gov/earlyvoting"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-8426073750bb390ce171764e",
+          "name": "American Serb Hall",
+          "address": "5101 W Oklahoma Ave",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "WY",
+        "zip": "82601",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 99.16494300000159,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 23,
+        "uniqueSiteIds": 23,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+          "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-0e90d81c073b132408a14021",
+          "name": "Natrona County Clerk's Office",
+          "address": "200 N. Center St. Room 154 Casper, WY 82601",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "PR",
+        "zip": "00601",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": false,
+        "expectedNotice": true,
+        "status": 200,
+        "elapsedMs": 95.29318599999897,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 0,
+        "uniqueSiteIds": 0,
+        "outsideCoverage": false,
+        "notice": true,
+        "sources": [],
+        "siteChecks": true,
+        "example": null,
+        "passed": true
+      },
+      {
+        "state": "AS",
+        "zip": "96799",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": false,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 103.53879700000107,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 0,
+        "uniqueSiteIds": 0,
+        "outsideCoverage": true,
+        "notice": false,
+        "sources": [],
+        "siteChecks": true,
+        "example": null,
+        "passed": true
+      },
+      {
+        "state": "GU",
+        "zip": "96910",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": false,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 116.28375400000004,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 0,
+        "uniqueSiteIds": 0,
+        "outsideCoverage": true,
+        "notice": false,
+        "sources": [],
+        "siteChecks": true,
+        "example": null,
+        "passed": true
+      },
+      {
+        "state": "AR",
+        "zip": "72704",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 475.38453,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 3,
+        "uniqueSiteIds": 3,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+          "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-6935690099e6ebe142802c4c",
+          "name": "County Clerk's Office - Bentonville",
+          "address": "215 E. Central Ave., Bentonville",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "KS",
+        "zip": "66013",
+        "port": "3104",
+        "readerCopyBranch": "br-purple-fire-axpd56ml",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 362.437767,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 23,
+        "uniqueSiteIds": 23,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.jocoelection.org/voting-election-info/advance-voting"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-4a54b4d7889159f4dbed57dc",
+          "name": "Arts and Heritage Center",
+          "address": "8788 Metcalf Ave., Overland Park, KS 66212",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "DC",
+        "zip": "20001",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 676.827714,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 129,
+        "uniqueSiteIds": 129,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.dcboe.org/voters/find-out-where-to-vote/election-day-vote-centers",
+          "https://www.dcboe.org/voters/find-out-where-to-vote/mail-ballot-drop-box-locations"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-c2b7acd33dd4b05f5958728d",
+          "name": "COLUMBIA HEIGHTS EDUCATION CAMPUS *",
+          "address": "3101 16th Street, NW",
+          "kinds": [
+            "VOTE_CENTER"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "MP",
+        "zip": "96951",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 121.72689400000002,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 2,
+        "uniqueSiteIds": 2,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://www.votecnmi.gov.mp/polling-places.php"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-436d8a7fc0252ad0dcb289fe",
+          "name": "Rota NMC, Room B-1",
+          "address": "Rota NMC, Room B-1, Rota, rota",
+          "kinds": [
+            "ELECTION_DAY"
+          ]
+        },
+        "passed": true
+      },
+      {
+        "state": "VI",
+        "zip": "00820",
+        "port": "3105",
+        "readerCopyBranch": "br-frosty-truth-axq7rdql",
+        "firstSubmission": true,
+        "expectedSites": true,
+        "expectedNotice": false,
+        "status": 200,
+        "elapsedMs": 128.481716,
+        "usableUnderThreeSeconds": true,
+        "siteRows": 6,
+        "uniqueSiteIds": 6,
+        "outsideCoverage": false,
+        "notice": false,
+        "sources": [
+          "https://vivote.gov/elections/early-voting/",
+          "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+        ],
+        "siteChecks": true,
+        "example": {
+          "id": "voting-a9fd3db55a4fae4998fae117",
+          "name": "Elections Office-Sunny Isle Shopping Center Unit 26",
+          "address": "Sunny Isle Shopping Center Unit 26",
+          "kinds": [
+            "EARLY_VOTING"
+          ]
+        },
+        "passed": true
+      }
+    ],
+    "updatedPublicationChecks": [],
+    "firstSubmissionCount": 56,
+    "firstSubmissionPassCount": 56,
+    "maximumFirstSubmissionMs": 1959.003971
+  },
+  "nativeCli": {
+    "state": "MT",
+    "command": "scripts/fetch-voting-sites.mts --promote --state=MT",
+    "sources": "Exact captured public response replay, actual reader/control copies and normal CP queue. Missing saved responses and site geocodes remain open blanks; replay is not a claim that every live route was reached.",
+    "copyBranches": {
+      "reader": "br-purple-fire-axpd56ml",
+      "control": "br-gentle-fog-aebfnn9f"
+    },
+    "receipt": {
+      "source": "voting-sites:MT",
+      "candidateId": "cv-2e4de2687a32cc5e9044518bf90dd104",
+      "acquisitionSucceeded": true,
+      "state": "PROMOTED",
+      "decision": "GOOD",
+      "promotedVersion": "cv-2e4de2687a32cc5e9044518bf90dd104",
+      "lastKnownGoodVersion": "cv-2e4de2687a32cc5e9044518bf90dd104",
+      "structuralReleaseContract": {
+        "testSitePromotions": 0,
+        "gitDataCommits": 0,
+        "pullRequests": 0,
+        "githubActionsRuns": 0,
+        "netlifyDeploys": 0,
+        "nextBuilds": 0,
+        "fullSiteBrowserWalks": 0
+      }
+    },
+    "metrics": {
+      "peakRssBytes": 395866112
+    }
+  },
+  "knownCopyCorrectionLimitation": "Earlier test-copy OR/MA/NJ and CO parsing or identity changes removed old test record IDs; the standing generic OPEN_FACT_SET removal check held the replacements. Corrected source first-publication proofs use a fresh child of actual production, without changing candidate pointers or relaxing admission. Generic voting member-removal support remains outside the allowed files.",
+  "remainingSourceGaps": {
+    "AK": "Fresh state source routes return HTTP 503; saved borough alternatives describe municipal elections and do not establish November 3 general applicability.",
+    "AS": "Fresh official absentee rule/contact captured and published; no current public voting-place list acquired.",
+    "GU": "No publishable public voting-place source acquired from the checked official routes.",
+    "PR": "Official Electoral Code verifies the general-election cycle; no regularly scheduled November 2026 general election. Special-election coverage is not claimed."
+  }
+}

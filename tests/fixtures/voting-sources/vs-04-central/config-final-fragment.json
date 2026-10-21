@@ -1,0 +1,47 @@
+[
+  {
+    "id": "ar-benton-general-vote-centers-2026",
+    "publisher": "Benton County Election Commission",
+    "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+    "shape": "file",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "AR",
+      "ocdId": "ocd-division/country:us/state:ar/county:benton",
+      "name": "Benton County",
+      "countyFips": "05007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://bentoncountyar.gov/vote/elections/",
+    "extraction": {
+      "format": "pdf",
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "election": "2026 GENERAL ELECTION",
+        "hours": "7:30 AM - 7:30 PM"
+      },
+      "templates": {
+        "address": "{streetNumber} {streetRest}"
+      },
+      "records": {
+        "pattern": "(?:^|\\n\\n)[A-Za-z][^\\n]+\\n+(?:ADDRESS\\n+)?A?\\d+[^\\n]+\\n+(?:ELECTION DAY HOURS\\n+)?7:30[^\\n]+",
+        "fields": {
+          "name": {
+            "pattern": "^\\s*([A-Za-z][^\\n]+)",
+            "group": 1
+          },
+          "streetNumber": {
+            "pattern": "\\nA?(\\d+)[^\\n]*\\n",
+            "group": 1
+          },
+          "streetRest": {
+            "pattern": "\\nA?\\d+\\s+\\.?([^\\n]+)\\n",
+            "group": 1
+          }
+        }
+      }
+    }
+  }
+]

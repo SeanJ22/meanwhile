@@ -1,0 +1,532 @@
+[
+  {
+    "url": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays=",
+    "finalUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays=",
+    "status": 200,
+    "contentType": "text/html;charset=UTF-8",
+    "capturedAt": "2026-10-21T04:29:42.568Z",
+    "rawHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ca-7f45f67a430d.html",
+    "savedHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://alamedacountyca.gov/rovapps/maps/vca?electionid=260",
+        "label": "Click here to find the nearest voting location in your area by visiting the Vote Center Map. Opens a new window. Opens a new window."
+      },
+      {
+        "url": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays=",
+        "label": "Union City"
+      },
+      {
+        "url": "https://maps.google.com?daddr=703+atlantic+avenue+alameda",
+        "label": "703 Atlantic Avenue Alameda"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2133+central+avenue+alameda",
+        "label": "2133 Central Avenue Alameda"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1815+union+street+alameda",
+        "label": "1815 Union Street Alameda"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1912+central+ave+alameda",
+        "label": "1912 Central Ave Alameda"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2202+south+shore+center+alameda",
+        "label": "2202 South Shore Center Alameda"
+      },
+      {
+        "url": "https://maps.google.com?daddr=500+pacific+ave+alameda",
+        "label": "500 Pacific Ave Alameda"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1249+marin+ave+albany",
+        "label": "1249 Marin Ave Albany"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1325+portland+ave+albany",
+        "label": "1325 Portland Ave Albany"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2465+bancroft+way+",
+        "label": "2465 Bancroft Way #312 Berkeley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=3075+adeline+st+berkeley",
+        "label": "3075 Adeline St Berkeley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2015+virginia+st+berkeley+ca+berkeley",
+        "label": "2015 Virginia St Berkeley Ca"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2425+stuart+st+berkeley+berkeley",
+        "label": "2425 Stuart St Berkeley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1953+hopkins+st+berkeley",
+        "label": "1953 Hopkins St Berkeley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1425+oregon+st+berkeley",
+        "label": "1425 Oregon St Berkeley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2600+bancroft+way+berkeley",
+        "label": "2600 Bancroft Way Berkeley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1710+carleton+st.+berkeley",
+        "label": "1710 Carleton Street Berkeley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1255+allston+way+berkeley",
+        "label": "1255 Allston Way Berkeley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=17800+redwood+road+castro+valley",
+        "label": "17800 Redwood Road Castro Valley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=3600+norbridge+ave+castro+valley",
+        "label": "3600 Norbridge Ave Castro Valley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=6811+villareal+dr+castro+valley",
+        "label": "6811 Villareal Dr Castro Valley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=18988+lake+chabot+road+castro+valley",
+        "label": "18988 Lake Chabot Road Castro Valley"
+      },
+      {
+        "url": "https://maps.google.com?daddr=4201+central+parkway+dublin",
+        "label": "4201 Central Parkway Dublin"
+      },
+      {
+        "url": "https://maps.google.com?daddr=7471+amarillo+rd+dublin",
+        "label": "7500 Amarillo Rd Dublin"
+      },
+      {
+        "url": "https://maps.google.com?daddr=100+civic+plaza+dublin",
+        "label": "100 Civic Plaza Dublin"
+      },
+      {
+        "url": "https://maps.google.com?daddr=4825+gleason+dr+dublin",
+        "label": "4825 Gleason Dr Dublin"
+      },
+      {
+        "url": "https://maps.google.com?daddr=4321+salem+st+emeryville",
+        "label": "4321 Salem St Emeryville"
+      },
+      {
+        "url": "https://maps.google.com?daddr=37154+2nd+st+fremont",
+        "label": "37154 2nd St Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=38255+blacow+rd+fremont",
+        "label": "38255 Blacow Rd Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=5200+valpey+park+ave+fremont",
+        "label": "5200 Valpey Park Ave Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=40382+fremont+blvd+fremont",
+        "label": "40382 Fremont Blvd Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=45135+s+grimmer+blvd+fremont",
+        "label": "45135 S Grimmer Blvd"
+      },
+      {
+        "url": "https://maps.google.com?daddr=251+goldenrain+ave+fremont",
+        "label": "251 Goldenrain Ave Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=555+lemos+ln+fremont",
+        "label": "555 Lemos Ln Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=4700+calaveras+ave+fremont",
+        "label": "4700 Calaveras Ave Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=41700+denise+st+fremont",
+        "label": "41700 Denise St Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=42412+albrea+st+fremont",
+        "label": "42412 Albrae St Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=43600+mission+blvd+fremont",
+        "label": "43600 Mission Blvd Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2400+stevenson+blvd+fremont",
+        "label": "2400 Stevenson Blvd Fremont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=25555+hesparian+blvd+hayward",
+        "label": "25555 Hesperian Blvd Hayward Bldg. 2300"
+      },
+      {
+        "url": "https://maps.google.com?daddr=951+turner+ct+hayward",
+        "label": "951 Turner Ct, Hayward"
+      },
+      {
+        "url": "https://maps.google.com?daddr=777+b+st.+hayward",
+        "label": "777 B St Hayward"
+      },
+      {
+        "url": "https://maps.google.com?daddr=28605+ruus+rd+hayward",
+        "label": "28605 Ruus Rd Hayward"
+      },
+      {
+        "url": "https://maps.google.com?daddr=27182+patrick+avenue+hayward",
+        "label": "27182 Patrick Avenue Hayward"
+      },
+      {
+        "url": "https://maps.google.com?daddr=25800+w+loop+rd+hayward",
+        "label": "25800 W Loop Rd Hayward"
+      },
+      {
+        "url": "https://maps.google.com?daddr=23515+maud+ave+hayward",
+        "label": "23515 Maud Ave Hayward"
+      },
+      {
+        "url": "https://maps.google.com?daddr=750+calhoun+st+hayward",
+        "label": "750 Calhoun St Hayward"
+      },
+      {
+        "url": "https://maps.google.com?daddr=22100+princeton+st.+hayward",
+        "label": "22100 Princeton St. Hayward"
+      },
+      {
+        "url": "https://maps.google.com?daddr=425+gresel+st+hayward",
+        "label": "31310 Medinah St Hayward"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1020+mocho+st+livermore",
+        "label": "1020 Mocho St Livermore"
+      },
+      {
+        "url": "https://maps.google.com?daddr=557+olivina+ave+livermore",
+        "label": "557 Olivina Ave Livermore"
+      },
+      {
+        "url": "https://maps.google.com?daddr=4743+east+avenue+livermore+livermore",
+        "label": "4743 East Avenue Livermore"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1232+arrowhead+ave+livermore",
+        "label": "1232 Arrowhead Ave Livermore"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1135+bluebell+dr+livermore",
+        "label": "1135 Bluebell Dr Livermore"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2466+8th+st+livermore",
+        "label": "2466 8th St Livermore"
+      },
+      {
+        "url": "https://maps.google.com?daddr=37055+newark+blvd+newark",
+        "label": "37055 Newark Blvd Newark"
+      },
+      {
+        "url": "https://maps.google.com?daddr=6800+mowry+ave+newark",
+        "label": "6800 Mowry Ave Newark"
+      },
+      {
+        "url": "https://maps.google.com?daddr=35725+cedar+blvd+newark",
+        "label": "35725 Cedar Blvd Newark"
+      },
+      {
+        "url": "https://maps.google.com?daddr=4850+clarewood+dr+oakland",
+        "label": "4850 Clarewood Dr Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1909+market+st+oakland",
+        "label": "1909 Market St Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=5366+college+ave+oakland",
+        "label": "5366 College Ave Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=8400+enterprise+way+oakland",
+        "label": "8400 Enterprise Way Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=925+brockhurst+st+oakland",
+        "label": "925 Brockhurst St Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=5555+ascot+dr+oakland",
+        "label": "5555 Ascot Dr Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=4351+broadway+oakland",
+        "label": "4351 Broadway Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=3200+boston+ave+oakland",
+        "label": "3200 Boston Ave Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=125+14th+st+oakland",
+        "label": "125 14th St Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=3994+burckhalter+ave+oakland",
+        "label": "3994 Burckhalter Ave Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=5000+macarthur+blvd+oakland",
+        "label": "5000 Macarthur Blvd Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2725+international+blvd+oakland",
+        "label": "2725 International Blvd Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=8000+birch+st+oakland",
+        "label": "8000 Birch St Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=915+54th+st+oakland",
+        "label": "915 54th St Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=666+bellevue+ave+oakland",
+        "label": "666 Bellevue Ave Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=920+campbell+st+oakland",
+        "label": "920 Campbell St Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=581+61st+st+oakland",
+        "label": "581 61st St Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=7929+ney+ave+oakland",
+        "label": "7929 Ney Ave Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=115+embarcadero+oakland",
+        "label": "115 Embarcadero Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2101+35th+ave+oakland",
+        "label": "2101 35th Ave Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1021+81st+ave+oakland",
+        "label": "1021 81st Ave Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=401+jones+ave+oakland",
+        "label": "401 Jones Ave Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=8501+international+blvd+oakland",
+        "label": "8501 International Blvd Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=476+34th+st+oakland",
+        "label": "476 34th St Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1183+10th+st+oakland",
+        "label": "1183 10th St Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=6401+san+pablo+ave+oakland",
+        "label": "6401 San Pablo Ave Oakland"
+      },
+      {
+        "url": "https://maps.google.com?daddr=401+highland+ave+piedmont",
+        "label": "401 Highland Ave Piedmont"
+      },
+      {
+        "url": "https://maps.google.com?daddr=480+adams+way+pleasanton",
+        "label": "480 Adams Way Pleasanton"
+      },
+      {
+        "url": "https://maps.google.com?daddr=5001+case+ave+pleasanton",
+        "label": "5001 Case Ave Pleasanton"
+      },
+      {
+        "url": "https://maps.google.com?daddr=4900+valley+ave+pleasanton",
+        "label": "4900 Valley Ave Pleasanton"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1454+santa+rita+rd.+pleasanton",
+        "label": "1454 Santa Rita Rd. Pleasanton"
+      },
+      {
+        "url": "https://maps.google.com?daddr=5794+west+las+positas+blvd+pleasanton",
+        "label": "5794 West Las Positas Blvd. Pleasanton"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1600+bancroft+ave+san+leandro",
+        "label": "1600 Bancroft Ave San Leandro"
+      },
+      {
+        "url": "https://maps.google.com?daddr=3081+teagarden+st+san+leandro",
+        "label": "3081 Teagarden St San Leandro"
+      },
+      {
+        "url": "https://maps.google.com?daddr=2860+halcyon+dr+san+leandro",
+        "label": "2860 Halcyon Dr San Leandro"
+      },
+      {
+        "url": "https://maps.google.com?daddr=601+macarthur+blvd+san+leandro",
+        "label": "601 Macarthur Blvd San Leandro"
+      },
+      {
+        "url": "https://maps.google.com?daddr=14903+catalina+st+san+leandro",
+        "label": "14903 Catalina St San Leandro"
+      },
+      {
+        "url": "https://maps.google.com?daddr=395+paseo+grande+san+lorenzo",
+        "label": "395 Paseo Grande San Lorenzo"
+      },
+      {
+        "url": "https://maps.google.com?daddr=945+paseo+grande+san+lorenzo",
+        "label": "945 Paseo Grande San Lorenzo"
+      },
+      {
+        "url": "https://maps.google.com?daddr=33520+western+ave+union+city",
+        "label": "33520 Western Ave Union City"
+      },
+      {
+        "url": "https://maps.google.com?daddr=30846+watkins+st+union+city",
+        "label": "30846 Watkins St Union City"
+      },
+      {
+        "url": "https://maps.google.com?daddr=1111+h+st+union+city",
+        "label": "1111 H St, Union City"
+      },
+      {
+        "url": "https://maps.google.com?daddr=703+c+st+union+city",
+        "label": "703 C St Union City"
+      }
+    ]
+  },
+  {
+    "url": "https://www.natronacounty-wy.gov/DocumentCenter/View/13835/2026-General-Election-Proclamation-Natrona",
+    "finalUrl": "https://www.natronacounty-wy.gov/DocumentCenter/View/13835/2026-General-Election-Proclamation-Natrona",
+    "status": 200,
+    "contentType": "application/pdf",
+    "capturedAt": "2026-10-21T04:29:42.990Z",
+    "rawHash": "406e1eb4e1be71ee97f3df599f6dba8c85c876eeabc5b84767acf0d5f8240a22",
+    "path": "tests/fixtures/voting-sources/vs-04-west/wy-6eca013753af.pdf",
+    "savedHash": "406e1eb4e1be71ee97f3df599f6dba8c85c876eeabc5b84767acf0d5f8240a22",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://elections.canyoncounty.id.gov/ways-to-vote/",
+    "finalUrl": "https://elections.canyoncounty.id.gov/ways-to-vote/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:29:43.925Z",
+    "rawHash": "e9266e89c6f97822efcdc6a86f807b27e60832cc7dcbfa79f2d7aedefe8f8df4",
+    "path": "tests/fixtures/voting-sources/vs-04-west/id-7457ddaf1032.html",
+    "savedHash": "e9266e89c6f97822efcdc6a86f807b27e60832cc7dcbfa79f2d7aedefe8f8df4",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://elections.canyoncounty.id.gov",
+        "label": "Canyon County Elections"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/faq",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://www.youtube.com/@CanyonCo/streams",
+        "label": "Livestream"
+      },
+      {
+        "url": "https://www.canyoncounty.id.gov",
+        "label": "County Site"
+      },
+      {
+        "url": "https://www.canyoncounty.id.gov/cc-public-records-request",
+        "label": "Submit Here"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/ways-to-vote/vote-by-mail",
+        "label": "How to Vote by Mail (Absentee)"
+      },
+      {
+        "url": "https://voteidaho.gov/casting-your-ballot",
+        "label": "What’s on the Ballot"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/ways-to-vote/accessible-voting",
+        "label": "Accessible Voting"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/ways-to-vote/military-overseas-voting",
+        "label": "Military & Overseas Voting"
+      },
+      {
+        "url": "https://voteidaho.gov/calendar",
+        "label": "Election Calendar"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/resources-for-candidates/voters-choice-act",
+        "label": "Voter’s Choice Act"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/feed",
+        "label": "Canyon County Elections &raquo; Feed"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/comments/feed",
+        "label": "Canyon County Elections &raquo; Comments Feed"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Felections.canyoncounty.id.gov%2Fways-to-vote%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/wp-json/wp/v2/pages/809",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "url": "https://elections.alaska.gov/",
+    "finalUrl": "https://elections.alaska.gov/",
+    "status": 503,
+    "contentType": "text/plain",
+    "capturedAt": "2026-10-21T04:29:42.690Z",
+    "rawHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-249710285c6a.bin",
+    "savedHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://www.jeffco.us/DocumentCenter/View/58898/2026-General-VSPC-and-Drop-Box-Combined-Location-Sheet-PDF",
+    "finalUrl": "https://www.jeffco.us/DocumentCenter/View/58898/2026-General-VSPC-and-Drop-Box-Combined-Location-Sheet-PDF",
+    "status": 200,
+    "contentType": "application/pdf",
+    "capturedAt": "2026-10-21T04:29:43.063Z",
+    "rawHash": "9f3ffea10c4202c2978643f9f70650c6338a163c35995770f0f7403714e57131",
+    "path": "tests/fixtures/voting-sources/vs-04-west/co-3ceac6431a09.pdf",
+    "savedHash": "9f3ffea10c4202c2978643f9f70650c6338a163c35995770f0f7403714e57131",
+    "redactions": 0,
+    "links": []
+  }
+]

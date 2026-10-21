@@ -3,7 +3,7 @@ import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { mergeVotingSiteRows, type SiteKind, type VotingOfficeContact, type VotingSite, type VotingSource } from "./voting-sites.ts";
 import type { VotingChangeNotice, VotingDoorScope, VotingColumn, VotingExtraction, VotingPlatform, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "./voting-source-types.ts";
 import { isVotingSiteKind } from "./voting-source-types.ts";
-import { decodeVotingBytes, delimitedVotingRows, htmlVotingTables, pdfVotingTables, sourceText, tableFromRows, xlsxVotingTables, type VotingTable } from "./voting-source-tables.ts";
+import { decodeVotingBytes, delimitedVotingRows, htmlVotingTables, pdfVotingTables, sourceText, tableFromRows, votingArchiveMember, xlsxVotingTables, type VotingTable } from "./voting-source-tables.ts";
 import { readVotingPages } from "./voting-source-pages.ts";
 import { votingFetchSession, type VotingCapture, type VotingFetchSession } from "./voting-source-fetch.ts";
 import { readVotingBoundaries } from "./voting-source-boundaries.ts";
@@ -233,13 +233,32 @@ function splitVotingRows(rows: Record<string, unknown>[], config: VotingExtracti
     });
   });
 }
+function configuredVotingRecords(text: string, config: VotingExtraction): Record<string, unknown>[] {
+  if (config.textAssertions?.some(assertion => !sourceText(text).replace(/\s+/g, " ").toLowerCase().includes(assertion.replace(/\s+/g, " ").toLowerCase()))) throw new Error("The list's published assertions no longer match");
+  const recordConfig = config.records!;
+  const fields = (block: string, mapping: Record<string, { pattern: string; group: number }>) => Object.fromEntries(
+    Object.entries(mapping).map(([field, extraction]) => [field, sourceText(block.match(new RegExp(extraction.pattern, "is"))?.[extraction.group] ?? "")]));
+  const sections = recordConfig.within ? [...text.matchAll(new RegExp(recordConfig.within.pattern, "gis"))]
+    .map(match => ({ block: match[recordConfig.within!.group ?? 0] ?? "", inherited: fields(match[0], recordConfig.within!.fields ?? {}) }))
+    : [{ block: text, inherited: {} }];
+  return sections.flatMap(section => [...section.block.matchAll(new RegExp(recordConfig.pattern, "gis"))].map(match => {
+    let block = match[recordConfig.group ?? 0] ?? "";
+    if (recordConfig.jsonString) block = JSON.parse(block) as string;
+    return { ...section.inherited, ...fields(block, recordConfig.fields), __documentText: section.block };
+  }));
+}
 async function parseVotingCaptureRows(capture: VotingCapture, door: VotingSourceDoor): Promise<Record<string, unknown>[]> {
   const text = decodeVotingBytes(capture.bytes), config = door.extraction ?? {};
   const format = config.format ?? (/\.xlsx(?:\?|$)/i.test(capture.url) || capture.bytes[0] === 80 && capture.bytes[1] === 75 ? "xlsx" : /\.pdf(?:\?|$)/i.test(capture.url) || text.startsWith("%PDF") ? "pdf" : /json/.test(capture.contentType) || /^[\s]*[\[{]/.test(text) ? "json" : /\.tsv(?:\?|$)|tab-separated/i.test(`${capture.url} ${capture.contentType}`) ? "tsv" : /\.csv(?:\?|$)|text\/csv/i.test(`${capture.url} ${capture.contentType}`) ? "csv" : "html");
   if (format === "json") return jsonRecords(JSON.parse(text), config.jsonPath);
   if (format === "csv" || format === "tsv") return tableRecords(tableFromRows(delimitedVotingRows(text.replace(/^\uFEFF/, ""), config.delimiter ?? (format === "tsv" || text.split(/\r?\n/, 1)[0]!.includes("\t") ? "\t" : ",")), config));
-  if (format === "xlsx") return splitVotingRows(xlsxVotingTables(capture.bytes, config).flatMap(tableRecords), config);
+  if (format === "xlsx") return xlsxVotingTables(capture.bytes, config).flatMap(tableRecords);
   if (format === "pdf") {
+    if (config.records) {
+      const { extractTextLayer } = await import("../extract/text-layer.ts");
+      const extracted = await extractTextLayer(new Uint8Array(capture.bytes), capture.url);
+      return configuredVotingRecords(extracted.items.map(page => page.text).join("\n"), config);
+    }
     if (config.textAssertions?.length) {
       const { extractTextLayer } = await import("../extract/text-layer.ts");
       const extracted = await extractTextLayer(new Uint8Array(capture.bytes), capture.url);
@@ -250,24 +269,28 @@ async function parseVotingCaptureRows(capture: VotingCapture, door: VotingSource
     return (await pdfVotingTables(capture.bytes, config)).flatMap(tableRecords);
   }
   if (config.records) {
-    if (config.textAssertions?.some(assertion => !sourceText(text).replace(/\s+/g, " ").toLowerCase().includes(assertion.replace(/\s+/g, " ").toLowerCase()))) throw new Error("The list's published assertions no longer match");
-    const recordConfig = config.records;
-    return [...text.matchAll(new RegExp(recordConfig.pattern, "gis"))].map(match => {
-      let block = match[recordConfig.group ?? 0] ?? "";
-      if (recordConfig.jsonString) block = JSON.parse(block) as string;
-      return Object.fromEntries(Object.entries(recordConfig.fields).map(([field, extraction]) => [field, sourceText(block.match(new RegExp(extraction.pattern, "is"))?.[extraction.group] ?? "")]));
-    });
+    return configuredVotingRecords(text, config);
   }
   if (config.textAssertions?.length && config.textAssertions.every(assertion => sourceText(text).toLowerCase().includes(assertion.toLowerCase()))) return [{}];
+  if (config.tableIndex !== undefined) {
+    const tables = htmlVotingTables(text);
+    if (!Number.isInteger(config.tableIndex) || config.tableIndex < 0 || !tables[config.tableIndex]) throw new Error("The configured voting table is absent from this page");
+    return tableRecords(tables[config.tableIndex]!);
+  }
   const platform = door.platform ?? fingerprintVotingPlatform(capture.url, text);
-  return platform ? platformReaders[platform](text, config) : htmlVotingTables(text).flatMap(tableRecords).concat(embeddedJson(text).flatMap(value => jsonRecords(value, config.jsonPath)));
+  if (platform) return platformReaders[platform](text, config);
+  const tables = htmlVotingTables(text);
+  return tables.flatMap(tableRecords).concat(embeddedJson(text).flatMap(value => jsonRecords(value, config.jsonPath)));
 }
 /** Every extracted value retains the exact saved document that supplied its row. */
 export async function parseVotingCapture(capture: VotingCapture, door: VotingSourceDoor): Promise<Record<string, unknown>[]> {
-  const rows = await parseVotingCaptureRows(capture, door);
+  const member = door.extraction?.archiveMember;
+  const document = member ? { ...capture, bytes: votingArchiveMember(capture.bytes, member),
+    contentType: /\.pdf$/i.test(member) ? "application/pdf" : /\.xlsx$/i.test(member) ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" : "text/plain" } : capture;
+  const rows = splitVotingRows(await parseVotingCaptureRows(document, door), door.extraction ?? {});
   const hash = createHash("sha256").update(capture.bytes).digest("hex");
   const documentText = rows.find(row => row.__documentText)?.__documentText;
-  const words = normalized(typeof documentText === "string" ? documentText : sourceText(decodeVotingBytes(capture.bytes)));
+  const words = normalized(sourceText(typeof documentText === "string" ? documentText : decodeVotingBytes(document.bytes)));
   const verifiedConstants = Object.entries(door.extraction?.constants ?? {}).filter(([, value]) => words.includes(normalized(value))).map(([field]) => field);
   return rows.map(row => {
     const { __documentText: _documentText, ...fields } = row;

@@ -1,0 +1,3831 @@
+[
+  {
+    "id": "nd-statewide-general-2026",
+    "state": "ND",
+    "sites": 209,
+    "blanks": [
+      {
+        "id": "nd-statewide-general-2026:missing-sites:12cc2d0a2f01",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Hettinger contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:396d2bc5ef38",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Valley City contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:200d584d8010",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Minnewaukan contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:0d33f857f727",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Fort Totten contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:4b5b94e6ec32",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Warwick contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:6d402c49eb22",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Medora contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:c52449665f40",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Fairfield contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:d00c774144a4",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Bottineau contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:1abf9e29a99e",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Lansford contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:94659311edbb",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Westhope contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:775468120121",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published St. Michael contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:6452bbfdb2cf",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Tokio contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:e9fcd763e570",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Bowman contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:ecf0173619b4",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Bowbells contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:7f51e8959beb",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Rhame contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:77a9d681b583",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Scranton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:708df0a44a44",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Bismarck contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:6d9ec21e3369",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Lincoln contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b6e74622f064",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Menoken contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:eccf49bee7d4",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Sterling contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:aabf93194a17",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Wilton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b174d78d5f75",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Wing contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5c76bf3cbf4d",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Arthur contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b9d311c1821a",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Fargo contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:6fb9ed391faa",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Casselton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5aa21eb51221",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published West Fargo contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:3d049bd18c84",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Harwood contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:7ee3834987ee",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Horace contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:c66792c3d5a7",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Kindred contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:bbb90093efbc",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Tower City contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:de787b7814c2",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published LANGDON contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:cddefa364fd6",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Ellendale contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:29f0a5f4febf",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Oakes contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:aa83ef0f8ded",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Crosby contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:a3abd57b208e",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Manning contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:8355a1f1a897",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Halliday contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:03d82e5cf8e8",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Mandaree contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:4795a432acd8",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Twin Buttes contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5fdb774cf648",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published New Rockford contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:3dd694482fda",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Linton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:d3027cebfbe6",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Hazelton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:9113f250116c",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Strasburg contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:dd691161a98a",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Carrington contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:83c233b6cafb",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Beach contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:33dbc3a601e8",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Grand Forks contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:a6ae58ced83a",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Emerado contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:1f8ef20cbff4",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Gilby contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:7f49b3d68ec2",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Larimore contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:0ed4ad614b94",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Manvel contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:fe6025beb119",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Northwood contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:ab96f0b7cfca",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Thompson contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:bec47673b5d4",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Elgin contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:93772c58deba",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Carson contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:89eed19fdc65",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Cooperstown contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:a5918ce9157a",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Regent contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:6b07fd49b3db",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Mott contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:7a807c66d230",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published New England contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:20f8f1adfd20",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Steele contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:edab4d0591fe",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published LaMoure contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:12053c697468",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Edgeley contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:680e205b72e4",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Napoleon contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:719e73b2f8c2",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Towner contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:0748dd6bf967",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Ashley contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:42951f93ddf0",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Wishek contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b134b2f5a9d4",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Cartwright contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:0b99919e9504",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Watford City contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:70bcc7df5595",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Garrison contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5d5b4cd336d5",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published White Shield contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:1a8c3b30277e",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Turtle Lake contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:16b418898d63",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Washburn contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:49a5ff3c2e21",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Beulah contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:c5d2e2fa3a20",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Almont contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b6c7bfb2ca82",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Flasher contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:975504d3430c",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Mandan contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:2b8862884780",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Glen Ullin contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:7fb9ff357e34",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Hebron contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:13a0406f3eb2",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published New Salem contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5cafbac04adf",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Saint Anthony contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:0c8813cf4a8e",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Stanley contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:00c132dc55a7",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published New Town contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:1f4c6010a4a9",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Palermo contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:42172969ae06",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Parshall contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:f81828320430",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Plaza contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:e97c2952a020",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Ross contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:99c709fb7432",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Lakota contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:f1d9abcdd8b2",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Center contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:2ff556474ede",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Cavalier contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:1966310c05ff",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Rugby contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:df5af2acc9be",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Devils Lake contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:ee2e351b1be8",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Enderlin contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5c0c7d32a4b5",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Lisbon contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:48f461758727",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Mohall contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:9615453d9186",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Abercrombie contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:ad8c9c38f582",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Colfax contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:d8855115ab1d",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Fairmount contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:a4d3633c05fe",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Hankinson contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:bfdd1691449c",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Lidgerwood contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:4d3bbb1f4f47",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Wahpeton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:05f6c427816c",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Wyndmere contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:d18ad9c3f1be",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Belcourt contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:2d2357db2060",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Dunseith contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:6702464b83ab",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Rolla contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5ebdddf12e1f",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published St. John contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:8301f135f9e7",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Rolette contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:bdf6479275b0",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Forman contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:68716bf7c39f",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published McClusky contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:441952439225",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Fort Yates contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:f34f8852d720",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Marmarth contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:bf003bdb2119",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Amidon contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b7484eae83b2",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Belfield contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:9bf2112c9c33",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Dickinson contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:73bc6b3239bd",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Richardton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:21a831141853",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Finley contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:f7c7ed2bc479",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Medina contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:62049c801a7a",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Jamestown contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:45b205254009",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Cando contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:4c535139e478",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Mayille contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5d6d630338d8",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Grafton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b7a1e8316d71",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Berthold contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:d9d0443a7ebb",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Burlington contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:9c1f58d29e3d",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Kenmare contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:24aa0368e08f",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Minot contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:cc4bfbedaac7",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Ryder contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:704015ab4b67",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Sawyer contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:556067824ceb",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Surrey contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:296c1c532c2b",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Bowdon contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:44a65d0c30eb",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Fessenden contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:c2c41f1c5e3b",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Harvey contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:e79bacf3fead",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Williston contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:d96dbb11a4e5",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Grenora contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5f16ee87542e",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Ray contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:7eae1c3f4f88",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Tioga contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b07da2c76d6c",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Wildrose contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:1e9e8b3a8cab",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Stanton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:4ca5b44d206a",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Porcupine contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:38d90abca22d",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Selfridge contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:3426ede1c75a",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Solen contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5524e04f153d",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Cannon Ball contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:982ad2b3d87a",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Hillsboro contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:19091e5b57a4",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered office match for the published Trenton contact",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:7dfa3feeacaa",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Adams",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Adams County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:c6ef77da9a53",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Barnes",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Barnes County Courthouse (Dropbox)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:c7c541378e93",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Benson",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Tokio Food Pantry (Dropbox)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:e2b5a400c198",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Billings",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Fairfield Fire Hall (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:1b6285016e6b",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Bottineau",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Bottineau Auditor's Office (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:0436f43b1099",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Bowman",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Scranton Community Center"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:16851329cca5",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Burke",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Burke County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:562f02eb3f2b",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Burleigh",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "City/County Building (Dropbox)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:e52de3fed5d9",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Cass",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Cass County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:06039b1c66fc",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Grand Forks",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "GF County Office Bldg Parking Ramp (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:ac5a89947b30",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Morton",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Morton County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:e6e896ef86d5",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Sioux",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Solen Fire Hall"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:1b26c174b59c",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Cavalier",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Cavalier County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5d2e47087d28",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Dickey",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Dickey County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:00d0eef86a06",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Divide",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Divide County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:07c8489068f9",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Dunn",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Twin Buttes Community Center"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5ec80b882107",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Eddy",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Eddy County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:158d9a7fd35b",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Emmons",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "The Blue Room"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:3fa03725eee1",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Foster",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Carrington Library"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:0730f78c370d",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Golden Valley",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Golden Valley County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b88601ba0365",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Grant",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Grant County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:590fa3f653f6",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Griggs",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Griggs County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:00fafc32eed9",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Hettinger",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Regent City Hall (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5b571eeb266d",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Kidder",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Kidder County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:f706029cdb0b",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for LaMoure",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "LaMoure County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:79f0e60f9bd0",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Logan",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Logan County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:feaffd566881",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for McHenry",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "McHenry County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b4811202a756",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for McIntosh",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "National Guard Armory"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:143c81280d84",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for McKenzie",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "McKenzie County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:4d5accc5757f",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for McLean",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "McLean County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:1a7c49ce08f8",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Mercer",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Mercer County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:a95b01da2a69",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Mountrail",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Ross Community Building"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:5c83fb995a9b",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Nelson",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Nelson County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:60493072e973",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Oliver",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Oliver County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:2c85115e8c4e",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Pembina",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Pembina County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:de6df39ef97d",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Pierce",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Pierce County Courthouse (Drop box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:b984c1233c69",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Ramsey",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Memorial Building"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:2eb1a152c101",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Ransom",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Ransom County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:67d9f385c677",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Renville",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Renville County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:9a4417743086",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Richland",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Richland County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:c371ac16aab7",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Rolette",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Rolette City Hall (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:260b4007d431",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Sargent",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Sargent County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:353f4bd0b010",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Sheridan",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "McClusky Ambulance Bay"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:c00634239767",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Slope",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Slope County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:23b6b946a3cd",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Stark",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Stark County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:db114a65a503",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Steele",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Steele County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:05724899e35c",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Stutsman",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Stutsman County Courthouse (Early Vote)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:bd2074597137",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Towner",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Towner Courthouse (Dropbox)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:a6e1e3fe034d",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Traill",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Traill County Courthouse (Drop Box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:9232ed19c039",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Walsh",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Walsh County Courthouse"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:8c9ac2779893",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Ward",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Ward County Administration Building - 1st Floor Meeting Rooms 105, 106 & 108"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:522be0f6c935",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Wells",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Harvey City Hall"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      },
+      {
+        "id": "nd-statewide-general-2026:missing-sites:ebf2a937f63a",
+        "doorId": "nd-statewide-general-2026",
+        "scope": {
+          "state": "ND",
+          "ocdId": "ocd-division/country:us/state:nd",
+          "name": "North Dakota"
+        },
+        "status": "open",
+        "reason": "missing-sites",
+        "owed": "Registered county match for Williams",
+        "tried": [
+          "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+          "Williams Co Admin Bldg (Drop box)"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tx-el-paso-vote-centers-2026",
+    "state": "TX",
+    "sites": 123,
+    "blanks": []
+  },
+  {
+    "id": "sd-statewide-general-polling-2026",
+    "state": "SD",
+    "sites": 456,
+    "blanks": []
+  },
+  {
+    "id": "ok-statewide-early-voting-2026",
+    "state": "OK",
+    "sites": 93,
+    "blanks": []
+  },
+  {
+    "id": "ia-scott-precinct-polling",
+    "state": "IA",
+    "sites": 64,
+    "blanks": []
+  },
+  {
+    "id": "mn-renville-polling",
+    "state": "MN",
+    "sites": 25,
+    "blanks": []
+  },
+  {
+    "id": "ne-douglas-drop-boxes",
+    "state": "NE",
+    "sites": 13,
+    "blanks": []
+  },
+  {
+    "id": "mo-st-louis-current-polling-centers",
+    "state": "MO",
+    "sites": 57,
+    "blanks": []
+  },
+  {
+    "id": "ar-sebastian-general-election-notice-2026",
+    "state": "AR",
+    "sites": 0,
+    "blanks": [
+      {
+        "id": "ar-sebastian-general-election-notice-2026:extraction:dcbea26708d7",
+        "doorId": "ar-sebastian-general-election-notice-2026",
+        "scope": {
+          "state": "AR",
+          "ocdId": "ocd-division/country:us/state:ar/county:sebastian",
+          "name": "Sebastian County",
+          "countyFips": "05131"
+        },
+        "status": "open",
+        "reason": "extraction",
+        "owed": "Published ELECTION_DAY, EARLY_VOTING sites and hours",
+        "tried": [
+          "https://www.sebastiancountyar.gov/robots.txt: HTTP 200",
+          "https://www.sebastiancountyar.gov/robots.txt: robots.txt DISALLOWED for /Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf: longest-match rule in the `*` group is `Disallow: /Portals/` for /Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf — recorded as evidence; the public page is still read",
+          "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf: HTTP 200",
+          "Error: Cannot find package 'pdfjs-dist' imported from /workspace/meanwhile/lib/ballot/voting-source-tables.ts"
+        ],
+        "next": [
+          "Follow the chief election office's current election files and map services",
+          "Read the delegated county or town election office's public lists and files"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ks-johnson-general-advance-2026",
+    "state": "KS",
+    "sites": 23,
+    "blanks": []
+  },
+  {
+    "id": "ar-benton-county-gis-early",
+    "state": "AR",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "ar-benton-county-gis-election-day",
+    "state": "AR",
+    "sites": 2,
+    "blanks": []
+  },
+  {
+    "id": "la-statewide-early-voting",
+    "state": "LA",
+    "sites": 112,
+    "blanks": []
+  },
+  {
+    "id": "tx-el-paso-early-voting-2026",
+    "state": "TX",
+    "sites": 39,
+    "blanks": []
+  }
+]

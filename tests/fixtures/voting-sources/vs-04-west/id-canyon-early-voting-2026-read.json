@@ -1,0 +1,155 @@
+{
+  "doorId": "id-canyon-early-voting-2026",
+  "sites": [
+    {
+      "id": "voting-6ec82bfb91e1a12902552ea7",
+      "name": "Canyon County Elections Office",
+      "address": "5815 Graye Lane. Caldwell, ID 83607",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Canyon County Elections",
+          "url": "https://elections.canyoncounty.id.gov/upcoming/",
+          "title": "Upcoming November 2026 Election – Canyon County Elections",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "dc2b10e0c0b65b0fa3c4c364d4a54bd4251ab3b90656def838c4206221358819",
+          "documentUrl": "https://elections.canyoncounty.id.gov/upcoming/"
+        }
+      ],
+      "days": "Saturday, October 24, 2026",
+      "hours": "Monday through Friday, 8:00 a.m. to 5:00 p.m., and Saturday 8:00 a.m. to 5:00 p.m.",
+      "countyFips": "16027",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "October 19, 2026, through October 30, 2026",
+          "hours": "Monday through Friday, 8:00 a.m. to 5:00 p.m., and Saturday 8:00 a.m. to 5:00 p.m.",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Canyon County Elections",
+            "url": "https://elections.canyoncounty.id.gov/upcoming/",
+            "title": "Upcoming November 2026 Election – Canyon County Elections",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "dc2b10e0c0b65b0fa3c4c364d4a54bd4251ab3b90656def838c4206221358819",
+            "documentUrl": "https://elections.canyoncounty.id.gov/upcoming/"
+          }
+        },
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Saturday, October 24, 2026",
+          "hours": "Monday through Friday, 8:00 a.m. to 5:00 p.m., and Saturday 8:00 a.m. to 5:00 p.m.",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Canyon County Elections",
+            "url": "https://elections.canyoncounty.id.gov/upcoming/",
+            "title": "Upcoming November 2026 Election – Canyon County Elections",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "dc2b10e0c0b65b0fa3c4c364d4a54bd4251ab3b90656def838c4206221358819",
+            "documentUrl": "https://elections.canyoncounty.id.gov/upcoming/"
+          }
+        }
+      ],
+      "assignments": [],
+      "precincts": []
+    },
+    {
+      "id": "voting-b883f92229e2230f911b8db2",
+      "name": "Nampa City Hall",
+      "address": "411 3rd St. S. Nampa, ID 83651",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Canyon County Elections",
+          "url": "https://elections.canyoncounty.id.gov/upcoming/",
+          "title": "Upcoming November 2026 Election – Canyon County Elections",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "dc2b10e0c0b65b0fa3c4c364d4a54bd4251ab3b90656def838c4206221358819",
+          "documentUrl": "https://elections.canyoncounty.id.gov/upcoming/"
+        }
+      ],
+      "days": "October 19, 2026, through October 30, 2026",
+      "hours": "Monday through Friday, 8:00 a.m. to 5:00 p.m., and Saturday 8:00 a.m. to 5:00 p.m.",
+      "countyFips": "16027",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "October 19, 2026, through October 30, 2026",
+          "hours": "Monday through Friday, 8:00 a.m. to 5:00 p.m., and Saturday 8:00 a.m. to 5:00 p.m.",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Canyon County Elections",
+            "url": "https://elections.canyoncounty.id.gov/upcoming/",
+            "title": "Upcoming November 2026 Election – Canyon County Elections",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "dc2b10e0c0b65b0fa3c4c364d4a54bd4251ab3b90656def838c4206221358819",
+            "documentUrl": "https://elections.canyoncounty.id.gov/upcoming/"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Canyon County Elections",
+      "url": "https://elections.canyoncounty.id.gov/upcoming/",
+      "title": "Upcoming November 2026 Election – Canyon County Elections",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://elections.canyoncounty.id.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://elections.canyoncounty.id.gov/upcoming/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://elections.canyoncounty.id.gov/robots.txt",
+      "contentType": "text/plain; charset=utf-8",
+      "rawHash": "61fb0c7405ef149fb7ba02c7049adea6e0b1d6fd8161f653bb7ebe7b7912a37b",
+      "path": "tests/fixtures/voting-sources/vs-04-west/id-f3be5f190746-61fb0c7405ef.bin"
+    },
+    {
+      "url": "https://elections.canyoncounty.id.gov/upcoming/",
+      "contentType": "text/html; charset=UTF-8",
+      "rawHash": "dc2b10e0c0b65b0fa3c4c364d4a54bd4251ab3b90656def838c4206221358819",
+      "path": "tests/fixtures/voting-sources/vs-04-west/id-8a7ea59eb1ee-dc2b10e0c0b6.html"
+    }
+  ],
+  "fileTitle": "Upcoming November 2026 Election – Canyon County Elections",
+  "contacts": []
+}

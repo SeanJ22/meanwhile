@@ -1,0 +1,401 @@
+[
+  {
+    "url": "https://www.fnsb.gov/DocumentCenter/View/468/Polling-Places-by-District-PDF",
+    "finalUrl": "https://www.fnsb.gov/DocumentCenter/View/468/Polling-Places-by-District-PDF",
+    "status": 200,
+    "responseHeaders": {},
+    "contentType": "application/pdf",
+    "capturedAt": "2026-10-21T04:34:39.742Z",
+    "rawHash": "b84a40bdbf794ac1ca5db1a50539b501d80a4c413f17cdb96eb418d1629fd83b",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-db3d88f4f8c6-b84a40bdbf79.pdf",
+    "savedHash": "b84a40bdbf794ac1ca5db1a50539b501d80a4c413f17cdb96eb418d1629fd83b",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+    "finalUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+    "status": 200,
+    "responseHeaders": {},
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:34:39.611Z",
+    "rawHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+    "path": "tests/fixtures/voting-sources/vs-04-west/co-de56f9c63a86-e28b83c46e48.html",
+    "savedHash": "e28b83c46e48d52f86b5a4942e86936ba2a447b1e539cb3a5ad78f7babcbfe5c",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+        "label": "Read More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/index.php",
+        "label": ""
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/faqs/index.php",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+        "label": "Zulu"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+        "label": "Ballot Drop Locations"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/nearest_voting_location.php",
+        "label": "Find My Nearest"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/curbside_ballot_pickup.php",
+        "label": "Curbside Ballot Pickup"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/wait_times.php",
+        "label": "Wait Times"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations",
+        "label": "Home"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/index.php",
+        "label": "Your County"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/index.php",
+        "label": "Voting Locations"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/vote/acceptableFormsOfID.html",
+        "label": "acceptable form of ID"
+      },
+      {
+        "url": "https://gisportal.arapahoegov.com/portal/apps/instant/nearby/index.html?appid=5aafba02f9df479c833c476960d1b3ff",
+        "label": "Enter your address to find your nearest VSPC location."
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R212.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=5900+S+Santa+Fe+Dr+Littleton+CO+80120",
+        "label": "Address 5900 S Santa Fe Dr,\nLittleton, CO 80120"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R214.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=14980+E+Alameda+Dr+Aurora+CO+80012",
+        "label": "Address 14980 E Alameda Dr,\nAurora, CO 80012"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R245.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=25690+E+Quincy+Ave+Aurora+CO+800116",
+        "label": "Address 25690 E Quincy Ave,\nAurora, CO 800116"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R217.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=6954+S+Lima+St+Centennial+CO+80112",
+        "label": "Address 6954 S Lima St,\nCentennial, CO 80112"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R220.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=30+Del+Mar+Cir+Aurora+CO+80011",
+        "label": "Address 30 Del Mar Cir,\nAurora, CO 80011"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R210.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=1085+Peoria+St+Aurora+CO+80011",
+        "label": "Address 1085 Peoria St,\nAurora, CO 80011"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R272.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=585+Salida+Way+Aurora+CO+80011",
+        "label": "Address 585 Salida Way,\nAurora, CO 80011"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R211.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=15771+E+1st+Ave+Aurora+CO+80011",
+        "label": "Address 15771 E 1st Ave,\nAurora, CO 80011"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R264.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=25400+E+Alexander+Dr+Aurora+CO+80016",
+        "label": "Address 25400 E Alexander Dr,\nAurora, CO 80016"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R222.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=6014+S+Datura+St+Littleton+CO+80120",
+        "label": "Address 6014 S Datura St,\nLittleton, CO 80120"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R225.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=18150+E+Vassar+Pl+Aurora+CO+80013",
+        "label": "Address 18150 E Vassar Pl,\nAurora, CO 80013"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R228.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=15151+E+Alameda+Pkwy+Aurora+CO+80012",
+        "label": "Address 15151 E Alameda Pkwy,\nAurora, CO 80012"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R229.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=950+S+Birch+St+Glendale+CO+80246",
+        "label": "Address 950 S Birch St,\nGlendale, CO 80246"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R260.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=4101+S+Federal+Blvd+Sheridan+CO+80110",
+        "label": "Address 4101 S Federal Blvd,\nSheridan, CO 80110"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R223.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=16000+E+CentreTech+Pkwy+Aurora+CO+80011",
+        "label": "Address 16000 E CentreTech Pkwy,\nAurora, CO 80011"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R259.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=7100+Cherry+Creek+S+Dr+Denver+CO+80224",
+        "label": "Address 7100 Cherry Creek S Dr,\nDenver, CO 80224"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R234.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=1000+Englewood+Pkwy+Englewood+CO",
+        "label": "Address 1000 Englewood Pkwy,\nEnglewood, CO  80110"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R236.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=6060+S+Quebec+St+Greenwood+Village+CO+80111",
+        "label": "Address 6060 S Quebec St,\nGreenwood Village, CO 80111"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R231.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=2888+S+Heather+Gardens+Way+Aurora+CO+80014",
+        "label": "Address 2888 S Heather Gardens Way,\nAurora, CO 80014"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R239.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=585+S+Main+St+Byers+CO+80103",
+        "label": "Address 585 S Main St,\nByers, CO 80103"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R240.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=9898+E+Colfax+Ave+Aurora+CO+80010",
+        "label": "Address 9898 E Colfax Ave,\nAurora, CO 80010"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R241.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=15324+E+Hampden+Cir+Aurora+CO",
+        "label": "Address 15324 E Hampden Cir,\nAurora, CO  80013"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R243.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=1700+S+Old+Tom+Morris+Rd+Aurora+CO+80018",
+        "label": "Address 1700 S Old Tom Morris Rd,\nAurora, CO 80018"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R244.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=14501+E+Crestline+Dr+Aurora+CO+80015",
+        "label": "Address 14501 E Crestline Dr,\nAurora, CO 80015"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R248.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=5430+S+Biscay+Cir+Centennial+CO+80015",
+        "label": "Address 5430 S Biscay Cir,\nCentennial, CO 80015"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R262.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=9195+E+Mineral+Ave+Centennial+CO+80112",
+        "label": "Address 9195 E Mineral Ave,\nCentennial, CO 80112"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R249.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=6972+S+Vine+St+Centennial+CO+80122",
+        "label": "Address 6972 S Vine St,\nCentennial, CO 80122"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R263.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=12855+E+Adam+Aircraft+Cir+Englewood+CO+80112",
+        "label": "Address 12855 E Adam Aircraft Cir,\nEnglewood, CO 80112"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R257.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=23911+E+Arapahoe+Rd+Aurora+CO+80016",
+        "label": "Address 23911 E Arapahoe Rd,\nAurora, CO 80016"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R258.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=13231+E+Mississippi+Ave+Aurora+CO+80012",
+        "label": "Address 13231 E Mississippi Ave,\nAurora, CO 80012"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R267.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=900+Auraria+Pkwy+Denver+CO+80204",
+        "label": "Address 900 Auraria Pkwy,\nDenver, CO 80204"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R265.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=25300+E+4th+Ave+Aurora+CO+80018",
+        "label": "Address 25300 E 4th Ave,\nAurora, CO 80018"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R256.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=16799+E+Lake+Ave+Centennial+CO+80016",
+        "label": "Address 16799 E Lake Ave,\nCentennial, CO 80016"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/business_detail_T15_R253.php",
+        "label": "Read More"
+      },
+      {
+        "url": "http://maps.google.com?q=24500+E+6th+Ave+Aurora+CO+80018",
+        "label": "Address 24500 E 6th Ave,\nAurora, CO 80018"
+      },
+      {
+        "url": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.arapahoeco.gov%2Fyour_county%2Farapahoevotes%2Fvoting_locations%2Fvoter_service_polling_centers.php",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://www.twitter.com/intent/tweet?url=http%3A%2F%2Fwww.arapahoeco.gov%2Fyour_county%2Farapahoevotes%2Fvoting_locations%2Fvoter_service_polling_centers.php",
+        "label": "Twitter"
+      },
+      {
+        "url": "https://www.reddit.com/submit?url=http%3A%2F%2Fwww.arapahoeco.gov%2Fyour_county%2Farapahoevotes%2Fvoting_locations%2Fvoter_service_polling_centers.php",
+        "label": "Reddit"
+      },
+      {
+        "url": "https://userway.org",
+        "label": "website accessibility"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/contact_us/index.php",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/county_departments/information_technology/technology_accessibility.php",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://www.facebook.com/ArapahoeClerk",
+        "label": ""
+      },
+      {
+        "url": "https://twitter.com/ArapahoeClerk",
+        "label": ""
+      },
+      {
+        "url": "https://www.instagram.com/ArapahoeClerk",
+        "label": ""
+      },
+      {
+        "url": "https://www.youtube.com/user/arapahoecountygov",
+        "label": ""
+      },
+      {
+        "url": "https://www.revize.com",
+        "label": ""
+      },
+      {
+        "url": "https://cms3.revize.com/revize/security/index.jsp?filename=%2Fyour_county%2Farapahoevotes%2Fvoting_locations%2Fvoter_service_polling_centers.php&webspace=arapahoe",
+        "label": "Login"
+      }
+    ]
+  }
+]

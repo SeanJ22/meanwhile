@@ -1,0 +1,4034 @@
+{
+  "doorId": "ok-statewide-early-voting-2026",
+  "sites": [
+    {
+      "id": "voting-07b3e1a5300b09263357a3cd",
+      "name": "ADAIR COUNTY ELECTION BOARD",
+      "address": "220 W Division St \r\nCounty Courthouse \r\nStilwell, OK 74960",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Adair",
+      "countyFips": "40001",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ff762f38f95bf3cad51627be",
+      "name": "ALFALFA COUNTY ELECTION BOARD",
+      "address": "602 W 5th St, Ste 3 \r\nCherokee, OK 73728",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Alfalfa",
+      "countyFips": "40003",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9f0fac3f32883c59bccc7c9e",
+      "name": "ATOKA COUNTY ELECTION BOARD",
+      "address": "200 E Court St, Ste 106E \r\nCounty Courthouse \r\nAtoka, OK 74525",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Atoka",
+      "countyFips": "40005",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b78091bd18b960dda8013ddc",
+      "name": "BEAVER COUNTY ELECTION BOARD",
+      "address": "111 W 2nd St \r\nCounty Courthouse, Basement \r\nBeaver, OK 73932",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Beaver",
+      "countyFips": "40007",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6879a3416d57af463d2a8281",
+      "name": "Beckham County Activity Center",
+      "address": "310 E. Main Street \r\nSayre, OK 73662",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Beckham",
+      "countyFips": "40009",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2f9fd92ed4808e73d4c0c817",
+      "name": "BLAINE COUNTY ELECTION BOARD",
+      "address": "212 N. Weigle \r\nWatonga, OK 73772",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Blaine",
+      "countyFips": "40011",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e8359d5ff7ba33b46253f736",
+      "name": "BRYAN COUNTY ELECTION BOARD",
+      "address": "402 W Evergreen St, Ste A-2 \r\nDurant, OK 74701",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Bryan",
+      "countyFips": "40013",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-dd061cc628f875604e23f3d7",
+      "name": "Caddo County Courthouse",
+      "address": "110 SW 2nd St, Ste 106 \r\nAnadarko, OK 73005",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Caddo",
+      "countyFips": "40015",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3796f62475328840b0de84f2",
+      "name": "CANADIAN VALLEY TECHNOLOGY CENTER COWAN CAMPUS",
+      "address": "1701 S CZECH HALL RD \r\nYUKON, OK 73099",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Canadian",
+      "countyFips": "40017",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e86266488f72a4fb67e397fb",
+      "name": "Educational Building",
+      "address": "220 N. Country Club Rd \r\nEl Reno, OK 73036",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Canadian",
+      "countyFips": "40017",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-eea9650c59d288433e51d480",
+      "name": "ELECTION BOARD OFFICE",
+      "address": "25 A ST NW \r\nSUITE 100 \r\nARDMORE, OK 73401",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Carter",
+      "countyFips": "40019",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8307d8872f07460be3a62786",
+      "name": "CHEROKEE COUNTY ELECTION BOARD",
+      "address": "914 S College Ave \r\nTahlequah, OK 74464",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Cherokee",
+      "countyFips": "40021",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4c192ad1d983bc76201ad5e0",
+      "name": "Courthouse",
+      "address": "300 E Duke St. \r\nHugo \r\nOk., OK 74743",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Choctaw",
+      "countyFips": "40023",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-806cc242aaaff300ebf44adf",
+      "name": "CIMARRON COUNTY ELECTION BOARD",
+      "address": "County Courthouse, Basement \r\nBoise City, OK 73933",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Cimarron",
+      "countyFips": "40025",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4763a1dd8ed813235cb1b424",
+      "name": "AST RESOURCE CENTER",
+      "address": "1970 156TH AVE NE \r\nNORMAN, OK 73026",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Cleveland",
+      "countyFips": "40027",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-45bb53ea8e3ce7e1e1c09d39",
+      "name": "CLEVELAND COUNTY FAIRGROUNDS",
+      "address": "615 E ROBINSON ST. \r\nNORMAN, OK 73072",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Cleveland",
+      "countyFips": "40027",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b079eb59966b435f4f71ad09",
+      "name": "MNTC SOUTH PENN CAMPUS",
+      "address": "13301 S PENN \r\nOKLAHOMA CITY, OK 73170",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Cleveland",
+      "countyFips": "40027",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e18fe993322bb174dcc0322b",
+      "name": "MOORE PUBLIC LIBRARY",
+      "address": "225 S HOWARD \r\nMOORE, OK 73160",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Cleveland",
+      "countyFips": "40027",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-1f270ec96c97a6a2855bd414",
+      "name": "NOBLE PUBLIC LIBRARY",
+      "address": "204 N 5TH ST \r\nNOBLE, OK 73068",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Cleveland",
+      "countyFips": "40027",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b4d6e8b95b31291b49210423",
+      "name": "SOONER MALL",
+      "address": "3301 W MAIN STREET \r\nNORMAN, OK OK",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Cleveland",
+      "countyFips": "40027",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-708811779018d4399ddb09bb",
+      "name": "COAL COUNTY ELECTION BOARD",
+      "address": "5 W Clay St \r\nCoalgate, OK 74538",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Coal",
+      "countyFips": "40029",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-213bd2615a7327310009e205",
+      "name": "COMANCHE COUNTY ELECTION BOARD",
+      "address": "315 SW 5th St, Rm 206 \r\nCounty Courthouse \r\nLawton, OK 73501",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Comanche",
+      "countyFips": "40031",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b2d1e4749234529e80c82a43",
+      "name": "COTTON COUNTY ELECTION BOARD",
+      "address": "301 N Broadway St, Rm 2 \r\nWalters, OK 73572",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Cotton",
+      "countyFips": "40033",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9d313f5c238b778549602842",
+      "name": "CRAIG COUNTY ELECTION BOARD",
+      "address": "210 W Delaware Ave, Ste 108 \r\nVinita, OK 74301",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Craig",
+      "countyFips": "40035",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a80128e814af6ee6ff18990d",
+      "name": "Creek County Fairgrounds",
+      "address": "17808 W Hwy 66 \r\nKellyville, OK 74039",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Creek",
+      "countyFips": "40037",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-90a24b705832495e10ae5664",
+      "name": "CUSTER COUNTY ELECTION BOARD",
+      "address": "633 N 6th St \r\nClinton, OK 73601",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Custer",
+      "countyFips": "40039",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-744843c6d694549032bd9af0",
+      "name": "CITY OF GROVE COMMUNITY BULDING",
+      "address": "104 W 3RD ST \r\nGROVE, OK 74344",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Delaware",
+      "countyFips": "40041",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-54792b7038fecbcecc639212",
+      "name": "DELAWARE COUNTY ELECTION BOARD",
+      "address": "225 S 5th St \r\nJay, OK 74346",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Delaware",
+      "countyFips": "40041",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8d6741e169d5bc90df4faa2d",
+      "name": "DEWEY COUNTY ELECTION BOARD",
+      "address": "213 S Broadway St \r\nCounty Courthouse \r\nTaloga, OK 73667",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Dewey",
+      "countyFips": "40043",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-021fe02e3e95a6af537f1403",
+      "name": "ELLIS COUNTY ELECTION BOARD",
+      "address": "100 S Washington St \r\nCounty Courthouse, Basement \r\nArnett, OK 73832",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Ellis",
+      "countyFips": "40045",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-62578cd159d6ce73ed49f08b",
+      "name": "GARFIELD COUNTY ELECTION BOARD",
+      "address": "903 Failing Dr \r\nEnid, OK 73701",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Garfield",
+      "countyFips": "40047",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f02affebc7524bfd84b91a92",
+      "name": "GARVIN COUNTY ELECTION BOARD",
+      "address": "201 W Grant Ave, Rm 8 \r\nCounty Courthouse, 1st Floor \r\nPauls Valley, OK 73075",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Garvin",
+      "countyFips": "40049",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6c058a88e89bb174802f4fc5",
+      "name": "GRADY COUNTY ELECTION BOARD",
+      "address": "315 W Pennsylvania Ave \r\nChickasha, OK 73018",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Grady",
+      "countyFips": "40051",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5115be3e81455b91a51e8c20",
+      "name": "GRANT COUNTY ELECTION BOARD",
+      "address": "112 E Guthrie St, Ste 301A \r\nCounty Courthouse \r\nMedford, OK 73759",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Grant",
+      "countyFips": "40053",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-638d9c903e660fa5efb9d621",
+      "name": "GREER COUNTY ELECTION BOARD",
+      "address": "106 E Jefferson St, Rm 1 \r\nCounty Courthouse, 1st Floor \r\nMangum, OK 73554",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Greer",
+      "countyFips": "40055",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b48b9df2ff53bdfe4a8089c8",
+      "name": "HARMON COUNTY ELECTION BOARD",
+      "address": "114 W Hollis St, Fl 2 Rm 5 \r\nCounty Courthouse \r\nHollis, OK 73550",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Harmon",
+      "countyFips": "40057",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-aa3370430404d3d5876ff996",
+      "name": "HARPER COUNTY ELECTION BOARD",
+      "address": "311 SE 1st St \r\nCounty Courthouse, 2nd Floor \r\nBuffalo, OK 73834",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Harper",
+      "countyFips": "40059",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bd9a3fb601a191e86504c345",
+      "name": "HASKELL COUNTY ELECTION BOARD",
+      "address": "202 E Main ST STE 1 \r\nStigler, OK 74462",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Haskell",
+      "countyFips": "40061",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7f80b1936a821276f262fafc",
+      "name": "HUGHES COUNTY ELECTION BOARD",
+      "address": "200 N Broadway St, Ste 3 \r\nCounty Courthouse \r\nHoldenville, OK 74848",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Hughes",
+      "countyFips": "40063",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8349b1abd06659b5605e40b9",
+      "name": "Altus Community Center",
+      "address": "401 Falcon \r\nAltus, OK 73521",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Jackson",
+      "countyFips": "40065",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9539e3569295cce0d0766cd4",
+      "name": "County Courthouse",
+      "address": "220 N Main St. Room 205 \r\nWaurika, OK 73573",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Jefferson",
+      "countyFips": "40067",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b1fc43322542412b6b50d831",
+      "name": "Former Johnston County Commissioner's Office",
+      "address": "705 W. Main St \r\nTishomingo, OK 73460",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Johnston",
+      "countyFips": "40069",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-eff5ff270126ce1eee81f665",
+      "name": "KAY COUNTY ELECTION BOARD",
+      "address": "219 S Main St \r\nAdministration Building \r\nNewkirk, OK 74647",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Kay",
+      "countyFips": "40071",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-78314fb201efc2f55e6d59d3",
+      "name": "Kingfisher County Fairgrounds",
+      "address": "300 S. 13th St \r\nKingfisher, OK 73750",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Kingfisher",
+      "countyFips": "40073",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2ebb770486f875e3090a8715",
+      "name": "KIOWA COUNTY ELECTION BOARD",
+      "address": "215 N Lincoln St \r\nHobart, OK 73651",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Kiowa",
+      "countyFips": "40075",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8191b0b21bb57a71da89ea2c",
+      "name": "LATIMER COUNTY ELECTION BOARD",
+      "address": "109 N Central St, Ste 102 \r\nCounty Courthouse \r\nWilburton, OK 74578",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Latimer",
+      "countyFips": "40077",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-69f9ef57267042d178516463",
+      "name": "LEFLORE COUNTY ELECTION BOARD",
+      "address": "103 N Church St \r\nPoteau, OK 74953",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "LeFlore",
+      "countyFips": "40079",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0912d3f7ee1d70e66c895616",
+      "name": "LINCOLN COUNTY ELECTION BOARD",
+      "address": "811 Manvel Ave, Ste 15 \r\nCounty Courthouse \r\nChandler, OK 74834",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Lincoln",
+      "countyFips": "40081",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-44e6cc453f9d6db7d31f1d50",
+      "name": "Logan CEB Early Voting Area",
+      "address": "219 S Broad St \r\nGuthrie, OK 73044",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Logan",
+      "countyFips": "40083",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-681d661a78a6d7f59469acd9",
+      "name": "LOVE COUNTY ELECTION BOARD",
+      "address": "405 W Main St, Ste 103 \r\nCounty Courthouse \r\nMarietta, OK 73448",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Love",
+      "countyFips": "40085",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0404474298ed18ebb4bc4a91",
+      "name": "Major County Fairgrounds",
+      "address": "808 E. Highland St. \r\nFairview, OK 73737",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Major",
+      "countyFips": "40093",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bab0037f3fbd7213336e79fa",
+      "name": "County Courthouse",
+      "address": "100 Plaza Room 107 \r\nMadill, OK 73446",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Marshall",
+      "countyFips": "40095",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2b2b5290d9a39139227332aa",
+      "name": "MAYES COUNTY ELECTION BOARD",
+      "address": "1 Court Pl, Ste 130 \r\nCounty Courthouse \r\nPryor, OK 74361",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Mayes",
+      "countyFips": "40097",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9641e16ed1de90eff9e4b9dd",
+      "name": "HISTORICAL CITY HALL",
+      "address": "114 W BROADWAY ST \r\nBLANCHARD, OK OK 73010",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "McClain",
+      "countyFips": "40087",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e30b9265d3f52dc907dedaa5",
+      "name": "McClain County Community Building",
+      "address": "1721 Hardcastle Blvd \r\nPurcell, OK 73080",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "McClain",
+      "countyFips": "40087",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a8fd71103fd524510920df4c",
+      "name": "MCCURTAIN COUNTY ELECTION BOARD",
+      "address": "104 N Central Ave \r\nIdabel, OK 74745",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "McCurtain",
+      "countyFips": "40089",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-23d1ca2e1e75a6638378d476",
+      "name": "MCINTOSH COUNTY ELECTION BOARD",
+      "address": "110 N 1st St, Ste 101 \r\nCounty Courthouse, 1st Floor \r\nEufaula, OK 74432",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "McIntosh",
+      "countyFips": "40091",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c2f7b35b298bf79089b6468b",
+      "name": "Murray County Expo",
+      "address": "3490 W Hwy 7 \r\nSulphur, OK 73086",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Murray",
+      "countyFips": "40099",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ada96aba199d2c1d3d39a9ea",
+      "name": "MUSKOGEE COUNTY ELECTION BOARD",
+      "address": "400 W Broadway St, Ste 120 \r\nMuskogee, OK 74401",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Muskogee",
+      "countyFips": "40101",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f70dce7fd6e996d500644fef",
+      "name": "NOBLE COUNTY ELECTION BOARD",
+      "address": "300 Courthouse Dr \r\nCounty Courthouse, 1st Floor \r\nPerry, OK 73077",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Noble",
+      "countyFips": "40103",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c5585436c9bf69f9b1925dba",
+      "name": "NOWATA COUNTY ELECTION BOARD",
+      "address": "228 N Maple St \r\nNowata, OK 74048",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Nowata",
+      "countyFips": "40105",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a1386d6aedd49e64d44a6316",
+      "name": "OKFUSKEE COUNTY ELECTION BOARD",
+      "address": "209 N 3rd St \r\nCounty Courthouse, 1st Floor \r\nOkemah, OK 74859",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Okfuskee",
+      "countyFips": "40107",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2f70b52b6a00878a67ebfc78",
+      "name": "MAC CENTER",
+      "address": "2733 MARILYN WILLIAMS DR. \r\nEDMOND, OK 73003",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Oklahoma",
+      "countyFips": "40109",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3955a02f616abb8e410970a4",
+      "name": "OKLAHOMA COUNTY ELECTION BOARD",
+      "address": "4201 N Lincoln Blvd \r\nOklahoma City, OK 73105",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Oklahoma",
+      "countyFips": "40109",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-aa873c855d222eaf55a28381",
+      "name": "THE ROCK CHURCH",
+      "address": "6801 S. ANDERSON RD. \r\nOKLAHOMA CITY, OK 73150",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Oklahoma",
+      "countyFips": "40109",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-33a4d552168adfeeca7acce1",
+      "name": "OKMULGEE COUNTY ELECTION BOARD",
+      "address": "314 W 7th St, Ste 102 \r\nCounty Courthouse \r\nOkmulgee, OK 74447",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Okmulgee",
+      "countyFips": "40111",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a836c2a3ef26d0995007f556",
+      "name": "FIRST BAPTIST CHURCH WEST ROGERS CAMPUS",
+      "address": "825 W ROGERS BLVD \r\nSKIATOOK, OK 74070",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Osage",
+      "countyFips": "40113",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5c368f252bcf86d96ba7c7f3",
+      "name": "OSAGE COUNTY ELECTION BOARD",
+      "address": "630 Kihekah Ave \r\nPawhuska, OK 74056",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Osage",
+      "countyFips": "40113",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-258a9d473a771d47753bec0f",
+      "name": "Community Room",
+      "address": "123 E Central AVE \r\nCourthouse Annex \r\nMiami, OK 74354",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Ottawa",
+      "countyFips": "40115",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c3a0771db31091ba427f5809",
+      "name": "PAWNEE COUNTY ELECTION BOARD",
+      "address": "500 Harrison St, Rm 101 \r\nCounty Courthouse \r\nPawnee, OK 74058",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Pawnee",
+      "countyFips": "40117",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c72b6ef26839c3870956d513",
+      "name": "Payne Co. Expo Center",
+      "address": "4518 Expo Cir. E \r\nStillwater, OK 74075",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Payne",
+      "countyFips": "40119",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-cdc4f6040eb9e988ede1eb0e",
+      "name": "PITTSBURG COUNTY ELECTION BOARD",
+      "address": "1609 N. Strong Blvd, Ste 200 \r\nMcAlester, OK 74501",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Pittsburg",
+      "countyFips": "40121",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5f594b9ba3de5edde2af0595",
+      "name": "Pontotoc County Agriplex",
+      "address": "1700 N. Broadway Ave \r\nAda, OK 74820",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Pontotoc",
+      "countyFips": "40123",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3f28d92e08f58fd48c608626",
+      "name": "POTTAWATOMIE COUNTY ELECTION BOARD",
+      "address": "330 N Broadway Ave \r\nShawnee, OK 74801",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Pottawatomie",
+      "countyFips": "40125",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-90ec7aa08d30bb21c259cc0a",
+      "name": "PUSHMATAHA COUNTY ELECTION BOARD",
+      "address": "204 SW 4th St, Ste A \r\nAntlers, OK 74523",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Pushmataha",
+      "countyFips": "40127",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-691f8baa048444d28b72a58e",
+      "name": "ROGER MILLS COUNTY ELECTION BOARD",
+      "address": "500 E Broadway \r\nCounty Courthouse, 1st Floor \r\nCheyenne, OK 73628",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Roger Mills",
+      "countyFips": "40129",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0664fdb9f751d238415c3704",
+      "name": "CENTRAL BAPTIST CHURCH",
+      "address": "9001 N 145TH E AVE \r\nOWASSO, OK OK",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Rogers",
+      "countyFips": "40131",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-18903d91f37fc5ad7de769a0",
+      "name": "ROGERS COUNTY ELECTION BOARD",
+      "address": "415 W 1st St \r\nClaremore, OK 74017",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Rogers",
+      "countyFips": "40131",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d741acf4b983924c7b86e8ab",
+      "name": "SEMINOLE COUNTY ELECTION BOARD",
+      "address": "200 S BROWN \r\nWewoka, OK 74884",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Seminole",
+      "countyFips": "40133",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7c77acc094bfdac755541627",
+      "name": "SEQUOYAH COUNTY ELECTION BOARD",
+      "address": "110 E Creek Ave \r\nSallisaw, OK 74955",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Sequoyah",
+      "countyFips": "40135",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-731ec0825f4b33fee056911e",
+      "name": "STEPHENS COUNTY ELECTION BOARD",
+      "address": "1017 West Elm Ave \r\nDuncan, OK 73533-4746",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Stephens",
+      "countyFips": "40137",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9db10d7bf371b438de5d5f4a",
+      "name": "TEXAS COUNTY ELECTION BOARD",
+      "address": "301 N Main St \r\nCourthouse Annex \r\nGuymon, OK 73942",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Texas",
+      "countyFips": "40139",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ce29340c80134dd1f67d452e",
+      "name": "TILLMAN COUNTY ELECTION BOARD",
+      "address": "201 N Main St, Rm 5 \r\nCounty Courthouse, 1st Floor \r\nFrederick, OK 73542",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Tillman",
+      "countyFips": "40141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-54eaa21a2ba65866034c8211",
+      "name": "CHANDLER PARK COMMUNITY CENTER",
+      "address": "6500 W 21 ST \r\nTULSA, OK 74107",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Tulsa",
+      "countyFips": "40143",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c2dffbdb238c09206b263d0a",
+      "name": "O'BRIEN PARK RECREATION CENTER",
+      "address": "6149 N LEWIS AVE \r\nTULSA, OK 74130",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Tulsa",
+      "countyFips": "40143",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-616648482993d3f0453d7dd8",
+      "name": "TULSA COUNTY ELECTION BOARD",
+      "address": "12000 E Skelly Dr \r\nTulsa, OK 74128",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Tulsa",
+      "countyFips": "40143",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-62be9d598c42cf23405b54c2",
+      "name": "TULSA TECH - BROKEN ARROW",
+      "address": "4000 W. FLORENCE ST. \r\nBROKEN ARROW, OK 74011",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Tulsa",
+      "countyFips": "40143",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-65aed47a673d1c55e2963fdc",
+      "name": "FIRST BAPTIST CHURCH WAGONER",
+      "address": "401 NE 2ND \r\nWAGONER, OK 74467",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Wagoner",
+      "countyFips": "40145",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3535cd4869c82f73e3c4ae24",
+      "name": "NORTHEASTERN STATE UNIVERSITY-BA",
+      "address": "3100 E NEW ORLEANS ST \r\nBROKEN ARROW, OK 74014",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Wagoner",
+      "countyFips": "40145",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ba21ed23d98a7eb03810a46c",
+      "name": "WASHINGTON COUNTY ELECTION BOARD",
+      "address": "401 S Johnstone Ave, Ste 4 \r\nBartlesville, OK 74003",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Washington",
+      "countyFips": "40147",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-85204677424ad05780d3ee0c",
+      "name": "WASHITA COUNTY ELECTION BOARD",
+      "address": "111 E Main St \r\nCordell, OK 73632",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Washita",
+      "countyFips": "40149",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-71de66493c8e76b9827aec68",
+      "name": "427 Barnes Ave",
+      "address": "Woods County Election Office \r\nAlva, OK 73717",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Woods",
+      "countyFips": "40151",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7ad631d3af9c6a1897ff761d",
+      "name": "WOODWARD COUNTY ELECTION BOARD",
+      "address": "1600 Main, Ste. 2 \r\nWoodward, OK 73801",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Oklahoma State Election Board",
+          "url": "https://hosting.okelections.gov/earlyvote.html",
+          "title": "November 3 Election - Early Voting Locations",
+          "checkedAt": "2026-10-21T04:32:36.914Z",
+          "official": true,
+          "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+          "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+        }
+      ],
+      "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+      "countyName": "Woodward",
+      "countyFips": "40153",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "hours": "Wed., Oct. 28 - 8:00 am - 6:00 pm \r\nThu., Oct. 29 - 8:00 am - 6:00 pm \r\nFri., Oct. 30 - 8:00 am - 6:00 pm \r\nSat., Oct. 31 - 8:00 am - 2:00 pm",
+          "source": {
+            "publisher": "Oklahoma State Election Board",
+            "url": "https://hosting.okelections.gov/earlyvote.html",
+            "title": "November 3 Election - Early Voting Locations",
+            "checkedAt": "2026-10-21T04:32:36.914Z",
+            "official": true,
+            "documentHash": "01e69f0ba0e1b1bd2a8defc49faadb35c76b9f2b1cc8cd12b06487adcc0d8186",
+            "documentUrl": "https://hosting.okelections.gov/earlyvote.html"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Oklahoma State Election Board",
+      "url": "https://hosting.okelections.gov/earlyvote.html",
+      "title": "November 3 Election - Early Voting Locations",
+      "checkedAt": "2026-10-21T04:32:36.914Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://hosting.okelections.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://hosting.okelections.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /earlyvote.html: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://hosting.okelections.gov/earlyvote.html",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "fileTitle": "November 3 Election - Early Voting Locations",
+  "contacts": []
+}

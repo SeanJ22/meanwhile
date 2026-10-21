@@ -14,12 +14,16 @@ export interface VotingDoorScope {
 }
 export interface VotingExtraction {
   format?: "csv" | "tsv" | "xlsx" | "pdf" | "html" | "json";
+  /** Exact public archive member; evidence and citations retain the publisher's archive URL. */
+  archiveMember?: string;
   /** Column names (or 0-based indexes for a headerless file), joined in order. */
   columns?: Partial<Record<VotingColumn, string | string[]>>;
   headerRow?: number;
   headers?: string[];
   delimiter?: string;
   sheet?: string;
+  /** Zero-based index among the source page's tables, for separately scoped county tables. */
+  tableIndex?: number;
   jsonPath?: string;
   kind?: SiteKind;
   /** PDF column left edges in points; preserves wrapped text in each cell. */
@@ -27,7 +31,11 @@ export interface VotingExtraction {
   /** A new record starts when this column matches. Other lines continue it. */
   pdfRecordStart?: { column: string; pattern: string };
   pdfCenteredRecords?: boolean;
-  records?: { pattern: string; group?: number; jsonString?: boolean; fields: Record<string, { pattern: string; group: number }> };
+  /** Repeated PDF blocks identified by their printed column headings and following section heading. */
+  pdfBlocks?: { heading: string; end: string; columns: Record<string, string>; pageExclude?: string };
+  records?: { pattern: string; group?: number; jsonString?: boolean; fields: Record<string, { pattern: string; group: number }>;
+    /** Scope child locations to their published county/parish section and inherit its printed fields. */
+    within?: { pattern: string; group?: number; fields?: Record<string, { pattern: string; group: number }> } };
   splitRows?: { column: string; pattern: string; alignedColumns?: string[]; alignedPattern?: string };
   filters?: Record<string, string>;
   /** Regex capture groups applied to a named input column; data configuration only. */
@@ -108,7 +116,7 @@ export interface VotingSourceRuntime {
   fetch: typeof fetch;
   deadlineMs?: number;
   onDiscoveredDoor?: (door: VotingSourceDoor, captures: { url: string; contentType: string; bytes: Uint8Array }[]) => Promise<void>;
-  onDiscoveredSource?: (source: import("./voting-source-discovery.ts").ClassifiedVotingSource) => Promise<void>;
+  onDiscoveredSource?: (source: import("./voting-source-discovery.ts").ClassifiedVotingSource) => Promise<void | "HELD">;
   resolveAiannhGeoid?: (tribalNation: string, reservation: string, state: string) => string | null;
   resolveCountyFips?: (countyName: string, state: string) => string | null;
   resolveScope?: (label: string, url: string, parent: VotingDoorScope) => VotingDoorScope | null;

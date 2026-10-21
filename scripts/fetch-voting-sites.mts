@@ -17,14 +17,16 @@ import { heldVotingSiteCoordinates, votingSiteAddressKey, type VotingSitesFile }
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { recordSourceObservation } from "../lib/doors/source-capture.ts";
+import { RestrictedDurabilityUnavailable } from "../lib/control-plane/evidence/durable-store.ts";
+import { VotingSourceDocumentHeld } from "../lib/ballot/voting-source-evidence.ts";
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { pageAddress } from "../lib/doors/page-doors.ts";
 import { discoverVotingDoors } from "../lib/ballot/voting-source-discovery.ts";
 import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction,
-  saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+  saveVotingSourceDoor, holdVotingRawEvidence, combineVotingSourceReads } from "../lib/ballot/voting-source-publication.ts";
 import { persistVotingSourceBlanks, planVotingSourceBlanks, votingSourcePlaces } from "../lib/ballot/voting-source-blanks.ts";
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
-import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
+import type { VotingDoorScope, VotingSourceBlank, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -44,6 +46,7 @@ const localTypes = new Set(["county", "cousub", "place"]);
 const normalizeUrl = (value: string): string => { try { const url = new URL(value); url.hash = ""; return url.href.replace(/\/$/, ""); } catch { return value; } };
 const localName = (value: string): string => value.toLowerCase().replace(/\b(?:polling locations?|election day polling places?|board of elections?|elections? office|supervisor of elections?|registrar of voters|town clerk)\b/g, "")
   .replace(/\b(?:county|township|town|city|borough|village|municipality|of)\b/g, "").replace(/[^a-z0-9]/g, "");
+const typedPlaceName = (value: string): string => value.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]/g, "");
 
 /** FEC roots carry their directory provenance; that does not make them child pages. */
 export function votingChiefRoots(doors: readonly VotingSourceDoor[]): VotingSourceDoor[] {
@@ -80,8 +83,10 @@ export function votingScopeResolvers(registry: Pick<Registry, "divisions" | "bod
       return codes.size === 1 ? [...codes][0]! : null;
     },
     resolveCountyFips: (name, state) => {
-      const candidates = registry.divisions.filter(division => division.state === state && division.divisionType === "county" &&
-        (division.geoid === name || localName(division.label) === localName(name)) && division.geoid?.length === 5);
+      const counties = registry.divisions.filter(division => division.state === state && division.divisionType === "county" && division.geoid?.length === 5);
+      const exact = counties.filter(division => division.geoid === name || typedPlaceName(division.label) === typedPlaceName(name));
+      if (exact.length === 1) return exact[0]!.geoid;
+      const candidates = counties.filter(division => localName(division.label.replace(/&/g, " and ")) === localName(name.replace(/&/g, " and ")));
       return candidates.length === 1 ? candidates[0]!.geoid : null;
     },
     resolveScope: (label, url, parent) => {
@@ -93,7 +98,8 @@ export function votingScopeResolvers(registry: Pick<Registry, "divisions" | "bod
       const directIds = new Set(direct.map(body => body.ocdId));
       let candidates = divisions.filter(division => directIds.has(division.ocdId));
       if (!candidates.length) {
-        candidates = divisions.filter(division => localName(division.label) === localName(label) &&
+        const exact = divisions.filter(division => typedPlaceName(division.label) === typedPlaceName(label));
+        candidates = exact.length ? exact : divisions.filter(division => localName(division.label) === localName(label) &&
           (!/\bcounty\b/i.test(label) || division.divisionType === "county") &&
           (!/\b(?:township|town|city|borough|village)\b/i.test(label) || division.divisionType !== "county"));
         const unit = /\b(township|town|city|borough|village)\b/i.exec(label)?.[1];
@@ -166,6 +172,20 @@ export function votingReadHasFacts(door: VotingSourceDoor, read: VotingSourceRea
   return Boolean(read.office || read.rules.length || read.publicationMessage || door.publication || door.shape === "address-lookup");
 }
 
+/** Keep the existing restricted-storage refusal local to its document, with a durable source note. */
+export async function recordVotingDiscoveryObservation(...args: Parameters<typeof recordSourceObservation>): Promise<void | "HELD"> {
+  try { await recordSourceObservation(...args); }
+  catch (error) {
+    if (!(error instanceof RestrictedDurabilityUnavailable)) throw error;
+    const [repos, observation, at, vault] = args;
+    await recordSourceObservation(repos, { ...observation, capture: null, disposition: {
+      kind: "SKIP", family: "voting", recordClass: "VOTING_SITE", belongs: true, quote: "",
+      reason: "This document requires encrypted restricted evidence storage. Other official files remain active.",
+    } }, at, vault);
+    return "HELD";
+  }
+}
+
 async function main() {
   if (!process.argv.includes("--promote")) throw new Error("Voting-source refresh publishes through the data plane; use --promote.");
   const state = requireBallotState(assignment(process.argv, "state") ?? "");
@@ -210,6 +230,17 @@ async function main() {
       const reads = new Map<string, VotingSourceRead>(), walked = new Set<string>();
       const evidenceSources = new Map<string, VotingSourceDoor>();
       const observations = new Map<string, "DOOR" | "EVIDENCE" | "SKIP">();
+      const heldDocuments = new Map<string, VotingSourceBlank>();
+      const holdDocument = (door: VotingSourceDoor, url: string) => {
+        const detail = "Source document requires encrypted restricted evidence storage; other official files remain active";
+        const blank: VotingSourceBlank = { id: `${door.id}:held-document`, doorId: door.id, scope: door.scope,
+          reason: "access", status: "open", owed: "Voting places from this held source document",
+          tried: [url, detail], next: ["Activate encrypted restricted evidence storage for this document", "Read the other official state and county files"] };
+        heldDocuments.set(url, blank);
+        const read = reads.get(door.id);
+        if (read) reads.set(door.id, { ...read, sites: [], rules: [], boundaries: [], contacts: [], sources: [], blanks: [...read.blanks, blank] });
+        console.error(JSON.stringify({ event: "voting_source_document_held", state, source: url, detail }));
+      };
       const geocodes = new Map<string, { lat: number; lng: number } | null>(heldVotingSiteCoordinates(held));
       let callbackFailure: unknown;
       const runtime: VotingSourceRuntime = {
@@ -233,16 +264,33 @@ async function main() {
       const acquire = async (door: VotingSourceDoor, captures: VotingSourceRead["rawBodies"] = [], persistent = true) => {
         if (door.scope.state !== state) throw new Error("Voting source crossed its state publication scope.");
         if (reads.has(door.id)) return;
-        const result = await readVotingSource(door, runtime), at = now();
-        const read = votingLookupDiscoveryRead(door, result, captures, at);
+        const at = now();
+        const mappings = [door, ...stateDoors.filter(other => other.id !== door.id && other.scope.ocdId === door.scope.ocdId &&
+          pageAddress(other.url)?.url === pageAddress(door.url)?.url)];
+        const group: VotingSourceRead[] = [];
+        for (const mapping of mappings) {
+          const read = votingLookupDiscoveryRead(mapping, await readVotingSource(mapping, runtime), captures, at);
+          reads.set(mapping.id, read); group.push(read);
+        }
+        const read = combineVotingSourceReads(group);
         console.info(JSON.stringify({ event: "voting_source_read", state, source: door.url, at,
           sites: read.sites.length, precincts: read.boundaries?.length ?? 0,
           sourceBytes: read.rawBodies.reduce((sum, capture) => sum + capture.bytes.byteLength, 0),
           failures: read.blanks.filter(blank => blank.reason === "access" || blank.reason === "extraction").map(blank => ({ reason: blank.reason, detail: blank.tried })) }));
-        reads.set(door.id, read);
-        if (persistent && (read.rawBodies.length || read.blanks.length)) await recordVotingSourceRead(context.repos.doors, door, read, at);
         const observed = read.rawBodies.filter(isVotingSourceContent);
-        if (!votingReadHasFacts(door, read)) return;
+        if (!votingReadHasFacts(door, read)) {
+          if (persistent && (read.rawBodies.length || read.blanks.length)) await recordVotingSourceRead(context.repos.doors, door, read, at);
+          return;
+        }
+        let acquisition: VotingRawCapture[];
+        try { acquisition = await votingSourceEvidence(door, read, captures); }
+        catch (error) {
+          if (!(error instanceof VotingSourceDocumentHeld)) throw error;
+          for (const mapping of mappings) holdDocument(mapping, error.url);
+          if (persistent) await recordVotingSourceRead(context.repos.doors, door, combineVotingSourceReads(mappings.map(mapping => reads.get(mapping.id)!)), at);
+          return;
+        }
+        if (persistent) await recordVotingSourceRead(context.repos.doors, door, read, at);
         let before = held;
         const jurisdiction = mergeVotingSourceRead(held?.jurisdictions.find(row => row.ocdId === door.scope.ocdId), door, read, at);
         let current = replaceVotingJurisdiction(held, jurisdiction, at);
@@ -256,7 +304,7 @@ async function main() {
           const local = mergeVotingSourceRead(current.jurisdictions.find(row => row.ocdId === contact.scope.ocdId), contactDoor, contactRead, at);
           current = replaceVotingJurisdiction(current, local, at);
         }
-        const candidate = votingSitesCandidate({ state, current, prior: before, failures: [], acquisition: await votingSourceEvidence(door, read, captures),
+        const candidate = votingSitesCandidate({ state, current, prior: before, failures: [], acquisition,
           successfulAuthorityReads: observed.length, requestedUrl: door.url, finalUrl: observed.at(-1)?.url ?? door.url,
           retrievedAt: at, carriedFromVersionId: version });
         before = null; held = null;
@@ -294,9 +342,10 @@ async function main() {
       };
       runtime.onDiscoveredSource = async ({ source, disposition, capture, linkingCaptures }) => {
         const url = pageAddress(source.url)!.url;
-        observations.set(url, disposition.kind);
-        await recordSourceObservation(context.repos, { url, ocdId: source.scope.ocdId, state,
+        const recorded = await recordVotingDiscoveryObservation(context.repos, { url, ocdId: source.scope.ocdId, state,
           names: [source.scope.name, source.publisher], disposition, capture }, now(), vault);
+        observations.set(url, recorded === "HELD" ? "SKIP" : disposition.kind);
+        if (recorded === "HELD") { holdDocument(source, url); return "HELD"; }
         if (disposition.kind === "EVIDENCE" && disposition.family === "voting") {
           const configured = stateDoors.filter(known => pageAddress(known.url)?.url === url);
           for (const target of configured.length ? configured : [source]) {
@@ -316,7 +365,14 @@ async function main() {
         if (callbackFailure) throw callbackFailure;
         for (const found of discovery.sources) walked.add(pageAddress(found.source.url)!.url);
       };
-      // The FEC-listed chief office is the first read, even when its source is currently unreachable.
+      // Publish registered bulk files before broad discovery; state files lead county files.
+      for (const source of stateDoors.filter(door => ["file", "json", "map-service"].includes(door.shape) &&
+        (door.covers.some(kind => kind !== "CANDIDATE_LIST" && kind !== "BALLOT_MEASURES") || door.boundaryLayer))
+        .sort((a, b) => Number(statewide(b)) - Number(statewide(a)))) {
+        doors.set(source.id, source);
+        await saveVotingSourceDoor(context.repos.doors, source, now());
+        await acquire(source);
+      }
       for (const root of roots) await walk(root);
       const root = roots[0];
       if (root) for (const office of registeredElectionOfficeDoors(root, localRegistry)) {
@@ -333,7 +389,7 @@ async function main() {
       const sourceDoors = [...doors.values(), ...evidenceSources.values()];
       const jurisdictions = held?.jurisdictions.filter(jurisdiction => jurisdiction.state === state) ?? [];
       const blanks = [...planVotingSourceBlanks({ electionDate: election.electionDate, places, doors: sourceDoors, reads: [...reads.values()], jurisdictions }),
-        ...votingBoundaryBlanks(places, jurisdictions, sourceDoors)];
+        ...votingBoundaryBlanks(places, jurisdictions, sourceDoors), ...heldDocuments.values()];
       await persistVotingSourceBlanks({ repos: context.repos, blanks, electionDate: election.electionDate, now: now() });
       console.log(`${state}: ${[...observations.values()].filter(kind => kind === "DOOR").length} publishing doors, ${[...observations.values()].filter(kind => kind === "EVIDENCE").length} evidence captures, ${[...observations.values()].filter(kind => kind === "SKIP").length} skips, ${[...reads.values()].reduce((sum, read) => sum + read.sites.length, 0)} site observations, ${blanks.length} open place blanks`);
     }

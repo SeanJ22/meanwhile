@@ -1,0 +1,89 @@
+{
+  "doorId": "hi-maui-centers-2",
+  "sites": [
+    {
+      "id": "voting-f9f8def6a69c00b5ebd92b18",
+      "name": "Velma McWayne Santos Community Center",
+      "address": "395 Waena Street\n\nWailuku, HI 96793",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "General Election\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m.",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Hawaii Office of Elections",
+          "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+          "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+          "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+        }
+      ],
+      "hours": "General Election\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m.",
+      "countyFips": "15009",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "General Election\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m.",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Hawaii Office of Elections",
+            "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+            "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+            "documentUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Hawaii Office of Elections",
+      "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+      "title": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://elections.hawaii.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://elections.hawaii.gov/robots.txt",
+      "contentType": "text/plain; charset=UTF-8",
+      "rawHash": "d111886a23f5014ea0ab55dd54fa97d20b07b56b30dbac59c562e73472c35bff",
+      "path": "tests/fixtures/voting-sources/vs-04-west/hi-9698bb4f69fd.bin"
+    },
+    {
+      "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+      "contentType": "text/html; charset=UTF-8",
+      "rawHash": "4180ae1f23ca315dcbc11ca0349165809338c1f4d2d8321df71dfd56bcfe7688",
+      "path": "tests/fixtures/voting-sources/vs-04-west/hi-800acdcc4baf.html"
+    }
+  ],
+  "fileTitle": "Office of Elections | Voter Service Centers and Ballot Drop Boxes",
+  "contacts": []
+}

@@ -1,0 +1,30 @@
+{
+  "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+  "sourceSha256": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+  "readAt": "2026-10-21T04:44:58.004Z",
+  "engine": "Tesseract eng; Poppler300DPI; lib/extract/ocr.ts",
+  "layer": "OCR",
+  "outcome": "EXTRACTED",
+  "items": [
+    {
+      "page": 1,
+      "text": "ELECTION DAY VOTING LOCATIONS FOR 2026 GENERAL ELECTION\n\nELECTION DAY VOTE CENTER\n\nBella Vista Community Church\n\nADDRESS\n75 E. Lancashire Blvd., Bella Vista\n\nELECTION DAY HOURS\n\n7:30AM +7:30 PM\n\nHighlands Church\n\n371 Glasgow Road, Bella Vista\n\n7:30 AM - 7:30 PM\n\nBella Vista Recreation Center\n\n3 Riordan Drive, Bella Vista\n\n7:30 AM - 7:30 PM\n\nBella Vista Assembly of God\n\n1771 Forest Hills Blvd., Bella Vista\n\n7:30 AM - 7:30 PM\n\nBella Vista Church of Christ\n\n989 N.W. McNelly Road, Bentonville\n\n7:30 AM - 7:30 PM\n\nBentonville Church of Christ, Activity Ctr\n\n708 N. Walton Blvd., Bentonville\n\n7:30 AM - 7:30 PM\n\nFirst Presbyterian Church\n\n901 N.E. J Street, Bentonville\n\n7:30 AM - 7:30 PM\n\nBogle Family Public Services Building\n\n1204 S.W. 14th Street, Bentonville\n\n7:30 AM - 7:30 PM\n\nFirst Landmark Baptist Church\n\n206 S.E. 28th Street, Bentonville\n\n7:30 AM - 7:30 PM\n\nNWACC — Shewmaker Center\n\n1000 S.E. Eagle Way, Bentonville\n\n7:30 AM - 7:30 PM\n\nBenton County Fairgrounds\n\n7640 S.W. Regional Airport Blvd., Bentonville\n\n7:30 AM - 7:30 PM\n\nLakeview Baptist Church\n\n1351 E. Lowell Ave., Cave Springs\n\n7:30 AM - 7:30 PM\n\nLifepoint Baptist Church\n\n11161 Gamble Road, Centerton\n\n7:30 AM - 7:30 PM\n\nCenterton Municipal Complex\n\n210 Captain Kelley Drive, Centerton\n\n7:30 AM - 7:30 PM\n\nDecatur Municipal Building\n\n310 Maple Ave., Decatur\n\n7:30 AM - 7:30 PM\n\nNEBCO Community Center\n\n17823 Marshall Street, Garfield\n\n7:30 AM - 7:30 PM\n\nFirst Baptist Church of Gentry\n\n232 W. Main Street, Gentry\n\n7:30 AM - 7:30 PM\n\nGravette Civic Center\n\n401 Charlotte Street S.E., Gravette\n\n7:30 AM - 7:30 PM\n\nGrace Lutheran Church\n\nA415 N. 6th Place, Lowell\n\n7:30 AM - 7:30 PM\n\nFirst Baptist Church of Lowell\n\n209-A Washington Street, Lowell\n\n7:30 AM - 7:30 PM\n\nDiscover Church\n\n577 Weston Street, Pea Ridge\n\n7:30 AM - 7:30 PM\n\nThe Ridge Church\n\n836 .N. Curtis Ave., Pea Ridge\n\n7:30 AM - 7:30 PM\n\nBoundless Grace Baptist Church\n\n222 Little Flock Drive, Rogers\n\n7:30 AM - 7:30 PM\n\nBland Chapel (Rocky Branch)\n\n8531 Twin Coves Road, Rogers\n\n7:30 AM - 7:30 PM\n\nCentral United Methodist Church\n\n2535 W. New Hope Road, Rogers\n\n7:30 AM - 7:30 PM\n\nCentro Cristiano de Rogers\n\n2121 S. 1st Street, Rogers\n\n7:30 AM - 7:30 PM\n\nFirst Baptist Church of Rogers\n\n3364 W. Pleasant Grove Road, Rogers\n\n7:30 AM - 7:30 PM\n\nSouthside Church Of Christ\n\n919 S. Dixieland Road, Rogers\n\n7:30 AM - 7:30 PM\n\nSunnyside Baptist Church\n\n210 E. Locust Street, Rogers\n\n7:30 AM - 7:30 PM\n\nFirst Baptist Church Highfill\n\n11912 N.W. Main Street, Siloam Springs\n\n7:30 AM - 7:30 PM\n\nNew Life Church\n\n1611 Cheri Whitlock Drive, Siloam Springs\n\n7:30 AM - 7:30 PM\n\nLogan Community Building\n\n15249 Logan Road, Siloam Springs\n\n7:30 AM - 7:30 PM\n\nSiloam Springs Community Building\n\n110 N. Mt. Olive Street, Siloam Springs\n\n7:30 AM - 7:30 PM\n\nSt. Mary's Catholic Church Parish Hall\n\n1998 Hwy. 412 E., Siloam Springs\n\n7:30 AM - 7:30 PM\n\ncco Event Center\n\n4149 N. Thompson Street, Springdale\n\n7:30 AM - 7:30 PM\n\n2U26 6946"
+    }
+  ],
+  "rows": 1,
+  "inputBytes": 109339,
+  "reason": "",
+  "source": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+  "counts": {
+    "pages": 1,
+    "pagesWithText": 1,
+    "pagesEmpty": 0
+  },
+  "count": {
+    "verdict": "NOT_ASSERTABLE",
+    "stated": null,
+    "statedBy": null,
+    "extracted": 1,
+    "reason": "no count is stated by the source — this layer was given no stated count to check against"
+  }
+}

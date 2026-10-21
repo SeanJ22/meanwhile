@@ -7,7 +7,7 @@ import { recordVotingLookupCount } from "../lib/ballot/voting-sites-counts.ts";
 import { votingSitesResponse } from "../lib/ballot/voting-sites-stream.ts";
 import { answerVotingSites } from "../lib/ballot/voting-answer.ts";
 import { votingPlaceFromZip } from "../lib/ballot/voting-answer-geography.ts";
-import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
+import type { VotingFallbackReason, VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 
 const empty: VotingSitesAnswer = { match: true, point: null, jurisdictions: [], outsideCoverage: true, pollingPlaceLinks: [] };
 const place = { ...votingPlaceFromZip(["ocd-division/country:us/state:mi/county:ingham"]), precision: "ADDRESS" as const };
@@ -18,6 +18,7 @@ const options = { apiKey: "private-test-key", fetchImpl: (async (input: URL) =>
 test("an empty held answer gets live Google locations, hours, assignment and required Sources", async () => {
   const before = Date.now();
   const answer = await fillVotingSitesAnswer(empty, "private reader street", place, options);
+  const after = Date.now();
   assert.equal(answer.outsideCoverage, false);
   assert.equal(answer.googleFallback?.requested, true);
   assert.equal(answer.jurisdictions[0].narrowing.kind, "EXACT");
@@ -26,7 +27,10 @@ test("an empty held answer gets live Google locations, hours, assignment and req
   assert.ok(answer.jurisdictions[0].sources?.some(source => source.title === "Voting information powered by the Civic Information API"));
   assert.ok(answer.jurisdictions[0].sources?.some(source => source.title === "Election office" && source.url.includes("lansingmi.gov")));
   assert.doesNotMatch(JSON.stringify(answer), /private reader street|private-test-key/);
-  assert.ok(Date.parse(answer.expiresAt!) <= before + 24 * 60 * 60 * 1000 + 50);
+  const expiresAt = Date.parse(answer.expiresAt!);
+  assert.ok(expiresAt >= before + 24 * 60 * 60 * 1000);
+  assert.ok(expiresAt <= after + 24 * 60 * 60 * 1000);
+  assert.equal(answer.googleFallback?.reason, undefined);
 });
 
 test("every lookup is fresh, ZIPs never claim an assigned precinct, and a mismatched state is rejected", async () => {
@@ -60,7 +64,50 @@ test("provider errors cannot echo the private address or key into the answer", a
   const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options,
     fetchImpl: async () => new Response("private reader street private-test-key", { status: 403 }) });
   assert.equal(answer.outsideCoverage, true);
+  assert.equal(answer.googleFallback?.reason, "GOOGLE_UNAVAILABLE");
   assert.doesNotMatch(JSON.stringify(answer), /private reader street|private-test-key/);
+});
+
+const noLocations = () => {
+  const raw = JSON.parse(fixture("mi-voterinfo"));
+  delete raw.pollingLocations; delete raw.earlyVoteSites; delete raw.dropOffLocations;
+  return Response.json(raw);
+};
+
+for (const scenario of [
+  { name: "a missing key", apiKey: "", reason: "KEY_MISSING", response: () => { assert.fail("a missing key must not make a request"); } },
+  { name: "a network failure", reason: "GOOGLE_UNAVAILABLE", response: () => { throw new Error("private reader street private-test-key"); } },
+  { name: "a provider timeout", reason: "GOOGLE_UNAVAILABLE", response: () => { throw new DOMException("private reader street private-test-key", "TimeoutError"); } },
+  { name: "a provider outage", reason: "GOOGLE_UNAVAILABLE", response: () => new Response("private reader street private-test-key", { status: 503 }) },
+  { name: "a rejected credential", reason: "GOOGLE_UNAVAILABLE", response: () => new Response("private reader street private-test-key", { status: 403 }) },
+  { name: "an unreadable response", reason: "GOOGLE_UNAVAILABLE", response: () => new Response("private reader street private-test-key") },
+  { name: "no sites in a successful response", reason: "NO_DATA", response: noLocations },
+  { name: "an unresolved address", reason: "NO_DATA", response: () => new Response("private reader street private-test-key", { status: 400 }) },
+  { name: "an address with no voter information", reason: "NO_DATA", response: () => new Response("private reader street private-test-key", { status: 404 }) },
+] satisfies { name: string; apiKey?: string; reason: VotingFallbackReason; response: () => Response }[]) {
+  test(`empty fallback diagnostics distinguish ${scenario.name} without returning private input`, async () => {
+    let requests = 0;
+    const answer = await fillVotingSitesAnswer(empty, "private reader street", place, {
+      ...options, apiKey: scenario.apiKey ?? options.apiKey, sleep: async () => {},
+      fetchImpl: (async (input: URL) => {
+        requests++;
+        return input.pathname.endsWith("elections") ? new Response(fixture("elections")) : scenario.response();
+      }) as unknown as typeof fetch,
+    });
+    assert.deepEqual(answer.googleFallback, { requested: true, available: false, reason: scenario.reason });
+    assert.equal(answer.outsideCoverage, true);
+    assert.doesNotMatch(JSON.stringify(answer), /private reader street|private-test-key/);
+    if (scenario.reason === "KEY_MISSING") assert.equal(requests, 0);
+    if (scenario.name === "no sites in a successful response") {
+      assert.ok(answer.jurisdictions[0].sources?.some(source => source.title === "Election office"), "office links survive a no-sites response");
+    }
+  });
+}
+
+test("a missing election catalog is an unavailable provider rather than no data for an address", async () => {
+  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options,
+    fetchImpl: async () => new Response("", { status: 404 }) });
+  assert.equal(answer.googleFallback?.reason, "GOOGLE_UNAVAILABLE");
 });
 
 test("anonymous counts atomically increment only day, ZIP and deduplicated divisions", async () => {

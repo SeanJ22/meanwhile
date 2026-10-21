@@ -2,11 +2,15 @@ import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_CONTRACT_ID, GOOGLE_CIVIC_ELECTION_DAY }
 import { civicElectionRows, civicLookupFromRaw, unavailableCivicLookup, type CivicLookup } from "./model.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../../civic-data/source-acquisition-failure.ts";
+import type { VotingFallbackReason } from "../../ballot/voting-sites.ts";
 
 export class CivicSourceError extends Error {
   readonly status: number | null;
   readonly reason: string;
-  constructor(status: number | null, reason: string) { super(reason); this.status = status; this.reason = reason; }
+  readonly failureReason: VotingFallbackReason;
+  constructor(status: number | null, reason: string, failureReason: VotingFallbackReason = "GOOGLE_UNAVAILABLE") {
+    super(reason); this.status = status; this.reason = reason; this.failureReason = failureReason;
+  }
 }
 export interface CivicReadOptions {
   apiKey?: string;
@@ -17,7 +21,7 @@ export interface CivicReadOptions {
 }
 export async function readCivicApi(route: "elections" | "voterinfo", params: Record<string, string>, options: CivicReadOptions = {}): Promise<{ raw: string; checkedAt: string }> {
   const key = options.apiKey ?? process.env.GOOGLE_CIVIC_API_KEY;
-  if (!key) throw new CivicSourceError(null, "Google Civic API key is not configured.");
+  if (!key) throw new CivicSourceError(null, "Google Civic API key is not configured.", "KEY_MISSING");
   const url = new URL(`${GOOGLE_CIVIC_API}${route}`);
   url.search = new URLSearchParams({ ...params, key }).toString();
   const signal = options.signal ?? AbortSignal.timeout(2500);
@@ -38,7 +42,8 @@ export async function readCivicApi(route: "elections" | "voterinfo", params: Rec
     // Never copy provider errors: they can echo a reader address or a key-bearing URL.
     await response.body?.cancel();
     throw new CivicSourceError(response.status, response.status === 404 ? "Google Civic has no information for this address (HTTP 404)."
-      : response.status === 400 ? "Google Civic could not resolve this address (HTTP 400)." : `Google Civic request failed (HTTP ${response.status}).`);
+      : response.status === 400 ? "Google Civic could not resolve this address (HTTP 400)." : `Google Civic request failed (HTTP ${response.status}).`,
+    route === "voterinfo" && (response.status === 400 || response.status === 404) ? "NO_DATA" : "GOOGLE_UNAVAILABLE");
   }
   throw new CivicSourceError(null, "Google Civic could not be reached.");
 }
@@ -57,7 +62,7 @@ export async function lookupCivicAddress(address: string, knownIds: ReadonlySet<
     return civicLookupFromRaw(result.raw, electionId, result.checkedAt, knownIds);
   } catch (error) {
     const reason = error instanceof CivicSourceError ? error.reason : "Google Civic returned an unreadable voterinfo response.";
-    return unavailableCivicLookup(reason, checkedAt, options.electionId);
+    return unavailableCivicLookup(reason, checkedAt, options.electionId, error instanceof CivicSourceError ? error.failureReason : "GOOGLE_UNAVAILABLE");
   }
 }
 export async function recordCivicCatalogFailure(store: import("../../civic-data/store.ts").RoutineDataStore, reason: string, at: string) {

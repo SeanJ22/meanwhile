@@ -15,6 +15,8 @@ export class CivicSourceError extends Error {
 export interface CivicReadOptions {
   apiKey?: string;
   fetchImpl?: typeof fetch;
+  /** The Census geocoder used for sites Google did not place; defaults to the network. */
+  censusFetchImpl?: typeof fetch;
   signal?: AbortSignal;
   now?: () => string;
   sleep?: (ms: number, signal?: AbortSignal) => Promise<void>;

@@ -19,7 +19,8 @@ const empty = (status = 200, outsideCoverage = true) => Response.json({ match: f
 
 export async function POST(request: Request): Promise<Response> {
   return withReaderRoute("/api/voting-sites", async () => {
-    const deadline = Date.now() + 2500;
+    const started = Date.now();
+    const deadline = started + 2500;
     let address = "";
     let stage = "input";
     try {
@@ -88,7 +89,7 @@ export async function POST(request: Request): Promise<Response> {
             stage = "precinct-match";
             const answer = await answerVotingSites(file, place);
             stage = "google-fallback";
-            return fillVotingSitesAnswer(answer, address, place, { signal: AbortSignal.any([request.signal, AbortSignal.timeout(25000)]) });
+            return fillVotingSitesAnswer(answer, address, place, { signal: AbortSignal.any([request.signal, AbortSignal.timeout(Math.max(1, started + 2800 - Date.now()))]) });
           });
           const [answer] = await Promise.all([result, counted]);
           return answer;

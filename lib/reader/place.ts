@@ -28,6 +28,7 @@ import { serverReaderValue } from "./memory.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { readerDatabaseQuery } from "./database.ts";
+import { installDatabaseTransferCounter } from "../db/transfer.ts";
 
 const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
 const retiredMeetingScopesSql = RETIRED_MEETING_ROUTES.map(route =>
@@ -92,9 +93,9 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
     WHERE header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR header.value->>'id'=ANY($3::text[]) OR $5::boolean
       OR header.value->>'id' IN (SELECT id FROM owned WHERE kind='body')
 ), ancestors AS (
-  SELECT id, parent_id FROM entity WHERE id=ANY(ARRAY(SELECT id FROM selected_places)) AND state=$1 AND id<>$4
+  SELECT id, parent_id FROM entity WHERE id=ANY(ARRAY(SELECT id FROM selected_places)) AND state=$1::char(2) AND id<>$4
   UNION
-  SELECT p.id,p.parent_id FROM ancestors a JOIN entity p ON p.id=a.parent_id WHERE p.state=$1 AND p.id<>$4
+  SELECT p.id,p.parent_id FROM ancestors a JOIN entity p ON p.id=a.parent_id WHERE p.state=$1::char(2) AND p.id<>$4
 ), covered AS (
   SELECT id FROM ancestors
   UNION SELECT ep.entity_id FROM entity_place ep JOIN ancestors a ON a.id=ep.place_id
@@ -102,11 +103,11 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
   SELECT e.id,e.kind,e.name,e.parent_id,e.state FROM entity e JOIN covered c ON c.id=e.id
   UNION
   SELECT e.id,e.kind,e.name,e.parent_id,e.state FROM entity e JOIN owned p ON e.parent_id=p.id
-    WHERE e.state=$1 AND e.kind IN ('government','body')
+    WHERE e.state=$1::char(2) AND e.kind IN ('government','body')
 ), bodies AS MATERIALIZED (
   SELECT id,kind,name,parent_id,state FROM owned WHERE kind='body'
   UNION SELECT id,kind,name,parent_id,state FROM entity
-    WHERE (id=ANY($3::text[]) OR id IN (SELECT value->>'id' FROM runtime_bodies) OR $5::boolean) AND state=$1 AND kind='body'
+    WHERE (id=ANY($3::text[]) OR id IN (SELECT value->>'id' FROM runtime_bodies) OR $5::boolean) AND state=$1::char(2) AND kind='body'
   UNION SELECT requested.id,'body',coalesce(r.value->>'name',requested.id),coalesce(r.value->>'ocdId',split_part(requested.id,'#',1)),$1
     FROM (SELECT unnest($3::text[]) AS id UNION SELECT value->>'id' FROM runtime_bodies) requested
     LEFT JOIN runtime_bodies r ON r.value->>'id'=requested.id
@@ -421,8 +422,10 @@ export function readPlacePackage(input: PlaceInput, query?: Query | null): Promi
   if (selection && !request) { request = new Map(); requests.set(selection, request); }
   const prior = request?.get(key) ?? places.get(key);
   if (prior) { request?.set(key, prior); return prior; }
-  const socket = readerDatabaseQuery();
-  const read = loadPlacePackage(selected, socket ? statementQuery(socket) : factReader());
+  // This is one statement; HTTP avoids opening a socket session after database suspension.
+  installDatabaseTransferCounter();
+  const http = factReader(), socket = http ? null : readerDatabaseQuery();
+  const read = loadPlacePackage(selected, http ?? (socket ? statementQuery(socket) : null));
   request?.set(key, read);
   places.set(key, read);
   const settled = () => { if (places.get(key) === read) places.delete(key); };

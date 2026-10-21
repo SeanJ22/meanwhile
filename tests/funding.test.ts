@@ -136,9 +136,9 @@ test("D40: no query-keyed API route marks itself publicly cacheable unless the C
       if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) continue;
       const bindings = statement.importClause?.namedBindings;
       if (!bindings || !ts.isNamedImports(bindings) || !bindings.elements.some(binding=>forwarded.has(binding.name.text))) continue;
-      const module = statement.moduleSpecifier.text;
-      const path = module.startsWith("@/") ? resolve(ROOT,module.slice(2))
-        : module.startsWith(".") ? resolve(dirname(file),module) : null;
+      const modulePath = statement.moduleSpecifier.text;
+      const path = modulePath.startsWith("@/") ? resolve(ROOT,modulePath.slice(2))
+        : modulePath.startsWith(".") ? resolve(dirname(file),modulePath) : null;
       if (!path) continue;
       assert.ok(!relative(ROOT,path).startsWith(".."),"a delegated reader handler stays inside the repository");
       source += `\n${readFileSync(/\.[cm]?tsx?$/.test(path)?path:`${path}.ts`,"utf8")}`;

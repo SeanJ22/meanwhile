@@ -134,7 +134,6 @@ test("no file URL is used as a path without fileURLToPath", () => {
   // These parse network URL components, never filesystem paths; each exception is expression-exact.
   const URL_COMPONENT_ONLY = new Map<string, readonly [string, number]>([
     ["lib/officials/federal-directory-data-plane.ts", [["new URL(row.finalUrl)", "pathname"].join("."), 1]],
-    ["lib/civic-data/derived-meeting-wiring.ts", [["new URL(input.route)", "pathname"].join("."), 1]],
     // The Census downloader takes only the final HTTPS path segment for its cache filename.
     ["scripts/fetch-districts.ts", [["new URL(url)", "pathname"].join("."), 1]],
     // The live-write guard compares a browser request's HTTPS path against the write routes.

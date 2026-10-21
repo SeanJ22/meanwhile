@@ -55,7 +55,7 @@ for (const kind of DATA_DOOR_KINDS) {
     for (const key of [spec.route.key, ...spec.allowed]) {
       assert.ok(same.some((r) => r.config[key] !== undefined), `${kind}: no body carries ${key}`);
     }
-    const route = kind === "BOARDBOOK" ? "https://meetings.boardbook.org/Public/Organization/1234" : `https://records.example.gov/${kind.toLowerCase()}/calendar`;
+    const route = kind === "LEGISTAR" ? "https://webapi.legistar.com/v1/pima/events" : kind === "BOARDBOOK" ? "https://meetings.boardbook.org/Public/Organization/1234" : `https://records.example.gov/${kind.toLowerCase()}/calendar`;
     const config = derivedAdapterConfig({ kind, route, officialHost: "records.example.gov", bodyId: "ocd-division/country:us/state:zz/place:example", bodyName: "Example Board", filter: sampleFilter(kind) });
     assert.equal(typeof config[spec.route.key], "string");
     const row: DerivedWiringRow = {

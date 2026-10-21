@@ -43,9 +43,10 @@ export function derivedMeetingFamilyScope(state: DerivedMeetingFamilyState): str
   return `source:${DERIVED_FAMILY_SOURCE}:family:${state}`;
 }
 
-export function meetingPartitionScope(sourceName: string, bodyId: string): string {
+export function meetingPartitionScope(sourceName: string, bodyId: string, route?: string): string {
   if (!sourceName || !bodyId) throw new Error("MEETING_PARTITION_IDENTITY_MISSING");
-  return `source:${encodeURIComponent(sourceName)}:body:${encodeURIComponent(bodyId)}`;
+  meetingPartitionId(sourceName, bodyId, route);
+  return `source:${encodeURIComponent(sourceName)}:body:${encodeURIComponent(bodyId)}${route ? `:route:${route}` : ""}`;
 }
 
 export function meetingPartitionOfId(id: string): { readonly source: string; readonly bodyId: string; readonly scope: string } | null {
@@ -56,13 +57,14 @@ export function meetingPartitionOfId(id: string): { readonly source: string; rea
     const state = rest as DerivedMeetingFamilyState;
     return { source, bodyId: `derived-family:${state}`, scope: derivedMeetingFamilyScope(state) };
   }
+  const routed = /^(.*):route:([a-f0-9]{16})$/.exec(rest);
   let bodyId: string;
   try {
-    bodyId = decodeURIComponent(rest);
+    bodyId = decodeURIComponent(routed?.[1] ?? rest);
   } catch {
     return null;
   }
-  return { source, bodyId, scope: meetingPartitionScope(source, bodyId) };
+  return { source, bodyId, scope: meetingPartitionScope(source, bodyId, routed?.[2]) };
 }
 
 /** Every supported adapter is explicit, so a new route cannot silently fall back to a shared failure domain. */
@@ -136,16 +138,18 @@ export function meetingRoutePartition(
   door: { readonly wiring: BodySourceWiring | null; readonly ocdId: string | null; readonly acquisitionFailureDomain: string },
 ): MeetingPartitionContract {
   const { readerConsumers, ...policy } = MEETING_PARTITION_POLICY;
+  const route = door.wiring?.config.partitionRoute;
+  const id = meetingPartitionId(meetingSource, bodyId, route);
   return {
     ...policy,
-    id: meetingPartitionId(meetingSource, bodyId),
-    scope: meetingPartitionScope(meetingSource, bodyId),
+    id,
+    scope: meetingPartitionScope(meetingSource, bodyId, route),
     acquisitionAdapter: {
       authorityMode: "REGISTERED_SOURCE_ROUTES" as const,
-      command: ["scripts/ingest.ts", "composite", "--promote", `--only-partition=${meetingPartitionId(meetingSource, bodyId)}`],
+      command: ["scripts/ingest.ts", "composite", "--promote", `--only-partition=${id}`],
     },
     readerProjection: {
-      id: `meetings-partition:${meetingSource}:${bodyId}`,
+      id: `meetings-partition:${meetingSource}:${bodyId}${route ? `:route:${route}` : ""}`,
       consumers: readerConsumers,
     },
     lkgBehavior:

@@ -112,17 +112,17 @@ function checkCycleFailsClosed(src: string): void {
 }
 
 /** Free work obeys the runner pause and remains independent of paid controls and explicit dispatches. */
-function checkFreeStandingWork(src: string, walk = source("scripts/platform-census-runner.mts")): void {
+function checkFreeStandingWork(src: string, walk = source("lib/control-plane/discovery/platform-census-runtime.ts")): void {
   assert.match(
     src,
     /\nif \(!dry && !canary && !intents\.runnerPause\.paused\) \{\s*try \{\s*const retained = await retainRecentRoutineMeetingEvidence\(/,
     "routine meeting intake is gated differently",
   );
-  assert.match(walk, /intents.runnerPause.paused/);
+  assert.match(walk, /orders.paused/);
   assert.match(walk, /REGISTRATION_TARGETS.map/);
-  assert.match(walk, /refreshDotgovCensusLeads\(repos, runtime, state\)/);
-  assert.match(walk, /readPlatformCensusNeeds\(state, null,/);
-  assert.match(walk, /runCensusState/);
+  assert.match(walk, /readPlatformDirectory\(/);
+  assert.match(walk, /dotgovPlatformTenants\(/);
+  assert.match(walk, /runPlatformCensusPass/);
   assert.doesNotMatch(walk, /modelLaneEnabled|laneClosure|scoutFor/);
   assert.match(src, /const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !intents\.runnerPause\.paused;/);
   assert.match(src, /const dispatchScopes = \(expansionPlan\?\.scopes \?\? \[\]\)\.filter\(scope=>scope\.decision\.budgetUsd>0\);/);
@@ -159,8 +159,8 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
   const intakeOnLane = src.replace("if (!dry && !canary && !intents.runnerPause.paused) {\n  try {\n    const retained", "if (!dry && !canary && !intents.runnerPause.paused && modelLaneEnabled) {\n  try {\n    const retained");
   assert.notEqual(intakeOnLane, src);
   assert.ok(fails(() => checkFreeStandingWork(intakeOnLane)), "routine intake gated on the paid lane passed");
-  const census = source("scripts/platform-census-runner.mts");
-  const censusOnPaidLane = census.replace("if (stopped) break;", "if (stopped || !modelLaneEnabled) break;");
+  const census = source("lib/control-plane/discovery/platform-census-runtime.ts");
+  const censusOnPaidLane = census.replace("if (orders.paused) return;", "if (orders.paused || !modelLaneEnabled) return;");
   assert.notEqual(censusOnPaidLane, census);
   assert.ok(fails(() => checkFreeStandingWork(src, censusOnPaidLane)), "standing census gated on the paid lane passed");
 

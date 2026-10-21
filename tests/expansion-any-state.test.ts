@@ -1,4 +1,4 @@
-import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
+import { recordFreeDiscoveryWalks } from "./helpers/free-discovery-walk.ts";
 
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -346,8 +346,8 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal((await readFreeDiscoveryWalks(repos, subjects)).latestFor(COLUMBUS), "NOT_WALKED");
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
-  await runCensusState({
-    repos, state: "OH", needs: [columbus],
+  await recordFreeDiscoveryWalks({
+    repos, needs: [columbus],
     runtime: {
       open: recordedDiscoveryOpen({
         [`https://${COLUMBUS_HOST}/robots.txt`]: ALLOW,
@@ -370,8 +370,9 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.deepEqual(walked.map((a) => [a.jurisdictionId, a.outcome]), [[COLUMBUS, "FOUND"]], "the free walk took the Send's city first");
   const [attempt] = walked;
   assert.equal(attempt!.found[0]?.url, COLUMBUS_ROUTE);
-  assert.equal(attempt!.site?.address?.source, "WEBSITE_EVIDENCE");
-  assert.ok(vault.has(attempt!.site!.address!.versionId!), "the host is attested by its saved source copy");
+  assert.deepEqual(attempt!.site?.address, { source: "REGISTRATION", versionId });
+  assert.ok(attempt!.steps.some(step => step.url === `https://${COLUMBUS_HOST}/` && step.artifactId && vault.has(step.artifactId)),
+    "the registered website's actual source page is retained for its calendar link");
   assert.equal((await readFreeDiscoveryWalks(repos, subjects)).latestFor(COLUMBUS), "FOUND");
 
   const regInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: reg.metadata.scope, versionId, readModelSha256: sha(reg.value), promotedAt: reg.metadata.promotedAt! };

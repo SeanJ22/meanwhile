@@ -10,6 +10,10 @@ import io
 import json
 import re
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "data/ballot/ba01-west-evidence"
 
@@ -23,7 +27,7 @@ def captured(name):
     source = next(row for row in json.loads((directory / "manifest.json").read_text()) if row["name"] == name)
     raw = gzip.decompress((directory / source["file"]).read_bytes())
     text = (directory / source["textSnapshot"]).read_bytes()
-    assert hashlib.sha256(raw).hexdigest() == source["rawHash"], name
+    assert capture_sha256(raw) == source["rawHash"], name
     assert hashlib.sha256(text).hexdigest() == source["textHash"], name
     return text.decode(), source
 
@@ -32,7 +36,7 @@ def state_capture(filename):
     directory = EVIDENCE / "captures"
     source = next(row for row in json.loads((directory / "manifest.json").read_text()) if row["file"] == filename + ".gz")
     raw = gzip.decompress((directory / source["file"]).read_bytes())
-    assert hashlib.sha256(raw).hexdigest() == source["uncompressedHash"]
+    assert capture_sha256(raw) == source["uncompressedHash"]
     return raw, {"sourceUrl": source["sourceUrl"], "finalUrl": source["sourceUrl"],
         "rawHash": source["uncompressedHash"], "retrievedAt": source["retrievedOrExtractedAt"], "httpStatus": 200}
 

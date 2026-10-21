@@ -18,6 +18,10 @@ from pathlib import Path
 
 from lxml import html
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT=Path(__file__).resolve().parents[1]
 EVIDENCE=ROOT/'data/ballot/evidence/ba01-great-lakes'
 BASE='ocd-division/country:us/state:mi'
@@ -28,7 +32,7 @@ def clean(value):return re.sub(r'\s+',' ',value).strip()
 def slug(value):return re.sub('[^a-z0-9]+','_',value.lower()).strip('_')
 def receipt(data,stem,publisher,source_class='OFFICIAL_PUBLISHER'):
     meta=json.loads((EVIDENCE/(stem+'.retrieval.json')).read_text())
-    assert meta['httpStatus']==200 and meta['rawHash']==hashlib.sha256(raw(stem)).hexdigest(),stem
+    assert meta['httpStatus']==200 and meta['rawHash']==capture_sha256(raw(stem)),stem
     if not any(s['finalUrl']==meta['finalUrl'] and s['rawHash']==meta['rawHash'] for s in data['sourceReceipt']['sources']):
         data['sourceReceipt']['sources'].append({**{k:meta[k] for k in ['requestedUrl','finalUrl','httpStatus','rawHash','retrievedAt']},'publisher':publisher,'sourceClass':source_class,
             'reviewedEvidence':f'Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/{stem}.raw.gz. Source-bound replay identifies whole jurisdictions and preserves distinct election divisions; hash identifies decompressed bytes.'})

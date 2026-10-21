@@ -18,6 +18,10 @@ from datetime import datetime, timezone
 import openpyxl
 import pandas
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(pathlib.Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CAPTURES = ROOT / "data/ballot/ba01-southeast-sources"
 
@@ -29,7 +33,7 @@ def normalized(value):
 def capture(key):
     meta = json.loads((CAPTURES / (key + ".meta.json")).read_text())
     raw = gzip.decompress((CAPTURES / (key + ".gz")).read_bytes())
-    assert hashlib.sha256(raw).hexdigest() == meta["rawHash"]
+    assert capture_sha256(raw) == meta["rawHash"]
     return raw, meta
 
 

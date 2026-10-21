@@ -20,6 +20,10 @@ from collections import defaultdict
 
 import openpyxl
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(pathlib.Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
@@ -44,14 +48,14 @@ def pdf_text(captures, key):
         assert hashlib.sha256(text.encode()).hexdigest() == meta["convertedTextHash"]
         return text, meta
     raw = capture_bytes(captures, key)
-    assert hashlib.sha256(raw).hexdigest() == meta["rawHash"]
+    assert capture_sha256(raw) == meta["rawHash"]
     return subprocess.check_output(["pdftotext", "-layout", "-", "-"], input=raw).decode(), meta
 
 
 def source(captures, key, publisher):
     raw = capture_bytes(captures, key)
     meta = json.loads((captures / (key + ".meta.json")).read_text())
-    assert hashlib.sha256(raw).hexdigest() == meta["rawHash"]
+    assert capture_sha256(raw) == meta["rawHash"]
     assert meta["httpStatus"] == 200
     workbook = openpyxl.load_workbook(io.BytesIO(raw), data_only=True)
     rows = iter(workbook.active.values)
@@ -206,7 +210,7 @@ def district_of_columbia(captures, write):
     ballot = next(iter(package["ballots"].values()))
     raw = capture_bytes(captures, "dc-3")
     meta = json.loads((captures / "dc-3.meta.json").read_text())
-    assert meta["rawHash"] == hashlib.sha256(raw).hexdigest() and meta["httpStatus"] == 200
+    assert meta["rawHash"] == capture_sha256(raw) and meta["httpStatus"] == 200
     page = subprocess.check_output(["pdftotext", "-layout", "-", "-"], input=raw).decode()
     aliases = {
         "Delegate to the U.S. House of Representatives": "Delegate to the House of Representatives",
@@ -273,7 +277,7 @@ def north_carolina(captures, write):
     ballot = next(iter(package["ballots"].values()))
     raw = capture_bytes(captures, "nc-1")
     meta = json.loads((captures / "nc-1.meta.json").read_text())
-    assert hashlib.sha256(raw).hexdigest() == meta["rawHash"] and meta["httpStatus"] == 200
+    assert capture_sha256(raw) == meta["rawHash"] and meta["httpStatus"] == 200
     records = [r for r in csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))) if r["election_dt"] == "11/03/2026"]
     registry = json.loads((ROOT / "data/derived/registration/nc.json").read_text())["divisions"]
     counties = {normalized(d[3].removesuffix(" County")): d[0] for d in registry if d[1] == "county"}
@@ -420,7 +424,7 @@ def maryland(captures, write):
     for key in ["md-local-browser-ua", "md-30"]:
         raw = capture_bytes(captures, key)
         meta = json.loads((captures / (key + ".meta.json")).read_text())
-        assert hashlib.sha256(raw).hexdigest() == meta["rawHash"] and meta["httpStatus"] == 200
+        assert capture_sha256(raw) == meta["rawHash"] and meta["httpStatus"] == 200
         records = list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))))
         sources.append(meta)
         for row in records:
@@ -519,7 +523,7 @@ def county_offices(captures, state, write):
     key = "sc-session-export" if state == "sc" else "de-3"
     raw = capture_bytes(captures, key)
     meta = json.loads((captures / (key + ".meta.json")).read_text())
-    assert hashlib.sha256(raw).hexdigest() == meta["rawHash"] and meta["httpStatus"] == 200
+    assert capture_sha256(raw) == meta["rawHash"] and meta["httpStatus"] == 200
     if state == "sc":
         rows = list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))))
         countywide = {"Probate Judge", "Auditor", "County Treasurer", "Sheriff", "Coroner", "Clerk of Court",

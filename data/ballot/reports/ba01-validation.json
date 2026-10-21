@@ -1,108 +1,139 @@
 {
-  "checkedAt": "2026-10-20T20:44:46.506718-07:00",
+  "checkedAt": "2026-10-20T21:48:53.436632-07:00",
   "status": "READY_FOR_RIVER",
-  "sourceAuthorityFileModified": true,
+  "mergedRiver": "f328cd2f2",
+  "mergedMain": "4c4f7f8fd",
+  "approvedOwnershipExceptions": [
+    "One-line source-authority observation identity fix",
+    "Bounded Ask ballot summary in lib/ask/ballot-summary.ts"
+  ],
+  "riverRequestedFiles": {
+    "passed": 40,
+    "failed": 0,
+    "skipped": 0,
+    "command": "node --test --experimental-strip-types --import ./scripts/register-test-loader.mjs --import ./tests/helpers/install-fixture-doors.ts tests/ballot-reader-edge.test.ts tests/browser-construction.test.ts tests/fixture-credentials.test.ts tests/measure-records.test.ts"
+  },
   "sourceReplayPython": {
     "passed": 54,
+    "failed": 0,
     "command": "python -B -m unittest discover -s tests -p 'ba01*test.py'"
   },
   "typeScript": {
     "status": "PASS",
-    "command": "node node_modules/typescript/bin/tsc --noEmit -p tests/ba01-tsconfig.json",
-    "configuration": "Root project, excluding stale generated .next validators, node_modules and local .scratch helpers."
+    "command": "pnpm exec tsc --noEmit",
+    "note": "Two test annotation errors found in the broad gate run were corrected; the exact full-project compiler then exited 0."
   },
-  "databaseCopy": {
-    "engine": "PGlite Postgres-compatible engine",
-    "realJournaledMigrationsApplied": 46,
-    "schemaMatchesFetchedRiver": "190700561a5a5c590e03cd8e22989ec18caac1a9",
-    "seed": "Previous checked-in ballots from first READY 7e54e6ac5cdaae7dbcf718f8a3f5c59714641bfb",
-    "productionRowsCopied": false,
-    "productionWriteAttempted": false,
-    "jurisdictionFilesPublished": [
-      "AK",
-      "AL",
-      "AR",
-      "AS",
-      "AZ",
-      "CA",
-      "CO",
-      "CT",
-      "DC",
-      "DE",
-      "FL",
-      "GA",
-      "HI",
-      "IA",
-      "ID",
-      "IL",
-      "IN",
-      "KS",
-      "KY",
-      "LA",
-      "MA",
-      "MD",
-      "ME",
-      "MI",
-      "MN",
-      "MO",
-      "MP",
-      "MS",
-      "MT",
-      "NC",
-      "ND",
-      "NE",
-      "NH",
-      "NJ",
-      "NM",
-      "NV",
-      "NY",
-      "OH",
-      "OK",
-      "OR",
-      "PA",
-      "RI",
-      "SC",
-      "SD",
-      "TN",
-      "TX",
-      "UT",
-      "VA",
-      "VI",
-      "VT",
-      "WA",
-      "WI",
-      "WV",
-      "WY"
-    ],
-    "checks": [
-      "Actual assembler and PostgresRoutineDataStore publication",
-      "Promoted typed readback",
-      "All previous published contest, candidacy and measure IDs retained",
-      "Every incoming complete contest and its candidates and measures published",
-      "Whole-division memberships and explicit ticket mates reach the reader",
-      "AS/MP/VI first publication through the same schema"
+  "lint": {
+    "status": "PASS",
+    "command": "pnpm lint",
+    "warnings": 33,
+    "errors": 0
+  },
+  "askSummaryRegression": {
+    "passed": 33,
+    "failed": 0,
+    "files": [
+      "tests/ask-latency-shape.test.ts",
+      "tests/ba01-west-ballot-ask-budget.test.ts"
     ]
   },
-  "productionSnapshotRead": "Automatic approval review rejected the credential transmission under the no-lane-credentials instruction. The rejected path was not retried.",
-  "liveAcceptance": "NOT_COMPLETE; River, daily runner and oversight still required.",
-  "reviewFixes": [
-    "Malformed optional membership metadata does not crash the reader",
-    "Partial updates cannot rewrite publisher/class metadata of an exact observation still cited by retained facts; uncited sources remain independent"
-  ],
-  "sourceObservationIdentity": {
-    "file": "lib/civic-data/source-authority.ts",
-    "fields": [
-      "requestedUrl",
-      "finalUrl",
-      "rawHash",
-      "retrievedAt"
-    ],
-    "regression": "PASS: distinct captures of identical bytes are accepted; exact duplicate observations remain rejected."
+  "redaction": {
+    "artifacts": 44,
+    "gzipArtifacts": 17,
+    "credentialSubstrings": 61,
+    "originalFingerprintsRetained": true,
+    "rawOriginalsIgnored": true,
+    "unusedThirdPartyClientOmittedWithFingerprint": true,
+    "manifest": "data/ballot/ba01-source-redactions.json"
   },
-  "ordinaryNode": {
-    "passed": 163,
-    "failed": 0,
-    "skipped": 0,
-    "command": "BA01_BASE_SHA=7e54e6ac5cdaae7dbcf718f8a3f5c59714641bfb node --experimental-strip-types --import ./scripts/register-test-loader.mjs --test tests/assemble-ballot-package.test.ts tests/worker-ballot-contests.test.ts tests/worker-ballot-measures.test.ts tests/ballot-publication.test.ts tests/member-office-source-lineage.test.ts tests/ba01-*.test.ts"
-  }
+  "databaseCopy": {
+    "engine": "Actual Neon PostgreSQL production child branch",
+    "branchId": "br-wandering-shape-ax3ranho",
+    "parentBranchId": "br-delicate-lab-ax02xuo5",
+    "productionRowsCopied": true,
+    "migrationCountBefore": 46,
+    "migrationCountAfter": 46,
+    "allMigrationHashesMatchCommittedJournal": true,
+    "jurisdictionsPublished": 54,
+    "priorIds": {
+      "contests": 6032,
+      "candidates": 11663,
+      "measures": 142
+    },
+    "priorIdsLost": 0,
+    "publishedContests": 11604,
+    "publishedCandidacies": 19853,
+    "publishedQuestionRecords": 488,
+    "fullReport": "data/ballot/reports/ba01-production-copy.json"
+  },
+  "copyPages": {
+    "requestedZipSelectors": 15,
+    "requestedBrowserPages": 15,
+    "extraTucsonBrowserPage": true,
+    "http200": 16,
+    "tucsonVisibleContests": 24,
+    "tucsonPriorContestIdsLost": 0,
+    "fullReport": "data/ballot/reports/ba01-production-copy-pages.json",
+    "omittedRetentionCards": {
+      "94110": 13,
+      "80202": 7,
+      "33130": 6,
+      "46204": 3
+    },
+    "runtime": "Next development server on the real production database copy; local timings do not prove production performance."
+  },
+  "liveAcceptance": "NOT_COMPLETE; per user instruction all remaining coverage/display/live checks are handed off for a new step, and this step stops on River acceptance.",
+  "productionWriteAttempted": false,
+  "fullNode": {
+    "files": 1211,
+    "firstRun": {
+      "tests": 8898,
+      "failed": 5,
+      "passed": 8888,
+      "cancelled": 0,
+      "skipped": 5,
+      "todo": 0,
+      "topLevel": 8781,
+      "suites": 39
+    },
+    "firstRunExitCode": 1,
+    "allInitialFailuresResolved": true,
+    "failedFilesRechecked": [
+      "tests/dispatch-work.test.ts",
+      "tests/district-territory.test.ts",
+      "tests/fact-entities.test.ts",
+      "tests/migration-shipping-invariant.test.ts"
+    ],
+    "canonicalRecheck": {
+      "tests": 54,
+      "failed": 0,
+      "passed": 54,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "topLevel": 54,
+      "suites": 0
+    },
+    "note": "The full suite ran once. Three files failed because the environment held Oct4 generated place references; the existing postinstall projector refreshed them. The fourth failure caught a duplicate migration-journal reader in the new copy helper, replaced with the shared reader. All four files then passed the canonical pnpm test affected-file invocation. Original failing totals are retained here; no full-suite rerun is claimed."
+  },
+  "gateRun": {
+    "command": "pnpm gates",
+    "initialAggregateExitCode": 1,
+    "initialAggregate": "6 of 8 green; TypeScript and test failed before corrections",
+    "finalRechecks": {
+      "tsc": "PASS: full-project pnpm exec tsc --noEmit; subsequent builds also passed type checking",
+      "test": "PASS: all four failed files rechecked by canonical pnpm test, 54/54 assertions"
+    },
+    "otherGates": {
+      "lint": "PASS",
+      "assert:browser": "PASS: pinned Chromium1234",
+      "db:gate": "PASS",
+      "build": "PASS",
+      "test:bundle": "PASS:16/16",
+      "build:standalone": "PASS"
+    },
+    "postBuildTrace": "PASS:12/12 deploy-path tests against actual standalone traces",
+    "finalPreflight": "PASS:2/2 on the staged replacement READY tree"
+  },
+  "migrationReader": "Copy verifier reuses lib/db/applied-migrations.ts and schema-state.ts; all46 exact applied hashes were rechecked on the isolated copy."
 }

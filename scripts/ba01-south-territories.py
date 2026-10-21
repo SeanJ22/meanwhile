@@ -8,6 +8,8 @@ import runpy
 import subprocess
 import unicodedata
 
+capture_sha256 = runpy.run_path(str(Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT=Path(__file__).resolve().parents[1]
 EVIDENCE=ROOT/'data/ballot/evidence/ba01-south/territories'
 for script in ['ba01-south-territory-sources.py','ba01-south-mp-samples.py','ba01-south-vi-samples.py']:
@@ -23,7 +25,7 @@ registry={row['id']:row for row in csv.DictReader(registry_raw.decode().splitlin
 
 def capture(name):
     raw=(EVIDENCE/name).read_bytes();meta=json.loads((EVIDENCE/(name+'.source.json')).read_text())
-    assert meta['httpStatus']==200 and hashlib.sha256(raw).hexdigest()==meta['sha256'],name
+    assert meta['httpStatus']==200 and capture_sha256(raw)==meta['sha256'],name
     return raw,meta
 
 

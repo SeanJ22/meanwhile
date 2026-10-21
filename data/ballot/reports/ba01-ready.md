@@ -1,19 +1,105 @@
-# BA-01 verified national expansion
+# BA-01 return repair
 
-Corrected inputs use the existing daily `ballot-contests:<ST>` assembler. This
-verified batch is READY for River. River ships the branch; the runner publishes
-on its next daily pass; oversight checks live ballot pages. No production write
-credential goes to this lane. National source coverage and the requested live
-acceptance remain incomplete.
+The five River return defects are repaired. This is the replacement READY; River acceptance is the finish line. Remaining acquisition and live coverage work belong to a new step.
 
-## Verified reader data prepared
+The daily `ballot-contests:<ST>` runner remains the production publication path. This lane uses an isolated production database copy for validation. No production write credential is requested or used.
 
-Current holdings are recorded by [`ba01-inventory.json`](ba01-inventory.json).
-They contain 11,608 contests,
-19,860 candidacy records and 488 measures across all 50 states, DC and three
-territories: +5,572 / +8,190 / +346 above the starting river, and
-+2,535 / +3,411 / +206 beyond the first READY. These are raw inventory counts,
-not official denominators, distinct people or live delivery counts.
+## Return repairs
+
+- Tucson preserves all 22 original reader contest IDs, all 91 prior Arizona contest objects, and every prior candidacy identity. Both newly verified races remain available. Explicit governor ticket aliases restore the original candidate targets and keep the older party disagreement as sourced history.
+- All three capture scripts use `launchGuarded`.
+- 61 credential substrings in 44 saved artifacts are redacted, including 17 gzip files. Original page/container fingerprints and exact sanitized hashes are retained in `../ba01-source-redactions.json`. Unsanitized copies stay outside Git. The unused third-party NYC JavaScript capture is omitted, with its original fingerprint retained.
+- The extra reviewed Arizona entries were Maricopa Proposition 413, Peoria Proposition 417 and Tempe Proposition 424. Their official questions and full YES/NO statements stay in raw measure records. They no longer masquerade as reviewed plain-English summaries. All 15 original reviewed summaries and 52 reaction targets remain unchanged. Arizona has 18 measure contests and seven raw question records; these are different counts.
+- River's four requested files pass all 40 tests.
+
+## Counts by state
+
+Counts below are the actual promoted production-copy readback. Candidates are raw candidacy records, not distinct people. Measure contests are already included in contests; question records count separately stored official wording. Input files contain 11,608 contests and 19,860 candidacies; the copy publishes 11,604 and 19,853. Four Illinois races and seven associated filings remain held, with reasons in `ba01-production-copy.json`. No prior production ID was lost.
+
+| State | Contests | Candidacies | Measure contests | Question records |
+| --- | ---: | ---: | ---: | ---: |
+| AK | 76 | 153 | 2 | 2 |
+| AL | 187 | 264 | 4 | 4 |
+| AR | 179 | 261 | 13 | 13 |
+| AS | 18 | 44 | 0 | 0 |
+| AZ | 169 | 297 | 18 | 7 |
+| CA | 346 | 461 | 79 | 79 |
+| CO | 165 | 321 | 20 | 20 |
+| CT | 197 | 544 | 0 | 0 |
+| DC | 16 | 51 | 1 | 1 |
+| DE | 77 | 130 | 0 | 0 |
+| FL | 307 | 514 | 62 | 62 |
+| GA | 279 | 479 | 6 | 6 |
+| HI | 92 | 138 | 32 | 32 |
+| IA | 140 | 246 | 1 | 1 |
+| ID | 423 | 574 | 4 | 4 |
+| IL | 166 | 256 | 0 | 0 |
+| IN | 142 | 274 | 2 | 2 |
+| KS | 248 | 362 | 1 | 1 |
+| KY | 127 | 206 | 1 | 1 |
+| LA | 18 | 44 | 10 | 10 |
+| MA | 232 | 304 | 9 | 9 |
+| MD | 336 | 671 | 51 | 51 |
+| ME | 278 | 470 | 0 | 0 |
+| MI | 340 | 707 | 2 | 2 |
+| MN | 392 | 683 | 1 | 1 |
+| MO | 195 | 367 | 5 | 5 |
+| MP | 21 | 72 | 0 | 0 |
+| MS | 102 | 148 | 0 | 0 |
+| MT | 146 | 269 | 3 | 3 |
+| NC | 561 | 999 | 6 | 6 |
+| ND | 409 | 612 | 3 | 3 |
+| NE | 48 | 94 | 4 | 4 |
+| NH | 98 | 165 | 28 | 28 |
+| NJ | 109 | 304 | 0 | 0 |
+| NM | 255 | 333 | 7 | 7 |
+| NV | 78 | 152 | 2 | 2 |
+| NY | 268 | 523 | 5 | 5 |
+| OH | 223 | 433 | 8 | 8 |
+| OK | 95 | 191 | 2 | 2 |
+| OR | 116 | 262 | 3 | 3 |
+| PA | 188 | 317 | 4 | 4 |
+| RI | 126 | 161 | 5 | 5 |
+| SC | 298 | 501 | 0 | 0 |
+| SD | 89 | 187 | 4 | 4 |
+| TN | 129 | 266 | 3 | 3 |
+| TX | 1,736 | 2,166 | 8 | 8 |
+| UT | 142 | 267 | 3 | 3 |
+| VA | 427 | 1,068 | 64 | 64 |
+| VI | 10 | 70 | 0 | 0 |
+| VT | 140 | 369 | 2 | 2 |
+| WA | 156 | 275 | 4 | 4 |
+| WI | 195 | 322 | 3 | 3 |
+| WV | 196 | 360 | 3 | 3 |
+| WY | 98 | 146 | 1 | 1 |
+
+## Production-copy ZIP checks
+
+All 15 normal reader selectors return promoted ballots. Each full race list, candidate identity and official source URL is in `ba01-production-copy.json`. All 15 actual local browser pages returned HTTP 200; `ba01-production-copy-pages.json` records their visible race IDs and candidate cards. Tucson 85701 separately shows 24 contests, including every original 22 contest ID. Browser screenshots were inspected. These local development timings do not establish production performance. A ZIP can span multiple ballot styles; the following counts do not certify every address or an official sample match.
+
+| ZIP | Selector contests | Visible page contests | Candidate cards | Held races omitted by page | Unresolved district family |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 78701 | 53 | 53 | 87 | 0 | U.S. House |
+| 94110 | 52 | 39 | 37 | 13 | U.S. House |
+| 43215 | 28 | 28 | 53 | 0 | U.S. House |
+| 53703 | 12 | 12 | 16 | 0 | None reported |
+| 19103 | 8 | 8 | 9 | 0 | None reported |
+| 85003 | 83 | 83 | 99 | 0 | None reported |
+| 80202 | 55 | 48 | 75 | 7 | None reported |
+| 98101 | 26 | 26 | 33 | 0 | None reported |
+| 10001 | 15 | 15 | 31 | 0 | None reported |
+| 30303 | 22 | 22 | 46 | 0 | None reported |
+| 33130 | 29 | 23 | 30 | 6 | U.S. House |
+| 07102 | 3 | 3 | 10 | 0 | None reported |
+| 48226 | 23 | 23 | 113 | 0 | State Senate |
+| 46204 | 14 | 11 | 19 | 3 | None reported |
+| 96813 | 29 | 29 | 20 | 0 | None reported |
+
+NYC 10001: the verified 315 W 29th Street paper style has 16 races. The normal ZIP selector returns 15: City Council District 3 and Municipal Court District 3 are missing, while the split ZIP adds State Senate District 28. Madison 53703: the ZIP union returns 12 races; the Central Library Ward 52 printed style has 11, with all 11 held and independently compared. Exact address narrowing remains open.
+
+The existing page filters out the `RETENTION` type: San Francisco omits 13 held judicial races, Denver seven, Miami six and Indianapolis three. All are present in the promoted data and normal selector. This requires a display repair in a new step; `app/ballot/page.tsx` is outside this lane. No contest was deleted to make the checks pass.
+
+## Verified source expansion
 
 Ohio's 139 core contests and 310 active choices match acquired official lists and
 samples, including all 15 congressional, 17 Senate and 99 House races. Its 311th
@@ -63,66 +149,22 @@ contest, including literal independent/minor-party labels and filed websites
 where supplied. No candidate is supplied for a blank write-in line. Six empty
 North Dakota offices and Richland County's coroner remain explicit held gaps.
 
-## Publication repairs and verification
+## Verification
 
-The merge retains every still-cited observation, including identical bytes
-captured at separate actual times, and prunes uncited observations. Authority
-lookup is bound to the exact capture, with a unique-publisher fallback for legacy
-measure provenance. A newly verified official list can fill a held contest. A
-changed published electorate requires an explicit, newer official correction;
-the Newbury Council2 correction includes that proof. Receipt replay preserves
-an existing observation's publisher; a partial update cannot rewrite the authority
-of a still-cited exact observation. Uncited observations are pruned independently.
-Malformed optional membership metadata cannot crash an otherwise usable ballot.
+The isolated Neon branch `br-wandering-shape-ax3ranho` copies production branch `br-delicate-lab-ax02xuo5`. All 46 copied migration hashes match the committed journal. All 54 jurisdiction inputs publish through the ordinary assembler and Postgres store; every copied prior contest, candidacy and measure ID remains. Actual final Arizona vote wording and joint tickets were also checked on the copy. Reports retain the branch, migration hashes, prior versions and input fingerprints. The test branch expires automatically.
 
-The source-authority duplicate key includes retrieval time. Separate actual
-captures of identical bytes are accepted, while exact duplicate observations
-remain rejected. Publication checks run through the ordinary path.
+The full suite exercised all 1,211 files / 8,898 tests: its initial result was 8,888 passed, five failed and five skipped. All five failures were corrected. Three affected files needed the repository's existing postinstall projector to replace stale October 4 generated references; no tracked source change was needed. The copy helper's duplicate migration-journal query was replaced with the shared receipt reader. The four files then passed the canonical `pnpm test` selection: 54/54 tests. The original full-run totals remain in `ba01-validation.json`; a second full run is not claimed.
 
-The isolated Postgres-compatible copy applies all 46 real journaled migrations.
-They are byte-identical to fetched River `190700561a5a5c590e03cd8e22989ec18caac1a9`.
-It seeds the prior checked-in ballots from the first READY, runs the actual
-assembler and Postgres store, and reads the typed promoted projection back.
-Checks require every incoming complete contest, candidate and measure to publish,
-every previous ballot ID to remain, and memberships and ticket mates to reach the
-reader. New territory inputs also exercise their first publication. All 163
-ordinary Node subtests pass, including all 54 jurisdiction publications and
-source-lineage/runner checks. The unchanged source inputs retain their 54 passing
-Python source-replay tests. TypeScript passes using the tracked test config,
-which excludes stale generated `.next` validators. Exact commands and limits are
-recorded in [`ba01-validation.json`](ba01-validation.json).
+Full-project TypeScript passes after correcting two test annotations found by the gate run. Lint, pinned Chromium, database gate, default build, bundle tests (16/16), and standalone build pass. The completed standalone traces also pass all 12 deploy-path checks. River's requested files pass 40/40, Python source replays 54/54, and the Ask route plus new budget regression pass 33/33. Final preflight is recorded in `ba01-validation.json`.
 
-The copy contains no production rows. Automatic approval review rejected the
-production snapshot read because it would transmit a configured database
-credential, citing Sean's no-lane-credentials instruction. No production write
-was attempted, and the rejected credential path was not retried.
+Sean approved these named ownership exceptions: the one-line fix in `lib/civic-data/source-authority.ts`, and the bounded summary fix in `lib/ask/ballot-summary.ts` ("Allow this Ask summary fix"). Expanded ballots now retain every sourced contest record while a summary exceeding the existing prose budget uses the correct counts. Small ballots keep their full named summary. The existing validator remains unchanged.
 
-## Remaining source and live work
+BL-30 retains its exact original 22-contest ID hash and every prior candidate assertion; it separately requires both additional source-verified races. All 91 prior Arizona contest objects, every prior candidacy ID, all reviewed summaries and all 52 provision IDs remain checked.
 
-[`ba01-national-comparison.md`](ba01-national-comparison.md) reports measured
-scope for every state and DC. Major regular core gaps remain in Pennsylvania,
-New Hampshire, Wisconsin and Illinois; Alaska's full core denominator is
-unmeasured, and Arizona's CD3/4/8 certification limitations remain explicit.
-Nebraska's entire saved source has 411 contest tuples / 521 choices: the old
-64-NRD estimate was incorrect; 174 NRD races / 199 choices and 195 other
-regional/local races / 230 choices remain for precise electorate mapping.
-All regional/local gaps remain standing acquisition work.
+## Remaining work for a new step
 
-[`ba01-zip-acceptance.json`](ba01-zip-acceptance.json) records all 15 requested
-ZIP checks as open. NYC10001's particular official address style matches all
-16 source races / 32 distinct choices / five questions in the prepared catalog;
-this does not establish every address in that split ZIP. Madison53703 Central
-Library, Ward52/style005, matches all11 printed races /14 choices through the
-prepared reader; CityHallWard51 remains unverified against a printed sample. Fargo58102's particular
-City Hall style matches all 26 races / 35 choices / three measures through the
-reader selector. Minnesota55415's example has all 41 source races in the catalog,
-but only40 reach the reader without explicit commissioner District3 resolution.
-Regional reports distinguish other complete source sections from unfinished
-address/style mapping.
+River owns integration/release. The existing daily runner owns production publication; its live refresh and current runner health remain unverified here (River lists RN-01 as pending). Oversight owns post-publication live race-by-race acceptance for all 15 ZIPs. No post-publication live acceptance is claimed here.
 
-No post-publication live acceptance is claimed. Austin, San Francisco and Miami
-lack resolved congressional districts in the saved live baseline; Detroit lacks
-a resolved state Senate district. Those resolver changes are outside the owned
-files and remain necessary for the live reader result. Oversight owns the final
-race-by-race checks after River and the runner. This verified expansion awaits
-River integration, runner publication and those live checks.
+`ba01-national-comparison.md` and regional comparison reports retain every state/DC denominator and gap. Major regular core gaps remain in Pennsylvania, New Hampshire, Wisconsin and Illinois. Alaska's full core denominator is unmeasured. Arizona CD3/4/8 certification limitations remain explicit. Nebraska's saved source has 411 contest tuples / 521 choices, including 174 NRD races / 199 choices and 195 other regional/local races / 230 choices still requiring exact electorate mapping.
+
+County, city, judicial, school, special-district and local-measure acquisition remains incomplete beyond the individually verified source sections. Exact address/style matching remains open except for the particular examples recorded in `ba01-zip-acceptance.json`. The unresolved geography families in the ZIP table require work outside this lane's original ownership. The current step stops when River accepts this READY; none of this remaining work is started here.

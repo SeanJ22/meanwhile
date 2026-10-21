@@ -116,7 +116,7 @@ class RegionalOfficialBallots(unittest.TestCase):
 
     def test_az_pima_retention_and_local_measures_keep_official_scope_and_question(self):
         data = ballot("az")
-        pima = [race for race in data["contests"] if race["id"].startswith("az-pima-general-2026-")]
+        pima = [race for race in data["contests"] if (race["id"].startswith("az-pima-general-2026-") or race["id"] == "ballot-az-pima-general-2026-clerk-of-the-superior-court")]
         self.assertEqual(len(pima), 14)
         self.assertEqual(sum(race["type"] == "RETENTION" for race in pima), 13)
         self.assertTrue(all(race["ocdId"].endswith("/county:pima") for race in pima))

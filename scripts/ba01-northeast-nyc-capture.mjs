@@ -1,5 +1,5 @@
 // Capture the ordinary public UI and its own read-only responses, with verified TLS.
-import { chromium } from 'playwright';
+import { launchGuarded } from "./browser.mts";
 import { mkdir, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
@@ -13,9 +13,9 @@ async function save(name, url, body) {
   captures.push({ name, requestedUrl: url, finalUrl: url, retrievedAt, httpStatus: 200,
     rawHash: createHash('sha256').update(body).digest('hex') });
 }
-const browser = await chromium.launch({ headless: true, ...(process.env.HTTPS_PROXY ? { proxy: { server: process.env.HTTPS_PROXY } } : {}) });
+const browser = await launchGuarded({ label: 'ba01-nyc-capture', headless: true, ...(process.env.HTTPS_PROXY ? { proxy: { server: process.env.HTTPS_PROXY } } : {}) });
 try {
-  const context = await browser.newContext();
+  const context = await browser.context();
   // APIRequest uses the configured environment CA; browser requests retain their
   // ordinary headers, cookies and normal public UI behavior through this route.
   await context.route('**/*', async route => {

@@ -1,45 +1,52 @@
 {
-  "generatedAt": "2026-10-21T01:16:04.177233+00:00",
+  "generatedAt": "2026-10-21T04:10:23.620658+00:00",
   "base": "7dbad3bb5f2ebdee6ab41f9e094237aa00eecb83",
-  "previousReady": "7e54e6ac5cdaae7dbcf718f8a3f5c59714641bfb",
+  "previousReady": "0098053a8eeec67829b198290c15006a7c7b6516",
   "baseline": {
     "contests": 6036,
     "candidacies": 11670,
-    "measures": 142
+    "measures": 142,
+    "measureContests": 153
   },
   "current": {
     "contests": 11608,
     "candidacies": 19860,
-    "measures": 488
+    "measures": 488,
+    "measureContests": 499
   },
   "added": {
     "contests": 5572,
     "candidacies": 8190,
-    "measures": 346
+    "measures": 346,
+    "measureContests": 346
   },
   "sincePreviousReady": {
-    "contests": 2535,
-    "candidacies": 3411,
-    "measures": 206
+    "contests": 0,
+    "candidacies": 0,
+    "measures": 0,
+    "measureContests": 0
   },
-  "countMeaning": "Raw checked-in inventory; not an official completeness denominator or live delivery count.",
+  "countMeaning": "Raw checked-in inventory, not official completeness or live delivery. measureContests counts races already included in contests; measures counts official question records. Candidacies are records, not distinct people.",
   "states": [
     {
       "state": "AK",
       "held": {
         "contests": 76,
         "candidacies": 153,
-        "measures": 2
+        "measures": 2,
+        "measureContests": 2
       },
       "added": {
         "contests": 20,
         "candidacies": 20,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -47,17 +54,20 @@
       "held": {
         "contests": 187,
         "candidacies": 264,
-        "measures": 4
+        "measures": 4,
+        "measureContests": 4
       },
       "added": {
         "contests": 16,
         "candidacies": 23,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -65,17 +75,20 @@
       "held": {
         "contests": 179,
         "candidacies": 261,
-        "measures": 13
+        "measures": 13,
+        "measureContests": 13
       },
       "added": {
         "contests": 157,
         "candidacies": 228,
-        "measures": 9
+        "measures": 9,
+        "measureContests": 9
       },
       "sincePreviousReady": {
-        "contests": 62,
-        "candidacies": 84,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -83,17 +96,20 @@
       "held": {
         "contests": 18,
         "candidacies": 44,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 18,
         "candidacies": 44,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 18,
-        "candidacies": 44,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -101,17 +117,20 @@
       "held": {
         "contests": 169,
         "candidacies": 297,
-        "measures": 7
+        "measures": 7,
+        "measureContests": 18
       },
       "added": {
         "contests": 78,
         "candidacies": 80,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "sincePreviousReady": {
-        "contests": 18,
-        "candidacies": 19,
-        "measures": 2
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -119,17 +138,20 @@
       "held": {
         "contests": 346,
         "candidacies": 461,
-        "measures": 79
+        "measures": 79,
+        "measureContests": 79
       },
       "added": {
         "contests": 104,
         "candidacies": 73,
-        "measures": 65
+        "measures": 65,
+        "measureContests": 65
       },
       "sincePreviousReady": {
-        "contests": 88,
-        "candidacies": 54,
-        "measures": 54
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -137,17 +159,20 @@
       "held": {
         "contests": 165,
         "candidacies": 321,
-        "measures": 20
+        "measures": 20,
+        "measureContests": 20
       },
       "added": {
         "contests": 38,
         "candidacies": 45,
-        "measures": 6
+        "measures": 6,
+        "measureContests": 6
       },
       "sincePreviousReady": {
-        "contests": 16,
-        "candidacies": 18,
-        "measures": 1
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -155,17 +180,20 @@
       "held": {
         "contests": 197,
         "candidacies": 544,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -173,17 +201,20 @@
       "held": {
         "contests": 16,
         "candidacies": 51,
-        "measures": 1
+        "measures": 1,
+        "measureContests": 1
       },
       "added": {
         "contests": 0,
         "candidacies": 1,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -191,17 +222,20 @@
       "held": {
         "contests": 77,
         "candidacies": 130,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 20,
         "candidacies": 27,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 11,
-        "candidacies": 16,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -209,17 +243,20 @@
       "held": {
         "contests": 307,
         "candidacies": 514,
-        "measures": 62
+        "measures": 62,
+        "measureContests": 62
       },
       "added": {
         "contests": 107,
         "candidacies": 120,
-        "measures": 59
+        "measures": 59,
+        "measureContests": 59
       },
       "sincePreviousReady": {
-        "contests": 107,
-        "candidacies": 120,
-        "measures": 59
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -227,17 +264,20 @@
       "held": {
         "contests": 279,
         "candidacies": 479,
-        "measures": 6
+        "measures": 6,
+        "measureContests": 6
       },
       "added": {
         "contests": 15,
         "candidacies": 16,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "sincePreviousReady": {
-        "contests": 15,
-        "candidacies": 16,
-        "measures": 3
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -245,17 +285,20 @@
       "held": {
         "contests": 92,
         "candidacies": 138,
-        "measures": 32
+        "measures": 32,
+        "measureContests": 32
       },
       "added": {
         "contests": 47,
         "candidacies": 44,
-        "measures": 30
+        "measures": 30,
+        "measureContests": 30
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -263,17 +306,20 @@
       "held": {
         "contests": 140,
         "candidacies": 246,
-        "measures": 1
+        "measures": 1,
+        "measureContests": 1
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -281,17 +327,20 @@
       "held": {
         "contests": 423,
         "candidacies": 574,
-        "measures": 4
+        "measures": 4,
+        "measureContests": 4
       },
       "added": {
         "contests": 304,
         "candidacies": 343,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 304,
-        "candidacies": 343,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -299,17 +348,20 @@
       "held": {
         "contests": 170,
         "candidacies": 263,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 7,
         "candidacies": 8,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 7,
-        "candidacies": 8,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -317,17 +369,20 @@
       "held": {
         "contests": 142,
         "candidacies": 274,
-        "measures": 2
+        "measures": 2,
+        "measureContests": 2
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -335,17 +390,20 @@
       "held": {
         "contests": 248,
         "candidacies": 362,
-        "measures": 1
+        "measures": 1,
+        "measureContests": 1
       },
       "added": {
         "contests": 103,
         "candidacies": 109,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 98,
-        "candidacies": 99,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -353,17 +411,20 @@
       "held": {
         "contests": 127,
         "candidacies": 206,
-        "measures": 1
+        "measures": 1,
+        "measureContests": 1
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -371,17 +432,20 @@
       "held": {
         "contests": 18,
         "candidacies": 44,
-        "measures": 10
+        "measures": 10,
+        "measureContests": 10
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -389,17 +453,20 @@
       "held": {
         "contests": 232,
         "candidacies": 304,
-        "measures": 9
+        "measures": 9,
+        "measureContests": 9
       },
       "added": {
         "contests": 8,
         "candidacies": 11,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -407,17 +474,20 @@
       "held": {
         "contests": 336,
         "candidacies": 671,
-        "measures": 51
+        "measures": 51,
+        "measureContests": 51
       },
       "added": {
         "contests": 203,
         "candidacies": 349,
-        "measures": 48
+        "measures": 48,
+        "measureContests": 48
       },
       "sincePreviousReady": {
-        "contests": 59,
-        "candidacies": 31,
-        "measures": 48
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -425,17 +495,20 @@
       "held": {
         "contests": 278,
         "candidacies": 470,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 88,
         "candidacies": 108,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 88,
-        "candidacies": 108,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -443,17 +516,20 @@
       "held": {
         "contests": 340,
         "candidacies": 707,
-        "measures": 2
+        "measures": 2,
+        "measureContests": 2
       },
       "added": {
         "contests": 168,
         "candidacies": 252,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 168,
-        "candidacies": 252,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -461,17 +537,20 @@
       "held": {
         "contests": 392,
         "candidacies": 683,
-        "measures": 1
+        "measures": 1,
+        "measureContests": 1
       },
       "added": {
         "contests": 170,
         "candidacies": 256,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 170,
-        "candidacies": 256,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -479,17 +558,20 @@
       "held": {
         "contests": 195,
         "candidacies": 367,
-        "measures": 5
+        "measures": 5,
+        "measureContests": 5
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -497,17 +579,20 @@
       "held": {
         "contests": 21,
         "candidacies": 72,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 21,
         "candidacies": 72,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 21,
-        "candidacies": 72,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -515,17 +600,20 @@
       "held": {
         "contests": 102,
         "candidacies": 148,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 95,
         "candidacies": 126,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 95,
-        "candidacies": 126,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -533,17 +621,20 @@
       "held": {
         "contests": 146,
         "candidacies": 269,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "added": {
         "contests": 12,
         "candidacies": 13,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 12,
-        "candidacies": 13,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -551,17 +642,20 @@
       "held": {
         "contests": 561,
         "candidacies": 999,
-        "measures": 6
+        "measures": 6,
+        "measureContests": 6
       },
       "added": {
         "contests": 369,
         "candidacies": 633,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "sincePreviousReady": {
-        "contests": 1,
-        "candidacies": 1,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -569,17 +663,20 @@
       "held": {
         "contests": 409,
         "candidacies": 612,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "added": {
         "contests": 346,
         "candidacies": 464,
-        "measures": 1
+        "measures": 1,
+        "measureContests": 1
       },
       "sincePreviousReady": {
-        "contests": 346,
-        "candidacies": 464,
-        "measures": 1
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -587,17 +684,20 @@
       "held": {
         "contests": 48,
         "candidacies": 94,
-        "measures": 4
+        "measures": 4,
+        "measureContests": 4
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -605,17 +705,20 @@
       "held": {
         "contests": 98,
         "candidacies": 165,
-        "measures": 28
+        "measures": 28,
+        "measureContests": 28
       },
       "added": {
         "contests": 85,
         "candidacies": 138,
-        "measures": 27
+        "measures": 27,
+        "measureContests": 27
       },
       "sincePreviousReady": {
-        "contests": 85,
-        "candidacies": 138,
-        "measures": 27
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -623,17 +726,20 @@
       "held": {
         "contests": 109,
         "candidacies": 304,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 10,
         "candidacies": 29,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -641,17 +747,20 @@
       "held": {
         "contests": 255,
         "candidacies": 333,
-        "measures": 7
+        "measures": 7,
+        "measureContests": 7
       },
       "added": {
         "contests": 158,
         "candidacies": 197,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 158,
-        "candidacies": 197,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -659,17 +768,20 @@
       "held": {
         "contests": 78,
         "candidacies": 152,
-        "measures": 2
+        "measures": 2,
+        "measureContests": 2
       },
       "added": {
         "contests": 6,
         "candidacies": 15,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 6,
-        "candidacies": 15,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -677,17 +789,20 @@
       "held": {
         "contests": 268,
         "candidacies": 523,
-        "measures": 5
+        "measures": 5,
+        "measureContests": 5
       },
       "added": {
         "contests": 26,
         "candidacies": 81,
-        "measures": 5
+        "measures": 5,
+        "measureContests": 5
       },
       "sincePreviousReady": {
-        "contests": 26,
-        "candidacies": 81,
-        "measures": 5
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -695,17 +810,20 @@
       "held": {
         "contests": 223,
         "candidacies": 433,
-        "measures": 8
+        "measures": 8,
+        "measureContests": 8
       },
       "added": {
         "contests": 214,
         "candidacies": 406,
-        "measures": 7
+        "measures": 7,
+        "measureContests": 7
       },
       "sincePreviousReady": {
-        "contests": 90,
-        "candidacies": 155,
-        "measures": 5
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -713,17 +831,20 @@
       "held": {
         "contests": 95,
         "candidacies": 191,
-        "measures": 2
+        "measures": 2,
+        "measureContests": 2
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -731,17 +852,20 @@
       "held": {
         "contests": 116,
         "candidacies": 262,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "added": {
         "contests": 33,
         "candidacies": 95,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -749,17 +873,20 @@
       "held": {
         "contests": 188,
         "candidacies": 317,
-        "measures": 4
+        "measures": 4,
+        "measureContests": 4
       },
       "added": {
         "contests": 120,
         "candidacies": 212,
-        "measures": 4
+        "measures": 4,
+        "measureContests": 4
       },
       "sincePreviousReady": {
-        "contests": 31,
-        "candidacies": 55,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -767,17 +894,20 @@
       "held": {
         "contests": 126,
         "candidacies": 161,
-        "measures": 5
+        "measures": 5,
+        "measureContests": 5
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -785,17 +915,20 @@
       "held": {
         "contests": 298,
         "candidacies": 501,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 158,
         "candidacies": 220,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -803,17 +936,20 @@
       "held": {
         "contests": 89,
         "candidacies": 187,
-        "measures": 4
+        "measures": 4,
+        "measureContests": 4
       },
       "added": {
         "contests": 4,
         "candidacies": 9,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 4,
-        "candidacies": 9,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -821,17 +957,20 @@
       "held": {
         "contests": 129,
         "candidacies": 266,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "added": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -839,17 +978,20 @@
       "held": {
         "contests": 1736,
         "candidacies": 2166,
-        "measures": 8
+        "measures": 8,
+        "measureContests": 8
       },
       "added": {
         "contests": 1505,
         "candidacies": 1684,
-        "measures": 8
+        "measures": 8,
+        "measureContests": 8
       },
       "sincePreviousReady": {
-        "contests": 270,
-        "candidacies": 329,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -857,17 +999,20 @@
       "held": {
         "contests": 142,
         "candidacies": 267,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "added": {
         "contests": 31,
         "candidacies": 35,
-        "measures": 1
+        "measures": 1,
+        "measureContests": 1
       },
       "sincePreviousReady": {
-        "contests": 31,
-        "candidacies": 35,
-        "measures": 1
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -875,17 +1020,20 @@
       "held": {
         "contests": 427,
         "candidacies": 1068,
-        "measures": 64
+        "measures": 64,
+        "measureContests": 64
       },
       "added": {
         "contests": 411,
         "candidacies": 1028,
-        "measures": 61
+        "measures": 61,
+        "measureContests": 61
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -893,17 +1041,20 @@
       "held": {
         "contests": 10,
         "candidacies": 70,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "added": {
         "contests": 10,
         "candidacies": 70,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 10,
-        "candidacies": 70,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -911,17 +1062,20 @@
       "held": {
         "contests": 140,
         "candidacies": 369,
-        "measures": 2
+        "measures": 2,
+        "measureContests": 2
       },
       "added": {
         "contests": 6,
         "candidacies": 50,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -929,17 +1083,20 @@
       "held": {
         "contests": 156,
         "candidacies": 275,
-        "measures": 4
+        "measures": 4,
+        "measureContests": 4
       },
       "added": {
         "contests": 16,
         "candidacies": 20,
-        "measures": 1
+        "measures": 1,
+        "measureContests": 1
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -947,17 +1104,20 @@
       "held": {
         "contests": 195,
         "candidacies": 322,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "added": {
         "contests": 184,
         "candidacies": 306,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 112,
-        "candidacies": 170,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -965,17 +1125,20 @@
       "held": {
         "contests": 196,
         "candidacies": 360,
-        "measures": 3
+        "measures": 3,
+        "measureContests": 3
       },
       "added": {
         "contests": 73,
         "candidacies": 117,
-        "measures": 2
+        "measures": 2,
+        "measureContests": 2
       },
       "sincePreviousReady": {
         "contests": 0,
         "candidacies": 0,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       }
     },
     {
@@ -983,17 +1146,20 @@
       "held": {
         "contests": 98,
         "candidacies": 146,
-        "measures": 1
+        "measures": 1,
+        "measureContests": 1
       },
       "added": {
         "contests": 8,
         "candidacies": 13,
-        "measures": 0
+        "measures": 0,
+        "measureContests": 0
       },
       "sincePreviousReady": {
-        "contests": 8,
-        "candidacies": 13,
-        "measures": 0
+        "contests": 0,
+        "candidacies": 0,
+        "measures": 0,
+        "measureContests": 0
       }
     }
   ]

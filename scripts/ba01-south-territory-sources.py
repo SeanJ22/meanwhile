@@ -7,13 +7,17 @@ import json
 import re
 import subprocess
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT=Path(__file__).resolve().parents[1]
 HERE=Path(__file__).resolve().parents[1]/'data/ballot/evidence/ba01-south/territories'
 
 
 def capture(name):
     raw=(HERE/name).read_bytes();meta=json.loads((HERE/(name+'.source.json')).read_text())
-    assert meta['httpStatus']==200 and hashlib.sha256(raw).hexdigest()==meta['sha256'],name
+    assert meta['httpStatus']==200 and capture_sha256(raw)==meta['sha256'],name
     return raw,meta
 
 

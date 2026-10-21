@@ -57,8 +57,8 @@ test("New Mexico district judges span their official counties while magistrate d
 test("Arizona city and county additions appear only within the proven electorate", () => {
   const { ballot, base } = load("az");
   const scoped = (id: string) => ballotForDivisions(ballot, [id]).contests;
-  assert.equal(scoped(`${base}/county:pima`).filter(row => row.id.startsWith("az-pima-general-2026-")).length, 14);
-  assert.equal(scoped(`${base}/county:maricopa`).filter(row => row.id.startsWith("az-pima-general-2026-")).length, 0);
+  assert.equal(scoped(`${base}/county:pima`).filter(row => (row.id.startsWith("az-pima-general-2026-") || row.id === "ballot-az-pima-general-2026-clerk-of-the-superior-court")).length, 14);
+  assert.equal(scoped(`${base}/county:maricopa`).filter(row => (row.id.startsWith("az-pima-general-2026-") || row.id === "ballot-az-pima-general-2026-clerk-of-the-superior-court")).length, 0);
   assert.equal(scoped(`${base}/place:peoria`).filter(row => row.id.startsWith("az-peoria-general-2026-")).length, 2);
   assert.equal(scoped(`${base}/place:tempe`).filter(row => row.id.startsWith("az-tempe-general-2026-")).length, 1);
   assert.ok(!scoped(`${base}/place:glendale`).some(row => row.id.startsWith("az-peoria-general-2026-")));

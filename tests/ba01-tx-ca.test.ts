@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import test from "node:test";
 import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { captureSha256 } from "../scripts/ba01-evidence.mts";
 
 const state = (code: string) => Object.values((JSON.parse(readFileSync(`data/ballot/2026-general/${code}.json`, "utf8")) as GenericBallotProjection).ballots)[0];
 
@@ -40,7 +41,7 @@ test("San Francisco countywide roster and exact ballot questions retain their so
   assert.equal(ca.contests.find(row => row.id === "ca-sf-2026-board-education")?.voteFor, 3);
   const sources = JSON.parse(readFileSync("data/ballot/sources/ba-01/ca/sources.json", "utf8"));
   for (const row of sources) {
-    assert.equal(createHash("sha256").update(readFileSync(`data/ballot/sources/ba-01/ca/${row.file}`)).digest("hex"), row.textHash);
+    assert.equal(captureSha256(readFileSync(`data/ballot/sources/ba-01/ca/${row.file}`)), row.textHash);
   }
   const text = readFileSync("data/ballot/sources/ba-01/ca/sf-ballot-questions.txt", "utf8").replace(/\s+/g, " ");
   for (const row of ca.measures.filter(row => /^ca-sf-2026-proposition-/.test(row.id))) assert.ok(text.includes(row.questionText), row.id);

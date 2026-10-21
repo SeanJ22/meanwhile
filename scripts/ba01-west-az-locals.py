@@ -66,6 +66,8 @@ def add_pima(package):
     rows, source = pima_rows()
     for row in rows:
         identifier = "az-pima-general-2026-" + COMMON["slug"](row["office"])
+        if row["office"] == "Clerk of the Superior Court":
+            identifier = "ballot-" + identifier
         COMMON["race"](package, identifier, row["office"], "ocd-division/country:us/state:az/county:pima",
             [(row["name"], row["party"])], source, "Pima County Elections Department", row["quote"], row["retention"])
     COMMON["receipt"](package, source, "Pima County Elections Department", "Complete September9 general candidate list: clerk and all3AppealsDivisionII/10PimaSuperiorCourt judicial choices; Pima electorate remains county-specific.")
@@ -122,10 +124,9 @@ def municipal_measure(package, place, number, title, question, yes, no, source, 
         "ocdId": f"ocd-division/country:us/state:az/place:{place}", "divisionVintage": "2026", "title": title,
         "type": "MEASURE", "voteFor": None, "termYears": None, "measureTextUrl": source["sourceUrl"], "scopeNote": None, "provenance": proof})
     COMMON["add"](package, "measures", {"id": identifier + "#question", "contestId": identifier, "officialNumber": number,
-        "questionText": question, "officialStatement": None, "provenance": proof})
-    if not any(row["contestId"] == identifier for row in ballot.setdefault("measureRecords", [])):
-        ballot["measureRecords"].append({"contestId": identifier, "whatItDoes": question, "yesMeans": yes, "noMeans": no,
-            "parts": [], "sourceUrl": source["sourceUrl"], "sourceHash": source["rawHash"], "sourceHashKind": "CAPTURE_BYTES", "writtenAt": source["retrievedAt"]})
+        "questionText": question, "officialStatement": yes + "\n" + no, "provenance": proof})
+    # These are official ballot words. Reviewed plain-English summaries and
+    # numbered reaction provisions are independent facts in measureRecords.
 
 
 def add_peoria(package):

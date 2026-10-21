@@ -8,6 +8,10 @@ import pathlib
 import re
 import subprocess
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(pathlib.Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
@@ -16,10 +20,10 @@ def capture(folder, key):
     path = folder / (key + '.gz')
     if path.exists():
         raw = gzip.decompress(path.read_bytes())
-        assert hashlib.sha256(raw).hexdigest() == meta['rawHash']
+        assert capture_sha256(raw) == meta['rawHash']
     else:
         raw = gzip.decompress((folder / (key + '.layout.txt.gz')).read_bytes())
-        assert hashlib.sha256(raw).hexdigest() == meta['convertedTextHash']
+        assert capture_sha256(raw) == meta['convertedTextHash']
     assert meta['httpStatus'] == 200
     return raw, meta
 

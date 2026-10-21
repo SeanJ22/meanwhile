@@ -16,6 +16,10 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT=Path(__file__).resolve().parents[1]
 EVIDENCE=ROOT/'data/ballot/evidence/ba01-great-lakes'
 NOW=datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
@@ -26,7 +30,7 @@ def raw(name):return gzip.decompress((EVIDENCE/(name+'.raw.gz')).read_bytes())
 def meta(name):return json.loads((EVIDENCE/(name+'.meta.json')).read_text())
 
 def receipt(data,name,publisher,source_class='ELECTION_AUTHORITY'):
-    details=meta(name);digest=hashlib.sha256(raw(name)).hexdigest()
+    details=meta(name);digest=capture_sha256(raw(name))
     assert details['status']==200 and details['sha256']==digest,(name,details)
     url=details['finalUrl']
     if not any(x['finalUrl']==url and x['rawHash']==digest for x in data['sourceReceipt']['sources']):

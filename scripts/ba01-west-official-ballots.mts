@@ -34,8 +34,10 @@ export function maricopaMeasure(document: string) {
   const question = /OFFICIAL TITLE: ([\s\S]+?) A "YES" vote/.exec(clean)?.[1];
   const yes = /A "YES" vote shall have the effect of ([\s\S]+?) A "NO"/.exec(clean)?.[1];
   const no = /A "NO" vote shall have the effect of ([\s\S]+?) YES NO/.exec(clean)?.[1];
-  if (!question || !yes || !no || !document.includes("November 3, 2026")) throw new Error("Missing official Proposition 413 text");
-  return { questionText: `OFFICIAL TITLE: ${question}`, yesMeans: yes, noMeans: no };
+  const statements = /(A "YES" vote shall have the effect of [\s\S]+?) (A "NO" vote shall have the effect of [\s\S]+?) YES NO/.exec(clean);
+  if (!question || !yes || !no || !statements || !document.includes("November 3, 2026")) throw new Error("Missing official Proposition 413 text");
+  return { questionText: `OFFICIAL TITLE: ${question}`, yesMeans: yes, noMeans: no,
+    officialStatement: `${statements[1]}\n${statements[2]}` };
 }
 
 export function denverCountywideRows(document: string) {
@@ -166,15 +168,12 @@ export function applyWestOfficialAdditions() {
   const pamphlet = snapshot("maricopa-proposition-413.txt"), measure = maricopaMeasure(pamphlet.document);
   const measureId = "az-maricopa-2026-proposition-413";
   if (!ballot.contests.some(c => c.id === measureId)) {
-    const prov = provenance(pamphlet.source, "Maricopa County Elections Department", measure.questionText);
+    const prov = provenance(pamphlet.source, "Maricopa County Elections Department", `${measure.questionText}\n${measure.officialStatement}`);
     ballot.contests.push({ id: measureId, electionId, ocdId: "ocd-division/country:us/state:az/county:maricopa", divisionVintage: "2026",
       title: "Proposition 413 — Transaction Privilege Tax for Jail Facilities", type: "MEASURE", voteFor: null, termYears: null,
       measureTextUrl: pamphlet.source.sourceUrl, scopeNote: null, provenance: prov });
     ballot.measures.push({ id: `${measureId}#question`, contestId: measureId, officialNumber: "413", questionText: measure.questionText,
-      officialStatement: null, provenance: prov });
-    ballot.measureRecords ??= [];
-    ballot.measureRecords.push({ contestId: measureId, whatItDoes: measure.questionText, yesMeans: measure.yesMeans, noMeans: measure.noMeans,
-      parts: [], sourceUrl: pamphlet.source.sourceUrl, sourceHash: pamphlet.source.rawHash, sourceHashKind: "CAPTURE_BYTES", writtenAt: pamphlet.source.retrievedAt });
+      officialStatement: measure.officialStatement, provenance: prov });
     result.az.contests++; result.az.measures++;
   }
   addReceipt(az, pamphlet.source, "Maricopa County Elections Department");

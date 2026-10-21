@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
-import { createHash } from "node:crypto";
+import { captureSha256 } from "../scripts/ba01-evidence.mts";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { ballotForDivisions } from "../lib/ballot/contests.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import type { BallotWithTickets } from "../lib/ballot/tickets.ts";
+import type { BallotWithDistrictMemberships } from "../lib/ballot/district-memberships.ts";
+import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const evidence = `${root}data/ballot/evidence/ba01-south/territories/`;
@@ -72,27 +75,29 @@ test("both Virgin Islands district samples have every printed choice and the exa
 test("territorial candidate, ticket and membership facts retain their exact source capture receipts", () => {
   for (const st of ["AS", "MP", "VI"]) {
     const pack = json(`${root}data/ballot/2026-general/${st.toLowerCase()}.json`);
-    const set = Object.values(pack.ballots)[0] as any;
-    const facts = [...set.contests, ...set.candidacies, ...set.districtMemberships,
-      ...set.candidateTickets.flatMap((ticket: any) => [ticket, ticket.runningMate])];
+    const set = Object.values(pack.ballots)[0] as BallotWithTickets & BallotWithDistrictMemberships;
+    const facts = [...set.contests, ...set.candidacies, ...set.districtMemberships ?? [],
+      ...(set.candidateTickets ?? []).flatMap(ticket => [ticket, ticket.runningMate])];
     for (const row of facts) {
-      const matching = pack.sourceReceipt.sources.filter((source: any) =>
-        [source.requestedUrl, source.finalUrl].includes(row.provenance.sourceUrl) &&
+      const sourceUrl = row.provenance.sourceUrl;
+      assert.ok(sourceUrl);
+      const matching = pack.sourceReceipt.sources.filter((source: ManualSourceSetReceipt["sources"][number]) =>
+        [source.requestedUrl, source.finalUrl].includes(sourceUrl) &&
         source.retrievedAt === row.provenance.collectedAt && source.reviewOutcome === "SUPPORTED");
       assert.equal(matching.length, 1, `${st} ${row.id}`);
       assert(row.provenance.quote);
     }
-    assert(set.contests.every((row: any) => row.ocdId.startsWith(`${base(st)}`)));
+    assert(set.contests.every(row => row.ocdId.startsWith(`${base(st)}`)));
   }
   for (const name of ["as-candidates.html", "mp-candidates.html", "mp-sample.pdf", "vi-stx-sample.pdf", "vi-stt-stj-sample.pdf", "vi-board.html"]) {
     const metadata = json(`${evidence}${name}.source.json`);
-    assert.equal(createHash("sha256").update(readFileSync(`${evidence}${name}`)).digest("hex"), metadata.sha256);
+    assert.equal(captureSha256(readFileSync(`${evidence}${name}`)), metadata.sha256);
     assert.equal(metadata.httpStatus, 200);
   }
 });
 
 test("Puerto Rico's next regular date and dated Cataño special do not create a November general contest", () => {
-  const report = json(`${evidence}comparison.json`).find((row: any) => row.territory === "PR");
+  const report = json(`${evidence}comparison.json`).find((row: { territory: string }) => row.territory === "PR");
   assert.equal(report.regularGeneralElectionDate, "2028-11-07");
   assert.equal(report.specialElection.date, "2026-09-27");
   assert.equal(existsSync(`${root}data/ballot/2026-general/pr.json`), false);

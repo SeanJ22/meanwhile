@@ -105,7 +105,7 @@ def main():
     pima = document("az-pima-general-candidates.txt")
     if not re.search(r"Justice of the Arizona Supreme Court[\s\S]*?NONPARTISAN\s+LOPEZ IV, JOHN", pima):
         raise ValueError("Missing statewide Supreme Court source row")
-    supreme = next(row for row in BALLOT["contests"] if row["id"] == "az-2026-general-supreme-court-john-lopez-iv")
+    supreme = next(row for row in BALLOT["contests"] if row["id"] == "ballot-az-2026-general-supreme-court-john-lopez-iv")
     expected.append({"contestId": supreme["id"], "office": supreme["title"], "name": "JOHN LOPEZ IV", "partyLabel": None, "source": "az-pima-general-candidates.txt"})
     groups = defaultdict(list)
     for row in expected:

@@ -4,6 +4,8 @@ from pathlib import Path
 from collections import defaultdict
 from datetime import datetime,timezone
 import copy,json,re,runpy,os,hashlib,gzip
+capture_sha256 = runpy.run_path(str(Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT=Path(os.environ.get('BA01_WEST_ROOT',Path(__file__).resolve().parents[1]))
 COMMON=runpy.run_path(str(ROOT/'scripts/ba01-west-court-county.py'))
 CAPTURES=Path(os.environ.get('BA01_WEST_ID_LOCAL_CAPTURES',ROOT / 'data/ballot/ba01-west-evidence/id-local-captures'))
@@ -11,8 +13,8 @@ CAPTURES=Path(os.environ.get('BA01_WEST_ID_LOCAL_CAPTURES',ROOT / 'data/ballot/b
 def snapshot(name):
  row=next(r for r in json.loads((CAPTURES/'manifest.json').read_text())if r['name']==name)
  raw=gzip.decompress((CAPTURES/row['file']).read_bytes());text=(CAPTURES/row['textSnapshot']).read_bytes()
- assert hashlib.sha256(raw).hexdigest()==row['rawHash']
- assert hashlib.sha256(text).hexdigest()==row['textHash']
+ assert capture_sha256(raw)==row['rawHash']
+ assert capture_sha256(text)==row['textHash']
  return text.decode(),row
 
 def source_quote(rows):

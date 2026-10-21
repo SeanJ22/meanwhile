@@ -1,15 +1,15 @@
 // Fetch the official public export with browser form state, while Node verifies HTTPS normally.
 // The download contains filed mailing addresses. Keep it out of reader data and console output.
-// node --use-env-proxy scripts/ba01-west-fetch-montana.mjs /tmp/candidate-list.csv
-import { chromium } from "playwright";
+// node --use-env-proxy --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/ba01-west-fetch-montana.mjs /tmp/candidate-list.csv
+import { launchGuarded } from "./browser.mts";
 import { resolve } from "node:path";
 
 const output = process.argv[2];
 if (!output) throw new Error("Pass an output path for the original official CSV.");
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium",
+const browser = await launchGuarded({ label: "ba01-montana-candidate-export", executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium",
   headless: true, args: ["--no-sandbox"] });
 try {
-  const page = await browser.newPage();
+  const page = await browser.page();
   await page.route("**/*", async route => {
     const request = route.request(), url = request.url();
     if (!url.startsWith("https://candidatefiling.mt.gov/")) return route.abort();

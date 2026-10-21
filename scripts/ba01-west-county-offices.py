@@ -10,6 +10,10 @@ import io
 import json
 import re
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "data/ballot/ba01-west-evidence"
 COUNTY = EVIDENCE / "county-captures"
@@ -19,7 +23,7 @@ MANIFEST = {row["name"]: row for row in json.loads((COUNTY / "manifest.json").re
 def snapshot(name):
     source = MANIFEST[name]
     raw = gzip.decompress((COUNTY / source["file"]).read_bytes())
-    if hashlib.sha256(raw).hexdigest() != source["rawHash"]:
+    if capture_sha256(raw) != source["rawHash"]:
         raise ValueError("Changed raw source: " + name)
     data = (COUNTY / source["textSnapshot"]).read_bytes()
     if hashlib.sha256(data).hexdigest() != source["textHash"]:

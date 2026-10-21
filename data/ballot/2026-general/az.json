@@ -3743,11 +3743,11 @@
             "sourceOrg": "Maricopa County Elections Department",
             "collectedAt": "2026-10-20T22:54:15.702076+00:00",
             "verifiedAt": "2026-10-20T22:54:15.702076+00:00",
-            "quote": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs."
+            "quote": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs.\nA \"YES\" vote shall have the effect of approving a sales tax of one-ﬁfth of one cent ($0.002) for county jail facilities and programs, the same rate as the current tax that is expiring.\nA \"NO\" vote shall have the effect of rejecting a sales tax of one-ﬁfth of one cent ($0.002) for jail facilities and programs."
           }
         },
         {
-          "id": "az-2026-general-supreme-court-john-lopez-iv",
+          "id": "ballot-az-2026-general-supreme-court-john-lopez-iv",
           "electionId": "az-2026-11-03",
           "ocdId": "ocd-division/country:us/state:az",
           "divisionVintage": "2026",
@@ -3937,7 +3937,7 @@
           }
         },
         {
-          "id": "az-pima-general-2026-clerk-of-the-superior-court",
+          "id": "ballot-az-pima-general-2026-clerk-of-the-superior-court",
           "electionId": "az-2026-11-03",
           "ocdId": "ocd-division/country:us/state:az/county:pima",
           "divisionVintage": "2026",
@@ -4339,13 +4339,13 @@
           "contestId": "az-maricopa-2026-proposition-413",
           "officialNumber": "413",
           "questionText": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs.",
-          "officialStatement": null,
+          "officialStatement": "A \"YES\" vote shall have the effect of approving a sales tax of one-ﬁfth of one cent ($0.002) for county jail facilities and programs, the same rate as the current tax that is expiring.\nA \"NO\" vote shall have the effect of rejecting a sales tax of one-ﬁfth of one cent ($0.002) for jail facilities and programs.",
           "provenance": {
             "sourceUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
             "sourceOrg": "Maricopa County Elections Department",
             "collectedAt": "2026-10-20T22:54:15.702076+00:00",
             "verifiedAt": "2026-10-20T22:54:15.702076+00:00",
-            "quote": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs."
+            "quote": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs.\nA \"YES\" vote shall have the effect of approving a sales tax of one-ﬁfth of one cent ($0.002) for county jail facilities and programs, the same rate as the current tax that is expiring.\nA \"NO\" vote shall have the effect of rejecting a sales tax of one-ﬁfth of one cent ($0.002) for jail facilities and programs."
           }
         },
         {
@@ -4353,7 +4353,7 @@
           "contestId": "az-peoria-general-2026-proposition-417",
           "officialNumber": "417",
           "questionText": "Shall the proposed Franchise Agreement, as published and submitted to the qualified electorate, be granted to Rose Valley Water Company, an Arizona corporation, to construct, maintain and operate water distribution and transmission systems in the City of Peoria, Arizona, and future annexations.",
-          "officialStatement": null,
+          "officialStatement": "A \"YES\" vote will allow the City of Peoria to enter into the Franchise Agreement with Rose Valley Water Company.\nA \"NO\" vote will deny the City of Peoria the authority to enter into the Franchise Agreement with Rose Valley Water Company.",
           "provenance": {
             "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
             "sourceOrg": "City of Peoria City Clerk",
@@ -4367,7 +4367,7 @@
           "contestId": "az-tempe-general-2026-proposition-424",
           "officialNumber": "424",
           "questionText": "OFFICIAL TITLE: A proposition submitted by the Tempe City Council, pursuant to the Tempe City Charter § 5.02, for a new transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, relating to public safety and security enhancements; public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and Tempe early childhood care and preschool education. DESCRIPTIVE TITLE: Effective January 1, 2027, shall a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, be levied and allocated as follows? 1) three-tenths of one percent (0.3%) to be designated to enhance public safety and strengthen the overall security of Tempe’s parks and neighborhoods, including funding for essential public safety infrastructure, operations, and services for police, fire, emergency operations, safety and security programs, and crime prevention through environmental design; 2) one-tenth of one percent (0.1%) to be designated for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and, 3) one-tenth of one percent (0.1%) to be designated to expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses. The City’s current tax rate, authorized by the voters, is 1.8 percent (1.2 percent General Fund, 0.5 percent Transit Tax, and 0.1 percent Arts & Culture Tax).",
-          "officialStatement": null,
+          "officialStatement": "A “YES” vote shall have the effect of approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.\nA “NO” vote shall have the effect of not approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.",
           "provenance": {
             "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
             "sourceOrg": "City of Tempe City Clerk",
@@ -14595,8 +14595,8 @@
           }
         },
         {
-          "id": "az-2026-general-supreme-court-john-lopez-iv-john-lopez-iv",
-          "contestId": "az-2026-general-supreme-court-john-lopez-iv",
+          "id": "ballot-az-2026-general-supreme-court-john-lopez-iv-john-lopez-iv",
+          "contestId": "ballot-az-2026-general-supreme-court-john-lopez-iv",
           "familyName": "LOPEZ IV",
           "givenName": "JOHN",
           "partyLabel": null,
@@ -14782,8 +14782,8 @@
           }
         },
         {
-          "id": "az-pima-general-2026-clerk-of-the-superior-court-giacomino-james-w",
-          "contestId": "az-pima-general-2026-clerk-of-the-superior-court",
+          "id": "ballot-az-pima-general-2026-clerk-of-the-superior-court-giacomino-james-w",
+          "contestId": "ballot-az-pima-general-2026-clerk-of-the-superior-court",
           "familyName": "GIACOMINO, JAMES W.",
           "givenName": "",
           "partyLabel": "DEM",
@@ -15689,39 +15689,6 @@
           "writtenAt": "2026-08-13",
           "citation": "measure-source",
           "sourceHashKind": "HELD_TEXT"
-        },
-        {
-          "contestId": "az-maricopa-2026-proposition-413",
-          "whatItDoes": "OFFICIAL TITLE: COUNTY JAILS: TRANSACTION PRIVILEGE TAX OF ONE-FIFTH OF ONE CENT, the same rate as the existing jail facilities excise tax expiring in March 2027. DESCRIPTIVE TITLE: Pursuant to authority granted by the State of Arizona, the County seeks voter approval of a transaction privilege tax set at the rate allowed under A.R.S. § 42-6109.02, section A, one-ﬁfth of one cent to be used for county jail facilities and programs.",
-          "yesMeans": "approving a sales tax of one-ﬁfth of one cent ($0.002) for county jail facilities and programs, the same rate as the current tax that is expiring.",
-          "noMeans": "rejecting a sales tax of one-ﬁfth of one cent ($0.002) for jail facilities and programs.",
-          "parts": [],
-          "sourceUrl": "https://elections.maricopa.gov/asset/jcr:5af11871-7e96-4ad1-a13a-5492f096c005/2026%20General%20Election%20Publicity%20Pamphlet%20-%20Maricopa%20County%20-%20Website%20Version.pdf",
-          "sourceHash": "deffb8b8c662373fc396f875428bfc06f94a46d274fdb8604f0f338e4bc5a858",
-          "sourceHashKind": "CAPTURE_BYTES",
-          "writtenAt": "2026-10-20T22:54:15.702076+00:00"
-        },
-        {
-          "contestId": "az-peoria-general-2026-proposition-417",
-          "whatItDoes": "Shall the proposed Franchise Agreement, as published and submitted to the qualified electorate, be granted to Rose Valley Water Company, an Arizona corporation, to construct, maintain and operate water distribution and transmission systems in the City of Peoria, Arizona, and future annexations.",
-          "yesMeans": "A \"YES\" vote will allow the City of Peoria to enter into the Franchise Agreement with Rose Valley Water Company.",
-          "noMeans": "A \"NO\" vote will deny the City of Peoria the authority to enter into the Franchise Agreement with Rose Valley Water Company.",
-          "parts": [],
-          "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
-          "sourceHash": "5005af65a90698f43f826ba35308549cab1958f125c971ae524bd5b039aeb57b",
-          "sourceHashKind": "CAPTURE_BYTES",
-          "writtenAt": "2026-10-21T00:09:35.705603+00:00"
-        },
-        {
-          "contestId": "az-tempe-general-2026-proposition-424",
-          "whatItDoes": "OFFICIAL TITLE: A proposition submitted by the Tempe City Council, pursuant to the Tempe City Charter § 5.02, for a new transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, relating to public safety and security enhancements; public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and Tempe early childhood care and preschool education. DESCRIPTIVE TITLE: Effective January 1, 2027, shall a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, be levied and allocated as follows? 1) three-tenths of one percent (0.3%) to be designated to enhance public safety and strengthen the overall security of Tempe’s parks and neighborhoods, including funding for essential public safety infrastructure, operations, and services for police, fire, emergency operations, safety and security programs, and crime prevention through environmental design; 2) one-tenth of one percent (0.1%) to be designated for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and, 3) one-tenth of one percent (0.1%) to be designated to expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses. The City’s current tax rate, authorized by the voters, is 1.8 percent (1.2 percent General Fund, 0.5 percent Transit Tax, and 0.1 percent Arts & Culture Tax).",
-          "yesMeans": "A “YES” vote shall have the effect of approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.",
-          "noMeans": "A “NO” vote shall have the effect of not approving a new five-tenths of one percent (0.5%) transaction privilege (sales) tax and use tax, except for the privilege (sales) tax on food for home consumption, to enhance public safety and strengthen the overall security of Tempe’s parks, neighborhoods and public spaces; for the improvement and operation of Tempe’s public transit system and multimodal projects, including pedestrian and bicycle infrastructure; and expand and strengthen early childhood care and preschool education and broaden access first to qualified Tempe residents, followed by teachers working in Tempe school districts, then to employees of the City of Tempe, and finally to non-residents who are employed by Tempe-based businesses, effective January 1, 2027.",
-          "parts": [],
-          "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
-          "sourceHash": "67a14d5d4933f726fd954980526ced3c8da159c719bc191e559d135df18e39a5",
-          "sourceHashKind": "CAPTURE_BYTES",
-          "writtenAt": "2026-10-21T00:09:35.797512+00:00"
         }
       ],
       "generalLineup": {
@@ -16326,8 +16293,8 @@
           },
           {
             "basis": {
-              "note": "one name match, and the two authorities disagree on party (canvass \"No Labels\" vs filing list \"Arizona Independent Party\")",
-              "partyAgrees": false,
+              "note": "Exact held name and contest agree; the newer Pima County official general list explicitly verifies No Labels, matching the certified canvass. The earlier filing disagreement is retained in supersededRows.",
+              "partyAgrees": true,
               "partyChecked": true,
               "contestAgrees": true,
               "sharedNameForm": "teri ann hourihan",
@@ -16336,22 +16303,22 @@
               ]
             },
             "cardKey": "ballot-az-pima:governor|Teri Ann Hourihan",
-            "outcome": "PARTY_CONFLICT",
+            "outcome": "RECONCILED",
             "contestId": "ballot-az-pima:governor",
             "nomineeName": "Teri Ann Hourihan",
             "sourceValues": {
               "canvassName": "Teri Ann Hourihan",
               "canvassParty": "No Labels",
               "registryName": "Teri Ann Hourihan",
-              "registryParty": "Arizona Independent Party",
+              "registryParty": "No Labels",
               "registryCandidateIds": [
                 "az-2026:governor:hourihan-teri-ann"
               ]
             },
             "nomineePartyLabel": "No Labels",
-            "readerGapSentence": "Arizona's certified canvass and the Secretary of State's candidate-filing list state different parties for the only matching name, so we have not established that they are the same candidacy.",
-            "candidateIdentityId": null,
-            "canonicalCandidacyId": null
+            "readerGapSentence": null,
+            "candidateIdentityId": "az-2026:governor:hourihan-teri-ann",
+            "canonicalCandidacyId": "ballot-az-pima:governor:hourihan-teri-ann"
           },
           {
             "basis": {
@@ -17396,6 +17363,158 @@
               "note": "Exact published name form, contest and party agree."
             },
             "readerGapSentence": null
+          },
+          {
+            "basis": {
+              "note": "The official Pima general list explicitly prints this lead and running mate together; the ticket card retains the lead's held canonical candidacy. The original lead card remains an alias.",
+              "partyAgrees": true,
+              "partyChecked": true,
+              "contestAgrees": true,
+              "sharedNameForm": "katie hobbs",
+              "sharedNameFormRules": [
+                "AS_PUBLISHED",
+                "EXPLICIT_OFFICIAL_GENERAL_TICKET_LEAD"
+              ]
+            },
+            "cardKey": "ballot-az-pima:governor|Katie Hobbs / John Giles",
+            "outcome": "RECONCILED",
+            "contestId": "ballot-az-pima:governor",
+            "nomineeName": "Katie Hobbs / John Giles",
+            "sourceValues": {
+              "canvassName": "Katie Hobbs",
+              "canvassParty": "Democratic",
+              "registryName": "Katie Hobbs",
+              "registryParty": "Democratic",
+              "registryCandidateIds": [
+                "az-2026:governor:hobbs-katie"
+              ]
+            },
+            "nomineePartyLabel": "Democratic / PND",
+            "readerGapSentence": null,
+            "candidateIdentityId": "az-2026:governor:hobbs-katie",
+            "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
+            "aliasOfCardKey": "ballot-az-pima:governor|Katie Hobbs",
+            "provenance": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+              "sourceOrg": "Pima County Elections Department",
+              "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+              "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+              "quote": "Governor and Lieutenant Governor\nDEM           HOBBS, KATIE\nPND           GILES, JOHN"
+            }
+          },
+          {
+            "basis": {
+              "note": "The official Pima general list explicitly prints this lead and running mate together; the ticket card retains the lead's held canonical candidacy. The original lead card remains an alias.",
+              "partyAgrees": true,
+              "partyChecked": true,
+              "contestAgrees": true,
+              "sharedNameForm": "andy biggs",
+              "sharedNameFormRules": [
+                "AS_PUBLISHED",
+                "EXPLICIT_OFFICIAL_GENERAL_TICKET_LEAD"
+              ]
+            },
+            "cardKey": "ballot-az-pima:governor|Andy Biggs / Sine Kerr",
+            "outcome": "RECONCILED",
+            "contestId": "ballot-az-pima:governor",
+            "nomineeName": "Andy Biggs / Sine Kerr",
+            "sourceValues": {
+              "canvassName": "Andy Biggs",
+              "canvassParty": "Republican",
+              "registryName": "Andy Biggs",
+              "registryParty": "Republican",
+              "registryCandidateIds": [
+                "az-2026:governor:biggs-andy"
+              ]
+            },
+            "nomineePartyLabel": "Republican",
+            "readerGapSentence": null,
+            "candidateIdentityId": "az-2026:governor:biggs-andy",
+            "canonicalCandidacyId": "ballot-az-pima:governor:biggs-andy",
+            "aliasOfCardKey": "ballot-az-pima:governor|Andy Biggs",
+            "provenance": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+              "sourceOrg": "Pima County Elections Department",
+              "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+              "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+              "quote": "Governor and Lieutenant Governor\nREP           BIGGS, ANDY\nREP           KERR, SINE"
+            }
+          },
+          {
+            "basis": {
+              "note": "The official Pima general list explicitly prints this lead and running mate together; the ticket card retains the lead's held canonical candidacy. The original lead card remains an alias.",
+              "partyAgrees": true,
+              "partyChecked": true,
+              "contestAgrees": true,
+              "sharedNameForm": "risa lombardo",
+              "sharedNameFormRules": [
+                "AS_PUBLISHED",
+                "EXPLICIT_OFFICIAL_GENERAL_TICKET_LEAD"
+              ]
+            },
+            "cardKey": "ballot-az-pima:governor|Risa Lombardo / Lisa Castillo",
+            "outcome": "RECONCILED",
+            "contestId": "ballot-az-pima:governor",
+            "nomineeName": "Risa Lombardo / Lisa Castillo",
+            "sourceValues": {
+              "canvassName": "Risa Lombardo",
+              "canvassParty": "Green",
+              "registryName": "Risa Lombardo",
+              "registryParty": "Green",
+              "registryCandidateIds": [
+                "az-2026:governor:lombardo-risa"
+              ]
+            },
+            "nomineePartyLabel": "Green",
+            "readerGapSentence": null,
+            "candidateIdentityId": "az-2026:governor:lombardo-risa",
+            "canonicalCandidacyId": "ballot-az-pima:governor:lombardo-risa",
+            "aliasOfCardKey": "ballot-az-pima:governor|Risa Lombardo",
+            "provenance": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+              "sourceOrg": "Pima County Elections Department",
+              "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+              "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+              "quote": "Governor and Lieutenant Governor\nGRN           LOMBARDO, RISA\nGRN           CASTILLO, LISA"
+            }
+          },
+          {
+            "basis": {
+              "note": "The official Pima general list explicitly prints this lead and running mate together; the ticket card retains the lead's held canonical candidacy. The original lead card remains an alias.",
+              "partyAgrees": true,
+              "partyChecked": true,
+              "contestAgrees": true,
+              "sharedNameForm": "teri ann hourihan",
+              "sharedNameFormRules": [
+                "AS_PUBLISHED",
+                "EXPLICIT_OFFICIAL_GENERAL_TICKET_LEAD"
+              ]
+            },
+            "cardKey": "ballot-az-pima:governor|Teri Ann Hourihan / Angela Harrolle Mohan",
+            "outcome": "RECONCILED",
+            "contestId": "ballot-az-pima:governor",
+            "nomineeName": "Teri Ann Hourihan / Angela Harrolle Mohan",
+            "sourceValues": {
+              "canvassName": "Teri Ann Hourihan",
+              "canvassParty": "No Labels",
+              "registryName": "Teri Ann Hourihan",
+              "registryParty": "No Labels",
+              "registryCandidateIds": [
+                "az-2026:governor:hourihan-teri-ann"
+              ]
+            },
+            "nomineePartyLabel": "No Labels / PND",
+            "readerGapSentence": null,
+            "candidateIdentityId": "az-2026:governor:hourihan-teri-ann",
+            "canonicalCandidacyId": "ballot-az-pima:governor:hourihan-teri-ann",
+            "aliasOfCardKey": "ballot-az-pima:governor|Teri Ann Hourihan",
+            "provenance": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+              "sourceOrg": "Pima County Elections Department",
+              "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+              "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+              "quote": "Governor and Lieutenant Governor\nNOL           HOURIHAN, TERI ANN\nPND           HARROLLE MOHAN, ANGELA"
+            }
           }
         ],
         "cycle": 2026,
@@ -17404,11 +17523,11 @@
           "unmatched": 0,
           "lineupContests": 13,
           "lineupNominees": 40,
-          "uniquelyReconciled": 39,
+          "uniquelyReconciled": 40,
           "duplicateTargetCollisions": 0,
           "applicableNonFederalNominees": 33,
-          "applicableNonFederalReconciled": 32,
-          "applicableNonFederalUnresolved": 1
+          "applicableNonFederalReconciled": 33,
+          "applicableNonFederalUnresolved": 0
         },
         "state": "AZ",
         "sources": [
@@ -17435,6 +17554,12 @@
             "url": "https://azsos.gov/sites/default/files/docs/2026-General-Write-In-and-Withdrawn-Candidate-List-0909.pdf",
             "readAt": "2026-10-15T04:04:22.911340+00:00",
             "note": "Exact published name, party and contest identify the added candidacy; no campaign committee link is inferred."
+          },
+          {
+            "name": "Pima County Elections Department — official general-election candidate list",
+            "url": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+            "readAt": "2026-10-20T23:17:15.543620+00:00",
+            "note": "The September 9 list explicitly prints all four governor/lieutenant-governor pairs and each person's party. Ticket aliases retain held lead identities; the older party-conflict row is preserved separately."
           }
         ],
         "generatedAt": "2026-09-04",
@@ -17451,7 +17576,48 @@
           "reportName": "Post-Primary Election (Q3)",
           "reportType": "Standing Reports",
           "filingPeriodEndDate": "2026-10-15"
-        }
+        },
+        "supersededRows": [
+          {
+            "row": {
+              "basis": {
+                "note": "one name match, and the two authorities disagree on party (canvass \"No Labels\" vs filing list \"Arizona Independent Party\")",
+                "partyAgrees": false,
+                "partyChecked": true,
+                "contestAgrees": true,
+                "sharedNameForm": "teri ann hourihan",
+                "sharedNameFormRules": [
+                  "AS_PUBLISHED"
+                ]
+              },
+              "cardKey": "ballot-az-pima:governor|Teri Ann Hourihan",
+              "outcome": "PARTY_CONFLICT",
+              "contestId": "ballot-az-pima:governor",
+              "nomineeName": "Teri Ann Hourihan",
+              "sourceValues": {
+                "canvassName": "Teri Ann Hourihan",
+                "canvassParty": "No Labels",
+                "registryName": "Teri Ann Hourihan",
+                "registryParty": "Arizona Independent Party",
+                "registryCandidateIds": [
+                  "az-2026:governor:hourihan-teri-ann"
+                ]
+              },
+              "nomineePartyLabel": "No Labels",
+              "readerGapSentence": "Arizona's certified canvass and the Secretary of State's candidate-filing list state different parties for the only matching name, so we have not established that they are the same candidacy.",
+              "candidateIdentityId": null,
+              "canonicalCandidacyId": null
+            },
+            "supersededBy": {
+              "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/d2c310c3-ade7-484e-a6f0-1ddaebec0799",
+              "sourceOrg": "Pima County Elections Department",
+              "collectedAt": "2026-10-20T23:17:15.543620+00:00",
+              "verifiedAt": "2026-10-20T23:17:15.543620+00:00",
+              "quote": "Governor and Lieutenant Governor\nNOL           HOURIHAN, TERI ANN\nPND           HARROLLE MOHAN, ANGELA"
+            },
+            "reason": "The September 9 official general-election list explicitly identifies this held candidate as NOL; the older filing party remains in this historical row."
+          }
+        ]
       },
       "filingCandidacies": [
         {

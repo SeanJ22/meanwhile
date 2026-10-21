@@ -54,6 +54,7 @@ test("Maricopa Proposition 413 uses the published ballot format and explicit vot
   const ballot = state("az"), held = ballot.measures.find(row => row.contestId === "az-maricopa-2026-proposition-413");
   assert.ok(held);
   assert.equal(held.questionText, measure.questionText);
+  assert.equal(held.officialStatement, measure.officialStatement);
   assert.match(measure.questionText, /expiring in March 2027/);
   assert.match(measure.yesMeans, /approving a sales tax/);
   assert.match(measure.noMeans, /rejecting a sales tax/);
@@ -82,7 +83,7 @@ test("Denver's sample ballot supplies all ten vacancy candidates, sixteen local 
 
 test("Pima's official general list supplies the statewide Supreme Court contest for every Arizona division", () => {
   const nominee = pimaStatewideCourt(readFileSync(resolve(evidence, "az-pima-general-candidates.txt"), "utf8"));
-  const ballot = state("az"), contest = ballot.contests.find(c => c.id === "az-2026-general-supreme-court-john-lopez-iv");
+  const ballot = state("az"), contest = ballot.contests.find(c => c.id === "ballot-az-2026-general-supreme-court-john-lopez-iv");
   assert.ok(contest);
   assert.equal(contest.ocdId, "ocd-division/country:us/state:az");
   assert.match(contest.title, /John Lopez IV — Retention$/);

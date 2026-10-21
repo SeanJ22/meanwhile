@@ -1,11 +1,11 @@
-import { chromium } from 'playwright';
+import { launchGuarded } from "./browser.mts";
 import { writeFile, mkdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const dir='/tmp/ba01-northeast/nyc-borough-samples';await mkdir(dir,{recursive:true});
-const browser=await chromium.launch({headless:true,proxy:{server:process.env.HTTPS_PROXY}});
+const browser=await launchGuarded({label:'ba01-nyc-borough-capture',headless:true,...(process.env.HTTPS_PROXY?{proxy:{server:process.env.HTTPS_PROXY}}:{})});
 const points=[['kings','209','Joralemon Street','11201'],['queens','90-27','Sutphin Boulevard','11435'],['bronx','1932','Arthur Avenue','10457'],['richmond','1','Edgewater Street','10305']];
 for(const [county,hn,sn,zip] of points){
- const context=await browser.newContext();const captures=[];
+ const context=await browser.context();const captures=[];
  await context.route('**/*',async route=>{try{
   const response=await context.request.fetch(route.request());const url=response.url();
   if(response.ok() && /findmypollsite\.vote\.nyc\/api\/|electionstreet\.com\/api\//.test(url)){

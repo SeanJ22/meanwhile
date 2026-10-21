@@ -7,12 +7,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FIELDS = ("contests", "candidacies", "measures")
+FIELDS = ("contests", "candidacies", "measures", "measureContests")
 
 
 def counts(document):
-    return Counter({field: sum(len(ballot.get(field, [])) for ballot in document["ballots"].values())
-                    for field in FIELDS})
+    result = Counter({field: sum(len(ballot.get(field, [])) for ballot in document["ballots"].values())
+                      for field in FIELDS if field != "measureContests"})
+    result["measureContests"] = sum(contest["type"] == "MEASURE" for ballot in document["ballots"].values()
+                                    for contest in ballot["contests"])
+    return result
 
 
 def at_revision(revision, path):
@@ -39,7 +42,7 @@ def inventory(base, previous):
             "previousReady": previous, "baseline": dict(baseline), "current": dict(current),
             "added": {field: current[field] - baseline[field] for field in FIELDS},
             "sincePreviousReady": {field: current[field] - prior[field] for field in FIELDS},
-            "countMeaning": "Raw checked-in inventory; not an official completeness denominator or live delivery count.",
+            "countMeaning": "Raw checked-in inventory, not official completeness or live delivery. measureContests counts races already included in contests; measures counts official question records. Candidacies are records, not distinct people.",
             "states": rows}
 
 

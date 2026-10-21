@@ -13,6 +13,10 @@ import re
 import subprocess
 from collections import Counter
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(pathlib.Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
@@ -20,7 +24,7 @@ def captured(folder, key):
     file = folder / key
     raw = file.read_bytes() if file.exists() else gzip.decompress((folder / (key + '.gz')).read_bytes())
     meta = json.loads((folder / (key + '.meta.json')).read_text())
-    assert hashlib.sha256(raw).hexdigest() == meta['rawHash'] and meta['httpStatus'] == 200
+    assert capture_sha256(raw) == meta['rawHash'] and meta['httpStatus'] == 200
     return raw, meta
 
 
@@ -29,7 +33,7 @@ def captured_text(folder, key):
     if converted.exists():
         meta = json.loads((folder / (key + '.meta.json')).read_text())
         raw = gzip.decompress(converted.read_bytes())
-        assert hashlib.sha256(raw).hexdigest() == meta['convertedTextHash'] and meta['httpStatus'] == 200
+        assert capture_sha256(raw) == meta['convertedTextHash'] and meta['httpStatus'] == 200
         return raw.decode(), meta
     raw, meta = captured(folder, key)
     if raw.startswith(b'%PDF'):

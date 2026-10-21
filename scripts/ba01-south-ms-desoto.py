@@ -5,6 +5,10 @@ import html
 import json
 import re
 
+import runpy
+
+capture_sha256 = runpy.run_path(str(Path(__file__).with_name("ba01_evidence.py")))["capture_sha256"]
+
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / 'data/ballot/evidence/ba01-south'
 COUNTY = EVIDENCE / 'ms-desoto'
@@ -18,7 +22,7 @@ def normalize(value):
 def checked(path, metadata):
     raw = path.read_bytes()
     meta = json.loads(metadata.read_text())
-    assert meta['httpStatus'] == 200 and hashlib.sha256(raw).hexdigest() == meta['sha256'], path
+    assert meta['httpStatus'] == 200 and capture_sha256(raw) == meta['sha256'], path
     return raw, meta
 
 

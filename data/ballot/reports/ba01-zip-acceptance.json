@@ -8,7 +8,15 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Certified House contests already held; live baseline lacks a resolved congressional district. Travis judicial/countywide offices and Austin questions expanded; exact local/special-district sample/style comparison and live acceptance remain open."
+      "remaining": "Certified House contests already held; live baseline lacks a resolved congressional district. Travis judicial/countywide offices and Austin questions expanded; exact local/special-district sample/style comparison and live acceptance remain open.",
+      "copySelectorContestCount": 53,
+      "copyBrowserContestCount": 53,
+      "copyBrowserCandidateCount": 87,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": [
+        "U.S. House"
+      ]
     },
     {
       "zip": "94110",
@@ -16,7 +24,29 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Certified House contests already held; live baseline lacks a resolved congressional district. Eleven Court of Appeal retentions and countywide offices/questions reach the prepared county reader; exact district sample/style and live acceptance remain open."
+      "remaining": "Certified House contests already held; live baseline lacks a resolved congressional district. Eleven Court of Appeal retentions and countywide offices/questions reach the prepared county reader; exact district sample/style and live acceptance remain open.",
+      "copySelectorContestCount": 52,
+      "copyBrowserContestCount": 39,
+      "copyBrowserCandidateCount": 37,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [
+        "ca-sos-2026-general-retention-kelli-m-evans",
+        "ca-sos-2026-general-retention-joshua-groban",
+        "ca-sos-2026-general-retention-charles-a-smiley",
+        "ca-sos-2026-general-retention-kathleen-m-banke",
+        "ca-sos-2026-general-retention-monique-langhorne-wilson",
+        "ca-sos-2026-general-retention-therese-m-stewart",
+        "ca-sos-2026-general-retention-tara-m-desautels",
+        "ca-sos-2026-general-retention-ioana-petrou",
+        "ca-sos-2026-general-retention-victor-a-rodriguez",
+        "ca-sos-2026-general-retention-tracie-l-brown",
+        "ca-sos-2026-general-retention-mark-simons",
+        "ca-sos-2026-general-retention-danny-y-chou",
+        "ca-sos-2026-general-retention-gordon-burns"
+      ],
+      "copyUnresolvedDistrictFamilies": [
+        "U.S. House"
+      ]
     },
     {
       "zip": "43215",
@@ -24,7 +54,15 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Franklin current official rosters and GIS identify the Statehouse address with CD15/Senate15/House1. Exact paper sample is behind a CAPTCHA; no bypass. Full local/style and live race-by-race acceptance remain open."
+      "remaining": "Franklin current official rosters and GIS identify the Statehouse address with CD15/Senate15/House1. Exact paper sample is behind a CAPTCHA; no bypass. Full local/style and live race-by-race acceptance remain open.",
+      "copySelectorContestCount": 28,
+      "copyBrowserContestCount": 28,
+      "copyBrowserCandidateCount": 53,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": [
+        "U.S. House"
+      ]
     },
     {
       "zip": "53703",
@@ -228,7 +266,13 @@
           "The separately checked City Hall address is in Ward 51, which is absent from this printed style; its printed sample remains unverified.",
           "This verifies the repository reader projection against official sources. The live page still requires verification."
         ]
-      }
+      },
+      "copySelectorContestCount": 12,
+      "copyBrowserContestCount": 12,
+      "copyBrowserCandidateCount": 16,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
     },
     {
       "zip": "19103",
@@ -246,7 +290,13 @@
         "zip": "19103",
         "zipMappingVerified": false,
         "liveVerified": false
-      }
+      },
+      "copySelectorContestCount": 8,
+      "copyBrowserContestCount": 8,
+      "copyBrowserCandidateCount": 9,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
     },
     {
       "zip": "85003",
@@ -254,7 +304,13 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner."
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 83,
+      "copyBrowserContestCount": 83,
+      "copyBrowserCandidateCount": 99,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
     },
     {
       "zip": "80202",
@@ -262,7 +318,21 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner."
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 55,
+      "copyBrowserContestCount": 48,
+      "copyBrowserCandidateCount": 75,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [
+        "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii",
+        "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre",
+        "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris",
+        "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum",
+        "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie",
+        "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock",
+        "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan"
+      ],
+      "copyUnresolvedDistrictFamilies": []
     },
     {
       "zip": "98101",
@@ -270,7 +340,13 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner."
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 26,
+      "copyBrowserContestCount": 26,
+      "copyBrowserCandidateCount": 33,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
     },
     {
       "zip": "10001",
@@ -364,7 +440,13 @@
             "measure": true
           }
         ]
-      }
+      },
+      "copySelectorContestCount": 15,
+      "copyBrowserContestCount": 15,
+      "copyBrowserCandidateCount": 31,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
     },
     {
       "zip": "30303",
@@ -372,7 +454,13 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner."
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 22,
+      "copyBrowserContestCount": 22,
+      "copyBrowserCandidateCount": 46,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
     },
     {
       "zip": "33130",
@@ -380,7 +468,22 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner."
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 29,
+      "copyBrowserContestCount": 23,
+      "copyBrowserCandidateCount": 30,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [
+        "fl-doe-2026-general-dca-3-90262",
+        "fl-doe-2026-general-dca-3-90301",
+        "fl-doe-2026-general-dca-3-90370",
+        "fl-doe-2026-general-dca-3-90307",
+        "fl-doe-2026-general-dca-3-90439",
+        "fl-doe-2026-general-scj-90484"
+      ],
+      "copyUnresolvedDistrictFamilies": [
+        "U.S. House"
+      ]
     },
     {
       "zip": "07102",
@@ -388,7 +491,13 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner."
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 3,
+      "copyBrowserContestCount": 3,
+      "copyBrowserCandidateCount": 10,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
     },
     {
       "zip": "48226",
@@ -396,7 +505,15 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner."
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 23,
+      "copyBrowserContestCount": 23,
+      "copyBrowserCandidateCount": 113,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": [
+        "State Senate"
+      ]
     },
     {
       "zip": "46204",
@@ -404,7 +521,17 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner."
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 14,
+      "copyBrowserContestCount": 11,
+      "copyBrowserCandidateCount": 19,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [
+        "in-ied-2026-retention-mary-a-deboer",
+        "in-ied-2026-retention-paul-a-felix",
+        "in-ied-2026-retention-justin-l-mcadam"
+      ],
+      "copyUnresolvedDistrictFamilies": []
     },
     {
       "zip": "96813",
@@ -412,7 +539,17 @@
       "liveAcceptance": "NOT_VERIFIED",
       "officialBallotRaceCount": null,
       "preparedMatchedRaceCount": null,
-      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner."
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 29,
+      "copyBrowserContestCount": 29,
+      "copyBrowserCandidateCount": 20,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
     }
+  ],
+  "productionCopyReports": [
+    "ba01-production-copy.json",
+    "ba01-production-copy-pages.json"
   ]
 }

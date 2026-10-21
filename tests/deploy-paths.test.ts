@@ -28,6 +28,9 @@ test("built registry routes contain their canonical geometry and roster inputs",
   const manifest = JSON.parse(readFileSync(join(ROOT, resolver), "utf8")) as { files: string[] };
   assert.ok(manifest.files.length >= 20, "resolver input denominator unexpectedly empty or partial");
   const expected = [resolver, ...manifest.files, BODY_TERRITORY_FILE];
+  const votingInputs = ["lib/geo/postal-zips.json", ...readdirSync(join(ROOT, "data/derived/zip-divisions"))
+    .filter(file => /^\d{2}\.json$/.test(file)).map(file => `data/derived/zip-divisions/${file}`)];
+  assert.ok(votingInputs.length > 1, "the voting ZIP input denominator must include the held shards");
   const routes = [
     "api/address/resolve/route", "api/ballot/scope/route", "api/demand-signal/route",
     "api/meetings/route", "api/reactions/route", "api/representation/[...division]/route",
@@ -39,7 +42,7 @@ test("built registry routes contain their canonical geometry and roster inputs",
     assert.ok(existsSync(traceFile), `${route}: production trace is absent`);
     const trace = JSON.parse(readFileSync(traceFile, "utf8")) as { files: string[] };
     const traced = new Set(trace.files.map((file) => resolve(dirname(traceFile), file)));
-    const missing = expected.filter((file) => !traced.has(resolve(ROOT, file)));
+    const missing = (route === "api/voting-sites/route" ? votingInputs : expected).filter((file) => !traced.has(resolve(ROOT, file)));
     assert.deepEqual(missing, [], `${route}: canonical holdings missing from production bundle`);
   }
 });

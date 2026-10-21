@@ -29,7 +29,7 @@ function capturedRead(): VotingSourceRead {
     attempts: [{ url: door.url, route: "direct", outcome: "Read the retained official vendor directory" }], rawBodies: [] };
 }
 
-test("automatic voting refresh changes from daily to hourly without a Send or restart and covers Election Day in all US timezones", () => {
+test("automatic voting refresh changes from twice daily to hourly without a Send or restart and covers Election Day in all US timezones", () => {
   const tasks = AUTOMATIC_REFRESH_TASKS.filter(row => row.id.startsWith("voting-sites:"));
   assert.equal(tasks.length, REGISTRY_STATES.length);
   assert.equal(new Set(tasks.map(row => row.acquisitionFailureDomain)).size, REGISTRY_STATES.length);
@@ -51,7 +51,7 @@ test("automatic voting refresh changes from daily to hourly without a Send or re
     assert.equal(routineTaskDue(task, current, Date.parse(now) - 1), false);
     assert.equal(routineTaskDue(task, current, Date.parse(now)), true);
   }
-  assert.equal(cadenceMsAt(task.contract, Date.parse("2026-11-04T12:00:00.000Z")), 24 * HOUR);
+  assert.equal(cadenceMsAt(task.contract, Date.parse("2026-11-04T12:00:00.000Z")), 12 * HOUR);
   assert.equal(routineTaskDue(task, { lastAttemptedAt: NOW }, Date.parse(NOW) + HOUR), true, "failed and unpublished routes stay scheduled");
   assert.equal(cadenceMsAt({ cadence: votingDoorRefreshCadence("2028-11-07") }, Date.parse("2028-11-01T00:00:00Z")), HOUR);
   assert.throws(() => votingDoorRefreshCadence("2026-02-30"), /INVALID/);

@@ -67,7 +67,6 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
       if (response.status >= 300 && response.status < 400) {
         const location = response.headers.get("location"); if (!location) throw new Error("Source redirect has no location");
         const next = publicUrl(new URL(location, url).href);
-        if (runtime.readerAddress && next.origin !== url.origin) throw new Error("Address lookup redirected away from the election office; address was not forwarded");
         url = next; continue;
       }
       if (!response.ok) throw new Error(`Source returned HTTP ${response.status}${response.headers.get("retry-after") ? `; retry after ${response.headers.get("retry-after")}` : ""}`);

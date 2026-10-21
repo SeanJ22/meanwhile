@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 72 TESTING (six lanes: OF-01, AQ-03, BA-01, EX-01, RN-02, VS-04); HN-01 AND RS-03 SENT BACK
+build_state: RELEASE 72 TESTING (all eight: OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, RS-03, VS-04, with two River fixes)
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
@@ -10,10 +10,12 @@ heartbeat: 2026-10-21T20:01:33Z
 ## Where things stand (Oct 21, 3:50 PM EDT)
 
 - River session session_017bJhG9VbQvb1KubNxKCKjA took over at 3:32 PM EDT. Main is fc3b4a00b (release 71, live). Next release number: 72.
-- Release 72 fold on river-next (River 84ab315f8 + OF-01 + AQ-03 + BA-01 + EX-01 + RN-02 + VS-04, then main merged in): pnpm gates running.
-- Sent back from 72:
-  - RS-03 53141653e: conflicts with OF-01 in lib/reader/national.ts (the US President read). OF-01 went first as Sean said. returns/rs-03.md.
-  - HN-01 ad1c1b327: the first combined run failed preflight (civic-data-release-firewall: the closure of scripts/promote-registry-runtime.mts exceeds 512 files). Measured: River + main 508; HN-01 alone 512 (adds 4 files); EX-01 509; VS-04 509; the others 508. Every lane passes alone; with HN-01 the combination is 514. Without HN-01 it is 510. returns/hn-01.md.
+- Release 72 fold on river-next: River 84ab315f8 + OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, VS-04, main merged in, then RS-03, then the limit fix. pnpm gates running.
+- New rule from Sean (3:55 PM EDT): a small problem in a READY is fixed by River and shipped, not sent back. Small = two lanes clash in one file, a limit that only counts files or size, a flaky test, a missing merge. Only real failures go back (the lane's own code is wrong, or readers would see something worse).
+- River fixed, in release 72:
+  - HN-01: lib/civic-data/firewall.ts EXECUTABLE_CLOSURE_NODE_LIMIT 512 to 1024 (line 529). The limit only counts files; HN-01, EX-01 and VS-04 each pass at 512 alone and reach 514 together. tests/civic-data-firewall.test.ts "executable closure permits its exact bound" moved with it (1023 chained modules pass, the next is rejected); 20 of 20 pass.
+  - RS-03: conflict with OF-01 in lib/reader/national.ts (the President read). Kept one read: RS-03's `residentPresident` with the optional caller-supplied store and `nationalPresidentPointers()`, exported through `readNationalPresident(store?)`, with OF-01's Vice President match in `currentPresidentRoster` and its comment kept. The older River return text for RS-03 named the two sides the wrong way round; no repair is needed from the lane.
+  - returns/hn-01.md and returns/rs-03.md are superseded by these fixes.
 
 ## Waiting on a new READY
 

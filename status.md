@@ -20,7 +20,9 @@ heartbeat: 2026-10-21T20:51:12Z
 
 ## Waiting on a new READY
 
-- DT-01, SL-01, VS-05: no stream/<lane> branch yet. BP-01 (stream/bp-01, 1213cd3c4) has no READY commit yet.
+- VS-05: READY fd1daab0a (preflight clean alone); goes in release 73.
+- DT-01: stream/dt-01 tip ccc78c9b0 (committed 3:47 PM EDT) is not a READY commit yet. Sean approved its change to scripts/control-plane-migrations.mts (needed for its migration to run). On river + main: tests/debt-state and tests/control-plane-migrations 11 of 11 pass, preflight clean. Folds the moment READY lands.
+- SL-01: no stream/sl-01 branch yet. BP-01 (stream/bp-01, tip 3f4f8023e) has no READY commit yet.
 
 ## Runner (read from cp_log_owner_digests, per state, at 3:45 PM EDT)
 

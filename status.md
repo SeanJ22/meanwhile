@@ -1,36 +1,36 @@
 # River status
 
-build_state: RELEASE 72 PR #782 OPEN (8 lanes, gates 8 of 8, run-full-ci label on); RELEASE 73 TESTING (VS-05, DT-01)
+build_state: RELEASE 72 SHIPPED AND LIVE (main 193846b52); RELEASE 73 PR #783 IN CI (VS-05, DT-01)
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
 heartbeat: 2026-10-21T21:30:28Z
 
-## Where things stand (Oct 21, 3:50 PM EDT)
+## Where things stand (Oct 21, 5:45 PM EDT)
 
-- River session session_017bJhG9VbQvb1KubNxKCKjA took over at 3:32 PM EDT. Main is fc3b4a00b (release 71, live). Next release number: 72.
-- Release 72: river f4a3a289d (gates 8 of 8 green, 9,076 tests pass, 0 fail). PR #782 https://github.com/SeanJ22/meanwhile/pull/782 open, run-full-ci label added, merging by hand when green.
-- Release 73 fold (VS-05 fd1daab0a + DT-01 9017d2c16 on river f4a3a289d): gates running while PR 782 runs CI. After 72 merges, main merges into river-next (the merge commit carries no new content); the tested tree hash is checked to be the same.
-- Release 72 fold on river-next (earlier note): River 84ab315f8 + OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, VS-04, main merged in, then RS-03, then the limit fix. pnpm gates running.
-- New rule from Sean (3:55 PM EDT): a small problem in a READY is fixed by River and shipped, not sent back. Small = two lanes clash in one file, a limit that only counts files or size, a flaky test, a missing merge. Only real failures go back (the lane's own code is wrong, or readers would see something worse).
-- River fixed, in release 72:
-  - HN-01: lib/civic-data/firewall.ts EXECUTABLE_CLOSURE_NODE_LIMIT 512 to 1024 (line 529). The limit only counts files; HN-01, EX-01 and VS-04 each pass at 512 alone and reach 514 together. tests/civic-data-firewall.test.ts "executable closure permits its exact bound" moved with it (1023 chained modules pass, the next is rejected); 20 of 20 pass.
-  - RS-03: conflict with OF-01 in lib/reader/national.ts (the President read). Kept one read: RS-03's `residentPresident` with the optional caller-supplied store and `nationalPresidentPointers()`, exported through `readNationalPresident(store?)`, with OF-01's Vice President match in `currentPresidentRoster` and its comment kept. The older River return text for RS-03 named the two sides the wrong way round; no repair is needed from the lane.
-  - RS-03 with VS-03: the first full run of the eight lanes passed 7 of 8 gates (lint, tsc, build, db:gate, firewall, preflight, browser assertion); the one failing test was tests/map-entry-voting-browser.test.ts (VS-03). Alone on River + main: passes. With RS-03 added: fails. With OF-01, VS-04 or HN-01 added: passes. Cause: RS-03 reads ZIP locations from /geo/reader-zips/<prefix>.json and takes the state answer inside /api/meetings?include=state, and the VS-03 test server still served /api/location/zip and a separate state answer, so the map never focused. RS-03's branch never contained VS-03's test (it predates release 71). Fixed the test server to serve what the page now reads; the page code is unchanged. Test passes. Gates rerun on the whole candidate.
-  - returns/hn-01.md and returns/rs-03.md are superseded by these fixes.
+- Release 72 SHIPPED: PR #782 merged as 193846b52 at 5:32 PM EDT, live at /api/build 5:34 PM EDT, post-deploy observer run 39679558965 succeeded. Lanes: OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, RS-03, VS-04. Gates 8 of 8 (9,076 pass, 0 fail); CI all green (admission, verify, both builds, 4 test shards, gates). The first CI run was cancelled by the concurrency rule when the run-full-ci label was added; the second run is the one that counted.
+- Release 73: PR #783 https://github.com/SeanJ22/meanwhile/pull/783 (VS-05 fd1daab0a, DT-01 9017d2c16), river 7f96d0542. Gates 8 of 8 on 54c0327b9; merging main (release 72) into river-next added no content (same tree 37216b93d), so the result was recorded on the new head instead of rerunning the same tree. run-full-ci label added; merging by hand when green.
+- River fixes in release 72: HN-01 closure limit 512 to 1024 (firewall.ts line 529, bound test moved with it); RS-03 one President read with OF-01's Vice President match; VS-03 map test server serves RS-03's ZIP shard and combined meetings answer. Rule from Sean: small problems are fixed by River and shipped.
+
+## Live check after release 72 (5:35 to 5:45 PM EDT; before = release 71)
+
+- Voting at street addresses: Los Angeles 1,077 places (before 0 at the two addresses I tried), Houston 697 (before 0), Atlanta 41, Milwaukee 1, New York 1 (same as before). Still no places: Lansing at 2500 S Washington Ave, Columbus, San Francisco (Google has no data; no held source yet). Pins on the map: 0 at every address, before and after: the places arrive with no latitude/longitude. VS-05 (release 73) pins from Google's own location.
+- Ballot pages 94110 and 43215: load in 0.8 to 2.1 s, same contests as before (9 and 8 "Vote for" contests).
+- Vice President in AZ, TX, NJ, OH, CA: still not shown (President only). OF-01's code is live and its production-copy check showed the Vice President in all 51 readers, so the live data does not hold the Vice President yet. OF-01 also changed the White House source parser (lib/sources/white-house/president.ts); the likely cause is that the held record is from before the parser change and the runner has not re-read that source. Not confirmed (production database reads are blocked for River).
+- First reads after the deploy took 3.3 s (AZ) and 3.7 s (TX) for /api/reader/state; repeat reads 0.4 to 0.8 s. A cold first read over three seconds is a §6 failure; open.
+- Reader copy: with no held meetings (for example 94110, 48933, 10001) the About this data line says "Checked 20747 days ago": the place snapshot falls back to the 1970 date (lib/reader/place.ts, same line in release 71). Existing defect, not from release 72.
+- New for first-time visitors: a Quick tour dialog opens after entering a ZIP.
+
+## Runner (cp_log_owner_digests, per state, 5:40 PM EDT)
+
+- Latest freshness cycle per state is still on release 71 (fc3b4a0): 9 SUCCEEDED, 48 FAILED (IdentityCollision on a FreshnessDebt, 47 candidate-enrichment, AZ campaign-finance). The runner has not picked up release 72. DT-01 (release 73) stamps each saved debt with its state, which is the cause named in its migration, and is the expected fix. Checked again after release 73 deploys.
+- Also in the digest: the routine civic data child exits 1 with "A five-digit ZIP is required."
 
 ## Waiting on a new READY
 
-- VS-05: READY fd1daab0a (preflight clean alone); goes in release 73.
-- DT-01: READY 9017d2c16, in release 73 (earlier tip ccc78c9b0 was not READY). Sean approved its change to scripts/control-plane-migrations.mts (needed for its migration to run). On river + main: tests/debt-state and tests/control-plane-migrations 11 of 11 pass, preflight clean. Folds the moment READY lands.
-- SL-01: no stream/sl-01 branch yet. BP-01 (stream/bp-01, tip 3f4f8023e) has no READY commit yet.
-
-## Runner (read from cp_log_owner_digests, per state, at 3:45 PM EDT)
-
-- Latest freshness cycle per state on release 71 (fc3b4a0): 9 SUCCEEDED, 48 FAILED (CYCLE_CRASHED). 47 of the 48 are the same error: IdentityCollision, a FreshnessDebt (candidate-enrichment) that "already holds a DIFFERENT value"; AZ's is a campaign-finance debt of the same kind.
-- On release 70 (4ff13f9) cycles mostly succeeded (15 SUCCEEDED, 1 FAILED). On release 71 (fc3b4a0, since 7:02 AM EDT) 67 SUCCEEDED and 158 FAILED. Release 71 changed only voting files, so the collision is not in its code; the cause is open. lastCycleOk was true on release 70 and does not show this.
-- Also in the digest: the routine civic data supervisor child exits 1 with "A five-digit ZIP is required."
+- BP-01 (stream/bp-01, tip 3f4f8023e): no READY commit yet. SL-01: no stream/sl-01 branch yet.
+- Sent back: none. Superseded returns: hn-01, rs-03 (fixed by River in 72).
 
 ## How River works
 

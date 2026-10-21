@@ -1,7 +1,8 @@
 import { readFile } from "node:fs/promises";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { join } from "node:path";
 import { setImmediate as yieldToReaders } from "node:timers/promises";
-import { readPromotedCivicDataBatch, CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
+import { readPromotedCivicDataBatch, CivicDataStoreUnavailableError, type CivicDataReadStore } from "../civic-data/read-model.ts";
 import { readCanonicalShelf } from "./canonical.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { REGISTRY_STATES, requireRegistryState } from "../civic-data/state-scopes.ts";
@@ -109,14 +110,14 @@ export function stateForZip(zip: string): string | null {
   return /^\d{5}$/.test(zip) ? postalArea(zip)?.state || null : null;
 }
 
-/** A historical President remains retrievable without being presented as the current holder. */
+/** Current national executive memberships; historical holders remain retrievable separately. */
 export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet | null {
   const countryLinks = roster.divisions.filter(link => link.ocdId === "ocd-division/country:us");
   const currentIds = new Set(countryLinks.filter(link => {
     const holder = roster.officeholders.find(person => person.id === link.officeholderId);
     return holder && (!link.membershipId || holder.memberships?.find(membership => membership.id === link.membershipId)?.current !== false);
   }).map(link => link.officeholderId));
-  const officeholders = roster.officeholders.filter(holder => currentIds.has(holder.id) && /^President(?: of the United States)?$/i.test(holder.officeTitle));
+  const officeholders = roster.officeholders.filter(holder => currentIds.has(holder.id) && /^(?:President|Vice President)(?: of the United States)?$/i.test(holder.officeTitle));
   if (!officeholders.length) return null;
   const ids = new Set(officeholders.map(holder => holder.id));
   return { ...roster, officeholders, divisions: countryLinks.filter(link => ids.has(link.officeholderId)), unmatched: roster.unmatched.filter(row => ids.has(row.officeholderId)) };
@@ -126,11 +127,14 @@ export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet
 const national = serverReaderValue("national-current", () => ({ value: null as NationalShelf | null }));
 export const currentNationalShelf = (): NationalShelf | null => national.value;
 
-/** A state needs the President immediately, independently of Congress's national directory load. */
-export const readNationalPresident = serverReaderValue("national-president", () => readerMemory(async (): Promise<OfficeholderSet | null> => {
-  const sources = ["statewide-executive-sources", "wikidata-people"];
-  const canonical = await readCanonicalShelf(sources.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) })));
-  const reads = await Promise.all(sources.map(source => readPeopleSourceProjection("US", source, { store: canonical })));
+/** States read the national executives independently of Congress's national directory load. */
+const presidentSources = ["statewide-executive-sources", "wikidata-people"];
+export const nationalPresidentPointers = () => presidentSources.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) }));
+const presidentContext = serverReaderValue("national-president-context", () => new AsyncLocalStorage<() => Promise<CivicDataReadStore>>());
+const residentPresident = serverReaderValue("national-president", () => readerMemory(async (): Promise<OfficeholderSet | null> => {
+  const supplied = presidentContext.getStore();
+  const canonical = await (supplied ? supplied() : readCanonicalShelf(nationalPresidentPointers()));
+  const reads = await Promise.all(presidentSources.map(source => readPeopleSourceProjection("US", source, { store: canonical })));
   const president = reads.flatMap(read => {
     if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return [];
     const roster = currentPresidentRoster(read.value.roster);
@@ -139,6 +143,11 @@ export const readNationalPresident = serverReaderValue("national-president", () 
   if (national.value) national.value = { ...national.value, president };
   return president;
 }));
+
+/** A state's existing batch can supply the President without opening another connection. */
+export function readNationalPresident(store?: () => Promise<CivicDataReadStore>): Promise<OfficeholderSet | null> {
+  return store ? presidentContext.run(store,residentPresident) : residentPresident();
+}
 
 export const readNationalShelf = serverReaderValue("national", () => readerMemory(async (): Promise<NationalShelf> => {
   const [canonical, places, president] = await Promise.all([

@@ -1,0 +1,176 @@
+import { createHash } from "node:crypto";
+import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import type { LineupReconciliation, LineupReconciliationRow } from "../lib/identity/types.ts";
+import type { Provenance } from "../lib/sources/types.ts";
+
+const root = resolve(import.meta.dirname, "..");
+
+export function pimaStatewideCourt(document: string) {
+  if (!document.includes("General Election-November 3, 2026") || !document.includes("Justice of the Arizona Supreme Court")) {
+    throw new Error("Wrong official Pima general candidate list");
+  }
+  const row = /^NONPARTISAN\s+(LOPEZ IV),\s+(JOHN)\s*$/m.exec(document);
+  if (!row) throw new Error("Statewide Supreme Court nominee is absent from the source");
+  return { familyName: row[1], givenName: row[2], title: "Justice of the Arizona Supreme Court", quote: row[0].trim() };
+}
+
+export function pimaGovernorTickets(document: string) {
+  if (!document.includes("General Election-November 3, 2026")) throw new Error("Wrong Pima election");
+  const office = "Governor and Lieutenant Governor";
+  const section = document.split(office)[1]?.split("State Senator")[0];
+  if (!section) throw new Error("Missing official joint-ticket section");
+  const names = [...section.matchAll(/^(DEM|PND|REP|GRN|NOL)\s+([^,\r\n]+),\s+([^\r\n]+)\s*$/gm)]
+    .map(match => ({ name: `${match[3].trim()} ${match[2].trim()}`, partyLabel: match[1], quote: match[0].trim() }));
+  if (names.length !== 8) throw new Error("Expected the four printed governor/lieutenant-governor pairs");
+  return Array.from({ length: 4 }, (_, index) => ({ lead: names[index * 2], mate: names[index * 2 + 1],
+    quote: `${office}\n${names[index * 2].quote}\n${names[index * 2 + 1].quote}` }));
+}
+
+/** An explicitly printed ticket keeps the lead's existing identity and old card link. */
+export function reconcileArizonaGovernorTickets(ballot: BallotSet, pairs: ReturnType<typeof pimaGovernorTickets>, provenance: Provenance) {
+  const bridge = ballot.lineupReconciliation as (LineupReconciliation & {
+    supersededRows?: { row: LineupReconciliationRow; supersededBy: Provenance; reason: string }[];
+  }) | undefined;
+  if (!bridge) throw new Error("Missing Arizona lead-candidate reconciliation");
+  const words = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  for (const pair of pairs) {
+    const lead = ballot.candidacies.find(candidate => candidate.contestId === "ballot-az-pima:governor" &&
+      words(`${candidate.givenName} ${candidate.familyName}`) === words(pair.lead.name));
+    const nominee = ballot.generalLineup?.contests.find(row => row.contestId === lead?.contestId)?.nominees
+      .find(row => words(row.name.split(" / ")[0]) === words(pair.lead.name));
+    const original = bridge.rows.find(row => row.contestId === lead?.contestId && !row.cardKey.includes(" / ") &&
+      words(row.nomineeName) === words(pair.lead.name));
+    if (!lead || !nominee || !original) throw new Error(`Missing held ticket lead: ${pair.lead.name}`);
+    const ticketProvenance = { ...provenance, quote: pair.quote };
+    if (original.outcome === "PARTY_CONFLICT") {
+      // The newer official general list explicitly labels this same held lead NOL.
+      // Preserve the older March-filing disagreement rather than erase its evidence.
+      if (pair.lead.partyLabel !== "NOL" || lead.partyLabel !== "No Labels" || original.sourceValues.canvassParty !== "No Labels") {
+        throw new Error(`Official general ticket does not resolve the held party disagreement: ${pair.lead.name}`);
+      }
+      bridge.supersededRows ??= [];
+      if (!bridge.supersededRows.some(previous => previous.row.cardKey === original.cardKey)) {
+        bridge.supersededRows.push({ row: structuredClone(original), supersededBy: ticketProvenance,
+          reason: "The September 9 official general-election list explicitly identifies this held candidate as NOL; the older filing party remains in this historical row." });
+      }
+      original.outcome = "RECONCILED";
+      original.candidateIdentityId = lead.identity?.identityId ?? null;
+      original.canonicalCandidacyId = lead.id;
+      original.sourceValues.registryParty = lead.partyLabel;
+      original.basis = { ...original.basis, partyAgrees: true, partyChecked: true,
+        note: "Exact held name and contest agree; the newer Pima County official general list explicitly verifies No Labels, matching the certified canvass. The earlier filing disagreement is retained in supersededRows." };
+      original.readerGapSentence = null;
+    }
+    if (original.outcome !== "RECONCILED" || original.canonicalCandidacyId !== lead.id) {
+      throw new Error(`Ticket would invent a lead-candidate identity: ${pair.lead.name}`);
+    }
+    const cardKey = `${lead.contestId}|${nominee.name}`;
+    const alias = { ...structuredClone(original), cardKey, nomineeName: nominee.name, nomineePartyLabel: nominee.partyLabel,
+      aliasOfCardKey: original.cardKey, provenance: ticketProvenance,
+      basis: { ...original.basis, sharedNameFormRules: [...new Set([...original.basis.sharedNameFormRules, "EXPLICIT_OFFICIAL_GENERAL_TICKET_LEAD"])],
+        note: "The official Pima general list explicitly prints this lead and running mate together; the ticket card retains the lead's held canonical candidacy. The original lead card remains an alias." } };
+    const index = bridge.rows.findIndex(row => row.cardKey === cardKey);
+    if (index < 0) bridge.rows.push(alias);
+    else bridge.rows[index] = alias;
+  }
+  if (!bridge.sources.some(source => source.url === provenance.sourceUrl && source.readAt === provenance.collectedAt)) {
+    bridge.sources.push({ name: "Pima County Elections Department — official general-election candidate list",
+      url: provenance.sourceUrl, readAt: provenance.collectedAt,
+      note: "The September 9 list explicitly prints all four governor/lieutenant-governor pairs and each person's party. Ticket aliases retain held lead identities; the older party-conflict row is preserved separately." });
+  }
+  const active = ballot.generalLineup!.contests.flatMap(contest => contest.nominees.map(nominee => ({
+    row: bridge.rows.find(row => row.cardKey === `${contest.contestId}|${nominee.name}`),
+    nonFederal: ballot.contests.find(row => row.id === contest.contestId)?.identity?.level !== "FEDERAL",
+  })));
+  bridge.proof = { ...bridge.proof, lineupContests: ballot.generalLineup!.contests.length, lineupNominees: active.length,
+    uniquelyReconciled: active.filter(({ row }) => row?.outcome === "RECONCILED").length,
+    ambiguous: active.filter(({ row }) => row?.outcome === "AMBIGUOUS_MULTIPLE_CANDIDATES").length,
+    unmatched: active.filter(({ row }) => !row || row.outcome === "NO_CANDIDATE_MATCH").length,
+    duplicateTargetCollisions: active.filter(({ row }) => row?.outcome === "RECONCILED").length -
+      new Set(active.filter(({ row }) => row?.outcome === "RECONCILED").map(({ row }) => row!.canonicalCandidacyId)).size,
+    applicableNonFederalNominees: active.filter(({ nonFederal }) => nonFederal).length,
+    applicableNonFederalReconciled: active.filter(({ row, nonFederal }) => nonFederal && row?.outcome === "RECONCILED").length,
+    applicableNonFederalUnresolved: active.filter(({ row, nonFederal }) => nonFederal && row?.outcome !== "RECONCILED").length };
+}
+
+export function addArizonaStatewideCourt() {
+  const directory = resolve(root, "data/ballot/ba01-west-evidence");
+  const document = readFileSync(resolve(directory, "az-pima-general-candidates.txt"), "utf8");
+  const sources = JSON.parse(readFileSync(resolve(directory, "sources.json"), "utf8"));
+  const source = sources.find((row: { file: string }) => row.file === "az-pima-general-candidates.txt");
+  if (createHash("sha256").update(document).digest("hex") !== source.snapshotHash) throw new Error("Changed source snapshot");
+  const row = pimaStatewideCourt(document), file = resolve(root, "data/ballot/2026-general/az.json");
+  const state = JSON.parse(readFileSync(file, "utf8")), ballot = Object.values(state.ballots)[0] as BallotSet & { candidateTickets?: {
+    id: string; leadCandidacyId: string; runningMate: unknown; provenance: unknown;
+  }[] };
+  const contestId = "ballot-az-2026-general-supreme-court-john-lopez-iv";
+  const provenance = { sourceUrl: source.sourceUrl, sourceOrg: "Pima County Elections Department", collectedAt: source.retrievedAt,
+    verifiedAt: source.retrievedAt, quote: `${row.title}\n${row.quote}` };
+  if (!ballot.contests.some(row => row.id === contestId)) ballot.contests.push({ id: contestId, electionId: ballot.election.id,
+    ocdId: "ocd-division/country:us/state:az", divisionVintage: "2026", title: row.title, type: "CANDIDACY", voteFor: 1,
+    termYears: null, candidateListComplete: true, scopeNote: null, provenance });
+  const candidacyId = `${contestId}-john-lopez-iv`;
+  if (!ballot.candidacies.some(row => row.id === candidacyId)) ballot.candidacies.push({ id: candidacyId, contestId,
+    familyName: row.familyName, givenName: row.givenName, partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance });
+  const sampleSource = sources.find((row: { file: string }) => row.file === "az-scottsdale-sample.txt");
+  const sample = readFileSync(resolve(directory, sampleSource.file), "utf8");
+  if (createHash("sha256").update(sample).digest("hex") !== sampleSource.snapshotHash ||
+      !sample.includes("Shall the following Justice of the Supreme Court be\nretained in office?") ||
+      !sample.includes("Retain:\nLOPEZ IV, JOHN\nYES\nNO")) throw new Error("Missing official Supreme Court retention wording");
+  const supreme = ballot.contests.find(contest => contest.id === contestId)!;
+  supreme.title = "Justice of the Arizona Supreme Court — John Lopez IV — Retention";
+  supreme.provenance = { sourceUrl: sampleSource.sourceUrl, sourceOrg: "City of Scottsdale — official Maricopa County sample ballot",
+    collectedAt: sampleSource.retrievedAt, verifiedAt: sampleSource.retrievedAt,
+    quote: "Shall the following Justice of the Supreme Court be retained in office?\nRetain:\nLOPEZ IV, JOHN\nYES\nNO" };
+  const words = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+  const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  ballot.candidateTickets ??= [];
+  for (const pair of pimaGovernorTickets(document)) {
+    const lead = ballot.candidacies.find(candidate => candidate.contestId === "ballot-az-pima:governor" &&
+      words(`${candidate.givenName} ${candidate.familyName}`) === words(pair.lead.name));
+    if (!lead) throw new Error(`Missing held lead candidate: ${pair.lead.name}`);
+    const id = `az-pima-general-2026-ticket-${slug(pair.lead.name)}`;
+    const ticketProvenance = { ...provenance, quote: pair.quote };
+    if (!ballot.candidateTickets.some(row => row.id === id)) ballot.candidateTickets.push({ id, leadCandidacyId: lead.id,
+      runningMate: { id: `az-pima-general-2026-running-mate-${slug(pair.mate.name)}`, contestId: lead.contestId,
+        familyName: pair.mate.name, givenName: "", partyLabel: pair.mate.partyLabel, slogan: null, incumbent: null,
+        websiteUrl: null, office: "Lieutenant Governor", provenance: ticketProvenance }, provenance: ticketProvenance });
+    const lineup = (ballot as BallotSet & { generalLineup?: { contests: {
+      contestId: string; nominees: { name: string; partyLabel: string; provenance?: unknown }[];
+    }[] } }).generalLineup?.contests.find(row => row.contestId === lead.contestId);
+    const nominee = lineup?.nominees.find(row => words(row.name.split(" / ")[0]) === words(pair.lead.name));
+    if (!nominee) throw new Error(`Missing general-lineup lead: ${pair.lead.name}`);
+    const displayName = (name: string) => name.toLowerCase().replace(/\b\w/g, letter => letter.toUpperCase());
+    nominee.name = `${displayName(pair.lead.name)} / ${displayName(pair.mate.name)}`;
+    nominee.provenance = ticketProvenance;
+    if (pair.lead.partyLabel !== pair.mate.partyLabel) {
+      const labels: Record<string, string> = { DEM: "Democratic", REP: "Republican", GRN: "Green", NOL: "No Labels", PND: "PND" };
+      nominee.partyLabel = `${labels[pair.lead.partyLabel]} / ${labels[pair.mate.partyLabel]}`;
+    }
+    if (words(pair.lead.name) === "teriannhourihan") {
+      // The current official general list labels this lead NOL; the held March filing label was older.
+      lead.partyLabel = "No Labels";
+      lead.provenance = ticketProvenance;
+    }
+  }
+  reconcileArizonaGovernorTickets(ballot, pimaGovernorTickets(document), provenance);
+  const checkedSource = {
+    requestedUrl: source.sourceUrl, finalUrl: source.sourceUrl, httpStatus: 200, rawHash: source.rawHash,
+    retrievedAt: source.retrievedAt, publisher: "Pima County Elections Department", sourceClass: "ELECTION_AUTHORITY",
+    reviewedEvidence: `Official Pima County November 3 general candidate list linked by ${source.linkingPage}. Full text saved in az-pima-general-candidates.txt; source names John Lopez IV for the statewide Supreme Court and explicitly prints all four governor/lieutenant-governor pairs.`,
+    reviewOutcome: "SUPPORTED" };
+  const priorSource = state.sourceReceipt.sources.find((row: { rawHash: string; retrievedAt: string; requestedUrl: string; finalUrl: string }) =>
+    row.rawHash === source.rawHash && row.retrievedAt === source.retrievedAt && [row.requestedUrl, row.finalUrl].includes(source.sourceUrl));
+  if (priorSource) Object.assign(priorSource, checkedSource);
+  else state.sourceReceipt.sources.push(checkedSource);
+  state.sourceReceipt.reviewedAt = new Date(Math.max(Date.now(), ...state.sourceReceipt.sources.map((row: { retrievedAt: string }) =>
+    Date.parse(row.retrievedAt)).filter(Number.isFinite))).toISOString();
+  state.sourceReceipt.reviewedBy = "Codex BA-01 official-source replay";
+  writeFileSync(file, JSON.stringify(state, null, 2) + "\n");
+  return { contestId, candidacyId };
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) console.log(JSON.stringify(addArizonaStatewideCourt()));

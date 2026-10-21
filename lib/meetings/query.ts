@@ -114,6 +114,21 @@ export async function searchMeetings(
   registeredBodyIds?: ReadonlySet<string>,
 ): Promise<MeetingSearchResult> {
   const source = injectedSource ?? (await import("./registry.ts")).getMeetingSource();
+  return searchMeetingsFromSource(lat, lng, radiusKm, now, divisionsAtPoint, source, shownSettings, bodyIds, registeredBodyIds);
+}
+
+/** Readers already hold their place's source; loading acquisition adapters is unnecessary. */
+export async function searchMeetingsFromSource(
+  lat: number,
+  lng: number,
+  radiusKm: number,
+  now: Date,
+  divisionsAtPoint: ReadonlySet<string>,
+  source: ResolvedMeetingSource,
+  shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
+  bodyIds: ReadonlySet<string> = new Set(),
+  registeredBodyIds?: ReadonlySet<string>,
+): Promise<MeetingSearchResult> {
   const shown = shownSettings ?? await readReaderMeetingSettings();
   const horizonMs = shown.shownAheadDays * 86_400_000;
   const lookbackMs = shown.shownBackDays * 86_400_000;

@@ -1,0 +1,71 @@
+
+
+
+function toggleAccordion(element)
+{
+    if ($(element).hasClass('active')) {
+        $(element).removeClass('active');
+        $(element).next('.accordion-content').hide('fast');
+    }
+    else {
+        $('#mainframe').find('.accordion-header').removeClass('active');
+        $(element).addClass('active');
+        $('#mainframe').find('.accordion-content').hide('fast');
+        $(element).next('.accordion-content').show('fast');
+    }
+}
+
+function setupApp()
+{
+    $('#mainframe').find('.accordion-content').hide();
+    $('#mainframe').find('.accordion-header').click(function () {
+        toggleAccordion(this);
+    });
+    $('.optionListItem').each(function () {
+        if ($(this).data('icon')) {
+            $(this).prepend('<i class="fa fa-fw ' + $(this).data('icon') + '"></i>');
+        }
+    });
+    $('a.external').attr('target', '_blank');
+    $('.js-google-map').each(function()
+    {
+        var data = $(this).data();
+        initializeMap($(this).attr('id'), data['zoom'], data['place']);
+
+    })
+}
+
+function initializeMap(mapId, zoom, location)
+{
+    var coords = {"lat" : location.address.lat, "lng" : location.address.long};
+    var mapOptions = {
+        "center" : coords,
+        "zoom" : zoom
+    };
+
+    var map = new google.maps.Map(document.getElementById(mapId), mapOptions);
+    var marker = new google.maps.Marker({
+        position: coords,
+        map: map,
+        title: location.venue.name
+    });
+
+    var infoWindowContent = '<strong>' + location.venue.name + '</strong><br />' +
+        location.address.street + '<br />' +
+        location.address.city + ', ' + location.address.state + ' ' + location.address.zip + '<br />' +
+        '<strong>Hours:</strong> ';
+    if (location.venue.hours.length > 1) {
+        for(var index in location.venue.hours) {
+            infoWindowContent += '<br />' + location.venue.hours[index];
+        }
+    } else {
+        infoWindowContent += location.venue.hours[0];
+    }
+
+    infoWindowContent = '<div class="js-map-info-window">' + infoWindowContent + '</div>'
+
+    var info = new google.maps.InfoWindow({
+        "content" : infoWindowContent
+    });
+    info.open(map, marker);
+}

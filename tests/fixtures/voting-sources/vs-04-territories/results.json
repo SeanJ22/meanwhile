@@ -1,0 +1,408 @@
+{
+  "capturedOn": "2026-10-21",
+  "scope": "2026-11-03 general election; partial source coverage, not a claim of complete territory coverage",
+  "states": [
+    {
+      "state": "AS",
+      "sites": 0,
+      "status": "location-extraction-open",
+      "verified": [
+        "Official American Samoa Election Office .gov pages and the embedded 2026 election calendar were captured",
+        "Local walk-in absentee voting at the Election Office is published; qualifying travel requires proof of travel",
+        "Published office contact: 684-699-3570 and Info@eo.as.gov"
+      ],
+      "reason": "The saved official public pages give the election office mailing address and a Tafuna location on a separate poll-worker page, but no extractable current facility-address list or district polling-station assignments. Do not substitute the mailing address for a voting site. The official-linked Facebook desktop page exposes only public page metadata to an unauthenticated read; mobile states this browser is unsupported. No login or challenge was submitted.",
+      "tried": [
+        "https://www.aselectionoffice.gov/",
+        "https://www.aselectionoffice.gov/absentee-voting",
+        "https://www.aselectionoffice.gov/calendar",
+        "https://www.aselectionoffice.gov/poll-workers",
+        "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+        "https://drive.google.com/uc?export=download&id=1h6Rb8t-XaocN-TfM7Q2CVHgExEXO2ARS",
+        "https://www.aselectionoffice.gov/registration",
+        "https://www.facebook.com/americansamoaelectionoffice",
+        "https://m.facebook.com/americansamoaelectionoffice"
+      ],
+      "next": "Acquire the Election Office's 2026 district polling-station public notice and link the Election Office physical address to its current absentee-voting notice. Source discovery remains open; no claim the government has not published the list.",
+      "siteList": []
+    },
+    {
+      "state": "GU",
+      "sites": 0,
+      "status": "source-access-open",
+      "reason": "FEC and EAC link Guam Election Commission. Its root, 2026 general-election page, polling routes and early-voting route return HTTP 503 with upstream TLS CERTIFICATE_VERIFY_FAILED. The official DOA mirror is accessible but its July circular concerns the primary; it does not prove October general-election voting sites. TLS verification was kept enabled. A native search of the official Mayors Council found officer elections and an old self-determination event, with no results for voting. The Commission Facebook route returned an actual login page; it was not submitted.",
+      "tried": [
+        "https://gec.guam.gov/",
+        "https://gec.guam.gov/2026-general-election-info/",
+        "https://gec.guam.gov/early-in-office-absentee-voting/",
+        "https://gec.guam.gov/absentee-voting/",
+        "https://gec.guam.gov/polling-places/",
+        "https://www.gec.guam.gov/",
+        "https://doa.guam.gov/doa-organizational-circulars/fy2026-doa-organizational-circular/",
+        "https://doa.guam.gov/doa-organizational-circulars/fy2027-doa-organizational-circular/",
+        "https://governor.guam.gov/?s=voting",
+        "https://guamlegislature.gov/govguam-web-directory/",
+        "https://mcog.guam.gov/",
+        "https://mcog.guam.gov/search/node?keys=election",
+        "https://mcog.guam.gov/search/node?keys=voting",
+        "https://www.facebook.com/GuamElectionCommission/"
+      ],
+      "next": "Recover the GEC source through the supported runtime trust configuration, or obtain an official current general-election notice mirrored by the governor, legislature or a village mayor. General-election coverage remains open.",
+      "siteList": []
+    },
+    {
+      "state": "MP",
+      "sites": 15,
+      "status": "sites-extracted",
+      "counts": {
+        "ELECTION_DAY": 12,
+        "EARLY_VOTING": 3
+      },
+      "reason": "The 15 source records comprise 12 election-day facility/village locations and three early-voting service entries; this is not a deduplicated physical-facility count. A combined Northern Islands entry naming Alamagan, Pagan and Agrigan has no individual facilities and is excluded. Precinct assignments, hours, separate general early-voting phase and two published points are retained.",
+      "sources": [
+        "https://www.votecnmi.gov.mp/polling-places.php",
+        "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/"
+      ],
+      "gaps": [
+        "Individual Northern Islands facility locations",
+        "Street numbers and Census coordinates where the publisher supplies only a village and facility",
+        "Address-to-precinct boundaries"
+      ],
+      "next": "Production-copy publication/readback; continue acquiring the individual Northern Islands sites.",
+      "siteList": [
+        {
+          "name": "Hopwood Junior High School Cafeteria",
+          "address": "Hopwood Junior High School Cafeteria, San Antonio, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "1A"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Dandan Middle School Cafeteria",
+          "address": "Dandan Middle School Cafeteria, San Vicente / Dandan, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "1B-1",
+            "1B-2"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Saipan Southern High School",
+          "address": "Saipan Southern High School, Koblerville, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "1C"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Joeten-Kiyu Public Library",
+          "address": "Joeten-Kiyu Public Library, Chalan Kanoa / Susupe, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "2"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Oleai Elementary School Cafeteria",
+          "address": "Oleai Elementary School Cafeteria, San Jose / Oleai, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "3A"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Garapan Elementary School Cafeteria",
+          "address": "Garapan Elementary School Cafeteria, Garapan, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "3B-1",
+            "3B-2"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Tanapag Youth Center",
+          "address": "Tanapag Youth Center, Tanapag, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "4A"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Gregorio T. Camacho Elementary School Cafeteria",
+          "address": "Gregorio T. Camacho Elementary School Cafeteria, San Roque / As Matius, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "4B"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Jesus P. Mafnas Legislative Building",
+          "address": "Jesus P. Mafnas Legislative Building, Capitol Hill, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "4C"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Chacha Oceanview Middle School",
+          "address": "Chacha Oceanview Middle School, Kagman, saipan",
+          "countyFips": "69110",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "5-1",
+            "5-2"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Tinian Youth Center",
+          "address": "Tinian Youth Center, Tinian & Aguiguan, tinian",
+          "countyFips": "69120",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "6"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Rota NMC, Room B-1",
+          "address": "Rota NMC, Room B-1, Rota, rota",
+          "countyFips": "69100",
+          "kind": "ELECTION_DAY",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "days": "Tuesday, November 3",
+          "precincts": [
+            "7"
+          ],
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Pedro P. Tenorio Multi-Purpose Center, Susupe",
+          "address": "Pedro P. Tenorio Multi-Purpose Center, Susupe, Saipan",
+          "countyFips": "69110",
+          "kind": "EARLY_VOTING",
+          "hours": "8:30 AM – 4:00 PM ChST",
+          "days": "2026-10-27 to 2026-11-02",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Tinian Youth Center, San Jose",
+          "address": "Tinian Youth Center, San Jose, Tinian",
+          "countyFips": "69120",
+          "kind": "EARLY_VOTING",
+          "hours": "8:30 AM – 4:00 PM ChST",
+          "days": "2026-10-27 to 2026-11-02",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        },
+        {
+          "name": "Northern Marianas College, Classroom B-1, Tatachok Village",
+          "address": "Northern Marianas College, Classroom B-1, Tatachok Village, Rota",
+          "countyFips": "69100",
+          "kind": "EARLY_VOTING",
+          "hours": "8:30 AM – 4:00 PM ChST",
+          "days": "2026-10-27 to 2026-11-02",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php"
+        }
+      ]
+    },
+    {
+      "state": "PR",
+      "sites": 0,
+      "status": "no-general-election-in-scope",
+      "reason": "Electoral Code Article 9.1 fixes general elections every four years from November 3, 2020. Thus November 3, 2026 is outside that general-election cycle; the CEE currently links its 2028 general-election guide. This finding concerns general elections only and does not establish absence of separately scheduled special elections.",
+      "sources": [
+        "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf",
+        "https://ww2.ceepur.org/",
+        "https://www.ceepur.org/"
+      ],
+      "next": "Production-copy publication/readback of the general-election notice; independently survey special-election applicability.",
+      "siteList": []
+    },
+    {
+      "state": "VI",
+      "sites": 14,
+      "status": "sites-extracted",
+      "counts": {
+        "EARLY_VOTING": 3,
+        "VOTE_CENTER": 11
+      },
+      "sources": [
+        "https://vivote.gov/elections/early-voting/",
+        "https://vivote.gov/elections/polling-places/",
+        "https://vivote.gov/?elections=2026-general-election",
+        "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+      ],
+      "gaps": [
+        "Street numbers and coordinates for eleven printed facility/island location strings",
+        "Unpublished general-election hours and address-to-precinct boundaries"
+      ],
+      "next": "Production-copy publication and exact-island HTTP reader readback; continue physical street-address/coordinate acquisition.",
+      "siteList": [
+        {
+          "name": "Elections Office-Sunny Isle Shopping Center Unit 26",
+          "address": "Sunny Isle Shopping Center Unit 26",
+          "countyFips": "78010",
+          "kind": "EARLY_VOTING",
+          "hours": "9:00 AM to 6:00 PM",
+          "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+          "url": "https://vivote.gov/elections/early-voting/"
+        },
+        {
+          "name": "St. Thomas Elections Office",
+          "address": "Lockhart Gardens (above Banco Popular)",
+          "countyFips": "78030",
+          "kind": "EARLY_VOTING",
+          "hours": "9:00 AM to 6:00 PM",
+          "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+          "url": "https://vivote.gov/elections/early-voting/"
+        },
+        {
+          "name": "Elections Office – The Market Place Suite II",
+          "address": "The Market Place Suite II",
+          "countyFips": "78020",
+          "kind": "EARLY_VOTING",
+          "hours": "9:00 AM to 4:00 PM",
+          "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+          "url": "https://vivote.gov/elections/early-voting/"
+        },
+        {
+          "name": "D.C. CANEGATA RECREATION CENTER",
+          "address": "D.C. CANEGATA RECREATION CENTER, ST. CROIX",
+          "countyFips": "78010",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+        },
+        {
+          "name": "ST. DUNSTAN’S EPISCOPAL SCHOOL AUDITORIUM",
+          "address": "ST. DUNSTAN’S EPISCOPAL SCHOOL AUDITORIUM, ST. CROIX",
+          "countyFips": "78010",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+        },
+        {
+          "name": "ST. CROIX CENTRAL HIGH SCHOOL MODULAR GYMNASIUM",
+          "address": "ST. CROIX CENTRAL HIGH SCHOOL MODULAR GYMNASIUM, ST. CROIX",
+          "countyFips": "78010",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+        },
+        {
+          "name": "ST. JOSEPH HOSPITALITY LOUNGE",
+          "address": "ST. JOSEPH HOSPITALITY LOUNGE, ST. CROIX",
+          "countyFips": "78010",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+        },
+        {
+          "name": "CLAUDE O. MARKOE ELEMENTARY SCHOOL",
+          "address": "CLAUDE O. MARKOE ELEMENTARY SCHOOL, ST. CROIX",
+          "countyFips": "78010",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+        },
+        {
+          "name": "CHARLOTTE AMALIE HIGH SCHOOL (SPRUNG)",
+          "address": "CHARLOTTE AMALIE HIGH SCHOOL (SPRUNG), ST. THOMAS",
+          "countyFips": "78030",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+        },
+        {
+          "name": "IVANNA EUDORA KEAN HIGH SCHOOL CAFETERIA",
+          "address": "IVANNA EUDORA KEAN HIGH SCHOOL CAFETERIA, ST. THOMAS",
+          "countyFips": "78030",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+        },
+        {
+          "name": "ELRIDGE BLAKE SPORTS & FITNESS CENTER (UVI)",
+          "address": "ELRIDGE BLAKE SPORTS & FITNESS CENTER (UVI), ST. THOMAS",
+          "countyFips": "78030",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+        },
+        {
+          "name": "TUTU PARK MALL (OPPOSITE OF CARLOS FURNITURE)",
+          "address": "TUTU PARK MALL (OPPOSITE OF CARLOS FURNITURE), ST. THOMAS",
+          "countyFips": "78030",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+        },
+        {
+          "name": "JULIUS SPRAUVE ELEMENTARY SCHOOL",
+          "address": "JULIUS SPRAUVE ELEMENTARY SCHOOL, ST. JOHN",
+          "countyFips": "78020",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+        },
+        {
+          "name": "GUY BENJAMIN COMMUNITY CENTER",
+          "address": "GUY BENJAMIN COMMUNITY CENTER, ST. JOHN",
+          "countyFips": "78020",
+          "kind": "VOTE_CENTER",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+        }
+      ],
+      "reason": "The current election-specific page links a newer September St. Thomas/St. John notice with an added Tutu Park Mall center. The three island-scoped lists retain 5 St. Croix, 4 St. Thomas and 2 St. John general-election centers, plus one early-voting office on each island. Exact county FIPS and held Census OCD identities prevent cross-island reader matches."
+    }
+  ],
+  "geography": {
+    "countyFipsReference": "data/reference/national_county_time_zones.json",
+    "countyFipsSource": "https://www.weather.gov/source/gis/Shapefiles/County/bp03mr20.dbx",
+    "countyOcdReference": [
+      "data/derived/zip-divisions/00.json",
+      "data/derived/zip-divisions/96.json"
+    ],
+    "countyOcdMethod": "Existing Census countyIdentity(STATEFP, NAME) values retained in the ZIP division reference",
+    "counties": {
+      "69085": "Northern Islands",
+      "69100": "Rota",
+      "69110": "Saipan",
+      "69120": "Tinian",
+      "78010": "St. Croix",
+      "78020": "St. John",
+      "78030": "St. Thomas"
+    }
+  }
+}

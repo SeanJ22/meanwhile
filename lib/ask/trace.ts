@@ -10,6 +10,7 @@ export interface RungTrace {
 }
 
 export interface AskTrace {
+  fallback?: { ran: boolean; ms: number; model: string };
   interpretation: RungTrace & {
     intent?: AskIntent;
     temporal?: AskTemporal;

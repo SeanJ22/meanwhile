@@ -1,0 +1,834 @@
+Tobias Read
+Oregon Secretary of State
+
+
+          D I R E C T I V E O F T H E
+        S E C R E TA R Y O F S TAT E
+NUMBER:               2026-09
+
+DATE:                 September 3, 2026
+
+SUBJECT:              Official Ballot Statement for the General Election on November 3, 2026
+
+The Secretary of State, in carrying out the duties of the office, shall issue detailed directives
+necessary to maintain uniformity in the application, operation, and interpretation of Oregon
+election laws. 1
+The information provided here is an official directive of the Secretary of State.
+Enclosed and made part of this directive is the Official Ballot Statement required by ORS
+254.085, which serves as a guide for preparing the county's ballot. The state Official Ballot
+Statement consists of Partisan and Nonpartisan Candidates.
+A list of open offices for the November 3, 2026, General Election is also enclosed for reference.
+This directive provides instructions for processing the Official Ballot Statement for the 2026
+General Election.
+The instructions address the following:
+•    Ballot Label Style
+•    Ballot Specifications
+•    Ballot Arrangement
+•    Ballot Measure Formatting
+•    Numbering System
+•    Random Ordering of Candidate Names
+•    Printing Candidate Names
+•    Multiple Party Nominations
+•    Judicial Candidates “Incumbent” Designation
+•    County Nonpartisan Candidates
+•    Lines for Candidate Write-In Votes
+
+Consistent with the instructions, the provisions of ORS 254.108, 254.125, 254.135, 254.145,
+254.155, 254.195, and 260.675 should be reviewed prior to preparing the county’s official
+ballot.
+
+
+1   ORS 246.110; ORS 246.120.
+
+
+
+                                                                                  255 Capitol St NE, Ste 126
+Tobias Read                                     Michael Kaplan                        Salem, Oregon 97310
+Oregon Secretary of State                    Deputy Secretary of State                     OregonVotes.gov
+Elections Division: Directive 2026-09
+September 3, 2026
+Page 2
+
+
+The Secretary of State directs the following:
+
+BALLOT LABEL STYLE
+The official General Election Ballot shall be styled “Official Ballot” and shall state the name of
+your county and the date of the election. See ORS 254.135 for further requirements.
+
+BALLOT SPECIFICATIONS
+All official General Election ballots shall be printed in black ink on good-quality material, as
+required by ORS 254.195(1).
+Ballots shall be printed on white paper.
+
+BALLOT ARRANGEMENT
+The offices shall be arranged in the sequence shown on the enclosed Official Ballot Statement.
+Offices are listed in the following order:
+1. Federal Office
+   • US Senator
+   • US Representative
+2. State Office
+   • Governor
+3. Legislative Office
+   • State Senator
+   • State Representative
+4. County Office – if partisan
+5. City Office – if partisan
+6. Nonpartisan Office – the sequence of all nonpartisan offices shall be as follows:
+   a. State Office
+      • None at this election
+   b. State Judicial Office
+      Contested races appear before uncontested races for the same office type.
+      ORS 254.125(2)(a).
+      • Contested Circuit Court positions
+      • Uncontested Circuit Court positions
+   c. District Attorney
+   d. Nonpartisan County Offices
+      • County Assessor
+      • County Clerk
+      • County Surveyor
+      • County Treasurer
+      • Sheriff
+      • County Commissioner, if nonpartisan
+      • County Judge
+      • Justice of the Peace
+         Note: County offices may vary by county.
+Elections Division: Directive 2026-09
+September 3, 2026
+Page 3
+
+
+   e. Nonpartisan City Offices
+   f.    Special District Offices – if any
+7. Ranked Choice Voting Contests
+   Note: Election officials may adjust the placement of contests to accommodate ballot design
+   or administrative needs. Ranked Choice Voting contests may appear on a separate ballot
+   card or in an alternate location on the ballot.
+   Any adjustment must preserve the hierarchy of offices in this directive. A contest may not
+   appear above the level of office to which it belongs. Lower-level contests cannot be placed
+   above higher-level offices. For example, local district contests may not appear above
+   statewide or congressional offices.
+8. Measures
+   • State (None at this election)
+   • County
+   • City
+   • Multi-County Special District
+   • Single County Special District
+If the ballot arrangement described above would create administrative or printing difficulties,
+please contact this office for further guidance.
+
+BALLOT MEASURE FORMATTING
+There are no statewide measures on the November 3, 2026, General Election ballot.
+The Secretary of State requires the following formatting for statewide ballot measures to
+promote consistency and readability for voters: Ballot measure headers and the ballot title
+captions should be printed in boldface, mixed-case type rather than in all uppercase. Mixed
+case means that the first letter of a phrase or sentence, and only certain words within a
+sentence, may be uppercase, with the remaining letters lowercase. This requirement does not
+apply to local ballot measures. However, the Secretary of State encourages consistent
+formatting for local measures to promote readability for the voters.
+
+NUMBERING SYSTEM
+The number assigned to each local (county, city, and district) measure must be preceded by
+your unique county prefix number (i.e., Baker County is number 1, Benton is number 2, and so
+forth, numbered consecutively in alphabetical order until Yamhill County, which is number 36).
+ORS 254.108(1).
+If a district or city is located in more than one county, the County Election Official who is the
+filing officer shall immediately certify the district or city measure and number to the County
+Election Official of any other county in which the district or city is located. The same measure
+number shall be used in all counties in which the election is conducted for that measure.
+ORS 254.108(2).
+
+RANDOM ORDERING OF CANDIDATE NAMES
+The names of the candidates shall be ordered as provided for in ORS 254.155. On August 27,
+2026, this office sent a memo to all County Election Officials giving the random ordering of the
+letters of the alphabet for candidates on the ballot for the November 3, 2026, General Election.
+Elections Division: Directive 2026-09
+September 3, 2026
+Page 4
+
+
+The random order of the alphabet in which candidates’ names will appear on the ballot for the
+November 3, 2026, General Election is as follows:
+ 1.   S            6.    I           11.   M            16.   J           21.   Q            26. R
+ 2.   K            7.    W           12.   D            17.   E           22.   A
+ 3.   B            8.    Y           13.   N            18.   H           23.   U
+ 4.   G            9.    V           14.   X            19.   T           24.   F
+ 5.   P            10.   C           15.   Z            20.   O           25.   L
+For candidates whose last names begin with the same letter(s) of the alphabet, whose
+surnames are identical, or whose first and last names are identical, follow the procedure
+contained in OAR 165-010-0090.
+ORS 254.135(3)(F)(e) requires that, if two or more candidates for the same office have the
+same first and last name, the location of their places of residence shall be printed with their
+names to distinguish one from another.
+The Official Ballot Statement for federal and state candidates has been prepared by the
+Secretary of State using the random sequence.
+
+PRINTING CANDIDATE NAMES
+The names of candidates shall be printed on the county’s official ballot as indicated in the Official
+Ballot Statement.
+ORS 249.031 allows a candidate to use the name by which the candidate is commonly known.
+The names of candidates and candidate office titles must be in boldface and mixed-case type
+rather than in all uppercase, for the purpose of better readability. Mixed case means the first
+letters of these names shall be uppercase with the rest lowercase (unless within the name an
+uppercase letter is specified by the candidate, such as “McVan”).
+ORS 254.145(2) provides that no title or designation may be included in the candidate’s name
+(such as Dr, Mr, PhD, Senior Vice President, etc.). A suffix (such as Jr, Sr, III, IV, etc.) is
+allowable if it is part of the name by which the candidate is commonly known.
+Additionally, candidate names must not contain any punctuation, with the exception of accent
+marks, hyphens, apostrophes, parentheses, and commas. Accent marks, hyphens, and
+apostrophes may be used when they are part of the standard spelling of a candidate’s legal name
+or the name by which the candidate is commonly known. Parentheses may be used to include a
+nickname in connection with a candidate’s full name, consistent with ORS 249.031. Commas are
+allowed preceding a suffix but are not required.
+Other punctuation marks, including but not limited to exclamation points, quotation marks, symbols,
+or periods, are not permitted in candidate names on the ballot.
+Note: If no candidate has filed for an office, the ballot must include “No Candidate Filed.”
+
+MULTIPLE PARTY NOMINATIONS
+Candidates may be nominated by multiple political parties. Up to three parties may be listed
+after a candidate’s name, as indicated in the Official Ballot Statement. If the candidate was
+nominated by the party they are a member of, that party will be listed first, followed by two or
+fewer additional parties in alphabetical order or as specified by the candidate. If individual
+electors or an assembly of electors nominate a nonaffiliated candidate, “nonaffiliated” will be
+listed first, followed by two or fewer additional parties in alphabetical order or as specified by the
+candidate. ORS 254.135(3).
+Elections Division: Directive 2026-09
+September 3, 2026
+Page 5
+
+
+JUDICIAL CANDIDATES “INCUMBENT” DESIGNATION
+The information for state candidates for Supreme Court, Court of Appeals, Tax Court, and
+Circuit Court positions shall include a designation of "Incumbent" for each candidate who is the
+regularly elected or appointed judge of the court to which the candidate seeks election. ORS
+254.125(2)(b). The Official Ballot Statement provides this designation. Please note that justices
+of the peace, county judges, and municipal court judges do not have the “Incumbent”
+designation.
+
+COUNTY NONPARTISAN CANDIDATES
+Review ORS 249.091 to determine whether county nonpartisan candidates (Sheriff, County
+Treasurer, or County Clerk) or candidates seeking to fill a vacancy in a nonpartisan office are
+required to be listed on the General Election ballot.
+
+LINES FOR CANDIDATE WRITE-IN VOTES
+ORS 254.145(3) provides for the write-in of names in the appropriate place on the ballot. Allow
+one blank line for each position to be filled. Example: "Vote for Three. " In this case, you will
+provide three blank lines following the list of candidates for that office. Blank lines shall not be
+numbered, except for the precinct committeeperson’s office.
+Offices that have been certified as "No Candidate Filed" must still appear on the ballot with the
+appropriate number of write-in lines. "No Candidate Filed" may appear on the line where the
+candidate’s name would otherwise appear.
+If you have any questions regarding this directive, please contact our office.
+
+APPEAL
+This directive 2026-09 may be appealed to the Marion County Circuit Court under ORS
+246.910.
+
+Tobias Read
+Oregon Secretary of State
+
+
+
+By:
+Dena Dawson
+Elections Director
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+US Senator                                                                        Vote for one
+
+David Brock Smith                                                                  Republican
+Jeff Merkley                                                       Democrat, Working Families
+Gary Lyndon Dye                                                                    Libertarian
+Chris Henry                                                         Progressive, Pacific Green
+
+US Representative, 1st District                                                   Vote for one
+
+Barbara J Kahl                                                                    Republican
+Suzanne Bonamici                                                   Democrat, Working Families
+
+US Representative, 2nd District                                                   Vote for one
+
+Chris Beck                                                             Democrat, Independent
+Cliff Bentz                                                                       Republican
+
+US Representative, 3rd District                                                   Vote for one
+
+Maxine E Dexter                                                                     Democrat
+Loran Ayles                                                                        Republican
+
+US Representative, 4th District                                                   Vote for one
+
+Monique DeSpain                                                        Republican, Libertarian
+Val Hoyle                                                          Democrat, Working Families
+Justin Filip                                                        Pacific Green, Progressive
+
+US Representative, 5th District                                                   Vote for one
+
+Janelle S Bynum                                                                     Democrat
+Andrea Townsend                                                                 Pacific Green
+Patti Adair                                                            Republican, Libertarian
+
+US Representative, 6th District                                                   Vote for one
+
+Andrea Salinas                                                         Democrat, Independent
+David Russ                                                                        Republican
+
+
+
+Page 6 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+Governor                                                                                 Vote for one
+
+Brett Smith                                                                            Pacific Green
+Tina Kotek                                                                Democrat, Working Families
+Christine Drazan                                                             Republican, Libertarian
+
+State Senator, 3rd District                                                              Vote for one
+
+Denise D Krause                                                                             Democrat
+Clay Bearnson                                                              Independent, Pacific Green
+Brad Hicks                                                                     Republican, Libertarian
+
+State Senator, 4th District                                                              Vote for one
+
+Floyd Prozanski                                                                 Democrat, Republican
+
+State Senator, 6th District                                                              Vote for one
+
+Sierrah Williams                                                          Democrat, Working Families
+Jack Tibbetts                                                                            Republican
+Caleb Ticer                                                                               Libertarian
+
+State Senator, 7th District                                                              Vote for one
+
+James I Manning Jr                                            Democrat, Independent, Working Families
+Jack (Jake) D Huff                                                                        Republican
+
+State Senator, 8th District                                                              Vote for one
+
+Sara Gelser Blouin                                                                         Democrat
+Valerie Draper Woldeit                                                                    Republican
+
+State Senator, 10th District                                                             Vote for one
+
+Deb Patterson                                                             Democrat, Working Families
+Angela Plowhead                                                              Republican, Libertarian
+
+
+
+
+Page 7 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+State Senator, 11th District                                                      Vote for one
+
+Virginia Stapleton                                                 Democrat, Working Families
+Tracy M Cramer                                                                    Republican
+
+State Senator, 13th District                                                      Vote for one
+
+Tim E Nelson                                                                       Libertarian
+Courtney Neron Misslin                                             Democrat, Working Families
+Glenn Lancaster                                                                   Republican
+
+State Senator, 15th District                                                      Vote for one
+
+Myrna A Munoz                                                      Democrat, Working Families
+Harold Hutchison                                                                  Republican
+
+State Senator, 16th District                                                      Vote for one
+
+Courtney Bangs                                                                     Republican
+Rachel Armitage                                                                      Democrat
+Melisa Finkle                                                                     Independent
+
+State Senator, 17th District                                                      Vote for one
+
+John A N Chee                                                                      Republican
+Lisa Reynolds                                                                       Democrat
+
+State Senator, 19th District                                                      Vote for one
+
+Rob Wagner                                                                          Democrat
+Mary Dirksen                                                                       Republican
+
+State Senator, 20th District                                                      Vote for one
+
+Michele Stroh                                                                      Republican
+Mark Meek                                                                           Democrat
+
+
+
+
+Page 8 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+State Senator, 24th District                                                             Vote for one
+
+Kayse Jama                                                                Democrat, Working Families
+
+State Senator, 26th District                                                             Vote for one
+
+Nicole Bassett                                                Democrat, Independent, Working Families
+Jeff Helfrich                                                                             Republican
+
+State Representative, 1st District                                                       Vote for one
+
+Court Boice                                                                               Republican
+Bret Cecil                                                                                 Democrat
+
+State Representative, 2nd District                                                       Vote for one
+
+Virgle J Osborne                                                                Republican, Democrat
+
+State Representative, 3rd District                                                       Vote for one
+
+Dwayne Yunker                                                                             Republican
+Susan Fischer-Maki                                                                         Democrat
+
+State Representative, 4th District                                                       Vote for one
+
+Alek Skarlatos                                                                            Republican
+
+State Representative, 5th District                                                       Vote for one
+
+Alexander Krigsvold                                                                       Republican
+Pam Marsh                                                                      Democrat, Independent
+
+State Representative, 6th District                                                       Vote for one
+
+Kim Wallan                                                                                Republican
+John P Holm                                                                                Democrat
+
+
+
+
+Page 9 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+State Representative, 7th District                                                       Vote for one
+
+Adam Wilson                                                                  Republican, Libertarian
+Kori Rodley                                                               Democrat, Working Families
+
+State Representative, 8th District                                                       Vote for one
+
+Bill Vivian                                                                               Republican
+Lisa Fragala                                                                               Democrat
+
+State Representative, 9th District                                                       Vote for one
+
+John Ezra Scheirman                                                                        Democrat
+Claire Lynn                                                                               Republican
+
+State Representative, 10th District                                                      Vote for one
+
+David Gomberg                                                      Democrat, Independent, Republican
+
+State Representative, 11th District                                                      Vote for one
+
+Ivan Maluski                                                  Democrat, Independent, Working Families
+Ken Jackola                                                                               Republican
+
+State Representative, 12th District                                                      Vote for one
+
+Amber Smith                                                                                Democrat
+Darin Harbick                                                                             Republican
+
+State Representative, 13th District                                                      Vote for one
+
+Nancy Nathanson                                                                            Democrat
+Jonathan T Abrahamsen                                                                     Republican
+
+State Representative, 14th District                                                      Vote for one
+
+Kevin T Burton                                                                            Republican
+Julie Fahey                                                                                Democrat
+
+
+
+Page 10 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+State Representative, 15th District                                                        Vote for one
+
+Shelly Boshart Davis                                                                      Republican
+Joanna Robinson                                               Democrat, Independent, Working Families
+
+State Representative, 16th District                                                        Vote for one
+
+Sarah Finger McDonald                                                            Democrat, Republican
+
+State Representative, 17th District                                                        Vote for one
+
+David Nelson                                                                                Democrat
+Dan Farrington                                                                             Republican
+
+State Representative, 18th District                                                        Vote for one
+
+Amanda Staehely                                                                            Republican
+Roy Kaufmann                                                  Independent, Working Families, Democrat
+Patrick Marnell                                                                             Libertarian
+
+State Representative, 19th District                                                        Vote for one
+
+Anna Munson                                                                    Republican, Libertarian
+Tom Andersen                                                  Democrat, Independent, Working Families
+
+State Representative, 20th District                                                        Vote for one
+
+Paul Evans                                                                 Democrat, Working Families
+Andrew Fudge                                                                 Republican, Independent
+Taylor A Rickey                                                                            Libertarian
+
+State Representative, 21st District                                                        Vote for one
+
+Michael Welsh                                                              Democrat, Working Families
+Kevin L Mannix                                                                            Republican
+
+
+
+
+Page 11 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+State Representative, 22nd District                                                       Vote for one
+
+Lesly M Munoz                                                 Democrat, Independent, Working Families
+Noemi Legaspi                                                                  Republican, Libertarian
+
+State Representative, 23rd District                                                       Vote for one
+
+Anna M Scharf                                                                              Republican
+Kriss Wright                                                                                Democrat
+
+State Representative, 24th District                                                       Vote for one
+
+Lucetta A Elmer                                                                            Republican
+
+State Representative, 25th District                                                       Vote for one
+
+Ben Bowman                                                                 Democrat, Working Families
+Bob Niemeyer                                                                              Republican
+
+State Representative, 26th District                                                       Vote for one
+
+Stephanie Carkin                                                               Republican, Libertarian
+Steph Terrio                                                                Pacific Green, Progressive
+Sue R Rieke Smith                                                             Democrat, Independent
+
+State Representative, 27th District                                                       Vote for one
+
+Tammy Carpenter                                                Democrat, Progressive, Working Families
+G Mark Norman                                                                              Republican
+
+State Representative, 28th District                                                       Vote for one
+
+Dacia Grayber                                                 Democrat, Independent, Working Families
+Randall Fryer                                                                             Republican
+
+
+
+
+Page 12 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+State Representative, 29th District                                              Vote for one
+
+Brian Schimmel                                                        Independent, Republican
+Susan McLain                                                                        Democrat
+
+State Representative, 30th District                                              Vote for one
+
+Nathan Sosa                                                                        Democrat
+Charles A Ross                                                                    Republican
+
+State Representative, 31st District                                              Vote for one
+
+Darcey Edwards                                                                    Republican
+Tom L Forest                                                                       Democrat
+
+State Representative, 32nd District                                              Vote for one
+
+Max Sherman                                                                       Republican
+Cyrus Javadi                                                           Democrat, Independent
+
+State Representative, 33rd District                                              Vote for one
+
+Shannon Jones Isadore                                                              Democrat
+Ciatta R Thompson                                                                 Republican
+
+State Representative, 34th District                                              Vote for one
+
+Mari Watanabe                                                                      Democrat
+Shaunie Cousins                                                                   Republican
+
+State Representative, 35th District                                              Vote for one
+
+Farrah Chaichi                                                     Democrat, Working Families
+Dan Martin                                                                        Republican
+
+State Representative, 36th District                                              Vote for one
+
+Hai Pham                                                                           Democrat
+Michael Orth                                                                      Republican
+
+
+Page 13 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+State Representative, 37th District                                                      Vote for one
+
+Chad Parker                                                                               Republican
+Jules Walters                                                 Democrat, Independent, Working Families
+
+State Representative, 38th District                                                      Vote for one
+
+Daniel Loc Nguyen                                                               Democrat, Republican
+
+State Representative, 39th District                                                      Vote for one
+
+April Dobson                                                       Democrat, Republican, Independent
+
+State Representative, 40th District                                                      Vote for one
+
+Michael W Sugar                                                           Democrat, Working Families
+Adam Baker                                                                               Republican
+Pat Hubbell                                                                             Independent
+
+State Representative, 41st District                                                      Vote for one
+
+Mark Gamba                                                                Democrat, Working Families
+Elvis Clark                                                                              Republican
+
+State Representative, 42nd District                                                      Vote for one
+
+Morey Straus                                                                               Libertarian
+Rob Nosse                                                                                   Democrat
+
+State Representative, 43rd District                                                      Vote for one
+
+Tawna Sanchez                                                                              Democrat
+Tim LeMaster                                                                              Republican
+
+State Representative, 44th District                                                      Vote for one
+
+Travis Nelson                                                             Democrat, Working Families
+Margo Logan                                                                              Republican
+
+
+
+Page 14 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+State Representative, 45th District                                                      Vote for one
+
+Jason Boyce                                                                               Republican
+Thuy Tran                                                     Democrat, Independent, Working Families
+
+State Representative, 46th District                                                      Vote for one
+
+Willy Chotzen                                                             Democrat, Working Families
+Leo Morley                                                                               Republican
+
+State Representative, 47th District                                                      Vote for one
+
+Andrea Valderrama                                                                          Democrat
+
+State Representative, 48th District                                                      Vote for one
+
+Lamar Wise                                                    Democrat, Independent, Working Families
+Andrew Morrison                                                                           Republican
+
+State Representative, 49th District                                                      Vote for one
+
+Ann Walker                                                                               Republican
+Zach Hudson                                                               Democrat, Working Families
+
+State Representative, 50th District                                                      Vote for one
+
+Brian Gray                                                                                Republican
+Ricki Ruiz                                                                     Democrat, Independent
+
+State Representative, 51st District                                                      Vote for one
+
+Matt Bunch                                                                               Republican
+Darla Mead                                                                Democrat, Working Families
+
+State Representative, 52nd District                                                      Vote for one
+
+Hank Sanders                                                                   Democrat, Independent
+Scott C Hege                                                                              Republican
+
+
+
+Page 15 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+State Representative, 53rd District                                           Vote for one
+
+Michael Summers                                                    Republican, Libertarian
+Emerson Levy                                                       Democrat, Independent
+
+State Representative, 54th District                                           Vote for one
+
+Jason Kropf                                                                     Democrat
+
+State Representative, 55th District                                           Vote for one
+
+Colby M Simmons                                                                Democrat
+E Werner Reschke                                                              Republican
+
+State Representative, 56th District                                           Vote for one
+
+Emily G McIntire                                                              Republican
+
+State Representative, 57th District                                           Vote for one
+
+Greg Smith                                                                    Republican
+Josiah Dean                                                                 Pacific Green
+
+State Representative, 58th District                                           Vote for one
+
+Brian Campbell                                                                 Democrat
+Bobby Levy                                                                    Republican
+
+State Representative, 59th District                                           Vote for one
+
+Vikki Breese-Iverson                                                          Republican
+Lawrence Jones                                                                 Democrat
+
+State Representative, 60th District                                           Vote for one
+
+Beth Spell                                                                     Democrat
+Mark Owens                                                                    Republican
+
+
+
+
+Page 16 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                        Candidate Ballot Statement
+                                          2026 General Election
+September 3, 2026
+
+Judge of the Circuit Court, 4th District, Position 2                 Vote for one
+
+Diane S Sykes
+Laura Maurer Rowan
+
+Judge of the Circuit Court, 4th District, Position 14                Vote for one
+
+Elizabeth Savage
+Joseph Hagedorn
+
+Judge of the Circuit Court, 11th District, Position 3                Vote for one
+
+Thaddeus Betz
+Sonia Huntsman
+Raun Atkinson
+Keith A Leitz
+
+Judge of the Circuit Court, 2nd District, Position 14                Vote for one
+
+Nathan J Lichvarcik                 Incumbent
+
+Judge of the Circuit Court, 4th District, Position 6                 Vote for one
+
+Sonia A Montalbano                  Incumbent
+
+Judge of the Circuit Court, 5th District, Position 5                 Vote for one
+
+Kara A Brooks                       Incumbent
+
+Judge of the Circuit Court, 20th District, Position 1                Vote for one
+
+Zohra Tourville                     Incumbent
+
+District Attorney, Curry County                                      Vote for one
+
+Kevin Kelley
+
+
+
+
+Page 17 of 18
+Secretary of State Elections Division
+255 Capitol St NE, Ste 126, Salem, Oregon 97310
+
+                                      Candidate Ballot Statement
+                                        2026 General Election
+September 3, 2026
+
+District Attorney, Jefferson County                                Vote for one
+
+Eric J Nisley
+
+District Attorney, Lake County                                     Vote for one
+
+Lane W Simpson
+Rami Amaro
+
+
+
+
+Page 18 of 18
+

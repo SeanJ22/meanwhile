@@ -1,0 +1,404 @@
+{
+  "doorId": "nm-santa-fe-early_voting-2026",
+  "sites": [
+    {
+      "id": "voting-a924f78771bf4b8d313f6655",
+      "name": "Abedon Lopez Comm. Center",
+      "address": "155 Camino De Quintana\n\nEspañola, NM 87532",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Santa Fe County Clerk",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "title": "Polling Locations | Santa Fe County",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+          "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        }
+      ],
+      "days": "Oct 17 - Oct 31, 2026",
+      "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+      "countyFips": "35049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Oct 17 - Oct 31, 2026",
+          "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+          "source": {
+            "publisher": "Santa Fe County Clerk",
+            "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+            "title": "Polling Locations | Santa Fe County",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+            "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2d0c52551fb378f234aa5a00",
+      "name": "Edgewood Fire Station #70",
+      "address": "1 Municipal Way\n\nEdgewood, NM 87015",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Santa Fe County Clerk",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "title": "Polling Locations | Santa Fe County",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+          "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        }
+      ],
+      "days": "Oct 17 - Oct 31, 2026",
+      "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+      "countyFips": "35049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Oct 17 - Oct 31, 2026",
+          "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+          "source": {
+            "publisher": "Santa Fe County Clerk",
+            "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+            "title": "Polling Locations | Santa Fe County",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+            "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0a73186a07d3fe997eff5e91",
+      "name": "Greer Garson Theater",
+      "address": "1600 St. Michael's Drive\n\nSanta Fe, NM 87507",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Santa Fe County Clerk",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "title": "Polling Locations | Santa Fe County",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+          "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        }
+      ],
+      "days": "Oct 17 - Oct 31, 2026",
+      "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+      "countyFips": "35049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Oct 17 - Oct 31, 2026",
+          "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+          "source": {
+            "publisher": "Santa Fe County Clerk",
+            "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+            "title": "Polling Locations | Santa Fe County",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+            "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-69d1262b176a47167a3c68f2",
+      "name": "Max Coll Corridor Comm. Center",
+      "address": "16 Avenida Torreon\n\nSanta Fe, NM 87508",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Santa Fe County Clerk",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "title": "Polling Locations | Santa Fe County",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+          "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        }
+      ],
+      "days": "Oct 17 - Oct 31, 2026",
+      "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+      "countyFips": "35049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Oct 17 - Oct 31, 2026",
+          "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+          "source": {
+            "publisher": "Santa Fe County Clerk",
+            "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+            "title": "Polling Locations | Santa Fe County",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+            "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-def518bb65e8c15fabc2781e",
+      "name": "Nancy Rodriguez Comm. Center",
+      "address": "1 Prairie Dog Loop\n\nSanta Fe, NM 87507",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Santa Fe County Clerk",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "title": "Polling Locations | Santa Fe County",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+          "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        }
+      ],
+      "days": "Oct 17 - Oct 31, 2026",
+      "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+      "countyFips": "35049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Oct 17 - Oct 31, 2026",
+          "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+          "source": {
+            "publisher": "Santa Fe County Clerk",
+            "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+            "title": "Polling Locations | Santa Fe County",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+            "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b1e14ede740fa10d2866ecb8",
+      "name": "Pojoaque Satellite Office",
+      "address": "5 W. Gutierrez Ste. 9, Pojoaque Pueblo Plaza\n\nSanta Fe, NM 87506",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Santa Fe County Clerk",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "title": "Polling Locations | Santa Fe County",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+          "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        }
+      ],
+      "days": "Oct 17 - Oct 31, 2026",
+      "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+      "countyFips": "35049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Oct 17 - Oct 31, 2026",
+          "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+          "source": {
+            "publisher": "Santa Fe County Clerk",
+            "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+            "title": "Polling Locations | Santa Fe County",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+            "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c7c420d439fca2adb424a17a",
+      "name": "Santa Fe County Fairgrounds",
+      "address": "3229 Rodeo Rd\n\nSanta Fe, NM 87507",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Santa Fe County Clerk",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "title": "Polling Locations | Santa Fe County",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+          "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        }
+      ],
+      "days": "Oct 17 - Oct 31, 2026",
+      "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+      "countyFips": "35049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Oct 17 - Oct 31, 2026",
+          "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+          "source": {
+            "publisher": "Santa Fe County Clerk",
+            "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+            "title": "Polling Locations | Santa Fe County",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+            "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5cf3ec992ebc4f475422f074",
+      "name": "Southside Library",
+      "address": "6599 Jaguar Dr\n\nSanta Fe, NM 87507",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Santa Fe County Clerk",
+          "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+          "title": "Polling Locations | Santa Fe County",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+          "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+        }
+      ],
+      "days": "Oct 17 - Oct 31, 2026",
+      "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+      "countyFips": "35049",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Oct 17 - Oct 31, 2026",
+          "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+          "source": {
+            "publisher": "Santa Fe County Clerk",
+            "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+            "title": "Polling Locations | Santa Fe County",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+            "documentUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Santa Fe County Clerk",
+      "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+      "title": "Polling Locations | Santa Fe County",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://www.santafecountynm.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://www.santafecountynm.gov/robots.txt",
+      "contentType": "text/plain; charset=UTF-8",
+      "rawHash": "186a6b214eb9f16a73a6d01c23a949a5b8c6f6f42239702ca248d9c7e2950535",
+      "path": "tests/fixtures/voting-sources/vs-04-west/nm-5377ffaabfcc-186a6b214eb9.bin"
+    },
+    {
+      "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+      "contentType": "text/html; charset=UTF-8",
+      "rawHash": "192ea8b4e365e0700e9c182de3c65430e7d885057f13307545825767f02c4c1a",
+      "path": "tests/fixtures/voting-sources/vs-04-west/nm-56fc01b3b101-192ea8b4e365.html"
+    }
+  ],
+  "fileTitle": "Polling Locations | Santa Fe County",
+  "contacts": []
+}

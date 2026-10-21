@@ -1,0 +1,49 @@
+{
+  "url": "https://www.desotocountyms.gov/DocumentCenter/View/11741/Ballot-Style-Samples",
+  "finalUrl": "https://www.desotocountyms.gov/DocumentCenter/View/11741/Ballot-Style-Samples",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:20:04.410853+00:00",
+  "sha256": "16172d5aaf5adf18f460c297948a41a3a0a2b4c2d77f70c7f42ee264445d5264",
+  "sourceTexts": [
+    {
+      "path": "style-1.txt",
+      "sha256": "a810f4cf8a1175223b90988934d892178a9a71045bbcec09a9baae4dc39eaac5",
+      "extraction": "OMP_THREAD_LIMIT=1 tesseract --psm 3, pdftoppm at 200dpi"
+    },
+    {
+      "path": "style-2.txt",
+      "sha256": "c07d529f1f89390a4a0eef173a909f8051c33865a82e0aa026a73a6cc71631f3",
+      "extraction": "OMP_THREAD_LIMIT=1 tesseract --psm 3, pdftoppm at 200dpi"
+    },
+    {
+      "path": "style-3.txt",
+      "sha256": "13dd0ded91341b274dc72d59958c7607f980b596cf06df032a43364b0f93941c",
+      "extraction": "OMP_THREAD_LIMIT=1 tesseract --psm 3, pdftoppm at 200dpi"
+    },
+    {
+      "path": "style-4.txt",
+      "sha256": "84417fc33630638e3e07f8ae2a34e0e6f65e8a485d018b755a1ac1733dffeb8c",
+      "extraction": "OMP_THREAD_LIMIT=1 tesseract --psm 3, pdftoppm at 200dpi"
+    },
+    {
+      "path": "style-4-psm6.txt",
+      "sha256": "d5a84c752804e9b21b3da98b0f8b8d8c4031a703d45b3af940074a994140a116",
+      "extraction": "OMP_THREAD_LIMIT=1 tesseract --psm 6, pdftoppm at 200dpi"
+    },
+    {
+      "path": "style-1-psm6.txt",
+      "sha256": "0684544b23da97213eb4072ba7b4bc848ee3437644f19fe06f099fa0637a61b5",
+      "extraction": "OMP_THREAD_LIMIT=1 tesseract --psm 6, pdftoppm at 200dpi"
+    },
+    {
+      "path": "style-2-psm6.txt",
+      "sha256": "71df71ff39b481dd050d883b51ff7bb24a1cf497cc405f4250d920595ee37491",
+      "extraction": "OMP_THREAD_LIMIT=1 tesseract --psm 6, pdftoppm at 200dpi"
+    },
+    {
+      "path": "style-3-psm6.txt",
+      "sha256": "6e08fe7dfec38e62ff0537c78285ef2d44d23854f366970a4444bbb0ea4475a1",
+      "extraction": "OMP_THREAD_LIMIT=1 tesseract --psm 6, pdftoppm at 200dpi"
+    }
+  ]
+}

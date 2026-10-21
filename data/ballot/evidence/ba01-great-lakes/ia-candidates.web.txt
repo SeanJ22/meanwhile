@@ -1,0 +1,373 @@
+ (https://sos.iowa.gov/sites/default/files/2026-08/2026%20General%20-%20Candidate%20List%20Database%20-%20All%20Elections_1.pdf)
+【turn196154view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 14; Source: open({"ref_id":"turn221891view1","lineno":180}); Total lines: 370
+Captured from overlapping viewports of the same official PDF; line numbers preserved.
+L0@P0: For change requests, contact elections@sos.iowa.gov
+L1@P0: or 515-281-0145. Candidate List
+L2@P0: November 3, 2026 General Election
+L3@P0: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L4@P0: United States Senator Republican Ashley Hinson PO Box 811, Marion, IA 52303 319-382-6636 info@ashleyhinson.com 3/11/2026
+L5@P0: Democratic Josh Turek PO Box 1005, Council Bluffs, IA 51503 712-524-4374 Josh@Turek4iowa.com 3/12/2026
+L6@P0: Libertarian Thomas Laehn 300 S Maple St Jefferson, IA 50129 515-370-0061 laehn4iowa@gmail.com 6/2/2026
+L7@P0: United States Representative District 1 Republican Mariannette Miller-Meeks PO Box 33, Ottumwa, IA 52501 563-279-2341 info@drmillermeeks.com 3/6/2026
+L8@P0: Democratic Christina Bohannan PO Box 722, Iowa City, IA 52244 319-321-5823 cb@bohannanforcongress.com 2/25/2026
+L9@P0: No Party Michael Bridgford 1051 Carriage Place Drive Bettendorf, IA 52722 309-582-6222 mbridgford@gmail.com 6/1/2026
+L10@P0: United States Representative District 2 Republican Joe Mitchell 1101 Emerald Cove Drive, Clear Lake, IA 50428 515-745-7528 joe@joemitchell.com 3/6/2026
+L11@P0: Democratic Lindsay James PO Box 144, Dubuque, IA 52004 563-235-4278 lindsay@lindsayforiowa.com 3/5/2026
+L12@P0: Libertarian Rick Stewart 855 Camburn CT SE Cedar Rapids, IA 52403 319-333-4449 rick@rickstewart.com 6/2/2026
+L13@P0: No Party Dave Bushaw 17783 Palace Road Hawkeye, IA 52147 319-238-3075 dave@davebushaw.com 6/1/2026
+L14@P0: United States Representative District 3 Republican Zach Nunn PO Box 8036, Des Moines, IA 50301 515-216-0686 Zach@zachnunn.com 2/23/2026
+L15@P0: Democratic Sarah Trone Garriott PO Box 621, Des Moines, IA 50303 515-661-9679 sarahtronegarriott@gmail.com 3/12/2026
+L16@P0: United States Representative District 4 Republican Chris McGowan PO Box 207, Sioux City, IA 51101 -- CJMcGowan@ChrisMcGowan.com 3/11/2026
+L17@P0: Democratic Dave Dawson 101 West Creek Court, Lawton, IA 51030 712-899-7074 davedawson2026@gmail.com 3/6/2026
+L18@P0: Governor Republican Zach Lahn 1254 74th St, Belle Plaine, IA 52208 319-444-6328 zach@lahnhq.com 3/13/2026
+L19@P0: Democratic Rob Sand PO Box 8382, Des Moines, IA 50301 515-664-4516 rob@robsand.com 3/9/2026
+L20@P0: Lieutenant Governor Republican Derek Wulf PO Box 161, Hudson, IA 50643 319-530-3769 WulfforIowa@gmail.com 6/15/2026
+L21@P0: Democratic Dave Muhlbauer PO Box 8382, Des Moines, IA 50301 515-669-7587 dave@robsand.com 6/22/2026
+L22@P0: Secretary of State Republican Paul D. Pate 2030 Diamond Ridge Rd, Cedar Rapids, IA 52403 319-550-9077 info@pateforiowa.com 3/10/2026
+L23@P0: Democratic Ryan Peterman PO Box 3501, Davenport, IA 52808 563-650-5973 ryan@petermanforiowa.com 3/11/2026
+L24@P0: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L25@P0: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L26@P0: Last Updated
+L27@P0-1: 8/19/2026 1:36 PMCandidate List
+L28@P1: November 3, 2026 General Election
+L29@P1: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L30@P1: Auditor of State Republican Chris Cournoyer PO Box 33, LeClaire, IA 52753 563-289-7335 cournoyer4ia@gmail.com 3/6/2026
+L31@P1: Democratic Taylor Wettach PO Box 47, Muscatine, IA 52761 563-554-8058 taylor@wettachforiowa.com 3/11/2026
+L32@P1: Treasurer of State Republican Roby Smith 2036 E 48th Street, Davenport, IA 52807 563-386-0179 roby@robysmith.com 3/11/2026
+L33@P1: Democratic John Norwood PO Box 65224, West Des Moines, IA 50265 -- jmnorwood@hotmail.com 3/12/2026
+L34@P1: Secretary of Agriculture Republican Mike Naig PO Box 93851, Des Moines, IA 50393 -- info@mikenaig.com 3/5/2026
+L35@P1: Democratic Chris Jones 505 E Bloomington St, Iowa City, IA 52245 515-303-0342 info@chrisjonesforiowa.com 2/24/2026
+L36@P1: Attorney General Republican Brenna Bird PO Box 7, Dexter, IA 50070 515-412-0154 info@birdforiowa.com 3/4/2026
+L37@P1: Democratic Nate Willems PO Box 151, Mount Vernon, IA 52314 319-929-4543 info@natewillems.com 3/5/2026
+L38@P1: State Senator District 1 Republican Christopher Prosch 3012 Nordic Ct, Sioux City, IA 51104 605-201-4528 Chrisprosch5@gmail.com 3/13/2026
+L39@P1: Democratic Catelin Drey 214 Jackson St Box 2316, Sioux City, IA 51106 712-227-1707 info@dreyforiowa.com 3/4/2026
+L40@P1: State Senator District 3 Republican Lynn Evans PO Box 305, Aurelia, IA 51005 712-261-2726 evansforiowa@gmail.com 2/23/2026
+L41@P1: Democratic Mike Frantz 515 Gran Drive, Storm Lake, IA 50588 712-291-0555 frantzforiowastatesenate@gmail.com 3/9/2026
+L42@P1: State Senator District 5 Republican Dave Rowley 1311 Gary Avenue, Spirit Lake, IA 51360 712-330-5596 daverowleyins@gmail.com 2/23/2026
+L43@P1: Democratic --
+L44@P1: No Party Rachel Gravert PO Box 12, Estherville, IA 51334 303-746-3471 rachel@gravertforiowa.com 5/21/2026
+L45@P1: State Senator District 7 Republican Kevin Alons 140 Galland St, Salix, IA 51052 712-389-7016 Kevin@Alonsforsenate.com 3/2/2026
+L46@P1: Democratic --
+L47@P1: State Senator District 9 Democratic James Uhlenkamp 802 East Jefferson, Mount Ayr, IA 50854 641-344-8416 juhlenkamp42@gmail.com 8/19/2026
+L48@P1: Republican Steve Baier 62837 Seattle Road, Griswold, IA 51535 712-789-0336 bbaier@netins.net 3/4/2026
+L49@P1: State Senator District 11 Republican Hollie Arlene Zajicek 2612 Lexington Dr., Norwalk, IA 50211 515-447-6560 holliez19@outlook.com 3/13/2026
+L50@P1: Democratic Sinikka Waugh PO Box 82, Indianola, IA 50125 515-971-0964 SinikkaForIowa@gmail.com 3/3/2026
+L51@P1: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L52@P1: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L53@P1: Last Updated
+L54@P1-2: 8/19/2026 1:36 PMCandidate List
+L55@P2: November 3, 2026 General Election
+L56@P2: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L57@P2: State Senator District 13 Republican Jeff Kulmatycki 23167 Dewey Road, Centerville, IA 52544 641-895-9454 kulmatyckijeffery@gmail.com 2/23/2026
+L58@P2: Democratic Brenda Case 1530 N Elm St, Ottumwa, IA 52501 641-777-7607 case.brenda7@gmail.com 2/25/2026
+L59@P2: State Senator District 15 Republican --
+L60@P2: Democratic Tony Bisignano 2618 East Leach Ave, Des Moines, IA 50320 515-371-5990 biz.tony@gmail.com 3/12/2026
+L61@P2: State Senator District 17 Republican Ronald Langston 3301 Kingman Boulevard, Des Moines, IA 50311 515-274-4620 Ron@LangstonforSenate.org 3/13/2026
+L62@P2: Democratic Samy El-Baroudi 701 Hickman Rd, Des Moines, IA 50316 515-991-2100 elbaroudisamy@gmail.com 3/4/2026
+L63@P2: State Senator District 19 Republican Barb Kniff McCulla 1309 Elmridge Drive, Pella, IA 50219 641-780-2930 bkniff@KLKconstruction.com 3/4/2026
+L64@P2: Democratic Zachary Mecham 104 East Broadway, Pleasantville, IA 50225 641-891-0032 MechamForIowa@Gmail.com 3/3/2026
+L65@P2: State Senator District 21 Republican John Hollinrake 1410 SE Rio Drive, Ankeny, IA 50021 515-612-7254 hollinrake4Iowa@gmail.com 2/26/2026
+L66@P2: Democratic Heather Matson 1802 SW Prairie Trail Pkwy, Ankeny, IA 50023 515-201-1877 hamatson@gmail.com 3/11/2026
+L67@P2: State Senator District 23 Democratic Tony Thompson PO Box 13, Elkhart, IA 50073 515-367-0110 tony@tonythompsonforiowa.com 3/2/2026
+L68@P2: Republican Wes Enos 409 5th Street N.W., Boundurant, IA 50035 515-988-4688 wes@wesenos.com 8/19/2026
+L69@P2: State Senator District 25 Republican Paul Wacker 4725 Toront #1, Ames, IA 50014 515-460-5669 paulwacke20@gmail.com 7/9/2026
+L70@P2: Democratic Herman C Quirmbach 1002 Jarrett Circle, Ames, IA 50014 515-292-8984 hcqbach@gmail.com 3/2/2026
+L71@P2: State Senator District 27 Republican Annette Sweeney 1616 Elk Run Rd, Iowa Falls, IA 50126 641-373-4899 sweeney4senate@gmail.com 3/9/2026
+L72@P2: Democratic --
+L73@P2: State Senator District 29 Republican Sandy Salmon 1308 275th Street, Janesville, IA 50647 319-987-3021 salmonms@gmail.com 3/4/2026
+L74@P2: Democratic Jim Vowels 1701 Horton Rd, Waverly, IA 50677 319-504-9284 votevowels2026@gmail.com 3/3/2026
+L75@P2: State Senator District 31 Republican --
+L76@P2: Democratic Timi Brown Powers 1920 West 7th Street, Waterloo, IA 50702 319-404-3380 timi4iowa@gmail.com 3/10/2026
+L77@P2: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L78@P2: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L79@P2: Last Updated
+L80@P2-3: 8/19/2026 1:36 PMCandidate List
+L81@P3: November 3, 2026 General Election
+L82@P3: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L83@P3: State Senator District 33 Republican Carrie Koelker 32369 Nature Trail, Dyersville, IA 52040 563-590-5975 carriekoelker@gmail.com 3/11/2026
+L84@P3: Democratic Mary Ungs-Sogaard 1760 13th Avenue NE, Dyersville, IA 52040 563-543-8452 maryusforiowa@gmail.com 6/19/2026
+L85@P3: State Senator District 35 Republican Joe Stutting 1326 Hwy 67, Princeton, IA 52768 563-212-2324 joestutting@gmail.com 2/25/2026
+L86@P3: Democratic Mike Zimmer 2967 265th St, DeWitt, IA 52742 563-650-9231 dmzimmer9@gmail.com 3/3/2026
+L87@P3: State Senator District 37 Republican Randy Marzen PO Box 65, Marion, IA 52302 319-651-5320 marzenforiowa@gmail.com 3/11/2026
+L88@P3: Democratic Molly Donahue 4408 Pepperwood Hill SE, Cedar Rapids, IA 52403 319-573-7041 donahueforrep@gmail.com 3/9/2026
+L89@P3: State Senator District 39 Republican Edward Bernie Hayes 327 30th St SE, Cedar Rapids, IA 52403 319-350-4568 berniectl@gmail.com 7/31/2026
+L90@P3: Democratic Liz Bennett 366 19th St, Cedar Rapids, IA 52403 319-431-1656 liz@lizbennett.com 3/11/2026
+L91@P3: State Senator District 41 Republican Kerry Gruenhagen 20319 70th Ave, Walcott, IA 52773 563-340-2073 kerry4Iowa@gmail.com 3/4/2026
+L92@P3: Democratic Tom Wieck 505 E 3rd St, West Liberty, IA 52776 515-318-1442 TomWieck4Senate@outlook.com 3/5/2026
+L93@P3: State Senator District 43 Republican --
+L94@P3: Democratic Meghann Foster 3284 Crosspark Rd Ste C Box 121, Coralville, IA 52241 319-325-0920 meghann@meghannfoster.com 3/2/2026
+L95@P3: State Senator District 45 Republican --
+L96@P3: Democratic Janice Weiner 2525 Mayfield Rd, Iowa City, IA 52245 571-426-9869 janice4iowa@gmail.com 3/4/2026
+L97@P3: State Senator District 47 Republican Scott Webster 3310 Fairhaven Road, Davenport, IA 52807 563-529-3755 smw212121@gmail.com 3/11/2026
+L98@P3: Democratic Nikhil Wagle 5214 Blackhawk Trail Ct, Bettendorf, IA 52722 563-343-0176 wagleforiowa@gmail.com 3/10/2026
+L99@P3: State Senator District 49 Republican Cynthia Mensendick 54 W Timberline Drive, Blue Grass, IA 52726 563-265-9795 cjmensendick@outlook.com 3/13/2026
+L100@P3: Democratic Cindy Winckler 6 Thode Ct, Davenport, IA 52802 563-940-1236 cindywinckler@gmail.com 3/4/2026
+L101@P3: State Representative District 1 Republican Josh Steinhoff 2010 Jackson St., Sioux City, IA 51104 712-898-2366 josh.mary.steinhoff@gmail.com 3/12/2026
+L102@P3: Democratic Shawn Olorundami 2920 Sunset Circle, Sioux City, IA 51104 712-899-4748 solorund@gmail.com 3/10/2026
+L103@P3: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L104@P3: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L105@P3: Last Updated
+L106@P3-4: 8/19/2026 1:36 PMCandidate List
+L107@P4: November 3, 2026 General Election
+L108@P4: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L109@P4: State Representative District 2 Republican Robert Henderson 4540 Talbot Road, Sioux City, IA 51103 712-253-9135 Pianocoach@Juno.com 2/24/2026
+L110@P4: Democratic Jessica Lopez-Walker 1221 S Glass, Sioux City, IA 51106 712-204-7765 jlowhouse2@gmail.com 3/12/2026
+L111@P4: State Representative District 3 Republican Robert Driesen 4244 Elmwood Ave, Ireton, IA 51027 712-541-2827 driesenrobert@gmail.com 2/23/2026
+L112@P4: Democratic --
+L113@P4: State Representative District 4 Republican Skyler Wheeler 1714 2nd St, Hull, IA 51239 712-441-7444 wheeler4iowa@outlook.com 3/11/2026
+L114@P4: Democratic --
+L115@P4: No Party Garth Van Donselaar 774 4th Ave NE, Sioux Center, IA 51250 712-449-5929 garthvd03@gmail.com 6/1/2026
+L116@P4: State Representative District 5 Republican Keith Glienke 5662 Wood Chip Rd, Aurelia, IA 51005 712-229-7653 kmglienk@newulmtel.net 2/24/2026
+L117@P4: Democratic Stephanie Steiner 4277 Van Buren Ave, Sutherland, IA 51058 712-229-7287 S.Steiner@SteinerforIowa.com 7/17/2026
+L118@P4: State Representative District 6 Republican Megan Jones 4470 US Highway 71, Sioux Rapids, IA 50585 515-991-7337 mlhjones50@gmail.com 3/3/2026
+L119@P4: Democratic --
+L120@P4: State Representative District 7 Republican Wendy Larson PO Box 97, Odebolt, IA 51458 712-371-2684 cwlarson4@gmail.com 3/11/2026
+L121@P4: Democratic Rachel Burns 1637 390th St, Odebolt, IA 51458 712-371-3566 info@burnsforiowa.com 2/23/2026
+L122@P4: State Representative District 8 Republican Ann Meyer 1948 Stadium Drive, Fort Dodge, IA 50501 515-570-6610 annmeyer@frontiernet.net 2/23/2026
+L123@P4: Democratic Kristofer Williams 2057 220th St, Fort Dodge, IA 50501 712-371-3253 williams.kristofer99@gmail.com 3/2/2026
+L124@P4: State Representative District 9 Republican Henry Stone 132 Woodland Dr., Forest City, IA 50436 702-533-0614 henrystone462@gmail.com 3/11/2026
+L125@P4: Democratic --
+L126@P4: State Representative District 10 Republican John H Wills 3726 Ithaca Ave, Spirit Lake, IA 51360 712-330-9492 Willsforiowa@gmail.com 3/3/2026
+L127@P4: Democratic --
+L128@P4: State Representative District 11 Republican Craig Williams 11886 320th Street, Manning, IA 51455 712-790-8927 craig.s.williams63@gmail.com 2/26/2026
+L129@P4: Democratic Bill Owen 703 Redwood Rd, Harlan, IA 51537 712-571-8544 billowenforiowahouse@gmail.com 3/3/2026
+L130@P4: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L131@P4: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L132@P4: Last Updated
+L133@P4-5: 8/19/2026 1:36 PMCandidate List
+L134@P5: November 3, 2026 General Election
+L135@P5: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L136@P5: State Representative District 12 Republican Steven Holt 1430 3rd Ave S, Denison, IA 51442 712-269-4042 holtforhouse@gmail.com 2/26/2026
+L137@P5: Democratic Dustin Durbin 2230 V Avenue, Dow City, IA 51528 402-960-3025 dustindurbinforhouse@gmail.com 3/10/2026
+L138@P5: State Representative District 13 Republican Travis M. Sitzmann 223 Park St, Kingsley, IA 51028 712-540-8647 SitzmannForIowa@gmail.com 2/23/2026
+L139@P5: Democratic --
+L140@P5: State Representative District 14 Republican Jacob Bossman 2650 S Cedar St, Sioux City, IA 51106 712-251-4541 BossmanForIowaHouse@gmail.com 3/2/2026
+L141@P5: Democratic --
+L142@P5: State Representative District 15 Republican Jason Sherer 2202 147th, Pisgah, IA 51564 712-592-1455 jjsherer@gmail.com 2/26/2026
+L143@P5: Democratic Benjamin Schauer 310 S 12th St, Dunlap, IA 51529 319-530-4317 schauerbenj@gmail.com 3/11/2026
+L144@P5: No Party Blake Johnson 15409 Hilltop Road, Council Bluffs, IA 51503 402-515-5360 Blake4Iowa@gmail.com 3/4/2026
+L145@P5: No Party Marilyn J Mentzer 2459 Mulligan Trail, Logan, IA 51546 402-979-1187 marijomentzer@gmail.com 5/15/2026
+L146@P5: State Representative District 16 Republican David A. Sieck 149 Hickory Ridge Drive, Glenwood, IA 51534 402-690-5207 davidasieck@gmail.com 3/10/2026
+L147@P5: Democratic Jack Goodman 24026 Masters Rd, Glenwood, IA 51534 712-404-0571 jackforiowa@yahoo.com 2/23/2026
+L148@P5: State Representative District 17 Republican Devon Wood PO Box 26, New Market, IA 51646 515-321-1395 wood4iowa@gmail.com 3/11/2026
+L149@P5: Democratic --
+L150@P5: State Representative District 18 Republican Thomas Jay Moore PO Box 224, Griswold, IA 51535 712-789-9954 tmoore@netins.net 3/9/2026
+L151@P5: Democratic Tripp Narup 100 S 5th Avenue, Villisca, IA 50864 712-438-0599 trippnarupforiowa@gmail.com 3/3/2026
+L152@P5: State Representative District 19 Republican Brent Siegrist 204 Lori Lane, Council Bluffs, IA 51503 402-250-5566 siegristbrent2@gmail.com 3/11/2026
+L153@P5: Democratic Benjamin Thomas Larson 1301 Madison Avenue, Council Bluffs, IA 51503 402-651-0256 Benjamin.T.Larson@proton.me 3/13/2026
+L154@P5: State Representative District 20 Republican Keith Jones 213 N Millard St., Council Bluffs, IA 51503 402-871-3040 kj634@hotmail.com 3/11/2026
+L155@P5: Democratic Eric Armstrong PO Box 215, Council Bluffs, IA 51502 712-524-0355 eric@armstrongforiowa.com 2/23/2026
+L156@P5: State Representative District 21 Republican Brooke Boden 207 S. Kenwood, Indianola, IA 50125 515-971-7156 BrookeforIowa@gmail.com 3/11/2026
+L157@P5: Democratic Spencer A Waugh PO Box 30, Indianola, IA 50125 515-971-9564 waughforiowa@gmail.com 3/3/2026
+L158@P5: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L159@P5: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L160@P5: Last Updated
+L161@P5-6: 8/19/2026 1:36 PMCandidate List
+L162@P6: November 3, 2026 General Election
+L163@P6: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L164@P6: State Representative District 22 Republican Samantha Fett 13502 Delaware Street, Carlisle, IA 50047 515-473-0798 fettforhouse@gmail.com 2/25/2026
+L165@P6: Democratic Rory Taylor 1728 Holly Drive, Norwalk, IA 50211 515-371-7606 RoryT@aol.com 3/9/2026
+L166@P6: State Representative District 23 Republican Ray Bubba Sorensen PO Box 97, Greenfield, IA 50849 712-525-0580 Sorensen.For.Iowa@gmail.com 3/4/2026
+L167@P6: Democratic Karen Varley 1314 Riverside Ave, Stuart, IA 50250 515-361-5256 votevarley@gmail.com 3/12/2026
+L168@P6: State Representative District 24 Republican Sam Wengryn 23686 324th St, Davis City / Pleasanton, IA 50065 641-442-5118 sjwengryn@pm.me 3/4/2026
+L169@P6: Democratic Sonya Hicks 111 Golfview Drive, Osceola, IA 50213 515-499-4655 hicksforiowa@gmail.com 2/26/2026
+L170@P6: State Representative District 25 Republican Hans C. Wilz 819 N Court Street, Ottumwa, IA 52501 641-682-4225 hans@rnextthing.com 3/12/2026
+L171@P6: Democratic Kolton Jones 1108 Chester Avenue, Ottumwa, IA 52501 641-226-3971 koltonforiowa@gmail.com 6/10/2026
+L172@P6: State Representative District 26 Republican Austin Harris 29374 570th St, Moulton, IA 52572 641-895-9962 austinrexharris@gmail.com 3/12/2026
+L173@P6: Democratic Brett Mohler 406 B Ave E, Albia, IA 52531 641-226-3888 brett@mohlerforiowa.com 2/27/2026
+L174@P6: State Representative District 27 Republican --
+L175@P6: Democratic Kenan Judge 325 Abigail Ln, Waukee, IA 50263 515-250-2841 KenanJudgeforIowans@gmail.com 3/5/2026
+L176@P6: State Representative District 28 Republican David Young PO Box 123, Van Meter, IA 50261 515-371-5669 davidyoung999@hotmail.com 3/11/2026
+L177@P6: Democratic Tom Walton 31805 Silverado Lane, Waukee, IA 50263 515-729-1982 waltonforiowa@gmail.com 3/11/2026
+L178@P6: State Representative District 29 Republican --
+L179@P6: Democratic Brian Meyer 5417 SE 29th St, Des Moines, IA 50320 -- representativemeyer@gmail.com 3/10/2026
+L180@P6: State Representative District 30 Republican --
+L181@P6: Democratic Megan L. Srinivas PO Box 36356, Des Moines, IA 50315 515-269-9118 megansrinivas@gmail.com 3/11/2026
+L182@P6: State Representative District 31 Republican Kevin W. DuBay 5480 Colt Dr., West Des Moines, IA 50266 515-735-0442 reclaimingiowa@gmail.com 3/13/2026
+L183@P6: Democratic Mary Madison 4335 Oakwood Lane, West Des Moines, IA 50265 515-480-3162 marymadd12@gmail.com 3/13/2026
+L184@P6: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L185@P6: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L186@P6: Last Updated
+L187@P6-7: 8/19/2026 1:36 PMCandidate List
+L188@P7: November 3, 2026 General Election
+L189@P7: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L190@P7: State Representative District 32 Republican --
+L191@P7: Democratic Mike Jones 1902 80th St, Windsor Heights, IA 50324 515-238-5105 info@mikeforiowa.com 3/2/2026
+L192@P7: State Representative District 33 Republican Lynn Hammel 2517 Boyd St, Des Moines, IA 50317 515-966-4610 hammelforiowa@gmail.com 3/12/2026
+L193@P7: Democratic Ivette Muhammad 1508 McCormick Street, Des Moines, IA 50316 515-868-9013 ivetteforthepeople@gmail.com 2/24/2026
+L194@P7: State Representative District 34 Republican --
+L195@P7: Democratic Rob Johnson 1353 21st, Des Moines, IA 50011 773-621-0030 info@robjohnsonforiowa.com 3/11/2026
+L196@P7: State Representative District 35 Republican --
+L197@P7: Democratic Sean Bagniewski 4019 Ovid Avenue, Des Moines, IA 50310 515-556-9111 seanbagniewski@gmail.com 3/9/2026
+L198@P7: State Representative District 36 Republican Bruce A Michalowski 3315 Southern Hills Dr, Des Moines, IA 50321 515-249-4059 brucemichals@protonmail.com 8/13/2026
+L199@P7: Democratic Austin Baeth 701 19th Street, Des Moines, IA 50314 515-971-0190 austin.baeth@gmail.com 3/9/2026
+L200@P7: State Representative District 37 Republican Jason Sandholdt 1273 Emerald Dr, Otley, IA 50214 641-891-7145 SandholdtforIowa@gmail.com 3/9/2026
+L201@P7: Democratic --
+L202@P7: State Representative District 38 Republican Matthew Oleson 487 E 156 St N, Grinnell, IA 50112 515-492-0397 Olesonforiowa@gmail.com 3/4/2026
+L203@P7: Democratic Brad Magg PO Box 146, Colfax, IA 50054 515-669-2239 Brad@MaggforIowa.com 3/5/2026
+L204@P7: State Representative District 39 Republican Troy Clark 5460 Sunrise Circle, Pleasant Hill, IA 50327 515-988-7540 troyclarkforiowa@gmail.com 3/12/2026
+L205@P7: Democratic Nate Boulton 3127 Thompson Avenue, Des Moines, IA 50317 515-669-4259 nate@boultonforiowa.com 3/3/2026
+L206@P7: State Representative District 40 Republican Bill Gustoff 5883 NE 6th St, Des Moines, IA 50313 515-201-3867 bill@gustoff4iowa.com 3/11/2026
+L207@P7: Democratic Heather Sievers 1409 8th Ave SE, Altoona, IA 50009 515-344-4461 heathersievers4iowa@gmail.com 3/3/2026
+L208@P7: State Representative District 41 Republican Ryan Weldon 2102 NW Pleasant St, Ankeny, IA 50023 319-230-0428 Ryan@ryanweldon.com 2/26/2026
+L209@P7: Democratic Molly Buck 2601 NW 14th St, Ankeny, IA 50023 515-865-5043 mollyannbuck@gmail.com 3/4/2026
+L210@P7: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L211@P7: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L212@P7: Last Updated
+L213@P7-8: 8/19/2026 1:36 PMCandidate List
+L214@P8: November 3, 2026 General Election
+L215@P8: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L216@P8: State Representative District 42 Republican Heather Stephenson 1910 SW 19th St, Ankeny, IA 50023 515-451-1939 stephenson4iowa@gmail.com 2/26/2026
+L217@P8: Democratic Amy Tagliareni 1132 SE Mill Pond Ct, Ankeny, IA 50021 515-423-9672 amyforiowa42@gmail.com 3/4/2026
+L218@P8: State Representative District 43 Republican Nicole Hasso 8805 Chambery Blvd Ste 300, Johnston, IA 50131 515-682-4610 nhasso2001@yahoo.com 3/5/2026
+L219@P8: Democratic Jill Alesch 5916 NW 98th St, Johnston, IA 50131 515-981-3090 jillalesch78@gmail.com 3/5/2026
+L220@P8: State Representative District 44 Republican --
+L221@P8: Democratic Larry McBurney 2511 134th St, Urbandale, IA 50323 515-494-1042 larry@mcburneyforiowa.com 3/3/2026
+L222@P8: State Representative District 45 Republican Austin Stubbs 612 37th St SW, Bondurant, IA 50035 515-954-9413 austinforiowa@gmail.com 3/10/2026
+L223@P8: Democratic Kendra Haug 201 Mallard Pointe Dr NW, Bondurant, IA 50035 515-556-0499 kendraforiowa@gmail.com 2/27/2026
+L224@P8: State Representative District 46 Republican Dan Gehlbach 15935 Hammontree Dr, Urbandale, IA 50323 515-664-2871 dan@dan4iowa.com 3/9/2026
+L225@P8: Democratic Mandy Newton Rosenow 3115 150th St, Urbandale, IA 50323 734-546-6246 mandyforiowa@gmail.com 2/25/2026
+L226@P8: State Representative District 47 Republican Carter F. Nordman 306 Kellogg Ave, Dallas Center, IA 50063 515-480-7837 Carter@CarterForIowa.com 3/3/2026
+L227@P8: Democratic Chris New 1504 Vine St, Dallas Center, IA 50063 515-556-0918 chrisnewhouse47@icloud.com 3/9/2026
+L228@P8: State Representative District 48 Republican Chad Behn 1309 Quill Ave, Boone, IA 50036 515-201-8039 cbehn@hotmail.com 3/9/2026
+L229@P8: Democratic Benjamin Olsen 201 Date Ct, Ames, IA 50010 515-291-6854 olsenforiowa@gmail.com 3/11/2026
+L230@P8: State Representative District 49 Republican --
+L231@P8: Democratic Beth Wessel-Kroeschell 518 Ash, Ames, IA 50014 515-457-4307 bweskroe81@gmail.com 3/2/2026
+L232@P8: State Representative District 50 Republican --
+L233@P8: Democratic Ross Wilburn 2103 Northwestern Avenue, Ames, IA 50010 319-530-5156 rosswilburn4iowa@gmail.com 2/23/2026
+L234@P8: State Representative District 51 Republican Brett Barker PO Box 83, Nevada, IA 50201 515-203-3501 brett@barkerforiowa.com 2/25/2026
+L235@P8: Democratic Teresa Perin 3103 Canfield Avenue, Rhodes, IA 50234 641-691-5522 edenhills.perin@gmail.com 2/24/2026
+L236@P8: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L237@P8: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L238@P8: Last Updated
+L239@P8-9: 8/19/2026 1:36 PMCandidate List
+L240@P9: November 3, 2026 General Election
+L241@P9: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L242@P9: State Representative District 52 Republican David Blom 2685 Underwood Ave, Marshalltown, IA 50158 641-758-1334 Davidleeblom@gmail.com 3/12/2026
+L243@P9: Democratic Mike Tupper 2917 Jackie Terrace, Marshalltown, IA 50158 641-777-3259 tupper.michael@gmail.com 3/3/2026
+L244@P9: State Representative District 53 Republican Dean Fisher 1306 290th St, Montour, IA 50173 641-750-3594 deanfisher2012@gmail.com 2/23/2026
+L245@P9: Democratic Berleen Wobeter 2658 K Ave, Toledo, IA 52342 641-328-4739 bwobeter@yahoo.com 8/14/2026
+L246@P9: State Representative District 54 Republican Joshua Meggers 1517 Cantebury Cir, Grundy Center, IA 50638 319-330-5208 joshmeggers@icloud.com 2/24/2026
+L247@P9: Democratic Leila Ann Staton PO Box 1, Reinbeck, IA 50669 319-429-3733 leilaforiowa@gmail.com 3/5/2026
+L248@P9: State Representative District 55 Republican Beau Klaver 2650 Olsen Ave, Kamrar, IA 50132 515-297-4453 klaver4house@gmail.com 3/12/2026
+L249@P9: Democratic Cynthia Oppedal Paschen PO Box 513, Jewell, IA 50130 515-509-1034 PaschenForSenate@gmail.com 3/5/2026
+L250@P9: State Representative District 56 Republican Mark I. Thompson 2387 150th, Belmond, IA 50421 515-851-7017 utcIowa@icloud.com 3/2/2026
+L251@P9: Democratic Kyle Kruse 2730 200th St, Hardy, IA 50545 319-429-0515 Kak1624@netzero.net 2/27/2026
+L252@P9: State Representative District 57 Republican Pat Grassley 30601 Deer Trail Dr, New Hartford, IA 50660 319-214-0351 patgrassley@gmail.com 3/11/2026
+L253@P9: Democratic Shawn Ellerbroek 1514 Hickory Heights Drive, Waverly, IA 50677 319-939-5845 shawnforiowa@gmail.com 3/2/2026
+L254@P9: State Representative District 58 Republican Charley Thomson 1110 N Grand Ave #30, Charles City, IA 50616 847-456-1911 cthomson@doall.com 2/23/2026
+L255@P9: Democratic India May PO Box 73, Ionia, IA 50645 620-778-6988 mayforiowa@gmail.com 3/2/2026
+L256@P9: State Representative District 59 Republican Christian Hermanson PO Box 117, Mason City, IA 50401 641-200-0856 hermansonforiowa@gmail.com 2/24/2026
+L257@P9: Democratic Jacob Welper PO Box 145, Mason City, IA 50401 641-529-0176 info@welperforiowa.com 2/27/2026
+L258@P9: State Representative District 60 Republican Dani Ollenburg 1506 N 36th Pl, Clear Lake, IA 50428 641-425-2172 danielleollenburg@gmail.com 3/6/2026
+L259@P9: Democratic Alexander Schmidt PO Box 42, St. Ansgar, IA 50472 641-426-6755 schmidtforia@gmail.com 3/12/2026
+L260@P9: State Representative District 61 Republican --
+L261@P9: Democratic Vincent Collis 4149 Omaha Ave, Waterloo, IA 50702 646-872-9355 vincent@vincentcollis.com 2/27/2026
+L262@P9: No Party Lucas Hewitt 345 Derbyshire Rd, Waterloo, IA 50701 319-290-9380 hew2702@gmail.com 3/19/2026
+L263@P9: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L264@P9: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L265@P9: Last Updated
+L266@P9-10: 8/19/2026 1:36 PMCandidate List
+L267@P10: November 3, 2026 General Election
+L268@P10: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L269@P10: State Representative District 62 Republican --
+L270@P10: Democratic Jerome Amos Jr 119 Ricker Street, Waterloo, IA 50703 319-429-8504 jeromeamosjr@gmail.com 3/11/2026
+L271@P10: State Representative District 63 Republican Michael R. Bergan 1204 N Bear Rd, Dorchester, IA 52140 563-380-3974 berganforiowahouse@gmail.com 3/12/2026
+L272@P10: Democratic Jeff Thurlow 506 E Broadway, Decorah, IA 52101 515-537-3853 jthurlow76@gmail.com 2/23/2026
+L273@P10: State Representative District 64 Republican Jason Gearhart 416 Commercial Street, Strawberry Point, IA 52076 563-608-7026 GearhartforIowa64@gmail.com 2/26/2026
+L274@P10: Democratic Brian Bruening PO Box 62, Elkader, IA 52043 641-220-4308 brian@brueningforiowa.com 3/9/2026
+L275@P10: State Representative District 65 Republican Shannon Lundgren PO Box 186, Peosta, IA 52068 563-451-6200 shannon@shannonlundgren.org 3/3/2026
+L276@P10: Democratic Carolyn Wiezorek 15941 Derby Grange Rd, Dubuque, IA 52002 563-542-4050 Wiezorek4Iowa@gmail.com 3/10/2026
+L277@P10: State Representative District 66 Republican Steven Bradley 812 Maquoketa Dr SE, Cascade, IA 52033 563-590-0845 Sbradley@netins.net 3/2/2026
+L278@P10: Democratic Matt English 307 Holt Street, Anamosa, IA 52205 319-480-8156 maenglish@englishforiowa.com 3/11/2026
+L279@P10: State Representative District 67 Republican Craig Johnson 413 13th Ave NE, Independence, IA 50644 319-334-2413 johnsonforiowa@outlook.com 2/23/2026
+L280@P10: Democratic Michael Coonrad 217 3rd Ave NE, Independence, IA 50644 319-332-2819 coonradforiowa@gmail.com 3/12/2026
+L281@P10: State Representative District 68 Republican Chad Ingels 13298 130th St, Randalia, IA 52164 563-920-5899 chad.ingels@gmail.com 3/9/2026
+L282@P10: Democratic Scott Bodley 417 East Burger Street, Hawkeye, IA 52147 563-518-0092 Bodleyforiowa@gmail.com 3/2/2026
+L283@P10: State Representative District 69 Republican Tom Determann 1411 Edens Ave, Camanche, IA 52730 563-249-1389 tomedetermann@gmail.com 3/4/2026
+L284@P10: Democratic Randy Meier 3916 Brandy Lane, Clinton, IA 52732 563-357-5755 rmeier563@gmail.com 3/3/2026
+L285@P10: State Representative District 70 Republican Norlin Mommsen 2308 15th St Ct, DeWitt, IA 52742 563-357-9826 norlinmommsen@yahoo.com 3/2/2026
+L286@P10: Democratic George Pickup 107 Short St, Delmar, IA 52037 563-559-0325 gppickup1986@gmail.com 3/3/2026
+L287@P10: State Representative District 71 Republican --
+L288@P10: Democratic Sam Wooden 844 Dorothy Kay Dr, Dubuque, IA 52003 815-541-67952 samuelwooden@gmail.com 2/23/2026
+L289@P10: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L290@P10: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L291@P10: Last Updated
+L292@P10-11: 8/19/2026 1:36 PMCandidate List
+L293@P11: November 3, 2026 General Election
+L294@P11: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L295@P11: State Representative District 72 Republican Jennifer Smith PO Box 752, Dubuque, IA 52004 563-207-6744 Jennifer@SmithForIowa.com 3/2/2026
+L296@P11: Democratic Matt Robinson 1627 Bies Drive, Dubuque, IA 52002 563-213-9409 mattrobinsonforiowa@gmail.com 3/4/2026
+L297@P11: State Representative District 73 Republican --
+L298@P11: Democratic Elizabeth Wilson 1407 7th St, Marion, IA 52302 319-213-7908 elizabeth.wilson@usa.net 3/13/2026
+L299@P11: State Representative District 74 Republican --
+L300@P11: Democratic Eric Gjerde 615 Boyson Rd NE #235, Cedar Rapids, IA 52402 319-331-8790 EricforIowa@gmail.com 3/9/2026
+L301@P11: State Representative District 75 Republican --
+L302@P11: Democratic Drew Stensland PO Box 112, Cedar Falls, IA 50613 319-427-3503 drewstenslandforiowa@gmail.com 3/12/2026
+L303@P11: State Representative District 76 Republican Matt Reisetter 4511 Ranchero Rd, Cedar Falls, IA 50613 319-230-2271 mattreisetter@gmail.com 7/23/2026
+L304@P11: Democratic Calvin Horn PO Box 114, Waterloo, IA 50704 319-988-1323 calvinhornforhd76@gmail.com 3/11/2026
+L305@P11: State Representative District 77 Republican --
+L306@P11: Democratic Jeff Cooling 5512 Mayfair St SW, Cedar Rapids, IA 52404 319-540-9221 iowansforcooling@gmail.com 3/10/2026
+L307@P11: State Representative District 78 Republican --
+L308@P11: Democratic Angel Ramirez 1751 C Ave NE, Cedar Rapids, IA 52402 623-980-8467 ramirezforiowa@gmail.com 3/9/2026
+L309@P11: State Representative District 79 Republican Barclay Woerner 111 Wellesley Ct NW, Cedar Rapids, IA 52405 319-538-1992 barclaywoerner@gmail.com 3/10/2026
+L310@P11: Democratic Tracy Ehlert 411 Hanover Rd SW, Cedar Rapids, IA 52404 319-899-2980 tracyehlert@hotmail.com 2/24/2026
+L311@P11: State Representative District 80 Republican --
+L312@P11: Democratic Aime J Wichtendahl PO Box 92, Hiawatha, IA 52233 319-721-9907 info@aimewichtendahl.com 2/25/2026
+L313@P11: State Representative District 81 Republican Dillon Fillion 3943 Marquette Street Apt #9, Davenport, IA 52806 563-205-3312 dillonfillion4547@gmail.com 2/23/2026
+L314@P11: Democratic Daniel Gosa 2223 Aspen Dr, Davenport, IA 52806 563-570-4821 dangosa4ia@gmail.com 3/9/2026
+L315@P11: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L316@P11: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L317@P11: Last Updated
+L318@P11-12: 8/19/2026 1:36 PMCandidate List
+L319@P12: November 3, 2026 General Election
+L320@P12: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L321@P12: State Representative District 82 Republican Bobby Kaufmann 1527 330th St, Wilton, IA 52778 -- bob_kaufmann@hotmail.com 3/10/2026
+L322@P12: Democratic James Behrmann 938 305th St, Atalissa, IA 52720 319-936-4442 darr_69_2000@yahoo.com 3/13/2026
+L323@P12: State Representative District 83 Republican Cindy Golding 7000 Tower Terrace Rd, Cedar Rapids, IA 52411 319-360-1028 cindy@cindygolding.com 3/4/2026
+L324@P12: Democratic Mike Bergman PO Box 9, Mt. Vernon, IA 52314 319-540-6139 bergmanforiowa83@gmail.com 7/27/2026
+L325@P12: State Representative District 84 Republican Thomas Gerhold 3326 71st Street, Atkins, IA 52206 -- tdgerhold@netins.net 3/9/2026
+L326@P12: Democratic Polly Denison 7170 21st Ave, Van Horne, IA 52346 319-530-9184 PollyDenisonforIowa@gmail.com 3/13/2026
+L327@P12: State Representative District 85 Republican --
+L328@P12: Democratic Amy Nielsen 168 Lockmor Cir, North Liberty, IA 52317 319-775-0992 amy@amyforiowa.com 3/12/2026
+L329@P12: State Representative District 86 Republican --
+L330@P12: Democratic Dave Jacoby 2308 North Ridge Dr, Coralville, IA 52241 319-430-9793 Davejjacoby@aol.com 3/2/2026
+L331@P12: State Representative District 87 Republican Jeff Shipley 12245 Jasmine Ave, Birmingham, IA 52535 319-432-3108 jeff@peaceloveiowa.com 3/12/2026
+L332@P12: Democratic Thomas R. O'Donnell 26849 South St, Keosauqua, IA 52565 641-630-3757 info@odonnellforhouse87.com 3/9/2026
+L333@P12: State Representative District 88 Republican Helena Hayes 1812 Hickory Avenue, New Sharon, IA 50207 641-673-0876 helenahayes74@yahoo.com 2/23/2026
+L334@P12: Democratic --
+L335@P12: State Representative District 89 Republican --
+L336@P12: Democratic Elinor A. Levin 781 Sandusky Dr, Iowa City, IA 52240 847-687-6886 levinforIowa@gmail.com 2/23/2026
+L337@P12: No Party Daniel Arch 4298 Maureen Terrace Iowa City, IA 52240 319-855-9549 archforiowa@gmail.com 6/2/2026
+L338@P12: State Representative District 90 Republican --
+L339@P12: Democratic Adam Zabner 730 N Van Buren St, Iowa City, IA 52245 319-855-8524 adam@zabnerforiowa.com 2/23/2026
+L340@P12: State Representative District 91 Republican Judd Lawler PO Box 606, Tiffin, IA 52340 319-541-6374 juddlawler@gmail.com 3/9/2026
+L341@P12: Democratic Mark Divitt 1242 Curtis Bridge Rd, Swisher, IA 52338 707-205-5956 info@markdivittforiowa.org 7/17/2026
+L342@P12: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L343@P12: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L344@P12: Last Updated
+L345@P12-13: 8/19/2026 1:36 PMCandidate List
+L346@P13: November 3, 2026 General Election
+L347@P13: For the Office Of… Party Ballot Name(s) Address Phone Email Filing Date
+L348@P13: State Representative District 92 Republican Heather Hora 2509 200th Street, Washington, IA 52353 319-321-0191 hhora@live.com 3/10/2026
+L349@P13: Democratic Brittany Erickson 709 S 3rd Ave, Washington, IA 52353 319-460-0460 BrittanyErickson@be4iowa.com 3/11/2026
+L350@P13: State Representative District 93 Republican Gary M. Mohr 4755 School House Road, Bettendorf, IA 52722 563-332-8377 gary.mohr@legis.iowa.gov 2/23/2026
+L351@P13: Democratic Keith Soko 3842 Lexington Ct, Bettendorf, IA 52722 563-726-1569 sokokeithj@gmail.com 2/27/2026
+L352@P13: State Representative District 94 Republican Mike Vondran 4401 Fairhaven Court, Davenport, IA 52807 563-650-6555 mikev@tagteamagency.com 2/23/2026
+L353@P13: Democratic Karen Roebuck 2709 E 37th Street, Davenport, IA 52807 563-676-4746 kroebuck777@gmail.com 7/1/2026
+L354@P13: State Representative District 95 Republican Taylor Collins 402 Southwind Drive, Mediapolis, IA 52637 309-255-5284 taylorcollinsia@gmail.com 2/23/2026
+L355@P13: Democratic Carrie Trevino 23828 110th Street, Columbus Junction, IA 52738 319-512-0546 carrieiowaforward@gmail.com 7/15/2026
+L356@P13: State Representative District 96 Republican Mark Cisneros 203 Colorado St #710, Muscatine, IA 52751 563-506-3673 cisnerosforiowa@gmail.com 2/25/2026
+L357@P13: Democratic Nick Salazar 508 E 11th Street, Muscatine, IA 52761 563-506-2813 nicksalazar62@gmail.com 3/5/2026
+L358@P13: State Representative District 97 Republican Charlie Helmick 2506 Elm Street, Davenport, IA 52803 931-319-3389 helmick4house@outlook.com 7/8/2026
+L359@P13: Democratic Adam Peters 2708 Jefferson Ave, Davenport, IA 52803 563-370-4339 adam4iowa@gmail.com 3/11/2026
+L360@P13: State Representative District 98 Republican Nathan Ramker PO Box 367, Blue Grass, IA 52726 563-528-5625 ramkerforIowans@gmail.com 3/5/2026
+L361@P13: Democratic Andrew Fitzgerald 2636 N Fillmore St, Davenport, IA 52804 563-940-5107 Andrewforiowa@gmail.com 2/23/2026
+L362@P13: State Representative District 99 Republican Matthew Rinker 1539 Winchester Dr, Burlington, IA 52601 319-750-5156 rinkerforiowa@gmail.com 3/12/2026
+L363@P13: Democratic Jennifer Kirkman 706 Jefferson Street, Burlington, IA 52601 319-321-4489 kirkmanforiowa@gmail.com 2/24/2026
+L364@P13: State Representative District 100 Republican Blaine Watkins 2104 204th Ave, Donnellson, IA 52625 319-470-5928 Watkinsforiowa@gmail.com 3/2/2026
+L365@P13: Democratic Matthew Mohrfeld 2127 Avenue H, Fort Madison, IA 52627 319-470-0937 matt4district100@gmail.com 3/3/2026
+L366@P13: Filing period for federal and state offices for NPPO and petition candidates: February 23 - June 2 at 5:00 p.m.
+L367@P13: Ballot vacancies occuring after the Primary Election may be filled by convention until August 19 at 5:00 p.m.
+L368@P13: Last Updated
+L369@P13: 8/19/2026 1:36 PM

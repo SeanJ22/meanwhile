@@ -4,7 +4,7 @@ import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 import { recordRecentZip } from "@/hooks/use-recent-zips";
 import type { ZctaCentroid } from "@/lib/geo/zcta-core";
-import { lookupReaderZip } from "@/lib/reader/zip";
+import { lookupReaderZip, readyReaderZip } from "@/lib/reader/zip";
 import {
   commitStorageWrite,
   publishToListeners,
@@ -82,6 +82,11 @@ function getSnapshot(): LocationSnapshot {
   const raw = readZipChoice();
   if (raw !== cachedRaw) {
     cachedRaw = raw;
+    const zip = zipOf(raw), ready = zip ? readyReaderZip(zip) : undefined;
+    if (ready) {
+      cachedSnapshot = { restored: true, location: ready };
+      return cachedSnapshot;
+    }
     cachedSnapshot = PENDING;
     void resolveStoredZip(raw).then(location => {
       if (cachedRaw !== raw) return;

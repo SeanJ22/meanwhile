@@ -1,0 +1,458 @@
+[
+  {
+    "url": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "label": "Back to top"
+  },
+  {
+    "url": "https://vt.ncsbe.gov/RegLkup",
+    "label": "Voter Search"
+  },
+  {
+    "url": "https://www.ncsbe.gov/faq-letters-voters-about-unvalidated-id-numbers",
+    "label": "Read More"
+  },
+  {
+    "url": "https://www.ncsbe.gov/registering/hosting-voter-registration-drives",
+    "label": "Hosting Voter Registration Drives"
+  },
+  {
+    "url": "https://www.ncsbe.gov/registering/national-voter-registration-act-nvra",
+    "label": "National Voter Registration Act (NVRA)"
+  },
+  {
+    "url": "https://www.ncsbe.gov/registering/faq-voter-registration",
+    "label": "FAQ: Voter Registration"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting",
+    "label": "Voting"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/upcoming-election",
+    "label": "Upcoming Election"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/your-voter-record",
+    "label": "Your Voter Record"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/voter-id",
+    "label": "Voter ID"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/vote-early-person",
+    "label": "Vote Early in Person"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/vote-person-election-day",
+    "label": "Vote in Person on Election Day"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/vote-mail",
+    "label": "Vote By Mail"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/military-and-overseas-voting",
+    "label": "Military and Overseas Voting"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/help-voters-disabilities",
+    "label": "Help for Voters with Disabilities"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/provisional-voting",
+    "label": "Provisional Voting"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/voter-tools-and-forms",
+    "label": "View all tools and forms"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/voting-technology",
+    "label": "Voting Technology"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/vote-honor-veteran",
+    "label": "Vote in Honor of a Veteran"
+  },
+  {
+    "url": "https://www.ncsbe.gov/results-data/voter-registration-data",
+    "label": "Voter Registration Data"
+  },
+  {
+    "url": "https://www.ncsbe.gov/results-data/voter-turnout",
+    "label": "Voter Turnout"
+  },
+  {
+    "url": "https://www.ncsbe.gov/results-data/voter-history-data",
+    "label": "Voter History Data"
+  },
+  {
+    "url": "https://www.ncsbe.gov/results-data/voting-maps-redistricting",
+    "label": "Voting Maps/Redistricting"
+  },
+  {
+    "url": "https://www.ncsbe.gov/about-elections/county-boards-elections",
+    "label": "County Boards of Elections"
+  },
+  {
+    "url": "https://www.ncsbe.gov/about-elections/maintaining-accurate-voter-rolls",
+    "label": "Maintaining Accurate Voter Rolls"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
+    "label": "2026 November 3 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_November_2026.pdf",
+    "label": "2026 November 3 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_03_03/polling_place_20260303.csv",
+    "label": "2026 March 3 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_March_2026.pdf",
+    "label": "2026 March 3 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2025_11_04/polling_place_20251104.csv",
+    "label": "2025 Nov 4 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2025/Early_Voting_Site_list_November2025.pdf",
+    "label": "2025 Nov 4 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2025_10_07/polling_place_20251007.csv",
+    "label": "2025 Oct 7 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2025/Early_Voting_Site_list_October2025.pdf",
+    "label": "2025 Oct 7 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2025_09_09/polling_place_20250909.csv",
+    "label": "2025 Sep 9 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2025/Early_Voting_Site_list_September2025.pdf",
+    "label": "2025 Sep 9 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2024_11_05/polling_place_20241105.csv",
+    "label": "2024 Nov 5 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2024/Early-Voting-Site-List-2024-General.pdf",
+    "label": "2024 Nov 5 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2024_05_14/polling_place_20240514.csv",
+    "label": "2024 May 14 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2024/Early%20Voting%20Schedules%20-%20May%2014%2C%202024%20Second%20Primary%20Election.pdf",
+    "label": "2024 May 14 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2024_03_05/polling_place_20240305.csv",
+    "label": "2024 Mar 05 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2024/Early%20Voting%20Schedules%20-%20March%205%2C%202024%20Primary%20Election.pdf",
+    "label": "2024 Mar 05 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2023_11_07/polling_place_20231107.csv",
+    "label": "2023 Nov 07 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2023/One-Stop%20Site%20List_November2023.pdf",
+    "label": "2023 Nov 07 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2023_10_10/polling_place_20231010.csv",
+    "label": "2023 Oct 10 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2023/One-Stop%20Site%20List_October2023.pdf",
+    "label": "2023 Oct 10 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2023_09_12/polling_place_20230912.csv",
+    "label": "2023 Sep 12 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2023/One-Stop%20Site%20List_September2023.pdf",
+    "label": "2023 Sep 12 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2022_11_08/polling_place_20221108.csv",
+    "label": "2022 Nov 08 Election - Active Election Day Polling Places (XLSX)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2022/One-Stop%20Voting%20Sites%20for%20the%20November%208%2C%202022%20Election.pdf",
+    "label": "2022 Nov 08 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2022_07_26/polling_place_20220726.csv",
+    "label": "2022 Jul 26 Election - Active Election Day Polling Places (XLSX)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2022/One-Stop%20Voting%20Sites%20for%20the%20July%2026%2C%202022%20Election.pdf",
+    "label": "2022 Jul 26 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2022_05_17/polling_place_20220517.csv",
+    "label": "2022 May 17 Election - Active Election Day Polling Places (XLSX)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2022/One-Stop%20Site%20List%20-%20May%202022%20Election.pdf",
+    "label": "2022 May 17 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/Requests/2021/2021-11-1%20active_polling_places_20211102.xlsx",
+    "label": "Election Day"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2021/One-Stop%20Site%20List%20-%20November%202021%20Election.pdf",
+    "label": "2021 Nov 02 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/Requests/2021/2021-09-29%20active_polling_places_20211005.xlsx",
+    "label": "2021 Oct 05 Election - Active Election Day Polling Places (XLSX)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2021/One-Stop%20Site%20List%20-%20October%202021%20Election.pdf",
+    "label": "2021 Oct 05 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2020_11_03/polling_place_20201103.csv",
+    "label": "2020 Nov 03 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2020/One-Stop%20Site%20List%20-%20November%202020%20General%20Election.pdf",
+    "label": "2020 Nov 03 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2020_06_23/polling_place_20200623.csv",
+    "label": "2020 Jun 23 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2020/One-Stop%20Site%20List%20-%20June%202020%20Election.pdf",
+    "label": "2020 Jun 23 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2020_03_03/polling_place_20200303.csv",
+    "label": "2020 Mar 03 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2020/One-Stop%20Site%20List%20-%20March%202020%20Primary%20Election.pdf",
+    "label": "2020 Mar 03 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2019_11_05/polling_place_20191105.csv",
+    "label": "2019 Nov 05 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2019/one-stop%20early%20voting_sites_hours_November2019.pdf",
+    "label": "2019 Nov 05 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2019_10_08/polling_place_20191008.csv",
+    "label": "2019 Oct 08 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2019/One-stop_sites_October_2019.pdf",
+    "label": "2019 Oct 08 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2019_09_10/polling_place_20190910.csv",
+    "label": "2019 Sep 10 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2019/One-Stop_Sites_September2019.pdf",
+    "label": "2019 Sep 10 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2019_07_09/polling_place_20190709.csv",
+    "label": "2019 Jul 09 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2019/One-Stop%20Site%20List_CD3_SecondPrimary_2019.pdf",
+    "label": "2019 Jul 09 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2019_05_14/polling_place_20190514.csv",
+    "label": "2019 May 14 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2019/One-Stop_Sites_CD9_Primary_05142019.pdf",
+    "label": "2019 May 14 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2019_04_30/polling_place_20190430.csv",
+    "label": "2019 Apr 03 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2019/One-Stop_Sites_CD3_Primary_04302019.pdf",
+    "label": "2019 Apr 03 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2018_11_06/polling_place_20181106.csv",
+    "label": "2018 Nov 06 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2018/One-Stop%20Site%20List_Nov_6_2018_updated_10162018.pdf",
+    "label": "2018 Nov 06 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2018_05_08/polling_place_20180508.csv",
+    "label": "2018 May 08 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2018/One-Stop%20Site%20List_May_8_2018_updated_04132018.pdf",
+    "label": "2018 May 08 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2017_11_07/polling_place_20171107.csv",
+    "label": "2017 Nov 07 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2017/November/One_Stop_Site_List_November_102617.pdf",
+    "label": "2017 Nov 07 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2017_10_10/polling_place_20171010.csv",
+    "label": "2017 Oct 10 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2017/October/One_Stop_Sites_Oct_2017.pdf",
+    "label": "2017 Oct 10 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2017_09_12/polling_place_20170912.csv",
+    "label": "2017 Sep 12 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2016_11_08/polling_place_20161108.csv",
+    "label": "2016 Nov 08 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2016/2016_General_OneStop_Sites_Hours.pdf",
+    "label": "2016 Nov 08 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2016_06_07/polling_place_20160607.csv",
+    "label": "2016 Jun 07 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2016/One-StopSiteList_2016-06-07.xls",
+    "label": "2016 Jun 07 Election - Early Voting Sites (Excel)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2016_03_15/polling_place_20160315.csv",
+    "label": "2016 Mar 15 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2016/One-StopSiteList_2016-03-15.xls",
+    "label": "2016 Mar 15 Election - Early Voting Sites (Excel)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2015_11_03/polling_place_20151103.csv",
+    "label": "2015 Nov 03 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2015/One-StopSiteList_2015-11-03.pdf",
+    "label": "2015 Nov 03 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2015_10_06/polling_place_20151006.csv",
+    "label": "2015 Oct 06 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2015/One-StopSiteList_2015-10-06.pdf",
+    "label": "2015 Oct 06 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2015_09_15/polling_place_20150915.csv",
+    "label": "2015 Sep 15 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2015/One-StopSiteList_2015-09-15.pdf",
+    "label": "2015 Sep 15 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2014_11_04/polling_place_20141104.csv",
+    "label": "Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2014/OneStopVotingSiteList2014-11-04.pdf",
+    "label": "2014 Nov 04 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2014_05_06/polling_place_20140506.csv",
+    "label": "2014 May 06 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2014/onestop_schedule_2014-05-06.pdf",
+    "label": "2014 May 06 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2012_11_06/polling_place_20121106.csv",
+    "label": "2012 Nov 06 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2012/One_Stop_Voting_Site_List_Nov2012.pdf",
+    "label": "2012 Nov 06 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2012/May2012PrimaryOneStopSites.pdf",
+    "label": "2012 May 08 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2010_11_02/polling_place_20101102.csv",
+    "label": "2010 Nov 02 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2010/onestop_schedule_nov2010.pdf",
+    "label": "2010 Nov 02 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2010/onestop_schedule_may2010.pdf",
+    "label": "2010 May 04 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2009_11_03/polling_place_20091103.csv",
+    "label": "2009 Nov 03 Election - Election Day Polling Places (CSV)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2008_11_04/polling_place_20081104.csv",
+    "label": "2008 Nov 04 Election - Election Day Polling Places CSV"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2008/One_Stop_Voting_Site_List_Nov_2008.pdf",
+    "label": "2008 Nov 4 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2008/One_Stop_Voting_site_List_May_2008.pdf",
+    "label": "2008 May 06 Election - Early Voting Sites (PDF)"
+  },
+  {
+    "url": "https://www.ncsbe.gov/about-elections/county-boards-elections/resources-county-boards",
+    "label": "Resources for County Boards"
+  },
+  {
+    "url": "https://vt.ncsbe.gov/BOEInfo",
+    "label": "County Boards of Elections Search"
+  },
+  {
+    "url": "https://northcarolina.ballottrax.net/voter",
+    "label": "BallotTrax (Absentee Ballot Tracking)"
+  },
+  {
+    "url": "https://vt.ncsbe.gov/RegStat",
+    "label": "Voter Registration Statistics"
+  }
+]

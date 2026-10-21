@@ -4,9 +4,9 @@ import test from "node:test";
 import centroidFile from "../lib/geo/zcta-centroids.json" with { type: "json" };
 import postalFile from "../lib/geo/postal-zips.json" with { type: "json" };
 import { lookupZcta, resolveZip, COVERAGE_IS_COMPLETE, CENTROID_SOURCE } from "../lib/geo/zcta.ts";
-import { lookupIn, resolveIn } from "../lib/geo/zcta-core.ts";
+import { lookupIn, resolveIn, type CentroidTable } from "../lib/geo/zcta-core.ts";
 import { resolveReaderZip } from "../lib/reader/zip.ts";
-import { GET as zipLocation } from "../app/api/location/zip/route.ts";
+import { readerZipStarts } from "../lib/geo/reader-zip-start.ts";
 import { postalAreaMessage, ZIP_AREA_MISSING, type PostalTable } from "../lib/geo/postal-core.ts";
 import { postalTable } from "../lib/geo/postal.ts";
 import { assertGovernmentZipCoverage, parseGazetteer, parseGeoNames, parsePostalTypes } from "../lib/geo/zip-source.ts";
@@ -51,7 +51,13 @@ test("ZIP-01: every government-index ZIP resolves in the complete 2020 ZCTA tabl
 });
 
 test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each sample's location and postal type", async (t) => {
-  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => zipLocation(input instanceof Request ? input : new Request(new URL(input, "http://localhost"))));
+  const shards = readerZipStarts(centroidFile.centroids as unknown as CentroidTable, postalFile.zips as unknown as PostalTable);
+  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
+    const requestUrl = new URL(input instanceof Request ? input.url : input, "http://localhost");
+    const match = /^\/geo\/reader-zips\/(\d{2})\.json$/.exec(requestUrl.pathname);
+    assert.ok(match, requestUrl.pathname);
+    return Response.json(shards[Number(match[1])]);
+  });
   const centroids = parseGazetteer(fixture("gazetteer.tsv"));
   const geonames = parseGeoNames(fixture("geonames.tsv"));
   const types = parsePostalTypes(fixture("postal-types.csv"));
@@ -61,7 +67,7 @@ test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each samp
     assert.deepEqual(table[zip], (postalFile.zips as unknown as PostalTable)[zip], zip);
     const sync = resolveZip(zip), asyncResult = await resolveReaderZip(zip);
     assert.ok(sync.ok, zip);
-    assert.deepEqual(asyncResult, sync, "resident server table and browser RPC agree");
+    assert.deepEqual(asyncResult, sync, "resident server table and browser projection agree");
     assert.deepEqual(lookupZcta(zip), sync.centroid);
   }
   assert.equal(table["73960"][2], "po-box");

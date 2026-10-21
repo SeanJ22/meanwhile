@@ -51,7 +51,7 @@ test("equivalent state and place records reuse office work, while changed record
     assert.equal(await page.evaluate(() => (window as unknown as {officePublications:number}).officePublications), publications, "unchanged office results keep their references and do not republish");
     await page.getByRole("button", { name: "Change", exact: true }).click();
     await page.waitForFunction(() => JSON.parse(document.querySelector("#answer")!.textContent!).pins.pins[0]?.name === "Updated name");
-    assert.equal(requests.length, 3, "a changed owner still resolves and publishes its current office");
+    assert.equal(requests.length, 2, "a changed owner publishes its current name while reusing the same recently located address");
     assert.deepEqual(errors, []);
   } finally { await browser?.close(); await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())); }
 });

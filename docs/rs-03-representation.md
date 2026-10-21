@@ -29,60 +29,62 @@ On the replacement build, AZ answers **1.569 / 0.175 s** and NH **1.602 / 0.327 
 
 ### Every state and one county in each
 
+The table is refreshed from the merged release-62 build `KWnb5_0hvrexIUj6S3wlj`, October 20, **7:34–7:37 AM ET**. All 200 requests again return HTTP 200, a nonempty label, metadataStatus HELD and public/durable cache headers. Every first/repeat pair matches. The maximum HTTP time is **1.850 s**; including process startup plus the first request, **2.322 s**. The captured production reader responses total **286,928,249 bytes** (4,547 direct selection/proof bytes and 286,923,702 server bytes). Together with the original captured 286,961,466 bytes, both metadata proofs account for 573,889,715 recorded bytes. The page report includes these in the combined read total.
+
 Times below are complete HTTP seconds. The whole-state ID is `ocd-division/country:us/state:<lowercase state code>`; append the county suffix for its county ID. Process startup is separate above and is included in the under-three-second check.
 
 | State | County suffix | State first | State repeat | County first | County repeat |
 | --- | --- | ---: | ---: | ---: | ---: |
-| AK | county:aleutians_east | 1.116 | 0.114 | 0.872 | 0.138 |
-| AL | county:autauga | 0.882 | 0.146 | 1.072 | 0.154 |
-| AR | county:arkansas | 0.964 | 0.311 | 0.856 | 0.160 |
-| AZ | county:apache | 1.569 | 0.175 | 1.376 | 0.169 |
-| CA | county:alameda | 1.076 | 0.169 | 1.050 | 0.184 |
-| CO | county:adams | 0.803 | 0.118 | 1.097 | 0.150 |
-| CT | county:capitol | 1.086 | 0.145 | 1.124 | 0.138 |
-| DE | county:kent | 1.050 | 0.156 | 1.606 | 0.287 |
-| FL | county:alachua | 1.102 | 0.249 | 1.141 | 0.267 |
-| GA | county:appling | 1.250 | 0.205 | 1.286 | 0.229 |
-| HI | county:hawaii | 0.949 | 0.127 | 0.791 | 0.138 |
-| IA | county:adair | 1.050 | 0.188 | 0.910 | 0.265 |
-| ID | county:ada | 1.304 | 0.268 | 1.139 | 0.442 |
-| IL | county:adams | 1.129 | 0.186 | 0.994 | 0.220 |
-| IN | county:adams | 1.026 | 0.179 | 0.807 | 0.306 |
-| KS | county:allen | 0.750 | 0.148 | 0.950 | 0.176 |
-| KY | county:adair | 0.807 | 0.131 | 1.087 | 0.150 |
-| LA | county:acadia | 1.098 | 0.127 | 0.921 | 0.177 |
-| MA | county:barnstable | 1.024 | 0.153 | 0.995 | 0.161 |
-| MD | county:allegany | 1.310 | 0.124 | 0.971 | 0.148 |
-| ME | county:androscoggin | 0.821 | 0.148 | 1.073 | 0.150 |
-| MI | county:alcona | 0.863 | 0.125 | 0.870 | 0.185 |
-| MN | county:aitkin | 0.874 | 0.151 | 0.900 | 0.181 |
-| MO | county:adair | 0.803 | 0.134 | 0.910 | 0.165 |
-| MS | county:adams | 0.840 | 0.185 | 0.846 | 0.155 |
-| MT | county:beaverhead | 0.984 | 0.156 | 0.860 | 0.279 |
-| NC | county:alamance | 0.812 | 0.142 | 1.072 | 0.200 |
-| ND | county:adams | 0.964 | 0.127 | 0.983 | 0.153 |
-| NE | county:adams | 0.743 | 0.113 | 0.898 | 0.144 |
-| NH | county:belknap | 1.602 | 0.327 | 1.553 | 0.331 |
-| NJ | county:atlantic | 1.127 | 0.196 | 1.107 | 0.267 |
-| NM | county:bernalillo | 1.029 | 0.123 | 1.136 | 0.150 |
-| NV | county:carson_city | 1.028 | 0.118 | 0.845 | 0.151 |
-| NY | county:albany | 0.988 | 0.193 | 0.985 | 0.207 |
-| OH | county:adams | 0.888 | 0.177 | 0.835 | 0.166 |
-| OK | county:adair | 0.882 | 0.126 | 0.864 | 0.144 |
-| OR | county:baker | 1.141 | 0.118 | 1.033 | 0.154 |
-| PA | county:adams | 1.032 | 0.228 | 1.466 | 0.301 |
-| RI | county:bristol | 0.893 | 0.116 | 1.029 | 0.147 |
-| SC | county:abbeville | 0.991 | 0.158 | 0.928 | 0.152 |
-| SD | county:aurora | 1.079 | 0.119 | 1.241 | 0.147 |
-| TN | county:anderson | 1.254 | 0.156 | 1.239 | 0.150 |
-| TX | county:anderson | 1.196 | 0.210 | 0.953 | 0.195 |
-| UT | county:beaver | 0.847 | 0.155 | 1.157 | 0.121 |
-| VA | county:accomack | 0.934 | 0.148 | 0.917 | 0.157 |
-| VT | county:addison | 1.095 | 0.118 | 1.013 | 0.136 |
-| WA | county:adams | 0.909 | 0.128 | 0.969 | 0.205 |
-| WI | county:adams | 1.202 | 0.126 | 0.984 | 0.147 |
-| WV | county:barbour | 0.885 | 0.177 | 1.077 | 0.128 |
-| WY | county:albany | 0.931 | 0.108 | 0.906 | 0.115 |
+| AK | county:aleutians_east | 0.868 | 0.129 | 1.088 | 0.210 |
+| AL | county:autauga | 1.035 | 0.297 | 0.916 | 0.156 |
+| AR | county:arkansas | 0.919 | 0.142 | 1.121 | 0.208 |
+| AZ | county:apache | 1.652 | 0.265 | 1.288 | 0.194 |
+| CA | county:alameda | 0.980 | 0.462 | 1.072 | 0.254 |
+| CO | county:adams | 1.108 | 0.250 | 0.923 | 0.195 |
+| CT | county:capitol | 1.048 | 0.140 | 1.103 | 0.172 |
+| DE | county:kent | 1.135 | 0.158 | 1.413 | 0.221 |
+| FL | county:alachua | 1.808 | 0.421 | 1.850 | 0.428 |
+| GA | county:appling | 1.513 | 0.282 | 1.379 | 0.332 |
+| HI | county:hawaii | 0.990 | 0.228 | 1.039 | 0.303 |
+| IA | county:adair | 1.139 | 0.399 | 0.966 | 0.212 |
+| ID | county:ada | 1.093 | 0.333 | 1.372 | 0.311 |
+| IL | county:adams | 1.362 | 0.225 | 1.253 | 0.222 |
+| IN | county:adams | 1.250 | 0.165 | 1.151 | 0.185 |
+| KS | county:allen | 0.970 | 0.164 | 1.011 | 0.203 |
+| KY | county:adair | 0.956 | 0.152 | 1.058 | 0.183 |
+| LA | county:acadia | 0.905 | 0.140 | 1.049 | 0.154 |
+| MA | county:barnstable | 1.029 | 0.197 | 1.050 | 0.183 |
+| MD | county:allegany | 0.806 | 0.140 | 1.168 | 0.161 |
+| ME | county:androscoggin | 1.187 | 0.147 | 1.197 | 0.169 |
+| MI | county:alcona | 0.955 | 0.141 | 0.891 | 0.186 |
+| MN | county:aitkin | 1.270 | 0.139 | 1.292 | 0.180 |
+| MO | county:adair | 0.869 | 0.254 | 0.898 | 0.181 |
+| MS | county:adams | 1.169 | 0.140 | 1.001 | 0.150 |
+| MT | county:beaverhead | 0.919 | 0.160 | 1.161 | 0.160 |
+| NC | county:alamance | 1.146 | 0.150 | 0.902 | 0.343 |
+| ND | county:adams | 0.857 | 0.128 | 1.151 | 0.158 |
+| NE | county:adams | 0.808 | 0.122 | 0.925 | 0.176 |
+| NH | county:belknap | 1.587 | 0.536 | 1.141 | 0.430 |
+| NJ | county:atlantic | 1.335 | 0.197 | 1.242 | 0.229 |
+| NM | county:bernalillo | 0.910 | 0.117 | 0.936 | 0.136 |
+| NV | county:carson_city | 0.851 | 0.115 | 1.094 | 0.147 |
+| NY | county:albany | 0.851 | 0.190 | 1.000 | 0.204 |
+| OH | county:adams | 1.044 | 0.175 | 0.832 | 0.228 |
+| OK | county:adair | 0.867 | 0.210 | 0.928 | 0.150 |
+| OR | county:baker | 0.753 | 0.120 | 0.950 | 0.149 |
+| PA | county:adams | 1.172 | 0.177 | 0.987 | 0.215 |
+| RI | county:bristol | 0.918 | 0.110 | 0.938 | 0.122 |
+| SC | county:abbeville | 1.241 | 0.157 | 0.875 | 0.244 |
+| SD | county:aurora | 0.879 | 0.134 | 1.120 | 0.134 |
+| TN | county:anderson | 0.945 | 0.157 | 0.802 | 0.133 |
+| TX | county:anderson | 0.994 | 0.252 | 1.052 | 0.253 |
+| UT | county:beaver | 1.256 | 0.113 | 0.912 | 0.354 |
+| VA | county:accomack | 0.889 | 0.134 | 1.087 | 0.161 |
+| VT | county:addison | 1.311 | 0.129 | 1.083 | 0.162 |
+| WA | county:adams | 1.008 | 0.136 | 0.919 | 0.169 |
+| WI | county:adams | 1.188 | 0.130 | 1.118 | 0.164 |
+| WV | county:barbour | 1.006 | 0.248 | 1.076 | 0.172 |
+| WY | county:albany | 0.886 | 0.106 | 0.876 | 0.121 |
 
 ## Verification and River handoff
 

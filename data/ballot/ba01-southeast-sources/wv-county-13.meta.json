@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hampshire%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hampshire%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.701857+00:00",
+  "rawHash": "4bf910d5c06870d11999a7b042f15992e3ff32089708a8d06603825d8590c8f4",
+  "httpStatus": 200,
+  "bytes": 905546,
+  "extractedTextHash": "12630ab4d66e1791f9007e47eec5a9afcc80767ca861be912ace67ab400ac1da",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

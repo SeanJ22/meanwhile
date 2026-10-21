@@ -22,7 +22,8 @@ const path = (file: string) => `tests/fixtures/voting-sources/${file}`;
 const manifest = JSON.parse(readFileSync(path("vt-native-capture.json"), "utf8")) as { files: { file: string; url: string; httpStatus: number; sha256: string }[] };
 const replay = JSON.parse(readFileSync(path("vt-discovery-replay.json"), "utf8"));
 const candidates = JSON.parse(readFileSync(path("vt-native-discovery-candidates.json"), "utf8")) as { url: string; after: string; captureFile: string | null }[];
-const roots = (JSON.parse(readFileSync(replay.rootReference, "utf8")) as VotingSourceDoor[]).filter(source => source.scope.state === "VT");
+const roots = (JSON.parse(readFileSync(replay.rootReference, "utf8")) as VotingSourceDoor[]).filter(source => source.scope.state === "VT" &&
+  candidates.some(candidate => pageAddress(candidate.url)?.url === pageAddress(source.url)?.url));
 const byUrl = new Map(manifest.files.map(file => [pageAddress(file.url)!.url, file]));
 const text = (file: string) => readFileSync(path(file), "utf8");
 

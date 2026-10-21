@@ -145,7 +145,7 @@ test("public-office geocoding shares in-flight reads, rejects missing/out-of-ran
     assert.deepEqual(results, [{ lat: 33.4, lng: -112.1 }, { lat: 33.4, lng: -112.1 }]);
     assert.equal(addresses.length, 1);
     await officePointFor("fixture:good");
-    assert.equal(addresses.length, 2, "completed office lookups do not retain another place in memory");
+    assert.equal(addresses.length, 1, "the same public office's recent point is shared within the bounded thirty-second window");
     assert.equal(await officePointFor("fixture:invalid"), null);
     assert.equal(await officePointFor("fixture:miss"), null);
     assert.equal(await officePointFor("fixture:miss"), null);

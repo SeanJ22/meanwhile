@@ -23,6 +23,7 @@ async function acquired(name: string, slug: string, at = AT) {
   const release = await acquirePresidentPeople({ store, locks, signal: new AbortController().signal, acquire: acquireKnownRelease, now: () => at,
     fetchImpl: (async resource => {
       const url = String(resource); requests.push(url);
+      if (url === profileUrl("vice-president")) throw new Error("Vice President page unavailable in this President-only fixture");
       assert.ok([ADMINISTRATION_URL, profileUrl(slug)].includes(url));
       return new Response(url === ADMINISTRATION_URL ? indexHtml(name, slug) : profileHtml(name), { headers: { "content-type": "text/html" } });
     }) as typeof fetch });
@@ -40,7 +41,7 @@ test("the standing national command uses the existing executive source and exact
 
 test("acquisition derives the current President from the official index and rejects unrelated or archived profiles", async () => {
   const release = await acquired("Jordan Example", "jordan-example");
-  assert.deepEqual(release.requests, [ADMINISTRATION_URL, profileUrl("jordan-example")]);
+  assert.deepEqual(release.requests, [ADMINISTRATION_URL, profileUrl("jordan-example"), profileUrl("vice-president")]);
   assert.equal(release.roster.officeholders[0].name, "Jordan Example");
   assert.equal(release.roster.officeholders[0].officeTitle, "President of the United States");
   assert.equal(release.roster.officeholders[0].level, "FEDERAL");
@@ -66,7 +67,7 @@ test("verified President facts publish through the standing store, retain the pr
   assert.equal(read.value?.roster.officeholders[0].name, "Jordan Example");
   const invalid = { ...first, roster: { ...first.roster, officeholders: first.roster.officeholders.map(person => ({ ...person, name: "Invented Person" })) } };
   const failed = await publish(invalid, "2026-10-12T00:01:00.000Z");
-  assert.equal(failed.outcome.promoted, null);
+  assert.ok(failed.candidate.excludedFacts?.some(fact => fact.code === "NATIONAL_OFFICIAL_UNVERIFIED"));
   assert.equal((await readPeopleSourceProjection("US", SOURCE, { store, now: AT })).value?.roster.officeholders[0].name, "Jordan Example");
   const nextAt = "2026-10-14T00:00:00.000Z", next = await acquired("Alex Example", "alex-example", nextAt);
   const changed = await publish(next, nextAt);

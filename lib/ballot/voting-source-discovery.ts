@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { classifySourceContent, sourceBody, sourceLinks, SOURCE_FAMILIES, type SourceDisposition } from "../doors/source-content.ts";
 import { pageAddress } from "../doors/page-doors.ts";
-import { extractTextLayer } from "../extract/text-layer.ts";
+import { votingPdfText } from "./voting-source-extraction.ts";
+import { decodeVotingBytes, xlsxVotingTables } from "./voting-source-tables.ts";
 import type { SiteKind } from "./voting-sites.ts";
 import { fingerprintVotingPlatform } from "./voting-source-readers.ts";
 import { votingFetchSession } from "./voting-source-fetch.ts";
@@ -75,10 +76,11 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
       finalUrls.add(final);
       runtime.discoverySeen?.add(final);
       source.url = final;
-      text = new TextDecoder().decode(capture.bytes);
+      text = decodeVotingBytes(capture.bytes);
       if (/pdf/i.test(capture.contentType) || text.startsWith("%PDF")) {
-        const extracted = await extractTextLayer(new Uint8Array(capture.bytes), capture.url);
-        text = extracted.items.map(page => page.text).join(" ");
+        text = (await votingPdfText(capture.bytes, capture.url)).text;
+      } else if (capture.bytes[0] === 80 && capture.bytes[1] === 75) {
+        text = xlsxVotingTables(capture.bytes).flatMap(table => [table.headers.join(" "), ...table.rows.map(row => row.join(" "))]).join("\n");
       }
     } catch (error) {
       const disposition: SourceDisposition = { kind: "SKIP", family: null, recordClass: null, quote: "", belongs: false,
@@ -88,19 +90,27 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
       await runtime.onDiscoveredSource?.(observation);
       continue;
     }
-    let disposition = classifySourceContent({ url: source.url, text, contentType: capture.contentType,
+    // The shared classifier examines literal login inputs too. Restrict it to the public article
+    // so a site's unrelated footer form cannot hide an otherwise public election list.
+    const article = /html/i.test(capture.contentType) && /name=["']password["']|captcha/i.test(text) ? sourceBody(text) : null;
+    const classificationText = article ? `<h1>${article.title}</h1>${article.html}` : text;
+    let disposition = classifySourceContent({ url: source.url, text: classificationText, contentType: capture.contentType,
       names: [source.scope.name, source.publisher], owed: SOURCE_FAMILIES });
     if (source.boundaryLayer && isOfficialSource(source.url, source.officialLinkingPage)) disposition = {
       kind: "DOOR", family: "voting", recordClass: "VOTING_SITE", belongs: true,
       quote: source.title ?? "Precinct boundaries", reason: "The official election page links this precinct-boundary source" };
     const observation = { source, disposition, capture, linkingCaptures };
     sources.push(observation);
+    // Retain the source before publishing from it. A held document affects only this page.
+    if (await runtime.onDiscoveredSource?.(observation) === "HELD") {
+      skips.push({ url: source.url, reason: "Source document held for restricted evidence storage" });
+      continue;
+    }
     if (disposition.kind === "DOOR" && disposition.family === "voting") {
       doors.push(source);
       await runtime.onDiscoveredDoor?.(source, [...linkingCaptures, capture]);
     } else if (disposition.kind === "EVIDENCE") evidence.push(observation);
     else if (disposition.kind === "SKIP") skips.push({ url: source.url, reason: disposition.reason });
-    await runtime.onDiscoveredSource?.(observation);
     if (!/html/i.test(capture.contentType) && !/^\s*<(?:!doctype|html)/i.test(text)) continue;
     if (!disposition.belongs && pageAddress(source.url)?.url !== pageAddress(root.url)?.url) continue;
     const parentText = sourceBody(text).text;

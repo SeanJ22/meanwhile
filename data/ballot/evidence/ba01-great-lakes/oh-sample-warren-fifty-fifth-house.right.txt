@@ -1,0 +1,52 @@
+https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X
+Captured HTTP200 official November 3, 2026 sample ballot. Original PDF bytes saved as oh-sample-warren-fifty-fifth-house.pdf.gz. Numbered text is local pdftotext -layout output.
+L0:  nty, Ohio web site.
+L1:  OT
+L2:                          FRANKLIN CITY A 001
+L3:                                     Split 01
+L4:  For U.S. Senator
+L5:  (Unexpired term ending 1-3-2029)
+L6:  (Vote for not more than 1)
+L7:            Sherrod Brown
+L8:            Democratic
+L9:            Jon Husted
+L10:            Republican
+L11:            Greg Levy
+L12:            Other-party candidate
+L13: l e        William B. Redpath
+L14:            Libertarian
+L15:            Write-in
+L16:  For Representative to Congress
+L17:  (1st District)
+L18:  (Vote for not more than 1)
+L19:            Eric Conroy
+L20:            Republican
+L21:            Greg Landsman
+L22:            Democratic
+L23:            Nathan Weise
+L24:            Libertarian
+L25:  For State Senator
+L26:  (7th District)
+L27:  (Vote for not more than 1)
+L28:            Cara Jacob
+L29:            Democratic
+L30:            Zac Haines
+L31:            Republican
+L32:  For State Representative
+L33:  (55th District)
+L34:  (Vote for not more than 1)
+L35:            Paul Michael Kurtz
+L36:            Democratic
+L37:            Philip L. Pirdy
+L38:            Libertarian
+L39:            C. Michelle Teska
+L40:            Republican
+L41:  For Judge of the
+L42:  Court of Appeals
+L43:  (12th District)
+L44:  (Full term commencing 1-1-2027)
+L45:  (Vote for not more than 1)
+L46:            Matthew Byrne
+L47:            Republican
+L48:            Write-in
+L49:  1889769

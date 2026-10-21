@@ -3,13 +3,15 @@ import type { VotingExtraction } from "./voting-source-types.ts";
 
 export type VotingTable = { headers: string[]; rows: string[][]; title?: string; documentTitle?: string; documentText?: string; lastUpdated?: string };
 export function decodeVotingBytes(bytes: Uint8Array): string {
-  return new TextDecoder(bytes[0] === 0xff && bytes[1] === 0xfe ? "utf-16le" : bytes[0] === 0xfe && bytes[1] === 0xff ? "utf-16be" : "utf-8").decode(bytes);
+  return new TextDecoder(bytes[0] === 0xff && bytes[1] === 0xfe ? "utf-16le" : bytes[0] === 0xfe && bytes[1] === 0xff ? "utf-16be" : "utf-8").decode(bytes).replace(/\u0000/g, "");
 }
 export function sourceText(value: string): string {
   return value.replace(/<br\s*\/?\s*>/gi, "\n").replace(/<[^>]+>/g, " ")
     .replace(/&#x([a-f0-9]+);/gi, (_, n: string) => String.fromCodePoint(parseInt(n, 16)))
     .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)))
     .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;|&#39;/g, "'")
+    .replace(/&([a-z])(acute|grave|circ|tilde|uml|cedil);/gi, (_, letter: string, accent: string) =>
+      (letter + ({ acute: "\u0301", grave: "\u0300", circ: "\u0302", tilde: "\u0303", uml: "\u0308", cedil: "\u0327" } as Record<string, string>)[accent.toLowerCase()]).normalize("NFC"))
     .replace(/[\t ]+/g, " ").replace(/ *\n */g, "\n").trim();
 }
 export function delimitedVotingRows(text: string, delimiter = ","): string[][] {
@@ -71,26 +73,39 @@ export function htmlVotingTables(html: string): VotingTable[] {
 }
 
 /** XLSX is a ZIP of XML. Read the central directory, including data-descriptor ZIPs. */
-function workbookFiles(bytes: Uint8Array): Map<string, string> {
+function votingZipFiles(bytes: Uint8Array, include: (path: string) => boolean): Map<string, Uint8Array> {
   const zip = Buffer.from(bytes); let end = -1;
   for (let at = zip.length - 22; at >= Math.max(0, zip.length - 65557); at--) if (zip.readUInt32LE(at) === 0x06054b50) { end = at; break; }
   if (end < 0) throw new Error("Spreadsheet ZIP directory is missing");
   const count = zip.readUInt16LE(end + 10); let at = zip.readUInt32LE(end + 16);
-  const files = new Map<string, string>();
+  const files = new Map<string, Uint8Array>();
   for (let n = 0; n < count; n++) {
     if (zip.readUInt32LE(at) !== 0x02014b50) throw new Error("Spreadsheet ZIP directory is malformed");
     const method = zip.readUInt16LE(at + 10), size = zip.readUInt32LE(at + 20), inflatedSize = zip.readUInt32LE(at + 24);
     const nameLength = zip.readUInt16LE(at + 28), extraLength = zip.readUInt16LE(at + 30), commentLength = zip.readUInt16LE(at + 32), local = zip.readUInt32LE(at + 42);
     const name = zip.subarray(at + 46, at + 46 + nameLength).toString();
     at += 46 + nameLength + extraLength + commentLength;
-    if (!name.endsWith(".xml") && !name.endsWith(".rels")) continue;
-    if (inflatedSize > 64 * 1024 * 1024) throw new Error("Spreadsheet XML exceeds the document read limit");
+    if (!include(name)) continue;
+    if (inflatedSize > 64 * 1024 * 1024) throw new Error("Archive member exceeds the document read limit");
     const start = local + 30 + zip.readUInt16LE(local + 26) + zip.readUInt16LE(local + 28);
     const body = zip.subarray(start, start + size);
-    if (method !== 0 && method !== 8) throw new Error(`Unsupported spreadsheet compression ${method}`);
-    files.set(name, (method === 8 ? inflateRawSync(body, { maxOutputLength: 64 * 1024 * 1024 }) : body).toString("utf8"));
+    if (method !== 0 && method !== 8) throw new Error(`Unsupported archive compression ${method}`);
+    if (files.has(name)) throw new Error("Archive contains a duplicate member path");
+    files.set(name, method === 8 ? inflateRawSync(body, { maxOutputLength: 64 * 1024 * 1024 }) : body);
   }
   return files;
+}
+/** Read the publisher's named document inside its saved archive without a synthetic HTTP URL. */
+export function votingArchiveMember(bytes: Uint8Array, member: string): Uint8Array {
+  const file = votingZipFiles(bytes, path => path === member).get(member);
+  if (!file) throw new Error(`Published archive member is missing: ${member}`);
+  return file;
+}
+function workbookFiles(bytes: Uint8Array): Map<string, string> {
+  // SpreadsheetML permits a namespace prefix on elements. Keep namespaced
+  // attributes (notably r:id), and use element local names consistently.
+  return new Map([...votingZipFiles(bytes, name => name.endsWith(".xml") || name.endsWith(".rels"))]
+    .map(([name, body]) => [name, Buffer.from(body).toString("utf8").replace(/<(\/?)[A-Za-z_][\w.-]*:/g, "<$1")]));
 }
 function attribute(xml: string, name: string): string | undefined { return xml.match(new RegExp(`\\b${name}=["']([^"']*)["']`))?.[1]; }
 export function xlsxVotingTables(bytes: Uint8Array, config: VotingExtraction = {}): VotingTable[] {
@@ -103,10 +118,11 @@ export function xlsxVotingTables(bytes: Uint8Array, config: VotingExtraction = {
     const path = sheet.target.startsWith("/") ? sheet.target.slice(1) : `xl/${sheet.target}`;
     const xml = files.get(path); if (!xml) return [];
     const rows = [...xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)].map(r => {
-      const row: string[] = [];
+      const row: string[] = []; let nextIndex = 0;
       for (const cell of r[1]!.matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
-        const ref = attribute(cell[1]!, "r")?.match(/^[A-Z]+/)?.[0] ?? "A";
-        let index = 0; for (const char of ref) index = index * 26 + char.charCodeAt(0) - 64;
+        const ref = attribute(cell[1]!, "r")?.match(/^[A-Z]+/)?.[0];
+        let index = ref ? 0 : nextIndex + 1; for (const char of ref ?? "") index = index * 26 + char.charCodeAt(0) - 64;
+        nextIndex = index;
         const value = cell[2]?.match(/<v\b[^>]*>([\s\S]*?)<\/v>/)?.[1] ?? "";
         row[index - 1] = attribute(cell[1]!, "t") === "s" ? shared[Number(value)] ?? "" : sourceText(attribute(cell[1]!, "t") === "inlineStr" ? cell[2] ?? "" : value);
       }
@@ -132,7 +148,14 @@ export async function pdfVotingTables(bytes: Uint8Array, config: VotingExtractio
       const content = await (await doc.getPage(p)).getTextContent();
       const pageWords = content.items.filter(item => "str" in item).map(item => (item as { str: string }).str).join(" ");
       documentPages.push(pageWords);
-      if (p === 1) documentTitle = pageWords.match(/[^.]{0,80}(?:20\d{2}[^.]{0,60}(?:election|polling|voting)|(?:election|polling|voting)[^.]{0,60}20\d{2})/i)?.[0]?.trim();
+      if (p === 1) {
+        const headingItems = content.items.flatMap(item => "str" in item && item.str.trim()
+          ? [{ text: item.str, x: item.transform[4]!, y: item.transform[5]! }] : [])
+          .sort((a, b) => b.y - a.y || a.x - b.x);
+        const top = headingItems[0]?.y ?? 0;
+        const heading = headingItems.filter(item => item.y >= top - 72).map(item => item.text).join(" ");
+        documentTitle = heading.match(/[^.]{0,80}(?:20\d{2}[^.]{0,60}(?:election|polling|voting)|(?:election|polling|voting)[^.]{0,60}20\d{2})/i)?.[0]?.trim();
+      }
       lastUpdated ??= pageWords.match(/(?:last\s+)?updated[:\s]+([^;\n]{0,45}20\d{2})/i)?.[1]?.trim();
       const items = content.items.flatMap(item => {
         if (!("str" in item) || !item.str.trim()) return [];
@@ -140,6 +163,29 @@ export async function pdfVotingTables(bytes: Uint8Array, config: VotingExtractio
         if ((config.pdfTop !== undefined && y > config.pdfTop) || (config.pdfBottom !== undefined && y < config.pdfBottom)) return [];
         return [{ x: item.transform[4]!, y, width: item.width, text: item.str }];
       });
+      if (config.pdfBlocks) {
+        const block = config.pdfBlocks;
+        if (block.pageExclude && new RegExp(block.pageExclude, "i").test(pageWords)) continue;
+        const starts = items.filter(item => new RegExp(block.heading, "i").test(item.text.trim()));
+        for (const start of starts) {
+          const end = items.filter(item => item.y < start.y && new RegExp(block.end, "i").test(item.text.trim())).sort((a, b) => b.y - a.y)[0];
+          if (!end) throw new Error("Published PDF location block has no closing section heading");
+          const columns = Object.entries(block.columns).map(([name, pattern]) => {
+            const printed = items.find(item => Math.abs(item.y - start.y) < 16 && new RegExp(pattern, "i").test(item.text.trim()));
+            if (!printed) throw new Error(`Published PDF location block is missing its ${name} heading`);
+            return { name, center: printed.x + printed.width / 2 };
+          });
+          const cells = columns.map(() => "");
+          for (const item of items.filter(item => item.y < start.y - 3 && item.y > end.y + 3).sort((a, b) => b.y - a.y || a.x - b.x)) {
+            const center = item.x + item.width / 2;
+            let nearest = 0;
+            for (let at = 1; at < columns.length; at++) if (Math.abs(center - columns[at]!.center) < Math.abs(center - columns[nearest]!.center)) nearest = at;
+            cells[nearest] = `${cells[nearest]} ${item.text}`.trim();
+          }
+          allRows.push(cells);
+        }
+        continue;
+      }
       if (config.pdfCenteredRecords && config.pdfColumns?.length && config.pdfRecordStart) {
         const colIndex = config.pdfColumns.findIndex(c => c.name === config.pdfRecordStart!.column);
         const start = new RegExp(config.pdfRecordStart.pattern);
@@ -167,7 +213,9 @@ export async function pdfVotingTables(bytes: Uint8Array, config: VotingExtractio
       });
       allRows.push(...rows);
     }
-    if (config.pdfColumns?.length && config.pdfRecordStart) {
+    if (config.pdfBlocks) {
+      tables.push({ headers: Object.keys(config.pdfBlocks.columns), rows: allRows, documentTitle, documentText: documentPages.join(" "), lastUpdated });
+    } else if (config.pdfColumns?.length && config.pdfRecordStart) {
       const index = config.pdfColumns.findIndex(c => c.name === config.pdfRecordStart!.column);
       const start = new RegExp(config.pdfRecordStart.pattern);
       const records: string[][] = [];

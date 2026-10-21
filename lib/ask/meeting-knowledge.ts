@@ -94,10 +94,10 @@ export function minutesSummaryEvidenceFor(bodyId: string, meetingId: string, que
 }
 
 /** Standing rules use the same exact-body selector as the meeting panel. */
-export function commentAccessEvidenceFor(bodyId: string, ocdId: string | null, bodyName: string) {
+export function commentAccessEvidenceFor(bodyId: string, ocdId: string | null, bodyName: string, projection?: Parameters<typeof commentAccessFor>[3]) {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
-  const access = commentAccessFor(ocdId, bodyName, bodyId);
+  const access = commentAccessFor(ocdId, bodyName, bodyId, projection);
   if (!access) return { records, gaps };
   if (access.commentPeriod === "UNKNOWN") {
     gaps.push({ whose: "OURS", statement: `We have not established ${bodyName}'s standing public-comment rules; its own page is ${access.sourceUrl}.` });

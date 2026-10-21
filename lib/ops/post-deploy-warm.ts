@@ -12,9 +12,9 @@ export const MAX_WARM_PLACES = 300;
 /** How many place requests are in flight at once. */
 export const WARM_CONCURRENCY = 24;
 
-/** The map's request for a typed ZIP, byte for byte as the map builds it; a typed ZIP's view carries no radius. */
+/** The arriving page starts this ZIP request before hydration; fill that exact CDN key. */
 export function readerMeetingsPath(point: WarmPlace): string {
-  return `/api/meetings?lat=${point.lat}&lng=${point.lng}&zip=${point.zip}`;
+  return `/api/meetings?zip=${point.zip}&include=state`;
 }
 
 export interface DeployToWarm {

@@ -316,9 +316,10 @@ test("canonical read distinguishes absent pointer, promoted LKG metadata, and st
   assert.equal(partial.metadata.lastKnownGoodVersionId, "candidate-1", "an already-observed LKG pointer survives a later read failure");
 });
 
-test("bootstrap requires the explicit non-production fixture gate and never follows a read error", async () => {
+test("a lazy bootstrap requires the explicit non-production fixture gate and never follows a read error", async () => {
   let opened = 0;
-  const bootstrap = () => {
+  const bootstrap = async () => {
+    await Promise.resolve();
     opened += 1;
     return {
       value: { answer: 7 },

@@ -13,6 +13,8 @@
 /** One person as the body's own page publishes them. */
 export interface PageRosterMember {
   name: string;
+  /** The source row when its name column is explicit. */
+  sourceQuote?:string;
   /** The role the page states — "Council President", "Ward 3". Never inferred. */
   officeTitle: string | null;
   /** The seat, where the page names one separately from the title. */
@@ -103,11 +105,11 @@ const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
  * term parenthetical municipal pages glue on beneath the name.
  */
 const OFFICE_WORD =
-  /\b(?:council|committee|board|township|borough|city|county|department|division|office|clerk|administrator|attorney|engineer|manager|coordinator|director|supervisor|meetings?|agendas?|minutes?|phone|email|address|term|ward|at[- ]large|vacant|vacancy)\b/i;
+  /\b(?:secretary|treasurer|pending|appointment|commission|members?|social media|policy|public safety|council|councilmember|councilman|councilwoman|mayor|trustee|commissioner|selectman|selectwoman|chair|chairman|chairwoman|committee|board|township|borough|city|county|department|division|office|clerk|administrator|attorney|engineer|manager|coordinator|director|supervisor|meetings?|agendas?|minutes?|phone|email|address|term|ward|at[- ]large|vacant|vacancy)\b/i;
 
 export function looksLikeNameCell(text: string): boolean {
   const first = text.split("\n")[0]?.trim() ?? "";
-  if (first.length < 5 || first.length > 60) return false;
+  if (first.length < 5 || first.length > 60 || /^(?:contact|email|meet|about|biography of)\b/i.test(first)) return false;
   if (OFFICE_WORD.test(first)) return false;
   if (EMAIL.test(first) || PHONE.test(first)) return false;
   const tokens = first.replace(/[,.]$/, "").split(/\s+/);
@@ -118,7 +120,7 @@ export function looksLikeNameCell(text: string): boolean {
     if (bare.length === 0) continue;
     if (/^(?:Sr|Jr|II|III|IV|V|Esq)\.?$/i.test(bare)) continue;
     if (/^(?:van|von|de|del|della|di|da|la|le|du)$/i.test(bare)) continue;
-    if (!/^[A-Z][A-Za-z'’.-]*$/.test(bare)) return false;
+    if (!/^[\p{Lu}][\p{L}'’.-]*$/u.test(bare)) return false;
     capitalised++;
   }
   return capitalised >= 2;
@@ -153,7 +155,7 @@ function splitNameCell(text: string): {
   }
 
   const rest = lines.slice(1).join(" ").trim();
-  const term = /term\s*exp[^)]*|expires?[^)]*|term\s*ends?[^)]*/i.exec(rest)?.[0] ?? (rest || null);
+  const term = /(?:term|expires?|elected|appointed|sworn|since)\b[^)]*/i.exec(rest)?.[0] ?? null;
   return {
     name,
     officeTitle,
@@ -177,15 +179,20 @@ function fromTables(html: string, attempts: Attempt[]): PageRosterMember[] {
     tablesSeen++;
     const rows = table.match(/<tr[\s\S]*?<\/tr>/gi) ?? [];
     const found: PageRosterMember[] = [];
+    const headers=(rows.find(row=>/<th\b/i.test(row))?.match(/<t[dh][\s\S]*?<\/t[dh]>/gi)??[]).map(cell=>cellText(cell).toLowerCase().trim());
+    const nameColumn=headers.findIndex(label=>/^(?:full |member |official )?name$/.test(label));
+    const firstColumn=headers.indexOf('first name'),lastColumn=headers.indexOf('last name');
     for (const row of rows) {
       const cells = row.match(/<t[dh][\s\S]*?<\/t[dh]>/gi) ?? [];
       if (cells.length < 2) continue;
       const texts = cells.map((c) => cellText(c));
-      const nameIndex = texts.findIndex((t) => looksLikeNameCell(t));
-      if (nameIndex < 0) continue;
-
-      const { name, officeTitle: gluedTitle, termNote } = splitNameCell(texts[nameIndex]);
-      const others = texts.filter((_, i) => i !== nameIndex);
+      const splitColumns=firstColumn>=0 && lastColumn>=0;
+      const nameIndex=splitColumns ? firstColumn : nameColumn>=0 ? nameColumn : texts.findIndex(t=>looksLikeNameCell(splitNameCell(t).name));
+      if(nameIndex<0)continue;
+      const nameText=splitColumns ? `${texts[firstColumn]??''} ${texts[lastColumn]??''}` : texts[nameIndex];
+      const { name, officeTitle: gluedTitle, termNote } = splitNameCell(nameText);
+      if(!looksLikeNameCell(name))continue;
+      const others = texts.filter((_, i) => i !== nameIndex && !(splitColumns && i===lastColumn));
       const joined = others.join("\n");
 
       const phone = PHONE.exec(joined)?.[0]?.replace(/\s+/g, " ").trim() ?? null;
@@ -223,6 +230,7 @@ function fromTables(html: string, attempts: Attempt[]): PageRosterMember[] {
 
       found.push({
         name,
+        ...(splitColumns || nameColumn>=0 ? {sourceQuote:cellText(row)} : {}),
         officeTitle,
         seat,
         termNote,
@@ -234,7 +242,7 @@ function fromTables(html: string, attempts: Attempt[]): PageRosterMember[] {
             : null,
       });
     }
-    if (found.length >= 2) out.push(...found);
+    if (found.length >= 1) out.push(...found);
   }
   attempts.push({
     strategy: "table-rows-with-contact",
@@ -337,25 +345,25 @@ function fromMemberLinks(html: string, attempts: Attempt[]): PageRosterMember[] 
 
 /**
  * Extract a roster, reporting every strategy and its count. Strategies run in
- * order and the first that returns at least two people wins: a single match
- * is almost always a footer address.
+ * order and the first sourced member is returned. The publisher checks the
+ * seat and every field against its own saved row before it can go live.
  */
 export function extractRoster(url: string, html: string): RosterExtraction {
   const attempts: Attempt[] = [];
   const body = /<main[\s\S]*?<\/main>/i.exec(html)?.[0] ?? html;
 
   const table = fromTables(body, attempts);
-  if (table.length >= 2) {
+  if (table.length >= 1) {
     return { url, members: table, strategy: "table-rows-with-contact", attempts, failure: null, bytes: html.length };
   }
 
   const blocks = fromBlocks(body, attempts);
-  if (blocks.length >= 2) {
+  if (blocks.length >= 1) {
     return { url, members: blocks, strategy: "repeated-contact-blocks", attempts, failure: null, bytes: html.length };
   }
 
   const links = fromMemberLinks(body, attempts);
-  if (links.length >= 2) {
+  if (links.length >= 1) {
     return { url, members: links, strategy: "per-member-contact-links", attempts, failure: null, bytes: html.length };
   }
 
@@ -365,7 +373,7 @@ export function extractRoster(url: string, html: string): RosterExtraction {
     strategy: null,
     attempts,
     failure:
-      `no strategy returned two or more members from ${html.length} bytes — ` +
+      `no strategy returned a member from ${html.length} bytes — ` +
       attempts.map((a) => `${a.strategy}:${a.rows}`).join(", ") +
       ". This is a FAILED extraction, not an empty body: the next rung is the " +
       "page's own network calls, then the vendor's directory module, then the " +

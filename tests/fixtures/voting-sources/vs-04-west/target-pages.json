@@ -1,0 +1,3869 @@
+[
+  {
+    "url": "https://www.elections.alaska.gov/Core/pollinglocations.php",
+    "finalUrl": "https://www.elections.alaska.gov/Core/pollinglocations.php",
+    "status": 503,
+    "contentType": "text/plain",
+    "capturedAt": "2026-10-21T04:24:52.522Z",
+    "rawHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-5ba4e4f4bf20.bin",
+    "savedHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://votemt.gov/",
+    "finalUrl": "https://votemt.gov/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:24:52.665Z",
+    "rawHash": "d4df7fc6185a6098dd9860e50e76540ba17233bd6854e92c3297dedaabcedf4e",
+    "path": "tests/fixtures/voting-sources/vs-04-west/mt-b04581cb604d.html",
+    "savedHash": "d4df7fc6185a6098dd9860e50e76540ba17233bd6854e92c3297dedaabcedf4e",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://votemt.gov",
+        "label": "Home Page"
+      },
+      {
+        "url": "https://sosmt.gov/about-secretary-jacobsen",
+        "label": "Website by: Christi Jacobsen and the Montana Secretary of State's Office"
+      },
+      {
+        "url": "https://votemt.gov/voter-registration",
+        "label": "Voter Registration"
+      },
+      {
+        "url": "https://sosmt.gov/wp-admin/admin-ajax.php?action=wpfd&juwpfisadmin=false&preview=1&task=file.download&token=&wpfd_category_id=46&wpfd_file_id=59393",
+        "label": "Download Application"
+      },
+      {
+        "url": "https://votemt.gov/update",
+        "label": "Update Voter Registration"
+      },
+      {
+        "url": "https://sosmt.gov/elections/forms",
+        "label": "View Forms"
+      },
+      {
+        "url": "https://voterportal.mt.gov",
+        "label": "Registration Status"
+      },
+      {
+        "url": "https://votemt.gov/same-weekend-registration",
+        "label": "Learn More"
+      },
+      {
+        "url": "https://sosmt.gov/elections/military-overseas",
+        "label": "Military & Overseas Info"
+      },
+      {
+        "url": "https://sosmt.gov/elections/disabilities",
+        "label": "Accessibility Information"
+      },
+      {
+        "url": "https://sosmt.gov/elections/election-administrators-contact-list",
+        "label": "Contact Info"
+      },
+      {
+        "url": "https://votemt.gov/voter-identification",
+        "label": "View Montana Identification Requirements"
+      },
+      {
+        "url": "https://votemt.gov/voter-resources",
+        "label": "Voter Resources"
+      },
+      {
+        "url": "https://votemt.gov/voter-calendar",
+        "label": "Election Calendar"
+      },
+      {
+        "url": "https://votemt.gov/serve-as-a-poll-worker",
+        "label": "Serve as a Poll Worker"
+      },
+      {
+        "url": "https://votemt.gov/poll-worker-application",
+        "label": "Poll Worker Application"
+      },
+      {
+        "url": "https://votemt.gov/absentee-ballot",
+        "label": "Learn More"
+      },
+      {
+        "url": "https://votemt.gov/resolve-my-ballot",
+        "label": "Resolve Rejected Ballot >"
+      },
+      {
+        "url": "https://sosmt.gov/elections/ballot_issues/proposed-2026-ballot-issues",
+        "label": "View Ballot Measures"
+      },
+      {
+        "url": "https://sosmt.gov/elections/vip",
+        "label": "Voter Information Pamphlet"
+      },
+      {
+        "url": "https://votemt.gov/frequently-asked-questions",
+        "label": "View FAQs"
+      },
+      {
+        "url": "https://sosmt.gov/elections/election-facts",
+        "label": "Election Facts"
+      },
+      {
+        "url": "https://sosmt.gov/elections/results",
+        "label": "View Election Results"
+      },
+      {
+        "url": "https://sosmt.gov/elections/fairelections",
+        "label": "Montana Fair Elections Center"
+      },
+      {
+        "url": "https://prodvoterportal.mt.gov/WhereToVote.aspx",
+        "label": "Track My Ballot"
+      },
+      {
+        "url": "https://votemt.gov/voter-info",
+        "label": "Voter Info"
+      },
+      {
+        "url": "https://voterportal.mt.gov/WhereToVote.aspx",
+        "label": "Track Your Ballot Now >"
+      },
+      {
+        "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+        "label": "Polling Places (download) >"
+      },
+      {
+        "url": "http://voterportal.mt.gov",
+        "label": "Check Registration Status"
+      },
+      {
+        "url": "https://sosmt.gov",
+        "label": "Montana Secretary of State"
+      },
+      {
+        "url": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002928",
+        "label": "2026 Candidate Filing List"
+      },
+      {
+        "url": "https://sosmt.gov/elections",
+        "label": "Montana Elections Division"
+      },
+      {
+        "url": "https://mt.gov/discover/disclaimer",
+        "label": "State of Montana Website Accessibility Policy"
+      },
+      {
+        "url": "https://votemt.gov/feed",
+        "label": "Vote Montana &raquo; Feed"
+      },
+      {
+        "url": "https://votemt.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvotemt.gov%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://votemt.gov/wp-json/wp/v2/pages/31",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "url": "https://elections.hawaii.gov/voting/voting-in-hawaii/",
+    "finalUrl": "https://elections.hawaii.gov/voting/voting-in-hawaii/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:24:53.138Z",
+    "rawHash": "dde53f84ae46590af355b1aba01a83f30dd7e5685094935c2868043b062ad045",
+    "path": "tests/fixtures/voting-sources/vs-04-west/hi-e15044a7e2e4.html",
+    "savedHash": "dde53f84ae46590af355b1aba01a83f30dd7e5685094935c2868043b062ad045",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.googletagmanager.com/ns.html?id=GTM-KBF48G7",
+        "label": ""
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/voting-in-hawaii",
+        "label": "Voting in Hawaii"
+      },
+      {
+        "url": "http://portal.ehawaii.gov",
+        "label": "Powered by eHawaii.gov"
+      },
+      {
+        "url": "https://portal.ehawaii.gov/government/departments-and-agencies",
+        "label": "Government Directory"
+      },
+      {
+        "url": "https://elections.hawaii.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://twitter.com/elections808",
+        "label": "Office of Elections on X Twitter"
+      },
+      {
+        "url": "https://www.facebook.com/elections808",
+        "label": "Office of Elections on Facebook"
+      },
+      {
+        "url": "https://www.youtube.com/channel/UCxSC4DC5HxSHx-2knh89p3g/feed",
+        "label": "Office of Elections on Youtube"
+      },
+      {
+        "url": "https://www.instagram.com/elections808",
+        "label": "Instagram icon"
+      },
+      {
+        "url": "https://elections.hawaii.gov/chinese-main",
+        "label": "中文 Chinese"
+      },
+      {
+        "url": "https://elections.hawaii.gov/ilocano-main",
+        "label": "Ilocano"
+      },
+      {
+        "url": "https://elections.hawaii.gov/tagalog-main",
+        "label": "Tagalog"
+      },
+      {
+        "url": "https://elections.hawaii.gov/japanese-main",
+        "label": "日本語 Japanese"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us",
+        "label": "About Us"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/contact-us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/calendar",
+        "label": "Calendar"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions",
+        "label": "Boards and Commissions"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/boards-of-registration",
+        "label": "Boards of Registration"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/elections-commission",
+        "label": "Elections Commission"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/reapportionment",
+        "label": "Reapportionment"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/elections-accessibility-needs-advisory-committee",
+        "label": "Statewide Elections Accessibility Needs Advisory Committee"
+      },
+      {
+        "url": "https://elections.hawaii.gov/reports",
+        "label": "Reports"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote/registration",
+        "label": "Registration"
+      },
+      {
+        "url": "https://olvr.hawaii.gov",
+        "label": "Register Online to Vote"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote/voter-registration-drives",
+        "label": "Voter Registration Drives"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting",
+        "label": "Voting"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/absentee-voting",
+        "label": "Absentee Voting"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/contest-schedule",
+        "label": "Contest Schedule"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/county-election-divisions",
+        "label": "County Elections Divisions"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/election-security",
+        "label": "Election Security"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/political-parties",
+        "label": "Political Parties"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/provisional-voting",
+        "label": "Provisional Voting"
+      },
+      {
+        "url": "https://elections.hawaii.gov/2026-primary-election-provisional-ballot-dispositions",
+        "label": "2026 Primary Election Provisional Ballot Dispositions"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/replacement-ballot",
+        "label": "Replacement Ballot"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/rumors-vs-facts",
+        "label": "Rumors Vs. Facts"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/volunteer",
+        "label": "Volunteer"
+      },
+      {
+        "url": "https://olvr.hawaii.gov/altballotsearch3.aspx",
+        "label": "Interactive Voter Guide"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_English.pdf",
+        "label": "English"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Chinese.pdf",
+        "label": "Chinese"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Hawaiian.pdf",
+        "label": "Hawaiian"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Ilocano.pdf",
+        "label": "Ilocano"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Tagalog.pdf",
+        "label": "Tagalog"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit",
+        "label": "Voter Service Centers and Ballot Drop Boxes"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution",
+        "label": "2026 Proposed Amendments to the Hawaii State Constitution"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates",
+        "label": "Candidates"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates/candidate-filing",
+        "label": "Become a Candidate"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates/candidate-reports",
+        "label": "Candidate Reports"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates/nonpartisan-candidates-in-partisan-contests",
+        "label": "qualifications as a nonpartisan candidate running in a partisan contest."
+      },
+      {
+        "url": "https://elections.hawaii.gov/presidential",
+        "label": "Presidential"
+      },
+      {
+        "url": "https://elections.hawaii.gov/electoral-college",
+        "label": "Learn more about the Electoral College"
+      },
+      {
+        "url": "https://elections.hawaii.gov/presidential-elections",
+        "label": "Presidential Elections"
+      },
+      {
+        "url": "https://elections.hawaii.gov/election-results",
+        "label": "Results"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources",
+        "label": "Resources"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/archives-2",
+        "label": "Archives"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/campaign-signs",
+        "label": "Campaign Signs Regulations"
+      },
+      {
+        "url": "https://ags.hawaii.gov/campaign",
+        "label": "Campaign Spending Commission"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/cast-your-vote-in-comfort",
+        "label": "Cast Your Vote in Comfort"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/districts-and-precincts",
+        "label": "Districts and Precincts"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/elected-officials",
+        "label": "Elected Officials & Terms of Office"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/election-laws",
+        "label": "Election Laws"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/election-objections",
+        "label": "Election Objections"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/hawaii-votes-program",
+        "label": "Hawaii Votes Program"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/maps",
+        "label": "Maps"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/registration-voter-turnout-statistics",
+        "label": "Registration and Turnout Statistics"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/absentee-voting-report",
+        "label": "Voting Report"
+      },
+      {
+        "url": "https://elections.hawaii.gov/news",
+        "label": "News"
+      },
+      {
+        "url": "https://elections.hawaii.gov/category/newsletters",
+        "label": "Newsletters"
+      },
+      {
+        "url": "https://elections.hawaii.gov/category/news-release",
+        "label": "News Releases"
+      },
+      {
+        "url": "https://elections.hawaii.gov/proclamations",
+        "label": "Proclamations"
+      },
+      {
+        "url": "https://www.youtube.com/embed/xwUp4CWF6G8?autoplay=1&enablejsapi=1&feature=oembed&mute=1",
+        "label": "Hawaii Elections Explained 2026 - State of Hawaii, Office of Elections"
+      },
+      {
+        "url": "https://www.capitol.hawaii.gov/measure_indiv.aspx?billnumber=1248&billtype=HB&year=2019",
+        "label": "Act 136, SLH 2019"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/registration",
+        "label": "Learn more about Voter Registration."
+      },
+      {
+        "url": "https://elections.hawaii.gov/political-parties/qualified-political-parties",
+        "label": "qualified political parties"
+      },
+      {
+        "url": "https://www.capitol.hawaii.gov/hrscurrent/Vol01_Ch0001-0042F/HRS0011/HRS_0011-0100.htm",
+        "label": "HRS § 11-100"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/voters-requiring-assistance",
+        "label": "here"
+      },
+      {
+        "url": "https://hawaii.ballottrax.net/voter",
+        "label": "BallotTrax"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/college-students",
+        "label": "College Student"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/houseless-voter-2",
+        "label": "Houseless Voter"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/military-and-overseas-voters",
+        "label": "Military/Overseas Voter"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/voters-requiring-assistance",
+        "label": "Voter Requiring Assistance"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/voters-with-a-felony-conviction",
+        "label": "Voter with a Felony Conviction"
+      },
+      {
+        "url": "https://elections.hawaii.gov?page_id=5378",
+        "label": "Time Off for Voting"
+      },
+      {
+        "url": "https://instagram.com",
+        "label": "Office of Elections on Instagram"
+      },
+      {
+        "url": "https://portal.ehawaii.gov/terms-of-use.html",
+        "label": "Terms of Use"
+      },
+      {
+        "url": "https://ags.hawaii.gov/accessibility",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://portal.ehawaii.gov/privacy-policy.html",
+        "label": "Privacy Policy"
+      },
+      {
+        "url": "https://elections.hawaii.gov/browser-requirements",
+        "label": "Browser Requirements"
+      },
+      {
+        "url": "https://elections.hawaii.gov/adobe-acrobat-reader-dc",
+        "label": "Adobe Acrobat Reader DC"
+      },
+      {
+        "url": "https://elections.hawaii.gov/cdn-cgi/l/email-protection",
+        "label": "[email protected]"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Felections.hawaii.gov%2Fvoting%2Fvoting-in-hawaii%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-json/wp/v2/pages/9634",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "url": "https://caearlyvoting.sos.ca.gov/",
+    "finalUrl": "https://caearlyvoting.sos.ca.gov/",
+    "status": 200,
+    "contentType": "text/html",
+    "capturedAt": "2026-10-21T04:24:52.446Z",
+    "rawHash": "1b7a06cee653f4e1620c536c5022ce9794ee613cebf5463483b53ae777c48207",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ca-7e05b9716e27.html",
+    "savedHash": "1b7a06cee653f4e1620c536c5022ce9794ee613cebf5463483b53ae777c48207",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://caearlyvoting.sos.ca.gov/_Incapsula_Resource?SWUDNSAI=31&cinfo=0e000000d66b&cip=90.96.183.12&cts=3TmwkVbFOma7xITTq2FDRQh976LKe0UOq67VbH8twugKkE%2BpDeqzmYcXvsZ9il71&edet=12&incident_id=958000060094169056-102321784799232436&mth=GET&rpinfo=0&xinfo=52-20601486-0+NNNN+RT%281792556692357+41%29+q%280+-1+-1+0%29+r%280+-1%29+B12%2814%2C0%2C0%29+U18",
+        "label": "Request unsuccessful. Incapsula incident ID: 958000060094169056-102321784799232436"
+      }
+    ]
+  },
+  {
+    "url": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+    "finalUrl": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:24:52.537Z",
+    "rawHash": "4f0c68338691b1a20bcdae3d5984fd36e16d3ebca31cb24c02374064f6665419",
+    "path": "tests/fixtures/voting-sources/vs-04-west/co-8acf2435b880.html",
+    "savedHash": "4f0c68338691b1a20bcdae3d5984fd36e16d3ebca31cb24c02374064f6665419",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+        "label": "Versión en Español"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/biography.html",
+        "label": "Secretary Griswold"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/spanish/spanishHome.html",
+        "label": "Español"
+      },
+      {
+        "url": "https://www.coloradosos.gov",
+        "label": ""
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/main.html",
+        "label": "Elections home"
+      },
+      {
+        "url": "https://www.coloradosos.gov/voter/pages/pub/olvr/findVoterReg.xhtml",
+        "label": "Find my registration"
+      },
+      {
+        "url": "https://www.coloradosos.gov/voter/pages/pub/olvr/verifyNewVoter.xhtml",
+        "label": "register to vote"
+      },
+      {
+        "url": "https://www.coloradosos.gov/voter/pages/pub/withdrawLookup.xhtml",
+        "label": "Withdraw my registration"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/UOCAVA.html",
+        "label": "Military & overseas voters"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/FAQs/FAQsMain.html",
+        "label": "Frequently asked questions (FAQs)"
+      },
+      {
+        "url": "https://www.coloradosos.gov/voter/pages/secured/voterSearch.xhtml",
+        "label": "Administrator login"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/vote/VoterRegFormEnglish.pdf",
+        "label": "Change my name (PDF)"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/vote/VoterHomeHow.html",
+        "label": "Get help"
+      },
+      {
+        "url": "https://myballot.coloradosos.gov",
+        "label": "View my sample ballot"
+      },
+      {
+        "url": "https://ballottrax.coloradosos.gov/voter",
+        "label": "Sign up for BallotTrax"
+      },
+      {
+        "url": "https://myballot.coloradosos.gov/ecure/app/home",
+        "label": "Cure my ballot"
+      },
+      {
+        "url": "https://www.youtube.com/embed/1q910g4ZHfA?enablejsapi=1",
+        "label": "YouTube video player - Colorado"
+      },
+      {
+        "url": "https://youtu.be/1q910g4ZHfA",
+        "label": "Colorado's election workers - your\nfriends and neighbors"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/VIP.html",
+        "label": "Find out where to return your mail ballot or where to vote in person"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
+        "label": "2026 General Election official candidate list"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/Initiatives/ballot/contacts/2026.html",
+        "label": "Amendments and propositions on the 2026 ballot"
+      },
+      {
+        "url": "https://content.leg.colorado.gov/sites/default/files/2026-bluebook-english-accessible_1.pdf",
+        "label": "Ballot Blue Book (PDF)"
+      },
+      {
+        "url": "https://judicialperformance.colorado.gov",
+        "label": "Judicial retention information"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/files/KnowYourRights.pdf",
+        "label": "Know your voting rights (PDF)"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/vote/acceptableFormsOfID.html",
+        "label": "Acceptable forms of ID"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/Resources/CountyElectionOffices.html",
+        "label": "Contact my county clerk"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/electionInfo.html",
+        "label": "Election information"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/ElectionIntegrity/index.html",
+        "label": "Fighting election disinformation"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/vote/displacedVoters.html",
+        "label": "Information for displaced voters"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/accessibleVoting.html",
+        "label": "Accessible voting"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/FAQs/languageAssist.html",
+        "label": "Language assistance hotline FAQs"
+      },
+      {
+        "url": "https://leg.colorado.gov/content/initiatives/initiatives-blue-book-overview/ballot-information-booklet-blue-book",
+        "label": "Ballot issue information booklet (Blue Book)"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/votedSticker/contest.html",
+        "label": "\"I Voted\" digital sticker contest"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/allInChallenge.html",
+        "label": "Colorado campus voting challenge"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/highSchoolVoterChallenge.html",
+        "label": "High School voter registration challenge"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/Resources/BecomeElectionJudge.html",
+        "label": "Become an election judge or student election judge"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/vote/veteran.html",
+        "label": "Vote in honor of a veteran"
+      },
+      {
+        "url": "https://public.govdelivery.com/accounts/COSOS/subscriber/new?topic_id=COSOS_12",
+        "label": "Sign up to receive Voter Information Email Updates"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/terms.html",
+        "label": "Terms & conditions"
+      },
+      {
+        "url": "https://coloradosos.gov/pubs/info_center/accessibility.html",
+        "label": "Accessibility statement"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/compatibility.html",
+        "label": "Browser compatibility"
+      }
+    ]
+  },
+  {
+    "url": "https://voteidaho.gov/guide-to-vote-in-person/",
+    "finalUrl": "https://voteidaho.gov/guide-to-vote-in-person/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:24:52.414Z",
+    "rawHash": "23d8d4bba86ad68dfb1c5909816f06cdd2b8740850fc6c78c0066cafc6cbfe3b",
+    "path": "tests/fixtures/voting-sources/vs-04-west/id-89efa6bf03c9.html",
+    "savedHash": "23d8d4bba86ad68dfb1c5909816f06cdd2b8740850fc6c78c0066cafc6cbfe3b",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://voteidaho.gov/guide-to-vote-in-person",
+        "label": "Mailchimp"
+      },
+      {
+        "url": "https://voteidaho.gov",
+        "label": ""
+      },
+      {
+        "url": "https://voteidaho.gov/voter-registration",
+        "label": "Registering To Vote"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/electionlink/electionlink/VoterSearch.aspx",
+        "label": "Check Your Voter Record"
+      },
+      {
+        "url": "https://voteidaho.gov/casting-your-ballot",
+        "label": "Absentee Voting"
+      },
+      {
+        "url": "https://voteidaho.gov/on-the-ballots",
+        "label": "What’s on the Ballot?"
+      },
+      {
+        "url": "https://voteidaho.gov/making-voting-secure",
+        "label": "Making Voting Secure"
+      },
+      {
+        "url": "https://voteidaho.gov/accessible-voting",
+        "label": "Accessible Voting"
+      },
+      {
+        "url": "https://voteidaho.gov/election-results",
+        "label": "Election Results"
+      },
+      {
+        "url": "https://voteidaho.gov/election-information",
+        "label": "Election Information"
+      },
+      {
+        "url": "https://voteidaho.gov/data-and-dashboards",
+        "label": "Data & Dashboards"
+      },
+      {
+        "url": "https://voteidaho.gov/initiatives-amendments",
+        "label": "Initiatives & Amendments"
+      },
+      {
+        "url": "https://voteidaho.gov/election-results/election-audits",
+        "label": "Election Audits"
+      },
+      {
+        "url": "https://voteidaho.gov/12-principles-of-idaho-elections",
+        "label": "12 Principles of Idaho Elections"
+      },
+      {
+        "url": "https://voteidaho.gov/candidate-filing",
+        "label": "Candidate Filing"
+      },
+      {
+        "url": "https://sunshine.voteidaho.gov",
+        "label": "Campaign Finance Portal"
+      },
+      {
+        "url": "https://voteidaho.gov/campaign-finance-portal",
+        "label": "Campaign Finance 101"
+      },
+      {
+        "url": "https://voteidaho.gov/how-to-run-for-office",
+        "label": "How to Run for Office"
+      },
+      {
+        "url": "https://voteidaho.gov/idaho-elected-officials",
+        "label": "Idaho Elected Officials"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/TEDElectionLink/ElectionVault/login",
+        "label": "Candidate VAULT"
+      },
+      {
+        "url": "https://voteidaho.gov/county-clerk",
+        "label": "Find Your County Clerk"
+      },
+      {
+        "url": "https://voteidaho.gov/become-an-election-worker",
+        "label": "Become an Election Worker"
+      },
+      {
+        "url": "https://voteidaho.gov/training-resources",
+        "label": "Training Resources"
+      },
+      {
+        "url": "https://press.voteidaho.gov",
+        "label": "Press Releases"
+      },
+      {
+        "url": "https://voteidaho.gov/media",
+        "label": "Media"
+      },
+      {
+        "url": "https://voteidaho.gov/frequently-asked-questions",
+        "label": "Frequently Asked Questions"
+      },
+      {
+        "url": "https://sosidaho.justfoia.com/publicportal/home/newrequest",
+        "label": "Public Records Requests"
+      },
+      {
+        "url": "https://voteidaho.gov/calendar",
+        "label": "Calendar"
+      },
+      {
+        "url": "https://voteidaho.gov/registrate-para-votar",
+        "label": "Regístrate para Votar"
+      },
+      {
+        "url": "https://voteidaho.gov/informacion-electoral",
+        "label": "Información Electoral"
+      },
+      {
+        "url": "https://voteidaho.gov/emite-tu-voto",
+        "label": "Emite tu Voto"
+      },
+      {
+        "url": "https://voteidaho.gov/votacion-accesible",
+        "label": "Votación Accesible"
+      },
+      {
+        "url": "https://voteidaho.gov/encuentra-a-tu-secretario-del-condado",
+        "label": "Encuentra a tu secretario/a del Condado"
+      },
+      {
+        "url": "https://voteidaho.gov/preguntas-frecuentes-faq",
+        "label": "Preguntas Frecuentes (FAQ)"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter/where-do-I-vote",
+        "label": "voting location here"
+      },
+      {
+        "url": "https://voteidaho.gov/election-audits",
+        "label": "Election Audits"
+      },
+      {
+        "url": "https://voteidaho.gov/press-releases",
+        "label": "Press Releases"
+      },
+      {
+        "url": "https://voteidaho.gov/cdn-cgi/l/email-protection",
+        "label": "[email protected]"
+      },
+      {
+        "url": "https://www.facebook.com/IDSecOfState",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://www.instagram.com/idsecofstate",
+        "label": "Instagram"
+      },
+      {
+        "url": "https://twitter.com/IDSecOfState",
+        "label": "X-twitter"
+      },
+      {
+        "url": "https://voteidaho.gov/calendar?ical=1",
+        "label": "VoteIdaho.Gov &raquo; iCal Feed"
+      },
+      {
+        "url": "https://voteidaho.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvoteidaho.gov%2Fguide-to-vote-in-person%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://voteidaho.gov/wp-json/tribe/events/v1",
+        "label": ""
+      }
+    ]
+  },
+  {
+    "url": "https://www.nvsos.gov/sos/elections/voters/voting-locations",
+    "finalUrl": "https://www.nvsos.gov/sos/elections/voters/voting-locations",
+    "status": 200,
+    "contentType": "text/html",
+    "capturedAt": "2026-10-21T04:24:52.399Z",
+    "rawHash": "2662c3c92ea9c8aa705613329ef759d80ad8ba6df1ca866085df189bd1e87750",
+    "path": "tests/fixtures/voting-sources/vs-04-west/nv-e514e65dcac0.html",
+    "savedHash": "2662c3c92ea9c8aa705613329ef759d80ad8ba6df1ca866085df189bd1e87750",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.nvsos.gov/_Incapsula_Resource?SWUDNSAI=31&cinfo=0b000000&cip=90.96.183.12&cts=SgvKpZYNwUsYKpRyXCT79%2F0fI05gey5foKRetbl%2FNKcSZZfWAe6KjV5ExXg7IrsY&edet=12&incident_id=967000060984161304-1108104100757045686&mth=GET&rpinfo=0&xinfo=54-206574422-0+0NNN+RT%281792556692320+64%29+q%280+-1+-1+-1%29+r%280+-1%29+B12%2811%2C1341189%2C0%29+U24",
+        "label": "Request unsuccessful. Incapsula incident ID: 967000060984161304-1108104100757045686"
+      }
+    ]
+  },
+  {
+    "state": "nm",
+    "url": "https://voterportal.servis.sos.state.nm.us/WhereToVoteAddress.aspx",
+    "error": "TypeError: fetch failed"
+  },
+  {
+    "url": "https://sos.oregon.gov/voting/pages/drop-box-locator.aspx",
+    "finalUrl": "https://sos.oregon.gov/elections/pages/drop-box-locator.aspx",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:24:53.178Z",
+    "rawHash": "ab1ef6f8d18c3b8a6c26e608d61d4700cdf4dfc69d596a5ce485e73b9c01d048",
+    "path": "tests/fixtures/voting-sources/vs-04-west/or-3f347ccb507d.html",
+    "savedHash": "ab1ef6f8d18c3b8a6c26e608d61d4700cdf4dfc69d596a5ce485e73b9c01d048",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://sos.oregon.gov/elections/pages/drop-box-locator.aspx",
+        "label": "\" + langvalue + \""
+      },
+      {
+        "url": "https://sos.oregon.gov/elections",
+        "label": "Elections"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/current-election.aspx",
+        "label": "Upcoming Elections"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/registration.aspx",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/myvote.aspx?lang=en",
+        "label": "Update Registration"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/track-your-ballot.aspx",
+        "label": "Track Your Ballot"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Voters-Pamphlet/Pages/default.aspx",
+        "label": "Voters' Pamphlets"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/county-officials.aspx",
+        "label": "County Elections Officials"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/historical-data.aspx",
+        "label": "Election Results & History"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/security.aspx",
+        "label": "Election Integrity"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/special.aspx",
+        "label": "Special Voting Circumstances"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/faq.aspx",
+        "label": "Frequently Asked Questions"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/campaign-finance/Pages/default.aspx",
+        "label": "Campaign Finance"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/get-involved/Pages/run-for-office.aspx",
+        "label": "Run for Public Office"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/initiatives-referendums-referrals.aspx",
+        "label": "Initiatives, Referendums, Referrals & Recall"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/get-involved/Pages/file-voters-pamphlet.aspx",
+        "label": "Voters' Pamphlet Statements & Arguments"
+      },
+      {
+        "url": "https://secure.sos.state.or.us/orestar/CFSearchPage.do",
+        "label": "Search Candidate & Campaign Filings (Opens in new window)"
+      },
+      {
+        "url": "https://secure.sos.state.or.us/oim/login?oimAction=login&p_a_cd=EIM&p_fp_gurl=https%3A%2F%2Fsecure.sos.state.or.us%2Forestar%2Fjsp%2Findex.jsp",
+        "label": "ORESTAR Login (Opens in new window)"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/manuals-tutorials.aspx",
+        "label": "Manuals & Quick Guides"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/forms.aspx",
+        "label": "Election Forms"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/laws-rules.aspx",
+        "label": "Laws, Rules & Directives"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/Candidate-Filings-Local-Measures.aspx",
+        "label": "Search Local Measures"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/get-involved/Pages/default.aspx",
+        "label": "Get Involved Home"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/tac/Pages/default.aspx",
+        "label": "Translation Advisory Council"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/get-involved/Pages/form-political-party.aspx",
+        "label": "Form a Political Party"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/rulemaking.aspx",
+        "label": "Elections Division Rulemaking"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/default.aspx",
+        "label": "Oregon Secretary of State"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Documents/GE26-Oregon-Drop-Sites.pdf",
+        "label": "Official Ballot Drop Sites in Oregon"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/pages/https&",
+        "label": ""
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/media-resources.aspx",
+        "label": "Media Resources"
+      },
+      {
+        "url": "https://maps.app.goo.gl/LGPtEU3zUS5CGo1m7",
+        "label": "Public Service Building\n\n255 Capitol St. NE, Suite 126\n\nSalem, OR 97310"
+      },
+      {
+        "url": "https://sos.oregon.gov/elections/Pages/election-dates.aspx",
+        "label": "Important Election Dates"
+      },
+      {
+        "url": "https://www.facebook.com/oregonelections",
+        "label": "Find us on Facebook"
+      },
+      {
+        "url": "https://bsky.app/profile/oregonelections.bsky.social",
+        "label": "Subscribe to us on Bluesky"
+      },
+      {
+        "url": "https://twitter.com/OregonElections",
+        "label": "Follow us on Twitter"
+      },
+      {
+        "url": "https://www.youtube.com/@OregonElections",
+        "label": "Subscribe to us on YouTube"
+      },
+      {
+        "url": "https://facebook.com/OregonSOS",
+        "label": "Find us on Facebook"
+      },
+      {
+        "url": "https://instagram.com/OregonSOS",
+        "label": "Find us on Instagram"
+      },
+      {
+        "url": "https://bsky.app/profile/oregonsos.bsky.social",
+        "label": "Subscribe to us on Bluesky"
+      },
+      {
+        "url": "https://twitter.com/OregonSOS",
+        "label": "Follow us on Twitter"
+      },
+      {
+        "url": "https://www.linkedin.com/company/oregonsos",
+        "label": "LinkedIn"
+      },
+      {
+        "url": "https://www.youtube.com/@OregonSOS",
+        "label": "Subscribe to us on YouTube"
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/meet-the-secretary.aspx",
+        "label": "About the Secretary"
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/about-us.aspx",
+        "label": "About the Agency"
+      },
+      {
+        "url": "https://oregonsos.govqa.us/WEBAPP/_rs",
+        "label": "Public Records Request"
+      },
+      {
+        "url": "https://data.oregon.gov/browse?provenance=official&q=secretaryofstatefinancial&sortBy=newest&utf8=%E2%9C%93",
+        "label": "Financial Transparency"
+      },
+      {
+        "url": "https://sos.oregon.gov/blue-book/Pages/default.aspx",
+        "label": "Oregon Blue Book"
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/work-with-us.aspx",
+        "label": "Work with Us"
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/contact-us.aspx",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/public-calendar.aspx",
+        "label": "Public Meeting Calendar"
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/contact-web-team.aspx",
+        "label": "Website Feedback"
+      },
+      {
+        "url": "https://sos.oregon.gov/business",
+        "label": "Business"
+      },
+      {
+        "url": "https://sos.oregon.gov/archives",
+        "label": "State Archives"
+      },
+      {
+        "url": "https://sos.oregon.gov/audits",
+        "label": "Audits"
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/supported-browsers.aspx",
+        "label": "Supported Browsers"
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/web-accessibility-policy.aspx",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://sos.oregon.gov/Pages/terms-and-conditions.aspx",
+        "label": "Terms & Conditions"
+      },
+      {
+        "url": "https://www.oregon.gov/ODVA/Pages/VETFORM.aspx",
+        "label": "Oregon Department of Veterans' Affairs"
+      },
+      {
+        "url": "https://bestvpn.org/outdatedbrowser/en.html",
+        "label": "Learn how"
+      }
+    ]
+  },
+  {
+    "url": "https://vote.utah.gov/current-election-information/",
+    "finalUrl": "https://vote.utah.gov/current-election-information/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:24:52.453Z",
+    "rawHash": "8d4c472466f3b39e62d6a092b2cfe5b61698cef6339cc0fc0798e8369bd70196",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ut-9e432192135a.html",
+    "savedHash": "8d4c472466f3b39e62d6a092b2cfe5b61698cef6339cc0fc0798e8369bd70196",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.googletagmanager.com/ns.html?id=GTM-TFBDJFF",
+        "label": ""
+      },
+      {
+        "url": "https://vote.utah.gov/current-election-information",
+        "label": "Back to Top"
+      },
+      {
+        "url": "https://vote.utah.gov",
+        "label": "Welcome To Vote.Utah.gov"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-content/uploads/2026/01/2026-Utah-Election-Calendar.pdf",
+        "label": "📄 Download Full 2026 Election Calendar (PDF)"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+        "label": "📄 Official Certified Candidates"
+      },
+      {
+        "url": "https://vote.utah.gov/resources-for-candidates-political-groups-parties",
+        "label": "Candidate Resources"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Write-In-Certification.pdf",
+        "label": "📄 Write-In Certification"
+      },
+      {
+        "url": "https://vote.utah.gov/2026-signature-gathering-candidates",
+        "label": "2026 Signature Gathering List"
+      },
+      {
+        "url": "https://vote.utah.gov/learn-about-registering-to-vote",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://vote.utah.gov/voter-id-requirements",
+        "label": "ID Requirements"
+      },
+      {
+        "url": "https://s.utah.gov/utah-voting-districts",
+        "label": "View District Maps"
+      },
+      {
+        "url": "https://vote.utah.gov/additional-resources-for-voters",
+        "label": "Voter Resources"
+      },
+      {
+        "url": "https://vote.utah.gov/track-my-ballot",
+        "label": "Track My Ballot"
+      },
+      {
+        "url": "https://votesearch.utah.gov/voter-search/search/search-by-voter/voter-info",
+        "label": "Check Voter Registration Status"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf",
+        "label": "Voter Information Pamphlet"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-content/uploads/2026/07/2026-Primary-Election-Certification.pdf",
+        "label": "2026 Primary Election Certification"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-content/uploads/2026/04/2026-Official-Primary-Election-Certification.pdf",
+        "label": "📄 Official Certified Candidates"
+      },
+      {
+        "url": "https://le.utah.gov/xcode/Title20A/Chapter1/20A-1-S102.html?v=C20A-1-S102_2022050420220504",
+        "label": "20A-1-102(26)(a) & (b)"
+      },
+      {
+        "url": "https://vote.utah.gov/contact-your-county-election-officials",
+        "label": "designated election official"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor",
+        "label": "Lt. Governor Home"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/about",
+        "label": "About Lt. Governor"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/initiatives",
+        "label": "Lt. Governor Initiatives"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/news",
+        "label": "Lt. Governor Newsroom"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/staff",
+        "label": "Lt. Governor Staff"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/contact",
+        "label": "Contact Lt. Governor"
+      },
+      {
+        "url": "https://www.utah.gov",
+        "label": "Utah.gov Home"
+      },
+      {
+        "url": "https://www.utah.gov/disclaimer.html",
+        "label": "Utah.gov Terms of Use"
+      },
+      {
+        "url": "https://www.utah.gov/privacypolicy.html",
+        "label": "Utah.gov Privacy Policy"
+      },
+      {
+        "url": "https://www.utah.gov/accessibility.html",
+        "label": "Utah.gov Accessibility Policy"
+      },
+      {
+        "url": "https://www.utah.gov/translate.html",
+        "label": "Translate Utah.gov"
+      },
+      {
+        "url": "https://vote.utah.gov/feed",
+        "label": "Utah Voter Information &raquo; Feed"
+      },
+      {
+        "url": "https://vote.utah.gov/comments/feed",
+        "label": "Utah Voter Information &raquo; Comments Feed"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvote.utah.gov%2Fcurrent-election-information%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-json/wp/v2/pages/1905",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "url": "https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations",
+    "finalUrl": "https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:24:52.568Z",
+    "rawHash": "cca86116ac2c7a7eb218b33183940214166f40d4d327fa289ecc98477743a7c6",
+    "path": "tests/fixtures/voting-sources/vs-04-west/wa-6e0994aea7ff.html",
+    "savedHash": "cca86116ac2c7a7eb218b33183940214166f40d4d327fa289ecc98477743a7c6",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations",
+        "label": ""
+      },
+      {
+        "url": "https://www.sos.wa.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections",
+        "label": "Elections"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters",
+        "label": "Voters"
+      },
+      {
+        "url": "https://voter.votewa.gov/WhereToVote.aspx",
+        "label": "Online Voter Registration"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/county-elections-offices",
+        "label": "County Elections Offices"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/civic-engagement-program-cep/ballot-drop-boxes-or-near-tribal-reservations",
+        "label": "Ballot Drop Boxes On or Near Tribal Reservations"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2026-01/Drop%20Boxes_0.xlsx",
+        "label": "Excel"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2026-01/Drop%20Boxes_0.pdf",
+        "label": "PDF"
+      },
+      {
+        "url": "https://app.powerbigov.us/view?r=eyJrIjoiMThkMDI0MjAtNjEwZi00MjY2LWExNmMtMWIwNDUyMjdhZWVkIiwidCI6ImUwMmRhYmUyLWMyY2ItNGU3YS1hMzcxLTYzZWQxZmViNjVhMCJ9",
+        "label": "2026 November General Drop Box and Voting Center Locations"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/contact-info/contact-us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.sos.wa.gov/accessibility-and-americans-disabilities-act-ada",
+        "label": "Website Accessibility"
+      },
+      {
+        "url": "https://www.sos.wa.gov/web-sites-privacy-policy",
+        "label": "Privacy Policy"
+      },
+      {
+        "url": "https://www.sos.wa.gov/cdn-cgi/l/email-protection",
+        "label": "[email protected]"
+      },
+      {
+        "url": "https://www.facebook.com/WashingtonStateElections",
+        "label": "Elections on Facebook."
+      },
+      {
+        "url": "https://twitter.com/secstatewa",
+        "label": "Office of the Secretary of State on X."
+      },
+      {
+        "url": "https://www.instagram.com/secstatewa",
+        "label": "Office of the Secretary of State on Instagram."
+      },
+      {
+        "url": "https://www.youtube.com/user/secstatewa",
+        "label": "Office of the Secretary of State on YouTube."
+      },
+      {
+        "url": "https://www.sos.wa.gov/about-office",
+        "label": "About the Office"
+      },
+      {
+        "url": "https://www.sos.wa.gov/about-office/secretary-state-steve-hobbs",
+        "label": "Secretary of State Steve Hobbs Biography"
+      },
+      {
+        "url": "https://www.sos.wa.gov/about-office/news",
+        "label": "Newsroom"
+      },
+      {
+        "url": "https://www.sos.wa.gov/blog",
+        "label": "Blog"
+      },
+      {
+        "url": "https://www.sos.wa.gov/employment",
+        "label": "Employment"
+      },
+      {
+        "url": "https://www.sos.wa.gov/internship-opportunities",
+        "label": "Internship Opportunities"
+      },
+      {
+        "url": "https://www.sos.wa.gov/about-office/public-records-request",
+        "label": "Public Records Request"
+      },
+      {
+        "url": "https://www.sos.wa.gov/invite-secretary-state-event",
+        "label": "Invite Secretary Hobbs to an Event"
+      },
+      {
+        "url": "https://www.sos.wa.gov/about-office/history-office",
+        "label": "History of the Office"
+      },
+      {
+        "url": "https://www.sos.wa.gov/about-office/washingtons-secretaries-state-past-and-present",
+        "label": "Washington's Secretaries of State - Past and Present"
+      },
+      {
+        "url": "https://www.sos.wa.gov/about-office/contact-us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities",
+        "label": "Corporations & Charities"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities",
+        "label": "Business Entities"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/filings-forms-information",
+        "label": "Download Forms"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/return-business-active-status",
+        "label": "Return a Business to Active Status"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/all-business-entity-forms-name",
+        "label": "All Business Entity Forms By Name"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/limited-liability-company-llc-professional-llc-pllc-filing-resource-page",
+        "label": "Limited Liability Company (LLC) & Professional LLC (PLLC) Filing Resource Page"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/maintain-business-compliance",
+        "label": "Maintain Business Compliance"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/maintain-business-compliance/registered-agents",
+        "label": "Registered Agents"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/maintain-business-compliance/annual-reports",
+        "label": "Annual Reports"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/maintain-business-compliance/period-duration",
+        "label": "Period of Duration"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/business-entity-online-filing-instructions",
+        "label": "Online Filing Instructions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/close-corporation-online",
+        "label": "Close a Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/close-llc-pllc-lp-llp-lllp-online",
+        "label": "Close an LLC, PLLC, LP, LLP, LLLP Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/file-annual-report-multiple-entity-types-online",
+        "label": "File an Annual Report (Multiple Entity Tpyes) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/file-annual-report-nonprofit-2403a-only-online",
+        "label": "File an Annual Report (Nonprofit 24.03A Only) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/register-foreign-non-wa-limited-liability-company-llc-online",
+        "label": "Register a Foreign (Non-WA) Limited Liability Company (LLC) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/register-foreign-non-wa-limited-partnership-lp-or-limited-liability-limited-partnership-lllp-online",
+        "label": "Register a Foreign (Non-WA) Limited Liability Limited Partnership (LLLP) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/register-foreign-non-wa-limited-liability-partnership-llp-online",
+        "label": "Register a Foreign (Non-WA) Limited Liability Partnership (LLP) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/register-foreign-non-wa-professional-limited-liability-company-pllc-online",
+        "label": "Register a Foreign (Non-WA) Professional Limited Liability Company (PLLC) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/register-foreign-non-wa-professional-limited-liability-partnership-pllp-online",
+        "label": "Register a Foreign (Non-WA) Professional Limited Liability Partnership (PLLP) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/register-foreign-non-wa-professional-service-corporation-online",
+        "label": "Register a Foreign (Non-WA) Professional Service Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/register-foreign-non-wa-profit-corporation-online",
+        "label": "Register a Foreign (Non-WA) Profit Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/reinstate-llc-pllc-profit-or-professional-service-corporation-online",
+        "label": "Reinstate a LLC, PLLC, Profit or Professional Service Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/reinstate-nonprofit-miscellaneous-mutual-corporation-online",
+        "label": "Reinstate a Nonprofit Miscellaneous & Mutual Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/reinstate-nonprofit-or-nonprofit-professional-service-corporation-online",
+        "label": "Reinstate a Nonprofit or Nonprofit Professional Service Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/requalify-llc-pllc-profit-or-professional-service-corporation-online",
+        "label": "Requalify an LLC, PLLC, Profit or Professional Service Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-lp-or-lllp-online",
+        "label": "Start a Domestic (WA) LP or LLLP Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-limited-liability-company-llc-online",
+        "label": "Start a Domestic (WA) Limited Liability Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-limited-liability-partnership-llp-online",
+        "label": "Start a Domestic (WA) Limited Liability Partnership (LLP) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-nonprofit-corporation-online",
+        "label": "Start a Domestic (WA) Nonprofit Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-nonprofit-professional-service-corporation-online",
+        "label": "Start a Domestic (WA) Nonprofit Professional Service Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-professional-limited-liability-company-pllc-online",
+        "label": "Start a Domestic (WA) Professional Limited Liability Corporation (PLLC) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-professional-limited-liability-partnership-pllp-online",
+        "label": "Start a Domestic (WA) Professional Limited Liability Partnership (PLLP) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-profit-corporation-online",
+        "label": "Start a Domestic (WA) Profit Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-profit-professional-service-corporation-online",
+        "label": "Start a Domestic (WA) Profit Professional Service Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/start-domestic-wa-social-purpose-corporation-online",
+        "label": "Start a Domestic (WA) Social Purpose Corporation Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/submit-amended-annual-report-all-entity-types-online",
+        "label": "Submit an Amended Annual Report (All Entity Types) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/online-filing-instructions/submit-initial-report-multiple-entity-types-online",
+        "label": "Submit an Initial Report (All Entity Types except NPs) Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/ownership",
+        "label": "Ownership"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/start-or-register-business",
+        "label": "Start or Register a Business"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/start-or-register-business/register-foreign-non-wa-business",
+        "label": "Register a Foreign (Non-WA) Business"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/start-or-register-business/start-domestic-wa-business",
+        "label": "Start a Domestic (WA) Business"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/start-or-register-business/steps-after-registration-secretary-state",
+        "label": "Steps after Registration with the Secretary of State"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/update-business-information",
+        "label": "Update Business Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/business-entities/voluntary-business-closure",
+        "label": "Voluntary Business Closure: Dissolution or Withdrawal"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities",
+        "label": "Nonprofits & Charities"
+      },
+      {
+        "url": "https://ccfs.sos.wa.gov",
+        "label": "Organization Search"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/nonprofits",
+        "label": "Nonprofits"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/nonprofits/2022-nonprofit-law-and-process-changes",
+        "label": "2022 Nonprofit Law and Process Changes"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities",
+        "label": "Charities"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/all-forms",
+        "label": "All Forms"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/disclosure-requirements",
+        "label": "Disclosure Requirements"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/commercial-fundraisers",
+        "label": "Commercial Fundraisers"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/commercial-fundraisers/fee-schedule-commercial-fundraisers",
+        "label": "Fee Schedule for Commercial Fundraisers"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/commercial-fundraisers/want-renew-your-commercial-fundraiser-registration-early",
+        "label": "Want to Renew Your Commercial Fundraiser Registration Early?"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-trusts",
+        "label": "Charitable Trusts"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-trusts/fee-schedule-charitable-trusts",
+        "label": "Fee Schedule for Charitable Trusts"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/donor-information-resource",
+        "label": "Information for Donors"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/information-donors/resources-donors",
+        "label": "Resources for Donors"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/information-donors/resources-donors/frequently-asked-questions-donors",
+        "label": "Consumer FAQs"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/information-donors/resources-donors/storefront-solicitors-where-does-your-donation-go",
+        "label": "Storefront Solicitors- Where does your donation go?"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/information-donors/resources-donors/national-do-not-call-registry",
+        "label": "National \"Do Not Call\" Registry"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/information-donors/resources-donors/reducing-unwanted-telephone-solicitations-and-junk-mail",
+        "label": "Reducing Unwanted Telephone Solicitations and Junk Mail"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/information-donors/assured-giving",
+        "label": "Assured Giving"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/information-donors/commercial-fundraiser-activity-reports",
+        "label": "Commercial Fundraiser Activity Reports"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/information-donors/file-complaint",
+        "label": "To File a Complaint"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions",
+        "label": "Charitable Org Online Filing Instructions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-charity-optional-closure-online",
+        "label": "File Charity Optional Closure Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-charity-renewal-online",
+        "label": "File a Charitable Registration Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-charitable-registration-online",
+        "label": "File a Charitable Registration Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-charity-amendment-online",
+        "label": "File a Charity Amendment Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-charity-closure-online",
+        "label": "File a Charity Closure Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-charity-optional-re-registration-online",
+        "label": "File a Charity Optional Re-Registration Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-charity-optional-registration-online",
+        "label": "File a Charity Optional Registration Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-charity-optional-renewal-online",
+        "label": "File a Charity Optional Renewal Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-charity-re-registration-online",
+        "label": "File a Charity Re-Registration Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-fundraiser-amendment-online",
+        "label": "File a Fundraiser Amendment Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-fundraiser-closure-online",
+        "label": "File a Fundraiser Closure Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-fundraiser-re-registration-online",
+        "label": "File a Fundraiser Re-Registration Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-fundraiser-registration-online",
+        "label": "File a Fundraiser Registration Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-fundraiser-renewal-online",
+        "label": "File a Fundraiser Renewal Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-fundraising-service-contract-amendment-online",
+        "label": "File a Fundraising Service Contract Amendment Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-fundraising-service-contract-registration-online",
+        "label": "File a Fundraising Service Contract Registration Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-trust-closure-online",
+        "label": "File a Trust Closure Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-trust-re-registration-online",
+        "label": "File a Trust Re-Registration Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/charitable-org-online-filing-instructions/file-trust-renewal-online",
+        "label": "File a Trust Renewal Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/charities/donations-clothes-and-household-items",
+        "label": "Donations of Clothes and Household Items"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/nonprofits-charities/nonprofit-charity-resources",
+        "label": "Nonprofit & Charity Resources"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/apostilles-services-information-resource-page",
+        "label": "Apostilles Program"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/apostilles-program/apostille-frequently-asked-questions",
+        "label": "Apostilles Frequently Asked Questions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/apostilles-program/apostille-and-certificate-authenticity-search",
+        "label": "Apostille and Certificate Authenticity Search"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/apostilles-program/contact-information-and-location-apostilles",
+        "label": "Contact Information and Location - Apostilles"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/additional-services/service-processsummons-and-complaint",
+        "label": "Service of Process/Summons and Complaint"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/additional-services/trademarks",
+        "label": "Trademarks"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/additional-services/domestic-partnerships",
+        "label": "Domestic Partnerships"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/additional-services/domestic-partnerships/domestic-partnerships-faqs",
+        "label": "Domestic Partnership FAQs"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/additional-services/domestic-partnerships/laws-and-regulations",
+        "label": "Laws and Regulations"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/additional-services/international-student-exchange-agency-program-isea",
+        "label": "International Student Exchange Agency Program (ISEA)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/additional-services/massachusetts-trust-registration",
+        "label": "Massachusetts Trust Registration"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/additional-services/fish-marketing-act",
+        "label": "Fish Marketing Act"
+      },
+      {
+        "url": "https://www.business.wa.gov/site/alias__business/927/small-business-guide.aspx",
+        "label": "Washington State Small Business Guide"
+      },
+      {
+        "url": "https://omwbe.wa.gov",
+        "label": "Washington Office of Minority and Women’s Business Enterprises (OMWBE)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/resources/business-entities/veteranservice-member-owned-business-information",
+        "label": "Veteran Owned Business Certification"
+      },
+      {
+        "url": "https://www.sba.gov",
+        "label": "Small Business Administration (SBA)"
+      },
+      {
+        "url": "https://www.sba.gov/local-assistance/resource-partners/small-business-development-centers-sbdc",
+        "label": "Small Business Development Centers (SBDC)"
+      },
+      {
+        "url": "https://www.sba.gov/local-assistance/resource-partners/score-business-mentoring",
+        "label": "SCORE Business Mentoring"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/resources/business-entities/prevent-and-detect-business-identity-theft",
+        "label": "Prevent and Detect Business Identity Theft"
+      },
+      {
+        "url": "https://www.atg.wa.gov/consumer-protection",
+        "label": "Washington Attorney General Consumer Protection"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/resources/nonprofits-charities/compliance-state-and-federal",
+        "label": "Compliance (State and Federal)"
+      },
+      {
+        "url": "https://nonprofitwa.org",
+        "label": "Nonprofit Association of Washington (NAWA)"
+      },
+      {
+        "url": "https://www.donotcall.gov",
+        "label": "National Do Not Call Registry"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/resources/nonprofits-charities/education-training/webinar-resources",
+        "label": "Videos - Webinars - Recordings"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/resources/nonprofits-charities/annual-information-return-tax-exempt-organization",
+        "label": "Annual Information Return from Tax-Exempt Org"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/resources/small-business-resource",
+        "label": "Small Business Resource"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/public-notices",
+        "label": "Public Notices"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/public-notices/charities-advisory-council",
+        "label": "Charities Advisory Council"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/public-notices/cle-resources",
+        "label": "CLE Resources"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/public-notices/legal-actions-taken-attorney-general",
+        "label": "Legal Actions Taken by the Attorney General"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/public-notices/note-financial-institutions",
+        "label": "Note to Financial Institutions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/public-notices/current-rulemaking",
+        "label": "Current Rulemaking"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/public-notices/online-filing-system-outage",
+        "label": "Online Filing System Outage"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/contact-us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs",
+        "label": "Frequently Asked Questions (FAQs)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/common-reasons-returned-documents",
+        "label": "Common Reasons for Returned Documents"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/faq-do-i-need-register-my-out-state-business-washington-state",
+        "label": "FAQ - Do I need to register my out of state business in Washington state?"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/glossary-terms",
+        "label": "Glossary of Terms"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/contact-info-requirements-updates",
+        "label": "What addresses to use when filing?"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/what-are-washington-state-business-structures",
+        "label": "What are Washington State Business Structures?"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/governors-officers-directors-members-managers",
+        "label": "Governors/Officers/Directors/Members/Managers"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/faq-trademarks",
+        "label": "FAQ - Trademarks"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/faq-how-do-i-get-copies",
+        "label": "FAQ - How do I get copies"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/fee-schedules-priority-services",
+        "label": "Fee Schedule / Expedited Service"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/charitable-organizations-frequently-asked-questions",
+        "label": "FAQ - Charitable Organizations"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/corporations-charities-filing-system-tools-resources",
+        "label": "CCFS"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/account-creation",
+        "label": "Account Creation"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/third-party-notices-and-solicitations-tips-examples",
+        "label": "Examples of Potentially Confusing or Misleading “Notices” & “Solicitations”"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/certificates-certified-copies",
+        "label": "How Do I Order Certified Copies?"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/how-verify-notice-secretary-state",
+        "label": "I think I received a notice from your office; what should I do?"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/order-certificate-existence-out-state",
+        "label": "Order a Certificate of Existence (Out‑of‑State)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/frequently-asked-questions-faqs/resetforgot-password",
+        "label": "Reset/Forgot Password"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/posted-customer-alerts-information",
+        "label": "Previously Posted Alerts & Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/corporations-charities/processing-guidelines-and-procedure",
+        "label": "Processing Guidelines and Procedure"
+      },
+      {
+        "url": "https://www.sos.wa.gov/trade",
+        "label": "International Trade Program"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/federal-impacts-washington-state-elections",
+        "label": "Federal Impacts on Washington State Elections"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/voter-eligibility",
+        "label": "Voter Eligibility"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/future-voter-program",
+        "label": "Future Voter Program"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/how-receive-absentee-ballot",
+        "label": "How to Receive a Ballot"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/military-and-overseas-voters",
+        "label": "Military and Overseas Voters"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/voters-disabilities",
+        "label": "Voters with Disabilities"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/voting-assisted-living-facilities",
+        "label": "Voting in Assisted Living Facilities"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/felony-convictions-and-voting-rights",
+        "label": "Felony Convictions and Voting Rights"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/voters-away-college",
+        "label": "Voters Away at College"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/new-washington-resident",
+        "label": "New Washington Resident"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/seasonal-resident-snowbird",
+        "label": "Seasonal Resident - Snowbird"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/residency-requirements",
+        "label": "Residency Requirements"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/print-voter-registration-form",
+        "label": "Print a Voter Registration Form"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/requesting-voter-registration-by-forms-mail",
+        "label": "Requesting Voter Registration Forms By Mail"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/avr",
+        "label": "Automatic Voter Registration (AVR)"
+      },
+      {
+        "url": "https://youtu.be/NkuhRpP-TY4",
+        "label": "3 Ways to Register to Vote"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
+        "label": "Current Election Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/top-two-primary-faqs-voters",
+        "label": "Top 2 Primary: FAQs for Voters"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/frequently-asked-questions-about-elections",
+        "label": "Frequently Asked Questions about Elections"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/frequently-asked-questions-voting-mail",
+        "label": "Frequently Asked Questions on Voting By Mail"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/elected-officials",
+        "label": "Current Federal & State Elected Officials"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/information/descriptions-elected-offices",
+        "label": "Descriptions of Elected Offices"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/natural-disasters-and-voting",
+        "label": "Wildfires and voting"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/electoral-college",
+        "label": "Electoral College"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/electoral-college/electoral-college-electors",
+        "label": "Electoral College Electors"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/helpful-information/presidential-primary-faq",
+        "label": "Presidential Primary FAQ"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/proposed-ballot-measure-information",
+        "label": "Proposed Ballot Measure Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/securing-your-vote",
+        "label": "Securing Your Vote"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/2021-voters-pamphlet-audio",
+        "label": "2021 Voters' Pamphlet Audio"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates",
+        "label": "Candidates"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/filing-resources/file-office",
+        "label": "File for Office"
+      },
+      {
+        "url": "https://voter.votewa.gov/CandidateList.aspx",
+        "label": "Candidates Who Have Filed"
+      },
+      {
+        "url": "https://salaries.wa.gov/salary",
+        "label": "Washington State Officials' Salary Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/filing-resources/running-president-united-states",
+        "label": "Running for President of the United States"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/filing-resources/withdrawal-candidacy",
+        "label": "Withdrawal of Candidacy"
+      },
+      {
+        "url": "https://www.redistricting.wa.gov/district-maps-handouts.html",
+        "label": "Current District Maps"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/washington-state-voter-registration-database-vrdb",
+        "label": "Washington State Voter Registration Database"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voter-registration-drive-tools/voter-outreach-and-education-materials",
+        "label": "Voter Outreach and Education Materials"
+      },
+      {
+        "url": "https://www.belfercenter.org/publication/state-and-local-election-cybersecurity-playbook",
+        "label": "Cybersecurity Campaign Playbook (Belfer Center)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/frequently-asked-questions/candidate-filing-frequently-asked-questions",
+        "label": "Candidate Filing FAQ"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/frequently-asked-questions/write-candidates",
+        "label": "Write-in Candidacy"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/frequently-asked-questions/top-two-primary-faqs-candidates",
+        "label": "Top Two Primary: FAQs for Candidates"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/candidates/frequently-asked-questions/recount-faq",
+        "label": "Recount FAQ"
+      },
+      {
+        "url": "http://www.pdc.wa.gov",
+        "label": "Washington Public Disclosure Commission"
+      },
+      {
+        "url": "http://www.fec.gov",
+        "label": "Federal Elections Commission"
+      },
+      {
+        "url": "https://wsdot.wa.gov/business-wsdot/highway-signs/political-signs-highways",
+        "label": "Political signs on highways"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda",
+        "label": "Initiatives & Referenda"
+      },
+      {
+        "url": "https://apps.sos.wa.gov/elections/initiatives/referenda.aspx",
+        "label": "Current Initiatives & Referenda"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/past-initiatives-referendum",
+        "label": "Past Initiatives"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/past-initiatives/2024-initiatives-legislature-measure-assignments",
+        "label": "2024 Initiatives to the Legislature Measure Assignments"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/2025-initiatives-people-measure-assignments",
+        "label": "Initiatives to the People Measure Assignments"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/2025-initiatives-legislature-measure-assignments",
+        "label": "Initiatives to the Legislature Measure Assignments"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/petition-observer-resources",
+        "label": "Petition Observer Resources"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2024-03/initiative-and-referenda-handbook.pdf",
+        "label": "Initiative and Referenda Handbook"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-instructions",
+        "label": "How to Sponsor an Initiative"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/filing-initiative",
+        "label": "File Online"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/initiatives-referenda/filing-initiative/frequently-asked-questions-about-circulating-initiative-and-referendum-petitions",
+        "label": "FAQ - Circulating Initiative and Referendum Petitions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/affidavitforproposedinitiative.pdf",
+        "label": "Affidavit for proposed Initiative"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/referendaaffidavitform.pdf",
+        "label": "Affidavit for proposed Referendum"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/petition-template-instructions.2022a.pdf",
+        "label": "Petition Template Instructions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/petition-template%E2%80%93-initiative-to-people.hobbs_.final_.docx",
+        "label": "Petition Template - Initiative to the People"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/suggestedpetitiontemplate.leg_.hobbs_.final_..docx",
+        "label": "Petition Template - Initiative to the Legislature"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach",
+        "label": "Education & Outreach"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/mock/about-student-mock-election.aspx",
+        "label": "Student Mock Election"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/k-12-college/student-mock-election/student-mock-election-dashboard",
+        "label": "Student Mock Election Dashboard"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-07/TeachingElectionsWA.pdf",
+        "label": "Teaching Elections in Washington State"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/k-12-college/teaching-elections-curriculum-guide",
+        "label": "Request copy of Teaching Elections in WA State"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/k-12-college/temperance-and-good-citizenship-day",
+        "label": "Temperance and Good Citizenship Day"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/k-12-college/washington-campus-voting-challenge",
+        "label": "Washington Campus Voting Challenge"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voters/language-access-voters",
+        "label": "Section 203 Language Access for Voters Map"
+      },
+      {
+        "url": "https://youtu.be/Vve1clkk044",
+        "label": "3 Ways to Register to Vote Video"
+      },
+      {
+        "url": "https://youtu.be/0pwd2WGlw44",
+        "label": "Path of a Ballot Video"
+      },
+      {
+        "url": "https://youtube.com/playlist?list=PL9oXZcOwq8vk-zp_8zd6rGfN3xj_Mbj5a",
+        "label": "Video Collection"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voters/outreach-and-voter-registration-handouts",
+        "label": "Outreach and Voter Registration Handouts"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-09/GuideToRegisteringVoters.pdf?uid=65416287086dc",
+        "label": "Guide to Registering Voters"
+      },
+      {
+        "url": "https://votewa.gov",
+        "label": "Online Voter Registration"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/voter-registration/requesting-voter-registration-forms-mail",
+        "label": "Requesting Voter Registration Forms By Mail"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voter-registration-drive-tools/request-voter-registration-starter-kit",
+        "label": "Request a Voter Registration Starter Kit"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/voter-registration-drive-tools/elections-toolkit",
+        "label": "Elections Toolkit"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/education-outreach/same-day-registration",
+        "label": "Same Day Registration"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research",
+        "label": "Data & Research"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/ballot-return-statistics",
+        "label": "Current Election Ballot Return Statistics"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/ballot-status-reports",
+        "label": "Current Election Ballot Status Reports"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics",
+        "label": "Reports, Data, and Statistics"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/voter-demographics",
+        "label": "Voter Demographics"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/monthly-voter-registration-transactions",
+        "label": "Monthly Voter Registration Transactions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/reports-data-and-statistics/washington-state-voter-registration-database-vrdb",
+        "label": "Voter Registration Database"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/ballot-drop-box-usage-year",
+        "label": "Ballot Drop Box Usage by Year"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/reports-data-and-statistics/voter-participation-statistics",
+        "label": "Voter Participation Statistics"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/voter-turnout-election",
+        "label": "Voter Turnout by Election"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/general-election-turnout",
+        "label": "General Election Turnout"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/redistricting-census-information",
+        "label": "Redistricting & Census Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/reports-data-and-statistics/precinct-shapefiles",
+        "label": "Precinct Shapefiles"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets",
+        "label": "Election Results and Voters' Pamphlets"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-april-special-election",
+        "label": "2026 April Special Election"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-february-special-election",
+        "label": "2026 February Special Election"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-general-election-voters-guide",
+        "label": "2026 General Election Voters' Guide"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-general-election-voters-guide/2026-general-election-voters-pamphlet-audio-guide",
+        "label": "2026 General Election Voters' Pamphlet Audio Guide"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-general-election-voters-guide/2026-voters-pamphlet-pdfs",
+        "label": "2026 Voters' Pamphlet PDFs"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/2026-primary-election",
+        "label": "2026"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/election-results-and-voters-pamphlets/washington-state-election-results-archive",
+        "label": "Washington State Election Results Archive"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-data-and-maps/2024-court-designated-legislativecongressional-maps",
+        "label": "2024 Court Designated Legislative/Congressional Maps"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/history-laws-and-litigation/election-laws",
+        "label": "State & Federal Election Laws and Checklists"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/history-laws-and-litigation/income-tax-ballot-measures",
+        "label": "Income Tax Ballot Measures"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/history-laws-and-litigation/history-washington-state-primary",
+        "label": "History of the Washington State Primary"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/history-laws-and-litigation/constitutional-amendment-ballot-measures",
+        "label": "Constitutional Amendment Ballot Measures"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-technology/understanding-voter-registration-data",
+        "label": "Understanding Voter Registration Data"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-technology/voting-systems-county",
+        "label": "Voting Systems by County"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-technology/voting-system-testing-and-certification",
+        "label": "Voting System Testing and Certification"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/election-technology/post-election-audits",
+        "label": "Post-Election Audits"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/public-notices/public-hearings-and-meetings",
+        "label": "Public Hearings and Meetings"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/data-research/public-notices/elections-rulemaking",
+        "label": "Recent Rulemaking"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators",
+        "label": "Administrators"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/certification-training/election-administrator-certification",
+        "label": "Election Administrator Certification"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/certification-training/certification-and-training",
+        "label": "About Certification and Training"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-11/PathToBecomingAdministrator.pdf",
+        "label": "How to Become Certified"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/certification-training/training-materials-and-videos",
+        "label": "Training Materials and Videos"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/certification-training/elections-101",
+        "label": "Elections 101"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-06/Certification%20Application.pdf",
+        "label": "Apply for Certification"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-11/ElectionAdminCertExam.pdf",
+        "label": "Certification Exam"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/ada-doj_ballot_box_access.pdf",
+        "label": "ADA Ballot Drop Box Accessibility"
+      },
+      {
+        "url": "https://archive.ada.gov/votingck.htm",
+        "label": "ADA Checklist for Voting Centers"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/election-laws/clearinghouse-notices-elections-advisories",
+        "label": "Clearinghouse Notices & Elections Advisories"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/canvassing%20board%20handbook%2002.2022.pdf",
+        "label": "Introduction to County Canvassing Boards"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/election-resources/presidential-primary-resources-training-materials",
+        "label": "Presidential Primary Resources & Training Materials"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-05/2018_voter-intent_web.pdf",
+        "label": "Statewide Standards on What is a Vote"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/election-laws/accessibility-resources",
+        "label": "Accessibility Resources"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-voters",
+        "label": "Forms for Voters"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-templates/candidate-filing-forms",
+        "label": "Forms for Candidates"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-templates/voter-registration-challenges",
+        "label": "Voter Registration Challenges"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-templates/certification-la-tests-and-recounts",
+        "label": "Certification, L&A Tests, and Recounts"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/administrators/forms-templates/election-cost-allocation-and-reimbursement",
+        "label": "Election Cost Allocation and Reimbursement"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/voters/forms-voters/agency-based-voter-registration-forms",
+        "label": "Agency-based Voter Registration Forms"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2022-06/do%20i%20need%20to%20request%20a%20special%20absentee%20ballot_2020.pdf",
+        "label": "Special Absentee Ballot Application"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-06/HAVA%20Administrative%20Complaint%20Form%20June%202023.pdf",
+        "label": "HAVA Complaint Form"
+      },
+      {
+        "url": "https://www.sos.wa.gov/sites/default/files/2023-07/VoterRegistrationCancellationForm_English.pdf",
+        "label": "Voter Registration Cancellation Form"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/contact-info",
+        "label": "Contact Info"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/calendar",
+        "label": "Elections Calendar"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/MarkTheBallot",
+        "label": "Mark the Ballot"
+      },
+      {
+        "url": "https://www.sos.wa.gov/elections/rumor-has-it",
+        "label": "Rumor Has It"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives",
+        "label": "Archives"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection",
+        "label": "Explore Our Collection"
+      },
+      {
+        "url": "https://www2.sos.wa.gov/archives/search.aspx",
+        "label": "Archives Catalog"
+      },
+      {
+        "url": "https://www.digitalarchives.wa.gov",
+        "label": "Online Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/ask-archivist",
+        "label": "Ask an Archivist"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/branches/central-regional-branch",
+        "label": "Central Regional Branch"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/branches/eastern-regional-branch",
+        "label": "Eastern Regional Branch"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/branches/northwest-regional-branch",
+        "label": "Northwest Regional Branch"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/branches/puget-sound-regional-branch",
+        "label": "Puget Sound Regional Branch"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/branches/southwest-regional-branch",
+        "label": "Southwest Regional Branch"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/branches/state-government",
+        "label": "State Government"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/common-research-questions",
+        "label": "Frequently Asked Research Questions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/washington-state-constitution",
+        "label": "State Constitution"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/explore-our-collection/educational-resources-teachers-students",
+        "label": "Teachers & Students"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies",
+        "label": "Help for Government Agencies"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-city-records",
+        "label": "Managing City Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-city-records/managing-liquor-and-cannabis-board-licensing-notices",
+        "label": "Managing Liquor and Cannabis Board Licensing Notices"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-county-records",
+        "label": "Managing County Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-state-agency-records",
+        "label": "Managing State Agency Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-state-agency-records/state-records-officer-directory",
+        "label": "State Records Officer Directory"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-records-private-other-non-government-organizations",
+        "label": "Managing Records of Private & Other Non-Government Organizations"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/customized-records-help-government-agencies",
+        "label": "Other Government Agencies"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/local-records-grant",
+        "label": "Local Records Grant"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/local-records-grant/application-and-grant-management",
+        "label": "Application and Grant Management"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/local-records-grant/organizing-file-room-grant",
+        "label": "Organizing the File Room Grant"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/local-records-grant/digital-imaging-grant",
+        "label": "Digital Imaging"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/local-records-grant/technology-tools-grant",
+        "label": "Technology Tools"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/local-records-grant/grantees-2017-current",
+        "label": "Grantees (2017-Current)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/imaging-services",
+        "label": "Imaging Services"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/records-center",
+        "label": "Records Center"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/committees-and-commissions/archives-advisory-committee",
+        "label": "Archives Advisory Committee"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/committees-and-commissions/local-records-committee",
+        "label": "Local Records Committee"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/committees-and-commissions/recording-standards-commission",
+        "label": "Recording Standards Commission"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/committees-and-commissions/state-records-committee",
+        "label": "State Records Committee"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/advice",
+        "label": "Advice and Consultations"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/consultations",
+        "label": "Consultations"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/draft-revision-local-government-core-schedule",
+        "label": "Draft Revision of Local Government CORE Schedule"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/help-using-records-retention-schedules",
+        "label": "Help Using Records Retention Schedules"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/laws-and-rules-records-management",
+        "label": "Laws and Rules for Records Management"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-commodity-commission-records",
+        "label": "Managing Commodity Commission Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-executive-level-records",
+        "label": "Managing Executive Level Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-legal-affairs-records",
+        "label": "Managing Legal Affairs Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-legal-affairs-records/managing-notary-public-journals",
+        "label": "Managing Notary Public Journals"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-policy-and-procedure-records",
+        "label": "Managing Policy and Procedure Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-project-files",
+        "label": "Managing Project Files"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-subject-files",
+        "label": "Managing Subject Files"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-transitory-records",
+        "label": "Managing Transitory Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-vehicle-records",
+        "label": "Managing Vehicle Records"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/managing-vehicle-records/managing-dash-cam-recordings",
+        "label": "Managing Dash Cam Recordings"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/records-management-training",
+        "label": "Records Management Training"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/records-retention-schedules",
+        "label": "Records Retention Schedules"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/records-retention-schedules/how-export-retention-schedules-excel-format",
+        "label": "How to Export Retention Schedules in Excel Format"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/records-retention-schedules/previous-versions-agricultural-commodity-commissions-schedule",
+        "label": "Previous Versions - Agricultural Commodity Commissions Schedule"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/records-retention-schedules/previous-versions-county-assessors-and-treasurers-schedule",
+        "label": "Previous Versions - County Assessors and Treasurers Schedule"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/records-retention-schedules/previous-versions-risk-pools-schedule",
+        "label": "Previous Versions - Risk Pools Schedule"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/help-government-agencies/request-consultation",
+        "label": "Request a Consultation"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/be-involved",
+        "label": "Be Involved"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/donate",
+        "label": "Donate to Washington State Archives"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/be-involved/historical-records-project",
+        "label": "SCRIBE"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/be-involved/out-archives-newsletter-archive",
+        "label": "Out of the Archives Newsletter Archive"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/be-involved/washington-archives-month-2026",
+        "label": "Washington Archives Month 2026"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/contact-us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/archives-policies",
+        "label": "Archives Policies"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/legacy",
+        "label": "Legacy Washington"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/legacy/projects",
+        "label": "Legacy Washington Projects"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/legacy/projects/dan-evans",
+        "label": "Daniel J. Evans: An Autobiography"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/legacy/projects/love-equally",
+        "label": "Love Equally: The Journey to Marriage Equality"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/legacy/projects/sam-reed",
+        "label": "Mr. Mainstream: Sam Reed’s Half Century of Public Service and Civility"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/legacy/projects/new-land",
+        "label": "New Land: Southeast Asian Refugees Finding Home in Washington"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/legacy/projects/boldt-decision-50",
+        "label": "The Boldt Decision at 50"
+      },
+      {
+        "url": "https://www.sos.wa.gov/archives/legacy/traveling-exhibits",
+        "label": "Traveling Exhibits"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library",
+        "label": "Library"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library",
+        "label": "About the State Library"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/available-library-services-starting-july-1-2025",
+        "label": "Available Services As Of July 1, 2025"
+      },
+      {
+        "url": "https://stlow.iii.com/patroninfo",
+        "label": "My Library Account"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/ask-librarian",
+        "label": "Ask a Librarian"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/branch-libraries",
+        "label": "Branch Libraries"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/history-washington-state-library",
+        "label": "History of the Washington State Library"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/get-library-card",
+        "label": "Get a Library Card"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/hours-operation-directions",
+        "label": "Hours of Operation & Directions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/state-librarian",
+        "label": "State Librarian"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/resource-sharing-interlibrary-loan",
+        "label": "Resource Sharing (Interlibrary Loan)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/resource-sharing-interlibrary-loan/resource-sharing-interlibrary-loan-individuals",
+        "label": "Resource Sharing (Interlibrary Loan) for Individuals"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/about-state-library/strategic-goals",
+        "label": "Strategic Goals"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections",
+        "label": "Research & Collections"
+      },
+      {
+        "url": "https://washstatelib.libguides.com/DigitalResourcesHub/Home",
+        "label": "Digital Resources Hub"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/washington-state-research",
+        "label": "Washington State Research"
+      },
+      {
+        "url": "https://washstatelib.libguides.com/newspapers",
+        "label": "Washington State Newspapers"
+      },
+      {
+        "url": "https://www.washingtonruralheritage.org",
+        "label": "Washington Rural Heritage"
+      },
+      {
+        "url": "https://washingtondigitalnewspapers.org",
+        "label": "Washington Digital Newspapers"
+      },
+      {
+        "url": "https://northwestdigitalheritage.org/s/nwdh/page/home",
+        "label": "Northwest Digital Heritage"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/state-government-publications",
+        "label": "State Government Publications"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/classics-washington-history",
+        "label": "Classics in Washington History"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/state-government-publications/washington-state-publications-new-electronic-titles",
+        "label": "Washington State Publications New Electronic Titles"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/federal-depository-libraries",
+        "label": "Federal Government Publications"
+      },
+      {
+        "url": "https://washstatelib.libguides.com/GenealogyatWSL",
+        "label": "Genealogy"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/collections-washington-state-library",
+        "label": "Collections of the Washington State Library"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections",
+        "label": "Special Collections"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/governors-writers-day-awards-washington-state-library-1966-2000",
+        "label": "Governor's Writers Day Awards at the Washington State Library, 1966-2000"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/rare-maps-collection-washington-state-library",
+        "label": "Rare Maps Collection of the Washington State Library"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/washington-state-library-tweney-89-collection",
+        "label": "The Washington State Library Tweney 89 Collection"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/rare-publications-washington-state-library",
+        "label": "Rare Publications of the Washington State Library"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/guidelines-donating-special-collections",
+        "label": "Guidelines for Donating to the Special Collections"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/guidelines-handling-and-care-special-collections",
+        "label": "Guidelines for the Handling and Care of Special Collections"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/manuscripts-collection-washington-state-library",
+        "label": "Manuscripts Collection of the Washington State Library"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/special-collections-frequently-asked-questions",
+        "label": "Special Collections Frequently Asked Questions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/governor-isaac-stevens-territorial-library-collection",
+        "label": "Governor Isaac Stevens' Territorial Library Collection"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/special-collections/ye-galleon-press-collection",
+        "label": "Ye Galleon Press Collection"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/city-directories-telephone-books",
+        "label": "City Directories & Telephone Books"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/county-directories",
+        "label": "County Directories"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/federal-government-resources",
+        "label": "Federal Government Resources"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/land-records-washington-state",
+        "label": "Land Records in Washington State"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/obituary-requests",
+        "label": "Obituary Requests"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/washington-state-depository-program-libraries",
+        "label": "Washington State Depository Program Libraries"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/washington-territorial-and-state-governors",
+        "label": "Washington Territorial and State Governors"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/women-washington-state-legislature",
+        "label": "Women in the Washington State Legislature"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/newspapers-moments-history",
+        "label": "Newspapers - Moments in History"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/research-collections/links-newspapers-washington",
+        "label": "Links to Newspapers in Washington"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-you",
+        "label": "Resources for You"
+      },
+      {
+        "url": "https://postmarked.primarilywashington.org/s/postmarked/page/home",
+        "label": "Postmarked Washington"
+      },
+      {
+        "url": "https://primarilywashington.org",
+        "label": "Primarily Washington"
+      },
+      {
+        "url": "https://washingtoncenterforthebook.org/about-the-washington-state-book-awards",
+        "label": "Washington State Book Awards"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-you/certification-librarians",
+        "label": "Librarian Certification"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-you/librarian-certification/washington-librarian-certification-faq",
+        "label": "Washington Librarian Certification FAQ"
+      },
+      {
+        "url": "https://washingtoncenterforthebook.org/ilswishlists",
+        "label": "Institutional Library Services Wishlist"
+      },
+      {
+        "url": "https://washingtoncenterforthebook.org",
+        "label": "Washington Center for the Book"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries",
+        "label": "Resources for Libraries"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/first-tuesdays",
+        "label": "First Tuesdays: Continuing Education"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/contacts-name",
+        "label": "Contacts by Name"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/technology/childrens-internet-protection-act",
+        "label": "Children's Internet Protection Act"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/technology/childrens-internet-protection-act/childrens-internet-protection-act-questions-and-answers",
+        "label": "Children's Internet Protection Act: Questions and Answers"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/technology/childrens-internet-protection-act-cipa-and-filtering",
+        "label": "Children's Internet Protection Act (CIPA) and Filtering"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/technology/e-rate-information-public-libraries",
+        "label": "E-Rate Information for Public Libraries"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/technology/technology-services",
+        "label": "Technology Services"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/training/training-calendar",
+        "label": "Training Calendar"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/training/training-and-certification-resources",
+        "label": "Training and Certification Resources"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/training/trustee-support",
+        "label": "Trustee Support"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/training/resources-training-public-library-staff",
+        "label": "Resources & Training for Public Library Staff - Washington State Library - WA Secretary of State"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/training/resources-training-school-library-staff",
+        "label": "Resources & Training for School Library Staff"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/lsta-background",
+        "label": "LSTA Background"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/publications",
+        "label": "Publications"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/previous-publications",
+        "label": "Previous Publications (1999 - 2022)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/washington-digital-library-consortium",
+        "label": "Washington Digital Library Consortium"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-development/public-library-statistics",
+        "label": "Public Library Statistics"
+      },
+      {
+        "url": "https://washstatelib.libguides.com/Digital-skills-resources/Linkedin-learning",
+        "label": "LinkedIn Learning"
+      },
+      {
+        "url": "https://washstatelib.libguides.com/Digital-skills-resources/Northstar-digital-skills-assessments",
+        "label": "Northstar"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/advantages-washington-group-services",
+        "label": "Advantages of Washington Group Services"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/all-aboard-kindergarten",
+        "label": "All Aboard for Kindergarten"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/check-out-washington",
+        "label": "Check Out Washington"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/data-consultation",
+        "label": "Data Consultation"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/digital-inclusion-resource-collection",
+        "label": "Digital Inclusion Resource Collection"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/early-learning-support",
+        "label": "Early Learning Support"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/open-data-library",
+        "label": "Open Data - Library"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/statewide-projects-and-initiatives",
+        "label": "Statewide Projects and Initiatives"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/teacher-librarian-common-core-cadre-tlc",
+        "label": "Teacher-Librarian Common Core Cadre (TLC"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/washington-group-services-news",
+        "label": "Washington Group Services News"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/washington-oclc-group-services-libraries",
+        "label": "Washington OCLC Group Services Libraries"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/washington-oclc-group-services",
+        "label": "Washington OCLC Group Services"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/washington-public-libraries-and-k-20-network",
+        "label": "Washington Public Libraries and the K-20 Network"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/washington-states-summer-reading-program",
+        "label": "Washington State's Summer Reading Program"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/youth-services",
+        "label": "Youth Services"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/youth-services/circulating-steam-program-kits",
+        "label": "Circulating STEAM Program Kits"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/youth-services/library-services-school-age-youth",
+        "label": "Library Services for School-Age Youth"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/projects/youth-services/library-services-teens",
+        "label": "Library Services for Teens"
+      },
+      {
+        "url": "https://sos.us10.list-manage.com/subscribe?id=192c874c3d&u=4cc76b29ebd6084a20161a5f6",
+        "label": "Subscribe to the Library Newsletter"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/grants-information",
+        "label": "Grants for Libraries"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/library-council-and-lsta-planning",
+        "label": "Library Council"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/professional-development-grants",
+        "label": "Professional Development and Training"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/services-libraries",
+        "label": "All Resources for Libraries"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/askwa-statewide-virtual-reference-cooperative",
+        "label": "AskWA"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/learn-practice-certify",
+        "label": "Workforce Development"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/resources-libraries/email-lists",
+        "label": "Email Lists"
+      },
+      {
+        "url": "https://policies.walibraries.org",
+        "label": "Washington State Public Library Policies"
+      },
+      {
+        "url": "https://www.wtbbl.org",
+        "label": "WA Talking Book & Braille Library"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/reference-requests-doc-dshs-and-dcyf",
+        "label": "Reference Requests from DOC, DSHS, and DCYF"
+      },
+      {
+        "url": "https://www.sos.wa.gov/library/donate",
+        "label": "Donate to Washington State Library Programs"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs",
+        "label": "Statewide Programs"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp",
+        "label": "Address Confidentiality Program (ACP)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/about-us",
+        "label": "About Us"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/do-i-qualify",
+        "label": "Do I Qualify?"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/application-process",
+        "label": "Application Process"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/application-process/acp-appropriate-me",
+        "label": "Is the ACP appropriate for me?"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants",
+        "label": "Participants"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/newsletters",
+        "label": "Newsletters"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/owning-business-nonprofit-or-charity",
+        "label": "Owning a Business. Nonprofit, or Charity."
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/participant-forms",
+        "label": "Participant Forms"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/participant-responsibilities",
+        "label": "Participant Responsibilities"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/purchasing-home",
+        "label": "Purchasing a Home"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/survivor-resources",
+        "label": "Survivor Resources"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/updating-acp-information",
+        "label": "Updating ACP Information"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/using-your-substitute-address",
+        "label": "Using Your Substitute Address"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/participants/voter-registration-acp",
+        "label": "Voter Registration - ACP"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/advocates",
+        "label": "Advocates"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/address-confidentiality-program-acp/agencies-and-businesses",
+        "label": "Agencies and Businesses"
+      },
+      {
+        "url": "https://www.sos.wa.gov/all-foundation",
+        "label": "ALL Foundation of Washington"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/civic-engagement-program",
+        "label": "Civic Engagement Program (CEP)"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive",
+        "label": "Combined Fund Drive"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/2026-cfd-campaign",
+        "label": "2026 CFD Campaign"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/about-combined-fund-drive",
+        "label": "About the Combined Fund Drive"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/cfd-policies-and-procedures",
+        "label": "CFD Policies and Procedures"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/agency-campaign-tracker",
+        "label": "Campaign Tracker"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/contact-combined-fund-drive",
+        "label": "Contact the Combined Fund Drive"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/disaster-relief-center",
+        "label": "Disaster Relief Center"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/frequently-asked-questions",
+        "label": "Frequently Asked Questions"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/ways-give",
+        "label": "Ways to Give"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/cfd-game-nite",
+        "label": "CFD Game Nite"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/calendar",
+        "label": "Event Calendar"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/first-week-give",
+        "label": "First Week to Give"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/combined-fund-drive/leadership-breakfast",
+        "label": "Leadership Breakfast"
+      },
+      {
+        "url": "https://www.sos.wa.gov/about-office/washington-state-global-war-terrorism-memorial",
+        "label": "Global War on Terrorism Memorial"
+      },
+      {
+        "url": "https://www.sos.wa.gov/medals",
+        "label": "Medals of Merit & Valor"
+      },
+      {
+        "url": "https://www.sos.wa.gov/flag",
+        "label": "State Flag"
+      },
+      {
+        "url": "https://www.sos.wa.gov/seal",
+        "label": "State Seal"
+      },
+      {
+        "url": "https://store.sos.wa.gov",
+        "label": "Buy Books and Flags"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/washington-state-productivity-board",
+        "label": "Washington State Productivity Board"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/washington-state-productivity-board/about-productivity-board",
+        "label": "About the Productivity Board"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/washington-state-productivity-board/productivity-board-awards",
+        "label": "Productivity Board Awards"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/washington-state-productivity-board/productivity-board-awards/2026-innovations-state-government",
+        "label": "2026 Innovations in State Government Awardees"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/washington-state-productivity-board/productivity-board-programs",
+        "label": "Productivity Board Programs"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/washington-state-productivity-board/results-practice-efficiency-experience-conference",
+        "label": "Results in Practice: Efficiency & Experience Conference"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/washington-state-productivity-board/submit-idea",
+        "label": "Submit an Idea"
+      },
+      {
+        "url": "https://www.sos.wa.gov/statewide-programs/washington-state-productivity-board/join-productivity-boards-coffee-klatch",
+        "label": "Join the Productivity Board's Coffee Klatch"
+      }
+    ]
+  },
+  {
+    "url": "https://sos.wyo.gov/Elections/Voting.aspx",
+    "finalUrl": "https://sos.wyo.gov/Elections/Voting.aspx",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:24:52.301Z",
+    "rawHash": "32dbb5b838075dfaea2c3050d5d7fccbf8da0022d06551ed7de02ff2bd7832df",
+    "path": "tests/fixtures/voting-sources/vs-04-west/wy-aae0b7371d6e.html",
+    "savedHash": "32dbb5b838075dfaea2c3050d5d7fccbf8da0022d06551ed7de02ff2bd7832df",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.googletagmanager.com/ns.html?id=GTM-K894CSM",
+        "label": ""
+      },
+      {
+        "url": "https://sos.wyo.gov",
+        "label": "Wyoming Secretary of State"
+      },
+      {
+        "url": "https://sos.wyo.gov/default.aspx",
+        "label": "Home"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Voting.aspx",
+        "label": "Voting"
+      },
+      {
+        "url": "https://sos.wyo.gov/AboutUs/Default.aspx",
+        "label": "About Us Home"
+      },
+      {
+        "url": "https://sos.wyo.gov/AboutUs/AboutSecretary.aspx",
+        "label": "Meet the Secretary"
+      },
+      {
+        "url": "https://sos.wyo.gov/AboutUs/DutiesoftheOffice.aspx",
+        "label": "Duties of the Office"
+      },
+      {
+        "url": "https://sos.wyo.gov/Media/MediaReleases.aspx",
+        "label": "Media Releases"
+      },
+      {
+        "url": "https://sos.wyo.gov/AboutUs/OtherWebsites.aspx",
+        "label": "Other Related Websites"
+      },
+      {
+        "url": "https://sos.wyo.gov/AboutUs/SOS50.aspx",
+        "label": "50 States' Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/faqs.aspx?root=GQ",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://wyobiz.wyo.gov/Business/Default.aspx",
+        "label": "Business E-Filing"
+      },
+      {
+        "url": "https://sos.wyo.gov/Business/Default.aspx",
+        "label": "Business & UCC Home"
+      },
+      {
+        "url": "https://wyobiz.wyo.gov/Business/AnnualReport.aspx",
+        "label": "Annual Report Online Filing"
+      },
+      {
+        "url": "https://sos.wyo.gov/faqs.aspx?root=BUS",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://sos.wyo.gov/Business/CRAHome.aspx",
+        "label": "Commercial Registered Agents"
+      },
+      {
+        "url": "https://sos.wyo.gov/FinCEN",
+        "label": "FinCEN / CTA Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Default.aspx?root=Business",
+        "label": "Forms"
+      },
+      {
+        "url": "https://wyobiz.wyo.gov/Business/ViewCertificate.aspx",
+        "label": "Good Standing Certificates Online"
+      },
+      {
+        "url": "https://sos.wyo.gov/Business/MaintainBusiness.aspx",
+        "label": "Maintaining Your Business"
+      },
+      {
+        "url": "https://sos.wyo.gov/Business/OnlineBusinessServices.aspx",
+        "label": "Online Business Services"
+      },
+      {
+        "url": "https://sos.wyo.gov/Business/QuestionsAndAnswers.aspx",
+        "label": "Questions and Answers"
+      },
+      {
+        "url": "https://wyobiz.wyo.gov/Business/Reinstatement.aspx",
+        "label": "Reinstate Online"
+      },
+      {
+        "url": "https://sos.wyo.gov/Business/ReportFraud",
+        "label": "Report Business Filing Fraud"
+      },
+      {
+        "url": "https://sos.wyo.gov/Business/StartABusiness.aspx",
+        "label": "Start a Business"
+      },
+      {
+        "url": "https://wyobiz.wyo.gov/Business/FilingSearch.aspx",
+        "label": "Search for Business Names/Filings"
+      },
+      {
+        "url": "https://sos.wyo.gov/Business/Statistics.aspx",
+        "label": "Statistics"
+      },
+      {
+        "url": "https://sos.wyo.gov/Business/UCCEFSBuyerHome.aspx",
+        "label": "UCC / EFS / Buyers"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Default.aspx",
+        "label": "Elections Home"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/2026ElectionInformation.aspx",
+        "label": "2026 Election"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/ElectionAdministration.aspx",
+        "label": "Administration"
+      },
+      {
+        "url": "https://www.wycampaignfinance.gov",
+        "label": "Campaign Finance"
+      },
+      {
+        "url": "https://www.wycampaignfinance.gov/WYCFWebApplication/Reports/ResearchToolsAndLists.aspx",
+        "label": "Political Action Committees"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/CandidateInformation.aspx",
+        "label": "Candidate Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/ElectionHistory.aspx",
+        "label": "Election History"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/ElectionInformation.aspx",
+        "label": "Election Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/ElectionResults.aspx",
+        "label": "Election Results"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/EthicsDisclosure.aspx",
+        "label": "Ethics Disclosure"
+      },
+      {
+        "url": "https://sos.wyo.gov/faqs.aspx?root=ELEC",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Default.aspx?root=Elections",
+        "label": "Forms"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/InitiativeReferendumInfo.aspx",
+        "label": "Initiative & Referendum"
+      },
+      {
+        "url": "https://lobbyist.wyo.gov",
+        "label": "Lobbying"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/default.aspx",
+        "label": "Forms"
+      },
+      {
+        "url": "https://sos.wyo.gov/Investing/Default.aspx",
+        "label": "Investing Home"
+      },
+      {
+        "url": "https://sos.wyo.gov/Investing/AdminHome.aspx",
+        "label": "Administration"
+      },
+      {
+        "url": "https://sos.wyo.gov/Investing/EnforcementHome.aspx",
+        "label": "Enforcement"
+      },
+      {
+        "url": "https://sos.wyo.gov/faqs.aspx?root=IBDA",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://sos.wyo.gov/Investing/IndustryHome.aspx",
+        "label": "Industry Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/Investing/InvestorHome.aspx",
+        "label": "Investor Education"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/Default.aspx",
+        "label": "Services Home"
+      },
+      {
+        "url": "https://rules.wyo.gov",
+        "label": "Administrative Rules System"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/Authentication.aspx",
+        "label": "Apostilles/Authentications"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/BHR.aspx",
+        "label": "Bucking Horse & Rider"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/GeneralInformation.aspx",
+        "label": "General Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/GreatSeal.aspx",
+        "label": "Great Seal"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/HistoricalInfo.aspx",
+        "label": "Historical Information"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/StatutoryNotices.aspx",
+        "label": "Statutory Notices"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/Notaries.aspx",
+        "label": "Notary Public"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/PublicationsHome.aspx",
+        "label": "Publications"
+      },
+      {
+        "url": "https://sos.wyo.gov/Services/StudentHome.aspx",
+        "label": "Student's Corner"
+      },
+      {
+        "url": "https://sos.wyo.gov/faqs.aspx?root=FISC",
+        "label": "FAQs - Fiscal"
+      },
+      {
+        "url": "https://sos.wyo.gov/contactus.aspx",
+        "label": "Contact"
+      },
+      {
+        "url": "https://myelectionday.sos.wyo.gov/WYVOTES/Pages/VOSearch.aspx",
+        "label": "Where do I vote?"
+      },
+      {
+        "url": "https://letsvotewyo.org",
+        "label": "Wyoming Votes - Voter Information Website"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/2026/2026_Voter_Guide.pdf",
+        "label": "2026 Voter Guide"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/VoterID/Default.aspx",
+        "label": "Voter ID Law"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/State/RegisteringToVote.aspx",
+        "label": "Registering to Vote"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/State/AbsenteeVoting.aspx",
+        "label": "Absentee Voting"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/MOVE_Overview.aspx",
+        "label": "Military/Overseas Citizens Voting"
+      },
+      {
+        "url": "https://experience.arcgis.com/experience/f086f052f28b4185a785f19344a057be/page/Current-House-Districts",
+        "label": "House Districts"
+      },
+      {
+        "url": "https://experience.arcgis.com/experience/f086f052f28b4185a785f19344a057be/page/Current-Senate-Districts",
+        "label": "Senate Districts"
+      },
+      {
+        "url": "https://sos.wyo.gov/Forms/Elections/General/Complaint.pdf",
+        "label": "HAVA Complaint"
+      },
+      {
+        "url": "https://corrections.wyo.gov/about-us/restoration-of-rights",
+        "label": "Restoration of Voting Rights"
+      },
+      {
+        "url": "https://sos.wyo.gov/ContactUs.aspx",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.facebook.com/wyosos",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/INSERT%20LINK%20HERE",
+        "label": ""
+      },
+      {
+        "url": "https://twitter.com/wyomingsos",
+        "label": "Twitter"
+      },
+      {
+        "url": "https://www.instagram.com/wyomingsos",
+        "label": "Instagram"
+      },
+      {
+        "url": "https://drive.google.com/drive/folders/18OpOlf4FLDKBxloB3MdFOFFf5wQzzVZl?usp=sharing",
+        "label": "Great Seal of Wyoming"
+      },
+      {
+        "url": "https://www.wyo.gov/state-government",
+        "label": "Government"
+      },
+      {
+        "url": "https://www.wyo.gov/resources/citizen",
+        "label": "Citizen"
+      },
+      {
+        "url": "https://travelwyoming.com",
+        "label": "Visitor"
+      },
+      {
+        "url": "https://www.wyo.gov/resources/business",
+        "label": "Business"
+      },
+      {
+        "url": "https://www.wyo.gov",
+        "label": "State Home"
+      },
+      {
+        "url": "https://sites.google.com/a/wyo.gov/wy-ag/privacy",
+        "label": "Privacy Policy"
+      },
+      {
+        "url": "https://sos.wyo.gov/SiteMap.aspx",
+        "label": "Site Map"
+      },
+      {
+        "url": "https://www.wyo.gov/about-wyoming",
+        "label": "About Wyoming"
+      },
+      {
+        "url": "https://sos.wyo.gov/PhotoCredits.aspx",
+        "label": "Photo Credits"
+      }
+    ]
+  }
+]

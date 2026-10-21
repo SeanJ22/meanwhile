@@ -69,15 +69,13 @@ test("failed checks retain both calls' usage and wait for the existing retry bef
   assert.equal(f.requests.length, 4);
 });
 
-test("admission never pays for another district, a partial capture, conflicting bytes or unmapped legacy reaction parts", async () => {
-  for (const kind of ["district", "partial", "conflict", "legacy", "ballot-conflict"]) {
+test("admission never pays for another district, a partial capture or conflicting held evidence", async () => {
+  for (const kind of ["district", "partial", "conflict", "ballot-conflict"]) {
     const f = fixture();
     if (kind === "district") f.input.divisions = ["ocd-division/country:us/state:oh/county:birch"];
     if (kind === "partial") f.input.captures = [{ ...capture, partial: true }];
     if (kind === "conflict") f.input.captures.push({ ...capture, evidence: { ...capture.evidence, retrievedAt: "2026-10-05T18:00:00.000Z",
       text: `${text} Conflicting revision.`, contentHash: `sha256-${translationHash(`${text} Conflicting revision.`)}` } });
-    if (kind === "legacy") f.input.ballots = [{ ...ballot, measureRecords: [{ ...measure,
-      parts: [{ id: "legacy-reaction", number: null, kind: "FUNDING", label: "Funding", what: measure.whatItDoes }] }] }];
     if (kind === "ballot-conflict") f.input.ballots.push({ ...ballot, measureRecords: [{ ...measure, noMeans: "Different held meaning." }] });
     const result = await runHeldMeasureTranslations(f.input);
     assert.equal(result.outcomes.length, 0, kind); assert.equal(f.requests.length, 0, kind);
@@ -85,6 +83,48 @@ test("admission never pays for another district, a partial capture, conflicting 
   const f = fixture();
   await assert.rejects(runHeldMeasureTranslations({ ...f.input, divisions: [division, "ocd-division/country:us/state:mi"] }), /one admitted state/);
   assert.equal(f.requests.length, 0);
+});
+
+test("a measure without a hand-made record gets checked summary and vote meanings from its official question", async () => {
+  const f = fixture();
+  f.input.ballots = [{ ...ballot, measureRecords: [],
+    contests: [{ ...ballot.contests[0], title: "Proposition 12 — Library levy", provenance: { sourceUrl: capture.evidence.canonicalUrl } }],
+    measures: [{ id: "question:12", contestId: measure.contestId, questionText: measure.whatItDoes, officialStatement: null,
+      provenance: { sourceUrl: capture.evidence.canonicalUrl } }],
+  } as unknown as BallotSet];
+  const result = await runHeldMeasureTranslations(f.input);
+  assert.equal(result.outcomes[0].status, "PUBLISHED", JSON.stringify(result));
+  assert.equal(f.requests.length, 2);
+  const subject = JSON.parse(f.requests[0].messages[0].content as string).subject;
+  assert.equal(subject.prior, null);
+  assert.equal(subject.sourceQuote, measure.whatItDoes);
+});
+
+test("legacy unnumbered parts do not block independently checked summary and vote meanings", async () => {
+  const f = fixture();
+  f.input.ballots = [{ ...ballot, measureRecords: [{ ...measure, parts: [{
+    id: `${measure.contestId}#funding`, number: null, kind: "FUNDING", label: "Funding", what: measure.whatItDoes,
+  }] }] }];
+  const result = await runHeldMeasureTranslations(f.input);
+  assert.equal(result.outcomes[0].status, "PUBLISHED", JSON.stringify(result));
+  assert.deepEqual(JSON.parse(f.requests[0].messages[0].content as string).subject.prior.parts, []);
+});
+
+test("a source's published designation binds a measure despite a differently formatted display title", async () => {
+  const f = fixture();
+  f.input.ballots = [{ ...ballot, measureRecords: [],
+    contests: [{ ...ballot.contests[0], title: "Proposition 12: LIBRARY FUNDING", provenance: { sourceUrl: capture.evidence.canonicalUrl } }],
+    measures: [{ id: "question:12", contestId: measure.contestId, officialNumber: "PROPOSITION 12", questionText: "The displayed question uses another layout.",
+      provenance: { sourceUrl: capture.evidence.canonicalUrl } }],
+  } as unknown as BallotSet];
+  const result = await runHeldMeasureTranslations(f.input);
+  assert.equal(result.outcomes[0].status, "PUBLISHED", JSON.stringify(result));
+  f.input.ballots = f.input.ballots.map(row => ({ ...row, measures: row.measures.map(entry => ({ ...entry, officialNumber: "Proposition 1" })) }));
+  const wrong = await runHeldMeasureTranslations({ ...f.input, store: new MemoryRoutineDataStore() });
+  assert.equal(wrong.outcomes.length, 0, "Proposition 1 never matches Proposition 12");
+  f.input.ballots = f.input.ballots.map(row => ({ ...row, contests: row.contests.map(contest => ({ ...contest, title: "Proposition 1" })) }));
+  const wrongTitle = await runHeldMeasureTranslations({ ...f.input, store: new MemoryRoutineDataStore() });
+  assert.equal(wrongTitle.outcomes.length, 0, "the display title also cannot match a different measure's number prefix");
 });
 
 test("a durable attempt must exist before spending; final persistence failure returns charges and stops the batch", async () => {

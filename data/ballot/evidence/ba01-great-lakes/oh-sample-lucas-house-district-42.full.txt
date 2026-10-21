@@ -1,0 +1,669 @@
+https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001A__1&bpty=X
+Captured HTTP200 official November 3, 2026 sample ballot. Original PDF bytes saved as oh-sample-lucas-house-district-42.pdf.gz. Numbered text is local pdftotext -layout output.
+L0:                 This sample ballot was produced by the Lucas County Board of Elections web site.
+L1: 
+L2: 
+L3: 
+L4: 
+L5:   pl e
+L6: m le
+L7:   11
+L8:                                                      OFFICIAL GENERAL ELECTION
+L9:                                                             Lucas County
+L10:                                                                                                                               TOLEDO 1A
+L11: 
+L12: 
+L13: 
+L14: 
+L15:    p
+L16:                                                            General Election
+L17:                                                            November 3, 2026
+L18: 
+L19:                                                                 Instructions to Voter
+L20: 
+L21: 
+L22: 
+L23: 
+L24:  m le
+L25:   21
+L26: 
+L27:        •To vote, darken the oval (       ) to the left of your choice.
+L28:        •Note the permitted number of choices directly below each office title.
+L29: 
+L30:        •Do not mark the ballot for more choices than allowed. If you do, that contest or question will not be counted.
+L31:        •To vote for a write-in candidate: darken the oval (         ) to the left of the blank line and write in the candidate’s name.
+L32: 
+L33: 
+L34: 
+L35: 
+L36:      p
+L37:        •Only votes cast for candidates who filed as write-in candidates can be counted.
+L38: 
+L39:        •Do not write in a candidate’s name if their name is already printed on the ballot for that same contest.
+L40:   40
+L41:        •If you make a mistake or want to change your vote, return your ballot to an election official and get a new ballot.
+L42: 
+L43: 
+L44: 
+L45: 
+L46:   m
+L47:   41
+L48: 
+L49:   42   •You may ask for a new ballot up to two times.
+L50: 
+L51: 
+L52: 
+L53: 
+L54:  a ple
+L55:   43
+L56:         For Governor and Lieutenant Governor                                    For U.S. Senator
+L57:         (To vote for Governor and Lieutenant Governor, darken the oval at the   (Unexpired term ending 1-3-2029)
+L58:         left of the joint candidates of your choice)                            (Vote for not more than 1)
+L59:             Amy Acton and David Pepper                                             Sherrod Brown
+L60:             Democratic                                                             Democratic
+L61:             Don Kissick and James L. Mills                                         Jon Husted
+L62:             Libertarian                                                            Republican
+L63:             Vivek Ramaswamy and Robert A. McColley
+L64: 
+L65: 
+L66: 
+L67: 
+L68:     m
+L69:   51
+L70:                                                                                    Greg Levy
+L71:             Republican                                                             Other-party candidate
+L72: 
+L73: 
+L74: 
+L75: 
+L76:   a
+L77:                                                                                    William B. Redpath
+L78: 
+L79: 
+L80: 
+L81: 
+L82:             e
+L83:           Write-in                                                                 Libertarian
+L84: 
+L85: 
+L86: 
+L87: 
+L88:  S mpl
+L89:         For Attorney General
+L90:         (Vote for not more than 1)                                                 Write-in
+L91:             Keith Faber                                                         For Representative to Congress
+L92:             Republican                                                          (9th District)
+L93:                                                                                 (Vote for not more than 1)
+L94:             John J. Kulewicz
+L95:             Democratic                                                             Marcy Kaptur
+L96:         For Auditor of State                                                       Democratic
+L97:         (Vote for not more than 1)                                                 Derek Merrin
+L98: 
+L99: 
+L100: 
+L101: 
+L102:     a
+L103:             Annette Blackwell                                                      Republican
+L104: 
+L105: 
+L106: 
+L107: 
+L108:               e
+L109:             Democratic
+L110: 
+L111: 
+L112: 
+L113: 
+L114:   S mpl
+L115:             Frank LaRose                                                           Write-in
+L116:             Republican                                                          For State Senator
+L117:         For Secretary of State                                                  (11th District)
+L118:         (Vote for not more than 1)                                              (Vote for not more than 1)
+L119: 
+L120:             Tom Pruss                                                              Paula Hicks-Hudson
+L121:             Libertarian                                                            Democratic
+L122:             Allison Russo                                                          James Nowak
+L123:             Democratic                                                             Republican
+L124: 
+L125: 
+L126: 
+L127: 
+L128:       a         e
+L129:             Robert Sprague                                                         Kenneth W. Sharp
+L130:             Republican                                                             Libertarian
+L131: 
+L132: 
+L133: 
+L134: 
+L135:     S mpl
+L136:         For Treasurer of State                                                  For State Representative
+L137:         (Vote for not more than 1)                                              (42nd District)
+L138:                                                                                 (Vote for not more than 1)
+L139:             Jay Edwards
+L140:             Republican                                                             Robert McMahon
+L141:             Seth Walsh                                                             Republican
+L142:             Democratic                                                             Elgin Rogers Jr.
+L143:         For Justice of the Supreme Court                                           Democratic
+L144: 
+L145: 
+L146: 
+L147: 
+L148:         a
+L149:         (Full term commencing 1-1-2027)                                         For Judge of the Court of Appeals
+L150: 
+L151: 
+L152: 
+L153: 
+L154:                   e
+L155:         (Vote for not more than 1)
+L156:                                                                                 (6th District)
+L157: 
+L158: 
+L159: 
+L160: 
+L161:       S mpl
+L162:                                                                                 (Full term commencing 2-9-2027)
+L163:             Daniel R. Hawkins                                                   (Vote for not more than 1)
+L164:             Republican
+L165:             Marilyn Zayas                                                          Michael R. Goulding
+L166:             Democratic                                                             Republican
+L167:         For Justice of the Supreme Court                                        For Judge of the Court of Appeals
+L168:         (Full term commencing 1-2-2027)                                         (6th District)
+L169:         (Vote for not more than 1)                                              (Full term commencing 2-10-2027)
+L170:                                                                                 (Vote for not more than 1)
+L171:             Jennifer Brunner
+L172: 
+L173: 
+L174: 
+L175: 
+L176:           a
+L177:             Democratic                                                             Myron C. Duhart
+L178:             Colleen O'Donnell                                                      Democratic
+L179: 
+L180: 
+L181: 
+L182: 
+L183:        S mpl
+L184:             Republican                                                             CJ Kamm
+L185:                                                                                    Republican
+L186:                                                                                 For Judge of the Court of Common Pleas
+L187:                                                                                 (Full term commencing 2-9-2027)
+L188:                                                                                 (Vote for not more than 1)
+L189:                                                                                    Ian B. English
+L190: 
+L191: 
+L192: 
+L193: 
+L194:             a                                         TOLEDO 1A
+L195:                                              VOTE BOTH SIDES OF THE BALLOT
+L196:                                                       PAGE 1 OF 4
+L197: 
+L198:            This sample ballot was produced by the Lucas County Board of Elections web site.
+L199: 
+L200: 
+L201: 
+L202: 
+L203:   pl e
+L204: m le
+L205:    For Judge of the Court of Common Pleas
+L206:    (Domestic Relations Division)
+L207: 
+L208: 
+L209: 
+L210: 
+L211:    p
+L212:    (Full term commencing 1-1-2027)
+L213:    (Vote for not more than 1)
+L214: 
+L215:       Nedal Adya
+L216: 
+L217: 
+L218: 
+L219: 
+L220:  m le
+L221:       Lisa D. McGowan
+L222:    For Judge of the Court of Common Pleas
+L223:    (Juvenile Division)
+L224:    (Full term commencing 1-2-2027)
+L225:    (Vote for not more than 1)
+L226: 
+L227:       Amy E. Stoner
+L228: 
+L229: 
+L230: 
+L231: 
+L232:      p
+L233:    For Judge of the Court of Common Pleas
+L234:    (Probate Division)
+L235:    (Full term commencing 2-9-2027)
+L236:    (Vote for not more than 1)
+L237: 
+L238: 
+L239: 
+L240: 
+L241:   m
+L242:      Jaime Agnew
+L243:      Tom Puffenberger
+L244: 
+L245: 
+L246: 
+L247: 
+L248:  a ple
+L249:    For County Commissioner
+L250:    (Full term commencing 1-1-2027)
+L251:    (Vote for not more than 1)
+L252: 
+L253:        Laura Brown
+L254:        Republican
+L255:        Brenden Johnson
+L256:        Libertarian
+L257: 
+L258: 
+L259: 
+L260: 
+L261:     m
+L262:        Lisa A. Sobecki
+L263:        Democratic
+L264: 
+L265: 
+L266: 
+L267: 
+L268:   a
+L269:    For County Auditor
+L270: 
+L271: 
+L272: 
+L273: 
+L274:             e
+L275:    (Vote for not more than 1)
+L276: 
+L277: 
+L278: 
+L279: 
+L280:  S mpl
+L281:        Katie Moline
+L282:        Democratic
+L283:        Carolyn Munn
+L284:        Republican
+L285: 
+L286:    Issue 3
+L287:    Proposed Constitutional Amendment
+L288: 
+L289: 
+L290: 
+L291: 
+L292:     a         e
+L293:    TO REQUIRE VOTERS TO PRESENT PHOTO IDENTIFICATION IN ORDER TO VOTE
+L294: 
+L295: 
+L296: 
+L297: 
+L298:   S mpl
+L299:    Proposed by Joint Resolution of the General Assembly
+L300:    To enact Section 5 of Article V of the Constitution of the State of Ohio
+L301: 
+L302: 
+L303:    A majority yes vote is required for the adoption of Section 5.
+L304: 
+L305:    The proposed amendment would:
+L306: 
+L307: 
+L308: 
+L309: 
+L310:       a         e
+L311:    • Require voters to present an approved form of government-issued photo identification in order to vote.
+L312: 
+L313: 
+L314: 
+L315: 
+L316:     S mpl
+L317:    • Allow state law to provide for an alternative method of verifying a voter’s identity for a voter who has a sincere religious
+L318:    objection to being photographed and, therefore, does not possess an approved form of government-issued photo
+L319:    identification.
+L320: 
+L321:    • Require that voters who do not vote in person provide an approved form of government-issued photo identification,
+L322:    unless the law authorizes those persons to vote by providing a signature and at least one other specified unique
+L323:    identifier.
+L324: 
+L325:    • Define approved forms of government-issued photo identification as an unexpired Ohio driver license or state
+L326: 
+L327: 
+L328: 
+L329: 
+L330:         a
+L331:    identification card; a United States passport or passport card; or a United States military identification card, Ohio
+L332: 
+L333: 
+L334: 
+L335: 
+L336:                   e
+L337:    National Guard identification card, or United States Department of Veterans Affairs identification card.
+L338: 
+L339: 
+L340: 
+L341: 
+L342:       S mpl
+L343:    If approved, the amendment shall take effect immediately.
+L344: 
+L345:    A “YES” vote means approval of the amendment.
+L346: 
+L347:    A “NO” vote means disapproval of the amendment.
+L348: 
+L349:    SHALL THE AMENDMENT BE APPROVED?
+L350: 
+L351: 
+L352: 
+L353: 
+L354:           a
+L355:        YES
+L356:        NO
+L357: 
+L358: 
+L359: 
+L360: 
+L361:        S mpl
+L362:             a                                 TOLEDO 1A
+L363:                                      VOTE BOTH SIDES OF THE BALLOT
+L364:                                               PAGE 2 OF 4
+L365: 
+L366:                This sample ballot was produced by the Lucas County Board of Elections web site.
+L367: 
+L368: 
+L369: 
+L370: 
+L371:   pl e
+L372: m le
+L373:   11
+L374: 
+L375:        Issue 8
+L376: 
+L377: 
+L378: 
+L379: 
+L380:    p
+L381:        Proposed Tax Levy (Additional)
+L382:        Toledo Lucas County Public Library
+L383: 
+L384: 
+L385: 
+L386: 
+L387:  m le
+L388:   21
+L389: 
+L390:   22   A majority affirmative vote is necessary for passage.
+L391: 
+L392:        An additional tax for the benefit of the Toledo Lucas County Public Library for the purpose of current expenses that the
+L393:        county auditor estimates will collect $34,261,921 annually, at a rate not exceeding 3 mills for each $1 of taxable value,
+L394:        which amounts to $105 for each $100,000 of the county auditor's market value, for 5 years, commencing in 2026, first
+L395:        due in calendar year 2027.
+L396: 
+L397: 
+L398: 
+L399: 
+L400:      p
+L401:            For the Tax Levy
+L402:            Against the Tax Levy
+L403:   40
+L404: 
+L405: 
+L406: 
+L407: 
+L408:   m
+L409:   41
+L410: 
+L411:   42   Issue 9
+L412: 
+L413: 
+L414: 
+L415: 
+L416:  a ple
+L417:   43
+L418:        Proposed Tax Levy (Additional)
+L419:        Toledo City School District
+L420: 
+L421:        A majority affirmative vote is necessary for passage.
+L422: 
+L423:      An additional tax for the benefit of Toledo City School District for the purpose of current expenses that the county auditor
+L424:      estimates will collect $22,817,500 annually, at a rate not exceeding 6.9 mills for each $1 of taxable value, which amounts
+L425: 
+L426: 
+L427: 
+L428: 
+L429:     m
+L430:   51
+L431:      to $242 for each $100,000 of the county auditor's market value, for 5 years, commencing in 2026, first due in calendar
+L432:      year 2027. The county auditor has certified that the amount by which the carry-over balance in the district's general
+L433: 
+L434: 
+L435: 
+L436: 
+L437:   a
+L438:      operating budget from the preceding fiscal year exceeds the district's general fund expenditures made in the preceding
+L439: 
+L440: 
+L441: 
+L442: 
+L443:             e
+L444:      fiscal year is $0, which is 0% of those expenditures.
+L445: 
+L446: 
+L447: 
+L448: 
+L449:  S mpl
+L450:            For the Tax Levy
+L451:            Against the Tax Levy
+L452: 
+L453: 
+L454:        Issue 13
+L455:        Proposed Tax Levy (Renewal)
+L456:        County of Lucas
+L457: 
+L458: 
+L459: 
+L460: 
+L461:     a
+L462:   S mpl       e
+L463:        A majority affirmative vote is necessary for passage.
+L464: 
+L465:        A renewal of a tax for the benefit of the County of Lucas for the purpose of operation and maintenance of the Imagination
+L466:        Station, Toledo's non-profit science center, and facility to promote the sciences and STEM education, that the county
+L467:        auditor estimates will collect $1,339,989 annually, at a rate not exceeding 0.17 mill for each $1 of taxable value, which
+L468:        amounts to $3 for each $100,000 of the county auditor's market value, for five years, commencing in 2027, first due in
+L469:        calendar year 2028.
+L470: 
+L471:            For the Tax Levy
+L472: 
+L473: 
+L474: 
+L475: 
+L476:       a         e
+L477:            Against the Tax Levy
+L478: 
+L479: 
+L480: 
+L481: 
+L482:     S mpl
+L483:        Issue 16
+L484:        Proposed Income Tax
+L485:        City of Toledo
+L486: 
+L487:        A majority affirmative vote is necessary for passage.
+L488: 
+L489: 
+L490: 
+L491: 
+L492:         a         e
+L493:        Shall Ordinance (Ordinance No. 301-26) providing for a new temporary one-quarter percent (.25%) City of Toledo levy
+L494:        on income for the period commencing on January 1, 2027, and ending December 31, 2030, which shall be in addition to
+L495: 
+L496: 
+L497: 
+L498: 
+L499:       S mpl
+L500:        the city of Toledo's other levies on income, for the purpose of allocating the levy proceeds to the General Fund to be
+L501:        dedicated to neighborhood safety expenditures, and to police and fire safety force operations, including criminal gang
+L502:        disruption, be passed?
+L503: 
+L504:            For the Income Tax
+L505:            Against the Income Tax
+L506: 
+L507: 
+L508: 
+L509: 
+L510:           a
+L511:        S mpl
+L512:   62
+L513:             a                                    TOLEDO 1A
+L514:                                         VOTE BOTH SIDES OF THE BALLOT
+L515:                                                  PAGE 3 OF 4
+L516: 
+L517:            This sample ballot was produced by the Lucas County Board of Elections web site.
+L518: 
+L519: 
+L520: 
+L521: 
+L522:   pl e
+L523: m le
+L524:    Issue 17
+L525: 
+L526: 
+L527: 
+L528: 
+L529:    p
+L530:    Proposed Charter Amendment
+L531:    City of Toledo
+L532: 
+L533: 
+L534: 
+L535: 
+L536:  m le
+L537:    A majority affirmative vote is necessary for passage.
+L538: 
+L539:    Chapter I, Section 6 to be amended to remove outdated language and updating definition of employee to include
+L540:    members of the unclassified service.
+L541: 
+L542:    Chapter IV, Section 33 to be amended to allow City Council to determine the conditions of employment for its officers
+L543: 
+L544: 
+L545: 
+L546: 
+L547:      p
+L548:    and employees, including matters such as hiring, discipline, and termination.
+L549: 
+L550:    Chapter VIII, Section 171 to be amended to designate that City Council officers and employees are members of the
+L551:    unclassified service.
+L552: 
+L553: 
+L554: 
+L555: 
+L556:   m
+L557:    Shall the proposed amendments to the Charter of the City of Toledo, as set forth in Ordinance 302-26, be adopted?
+L558: 
+L559: 
+L560: 
+L561: 
+L562:  a ple
+L563:        Yes
+L564:        No
+L565: 
+L566: 
+L567:    Issue 18
+L568:    Proposed Charter Amendment
+L569:    City of Toledo
+L570: 
+L571: 
+L572: 
+L573: 
+L574:   a m
+L575:    A majority affirmative vote is necessary for passage.
+L576: 
+L577: 
+L578: 
+L579: 
+L580:             e
+L581:    Chapter III, Section 14 to be amended to update language to be more aligned with state law, and in particular to remove
+L582: 
+L583: 
+L584: 
+L585: 
+L586:  S mpl
+L587:    the requirement that a candidate who has filed a nominating petition for a primary election must also file a written
+L588:    acceptance of nomination with election authorities.
+L589: 
+L590:    Chapter III, Section 17 to be amended to bring the criteria for designation as a write-in candidate in line with state
+L591:    election law by requiring any potential write-in candidate to declare their intent to run on the forms prescribed by the
+L592:    state.
+L593: 
+L594:    Chapter VI, Section 83 to be amended to increase the deadline for which an election on referendum or initiative petitions
+L595:    must be held within from 75 days to 90 days.
+L596: 
+L597: 
+L598: 
+L599: 
+L600:     a         e
+L601:    Chapter VI, Section 92 to be amended to require any petitions filed to be consistent with the forms prescribed by the
+L602: 
+L603: 
+L604: 
+L605: 
+L606:   S mpl
+L607:    state.
+L608: 
+L609:    Shall the proposed amendments to the Charter of the City of Toledo, as set forth in Ordinance 304-26, be adopted?
+L610: 
+L611:        Yes
+L612:        No
+L613: 
+L614: 
+L615:    Issue 19
+L616: 
+L617: 
+L618: 
+L619: 
+L620:       a         e
+L621:    Proposed Charter Amendment
+L622: 
+L623: 
+L624: 
+L625: 
+L626:     S mpl
+L627:    City of Toledo
+L628: 
+L629:    A majority affirmative vote is necessary for passage.
+L630: 
+L631:    Shall Chapter I, Section 5 be amended to be consistent with the Ohio Constitution by requiring Council to approve
+L632:    proposed Charter amendments by an ordinance rather than a resolution, and to rewrite the Section to describe the
+L633:    requirements of the Charter amendment process more clearly, as set forth in Ordinance 305-26?
+L634: 
+L635: 
+L636: 
+L637: 
+L638:         a
+L639:        Yes
+L640: 
+L641: 
+L642: 
+L643: 
+L644:                   e
+L645:        No
+L646: 
+L647: 
+L648: 
+L649: 
+L650:       S mpl
+L651:           a
+L652:        S mpl                                                                   Members of the Board of Elections
+L653:                                                                                     Lucas County, Ohio
+L654: 
+L655: 
+L656: 
+L657: 
+L658:             a
+L659:                                                                                      November 3, 2026
+L660: 
+L661: 
+L662: 
+L663:                                               TOLEDO 1A
+L664:                                      VOTE BOTH SIDES OF THE BALLOT
+L665:                                               PAGE 4 OF 4
+L666: 

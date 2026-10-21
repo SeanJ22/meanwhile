@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wyoming%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wyoming%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:39.233444+00:00",
+  "rawHash": "ee52138665fca360934b0d55381728802107e0a97b5a45db955ccd4642b1a253",
+  "httpStatus": 200,
+  "bytes": 874402,
+  "extractedTextHash": "2d225ccc77dffeb1a953dd44e2f4cf9b107ee30ad95a929d44aad5ca5479a8ac",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

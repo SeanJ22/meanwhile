@@ -1,0 +1,144 @@
+{
+  "added": {
+    "contests": 132,
+    "candidacies": 169
+  },
+  "countyDenominators": {
+    "Bernalillo": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Dona Ana": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Santa Fe": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "Sandoval": {
+      "contests": 3,
+      "namedChoices": 6
+    },
+    "San Juan": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "Valencia": {
+      "contests": 3,
+      "namedChoices": 6
+    },
+    "Lea": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "McKinley": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Otero": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "Chaves": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "Catron": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Cibola": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Colfax": {
+      "contests": 3,
+      "namedChoices": 5
+    },
+    "Curry": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "De Baca": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Eddy": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Grant": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Guadalupe": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "Harding": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Hidalgo": {
+      "contests": 5,
+      "namedChoices": 7
+    },
+    "Lincoln": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Los Alamos": {
+      "contests": 4,
+      "namedChoices": 11
+    },
+    "Luna": {
+      "contests": 3,
+      "namedChoices": 7
+    },
+    "Mora": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Quay": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "Rio Arriba": {
+      "contests": 3,
+      "namedChoices": 5
+    },
+    "Roosevelt": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "San Miguel": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "Sierra": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "Socorro": {
+      "contests": 3,
+      "namedChoices": 3
+    },
+    "Taos": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Torrance": {
+      "contests": 3,
+      "namedChoices": 4
+    },
+    "Union": {
+      "contests": 4,
+      "namedChoices": 5
+    }
+  },
+  "countyContests": 103,
+  "countyCandidates": 140,
+  "judicialContests": 45,
+  "judicialCandidates": 46
+}

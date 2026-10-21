@@ -1,0 +1,95 @@
+{
+  "doorId": "ar-benton-county-gis-early",
+  "sites": [
+    {
+      "id": "voting-6935690099e6ebe142802c4c",
+      "name": "County Clerk's Office - Bentonville",
+      "address": "215 E. Central Ave., Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": null,
+      "serves": "EV1",
+      "sources": [
+        {
+          "publisher": "Benton County Clerk GIS",
+          "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+          "checkedAt": "2026-10-21T04:42:07.349Z",
+          "official": true,
+          "documentHash": "2aa3be66b3dc2c11b0ff474b018085df2dd7ed95c190741ee48b465fa600e1a9",
+          "documentUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0/query?f=json&where=1%3D1&objectIds=50&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "EV1",
+      "countyFips": "05007",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "precincts": [
+        "EV1"
+      ],
+      "assignments": [
+        {
+          "precinct": "EV1",
+          "name": "County Clerk's Office - Bentonville",
+          "room": null,
+          "source": {
+            "publisher": "Benton County Clerk GIS",
+            "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+            "checkedAt": "2026-10-21T04:42:07.349Z",
+            "official": true,
+            "documentHash": "2aa3be66b3dc2c11b0ff474b018085df2dd7ed95c190741ee48b465fa600e1a9",
+            "documentUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0/query?f=json&where=1%3D1&objectIds=50&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "source": {
+            "publisher": "Benton County Clerk GIS",
+            "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+            "checkedAt": "2026-10-21T04:42:07.349Z",
+            "official": true,
+            "documentHash": "2aa3be66b3dc2c11b0ff474b018085df2dd7ed95c190741ee48b465fa600e1a9",
+            "documentUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0/query?f=json&where=1%3D1&objectIds=50&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Benton County Clerk GIS",
+      "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+      "checkedAt": "2026-10-21T04:42:07.349Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://gis.bentoncountyar.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://gis.bentoncountyar.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/CoClerk/VotingLocations/MapServer/0/query: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0/query?f=json&where=1%3D1&objectIds=50&outFields=*&returnGeometry=false",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "contacts": []
+}

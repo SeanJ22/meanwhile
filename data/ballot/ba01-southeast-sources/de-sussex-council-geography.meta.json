@@ -1,0 +1,8 @@
+{
+  "url": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:26:54.394111+00:00",
+  "rawHash": "0e2d7ff1d2d328c8d89c895f68a5f6691c1d21b0188bcd4e25ca5bd0fdd89833",
+  "bytes": 446371
+}

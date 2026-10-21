@@ -53,6 +53,7 @@ import {
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import type { HuntSourceScope } from "../lib/hunt/own-site-runtime.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { preloadRegistrationJurisdictions } from "../lib/registration/jurisdictions.ts";
@@ -515,6 +516,8 @@ test("A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from regist
   assert.equal(walks.latestFor(adjuntas.need.jurisdictionId), "NO_SITE_TO_WALK");
   const route = buildRegistry([meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ ids: new Set(created.map((o) => o.id)) }) })], { root: ROOT, nowIso: T_NEXT })
     .routeFor(`${MEETINGS_DISCOVERY_NAMESPACE}pr:county:adjuntas-municipio#find-own-site`);
-  assert.match(route?.citation ?? "", /PR's registration names this government \(promoted version .+\), and the Census records no web address for it, so none is invented/);
+  assert.equal(route?.citation, `PR's promoted registration ${versionId}`);
+  assert.equal(route?.open.kind, "HTTP_GET", "the recorded government directory can be read while its own site remains blank");
+  assert.equal((route as typeof route & {placeHunt?:HuntSourceScope})?.placeHunt?.knownOwnSite, false);
   clearRegistrationJurisdictionRegistries();
 });

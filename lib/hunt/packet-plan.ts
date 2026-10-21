@@ -5,7 +5,8 @@ import { HUNT_PACKET_CAPABILITY, HUNT_PACKET_RECORD_CLASS, HUNT_PACKET_ROUTE_ID,
 
 export function stateOfDivision(divisionId: string): string {
   return (/\/(?:state|district|territory):([a-z]{2})(?:\/|$)/i.exec(divisionId)?.[1]
-    ?? /^government:US-([a-z]{2}):/i.exec(divisionId)?.[1])?.toUpperCase() ?? "US";
+    ?? /^government:US-([a-z]{2}):/i.exec(divisionId)?.[1]
+    ?? /^([a-z]{2}):/i.exec(divisionId)?.[1])?.toUpperCase() ?? "US";
 }
 
 export function isHuntPacketPlan(plan: Pick<AutonomousWorkPlan, "capability"> | undefined | null): boolean {

@@ -1,0 +1,182 @@
+{
+  "contests": 301,
+  "candidates": 334,
+  "counties": {
+    "Latah": {
+      "contests": 6,
+      "candidates": 10
+    },
+    "Ada": {
+      "contests": 14,
+      "candidates": 19
+    },
+    "Teton": {
+      "contests": 6,
+      "candidates": 9
+    },
+    "Blaine": {
+      "contests": 6,
+      "candidates": 8
+    },
+    "Nez Perce": {
+      "contests": 7,
+      "candidates": 10
+    },
+    "Bonner": {
+      "contests": 7,
+      "candidates": 8
+    },
+    "Canyon": {
+      "contests": 9,
+      "candidates": 11
+    },
+    "Valley": {
+      "contests": 8,
+      "candidates": 11
+    },
+    "Twin Falls": {
+      "contests": 7,
+      "candidates": 8
+    },
+    "Butte": {
+      "contests": 7,
+      "candidates": 8
+    },
+    "Jerome": {
+      "contests": 7,
+      "candidates": 7
+    },
+    "Payette": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Bear Lake": {
+      "contests": 7,
+      "candidates": 7
+    },
+    "Boise": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Madison": {
+      "contests": 7,
+      "candidates": 7
+    },
+    "Jefferson": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Gem": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Bannock": {
+      "contests": 9,
+      "candidates": 10
+    },
+    "Shoshone": {
+      "contests": 7,
+      "candidates": 11
+    },
+    "Bingham": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Elmore": {
+      "contests": 7,
+      "candidates": 7
+    },
+    "Caribou": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Camas": {
+      "contests": 7,
+      "candidates": 7
+    },
+    "Power": {
+      "contests": 7,
+      "candidates": 7
+    },
+    "Washington": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Adams": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Kootenai": {
+      "contests": 9,
+      "candidates": 9
+    },
+    "Bonneville": {
+      "contests": 9,
+      "candidates": 9
+    },
+    "Fremont": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Cassia": {
+      "contests": 7,
+      "candidates": 8
+    },
+    "Boundary": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Oneida": {
+      "contests": 7,
+      "candidates": 7
+    },
+    "Lewis": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Clearwater": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Clark": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Idaho": {
+      "contests": 6,
+      "candidates": 7
+    },
+    "Lemhi": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Minidoka": {
+      "contests": 7,
+      "candidates": 7
+    },
+    "Lincoln": {
+      "contests": 7,
+      "candidates": 7
+    },
+    "Benewah": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Gooding": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Owyhee": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Custer": {
+      "contests": 6,
+      "candidates": 6
+    },
+    "Franklin": {
+      "contests": 6,
+      "candidates": 7
+    }
+  }
+}

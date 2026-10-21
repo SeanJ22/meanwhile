@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Clay%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Clay%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.173727+00:00",
+  "rawHash": "ff3f2e29724238792141f5dc664785bf3fe056969bc82299e9fb406ab55c86a2",
+  "httpStatus": 200,
+  "bytes": 706879,
+  "extractedTextHash": "92bafb880f10cd9aa8b78d4f0776e513815b8cea507749b9f2a7c18d9e4f23dc",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

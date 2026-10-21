@@ -1,0 +1,840 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang = "en">
+<head><meta http-equiv="X-UA-Compatible" content="IE=7" /><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /><meta name="viewport" content="user-scalable=yes, initial-scale=1, maximum-scale=2.0" /><title>
+	Douglas County Election Commission - Early Voting
+</title><link href="/App_Themes/Theme1/website.css" rel="Stylesheet" type="text/css" asp-append-version="true" /><link rel="stylesheet" href="/App_Themes/Theme1/meanmenu.css" media="all" />
+    <script src="/js/jquery-1.9.1.js" type="text/javascript"></script>
+    <script src="/js/jquery.meanmenu.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        isSafari3 = false;
+        if(window.devicePixelRatio) isSafari3 = true;
+    </script>
+<style type="text/css">
+	/* <![CDATA[ */
+	#Menu1 { height:50px; }
+	#Menu1 img.icon { border-style:none;vertical-align:middle; }
+	#Menu1 img.separator { border-style:none;display:block; }
+	#Menu1 img.horizontal-separator { border-style:none;vertical-align:middle; }
+	#Menu1 ul { list-style:none;margin:0;padding:0;width:auto; }
+	#Menu1 ul.dynamic { z-index:1; }
+	#Menu1 a { text-decoration:none;white-space:nowrap;display:block; }
+	#Menu1 a.static { height:45px;padding:0px 10px 0px 10px;text-decoration:none;border-style:none; }
+	#Menu1 a.popout { background-image:url("img/menu_arrow.png");background-repeat:no-repeat;background-position:right center;padding-right:14px; }
+	#Menu1 a.popout-dynamic { background:url("/WebResource.axd?d=gPsfljHsgOjVSFaU2qTlpioeaJxQe-YJM1nrEK1b47JF-7Qil_z_kfPG1TRgK1uV0FS43-HX8fBhleBLdGa_VmWrpHbDhJc-S53UQ1kbfaw1&t=638912105111817680") no-repeat right center;padding-right:14px; }
+	#Menu1 a.dynamic { text-decoration:none;border-style:none; }
+	#Menu1 a.static.highlighted { background-color:#112E51; }
+	/* ]]> */
+</style></head>
+
+
+<body>
+    
+
+
+    <form method="post" action="./early_voting.aspx" id="form">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTY1NzEyODQ1Mw9kFgJmD2QWAgIFD2QWAmYPPCsADQIADxYCHgtfIURhdGFCb3VuZGdkDBQrAAgFGzA6MCwwOjEsMDoyLDA6MywwOjQsMDo1LDA6NhQrAAIWDB4EVGV4dAUSVm90ZXIgUmVnaXN0cmF0aW9uHgVWYWx1ZQUSVm90ZXIgUmVnaXN0cmF0aW9uHgdFbmFibGVkZx4KU2VsZWN0YWJsZWceCERhdGFQYXRoBSAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT0xXR4JRGF0YUJvdW5kZxQrAAYFEzA6MCwwOjEsMDoyLDA6MywwOjQUKwACFg4fAQUQUmVnaXN0ZXIgVG8gVm90ZR8CBRBSZWdpc3RlciBUbyBWb3RlHgtOYXZpZ2F0ZVVybAUYL3ZvdGVyX3JlZ2lzdHJhdGlvbi5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT0xXR8GZ2QUKwACFg4fAQUaTWlsaXRhcnkgLyBPdmVyc2VhcyBWb3RlcnMfAgUaTWlsaXRhcnkgLyBPdmVyc2VhcyBWb3RlcnMfBwUXL21pbGl0YXJ5X292ZXJzZWFzLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTJdHwZnZBQrAAIWDh8BBRFEZXB1dHkgUmVnaXN0cmFycx8CBRFEZXB1dHkgUmVnaXN0cmFycx8HBRcvZGVwdXR5X3JlZ2lzdHJhcnMuYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9M10fBmdkFCsAAhYOHwEFG1Byb29mIG9mIFZvdGVyIFJlZ2lzdHJhdGlvbh8CBRtQcm9vZiBvZiBWb3RlciBSZWdpc3RyYXRpb24fBwUhL3Byb29mX29mX3ZvdGVyX3JlZ2lzdHJhdGlvbi5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT00XR8GZ2QUKwACFg4fAQUZQ2FuY2VsIFZvdGVyIFJlZ2lzdHJhdGlvbh8CBRlDYW5jZWwgVm90ZXIgUmVnaXN0cmF0aW9uHwcFJC92b3Rlcl9yZWdpc3RyYXRpb25fY2FuY2VsYXRpb24uYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9NV0fBmdkFCsAAhYMHwEFDFdheXMgdG8gVm90ZR8CBQxXYXlzIHRvIFZvdGUfA2cfBGcfBQUgLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9Ml0fBmcUKwAFBQ8wOjAsMDoxLDA6MiwwOjMUKwACFg4fAQUMRWFybHkgVm90aW5nHwIFDEVhcmx5IFZvdGluZx8HBRIvZWFybHlfdm90aW5nLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9Ml0vKltwb3NpdGlvbigpPTFdHwZnZBQrAAIWDh8BBRpQb2xsaW5nIFBsYWNlIEluc3RydWN0aW9ucx8CBRpQb2xsaW5nIFBsYWNlIEluc3RydWN0aW9ucx8HBRgvdm90ZXJfaW5zdHJ1Y3Rpb25zLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9Ml0vKltwb3NpdGlvbigpPTJdHwZnZBQrAAIWDh8BBRpNaWxpdGFyeSAvIE92ZXJzZWFzIFZvdGVycx8CBRpNaWxpdGFyeSAvIE92ZXJzZWFzIFZvdGVycx8HBRcvbWlsaXRhcnlfb3ZlcnNlYXMuYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT0yXS8qW3Bvc2l0aW9uKCk9M10fBmdkFCsAAhYOHwEFGFZvdGVycyBXaXRoIERpc2FiaWxpdGllcx8CBRhWb3RlcnMgV2l0aCBEaXNhYmlsaXRpZXMfBwUeL3ZvdGVyc193aXRoX2Rpc2FiaWxpdGllcy5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTJdLypbcG9zaXRpb24oKT00XR8GZ2QUKwACFgwfAQUNRWxlY3Rpb24gSW5mbx8CBQ1FbGVjdGlvbiBJbmZvHwNnHwRnHwUFIC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTNdHwZnFCsADAUsMDowLDA6MSwwOjIsMDozLDA6NCwwOjUsMDo2LDA6NywwOjgsMDo5LDA6MTAUKwACFg4fAQUIVm90ZXIgSUQfAgUIVm90ZXIgSUQfBwUOL3ZvdGVyX2lkLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9M10vKltwb3NpdGlvbigpPTFdHwZnZBQrAAIWDh8BBRdPZmZpY2VzIFVwIEZvciBFbGVjdGlvbh8CBRdPZmZpY2VzIFVwIEZvciBFbGVjdGlvbh8HBQ0vb2ZmaWNlcy5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTNdLypbcG9zaXRpb24oKT0yXR8GZ2QUKwACFg4fAQUSRWxlY3Rpb24gRGVhZGxpbmVzHwIFEkVsZWN0aW9uIERlYWRsaW5lcx8HBQ8vZGVhZGxpbmVzLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9M10vKltwb3NpdGlvbigpPTNdHwZnZBQrAAIWDh8BBQ5TYW1wbGUgQmFsbG90cx8CBQ5TYW1wbGUgQmFsbG90cx8HBRQvc2FtcGxlX2JhbGxvdHMuYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT0zXS8qW3Bvc2l0aW9uKCk9NF0fBmdkFCsAAhYOHwEFEkVsZWN0aW9uIEludGVncml0eR8CBRJFbGVjdGlvbiBJbnRlZ3JpdHkfBwUYL2VsZWN0aW9uX2ludGVncml0eS5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTNdLypbcG9zaXRpb24oKT01XR8GZ2QUKwACFg4fAQUaQWxsLU1haWwgU3BlY2lhbCBFbGVjdGlvbnMfAgUaQWxsLU1haWwgU3BlY2lhbCBFbGVjdGlvbnMfBwUgL2FsbF9tYWlsX3NwZWNpYWxfZWxlY3Rpb25zLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9M10vKltwb3NpdGlvbigpPTZdHwZnZBQrAAIWDh8BBRpOb25wYXJ0aXNhbiBWb3RpbmcgT3B0aW9ucx8CBRpOb25wYXJ0aXNhbiBWb3RpbmcgT3B0aW9ucx8HBRgvbm9ucGFydGlzYW5fdm90aW5nLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9M10vKltwb3NpdGlvbigpPTddHwZnZBQrAAIWDh8BBSBQb2xpdGljYWwgU2lnbnMgLyBFbGVjdGlvbmVlcmluZx8CBSBQb2xpdGljYWwgU2lnbnMgLyBFbGVjdGlvbmVlcmluZx8HBRkvY2FtcGFpZ25fZ3VpZGVsaW5lcy5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTNdLypbcG9zaXRpb24oKT04XR8GZ2QUKwACFg4fAQUXQ2l0eSBPZiBPbWFoYSBFbGVjdGlvbnMfAgUXQ2l0eSBPZiBPbWFoYSBFbGVjdGlvbnMfBwUUL2NpdHlfZWxlY3Rpb25zLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9M10vKltwb3NpdGlvbigpPTldHwZnZBQrAAIWDh8BBSdTYW5pdGFyeSAmIEltcHJvdmVtZW50IERpc3RyaWN0cyAoU0lEcykfAgUnU2FuaXRhcnkgJiBJbXByb3ZlbWVudCBEaXN0cmljdHMgKFNJRHMpHwcFCS9zaWQuYXNweB8DZx8EZx8FBTEvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT0zXS8qW3Bvc2l0aW9uKCk9MTBdHwZnZBQrAAIWDh8BBRNSZWNvdW50IEluZm9ybWF0aW9uHwIFE1JlY291bnQgSW5mb3JtYXRpb24fBwUZL3JlY291bnRfaW5mb3JtYXRpb24uYXNweB8DZx8EZx8FBTEvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT0zXS8qW3Bvc2l0aW9uKCk9MTFdHwZnZBQrAAIWDB8BBSBDYW5kaWRhdGVzIGFuZCBFbGVjdGVkIE9mZmljaWFscx8CBSBDYW5kaWRhdGVzIGFuZCBFbGVjdGVkIE9mZmljaWFscx8DZx8EZx8FBSAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT00XR8GZxQrAAgFGzA6MCwwOjEsMDoyLDA6MywwOjQsMDo1LDA6NhQrAAIWDh8BBRpDYW5kaWRhdGVzIFVwIEZvciBFbGVjdGlvbh8CBRpDYW5kaWRhdGVzIFVwIEZvciBFbGVjdGlvbh8HBRQvY2FuZGlkYXRlX2luZm8uYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT00XS8qW3Bvc2l0aW9uKCk9MV0fBmdkFCsAAhYOHwEFGUN1cnJlbnQgRWxlY3RlZCBPZmZpY2lhbHMfAgUZQ3VycmVudCBFbGVjdGVkIE9mZmljaWFscx8HBRcvZWxlY3RlZF9vZmZpY2lhbHMuYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT00XS8qW3Bvc2l0aW9uKCk9Ml0fBmdkFCsAAhYOHwEFEUZpbGluZyBGb3IgT2ZmaWNlHwIFEUZpbGluZyBGb3IgT2ZmaWNlHwcFFi9jYW5kaWRhdGVfZmlsaW5nLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9NF0vKltwb3NpdGlvbigpPTNdHwZnZBQrAAIWDh8BBRZOb21pbmF0aW9uIEJ5IFBldGl0aW9uHwIFFk5vbWluYXRpb24gQnkgUGV0aXRpb24fBwUcL25vbWluYXRpb25fYnlfcGV0aXRpb24uYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT00XS8qW3Bvc2l0aW9uKCk9NF0fBmdkFCsAAhYOHwEFJFBvbGxpbmcgUGxhY2VzIEJ5IFBvbGl0aWNhbCBEaXN0cmljdB8CBSRQb2xsaW5nIFBsYWNlcyBCeSBQb2xpdGljYWwgRGlzdHJpY3QfBwUWL3ZvdGluZ19sb2NhdGlvbnMuYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT00XS8qW3Bvc2l0aW9uKCk9NV0fBmdkFCsAAhYOHwEFFERlbGVnYXRlIEluZm9ybWF0aW9uHwIFFERlbGVnYXRlIEluZm9ybWF0aW9uHwcFGi9kZWxlZ2F0ZV9pbmZvcm1hdGlvbi5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTRdLypbcG9zaXRpb24oKT02XR8GZ2QUKwACFg4fAQURUmVjYWxsIFByb2NlZHVyZXMfAgURUmVjYWxsIFByb2NlZHVyZXMfBwUML3JlY2FsbC5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTRdLypbcG9zaXRpb24oKT03XR8GZ2QUKwACFgwfAQUPRWxlY3Rpb24gV29ya2VyHwIFD0VsZWN0aW9uIFdvcmtlch8DZx8EZx8FBSAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT01XR8GZxQrAAUFDzA6MCwwOjEsMDoyLDA6MxQrAAIWDh8BBRNHZW5lcmFsIEluZm9ybWF0aW9uHwIFE0dlbmVyYWwgSW5mb3JtYXRpb24fBwUdL3BvbGxfd29ya2VyX2luZm9ybWF0aW9uLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9NV0vKltwb3NpdGlvbigpPTFdHwZnZBQrAAIWDh8BBRRUcmFpbmluZyAmIFJlc291cmNlcx8CBRRUcmFpbmluZyAmIFJlc291cmNlcx8HBSUvZWxlY3Rpb25fd29ya2VyX29ubGluZV90cmFpbmluZy5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTVdLypbcG9zaXRpb24oKT0yXR8GZ2QUKwACFg4fAQUaQ2Fubm90IFdvcmsvQWNjb21tb2RhdGlvbnMfAgUaQ2Fubm90IFdvcmsvQWNjb21tb2RhdGlvbnMfBwUgL2Nhbm5vdF93b3JrX2FjY29tbW9kYXRpb25zLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9NV0vKltwb3NpdGlvbigpPTNdHwZnZBQrAAIWDh8BBRNOZXcgRWxlY3Rpb24gV29ya2VyHwIFE05ldyBFbGVjdGlvbiBXb3JrZXIfBwUaL25ld19lbGVjdGlvbl93b3JrZXJzLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9NV0vKltwb3NpdGlvbigpPTRdHwZnZBQrAAIWDB8BBQlEYXRhL01hcHMfAgUJRGF0YS9NYXBzHwNnHwRnHwUFIC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTZdHwZnFCsACAUbMDowLDA6MSwwOjIsMDozLDA6NCwwOjUsMDo2FCsAAhYOHwEFEEVsZWN0aW9uIFJlc3VsdHMfAgUQRWxlY3Rpb24gUmVzdWx0cx8HBRYvZWxlY3Rpb25fcmVzdWx0cy5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTZdLypbcG9zaXRpb24oKT0xXR8GZ2QUKwACFg4fAQUSMjAyMSBSZWRpc3RyaWN0aW5nHwIFEjIwMjEgUmVkaXN0cmljdGluZx8HBRMvcmVkaXN0cmljdGluZy5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTZdLypbcG9zaXRpb24oKT0yXR8GZ2QUKwACFg4fAQUVVm90ZXIgVHVybm91dCBSZXBvcnRzHwIFFVZvdGVyIFR1cm5vdXQgUmVwb3J0cx8HBRMvdm90ZXJfdHVybm91dC5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTZdLypbcG9zaXRpb24oKT0zXR8GZ2QUKwACFg4fAQUZVm90ZXIgUmVnaXN0cmF0aW9uIENvdW50cx8CBRlWb3RlciBSZWdpc3RyYXRpb24gQ291bnRzHwcFDy92cl9jb3VudHMuYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT02XS8qW3Bvc2l0aW9uKCk9NF0fBmdkFCsAAhYQHwEFBE1hcHMfAgUETWFwcx8HBUlodHRwczovL2V4cGVyaWVuY2UuYXJjZ2lzLmNvbS9leHBlcmllbmNlLzU1NGZmZmU1MmYzOTQyMDdhNzE0MmY5MjAyNThiODRhHgZUYXJnZXQFBl9ibGFuax8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT02XS8qW3Bvc2l0aW9uKCk9NV0fBmdkFCsAAhYOHwEFDU9yZGVyaW5nIE1hcHMfAgUNT3JkZXJpbmcgTWFwcx8HBRMvc2VydmljZXNfbWFwcy5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTZdLypbcG9zaXRpb24oKT02XR8GZ2QUKwACFg4fAQUVT3JkZXJpbmcgQSBWb3RlciBGaWxlHwIFFU9yZGVyaW5nIEEgVm90ZXIgRmlsZR8HBRkvc2VydmljZXNfdm90ZXJfZmlsZS5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTZdLypbcG9zaXRpb24oKT03XR8GZ2QUKwACFgwfAQUETW9yZR8CBQRNb3JlHwNnHwRnHwUFIC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTddHwZnFCsABQUPMDowLDA6MSwwOjIsMDozFCsAAhYOHwEFCEFib3V0IFVzHwIFCEFib3V0IFVzHwcFDi9hYm91dF91cy5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTddLypbcG9zaXRpb24oKT0xXR8GZ2QUKwACFg4fAQUKQ29udGFjdCBVcx8CBQpDb250YWN0IFVzHwcFEC9jb250YWN0X3VzLmFzcHgfA2cfBGcfBQUwLypbcG9zaXRpb24oKT0xXS8qW3Bvc2l0aW9uKCk9N10vKltwb3NpdGlvbigpPTJdHwZnZBQrAAIWDh8BBQpFbXBsb3ltZW50HwIFCkVtcGxveW1lbnQfBwUQL2VtcGxveW1lbnQuYXNweB8DZx8EZx8FBTAvKltwb3NpdGlvbigpPTFdLypbcG9zaXRpb24oKT03XS8qW3Bvc2l0aW9uKCk9M10fBmdkFCsAAhYOHwEFBUxpbmtzHwIFBUxpbmtzHwcFCy9saW5rcy5hc3B4HwNnHwRnHwUFMC8qW3Bvc2l0aW9uKCk9MV0vKltwb3NpdGlvbigpPTddLypbcG9zaXRpb24oKT00XR8GZ2RkZDPC4AVACbu9dsUoBSTgyZfMeXOyJXzm6WRfxqNqzNc7" />
+
+
+<script src="/WebResource.axd?d=N_ROALSKb19MlUDlzgvV4q4f77CDd82ukygBy-FNVHiT0rlv8SsLzxU5wwObAQzJo6P4Z7UTx4LSX1uhBta5mWn_WL19YYbMUhbbmJA3TCE1&amp;t=638912105111817680" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="51FD2C05" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAgr552VvQaXKm4nf9jBPT0Cd+46uISBEHFtCSFUntw1g20D12Z1EATlqhlIAzPElVoiG6UMt37PaZujySEwpZINS2qGUz+ISyyBNKcR6ScNxsl0JyAi2gHDdUhyTAzbqRCVDp1lZAIu+c0AtZD/tgDvlFd/VnYAWVrmK3nUpLAid6B+FxYRC9ULYkeKFJjdxfijWh+AVS9hTcShH3p5XJzZ" />
+        <div id = "header">
+                <div id = "stripes">
+                </div>
+                <div id = "header_container">
+                <div id = "title">
+                    <span class = "dcec">Douglas County Election Commission</span>
+                    <br>
+                    <span>Nebraska</span>
+                </div>
+                <div id = "commissioner_photo">
+                    <img src="/img/commissioner_round.png" alt="Election Commissioner" /><br />
+                    <p class = "job_name">Danielle Jensen</p>
+                    <p class = "job_title">Election Commissioner</p>
+                    <p class = "job_name">Chris Carithers</p>
+                    <p class = "job_title">Chief Deputy Commissioner</p>
+                </div>
+            </div>
+        </div>
+        <div id = "menu" role="menu">
+
+			<a href="#Menu1_SkipLink"><img alt="Skip Navigation Links" src="/WebResource.axd?d=r_FsN7z5vykakDxu-qNBzdUbBKMoWYNEMUoQjWQ7535BqfWidkFLg6BNOFMHZUUgCXWD0fg20SBuv7MBKlhAYP7B2-8QBBEIGfJ9lAAO9ps1&amp;t=638912105111817680" width="0" height="0" border="0" /></a><div role="menuitem" class="horizontal_menu" id="Menu1">
+	<ul class="level1 horizontal_menu_bar">
+		<li><a class="popout level1 horizontal_menu_item_static" href="#" onclick="__doPostBack(&#39;ctl00$Menu1&#39;,&#39;Voter Registration&#39;)">Voter Registration</a><ul class="level2 horizontal_menu_dynamic">
+			<li><a class="level2 horizontal_menu_item_dynamic" href="/voter_registration.aspx">Register To Vote</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/military_overseas.aspx">Military / Overseas Voters</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/deputy_registrars.aspx">Deputy Registrars</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/proof_of_voter_registration.aspx">Proof of Voter Registration</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/voter_registration_cancelation.aspx">Cancel Voter Registration</a></li>
+		</ul></li><li><a class="popout level1 horizontal_menu_item_static" href="#" onclick="__doPostBack(&#39;ctl00$Menu1&#39;,&#39;Ways to Vote&#39;)">Ways to Vote</a><ul class="level2 horizontal_menu_dynamic">
+			<li><a class="level2 horizontal_menu_item_dynamic" href="/early_voting.aspx">Early Voting</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/voter_instructions.aspx">Polling Place Instructions</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/military_overseas.aspx">Military / Overseas Voters</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/voters_with_disabilities.aspx">Voters With Disabilities</a></li>
+		</ul></li><li><a class="popout level1 horizontal_menu_item_static" href="#" onclick="__doPostBack(&#39;ctl00$Menu1&#39;,&#39;Election Info&#39;)">Election Info</a><ul class="level2 horizontal_menu_dynamic">
+			<li><a class="level2 horizontal_menu_item_dynamic" href="/voter_id.aspx">Voter ID</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/offices.aspx">Offices Up For Election</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/deadlines.aspx">Election Deadlines</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/sample_ballots.aspx">Sample Ballots</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/election_integrity.aspx">Election Integrity</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/all_mail_special_elections.aspx">All-Mail Special Elections</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/nonpartisan_voting.aspx">Nonpartisan Voting Options</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/campaign_guidelines.aspx">Political Signs / Electioneering</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/city_elections.aspx">City Of Omaha Elections</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/sid.aspx">Sanitary & Improvement Districts (SIDs)</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/recount_information.aspx">Recount Information</a></li>
+		</ul></li><li><a class="popout level1 horizontal_menu_item_static" href="#" onclick="__doPostBack(&#39;ctl00$Menu1&#39;,&#39;Candidates and Elected Officials&#39;)">Candidates and Elected Officials</a><ul class="level2 horizontal_menu_dynamic">
+			<li><a class="level2 horizontal_menu_item_dynamic" href="/candidate_info.aspx">Candidates Up For Election</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/elected_officials.aspx">Current Elected Officials</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/candidate_filing.aspx">Filing For Office</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/nomination_by_petition.aspx">Nomination By Petition</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/voting_locations.aspx">Polling Places By Political District</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/delegate_information.aspx">Delegate Information</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/recall.aspx">Recall Procedures</a></li>
+		</ul></li><li><a class="popout level1 horizontal_menu_item_static" href="#" onclick="__doPostBack(&#39;ctl00$Menu1&#39;,&#39;Election Worker&#39;)">Election Worker</a><ul class="level2 horizontal_menu_dynamic">
+			<li><a class="level2 horizontal_menu_item_dynamic" href="/poll_worker_information.aspx">General Information</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/election_worker_online_training.aspx">Training & Resources</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/cannot_work_accommodations.aspx">Cannot Work/Accommodations</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/new_election_workers.aspx">New Election Worker</a></li>
+		</ul></li><li><a class="popout level1 horizontal_menu_item_static" href="#" onclick="__doPostBack(&#39;ctl00$Menu1&#39;,&#39;Data/Maps&#39;)">Data/Maps</a><ul class="level2 horizontal_menu_dynamic">
+			<li><a class="level2 horizontal_menu_item_dynamic" href="/election_results.aspx">Election Results</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/redistricting.aspx">2021 Redistricting</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/voter_turnout.aspx">Voter Turnout Reports</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/vr_counts.aspx">Voter Registration Counts</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="https://experience.arcgis.com/experience/554fffe52f394207a7142f920258b84a" target="_blank">Maps</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/services_maps.aspx">Ordering Maps</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/services_voter_file.aspx">Ordering A Voter File</a></li>
+		</ul></li><li><a class="popout level1 horizontal_menu_item_static" href="#" onclick="__doPostBack(&#39;ctl00$Menu1&#39;,&#39;More&#39;)">More</a><ul class="level2 horizontal_menu_dynamic">
+			<li><a class="level2 horizontal_menu_item_dynamic" href="/about_us.aspx">About Us</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/contact_us.aspx">Contact Us</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/employment.aspx">Employment</a></li><li><a class="level2 horizontal_menu_item_dynamic" href="/links.aspx">Links</a></li>
+		</ul></li>
+	</ul>
+</div><a id="Menu1_SkipLink"></a>
+
+        </div>
+
+        <div id = "submenu-row">
+            <div class = "breadcrumb">
+                <span id="SiteMapPath1"><a href="#SiteMapPath1_SkipLink"><img alt="Skip Navigation Links" src="/WebResource.axd?d=r_FsN7z5vykakDxu-qNBzdUbBKMoWYNEMUoQjWQ7535BqfWidkFLg6BNOFMHZUUgCXWD0fg20SBuv7MBKlhAYP7B2-8QBBEIGfJ9lAAO9ps1&amp;t=638912105111817680" width="0" height="0" border="0" /></a><span><a title="Home Page" class="breadcrumb-root-node" href="/index.aspx">Home</a></span><span class="breadcrumb-path-seperator">&gt;&gt;</span><span><a>Ways to Vote</a></span><span class="breadcrumb-path-seperator">&gt;&gt;</span><span class="breadcrumb-current">Early Voting</span><a id="SiteMapPath1_SkipLink"></a></span>            
+            </div>
+            <div id = "google_translate_element">            
+            </div>
+        </div>
+
+        <div id = "content">
+
+            <div class = "sitewide-alert-row">
+                <span class = "alert-content">Our website address has changed to www.votedouglascounty-ne.gov. You will be re-directed if visiting from www.votedouglascounty.com.</span>
+            </div>    
+
+            
+
+    <div class = "content">
+
+        <h1 class = "page-title">
+            Early Voting
+        </h1>
+
+        <p>
+            Registered voters can request that an Early Voting ballot be mailed directly to them prior to each election, or they can visit the <a href = "contact_us.aspx" title = "Contact Information">Election Commission</a> and vote early in person.  They can also have someone pick up a ballot for them prior to the election.
+        </p>
+
+        <p>
+            Print and complete one of the forms below to request your ballot to be mailed. No printer? No problem, just write your information on a piece of paper following this <a href="/forms/NoPrinterNoProblem.pdf">example</a>.
+		</p> 
+
+
+
+        <p style = "color: red;">
+            Note: Some forms contain red text. To ensure, all text is printed, it is recommended to print in black and white, if color printing is not available.
+        </p>
+
+        <div class = "file-section">
+
+    
+<!--
+        <p class = "ev-request-list">
+            Early Voting Ballot Applications are available no earlier than <b>120 days prior</b> to an election.  There are no Early Voting Ballot Applications available at this time.
+        </p> 
+
+        <p class = "download-adobe">
+            <b>The deadline to request an Early Voting Ballot to be sent by mail has passed</b>
+        </p>        
+                    
+         <p class = "ev-request-list">
+            Early Voting Ballot Applications are available no earlier than <b>120 days prior</b> to an election.  There are no Early Voting Ballot Applications available at this time, but you may sign up for the Early Voting Request List with the following form:
+        </p>        
+
+-->
+			<br>
+			
+            <div class = "file-links">     
+
+                <a class = "img_form ev-form" href = "/elections/2026/General/GN26ByMailApplication.pdf" target = "_blank">
+                    <img src = "img/img_form.png" Title = "English Early Voting Request Form" /><br>2026 Statewide Gubernatorial<br>General Election<br>Early Voting Request Application<br>(English)
+				</a> 
+
+				</a>      
+                    <a class = "img_form ev-form" href = "/elections/2026/General/GN26ByMailApplicationSpanish.pdf" target = "_blank">
+                    <img src = "img/img_form.png" Title = "Spanish Early Voting Request Form" /><br>Aplicaci&oacute;n para votar temprano
+				</a>                
+
+				<a class = "img_form ev-form" href = "https://www.votercheck.necvr.ne.gov/voterview" target = "_blank">
+					<img src = "img/external_link.png" Title = "By-Mail Ballot Status Check" /><br>By-Mail Ballot<br>Status Check<br>(Track status of ballot.)    
+                </a>
+                
+
+<!--
+				<a class = "img_form" href = "/forms/EarlyVotingRequestListForm.pdf" target = "_blank">
+                    <img src = "img/img_form.png" Title = "Early Voting Request List Form" /><br>Early Voting<br>Request List<br>
+				</a>                
+                
+
+
+
+
+
+-->                              
+
+            </div>
+
+            <p class = "download-adobe">
+                <a href = "http://get.adobe.com/reader/" title = "Download Adobe Acrobat Reader" target = "_blank">Click here</a> to download the latest version of Adobe Acrobat Reader.  If you are experiencing problems with a form, you should update your software.
+            </p>
+        </div>
+
+        <div class = "content-toc">
+            <p>
+                Learn more about early voting by reading the information below.
+            </p>
+
+            <ul>
+                <li>    
+                    <a href = "#dropboxes">Drop Box Locations</a>
+                </li>
+                <li>    
+                    <a href = "#qualifications">Qualifications</a>
+                </li>
+                <li>
+                    <a href = "#mail">Requesting by Mail</a>
+                </li>
+                <li>
+                    <a href = "#request_list">Early Voting Request List</a>
+				</li>
+                <li>
+                    <a href = "#in_person">Voting In Person</a>
+                </li>				
+            </ul>
+            <ul>
+                <li>
+                    <a href = "#agent">Requesting by Agent</a>
+				</li>
+                <li>
+                    <a href = "#verification">Early Voting Ballot Verification & Processing</a>
+                </li>				
+                <li>
+                    <a href = "#hospitals">Hospitals</a>
+                </li>
+                <li>
+                    <a href = "#nursing_homes">Nursing Homes / Assisted Living Facilities</a>
+                </li>
+                <li>
+                    <a href = "#emergency_responders">Emergency Responders</a>
+                </li>                
+            </ul>
+        </div>
+
+        <div class="content-main">
+
+            <h2>
+                <a id = "dropboxes">
+                    Drop Box Locations
+                </a>
+			</h2>
+
+			<div>
+				<p style = "width: 70%; display: inline-block;">
+					The Douglas County Election Commission has thirteen drop box locations to give voters an opportunity to return election materials, including ballots, without using the mail. When available, drop boxes are open 24/7, and no postage is required. All drop boxes are available approximately three months prior to statewide primary, statewide general, and City of Omaha elections. Select drop boxes are available for 22 days prior to all-mail special elections. The drop boxes will accept ballots up until the close of polls on election day (8:00 p.m. for polling place elections and 5:00 p.m. for all-mail elections). <br><br><b>The current availability of each drop box is listed below each drop box name.</b>
+				</p>
+
+				<p style = "width: 3%; display: inline-block;"></p>
+
+				<img ID="imgDropBox" class="drop-box-image" Title = "Drop Box Image" src="img/DropBox.jpg" />
+			</div>
+
+			<ul class = "drop-box-locations">
+                <li>
+                    <b>Douglas County Election Commission</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/10.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/10.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>
+					<br>
+					<span class = "open">Open</span><br>
+					Located: <a href = "forms/DCEC Drop Box Traffic Flow.pdf">Southwest end of parking lot</a>,<br>
+					<span style = "margin-left: 65px;">under light pole<br>
+                    12220 W Center Road, Omaha<br>
+                </li>
+			</ul>
+			<br>
+			<ul class = "drop-box-locations">    
+                 
+                
+				<li>
+                    <b>City/County Building</b>
+					<br> 
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/6.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div> 
+                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/6.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>						                  
+                    <br>
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span> <span style = "font-size:10pt;">(Road Construction Nearby)</span><br>
+                    Located: Between 18th & 19th on Farnam<br>
+                    <span style = "margin-left: 65px;">near sidewalk</span><br>
+                    1819 Farnam Street, Omaha<br>
+                </li>
+                <li>
+                    <b>South Omaha Library</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/2.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/2.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>						
+                    <br>                     
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>
+					Located: East side parking lot<br>
+                    2808 Q Street, Omaha<br>
+                </li>                   
+                <li>
+                    <b>Charles B. Washington Branch Library</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/1.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/1.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>						    
+                    <br>                    
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>	
+                    Located: Southwest corner of building<br>
+                    2868 Ames Avenue, Omaha<br>
+				</li>
+				<li>
+                    <b>Clarkson College Parking Lot 8</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/12.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/12.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>						
+                    <br>                        
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>
+					Located: Northwest corner,<br>
+					<span style = "margin-left: 65px;">east side of parking lot</span><br>
+                    42nd & Farnam Street, Omaha<br>
+				</li>                   
+            </ul>
+			<ul class = "drop-box-locations">  
+                <li>
+                    <b>Asian Market</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/11.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/11.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>						
+                    <br>                        
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>
+                    Located: West end of parking lot<br>
+                    321 N 76th Street, Omaha<br>
+                </li> 
+                <li>
+                    <b>Ralston Police Department</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/9.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+						                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/9.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br> 
+                    <br>                     
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>	
+                    Located: Southwest corner of building<br>
+                    7400 Main Street, Ralston<br>
+				</li>                       
+				<li>
+                    <b>Goodwill</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/13.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+						                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/13.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>
+                    <br>                      
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>
+					Located: On median in Goodwill's south<br>
+                    <span style = "margin-left: 65px;">parking lot next to Home Depot<br>
+                    4805 N 72nd Street, Omaha<br>
+                </li>				  				               
+                <li>
+                    <b>Milton R. Abrahams Branch Library</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/8.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+						                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/8.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br> 
+                    <br>                       
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>
+                    Located: South of main entrance<br>
+                    5111 N 90th Street, Omaha<br>
+                </li> 
+			</ul>
+            <ul class = "drop-box-locations">   
+                
+                <li>
+                    <b>Douglas County Engineer's Office</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/7.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+						                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/7.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>
+                    <br>                        
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>
+                    Located: Near sidewalk by parking stalls<br>
+                    15505 W Maple Road, Omaha<br>
+                </li>
+
+                <li>
+                    <b>Millard Public Schools Foundation</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/3.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+						                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/3.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>
+                    <br>                       
+					<!--<span class = "unavailable">Unavailable</span><br>-->	
+					<span class = "open">Open</span><br>
+					Located: Northwest corner of building,<br>
+					<span style = "margin-left: 65px;">end of sidewalk<br>
+                    5231 South 159th Avenue, Omaha<br>
+				</li>            
+                <li>
+                    <b>Spring Ridge Shopping Center</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/14.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+						                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/14.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>
+                    <br>                        
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>
+					Located: On median when entering at 178th St,<br>
+					<span style = "margin-left: 65px;">next to post office box<br>
+                    178th & Pacific Street, Omaha<br>
+                </li>  
+                
+                <li>
+                    <b>Bess Johnson Elkhorn Branch Library</b>
+					<br>
+                        <div class = "db-photo-icon">
+                            <a href="img/drop_boxes/4.jpg" target="_blank">
+                                <img class = "db-photo-img" src="img/photo_img.png" Title="Drop Box Photo" />
+                            </a>
+                        </div>
+						                        <div class = "db-buffer-icon">
+                            <a href="img/drop_boxes/200ft_Maps/4.pdf" target="_blank">
+                                <img class = "db-buffer-img" src="img/db_buffer.png" Title="200 ft Electioneering Boundary" />
+                            </a>
+                        </div> 						                       
+                    <br>
+                    <br>                       
+					<!--<span class = "unavailable">Unavailable</span><br>-->
+					<span class = "open">Open</span><br>
+                    Located: Northeast corner of building<br>
+                    2100 Reading Plaza, Elkhorn<br>
+                </li>                  
+            			
+            </ul>
+
+
+			
+			<p class = "google-maps">
+                <iframe title = "Douglas County Drop Boxes" src="https://www.google.com/maps/d/embed?mid=169X1JMaRXQjap2j7N2OFdf30tZX_bAIk" width="560" height="360" frameborder="1" scrolling="no" style="border:0;" marginheight="0" marginwidth="0" z="19" loading="lazy"></iframe>		               
+			</p>
+
+            <h2>
+                <a id = "qualifications">
+                    Qualifications for Requesting an Early Voting Ballot
+                </a>
+            </h2>
+
+            <p>
+                Any Douglas County voter who was registered prior to the <a href = "deadlines.aspx" title = "Deadline Information">voter registration deadline</a> is eligible to request an early voting ballot, either by mail, in person, or by agent.
+            </p>
+
+            <h2>
+                <a id="mail">
+                    Requesting By Mail
+                </a>
+            </h2>
+
+            <p>
+                Voters can have a ballot sent directly to them in the mail, either to their home address or to another address if they are away from home.  Voters should send an <a href="#" onclick="window.scrollTo(0,0); return false">Early Voting Ballot Application</a> to the <a href = "contact_us.aspx" title = "Contact Information">Election Commission</a> requesting a ballot be mailed to them. For more information check out our <a href="/forms/EV_Fast_Facts.pdf" target="_blank">Fast Facts - By-Mail Early Voting</a> and <a href = "/forms/ByMailVotingTop10Tips.pdf" target = "_blank">Top 10 Tips for By-Mail Voting</a>.
+            </p>
+
+            <h3 class = "ev-sub-title">
+                Requirements:
+            </h3>
+
+            <ul>
+                <li>Completed applications may be returned to the Election Commission by mail or in person to 12220 W Center Rd, Omaha, NE 68144; by fax to (402) 444-4181; or by email by attaching a picture of the completed application and sending it to early.voting@douglascounty-ne.gov</li>
+
+                <li>A voter can print an Early Voting Ballot Application or send us a request with the following information (see <a href="/forms/NoPrinterNoProblem.pdf">example</a>).</li>
+                    <ul>
+                        <li>Name of Election (e.g. 2026 General Election)</li>
+                        <li>Voter's Name</li>
+                        <li>Voter's Home (Registered) Address</li>
+                        <li>Address where ballot should be mailed, if different from voter's home address</li>
+                        <li>Voter's Date of Birth</li>
+						<li>Voter's Nebraska Driver's License or State ID Number OR include a copy of <a href = "https://sos.nebraska.gov/elections/voter-id">other valid photo identification</a> or completed <a href = "forms/RIC_Form.pdf">Reasonable Impediment Certification</a></li>
+                        <li>Voter's Phone Number</li>
+                        <li>Voter's Email Address</li>
+                        <li>Voter's Signature or the signature of the person acting as an agent</li>
+                    </ul>
+                <li>All requests must be received by 6:00 p.m. on the second Friday prior to each election.</li>
+            </ul>
+
+            <h3 class = "ev-sub-title">
+                Envelopes:
+            </h3>
+
+            <ul>
+                <li>Early voting ballots are mailed in gold-colored envelopes (pictured below) measuring approximately 6 inches by 9 inches.</li>
+                <div style="margin-left:30px;">
+                    <img id="ContentPlaceHolder1_imgOutgoingEnvelope" src="img/outgoing_envelope.jpg" alt="Outgoing Envelope" border="2" />
+                </div>
+                <li> A return envelope (pictured below) is included with the early voting ballot. The return envelopes are gold-colored and measure 6 inches by 9 inches. Voters must sign the back of the return envelope in order for the ballot to be counted.</li>
+                <div style="margin-left:30px;">
+                    <img id="ContentPlaceHolder1_imgReturnEnvelopeFront" src="img/return_envelope_front.jpg" alt="Return Envelope Front" border="2" />
+
+                    <img id="ContentPlaceHolder1_imgReturnEnvelopeBack" src="img/return_envelope_back.jpg" alt="Return Envelope Back" border="2" />
+                </div>
+            </ul>
+
+            <h2>
+                <a id="request_list">
+                    Early Voting Request List
+                </a>
+            </h2>
+
+            <p>
+                In July 2018, the Douglas County Election Commission began offering a program for voters to sign up to be on the Early Voting Request List.
+            </p>
+
+            <p>
+                This program includes the following:
+            </p>
+
+            <ul style="margin-top:-25px;">
+                <li>
+                    Voter that plans to vote early by mail for future scheduled elections signs up to be on the mailing list by checking the box on the By-Mail Early Voting Ballot Application while requesting a ballot for an election or by completing the Early Voting Request List Sign-Up Form during non-election times. <b>See top of page for form.</b>
+                </li>
+                <li>
+                    Voter receives a postcard application approximately 2 to 3 months prior to each scheduled election.
+                </li>
+                <li>
+                    Voter must complete, sign, and return the postcard application in order to have an early voting ballot mailed to them.
+                </li>
+                <li>
+                    Voter that prefers to vote at their polling place on Election Day should not sign up to be on this list.
+                </li>
+            </ul>
+
+            <h2>
+                <a id = "in_person">
+                    Voting In Person
+                </a>
+            </h2>
+
+            <ul>
+
+                <li>All in-person early voting takes place at the <a href = "contact_us.aspx" title = "Contact Information">Election Commission</a>.</li>
+                <li>The voter can vote their ballot at the Election Commission, or the voter can take their ballot home as long as the ballot is returned to the Election Commission or a <a href = "#dropboxes" title = "Drop Box Locations">drop box location</a> before 8:00 p.m. on election day.
+				<li>In-person early voting takes place 30 days prior to a statewide election and fifteen days prior to all other elections (e.g. City of Omaha Elections, School Bond Elections, Levy Override Elections, etc.).</li>
+
+            </ul>
+
+            <h2>
+                <a id="agent">
+                    Requesting By Agent
+                </a>
+            </h2>
+
+            <ul>
+
+                <li>An agent is a person acting on behalf of a registered voter.</li>
+                <li>An agent can request an early voting ballot to be mailed to a voter or can pick up an early voting ballot for a voter.</li>
+                <li>An agent can only be an agent for two voters each election (requesting a ballot for yourself is not considered acting as an agent).</li>
+                <li>An agent does not have to be a registered voter, but they must be able to provide the name, registered address, date of birth, and Nebraska or State ID number of the voter.</li>
+                <li>If an agent is picking up an early voting ballot for a voter, the agent has until 7:00 p.m. on election day to come to the <a href = "contact_us.aspx" title = "Contact Information">Election Commission</a> to pick up a ballot.</li>
+				<li>All ballots must be returned to the Election Commission or a <a href = "#dropboxes" title = "Drop Box Locations">drop box location</a> before 8:00 p.m. on election day.</li>
+
+			</ul>
+
+            <h2>
+                <a id="verification">
+                    Early Voting Ballot Verification & Processing
+                </a>
+            </h2>			
+			
+            <ul>
+				<li>Ballots are collected from the post office and drop boxes each weekday.</li>
+                <li>Voter's signature on the return envelope is verified.</li>
+                <li>
+					The status of each ballot return envelope is logged in the voter registration system.
+					<ul>
+						<li>
+							Visit <a href = "https://www.votercheck.necvr.ne.gov/voterview">Early Voting Ballot Status Check</a> to track the status of your ballot.
+						</li>
+					</ul>
+				</li>
+                <li>All ballot returns are logged the same day they are received.</li>
+                <li>An audit is completed to ensure all ballot returns are accounted for.</li>
+                <li>Ballot returns are then stored in a secure room until opening begins.</li>
+				<li>Accepted ballot return envelopes are opened by a team of two workers of differing political parties.</li>
+                <li>The ballot is removed and separated from the envelope so that each voter's ballot remains secret.</li>
+                <li>Accepted ballots are placed in boxes which are sealed and stored in a secure room.</li>
+				<li>
+					Accepted early voting ballots can begin to be counted the Monday prior to Election Day.
+					<ul>
+						<li>
+							These ballots are part of the first sets of results after the closing of the polls on Election Night.
+						</li>
+					</ul>
+				</li>
+				<li>
+					All early voting ballots returned on Election Day are verified and processed the day after Election Day.
+					<ul>
+						<li>
+							The accepted ballots are then counted the Friday following Election Day and are included in the final official election results.
+						</li>
+					</ul>
+				</li>
+				<li>
+					<b>All accepted early voting ballots are counted and reported.</b>
+				</li>
+				<li>
+					Suspended ballots are processed during the canvass (auditing) of the election.
+					<ul>
+						<li>
+							If accepted, the ballot will be counted and added to the final official election results.
+						</li>
+					</ul>
+				</li>
+				<li>After the canvass of the election is complete, all early voting ballots and materials are stored for 22 months.</li>
+            </ul>			
+
+            <h2>
+                <a id="hospitals">
+                    Hospitals
+                </a>
+			</h2>
+
+            <ul>
+                <li>Anyone who is a registered voter in Douglas County and is a patient in a Douglas County hospital on election day is eligible to have their ballot delivered to the hospital by an Election Commission representative.</li>
+                <li>The patient, or an agent acting on the patient's behalf, must complete an <a href="#" onclick="window.scrollTo(0,0); return false">Early Voting Ballot Application</a>, which can be obtained from a hospital staff member.</li>
+                <li>All patient applications must be received by the Election Commission by 5:00 p.m. the day before the election.</li>
+                <li>If a patient needs assistance marking or reading their ballot, a <a href="forms/VoterAssistanceOath.pdf" target="_blank">Voter Assistance Oath</a> must be completed and returned with the ballot.</li>
+                <li>Ballots must be returned to the <a href = "contact_us.aspx" title = "Contact Information">Election Commission</a> or a <a href = "#dropboxes" title = "Drop Box Locations">drop box location</a> by 8:00 p.m. on election day.</li>
+                <li>Hospital staff assist patients in completing the requests and ensure the ballots are returned to the Election Commission by the deadline.</li>
+            </ul>
+
+            <h2>
+                <a id="nursing_homes">
+                    Nursing Homes / Assisted Living Facilities
+                </a>
+            </h2>
+
+            <p>
+                In order to assist residents of nursing homes and assisted living facilities, the Douglas County Election Commission arranges for ballots to be mailed directly to the residents of these facilities.
+            </p>
+            
+            <ul>
+                <li>The resident wishing to vote, or an agent acting on the resident's behalf, must complete an <a href="#" onclick="window.scrollTo(0,0); return false">Early Voting Ballot Application</a> prior to the <a href = "deadlines.aspx" title = "Deadline Information">voter registration deadline</a> for that election.</li>
+                <li>If a resident wishes to vote and is not listed as an active resident of the nursing home or assisted living facility, then they must also complete a <a href="voter_registration.aspx" title = "Voter Registration Application Information">Nebraska Voter Registration Application</a>.</li>
+                <li>All completed Early Voting Ballot Applications must be faxed, mailed, emailed, or delivered to the Douglas County Election Commission no later than 6:00 p.m. on the second Friday before election day.</li>
+                <li>If a resident needs assistance marking or reading their ballot, a <a href="forms/VoterAssistanceOath.pdf" target="_blank">Voter Assistance Oath</a> must be completed and returned with the ballot.</li>
+                <li>Upon completion, the ballots must be returned in their respective envelopes to the <a href = "contact_us.aspx" title = "Contact Information">Election Commission</a> by mail or in person.</li>
+                <li>Ballots must be returned to the Election Commission or a <a href = "#dropboxes" title = "Drop Box Locations">drop box location</a> by 8:00 p.m. on election day.</li>
+            </ul>
+
+            <p>
+                There are a number of deadlines related to voter registration and early voting.  Please review them carefully so that residents have the opportunity to vote each election.
+            </p>
+            
+            <p>
+                All Nebraska Voter Registration Applications must be received by the voter registration deadline in order for a resident to vote in the upcoming election.
+            </p>
+            
+            <p>
+                Please note that Early Voting Ballot Applications may be faxed or mailed to the Election Commission; however, all Nebraska Voter Registration Applications must be mailed to the Election Commission or delivered in person.  We are unable to accept any faxed voter registration applications.
+            </p>
+
+            <h2>
+                <a id="emergency_responders">
+                    Emergency Responders
+                </a>
+            </h2>
+
+            <p>
+                An emergency responder is defined as, "a person responding to a mutual aid agreement or a state of emergency proclamation issued by the Governor or the President of the United States who is temporarily assigned by a governmental or nongovernmental relief agency or employer to provide support to victims of an emergency or a natural disaster or to rebuild the infrastructure of an area affected by such emergency or natural disaster."
+            </p>  
+            
+            <p>
+                Emergency responders may request a ballot be emailed or faxed to them according to the following:
+            </p>
+
+            <ul style="margin-top:-25px;">
+                <li>Applications may be submitted to the Election Commission starting 45 days before any election.</li>
+
+                <li>Emergency responders must complete a <a href = "forms/2022 Early Voting Ballot Application - Emergency Responder.pdf">Nebraska Early Voting Ballot Application - Emergency Responder</a>.</li>
+
+                <li>Applications must be physically signed.</li>
+
+                <li>Completed applications may be returned to the Election Commission by mail to 12220 W Center Rd, Omaha, NE 68144; by fax to (402) 444-4181; or by email by attaching a picture of the completed application and sending it to early.voting@douglascounty-ne.gov.</li>
+
+                <li>The deadline for the Election Commission to receive the completed and signed application is 12:00 p.m. on election day.</li>
+
+                <li>Ballots must be returned to the Election Commission by 8:00 p.m. on election day.</li>
+
+                <li>To return the ballot via email or fax a request must be made to the Election Commission.</li>
+            </ul>
+        </div>
+    </div>
+
+        </div>
+        <div id = "footer">
+	        <p>Douglas County Election Commission&nbsp;&nbsp;&bull;&nbsp;&nbsp;Copyright &copy; 2004-2026&nbsp;&nbsp;&bull;&nbsp;&nbsp;<a href = "privacy_policy.aspx" title = "Privacy Information">Privacy Policy</a></p>
+        </div>
+    
+<script type='text/javascript'>new Sys.WebForms.Menu({ element: 'Menu1', disappearAfter: 500, orientation: 'horizontal', tabIndex: 0, disabled: false });</script></form>
+</body>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        jQuery('.horizontal_menu').meanmenu({
+            meanScreenWidth: "768"
+        });
+    });
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({ pageaLanguage: 'en' }, 'google_translate_element');
+    }
+</script>
+
+<!-- Back to Top Script -->
+<script type="text/javascript">
+    function backToTop()
+    {
+        var x1 = x2 = x3 = 0;
+        var y1 = y2 = y3 = 0;
+
+        if (document.documentElement)
+        {
+            x1 = document.documentElement.scrollLeft || 0;
+            y1 = document.documentElement.scrollTop || 0;
+        }
+    if (document.body)
+        {
+            x2 = document.body.scrollLeft || 0;
+            y2 = document.body.scrollTop || 0;
+        }
+    x3 = window.scrollX || 0;
+    y3 = window.scrollY || 0;
+    var x = Math.max(x1, Math.max(x2, x3));
+    var y = Math.max(y1, Math.max(y2, y3));
+    window.scrollTo(Math.floor(x / 2), Math.floor(y / 2));
+    if (x > 0 || y > 0)
+        {
+            window.setTimeout("backToTop()", 25);
+        }
+    }
+</script>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+  m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-50301635-1', 'votedouglascounty.com');
+    ga('send', 'pageview');
+
+</script>
+<script type = "text/javascript">
+    $('li[aria-haspopup^="Menu1:submenu"]').attr('aria-haspopup', 'menu');    
+</script>
+</html>

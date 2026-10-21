@@ -27,6 +27,14 @@
   node_bundler = "esbuild"
   included_files = ["data/derived/zip-divisions/*.json", "data/derived/resolver-geometry.json", "data/derived/zip-coverage-tiers-runtime.json", "data/states/*/geo/**/*.geojson", "public/geo/*.geojson"]
 
+[functions."reader-meetings"]
+  node_bundler = "esbuild"
+  external_node_modules = ["next"]
+  included_files = ["data/derived/zip-divisions/*.json", "lib/geo/zcta-centroids.json", "lib/geo/postal-zips.json", "data/derived/resolver-geometry.json", "data/derived/zip-coverage-tiers-runtime.json", "data/states/*/geo/**/*.geojson", "public/geo/*.geojson", "data/reference/fec_state_election_offices.csv", "data/reference/state-cf-agencies.csv"]
+
+[functions."reader-geocode"]
+  node_bundler = "esbuild"
+
 # The site's default Netlify hostname forwards to the real one.
 [[redirects]]
   from = "https://sparkwtp.netlify.app/*"

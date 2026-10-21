@@ -1,0 +1,167 @@
+Ohio Courts of Appeals (https://ohioroster.ohiosos.gov/court_of_appeals.aspx)
+【turn588958view0】 [wordlim: 200] Crawled: yesterday; Content type: text/html; Source: open({"ref_id":"https://ohioroster.ohiosos.gov/court_of_appeals.aspx","lineno":null}); Total lines: 164
+L0: Ohio law requires the official rosters to be updated and published every two years. The information contained on this website is submitted to the Ohio Secretary of State by various federal, state, and local entities during the two years indicated in the upper left corner of each page. Vacancies and appointments of elected officials occurring after this data was submitted by the agency may result in outdated content. Please consult with the relevant governing authority for their most current information.
+L1: 【0†skip to content】 | 【1†skip to navigation】
+L2: # Official Roster of Ohio Officers
+L3: 
+L4: [Input]
+L5: 
+L6: [Input]
+L7: 
+L8: 2023-2024 【2†Image: Official Roster of Federal, State and County Officers】
+L9: ## Ohio Courts of Appeals
+L10: 
+L11: Term of Office: 6 Years
+L12:    【3†Image: Logo for Ohio Courts of Appeals】
+L13: 【4†Courts of Appeals Website†www.supremecourt.ohio.gov】
+L14: 【5†First District】 【6†Second District】 【7†Third District】 【8†Fourth District】
+L15: 【9†Fifth District】 【10†Sixth District】 【11†Seventh District】 【12†Eighth District】
+L16: 【13†Ninth District】 【14†Tenth District】 【15†Eleventh District】 【16†Twelfth District】
+L17:   【17†Public Footnotes】
+L18: ### First District
+L19: 
+L20: Hamilton
+L21: Name Residence Term Expires
+L22: Pierre Bergeron Cincinnati 02/08/2025
+L23: Marilyn Zayas Cincinnati 02/09/2025
+L24: Candace Crouse Cincinnati 02/10/2025
+L25: Robert C. Winkler Cincinnati 02/11/2025
+L26: Ginger Bock Cincinnati 02/08/2027
+L27: Jennifer Kinsley Cincinnati 02/08/2029
+L28: 
+L29: 【18†Back to Top】
+L30: ### Second District
+L31: 
+L32: Champaign; Clark; Darke; Greene; Miami; Montgomery
+L33: Name Residence Term Expires
+L34: Jeffrey M. Welbaum Troy 02/08/2025
+L35: Chris Epley Oakwood 02/08/2027
+L36: Mary Kate Huffman Centerville 02/08/2029
+L37: Ronald C. Lewis Xenia 02/09/2029
+L38: Mike Tucker Kettering 02/10/2029
+L39: 
+L40: 【18†Back to Top】
+L41: ### Third District
+L42: 
+L43: Allen; Auglaize; Crawford; Defiance; Hancock; Hardin; Henry; Logan; Marion; Mercer; Paulding; Putnam; Seneca; Shelby; Union; Van Wert; Wyandot
+L44: Name Residence Term Expires
+L45: John R. Willamowski Lima 02/08/2025
+L46: Mark C. Miller Findlay 02/08/2027
+L47: William R. Zimmerman Sidney 02/08/2029
+L48: Juergen A. Waldick Delphos 02/10/2029
+L49: 
+L50: 【18†Back to Top】
+L51: ### Fourth District
+L52: 
+L53: Adams; Athens; Gallia; Highland; Hocking; Jackson; Lawrence; Meigs; Pickaway; Pike; Ross; Scioto; Vinton; Washington
+L54: Name Residence Term Expires
+L55: Jason P. Smith Ironton 02/08/2025
+L56: Mike Hess Commercial Point 02/09/2025
+L57: Peter B. Abele Albany 02/08/2027
+L58: Kristy Wilkin Hillsboro 02/08/2029
+L59: 
+L60: 【18†Back to Top】
+L61: ### Fifth District
+L62: 
+L63: Ashland; Coshocton; Delaware; Fairfield; Guernsey; Holmes; Knox; Licking; Morgan; Morrow; Muskingum; Perry; Richland; Stark; Tuscarawas
+L64: Name Residence Term Expires
+L65: John W. Wise Canton 02/08/2025
+L66: Scott Gwin Canton 02/09/2025
+L67: Patricia A. Delaney Delaware 02/10/2025
+L68: William B. Hoffman North Canton 02/08/2027
+L69: Andrew King Granville 02/08/2029
+L70: Craig Baldwin Newark 02/09/2029
+L71: 
+L72: 【18†Back to Top】
+L73: ### Sixth District
+L74: 
+L75: Erie; Fulton; Huron; Lucas; Ottawa; Sandusky; Williams; Wood
+L76: Name Residence Term Expires
+L77: Gene A. Zmuda Toledo 02/08/2025
+L78: Thomas J. Osowik Toledo 02/08/2027
+L79: Myron C. Duhart Toledo 02/09/2027
+L80: Christine Mayle Perrysburg 02/08/2029
+L81: Charles E. Sulek Toledo 02/09/2029
+L82: 
+L83: 【18†Back to Top】
+L84: ### Seventh District
+L85: 
+L86:   Belmont; Carroll; Columbiana; Harrison; Jefferson; Mahoning; Monroe; Noble
+L87: 
+L88: Name Residence Term Expires
+L89: David A. D'Apolito Canfield 02/08/2025
+L90: Carol Ann Robb New Waterford 02/08/2027
+L91: Cheryl L. Waite Youngstown 02/09/2027
+L92: Mark A. Hanni Canfield 02/08/2029
+L93: 
+L94: 【18†Back to Top】
+L95: ### Eighth District
+L96:   Cuyahoga
+L97: 
+L98: Name Residence Term Expires
+L99: Frank D. Celebrezze Jr. Strongsville 12/31/2024
+L100: Michelle J. Sheehan Rocky River 01/01/2025
+L101: Eileen T. Gallagher Pepper Pike 01/02/2025
+L102: Mary J. Boyle Olmsted Twp. 02/08/2025
+L103: Sean C. Gallagher Cleveland 02/08/2027
+L104: Michael John Ryan Cleveland 02/09/2027
+L105: Emanuella D. Groves Cleveland 02/10/2027
+L106: Anita Laster Mays Cleveland 02/11/2027
+L107: Mary Eileen Kilbane Cleveland 12/31/2028
+L108: Lisa Forbes Shaker Hts. 01/01/2029
+L109: Kathleen Ann Keough Westlake 01/02/2029
+L110: Eileen A. Gallagher Rocky River 02/08/2029
+L111: 
+L112: 【18†Back to Top】
+L113: ### Ninth District
+L114: 
+L115:   Lorain; Medina; Summit; Wayne
+L116: 
+L117: Name Residence Term Expires
+L118: Jennifer Hensal Akron 02/08/2025
+L119: Betty Sutton Copley 02/08/2027
+L120: Scot Stevenson Barberton 02/08/2029
+L121: Donna J. Carr Akron 02/09/2029
+L122: Jill Flagg Lanzinger Akron 02/10/2029
+L123: 
+L124: 【18†Back to Top】
+L125: ### Tenth District
+L126: 
+L127:    Franklin
+L128: 
+L129: Name Residence Term Expires
+L130: Laurel Beatty Blunt Gahanna 02/08/2025
+L131: Betsy Luper Schuster New Albany 02/09/2025
+L132: Michael C. Mentel Columbus 02/08/2027
+L133: Terri Jamison Blacklick 06/30/2027
+L134: Kristin Boggs Columbus 12/31/2028
+L135: Julia L. Dorrian Columbus 01/01/2029
+L136: Keith McGrath Columbus 01/02/2029
+L137: David Leland Columbus 02/08/2029
+L138: 
+L139: 【18†Back to Top】
+L140: ### Eleventh District
+L141: 
+L142:   Ashtabula; Geauga; Lake; Portage; Trumbull
+L143: 
+L144: Name Residence Term Expires
+L145: John J. Eklund Chardon 02/08/2025
+L146: Mary Jane Trapp Novelty 02/09/2025
+L147: Matt Lynch Bainbridge 02/08/2027
+L148: Cynthia Westcott Rice Brookfield 02/09/2027
+L149: Eugene A. Lucci Concord 02/08/2029
+L150: 
+L151: 【18†Back to Top】
+L152: ### Twelfth District
+L153: 
+L154:   Brown; Butler; Clermont; Clinton; Fayette; Madison; Preble; Warren
+L155: 
+L156: Name Residence Term Expires
+L157: Stephen W. Powell West Chester 02/08/2025
+L158: Matthew Byrne Maineville 12/31/2026
+L159: Robert A. Hendrickson Monroe 02/08/2027
+L160: Robin N. Piper Hamilton 02/08/2029
+L161: Mike Powell Lebanon 02/09/2029
+L162: 
+L163: 【18†Back to Top】
+

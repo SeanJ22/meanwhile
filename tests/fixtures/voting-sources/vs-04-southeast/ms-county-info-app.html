@@ -1,0 +1,966 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+
+</title>
+
+    <style type="text/css">
+        .container {
+            display: table;
+        }
+
+        .row {
+            display: table-row;
+        }
+
+        .cell {
+            display: table-cell;
+            /*border-width: 1px;
+            border-color: #94C0D2;
+            border-style:solid;*/
+        }
+
+        .regCell {
+            display: table-cell;
+        }
+
+        .bttnStyles {
+            height: 36px;
+            border-color: #94C0D2;
+            font-size: 15px;
+            border-width: 1px;
+            border-radius: 5px;
+            background-color: #DAECF4;
+            color: #003F59;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+
+        @font-face {
+            font-family: 'Open Sans';
+            src: url('OpenSans-Regular.eot');
+            src: url('OpenSans-Regular.eot?#iefix') format('embedded-opentype'), url('OpenSans-Regular.woff') format('woff'), url('OpenSans-Regular.ttf') format('truetype'), url('OpenSans-Regular.svg#svgFontName') format('svg');
+        }
+    </style>
+
+    <script type="text/javascript">
+        var countyClicked = 'No';
+
+
+        function MouseOver(tmpName) {
+
+            document.getElementById('Adams').style.color = 'black';
+            document.getElementById('Adams').style.fontWeight = '';
+            document.getElementById('Alcorn').style.color = 'black';
+            document.getElementById('Alcorn').style.fontWeight = '';
+            document.getElementById('Amite').style.color = 'black';
+            document.getElementById('Amite').style.fontWeight = '';
+            document.getElementById('Attala').style.color = 'black';
+            document.getElementById('Attala').style.fontWeight = '';
+            document.getElementById('Benton').style.color = 'black';
+            document.getElementById('Benton').style.fontWeight = '';
+            document.getElementById('Bolivar').style.color = 'black';
+            document.getElementById('Bolivar').style.fontWeight = '';
+            document.getElementById('Calhoun').style.color = 'black';
+            document.getElementById('Calhoun').style.fontWeight = '';
+            document.getElementById('Carroll').style.color = 'black';
+            document.getElementById('Carroll').style.fontWeight = '';
+            document.getElementById('Chickasaw').style.color = 'black';
+            document.getElementById('Chickasaw').style.fontWeight = '';
+            document.getElementById('Choctaw').style.color = 'black';
+            document.getElementById('Choctaw').style.fontWeight = '';
+            document.getElementById('Claiborne').style.color = 'black';
+            document.getElementById('Claiborne').style.fontWeight = '';
+            document.getElementById('Clarke').style.color = 'black';
+            document.getElementById('Clarke').style.fontWeight = '';
+            document.getElementById('Clay').style.color = 'black';
+            document.getElementById('Clay').style.fontWeight = '';
+            document.getElementById('Coahoma').style.color = 'black';
+            document.getElementById('Coahoma').style.fontWeight = '';
+            document.getElementById('Copiah').style.color = 'black';
+            document.getElementById('Copiah').style.fontWeight = '';
+            document.getElementById('Covington').style.color = 'black';
+            document.getElementById('Covington').style.fontWeight = '';
+            document.getElementById('DeSoto').style.color = 'black';
+            document.getElementById('DeSoto').style.fontWeight = '';
+            document.getElementById('Forrest').style.color = 'black';
+            document.getElementById('Forrest').style.fontWeight = '';
+            document.getElementById('Franklin').style.color = 'black';
+            document.getElementById('Franklin').style.fontWeight = '';
+            document.getElementById('George').style.color = 'black';
+            document.getElementById('George').style.fontWeight = '';
+            document.getElementById('Greene').style.color = 'black';
+            document.getElementById('Greene').style.fontWeight = '';
+            document.getElementById('Grenada').style.color = 'black';
+            document.getElementById('Grenada').style.fontWeight = '';
+            document.getElementById('Hancock').style.color = 'black';
+            document.getElementById('Hancock').style.fontWeight = '';
+            document.getElementById('Harrison').style.color = 'black';
+            document.getElementById('Harrison').style.fontWeight = '';
+            document.getElementById('Hinds').style.color = 'black';
+            document.getElementById('Hinds').style.fontWeight = '';
+            document.getElementById('Holmes').style.color = 'black';
+            document.getElementById('Holmes').style.fontWeight = '';
+            document.getElementById('Humphreys').style.color = 'black';
+            document.getElementById('Humphreys').style.fontWeight = '';
+            document.getElementById('Issaquena').style.color = 'black';
+            document.getElementById('Issaquena').style.fontWeight = '';
+            document.getElementById('Itawamba').style.color = 'black';
+            document.getElementById('Itawamba').style.fontWeight = '';
+            document.getElementById('Jackson').style.color = 'black';
+            document.getElementById('Jackson').style.fontWeight = '';
+            document.getElementById('Jasper').style.color = 'black';
+            document.getElementById('Jasper').style.fontWeight = '';
+            document.getElementById('Jefferson').style.color = 'black';
+            document.getElementById('Jefferson').style.fontWeight = '';
+            document.getElementById('Jefferson Davis').style.color = 'black';
+            document.getElementById('Jefferson Davis').style.fontWeight = '';
+            document.getElementById('Jones').style.color = 'black';
+            document.getElementById('Jones').style.fontWeight = '';
+            document.getElementById('Kemper').style.color = 'black';
+            document.getElementById('Kemper').style.fontWeight = '';
+            document.getElementById('Lafayette').style.color = 'black';
+            document.getElementById('Lafayette').style.fontWeight = '';
+            document.getElementById('Lamar').style.color = 'black';
+            document.getElementById('Lamar').style.fontWeight = '';
+            document.getElementById('Lauderdale').style.color = 'black';
+            document.getElementById('Lauderdale').style.fontWeight = '';
+            document.getElementById('Lawrence').style.color = 'black';
+            document.getElementById('Lawrence').style.fontWeight = '';
+            document.getElementById('Leake').style.color = 'black';
+            document.getElementById('Leake').style.fontWeight = '';
+            document.getElementById('Lee').style.color = 'black';
+            document.getElementById('Lee').style.fontWeight = '';
+            document.getElementById('Leflore').style.color = 'black';
+            document.getElementById('Leflore').style.fontWeight = '';
+            document.getElementById('Lincoln').style.color = 'black';
+            document.getElementById('Lincoln').style.fontWeight = '';
+            document.getElementById('Lowndes').style.color = 'black';
+            document.getElementById('Lowndes').style.fontWeight = '';
+            document.getElementById('Madison').style.color = 'black';
+            document.getElementById('Madison').style.fontWeight = '';
+            document.getElementById('Marion').style.color = 'black';
+            document.getElementById('Marion').style.fontWeight = '';
+            document.getElementById('Marshall').style.color = 'black';
+            document.getElementById('Marshall').style.fontWeight = '';
+            document.getElementById('Monroe').style.color = 'black';
+            document.getElementById('Monroe').style.fontWeight = '';
+            document.getElementById('Montgomery').style.color = 'black';
+            document.getElementById('Montgomery').style.fontWeight = '';
+            document.getElementById('Neshoba').style.color = 'black';
+            document.getElementById('Neshoba').style.fontWeight = '';
+            document.getElementById('Newton').style.color = 'black';
+            document.getElementById('Newton').style.fontWeight = '';
+            document.getElementById('Noxubee').style.color = 'black';
+            document.getElementById('Noxubee').style.fontWeight = '';
+            document.getElementById('Oktibbeha').style.color = 'black';
+            document.getElementById('Oktibbeha').style.fontWeight = '';
+            document.getElementById('Panola').style.color = 'black';
+            document.getElementById('Panola').style.fontWeight = '';
+            document.getElementById('Pearl River').style.color = 'black';
+            document.getElementById('Pearl River').style.fontWeight = '';
+            document.getElementById('Perry').style.color = 'black';
+            document.getElementById('Perry').style.fontWeight = '';
+            document.getElementById('Pike').style.color = 'black';
+            document.getElementById('Pike').style.fontWeight = '';
+            document.getElementById('Pontotoc').style.color = 'black';
+            document.getElementById('Pontotoc').style.fontWeight = '';
+            document.getElementById('Prentiss').style.color = 'black';
+            document.getElementById('Prentiss').style.fontWeight = '';
+            document.getElementById('Quitman').style.color = 'black';
+            document.getElementById('Quitman').style.fontWeight = '';
+            document.getElementById('Rankin').style.color = 'black';
+            document.getElementById('Rankin').style.fontWeight = '';
+            document.getElementById('Scott').style.color = 'black';
+            document.getElementById('Scott').style.fontWeight = '';
+            document.getElementById('Sharkey').style.color = 'black';
+            document.getElementById('Sharkey').style.fontWeight = '';
+            document.getElementById('Simpson').style.color = 'black';
+            document.getElementById('Simpson').style.fontWeight = '';
+            document.getElementById('Smith').style.color = 'black';
+            document.getElementById('Smith').style.fontWeight = '';
+            document.getElementById('Stone').style.color = 'black';
+            document.getElementById('Stone').style.fontWeight = '';
+            document.getElementById('Sunflower').style.color = 'black';
+            document.getElementById('Sunflower').style.fontWeight = '';
+            document.getElementById('Tallahatchie').style.color = 'black';
+            document.getElementById('Tallahatchie').style.fontWeight = '';
+            document.getElementById('Tate').style.color = 'black';
+            document.getElementById('Tate').style.fontWeight = '';
+            document.getElementById('Tippah').style.color = 'black';
+            document.getElementById('Tippah').style.fontWeight = '';
+            document.getElementById('Tishomingo').style.color = 'black';
+            document.getElementById('Tishomingo').style.fontWeight = '';
+            document.getElementById('Tunica').style.color = 'black';
+            document.getElementById('Tunica').style.fontWeight = '';
+            document.getElementById('Union').style.color = 'black';
+            document.getElementById('Union').style.fontWeight = '';
+            document.getElementById('Walthall').style.color = 'black';
+            document.getElementById('Walthall').style.fontWeight = '';
+            document.getElementById('Warren').style.color = 'black';
+            document.getElementById('Warren').style.fontWeight = '';
+            document.getElementById('Washington').style.color = 'black';
+            document.getElementById('Washington').style.fontWeight = '';
+            document.getElementById('Wayne').style.color = 'black';
+            document.getElementById('Wayne').style.fontWeight = '';
+            document.getElementById('Webster').style.color = 'black';
+            document.getElementById('Webster').style.fontWeight = '';
+            document.getElementById('Wilkinson').style.color = 'black';
+            document.getElementById('Wilkinson').style.fontWeight = '';
+            document.getElementById('Winston').style.color = 'black';
+            document.getElementById('Winston').style.fontWeight = '';
+            document.getElementById('Yalobusha').style.color = 'black';
+            document.getElementById('Yalobusha').style.fontWeight = '';
+            document.getElementById('Yazoo').style.color = 'black';
+            document.getElementById('Yazoo').style.fontWeight = '';
+
+
+
+
+            document.getElementById(tmpName).style.color = 'red';
+            document.getElementById(tmpName).style.fontWeight = 'bold';
+
+            document.getElementById('countyIMG').src = 'counties/' + tmpName + '.GIF'
+
+            document.getElementById('nameCell').innerText = tmpName + ' County Election Information';
+
+
+        }
+
+        function MouseOut() {
+            if (countyClicked == 'No') {
+                document.getElementById('Adams').style.color = 'black';
+                document.getElementById('Adams').style.fontWeight = '';
+                document.getElementById('Alcorn').style.color = 'black';
+                document.getElementById('Alcorn').style.fontWeight = '';
+                document.getElementById('Amite').style.color = 'black';
+                document.getElementById('Amite').style.fontWeight = '';
+                document.getElementById('Attala').style.color = 'black';
+                document.getElementById('Attala').style.fontWeight = '';
+                document.getElementById('Benton').style.color = 'black';
+                document.getElementById('Benton').style.fontWeight = '';
+                document.getElementById('Bolivar').style.color = 'black';
+                document.getElementById('Bolivar').style.fontWeight = '';
+                document.getElementById('Calhoun').style.color = 'black';
+                document.getElementById('Calhoun').style.fontWeight = '';
+                document.getElementById('Carroll').style.color = 'black';
+                document.getElementById('Carroll').style.fontWeight = '';
+                document.getElementById('Chickasaw').style.color = 'black';
+                document.getElementById('Chickasaw').style.fontWeight = '';
+                document.getElementById('Choctaw').style.color = 'black';
+                document.getElementById('Choctaw').style.fontWeight = '';
+                document.getElementById('Claiborne').style.color = 'black';
+                document.getElementById('Claiborne').style.fontWeight = '';
+                document.getElementById('Clarke').style.color = 'black';
+                document.getElementById('Clarke').style.fontWeight = '';
+                document.getElementById('Clay').style.color = 'black';
+                document.getElementById('Clay').style.fontWeight = '';
+                document.getElementById('Coahoma').style.color = 'black';
+                document.getElementById('Coahoma').style.fontWeight = '';
+                document.getElementById('Copiah').style.color = 'black';
+                document.getElementById('Copiah').style.fontWeight = '';
+                document.getElementById('Covington').style.color = 'black';
+                document.getElementById('Covington').style.fontWeight = '';
+                document.getElementById('DeSoto').style.color = 'black';
+                document.getElementById('DeSoto').style.fontWeight = '';
+                document.getElementById('Forrest').style.color = 'black';
+                document.getElementById('Forrest').style.fontWeight = '';
+                document.getElementById('Franklin').style.color = 'black';
+                document.getElementById('Franklin').style.fontWeight = '';
+                document.getElementById('George').style.color = 'black';
+                document.getElementById('George').style.fontWeight = '';
+                document.getElementById('Greene').style.color = 'black';
+                document.getElementById('Greene').style.fontWeight = '';
+                document.getElementById('Grenada').style.color = 'black';
+                document.getElementById('Grenada').style.fontWeight = '';
+                document.getElementById('Hancock').style.color = 'black';
+                document.getElementById('Hancock').style.fontWeight = '';
+                document.getElementById('Harrison').style.color = 'black';
+                document.getElementById('Harrison').style.fontWeight = '';
+                document.getElementById('Hinds').style.color = 'black';
+                document.getElementById('Hinds').style.fontWeight = '';
+                document.getElementById('Holmes').style.color = 'black';
+                document.getElementById('Holmes').style.fontWeight = '';
+                document.getElementById('Humphreys').style.color = 'black';
+                document.getElementById('Humphreys').style.fontWeight = '';
+                document.getElementById('Issaquena').style.color = 'black';
+                document.getElementById('Issaquena').style.fontWeight = '';
+                document.getElementById('Itawamba').style.color = 'black';
+                document.getElementById('Itawamba').style.fontWeight = '';
+                document.getElementById('Jackson').style.color = 'black';
+                document.getElementById('Jackson').style.fontWeight = '';
+                document.getElementById('Jasper').style.color = 'black';
+                document.getElementById('Jasper').style.fontWeight = '';
+                document.getElementById('Jefferson').style.color = 'black';
+                document.getElementById('Jefferson').style.fontWeight = '';
+                document.getElementById('Jefferson Davis').style.color = 'black';
+                document.getElementById('Jefferson Davis').style.fontWeight = '';
+                document.getElementById('Jones').style.color = 'black';
+                document.getElementById('Jones').style.fontWeight = '';
+                document.getElementById('Kemper').style.color = 'black';
+                document.getElementById('Kemper').style.fontWeight = '';
+                document.getElementById('Lafayette').style.color = 'black';
+                document.getElementById('Lafayette').style.fontWeight = '';
+                document.getElementById('Lamar').style.color = 'black';
+                document.getElementById('Lamar').style.fontWeight = '';
+                document.getElementById('Lauderdale').style.color = 'black';
+                document.getElementById('Lauderdale').style.fontWeight = '';
+                document.getElementById('Lawrence').style.color = 'black';
+                document.getElementById('Lawrence').style.fontWeight = '';
+                document.getElementById('Leake').style.color = 'black';
+                document.getElementById('Leake').style.fontWeight = '';
+                document.getElementById('Lee').style.color = 'black';
+                document.getElementById('Lee').style.fontWeight = '';
+                document.getElementById('Leflore').style.color = 'black';
+                document.getElementById('Leflore').style.fontWeight = '';
+                document.getElementById('Lincoln').style.color = 'black';
+                document.getElementById('Lincoln').style.fontWeight = '';
+                document.getElementById('Lowndes').style.color = 'black';
+                document.getElementById('Lowndes').style.fontWeight = '';
+                document.getElementById('Madison').style.color = 'black';
+                document.getElementById('Madison').style.fontWeight = '';
+                document.getElementById('Marion').style.color = 'black';
+                document.getElementById('Marion').style.fontWeight = '';
+                document.getElementById('Marshall').style.color = 'black';
+                document.getElementById('Marshall').style.fontWeight = '';
+                document.getElementById('Monroe').style.color = 'black';
+                document.getElementById('Monroe').style.fontWeight = '';
+                document.getElementById('Montgomery').style.color = 'black';
+                document.getElementById('Montgomery').style.fontWeight = '';
+                document.getElementById('Neshoba').style.color = 'black';
+                document.getElementById('Neshoba').style.fontWeight = '';
+                document.getElementById('Newton').style.color = 'black';
+                document.getElementById('Newton').style.fontWeight = '';
+                document.getElementById('Noxubee').style.color = 'black';
+                document.getElementById('Noxubee').style.fontWeight = '';
+                document.getElementById('Oktibbeha').style.color = 'black';
+                document.getElementById('Oktibbeha').style.fontWeight = '';
+                document.getElementById('Panola').style.color = 'black';
+                document.getElementById('Panola').style.fontWeight = '';
+                document.getElementById('Pearl River').style.color = 'black';
+                document.getElementById('Pearl River').style.fontWeight = '';
+                document.getElementById('Perry').style.color = 'black';
+                document.getElementById('Perry').style.fontWeight = '';
+                document.getElementById('Pike').style.color = 'black';
+                document.getElementById('Pike').style.fontWeight = '';
+                document.getElementById('Pontotoc').style.color = 'black';
+                document.getElementById('Pontotoc').style.fontWeight = '';
+                document.getElementById('Prentiss').style.color = 'black';
+                document.getElementById('Prentiss').style.fontWeight = '';
+                document.getElementById('Quitman').style.color = 'black';
+                document.getElementById('Quitman').style.fontWeight = '';
+                document.getElementById('Rankin').style.color = 'black';
+                document.getElementById('Rankin').style.fontWeight = '';
+                document.getElementById('Scott').style.color = 'black';
+                document.getElementById('Scott').style.fontWeight = '';
+                document.getElementById('Sharkey').style.color = 'black';
+                document.getElementById('Sharkey').style.fontWeight = '';
+                document.getElementById('Simpson').style.color = 'black';
+                document.getElementById('Simpson').style.fontWeight = '';
+                document.getElementById('Smith').style.color = 'black';
+                document.getElementById('Smith').style.fontWeight = '';
+                document.getElementById('Stone').style.color = 'black';
+                document.getElementById('Stone').style.fontWeight = '';
+                document.getElementById('Sunflower').style.color = 'black';
+                document.getElementById('Sunflower').style.fontWeight = '';
+                document.getElementById('Tallahatchie').style.color = 'black';
+                document.getElementById('Tallahatchie').style.fontWeight = '';
+                document.getElementById('Tate').style.color = 'black';
+                document.getElementById('Tate').style.fontWeight = '';
+                document.getElementById('Tippah').style.color = 'black';
+                document.getElementById('Tippah').style.fontWeight = '';
+                document.getElementById('Tishomingo').style.color = 'black';
+                document.getElementById('Tishomingo').style.fontWeight = '';
+                document.getElementById('Tunica').style.color = 'black';
+                document.getElementById('Tunica').style.fontWeight = '';
+                document.getElementById('Union').style.color = 'black';
+                document.getElementById('Union').style.fontWeight = '';
+                document.getElementById('Walthall').style.color = 'black';
+                document.getElementById('Walthall').style.fontWeight = '';
+                document.getElementById('Warren').style.color = 'black';
+                document.getElementById('Warren').style.fontWeight = '';
+                document.getElementById('Washington').style.color = 'black';
+                document.getElementById('Washington').style.fontWeight = '';
+                document.getElementById('Wayne').style.color = 'black';
+                document.getElementById('Wayne').style.fontWeight = '';
+                document.getElementById('Webster').style.color = 'black';
+                document.getElementById('Webster').style.fontWeight = '';
+                document.getElementById('Wilkinson').style.color = 'black';
+                document.getElementById('Wilkinson').style.fontWeight = '';
+                document.getElementById('Winston').style.color = 'black';
+                document.getElementById('Winston').style.fontWeight = '';
+                document.getElementById('Yalobusha').style.color = 'black';
+                document.getElementById('Yalobusha').style.fontWeight = '';
+                document.getElementById('Yazoo').style.color = 'black';
+                document.getElementById('Yazoo').style.fontWeight = '';
+
+                document.getElementById('countyIMG').src = 'counties/mississippi.gif'
+
+
+                document.getElementById('nameCell').innerText = 'County Election Information';
+            }
+        }
+
+        function ShowCounties() {
+            var countyNames = document.getElementById('countyNames').value.split('^^~');
+            var splitNames2 = [];
+            countyClicked = 'No';
+
+            var tmpHTML = '';
+
+            for (var i = 0; i < countyNames.length;) {
+                var d = 0;
+                tmpHTML += '<div class="row" style="font-size: 12px;">';
+                while (d < 3) {
+                    d++;
+                    i++;
+                    if (countyNames[i] == undefined) {
+                        tmpHTML += '<div class="cell">&nbsp;</div>';
+                    }
+                    else {
+                        splitNames2 = countyNames[i].split('~~^');
+                        tmpHTML += '<div class="cell" id="' + splitNames2[1] + '" style="width: 100px; cursor: pointer;" onmouseover="MouseOver(\'' + splitNames2[1] + '\');" onmouseout="MouseOut();" onclick="ClickCounties(\'' + splitNames2[0] + '\');">' + splitNames2[1] + '</div>';
+                    }
+                }
+                tmpHTML += '</div>';
+            }
+            document.getElementById('countyCells').innerHTML = tmpHTML;
+
+
+            //var picHTML = '<div class="row">';
+            //picHTML += '<div class="cell" >';
+            //picHTML += '<img src="counties/mississippi.gif" width="400" height="622" usemap="#counties" border="0" />';
+            //picHTML += '</div>';
+            //picHTML += '</div>';
+            //document.getElementById('gifCell').innerHTML = picHTML;
+
+        }
+
+        function ClickCounties(tmpId) {
+            var tmpHTML = '';
+            countyClicked = 'Yes';
+
+            var countyInfo = document.getElementById('countyCourtInfo').value.split('||^');
+            var splitInfo = countyInfo[tmpId].split('||~');
+
+            // splitInfo[0] = spliCountyID
+            // splitInfo[1] = County NAme            
+            // splitInfo[2] = Court Address
+            // splitInfo[3] = Circuit Clerk Name 
+            // splitInfo[4] = Circuit Clerk Address
+            // splitInfo[5] = Election Commissioners and Address
+
+            var countyName = splitInfo[1];
+            var countyCourt = splitInfo[2].split('^^~');
+            var courtSplit = [];
+            var circuitclerk = splitInfo[3];
+            var circuitAddress = splitInfo[4].split('^^~');
+            var circuitSplit = [];
+            var electionInfo = splitInfo[5].split('^^~');
+            var electionSplit = [];
+
+            tmpHTML += '<div class="container">';
+            tmpHTML += '<div class =" row">';
+            
+            tmpHTML += '<div class="cell" style="width:150px;text-align:center;">';
+            tmpHTML += '<div class="container" id="countyPic" >';
+
+            tmpHTML += '<div class =" row">';
+            tmpHTML += '<div class="cell">&nbsp;</div>';
+            tmpHTML += '</div>';
+
+            tmpHTML += '<div class =" row">';
+            tmpHTML += '<div class="cell">&nbsp;</div>';
+            tmpHTML += '</div>';
+
+            tmpHTML += '<div class =" row">';
+            tmpHTML += '<div class="cell style="width:150px;text-align:center;"" ><input class="bttnStyles" type="button" value="County List" onclick="CloseInfo();"/></div>';
+            tmpHTML += '</div>';
+
+            tmpHTML += '<div class =" row">';
+            tmpHTML += '<div class="cell">&nbsp;</div>';
+            tmpHTML += '</div>';
+
+            tmpHTML += '<div class="row">';
+            tmpHTML += '<div class="cell">';
+            tmpHTML += '<img src="Tn_Counties/tn_' + countyName + '.GIF" border="0"/>';
+            tmpHTML += '</div>';
+            tmpHTML += '</div>';
+
+            tmpHTML += '</div>';
+            tmpHTML += '</div>';
+
+            tmpHTML += '<div class="cell" style="width: 20px;">&nbsp;</div>';
+
+            tmpHTML += '<div class="cell" style="width: 300px; vertical-align: top; ">';
+            tmpHTML += '<div class="container" id="courtAddresses" >';
+
+            tmpHTML += '<div class="row">';
+            tmpHTML += '<div class="cell" style="font-size: 20px; font-weight: bold;">Courthouse Address</div>';
+            tmpHTML += '</div>';
+            for (var i = 0; i < countyCourt.length; i++) {
+                //Start of courthouse for statement
+                courtSplit = countyCourt[i].split('~~^');
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" style="font-weight:bold">' + courtSplit[0] + '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (courtSplit[0] != '0') {
+                    tmpHTML += courtSplit[0]
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (courtSplit[1] != '0') {
+                    tmpHTML += courtSplit[1]
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                if (courtSplit[2] != '0') {
+                    tmpHTML += ' ' + courtSplit[2]
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (courtSplit[0] != '0') {
+                    tmpHTML += '<a href="' + courtSplit[5] + '" target="_blank">[Directions]</a>';
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+                
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" style="font-style:italic;">For more information</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (courtSplit[3] != '') {
+                    tmpHTML += '<a href="' + courtSplit[3] + '" target="_blank">Online Elections Information</a>';
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (courtSplit[4] != '') {
+                    tmpHTML += '<a href="' + courtSplit[4] + '" target="_blank">' + courtSplit[4] + '</a>';
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" style="font-size:5px;">&nbsp;</div>';
+                tmpHTML += '</div>';
+            }
+            //end of courthouse for statement
+            tmpHTML += '<div class =" row">';
+            tmpHTML += '<div class="cell" style="font-size:5px;">&nbsp;</div>';
+            tmpHTML += '</div>';
+            tmpHTML += '<div class="row">';
+            tmpHTML += '<div class="cell" style="font-size: 20px; font-weight: bold;">Circuit Clerk</div>';
+            tmpHTML += '</div>';
+            tmpHTML += '<div class =" row">';
+            tmpHTML += '<div class="cell" style="font-weight: bold;" >' + circuitclerk + '</div>';
+            tmpHTML += '</div>';
+
+            tmpHTML += '<div class =" row">';
+            tmpHTML += '<div class="cell" style="font-size:5px;">&nbsp;</div>';
+            tmpHTML += '</div>';
+            for (var i = 0; i < circuitAddress.length; i++) {
+
+                //Start of circuit Clerk for Statement
+                circuitSplit = circuitAddress[i].split('~~^');
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (circuitSplit[0] != '0') {
+                    tmpHTML += circuitSplit[0]
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (circuitSplit[1] != '0') {
+                    tmpHTML += circuitSplit[1];
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+
+                if (circuitSplit[2] != '0') {
+                    tmpHTML += ' ' + circuitSplit[2];
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+
+                if (circuitSplit[3] != '0') {
+                    tmpHTML += ' ' + circuitSplit[3];
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (circuitSplit[4] != '0') {
+                    tmpHTML += circuitSplit[4]
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (circuitSplit[5] != '0') {
+                    tmpHTML += '<a href="Mailto:' + circuitSplit[5] + '">' + circuitSplit[5] + '</a>';
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" style="font-size:10px;">&nbsp;</div>';
+                tmpHTML += '</div>';
+            }
+            //End of circuit Clerk Statement
+            tmpHTML += '</div>';
+            tmpHTML += '</div>';
+
+            tmpHTML += '<div class="cell" style="width: 20px;">&nbsp;</div>';
+
+            tmpHTML += '<div class="cell" style="width: 300px; vertical-align: top; ">';
+            tmpHTML += '<div class="container" id="electionCommiss" >';
+            tmpHTML += '<div class="row">';
+            tmpHTML += ' <div class="cell" style="font-size: 20px; font-weight: bold;">Election Commissioners</div>';
+            tmpHTML += '</div>';
+            //Start of Election Commissioners for statement
+            for (var i = 0; i < electionInfo.length; i++) {
+                electionSplit = electionInfo[i].split('~~^');
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" style="font-weight:bold;" >' + electionSplit[0] + ' ' + electionSplit[1] + ' - <span style="font-style:italic; font-weight:normal;">' + electionSplit[2] + '</span></div>';
+                tmpHTML += '</div>';
+                tmpHTML += '<div class =" row">';
+
+                tmpHTML += '<div class="cell" >';
+                if (electionSplit[3] != '0') {
+                    tmpHTML += electionSplit[3];
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (electionSplit[4] != '0') {
+                    tmpHTML += electionSplit[4];
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+
+                if (electionSplit[5] != '0') {
+                    tmpHTML += ' ' + electionSplit[5];
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+
+                if (electionSplit[6] != '0') {
+                    tmpHTML += ' ' + electionSplit[6];
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += ' <div class="cell" >';
+                if (electionSplit[7] != '0') {
+                    tmpHTML += electionSplit[7];
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" >';
+                if (electionSplit[8] != '0') {
+                    tmpHTML += '<a href="Mailto:' + electionSplit[8] + '">' + electionSplit[8] + '</a>';
+                }
+                else {
+                    tmpHTML += '&nbsp;';
+                }
+                tmpHTML += '</div>';
+                tmpHTML += '</div>';
+
+                tmpHTML += '<div class =" row">';
+                tmpHTML += '<div class="cell" style="font-size:5px;">&nbsp;</div>';
+                tmpHTML += '</div>';
+            }
+            //end of elections commissioners for statement
+
+            tmpHTML += '</div>';
+            tmpHTML += '</div>';
+
+            tmpHTML += '</div>';
+            tmpHTML += '</div>';
+
+            document.getElementById('countyElectInfo').innerHTML = tmpHTML;
+            document.getElementById('countyElectInfo').style.display = 'block';
+            document.getElementById('nameCell').innerText = countyName + ' County Election Information';
+
+            document.getElementById('openingContainer').style.display = 'none';
+
+        }
+
+        function CloseInfo() {
+            document.getElementById('openingContainer').style.display = 'block';
+            document.getElementById('countyElectInfo').style.display = 'none';
+            countyClicked = 'No';
+            ShowCounties();
+        }
+
+        function VoterRegistration() {
+            document.getElementById('voterRegistration').style.display = 'block';
+            document.getElementById('mainDiv').style.display = 'none';
+            countyClicked = 'No';
+        }
+
+        function ReturnToMap() {
+            document.getElementById('voterRegistration').style.display = 'none';
+            document.getElementById('mainDiv').style.display = 'block';
+            countyClicked = 'No';
+        }
+
+
+    </script>
+
+</head>
+<body style="font-family: 'Open Sans';" onload="ShowCounties()">
+    <map name="counties" id="counties">
+        <area shape="poly" coords="314,536,364,534,366,583,356,585,346,582,334,583,323,578,317,578,315,578" href="#" title="Jackson" onmouseover="MouseOver('Jackson');" onmouseout="MouseOut();" onclick="javascript:ClickCounties('30');" alt="Jackson" />
+        <area shape="poly" coords="264,546,314,542,314,577,273,588,265,581" href="#" onmouseover="MouseOver('Harrison');" onmouseout="MouseOut();" onclick="ClickCounties('24');" alt="Harrison" />
+        <area shape="poly" coords="228,571,243,561,244,545,263,545,266,580,264,588,254,606,240,603,239,603,236,602" href="#" onmouseover="MouseOver('Hancock');" onmouseout="MouseOut();" onclick="ClickCounties('23');" alt="Hancock" />
+        <area shape="poly" coords="313,514,317,512,319,502,362,502,363,535,314,535" href="#" onmouseover="MouseOver('George');" onmouseout="MouseOut();" onclick="ClickCounties('20');" alt="George" />
+        <area shape="poly" coords="265,514,312,513,313,542,264,545" href="#" onmouseover="MouseOver('Stone');" onmouseout="MouseOut();" onclick="ClickCounties('66');" alt="Stone" />
+        <area shape="poly" coords="222,502,265,503,264,547,244,547,242,560,230,570,227,570,215,559,211,542,212,531" href="#" onmouseover="MouseOver('Pearl River');" onmouseout="MouseOut();" onclick="ClickCounties('55');" alt="Pearl River" />
+        <area shape="poly" coords="318,448,360,448,362,502,319,503" href="#" onmouseover="MouseOver('Greene');" onmouseout="MouseOut();" onclick="ClickCounties('21');" alt="Greene" />
+        <area shape="poly" coords="286,449,318,449,318,508,313,513,286,513,285,498" href="#" onmouseover="MouseOver('Perry');" onmouseout="MouseOut();" onclick="ClickCounties('56');" alt="Perry" />
+        <area shape="poly" coords="252,449,284,449,285,514,266,513,265,503,263,461,254,458" href="#" onmouseover="MouseOver('Forrest');" onmouseout="MouseOut();" onclick="ClickCounties('18');" alt="Forrest" />
+        <area shape="poly" coords="233,448,250,448,254,459,262,462,264,502,232,502,232,467" href="#" onmouseover="MouseOver('Lamar');" onmouseout="MouseOut();" onclick="ClickCounties('37');" alt="Lamar" />
+        <area shape="poly" coords="189,453,212,455,213,449,232,449,232,501,211,502,210,495,204,492,201,487,195,487,191,481,193,481,189,472" href="#" onmouseover="MouseOver('Marion');" onmouseout="MouseOut();" onclick="ClickCounties('46');" alt="Marion" />
+        <area shape="poly" coords="165,459,182,459,188,461,190,472,190,479,193,485,200,488,203,493,209,494,211,502,166,502" href="#" onmouseover="MouseOver('Walthall');" onmouseout="MouseOut();" onclick="ClickCounties('74');" alt="Walthall" />
+        <area shape="poly" coords="135,459,166,459,165,502,135,502" href="#" onmouseover="MouseOver('Pike');" onmouseout="MouseOut();" onclick="ClickCounties('57');" alt="Pike" />
+        <area shape="poly" coords="78,462,89,459,134,459,134,502,81,502,81,469" href="#" onmouseover="MouseOver('Amite');" onmouseout="MouseOut();" onclick="ClickCounties('3');" alt="Amite" />
+        <area shape="poly" coords="25,475,29,472,32,474,36,470,37,466,38,462,63,455,75,462,78,463,81,468,81,502,20,502,26,496,25,491,20,487,20,485,23,478" href="#" onmouseover="MouseOver('Wilkinson');" onmouseout="MouseOut();" onclick="ClickCounties('79');" alt="Wilkinson" />
+        <area shape="poly" coords="51,408,54,408,56,418,62,423,71,423,71,459,63,455,38,462,36,467,36,471,32,474,29,472,24,476,18,471,18,468,30,468,32,463,29,459,29,454,27,452,28,447,32,456,37,456,38,452,33,448,33,436,39,436,45,430,38,429,33,427,34,421,42,425,46,422,45,414" href="#" onmouseover="MouseOver('Adams');" onmouseout="MouseOut();" onclick="ClickCounties('1');" alt="Adams" />
+        <area shape="poly" coords="72,426,126,426,127,445,126,453,126,459,85,459,77,462,71,460" href="#" onmouseover="MouseOver('Franklin');" onmouseout="MouseOut();" onclick="ClickCounties('');" alt="Franklin" />
+        <area shape="poly" coords="117,426,116,415,120,415,121,416,145,416,146,415,150,415,150,417,153,417,154,415,159,415,168,415,168,459,126,459,127,427" href="#" onmouseover="MouseOver('Lincoln');" onmouseout="MouseOut();" onclick="ClickCounties('43');" alt="Lincoln" />
+        <area shape="poly" coords="168,414,179,409,188,408,197,408,196,437,198,439,198,454,189,453,188,462,185,459,168,459" href="#" onmouseover="MouseOver('Lawrence');" onclick="ClickCounties('39');" alt="Lawrence" />
+        <area shape="poly" coords="197,409,202,408,203,407,217,408,218,405,220,406,220,427,223,428,231,433,238,439,239,448,213,449,213,454,198,454,196,437" href="#" onmouseover="MouseOver('Jefferson Davis');" onmouseout="MouseOut();" onclick="ClickCounties('33');" alt="JeffersonDavis" />
+        <area shape="poly" coords="221,407,231,405,242,404,257,404,257,435,259,436,258,448,239,448,237,439,220,428" href="#" onmouseover="MouseOver('Covington');" onmouseout="MouseOut();" onclick="ClickCounties('16');" alt="Covington" />
+        <area shape="poly" coords="257,403,307,400,306,448,258,448" href="#" onmouseover="MouseOver('Jones');" onmouseout="MouseOut();" onclick="ClickCounties('34');" alt="Jones" />
+        <area shape="poly" coords="308,399,356,391,358,446,306,449" href="#" onmouseover="MouseOver('Wayne');" onmouseout="MouseOut();" onclick="ClickCounties('77');" alt="Wayne" />
+        <area shape="poly" coords="58,396,52,396,49,406,53,409,56,419,61,423,71,423,72,426,116,425,116,405,105,406,104,399,78,394,62,394" href="#" onmouseover="MouseOver('Jefferson');" onmouseout="MouseOut();" onclick="ClickCounties('32');" alt="Jefferson" />
+        <area shape="poly" coords="118,372,169,372,173,387,176,387,176,390,179,393,179,398,178,402,182,404,181,408,167,414,154,416,153,417,150,417,148,416,117,415,116,400,118,397" href="#" onmouseover="MouseOver('Copiah');" onmouseout="MouseOut();" onclick="ClickCounties('15');" alt="Copiah" />
+        <area shape="poly" coords="87,364,92,366,97,368,98,363,113,359,110,356,117,352,118,372,118,397,116,400,116,405,105,406,104,400,87,395,61,395,68,389,68,383,71,380,76,380,79,376,80,373,71,371,74,368,77,370" href="#" onmouseover="MouseOver('Claiborne');" onmouseout="MouseOut();" onclick="ClickCounties('11');" alt="Claiborne" />
+        <area shape="poly" coords="170,372,230,373,230,405,181,409,178,391,172,385" href="#" onmouseover="MouseOver('Simpson');" onmouseout="MouseOut();" onclick="ClickCounties('64');" alt="Simpson" />
+        <area shape="poly" coords="222,351,265,351,266,403,230,406,230,373,222,373" href="#" onmouseover="MouseOver('Smith');" onmouseout="MouseOut();" onclick="ClickCounties('65');" alt="Smith" />
+        <area shape="poly" coords="265,350,308,350,309,399,266,403" href="#" onmouseover="MouseOver('Jasper');" onmouseout="MouseOut();" onclick="ClickCounties('31');" alt="Jasper" />
+        <area shape="poly" coords="308,350,359,349,356,392,309,400" href="#" onmouseover="MouseOver('Clarke');" onmouseout="MouseOut();" onclick="ClickCounties('12');" alt="Clarke" />
+        <area shape="poly" coords="308,306,363,306,359,349,308,350" href="#" onmouseover="MouseOver('Lauderdale');" onmouseout="MouseOut();" onclick="ClickCounties('38');" alt="Lauderdale" />
+        <area shape="poly" coords="265,307,308,306,307,350,265,350" href="#" onmouseover="MouseOver('Newton');" onmouseout="MouseOut();" onclick="ClickCounties('51');" alt="Newton" />
+        <area shape="poly" coords="222,301,222,307,265,307,264,351,222,351,221,326,217,311,217,305" href="#" onmouseover="MouseOver('Scott');" onmouseout="MouseOut();" onclick="ClickCounties('62');" alt="Scott" />
+        <area shape="poly" coords="208,306,216,305,217,312,220,325,222,373,169,372,169,366,169,357,174,355,173,351,172,348,187,329,187,324,199,316" href="#" onmouseover="MouseOver('Rankin');" onmouseout="MouseOut();" onclick="ClickCounties('61');" alt="Rankin" />
+        <area shape="poly" coords="147,308,147,318,168,318,168,329,185,329,173,348,174,355,168,357,168,372,119,373,117,352,120,335,127,336,131,324,131,319,135,317" href="#" onmouseover="MouseOver('Hinds');" onmouseout="MouseOut();" onclick="ClickCounties('25');" alt="Hinds" />
+        <area shape="poly" coords="103,307,118,307,120,301,122,305,125,305,125,310,132,310,132,312,136,312,136,316,131,318,129,327,127,335,120,335,117,351,110,356,113,359,98,363,97,367,86,364,88,359,82,356,83,361,72,361,70,356,73,351,76,352,77,350,82,350,85,348,89,351,91,346,91,342,97,342,98,336,90,334,89,330,93,322,103,322" href="#" onmouseover="MouseOver('Warren');" onmouseout="MouseOut();" onclick="ClickCounties('75');" alt="Warren" />
+        <area shape="poly" coords="307,264,365,262,364,306,309,306" href="#" onmouseover="MouseOver('Kemper');" onmouseout="MouseOut();" onclick="ClickCounties('35');" alt="Kemper" />
+        <area shape="poly" coords="265,263,306,264,308,305,265,307" href="#" onmouseover="MouseOver('Neshoba');" onmouseout="MouseOut();" onclick="ClickCounties('50');" alt="Neshoba" />
+        <area shape="poly" coords="222,263,264,263,265,307,222,307" href="#" onmouseover="MouseOver('Leake');" onmouseout="MouseOut();" onclick="ClickCounties('40');" alt="Leake" />
+        <area shape="poly" coords="198,269,221,269,222,300,217,305,211,306,196,318,192,320,187,329,169,329,168,319,148,318,147,307,161,300,166,296,175,296,178,293,189,287,192,276" href="#" onmouseover="MouseOver('Madison');" onmouseout="MouseOut();" onclick="ClickCounties('45');" alt="Madison" />
+        <area shape="poly" coords="147,253,157,253,158,252,197,269,191,278,190,285,175,295,165,296,138,315,137,315,135,312,132,312,132,310,125,310,125,305,121,305,121,299,118,298,119,293,123,296,124,293,123,291,115,288,118,284,122,284,118,279,114,276,125,264,147,264" href="#" onmouseover="MouseOver('Yazoo');" onmouseout="MouseOut();" onclick="ClickCounties('82');" alt="Yazoo" />
+        <area shape="poly" coords="98,241,124,242,126,263,114,274,113,275,121,282,118,283,114,285,123,290,122,293,117,293,118,296,93,296,92,275,96,271,98,263" href="#" onmouseover="MouseOver('Sharkey');" onmouseout="MouseOut();" onclick="ClickCounties('63');" alt="Sharkey" />
+        <area shape="poly" coords="73,252,98,252,94,274,93,296,117,296,121,302,117,307,103,307,104,322,93,322,90,322,85,324,78,318,80,311,88,317,81,312,83,307,89,302,87,298,77,305,73,298,82,289,73,286,72,276,78,271,82,268,83,263,80,255,76,256,76,264,70,266,67,262,71,256" href="#" onmouseover="MouseOver('Issaquena');" onmouseout="MouseOut();" onclick="ClickCounties('28');" alt="Issaquena" />
+        <area shape="poly" coords="318,218,370,217,366,262,318,263" href="#" onmouseover="MouseOver('Noxubee');" onmouseout="MouseOut();" onclick="ClickCounties('52');" alt="Noxubee" />
+        <area shape="poly" coords="289,218,318,218,318,263,264,263,265,241,275,241,276,230,283,230,285,229,286,229,287,218" href="#" onmouseover="MouseOver('Winston');" onmouseout="MouseOut();" onclick="ClickCounties('80');" alt="Winston" />
+        <area shape="poly" coords="226,219,265,219,265,263,222,263,222,269,198,270,205,263,205,258,210,250,212,240,217,231,224,219" href="#" onmouseover="MouseOver('Attala');" onmouseout="MouseOut();" onclick="ClickCounties('4');" alt="Attala" />
+        <area shape="poly" coords="162,208,219,228,209,253,206,257,205,263,198,269,159,252,154,252,154,248,150,248,149,240,155,244,154,239,158,239,159,217,163,216,165,211" href="#" onmouseover="MouseOver('Holmes');" onmouseout="MouseOut();" onclick="ClickCounties('26');" alt="Holmes" />
+        <area shape="poly" coords="136,213,147,213,147,222,151,225,155,224,155,219,159,216,158,239,156,244,149,240,149,247,154,248,154,253,147,253,147,264,126,265,124,242,120,237,123,230,118,226,119,221,136,221" href="#" onmouseover="MouseOver('Humphreys');" onmouseout="MouseOut();" onclick="ClickCounties('27');" alt="Humphreys" />
+        <area shape="poly" coords="116,188,114,220,118,221,118,226,123,228,120,236,125,242,99,242,98,252,73,252,77,247,69,241,69,237,72,236,73,237,78,238,81,236,80,226,85,224,85,218,83,218,79,223,78,221,75,217,76,210,84,202,84,198,83,197,76,205,72,206,68,203,78,199,74,193,72,193,72,199,65,199,72,193,69,188" href="#" onmouseover="MouseOver('Washington');" onmouseout="MouseOut();" onclick="ClickCounties('76');" alt="Washington" />
+        <area shape="poly" coords="375,162,371,217,332,218,332,191,343,189,348,186,352,188,350,183,352,179,350,177,348,173,350,172,366,166,367,161" href="#" onmouseover="MouseOver('Lowndes');" onmouseout="MouseOut();" onclick="ClickCounties('44');" alt="Lowndes" />
+        <area shape="poly" coords="289,184,332,184,332,218,289,218" href="#" onmouseover="MouseOver('Oktibbeha');" onmouseout="MouseOut();" onclick="ClickCounties('53');" alt="Oktibbeha" />
+        <area shape="poly" coords="251,201,255,199,277,188,289,188,289,218,287,219,286,229,276,230,275,241,265,241,265,219,251,219" href="#" onmouseover="MouseOver('Choctaw');" onmouseout="MouseOut();" onclick="ClickCounties('10');" alt="Choctaw" />
+        <area shape="poly" coords="128,116,128,178,115,179,117,187,69,187,69,182,77,182,69,172,71,167,83,173,89,169,85,167,78,167,75,160,79,156,86,156,90,159,93,156,86,154,83,149,88,139,82,133,87,129,94,129,102,124,103,120,96,115" href="#" onmouseover="MouseOver('Bolivar');" onmouseout="MouseOut();" onclick="ClickCounties('6');" alt="Bolivar" />
+        <area shape="poly" coords="128,133,147,133,146,214,137,214,136,222,118,221,116,221,116,182,130,180,131,177" href="#" onmouseover="MouseOver('Sunflower');" onmouseout="MouseOut();" onclick="ClickCounties('67');" alt="Sunflower" />
+        <area shape="poly" coords="148,154,175,153,177,157,177,160,165,161,163,168,167,172,169,166,173,166,180,167,181,175,182,197,177,204,178,212,161,206,160,209,164,210,162,214,157,216,155,223,152,223,148,214" href="#" onmouseover="MouseOver('Leflore');" onmouseout="MouseOut();" onclick="ClickCounties('42');" alt="Leflore" />
+        <area shape="poly" coords="181,172,217,170,217,203,232,205,232,220,225,220,218,228,181,212,177,207,182,204,185,200" href="#" onmouseover="MouseOver('Carroll');" onmouseout="MouseOut();" onclick="ClickCounties('8');" alt="Carroll" />
+        <area shape="poly" coords="218,170,246,171,247,199,261,198,251,202,253,220,233,221,234,205,216,203" href="#" onmouseover="MouseOver('Montgomery');" onmouseout="MouseOut();" onclick="ClickCounties('49');" alt="Montgomery" />
+        <area shape="poly" coords="246,166,278,166,280,164,295,163,297,185,290,184,289,189,276,188,258,199,248,198,247,198" href="#" onmouseover="MouseOver('Webster');" onmouseout="MouseOut();" onclick="ClickCounties('78');" alt="Webster" />
+        <area shape="poly" coords="297,161,306,161,307,155,329,155,329,168,350,170,350,185,350,187,332,192,332,183,299,185" href="#" onmouseover="MouseOver('Clay');" onmouseout="MouseOut();" onclick="ClickCounties('13');" alt="Clay" />
+        <area shape="poly" coords="326,119,344,120,380,117,376,163,368,163,364,167,352,172,347,169,330,170,329,152,328,153" href="#" onmouseover="MouseOver('Monroe');" onmouseout="MouseOut();" onclick="ClickCounties('48');" alt="Monroe" />
+        <area shape="poly" coords="283,122,326,120,329,155,307,155,307,161,297,161,296,162,281,164,281,153,284,152" href="#" onmouseover="MouseOver('Chickasaw');" onmouseout="MouseOut();" onclick="ClickCounties('9');" alt="Chickasaw" />
+        <area shape="poly" coords="247,110,274,111,274,122,284,122,283,152,280,153,280,164,246,166,245,136,246,118" href="#" onmouseover="MouseOver('Calhoun');" onmouseout="MouseOut();" onclick="ClickCounties('7');" alt="Calhoun" />
+        <area shape="poly" coords="180,154,195,156,195,152,202,152,203,145,217,145,217,148,244,149,246,170,217,170,183,172,183,165" href="#" onmouseover="MouseOver('Grenada');" onmouseout="MouseOut();" onclick="ClickCounties('22');" alt="Grenada" />
+        <area shape="poly" coords="201,111,223,110,223,106,245,108,247,112,244,149,219,149,218,145,202,145" href="#" onmouseover="MouseOver('Yalobusha');" onmouseout="MouseOut();" onclick="ClickCounties('81');" alt="Yalobusha" />
+        <area shape="poly" coords="149,121,180,121,183,111,203,111,201,150,196,150,196,158,184,156,185,167,171,166,168,169,165,163,171,163,177,162,179,155,165,155,148,154,148,131" href="#" onmouseover="MouseOver('Tallahatchie');" onmouseout="MouseOut();" onclick="ClickCounties('68');" alt="Tallahatchie" />
+        <area shape="poly" coords="136,65,153,80,154,99,150,100,148,124,148,133,128,132,128,115,97,116,101,111,107,113,113,107,101,106,100,101,108,102,111,101,111,95,118,96,116,88,125,88,134,78" href="#" onmouseover="MouseOver('Coahoma');" onmouseout="MouseOut();" onclick="ClickCounties('14');" alt="Coahoma" />
+        <area shape="poly" coords="164,23,174,23,172,41,171,51,170,59,177,65,174,67,163,66,163,77,155,79,137,66,137,59,134,46,140,47,140,52,145,49,149,44,141,43,138,40,139,31,149,36,147,29,146,21,152,19,151,27,156,25" href="#" onmouseover="MouseOver('Tunica');" onmouseout="MouseOut();" onclick="ClickCounties('72');" alt="Tunica" />
+        <area shape="poly" coords="166,8,222,9,223,36,202,35,194,44,178,37,175,43,175,22,163,23,169,17" href="#" onmouseover="MouseOver('DeSoto');" onmouseout="MouseOut();" onclick="ClickCounties('17');" alt="DeSoto" />
+        <area shape="poly" coords="153,78,164,79,165,67,175,68,174,93,180,98,181,114,181,121,149,122,151,102,156,102" href="#" onmouseover="MouseOver('Quitman');" onmouseout="MouseOut();" onclick="ClickCounties('60');" alt="Quitman" />
+        <area shape="poly" coords="176,62,222,61,223,107,220,112,182,111,182,98,175,93" href="#" onmouseover="MouseOver('Panola');" onmouseout="MouseOut();" onclick="ClickCounties('54');" alt="Panola" />
+        <area shape="poly" coords="175,37,196,44,204,35,224,36,223,47,229,46,229,63,176,61,169,57" href="#" onmouseover="MouseOver('Tate');" onmouseout="MouseOut();" onclick="ClickCounties('69');" alt="Tate" />
+        <area shape="poly" coords="223,64,230,63,243,62,254,67,273,67,273,84,272,112,245,111,245,107,222,107" href="#" onmouseover="MouseOver('Lafayette');" onmouseout="MouseOut();" onclick="ClickCounties('36');" alt="Lafayette" />
+        <area shape="poly" coords="221,7,262,7,262,26,268,26,268,57,273,57,273,71,257,67,247,63,234,61,231,62,230,45,223,40" href="#" onmouseover="MouseOver('Marshall');" onmouseout="MouseOut();" onclick="ClickCounties('47');" alt="Marshall" />
+        <area shape="poly" coords="272,83,303,82,303,85,315,85,315,122,274,122" href="#" onmouseover="MouseOver('Pontotoc');" onmouseout="MouseOut();" onclick="ClickCounties('58');" alt="Pontotoc" />
+        <area shape="poly" coords="316,86,315,80,321,80,321,70,325,67,344,66,345,118,326,120,315,121" href="#" onmouseover="MouseOver('Lee');" onmouseout="MouseOut();" onclick="ClickCounties('41');" alt="Lee" />
+        <area shape="poly" coords="346,72,372,73,372,71,382,71,380,118,345,119" href="#" onmouseover="MouseOver('Itawamba');" onmouseout="MouseOut();" onclick="ClickCounties('29');" alt="Itawamba" />
+        <area shape="poly" coords="272,57,326,57,325,68,321,70,322,80,315,80,315,87,306,87,305,83,273,84" href="#" onmouseover="MouseOver('Union');" onmouseout="MouseOut();" onclick="ClickCounties('73');" alt="Union" />
+        <area shape="poly" coords="325,38,361,37,365,38,366,75,344,74,342,66,326,66" href="#" onmouseover="MouseOver('Prentiss');" onmouseout="MouseOut();" onclick="ClickCounties('59');" alt="Prentiss" />
+        <area shape="poly" coords="263,7,293,7,297,20,295,24,294,30,286,30,289,57,270,56,269,28,264,27" href="#" onmouseover="MouseOver('Benton');" onmouseout="MouseOut();" onclick="ClickCounties('5');" alt="Benton" />
+        <area shape="poly" coords="295,8,315,7,314,24,322,24,326,39,324,58,289,57,287,32,294,32,297,23" href="#" onmouseover="MouseOver('Tippah');" onmouseout="MouseOut();" onclick="ClickCounties('70');" alt="Tippah" />
+        <area shape="poly" coords="316,8,361,6,361,37,324,38,323,25,315,26" href="#" onmouseover="MouseOver('Alcorn');" onmouseout="MouseOut();" onclick="ClickCounties('2');" alt="Alcorn" />
+        <area shape="poly" coords="362,6,379,6,388,21,385,73,368,73,366,37,360,35" href="#" onmouseover="MouseOver('Tishomingo');" onmouseout="MouseOut();" onclick="ClickCounties('71');" alt="Tishomingo" />
+    </map>
+
+    <form method="post" action="./" id="form1">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTE2MjQzMDM1MTNkZFazmaWY7ePTKn/KTgicaHkFAKLnToN0awZUbSp2LKUg" />
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="54577EEF" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAMcelcl2pn/ftLEAb5spNU8F8whT1LvloUJEvdQq7nmaTbz3o8Q9Qxwq3eStWPPWDqNazvoH7cxwyQwGglKaoacEmS3uY++4aeXLSYO2kgvOQ==" />
+        <div id="mainDiv" style="width: 800px;">
+
+            <div class="container">
+
+                <div class="row">
+                    <div class="floatingCell" style="color: #003F59; width: 40px;">
+                        <a href="https://www.sos.ms.gov/MSCountyElectionInfo/" target="_parent" style="color: #003F59;">
+                            <img src="tn_mobile_img.gif" style="border: none; vertical-align: middle;" /></a>
+                    </div>
+                    <div class="cell" style="width: 50px; font-size: 12px; vertical-align: bottom;"><a href="https://www.sos.ms.gov/MSCountyElectionInfo/" target="_parent" style="color: #003F59;">Mobile</a></div>
+
+                    <div class="cell" style="width: 700px; text-align: center; font-weight: bold; font-size: 28px;" id="nameCell">
+                        County Election Information
+                    </div>
+                    <input name="countyNames" type="hidden" id="countyNames" value="0~~^^^~1~~^Adams^^~2~~^Alcorn^^~3~~^Amite^^~4~~^Attala^^~5~~^Benton^^~6~~^Bolivar^^~7~~^Calhoun^^~8~~^Carroll^^~9~~^Chickasaw^^~10~~^Choctaw^^~11~~^Claiborne^^~12~~^Clarke^^~13~~^Clay^^~14~~^Coahoma^^~15~~^Copiah^^~16~~^Covington^^~17~~^DeSoto^^~18~~^Forrest^^~19~~^Franklin^^~20~~^George^^~21~~^Greene^^~22~~^Grenada^^~23~~^Hancock^^~24~~^Harrison^^~25~~^Hinds^^~26~~^Holmes^^~27~~^Humphreys^^~28~~^Issaquena^^~29~~^Itawamba^^~30~~^Jackson^^~31~~^Jasper^^~32~~^Jefferson^^~33~~^Jefferson Davis^^~34~~^Jones^^~35~~^Kemper^^~36~~^Lafayette^^~37~~^Lamar^^~38~~^Lauderdale^^~39~~^Lawrence^^~40~~^Leake^^~41~~^Lee^^~42~~^Leflore^^~43~~^Lincoln^^~44~~^Lowndes^^~45~~^Madison^^~46~~^Marion^^~47~~^Marshall^^~48~~^Monroe^^~49~~^Montgomery^^~50~~^Neshoba^^~51~~^Newton^^~52~~^Noxubee^^~53~~^Oktibbeha^^~54~~^Panola^^~55~~^Pearl River^^~56~~^Perry^^~57~~^Pike^^~58~~^Pontotoc^^~59~~^Prentiss^^~60~~^Quitman^^~61~~^Rankin^^~62~~^Scott^^~63~~^Sharkey^^~64~~^Simpson^^~65~~^Smith^^~66~~^Stone^^~67~~^Sunflower^^~68~~^Tallahatchie^^~69~~^Tate^^~70~~^Tippah^^~71~~^Tishomingo^^~72~~^Tunica^^~73~~^Union^^~74~~^Walthall^^~75~~^Warren^^~76~~^Washington^^~77~~^Wayne^^~78~~^Webster^^~79~~^Wilkinson^^~80~~^Winston^^~81~~^Yalobusha^^~82~~^Yazoo" />
+                    <input name="countyCourtInfo" type="hidden" id="countyCourtInfo" value="0||~||~||~||~||~||^1||~Adams||~Natchez~~^115 S. Wall St.~~^39120~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Natchez,+115+S.+Wall+St+39120&amp;sll=33.89674,-89.000171&amp;sspn=0.05158,0.07699&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Eva&amp;nbsp;Givens||~115 S. Wall Street~~^Natchez,~~^MS~~^39120~~^(601)446-6326~~^egivens@adamscountyms.gov||~Tracy~~^Gaude~~^District 1~~^205 B S BROADWAY~~^Natchez,~~^MS~~^39120~~^(601)445-7905~~^tgaude@adamscountyms.gov^^~Stephanie~~^Anderson~~^District 2~~^45 Ashburn Woods Ave.~~^Natchez,~~^MS~~^39120~~^(601)445-7905~~^sanderson@adamscountyms.gov^^~Frances~~^Bailey~~^District 3~~^202 SGT HENRY L BROWN~~^Natchez,~~^MS~~^39120~~^(601)445-7905~~^francestbailey_3@yahoo.com^^~Shelly~~^Frazier~~^District 4~~^105 S BLUE BIRD~~^Natchez,~~^MS~~^39120~~^(601)445-7905~~^sfrazier@adamscountyms.gov^^~Doris~~^Rice~~^District 5~~^164 RICE RD~~^Natchez,~~^MS~~^39120~~^(601)445-7905~~^drice@adamscountyms.gov||^2||~Alcorn||~Corinth~~^600 E. Waldron St~~^38834~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Corinth,+600+Waldron+St+38834&amp;sll=33.89674,-89.000171&amp;sspn=0.05158,0.07699&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Crystal&amp;nbsp;Starling||~P.O. Box 430~~^Corinth,~~^MS~~^38835~~^(662)286-7740~~^cstarling@alcorncountyms.gov||~Bobby~~^McDaniel~~^District 1~~^25 CR 105~~^Corinth,~~^MS~~^38834~~^(662)286-7740~~^bmc12348@yahoo.com^^~John~~^Peebles~~^District 2~~^38 CR 260~~^Glen,~~^MS~~^38846~~^(662)286-7740~~^johnpeebles.jp@gmail.com^^~Kim~~^Ratliff~~^District 3~~^P.O. Box 430~~^Corinth,~~^MS~~^38835~~^(662)286-7740~~^kratliff@bellsouth.net^^~Keith~~^Conway~~^District 4~~^~~^~~^MS~~^0~~^(662)286-7740~~^kconaway64@icloud.com^^~Timmy~~^WILBANKS~~^District 5~~^597 CR 600~~^WALNUT~~^MS~~^38683~~^(662)286-7740~~^wilbanksmtncurs@gmail.com||^3||~Amite||~Liberty~~^243 W. Main St.~~^39645~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Liberty,+243+W.+Main+St.+39645&amp;sll=34.934839,-88.519529&amp;sspn=0.006368,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Celeste&amp;nbsp;McIntyre||~P.O. Box 312~~^Liberty,~~^MS~~^39645~~^(601)657-8932~~^cmcintyre@amitecountyms.gov||~Annette~~^Wicker~~^District 1~~^4947 FARMER RD~~^Smithdale~~^MS~~^39664~~^(601)657-8932~~^rwicker@bellsouth.net^^~Vergia~~^Bradley~~^District 2~~^3103 COUNTY FARM RD~~^Liberty,~~^MS~~^39645~~^(601)657-8932~~^vergiabradley@gmail.com^^~Cynthia~~^Slay~~^District 3~~^3043 HUNTER LANE~~^Gloster,~~^MS~~^39638~~^(601)657-8932~~^cynthiaslay4@gmail.com^^~Jeanne~~^Williams~~^District 4~~^5591 HWY 24E~~^Liberty,~~^MS~~^39645~~^(601)657-8932~~^jmw39645@yahoo.com^^~Janet Boss~~^TOUCHSTONE~~^District 5~~^3215 SMILEY HONEA RD~~^MAGNOLIA~~^MS~~^39652~~^(601)657-8932~~^jjtouchstone5@gmail.com||^4||~Attala||~Kosciusko~~^100 Courthouse Suite One~~^39090~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Kosciudko,+100+Courthouse,+Suite+39090&amp;sll=32.846769,-90.412479&amp;sspn=0.006526,0.009624&amp;g=Yazoo+City,+211+E.+Broadway+39194&amp;ie=UTF8&amp;z=17||~Tim&amp;nbsp;Pinkard||~100 Courthouse Ste. 1~~^Kosciusko,~~^MS~~^39090~~^(662)289-1471~~^pinkardt@icloud.com||~Kay~~^Chipley~~^District 1~~^4341 ATTALA RD 1010~~^Kosciusko,~~^MS~~^39090~~^(662)289-1471~~^kchip@bellsouth.net^^~Theresa~~^Henry~~^District 3~~^~~^~~^MS~~^0~~^(662)289-1471~~^theresahenry@gmail.com^^~Virginia~~^Clark~~^District 4~~^10097 ATT RD 4106~~^Sallis,~~^MS~~^39160~~^(662)289-1471~~^virginiaclark@gmail.com^^~ANDRE&#39;~~^LIBROTH~~^District 5~~^7711 ATTALA RD 5053~~^ETHEL~~^MS~~^39067~~^(662)289-1471~~^alibroth@yahoo.com^^~Annie~~^Winters~~^District 2~~^7711 ATTALA RD 5053~~^Ethel~~^MS~~^39067~~^(662)289-1471~~^alibroth@yahoo.com||^5||~Benton||~Ashland~~^190 Ripley Ave.~~^38603~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Ashland,+190+Ripley+Ave.+38603&amp;sll=31.157867,-90.810501&amp;sspn=0.006647,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Kathy&amp;nbsp;Graves||~P.O. Box 262~~^Ashland,~~^MS~~^38603~~^(662)224-6310~~^circlk@bentoncountyms.gov||~Leatrice~~^Wooden~~^District 1~~^267 STEWARD RD~~^MiCHIGAN CITY~~^MS~~^38647~~^(662)224-6310~~^leatricewooden@aol.com^^~FREDA~~^POFF~~^District 2~~^529 HUDSPETH RD~~^HICKORY FLAT~~^MS~~^38633~~^(662)224-6310~~^nell302006@yahoo.com^^~Charlie~~^Walls~~^District 3~~^4698 HWY 4 WEST~~^Holly Springs,~~^MS~~^38635~~^(662)224-6310~~^wallscharlie3@gmail.com^^~FREDA~~^SPIGHT~~^District 4~~^2352 BRYAN RD~~^MICHIGAN CITY~~^MS~~^38647~~^(662)224-6310~~^fredaspight737@gmail.com^^~BEVERLY~~^ESTES~~^District 5~~^~~^~~^MS~~^0~~^()-~~^||^6||~Bolivar||~Rosedale~~^801 Main St.~~^38769~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Rosedale,+801+Main+St.+38769&amp;sll=33.743416,-90.719787&amp;sspn=0.006459,0.009624&amp;ie=UTF8&amp;z=15&amp;iwloc=A^^~Cleveland~~^200 S. Court St.~~^38732~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Cleveland,+200+S.+Court+St.+38732&amp;sll=34.833462,-89.185159&amp;sspn=0.006376,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Judith&amp;nbsp;Thompson||~P.O. Box 670~~^Cleveland,~~^MS~~^38732~~^(662)759-6521~~^jweatherspoon@co.bolivar.ms.us||~Kimberly~~^Green~~^District 1~~^PO Box 251~~^ROSEDALE~~^MS~~^0~~^(662)843-4083~~^kimkaylenkylan@yahoo.com^^~Dianne~~^Schattner~~^District 2~~^504 FREDRICK DR~~^Cleveland,~~^MS~~^38732~~^(662)843-4083~~^dschattner@gmail.com^^~Kazandria~~^Blockett~~^District 4~~^1109 STAMPS COVE~~^Cleveland,~~^MS~~^38732~~^(662)843-4083~~^poohblock@hotmail.com^^~Ora~~^Jackson~~^District 5~~^PO Box 371~~^Boyle~~^MS~~^38730~~^(662)843-4083~~^squigydean@yahoo.com^^~Eulah~~^Peterson~~^District 3~~^PO Box 119~~^Cleveland,~~^MS~~^38732~~^(662)843-4083~~^petie242@aol.com||^7||~Calhoun||~Pittsboro~~^103 W. Main St.~~^38951~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Pittsboro,+103+W.+Main+St.+38951&amp;sll=33.744306,-90.722728&amp;sspn=0.006459,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Carlton&amp;nbsp;Baker||~P.O. Box 25~~^Pittsboro,~~^MS~~^38951~~^(662)412-3101~~^cbaker@calhouncoms.com||~Bernadette~~^Coleman~~^District 1~~^110 RAYMON ST~~^CALHOUN CITY~~^MS~~^38916~~^(662)412-3101~~^bernadette.coleman@maxxsouth.net^^~Patti~~^Young~~^District 3~~^119 EASLEY AVE~~^BRUCE~~^MS~~^38915~~^(662)983-8145~~^pattiyoung98@gmail.com^^~Donnie~~^Cain~~^District 2~~^PO Box 354~~^Pittsboro,~~^MS~~^38951~~^(662)800-6257~~^dandp@brucetelephone.com^^~Phillip~~^Lucius~~^District 4~~^116 EAST FOX AVE~~^CALHOUN CITY~~^MS~~^38916~~^(662)414-5640~~^phillucius@icloud.com^^~Robert~~^Easley~~^District 5~~^31 CR 462~~^CALHOUN CITY~~^MS~~^38916~~^(662)412-3101~~^easley@tds.net||^8||~Carroll||~Carrollton~~^600 Lexington St.~~^38917~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Carrollton,+Lexington+St.+38917&amp;sll=33.854687,-91.027662&amp;sspn=0.025803,0.038495&amp;ie=UTF8&amp;z=15&amp;iwloc=A^^~Vaiden~~^803 Front Street~~^39176~~^~~^~~^http://maps.google.com/maps?source=s_q&amp;hl=en&amp;geocode=&amp;q=Vaiden,+605+Hwy+51+N.+39176&amp;sll=33.503149,-89.907947&amp;sspn=0.025908,0.038495&amp;g=Carrollton,+Lexington+St.+38917&amp;ie=UTF8&amp;hq=Vaiden,+605+Hwy+51+N.+39176+loc:&amp;radius=15000.000000&amp;split=1&amp;z=13&amp;iwloc=A||~Durward&amp;nbsp;Stanton||~P.O. Box 60~~^Carrollton,~~^MS~~^38917~~^(662)237-9274~~^dstanton@carrollcounty.ms^^~P.O. Box 6~~^Vaiden,~~^MS~~^39176~~^(662)464-5476~~^dstanton@carrollcounty.ms||~April~~^Neill~~^District 1~~^P.O. Box 6~~^Vaiden,~~^MS~~^39176~~^(662)464-5476~~^carrollclerk@duckwood.net^^~Rebecca~~^Touchstone~~^District 2~~^P.O. Box 6~~^Vaiden,~~^MS~~^39176~~^(662)464-5476~~^carrollclerk@duckwood.net^^~David~~^Burkhead~~^District 4~~^P.O. Box 6~~^Vaiden,~~^MS~~^39176~~^(662)464-5476~~^davidburkhead31@gmail.com^^~Lesa~~^Fletcher~~^District 5~~^P.O. Box 6~~^Vaiden,~~^MS~~^39176~~^(662)464-5476~~^carrollclerk@duckwood.net^^~Carolyn~~^Summerville~~^District 3~~^P.O. Box 6~~^Vaiden,~~^MS~~^39176~~^(662)464-5476~~^carrollclerk@duckwood.net||^9||~Chickasaw||~Houston~~^1 Pinson Sq., Room 2~~^38851~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Houston,+1+Pinson+Sq.,+Courthouse+Room+2+38851&amp;sll=33.939746,-89.337845&amp;sspn=0.006444,0.009624&amp;ie=UTF8&amp;z=17^^~Okolona~~^234 W. Main St., Room. 203~~^38860~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Okolona,+234+W.+Main+St.,+Rm.+203+38860&amp;sll=34.149785,-89.629639&amp;sspn=0.001962,0.003744&amp;ie=UTF8&amp;ll=34.03431,-88.746529&amp;spn=0.031439,0.05991&amp;z=13&amp;iwloc=A||~Cassandra&amp;nbsp;Pulliam||~1 Pinson Sq. Rm 2~~^Houston,~~^MS~~^38851~~^(662)456-2331~~^cpulliam@chickasawcoms.com^^~234 W Main St. Rm 203~~^Okolona,~~^MS~~^38860~~^(662)447-2838~~^cpulliam@chickasawcoms.com||~Gary~~^Huffman~~^District 2~~^2154 HWY 339~~^wooDLAND~~^MS~~^39776~~^(662)456-2331~~^garyhuffman1@att.net^^~Nathan~~^Bailey~~^District 3~~^1 Pinson Square, Ste 2~~^Houston,~~^MS~~^38851~~^(662)456-2331~~^^^~Brenda~~^Crawford~~^District 1~~^123 OKOLONA CUTOFF~~^Houston,~~^MS~~^38851~~^(662)456-2331~~^brendawrawford055@yahoo.com^^~Dennis~~^Griffin~~^District 4~~^PO Box 293~~^houLKA~~^MS~~^38850~~^(662)456-2331~~^dennisgriffin456@gmail.com^^~Gus~~^Clark~~^District 5~~^1 Pinson Square, Ste 2~~^Houston,~~^MS~~^38851~~^(662)456-2331~~^||^10||~Choctaw||~Ackerman~~^22 E. Quinn St.~~^39735~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Ackerman,+112+Quinn+St.+39735&amp;sll=33.939746,-89.337845&amp;sspn=0.006444,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Amy&amp;nbsp;Burdine||~P.O. Box 34~~^Ackerman,~~^MS~~^39735~~^(662)285-6245~~^anburdine@gmail.com||~Sharon~~^Brooks~~^District 2~~^650 BLYTHE CREEK RD~~^MATHISTON~~^MS~~^39752~~^(662)285-6245~~^shay9945@yahoo.com^^~SHANNON~~^STEVENS-MYERS~~^District 3~~^3600 MS HWY 413~~^FRENCH CAMP~~^MS~~^39745~~^(662)285-6245~~^ssmyers17@gmail.com^^~Willie~~^Guillory~~^District 4~~^~~^~~^MS~~^0~~^(662)285-6245~~^guillorywillie85@gmail.com^^~Wayne~~^McLeod~~^District 5~~^~~^~~^MS~~^0~~^(662)285-6245~~^wayne@dtc.web.net^^~Juliette~~^Ashford~~^District 1~~^189 MCMULLEN EXT~~^Ackerman,~~^MS~~^39735~~^(662)285-6245~~^sip.mom45@gmail.com||^11||~Claiborne||~Port Gibson~~^410 Market St.~~^39150~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Port+Gibson,+410+Market+St.+39150&amp;sll=33.309563,-89.172995&amp;sspn=0.006492,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Gale&amp;nbsp;Compton||~P.O. Box 549~~^Port Gibson,~~^MS~~^39150~~^(601)437-5841~~^galecompton@claibornecountyms.gov||~Stella~~^Greenwood~~^District 1~~^103 UTOPIA DR~~^Port Gibson,~~^MS~~^39150~~^(601)617-0009~~^green53@bellsouth.net^^~Gustina~~^Jackson~~^District 2~~^P.O. Box 549~~^Port Gibson,~~^MS~~^39150~~^(601)617-0009~~^gtjackson55@yahoo.com^^~Marvin~~^Ratliff~~^District 3~~^512 JACKSON ST~~^Port Gibson,~~^MS~~^39150~~^(601)617-0009~~^marvinratliff@ccmsgov.us^^~Vernester~~^Watts~~^District 4~~^1114 LEMON RD~~^herMANVILLE~~^MS~~^39086~~^(601)617-0009~~^vernester88@gmail.com^^~Rita~~^Farmer~~^District 5~~^4093 PATTISON/TILLMAN~~^PattISON~~^MS~~^39144~~^(601)617-0009~~^rita53farmerkp10@gmail.com||^12||~Clarke||~Quitman~~^101 Archusa Ave.~~^39355~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Quitman,+101+archusa+Ave.+39355&amp;sll=31.963681,-90.98312&amp;sspn=0.00659,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc||~Sally&amp;nbsp;Wedgeworth||~P.O. Box 216~~^Quitman,~~^MS~~^39355~~^(601)616-1714~~^brianandsallywedgeworth@yahoo.com||~Dora~~^McKenzie~~^District 1~~^414 CR 150~~^Quitman,~~^MS~~^39355~~^(601)776-5078~~^dmckenzie@clarkecountyms.gov^^~Viola~~^Davis~~^District 2~~^117 CR 2671~~^SHUBUTA~~^MS~~^39360~~^(601)776-5078~~^election_2@yahoo.com^^~Troy~~^Dew~~^District 3~~^PO Box 246~~^Quitman,~~^MS~~^39355~~^(601)776-5078~~^troyadew@gmail.com^^~James~~^Avera~~^District 4~~^135303 HWY 18 EAST~~^Quitman,~~^MS~~^39355~~^(601)776-5078~~^billavera20@att.net^^~Dorothy~~^Rolison~~^District 5~~^4264 CR 511~~^Quitman,~~^MS~~^39355~~^(601)776-5078~~^dotrolison2012@icloud.com||^13||~Clay||~West Point~~^205 Court St.~~^39773~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=West+Point,+205+Court+St.+39773&amp;sll=32.040255,-88.727938&amp;sspn=0.006584,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Kim&amp;nbsp;Brown Hood||~P.O. Box 364~~^West Point,~~^MS~~^39773~~^(662)494-3384~~^khood@claycounty.ms.gov||~Linda~~^Ivy~~^District 1~~^107 CARVER ST EXT~~^West Point,~~^MS~~^39773~~^(662)495-2053~~^oneal283@yahoo.com^^~SOYNA~~^ORR~~^District 4~~^2599 CCC LINE RD~~^PRAIRIE~~^MS~~^39756~~^(662)495-2053~~^ltosmo@yahoo.com^^~JULIA CAMPBELL~~^GRAY~~^District 2~~^901 E BROAD ST~~^West Point,~~^MS~~^39773~~^(662)495-2053~~^andyjuliegray@bellsouth.net^^~Tommy~~^Bryan~~^District 2~~^P.O. Box 364~~^West Point,~~^MS~~^39773~~^(662)495-2053~~^tbryan@claycounty.ms.gov^^~DOROTHY~~^HEARD~~^District 3~~^70 HOGAN ST~~^PHEBA~~^MS~~^39755~~^(662)495-2053~~^dheard1251@aol.com||^14||~Coahoma||~Clarksdale~~^115 1st St.~~^38614~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Clarksdale,+115+1st+St.+38614&amp;sll=33.605867,-88.649112&amp;sspn=0.006469,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Demetria&amp;nbsp;Jackson||~P.O. Drawer 849~~^Clarksdale,~~^MS~~^38614~~^(662)624-3014~~^circuitclerk14@coahomacountyms.gov||~Andrew~~^Thompson~~^District 2~~^~~^~~^MS~~^0~~^(662)624-3014~~^athompson847@gmail.com^^~Startavian~~^Victory~~^District 3~~^PO Box 242~~^JONESTOWN 38639~~^MS~~^38639~~^(662)624-3014~~^zodell32@gmail.com^^~Virginia~~^Burchfield~~^District 5~~^3980 HWY 1~~^ALLIGATOR~~^MS~~^38720~~^(662)624-3014~~^burchfieldvirginia@yahoo.com^^~Jo Ann~~^Gates~~^District 1~~^2385 MOON LAKE RD~~^DUNDEE~~^MS~~^38626~~^(662)624-3014~~^joanngates1@icloud.com^^~Eva~~^Cole-Lee~~^District 4~~^926 MCKINLEY ST~~^Clarksdale,~~^MS~~^38614~~^(662)624-3014~~^evacole2005@yahoo.com||^15||~Copiah||~Hazlehurst~~^100 Caldwell Dr.~~^39083~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Hazlehurst,+100+Caldwell+Dr.+39083&amp;sll=34.204013,-90.575192&amp;sspn=0.006424,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Derrick&amp;nbsp;Cubit||~P.O. Box 467~~^Hazlehurst,~~^MS~~^39083~~^(601)894-1241~~^dcubit200@yahoo.com||~LISA~~^RIALS~~^District 1~~^3010 BARNES RD~~^CRYSTAL SPRINGS~~^MS~~^39059~~^(601)894-1241~~^lrials68@yahoo.com^^~Frances~~^Taylor~~^District 2~~^1013 DAVID BRITT ST~~^WESSON~~^MS~~^39191~~^(601)894-1241~~^mot645@bellsouth.net^^~Ernest~~^Munn~~^District 3~~^PO Box 245~~^WESSON~~^MS~~^39191~~^(601)894-1241~~^elmunn@gmail.com^^~Lydia~~^Green~~^District 4~~^145 AUSTIN CR~~^CRYSTAL SPRINGS~~^MS~~^39059~~^(601)894-1241~~^lydgre6@gmail.com^^~TIFFANY~~^JONES~~^District 5~~^1003 JOHN M HALL DR~~^Hazlehurst,~~^MS~~^39083~~^(601)894-1241~~^bjones7771@yahoo.comhood@copiahcountyms.gov||^16||~Covington||~Collins~~^101 S. Dogwood Ave~~^39428~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Collins,+101+Main+%26+Dogwood+39428&amp;sll=31.859695,-90.396284&amp;sspn=0.006597,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Melissa&amp;nbsp;Duckworth||~P.O. Box 667~~^Collins,~~^MS~~^39428~~^(601)765-6506~~^mduckworth@covingtoncountyms.gov||~LESIA~~^TAORMINA~~^District 2~~^248 CASCIO TAORMINA RD~~^SEMINARY~~^MS~~^39479~~^(601)765-6506~~^lltaormina@yahoo.com^^~Rhonda~~^Purvis~~^District 3~~^~~^~~^MS~~^0~~^(601)765-6506~~^moose2448@aol.com^^~Mary~~^Thorton~~^District 4~~^51 CORELLA LANE~~^Collins,~~^MS~~^39428~~^(601)765-6506~~^mimi1950dh@gmail.com^^~Dorothy~~^Magee~~^District 5~~^242 LILLY VALLEY CH RD~~^MT OLIVE~~^MS~~^39119~~^(601)765-6506~~^dorothymagee82@yahoo.com^^~Mary~~^Walters~~^District 1~~^P.O. Box 667~~^SEMINARY~~^MS~~^39479~~^(601)765-6506~~^douglas.mary56@icloud.com||^17||~DeSoto||~Hernando~~^2535 Hwy. 51 S. ~~^38632~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Hernando,+2535+Hwy.+51+S.+38632&amp;sll=31.644307,-89.556735&amp;sspn=0.006613,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Dale&amp;nbsp;Thompson||~2535 Highway 51 S.~~^Hernando,~~^MS~~^38632~~^(662)469-8007~~^dthompson@desotocountyms.gov||~Laura~~^Elder~~^District 1~~^3868 CYPRESS PLANTATION~~^OLIVE BRANCH~~^MS~~^38654~~^(662)469-8072~~^ledler@desotocountyms.gov^^~TIM~~^SNYDER~~^District 2~~^5412 DOE LANE~~^SOUTHAVEN~~^MS~~^38671~~^(662)469-8072~~^tsnyder@desotocountyms.gov^^~Chad~~^Engelke~~^District 3~~^7312 EASTOVER DR~~^HORN LAKE~~^MS~~^38637~~^(662)469-8072~~^chad@unitedmidsouth.com^^~Sissie~~^Ferguson~~^District 4~~^6234 NESBIT RD~~^LAKE CORMORANT~~^MS~~^38641~~^(662)469-8072~~^sferguson@desotocountyms.gov^^~David~~^Ross~~^District 5~~^2874 OXFORD CR~~^SOUTHAVEN~~^MS~~^38632~~^(662)469-8072~~^dhross@desotocountyms.gov||^18||~Forrest||~Hattiesburg~~^630 Main St.~~^39401~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Hattiesburg,+630+Main+St.+39403&amp;sll=34.820738,-89.994105&amp;sspn=0.006377,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Gwen&amp;nbsp;Wilks||~P.O. Box 992~~^Hattiesburg,~~^MS~~^39403~~^(601)582-3213~~^gwilks@co.forrest.ms.us||~JOHNEICE~~^DUPREE~~^District 1~~^~~^~~^MS~~^0~~^(601)544-0688~~^johniecedupree@yahoo.com^^~NANCY~~^BOURNE-NOBLE~~^District 2~~^200 FRANKLIN ST~~^Hattiesburg,~~^MS~~^39401~~^(601)544-0823~~^nftbn123@gmail.com^^~Lucretia~~^Jenkins~~^District 3~~^P.O. Box 1310~~^Hattiesburg,~~^MS~~^39403~~^(601)582-7230~~^sugjenx@aol.com^^~JAMES~~^HARVISON~~^District 4~~^26 HARRINGTON RD~~^Hattiesburg,~~^MS~~^39401~~^(601)582-7481~~^jnharvison@liberty.edu^^~Sue~~^Polk~~^District 5~~^1209 N 32ND AVE~~^Hattiesburg,~~^MS~~^39401~~^(601)582-7495~~^suepolk@hotmail.com||^19||~Franklin||~Meadville~~^36 Main St. East~~^39653~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Meadville,+36+Main+St.+39653&amp;sll=31.327805,-89.291501&amp;sspn=0.006635,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Warren&amp;nbsp;Walker||~P.O. Box 267~~^Meadville,~~^MS~~^39653~~^(601)384-2320~~^circuitclerk@franklincountyms.org||~Gloria~~^Bonds~~^District 1~~^469 RAILROAD AVE~~^ROXIE~~^MS~~^39661~~^(601)384-2320~~^gloriabonds@gmail.com^^~HILDA~~^PEELER~~^District 2~~^~~^~~^MS~~^0~~^(601)384-2320~~^peeler@ftcweb.net^^~Margie~~^McNair~~^District 3~~^PO Box 318~~^BUDE~~^MS~~^0~~^(601)384-2320~~^memadell1954@yahoo.com^^~Marilyn~~^Ezell~~^District 5~~^9255 BERRYTOWN RD SE~~^Meadville,~~^MS~~^39653~~^(601)384-2320~~^mexell@ftcweb.net^^~Faye~~^Enzman~~^District 4~~^4650 HWY 84 E~~^Meadville,~~^MS~~^39653~~^(601)384-2320~~^enzman39653@yahoo.com||^20||~George||~Lucedale~~^355 Cox St. Suite C~~^39452~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Lucedale,+355+Cox+St.+Ste.+C+39452&amp;sll=31.470892,-90.89893&amp;sspn=0.006625,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=||~Chad&amp;nbsp;Welford||~355 Cox St., Ste C~~^Lucedale,~~^MS~~^39452~~^(601)947-4881~~^cwelford@georgecountyms.gov||~Rebecca~~^Berry~~^District 5~~^118 A HAVENS RD~~^PERKINSTON~~^MS~~^39573~~^(601)947-8017~~^rebecca.berry73@yahoo.com^^~Darlene~~^Steede~~^District 3~~^126 BROOKS &amp; BYRD RD~~^Lucedale,~~^MS~~^39452~~^(601)947-8017~~^darlenesteede@gmail.com^^~Matthew~~^Lamb~~^District 4~~^153 THE CEDORS~~^Lucedale,~~^MS~~^39452~~^(601)947-8017~~^malamb86@gmail.com^^~Joanie~~^Evans~~^District 1~~^175 DAVID WADE RD~~^Lucedale,~~^MS~~^39452~~^(601)947-8017~~^gcelections@georgecountyms.gov^^~Caleb~~^Howell~~^District 2~~^211 ANDERSON SBDV~~^Lucedale,~~^MS~~^39452~~^(601)947-8017~~^calebcarey03@gmail.com||^21||~Greene||~Leakesville~~^400 Main St.~~^39451~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Leakesville,+400+Main+St.+39451&amp;sll=30.923712,-88.5918&amp;sspn=0.006664,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Cecelia&amp;nbsp;Bounds||~P.O. Box 310~~^Leakesville,~~^MS~~^39451~~^(601)394-2379~~^cbounds@greenecountyms.gov||~Stacy~~^Wilson~~^District 1~~^~~^~~^MS~~^0~~^(601)394-2379~~^sawilson96@gmail.com^^~Lisa~~^Bivens~~^District 2~~^55359 HWY 157~~^STATE LINE~~^MS~~^39362~~^(601)394-2379~~^lbivens7658@gmail.com^^~Deborah~~^Freeman~~^District 3~~^169 EVON LOOP~~^RICHTON~~^MS~~^39476~~^(601)394-2379~~^debofreeman@gmail.com^^~Terri~~^Denmark~~^District 5~~^PO Box 288~~^Leaksville,~~^MS~~^39461~~^(601)394-2379~~^tdenmark65@yahoo.com^^~Elizabeth~~^Ross~~^District 4~~^5083 VERNAL RIVER RD~~^LUCEDALE~~^MS~~^39452~~^(601)394-2379~~^efross60@gmail.com||^22||~Grenada||~Grenada~~^59 Green St. Suite 8~~^38901~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Grenada,+59+Green+St.+Ste.+8+38901&amp;sll=31.15306,-88.551374&amp;sspn=0.006647,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=||~Michele&amp;nbsp;Redditt Garcia||~P.O. Box 1517~~^Grenada,~~^MS~~^38902~~^(662)226-1941~~^umredditt@grenadacountyms.org||~James~~^Carver~~^District 3~~^37 N MOUND ST~~^Grenada,~~^MS~~^38901~~^(662)226-8457~~^jamesandfaye2003@yahoo.com^^~Elizabeth~~^Moore~~^District 4~~^975 LATHAM ST~~^Grenada,~~^MS~~^38901~~^(662)226-8457~~^elizabeth_moore38901@yahoo.com^^~Celina~~^Hayward~~^District 5~~^5535 HWY 7 S~~^HOLCOMB~~^MS~~^38940~~^(662)226-8457~~^celinahayward@gmail.com^^~Susan~~^Williams~~^District 1~~^8214 SPARTA RD~~^HOLCOMB~~^MS~~^38901~~^(662)226-8457~~^sgbwilliams@hotmail.com^^~Karen~~^James~~^District 2~~^31385 HWY 8 E~~^GORE SPRINGS~~^MS~~^38929~~^(662)226-8457~~^karenajames58@yahoo.com||^23||~Hancock||~Bay St Louis~~^152 Main St.~~^39520~~^~~^~~^https://www.google.com/maps/place/152+Main+St/@30.3108758,-89.327271,17z/data=!3m1!4b1!4m2!3m1!1s0x889c2ddbd86b5fdb:0xfd08b3dae8fee65b?hl=en||~Kendra&amp;nbsp;Necaise||~152 Main St. Ste. B~~^Bay St. Louis,~~^MS~~^39520~~^(228)467-5265~~^kendra.necaise@co.hancock.ms.us||~Reba~~^McCaleb~~^District 1~~^6250 OLD HILL RD~~^Bay St. Louis,~~^MS~~^39520~~^(228)860-4752~~^mccalebreba@aol.com^^~Tad~~^Shaw~~^District 2~~^28094 HWY 603~~^PERKINSTON~~^MS~~^39573~~^(228)342-5743~~^tadshaw@outlook.com^^~Donna~~^Henry~~^District 4~~^837 DOVE BLVD~~^Bay St. Louis,~~^MS~~^39520~~^(508)450-2138~~^donna.henry2@co.hancock.ms^^~Joseph~~^Pettigrew~~^District 5~~^152 Main St., Suite B.~~^Bay St. Louis,~~^MS~~^39520~~^(228)467-5265~~^petigru@aol.com^^~E J~~^Bice~~^District 3~~^9925 KAHANA ST~~^bay SAINT LOUIS~~^MS~~^39525~~^(228)547-7059~~^ej.bice@co.hancock.ms.us||^24||~Harrison||~Gulfport~~^1801 23rd Ave.~~^39501~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Gulfport,+1801+23rd+Ave.+39501&amp;sll=33.784987,-89.803027&amp;sspn=0.006456,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A^^~Biloxi~~^730 Dr. Martin Luther King, Jr. Blvd~~^39530~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Biloxi,+730+Dr.+Martin+Luther+King,+Jr.+Blvd+39530&amp;sll=34.005143,-88.749962&amp;sspn=0.049736,0.07699&amp;ie=UTF8&amp;ll=30.397235,-88.886368&amp;spn=0.0067,0.009624&amp;z=17&amp;iwloc=A||~Justin&amp;nbsp;Wetzel||~P.O. Box 998~~^Gulfport,~~^MS~~^39502~~^(228)865-4051~~^jwwetzel@co.harrison.ms.us||~Toni Jo~~^Diaz~~^District 1~~^2600 24th Avenue~~^Gulfport,~~^MS~~^39501~~^(228)865-4007~~^tdiaz@co.harrison.ms.us^^~Barbara~~^Kimball~~^District 3~~^2600 24th Avenue~~^Gulfport,~~^MS~~^39501~~^(228)865-4007~~^bkimball@co.harrison.ms.us^^~Christene~~^Brice~~^District 4~~^102 WHISPERING PINE DR~~^Gulfport,~~^MS~~^39503~~^(228)865-4007~~^cbrice@co.harrison.ms.us^^~Becky~~^Payne~~^District 2~~^2600 24th Avenue~~^Gulfport,~~^MS~~^39501~~^(228)865-4007~~^bppayne@co.harrison.ms.us^^~Carolyn~~^Handler~~^District 5~~^2600 24th Avenue~~^Gulfport,~~^MS~~^39501~~^(228)865-4007~~^chandler@co.harrison.ms.us||^25||~Hinds||~Jackson~~^407 E. Pascagoula~~^39201~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Jackson,+407+E.+Pascagoula,+39201&amp;sll=30.372337,-89.090363&amp;sspn=0.006702,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A^^~Raymond~~^127 W. Main St.~~^39154~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Raymond,+121+W.+Main+St.+39154&amp;sll=30.397235,-88.886368&amp;sspn=0.0067,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Zack&amp;nbsp;Wallace||~P.O Box 327~~^Jackson,~~^MS~~^39205~~^(601)968-6628~~^zwallace@co.hinds.ms.us^^~P.O Box 999~~^Raymond,~~^MS~~^39154~~^(601)857-8038~~^zwallace@co.hinds.ms.us||~Kidada~~^Brown~~^District 1~~^P.O. Box 946~~^Jackson,~~^MS~~^39205~~^(601)968-6685~~^kidada.brown@co.hinds.ms.us^^~Jermal~~^Clark~~^District 3~~^PO Box 20564~~^Jackson,~~^MS~~^39289~~^(601)968-6682~~^jermal.clark@co.hinds.ms.us^^~Yvonne~~^Horton~~^District 4~~^1210 VINSON DR / PO BOX 123~~^Jackson,~~^MS~~^39041~~^(601)968-6556~~^yhorton@co.hinds.ms.us^^~Felicia~~^McClinton~~^District 5~~^701 Commerce Street~~^Jackson,~~^MS~~^39201~~^(601)968-6684~~^felicia.mcclinton@co.hinds.ms.us^^~Bobbie McClure~~^Graves~~^District 2~~^701 Commerce Street~~^Jackson,~~^MS~~^39201~~^(601)968-6557~~^bobbie.graves@co.hinds.ms.us||^26||~Holmes||~Lexington~~^22549 Depot Street~~^39095~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Lexington,+1+Courthouse+Sq.+39095&amp;sll=32.297421,-90.183227&amp;sspn=0.006566,0.009624&amp;g=Jackson,+407+E.+Pascagoula,+39201&amp;ie=UTF8&amp;ll=32.297417,-90.183227&amp;spn=0.006339,0.009624&amp;z=17||~Brenda&amp;nbsp;Travis||~P.O. Box 718~~^Lexington,~~^MS~~^39095~~^(662)834-2476~~^bnt4u@att.net||~Elnora~~^Patton~~^District 1~~^~~^~~^MS~~^0~~^(662)834-1957~~^pelnorapatton@aol.com^^~Kahaliah~~^Hogan-Cook~~^District 5~~^P.O. Box 718~~^Lexington,~~^MS~~^39095~~^(662)834-1957~~^^^~Henry~~^Simpson~~^District 3~~^PO Box 186~~^PICKENS~~^MS~~^39146~~^(662)834-1957~~^lee45@bellsouth.net^^~Augustine~~^Winstead~~^District 4~~^16525 HWY 17~~^Lexington,~~^MS~~^39095~~^(662)834-1957~~^awinstead@bellsouth.net^^~Loretta~~^Tidwell~~^District 2~~^3731 OLD WILSON RD~~^WEST~~^MS~~^39192~~^(662)834-1957~~^lorettatidwell29@yahoo.com||^27||~Humphreys||~Belzoni~~^102 Castleman St.~~^39038~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Belzoni,+102+Castleman+St.+39038&amp;sll=32.297417,-90.183227&amp;sspn=0.006339,0.009624&amp;ie=UTF8&amp;ll=33.176102,-90.488763&amp;spn=0.006501,0.009624&amp;z=17&amp;iwloc=A||~Marvin&amp;nbsp;Jones||~P.O. Box 696~~^Belzoni,~~^MS~~^39038~~^(662)247-3065~~^mjay678@gmail.com||~Lizzie~~^Powell~~^District 2~~^312 S COLLINS ST / PO BOX 41~~^ISOLA~~^MS~~^38754~~^(662)247-3065~~^bitthooker@yahoo.com^^~Constance~~^Burley~~^District 3~~^2005 ALLENDALE RD~~^SILVER CITY~~^MS~~^39166~~^(662)247-3065~~^cburley6300@gmail.com^^~Jospeh~~^Lee~~^District 5~~^151 S SIMMONS RD~~^LOUISE~~^MS~~^39097~~^(662)247-3065~~^josephlee83@gmail.com^^~Daliah~~^Randle~~^District 1~~^124 HARVEY ST~~^Belzoni,~~^MS~~^39038~~^(662)247-3065~~^bitthooker@yahoo.com^^~Tina~~^Gullett~~^District 4~~^202 LEFLORE AVE~~^Belzoni,~~^MS~~^39038~~^(662)247-3065~~^gullettetina@yahoo.com||^28||~Issaquena||~Mayersville~~^129 Court St.~~^39113~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Mayersville,+129+Court+St.+39113&amp;sll=33.176102,-90.488763&amp;sspn=0.006501,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Ronda&amp;nbsp;Delaney||~P.O. Box 27~~^Mayersville,~~^MS~~^39113~~^(662)873-2761~~^clerk@issaquenacountyms.gov||~Jimmy~~^Newman~~^District 1~~^PO Box 6~~^VALLEY PARK~~^MS~~^39177~~^(662)873-2761~~^newmanjj@bellsouth.net^^~David~~^Hendrix~~^District 5~~^296 GORE RD~~^ROLLING FORK~~^MS~~^39159~~^(662)873-2761~~^clerk@issaquenacountyms.gov^^~ERMA~~^PETERSON~~^District 2~~^~~^~~^MS~~^0~~^(662)873-2761~~^toetippy73@gmail.com^^~Patty~~^Sherrill~~^District 3~~^13211 HWY 1~~^Mayersville,~~^MS~~^39113~~^(662)873-2761~~^pssherrill@aol.com^^~Corinder~~^Williams~~^District 4~~^25 COLEMAN RD~~^Mayersville,~~^MS~~^39113~~^(662)873-2761~~^corinderwilliams1960@gmail.com||^29||~Itawamba||~Fulton~~^201 W. Main St.~~^38843~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Fulton,+201+W.+Main+St.+38843&amp;sll=32.902121,-91.053456&amp;sspn=0.006522,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Ceburn&amp;nbsp;Gray||~201 W Main St~~^Fulton,~~^MS~~^38843~~^(662)862-3511~~^cgray@itawamba.gov||~DENNIS HOWARD~~^FARRIS~~^District 3~~^165 JUSTIN RD~~^MANTACHIE~~^MS~~^38855~~^(662)862-3511~~^dennisfarris@hotmail.com^^~Steve~~^Johnson~~^District 5~~^4644 CLAY-TILDEN RD~~^Fulton,~~^MS~~^38843~~^(662)862-3511~~^ssgjohnson@yahoo.com^^~James~~^Dickens~~^District 1~~^1954 RYAN SALEM RD~~^Fulton,~~^MS~~^38843~~^(662)862-3511~~^j.g.dickens123@gmail.com^^~Amanda~~^McFerrin~~^District 2~~^1 GREGORY DR~~^manTACHIE~~^MS~~^38855~~^(662)862-3511~~^evanm@nexband.com||^30||~Jackson||~Pascagoula~~^3104 Magnolia St.~~^39567~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Pascagoula,+3104+Magnolia+39567&amp;sll=34.27352,-88.408151&amp;sspn=0.006419,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Randy&amp;nbsp;Carney||~P.O. Box 998~~^Pascagoula,~~^MS~~^39568~~^(228)769-3040~~^randy_carney@co.jackson.ms.us||~Danny~~^Glaskox~~^District 1~~^8901 FRANK SNELL ROAD~~^MOSS POINT~~^MS~~^39562~~^(228)769-3362~~^danny_glaskox@co.jackson.ms.us^^~Deborah~~^Parker~~^District 5~~^3201 Hamil Farm Rd~~^Ocean Springs~~^MS~~^39564~~^(228)769-3006~~^debparker73@gmail.com^^~TOMMY LEE~~^CLIFFORD~~^District 4~~^114 ARMAND OAKS~~^OCEAN SPRINGS~~^MS~~^39564~~^(228)471-1355~~^tlccs39564@yahoo.com^^~KATRINA~~^VIVERETTE~~^District 2~~^3312 BELLVIEW AVE~~^MOSS POINT~~^MS~~^39563~~^(228)769-3007~~^katrina-viverette@co.jackson.ms.us^^~Debbie~~^Hodges~~^District 3~~^1103 BECHT AVE~~^Pascagoula,~~^MS~~^39567~~^(228)769-3008~~^debshodges@yahoo.com||^31||~Jasper||~Paulding~~^1782 Hwy. 503~~^39348~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Paulding,+1782+Hwy.+503+39348&amp;sll=32.846769,-90.412479&amp;sspn=0.006526,0.009624&amp;ie=UTF8&amp;z=13^^~Bay Springs~~^27 West 8th Ave.~~^39422~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Bay+Springs,+27+West+8th+Ave.+39422&amp;sll=32.03311,-89.035778&amp;sspn=0.101722,0.15398&amp;ie=UTF8&amp;ll=31.97479,-89.288764&amp;spn=0.006589,0.009624&amp;z=17&amp;iwloc=A||~Billy&amp;nbsp;Rayner||~P.O. Box 58~~^Paulding,~~^MS~~^39348~~^(601)727-4941~~^brayner@co.jasper.ms.us^^~P.O. Box 447~~^Bay Springs,~~^MS~~^39422~~^(601)727-4941~~^brayner@co.jasper.ms.us||~Vernell~~^Lofton~~^District 2~~^PO Box 627~~^rose HILL~~^MS~~^39356~~^(601)764-9895~~^vernelllofton@yahoo.com^^~Laura~~^Parker~~^District 3~~^183 HWY 528~~^Bay Springs,~~^MS~~^39422~~^(601)764-9895~~^lparker@co.jasper.ms.us^^~Larry~~^Dykes~~^District 4~~^7 CR 1571~~^strINGER~~^MS~~^39481~~^(601)764-9895~~^ldykes@co.jasper.ms.us^^~Samantha~~^Parker~~^District 5~~^416 CR 333~~^heIDELBERG~~^MS~~^39439~~^(601)764-9895~~^sparker0279@gmail.com^^~Linda~~^Graham~~^District 1~~^1348 CR 21~~^strINGER~~^MS~~^39481~~^(601)764-9895~~^ikego757@gmail.com||^32||~Jefferson||~Fayette~~^1483 Main St. ~~^39069~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Fayette,+1483+Main+St.+39069&amp;sll=30.365374,-88.559361&amp;sspn=0.006702,0.009624&amp;ie=UTF8&amp;z=16&amp;iwloc=A||~Arnell&amp;nbsp;Harried||~P.O. Box 305~~^Fayette,~~^MS~~^39069~~^(601)786-3422~~^circuitclerk@jeffersoncountyms.gov||~Henry~~^Wilson~~^District 1~~^2059 MEADVILLE RD~~^UNION CHURCH~~^MS~~^39668~~^(601)786-3422~~^hw19619@gmail.com^^~Nicole~~^Davis~~^District 2~~^~~^~~^MS~~^0~~^(601)786-3422~~^drnicoledavis@att.net^^~Fannie~~^Mims~~^District 3~~^~~^~~^MS~~^0~~^(601)786-3422~~^shirleysbrown02@gmail.com^^~David~~^Franklin~~^District 4~~^3418 CANNONSBURG RD~~^natCHEZ~~^MS~~^39120~~^(601)786-3422~~^dfrank5513@gmail.com^^~Shirley~~^Brown~~^District 5~~^997 MABLE ALDRIDGE RD~~^Fayette,~~^MS~~^39069~~^(601)786-3422~~^marthastringer3@gmail.com||^33||~Jefferson Davis||~Prentiss~~^1025 3rd St.~~^39474~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Prentiss,+1025+3rd+St.+39474&amp;sll=31.711786,-91.061264&amp;sspn=0.013216,0.019248&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Clint&amp;nbsp;Langley||~P.O. Box 1090~~^Prentiss,~~^MS~~^39474~~^(601)792-4231~~^circuitclerk@co.jefferson-davis.ms.us||~MATTIE~~^LEWIS~~^District 2~~^176 GULF CAMP RD~~^NEW HEBRON~~^MS~~^39140~~^(601)792-9579~~^swepoll@yahoo.com^^~MARTHA ANN~~^STRINGER~~^District 5~~^146 HATHORN CEMETARY RD~~^CARSON~~^MS~~^39427~~^(601)792-9579~~^marthastringer3@gmail.com^^~Linda~~^Speights~~^District 1~~^PO Box 301~~^Prentiss,~~^MS~~^39747~~^(601)792-9579~~^ljspeights@aol.com^^~Towonder~~^Applewhite~~^District 3~~^205 STUBBS RD~~^bassFIELD~~^MS~~^39421~~^(601)792-9579~~^towonderapplewhite@yahoo.com||^34||~Jones||~Ellisville~~^101 N. Court St., Suite B~~^39437~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Ellisville,+101+N.+Court+St.+39437&amp;sll=31.600871,-89.865173&amp;sspn=0.006616,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=^^~Laurel~~^415 N. 5th Ave. ~~^39440~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Laurel,+415+N.+5th+Ave.+39440&amp;sll=32.259647,-90.423125&amp;sspn=0.006569,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Greg &#39;Red&#39;&amp;nbsp;Dickerson||~P.O. Box 1336~~^Laurel,~~^MS~~^39441~~^(601)425-2556~~^gdickerson@co.jones.ms.us||~Gail~~^Welch~~^District 1~~^17 KIMBERLEY DR~~^Laurel,~~^MS~~^39440~~^(601)428-3110~~^gailwelch1234@yahoo.com^^~Helen~~^Stanley~~^District 3~~^2084 MILL CREEK RD~~^Laurel,~~^MS~~^39443~~^(601)428-3110~~^kreynolds@co.jones.ms.us^^~Addie~~^Chinn~~^District 5~~^1119 MCCONKEY ST~~^Laurel,~~^MS~~^39443~~^(601)428-3110~~^acwash8@gmail.com^^~MICHELLE~~^BLACKWELL~~^District 2~~^15 STEPHANIE DR~~^LAUREL~~^MS~~^39443~~^(601)792-9579~~^cshaygo2001@yahoo.com^^~John~~^Herrington~~^District 4~~^998 Oak Bowery Rd~~^Ellisville~~^MS~~^39437~~^(601)428-3110~~^john.herrington78@yahoo.com||^35||~Kemper||~DeKalb~~^280 Veteran Street~~^39328~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=DeKalb,+123+Main+St.+39328&amp;sll=31.604082,-89.195911&amp;sspn=0.006616,0.009624&amp;g=Ellisville,+101+N.+Court+St.+39437&amp;ie=UTF8&amp;ll=32.772265,-88.650742&amp;spn=0.403567,0.615921&amp;z=11&amp;iwloc=A||~Shirley&amp;nbsp;Steele Jackson||~P.O. Box 130~~^DeKalb,~~^MS~~^39328~~^(601)743-8375~~^sjackson@kempercountyms.gov||~Ron~~^Boyd~~^District 1~~^246 AVERY RD~~^scooBA~~^MS~~^39358~~^(601)743-2224~~^roboyd1961@icloud.com^^~Charles~~^Hollingsworth~~^District 2~~^5441 ENONDALE RD~~^PORTERVILLE~~^MS~~^39352~~^(601)743-2224~~^cch100percent@yahoo.com^^~Zac~~^Clay~~^District 3~~^P.O. Box 130~~^DeKalb,~~^MS~~^39328~~^(601)743-2224~~^zac.clay17@yahoo.com^^~Tommy~~^Gholston~~^District 4~~^1438 LM GRADY RD~~^TREMONT~~^MS~~^38876~~^(662)862-3511~~^tommygholston@gmail.com^^~Kathy~~^Clemons~~^District 4~~^4793 HWY 21 SOUTH~~^presTON~~^MS~~^39354~~^(601)743-2224~~^kclemons1956@yahoo.com^^~Mary~~^Bennamon~~^District 5~~^394 OLD~~^DeKalb,~~^MS~~^39328~~^(601)743-2224~~^bennamonm@yahoo.com||^36||~Lafayette||~Oxford~~^1 Courthouse Square Suite 101~~^38655~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Oxford,+1+Courthouse+Sq.+Ste+101+38655&amp;sll=32.772265,-88.650742&amp;sspn=0.403567,0.615921&amp;ie=UTF8&amp;ll=34.366607,-89.518619&amp;spn=0.012824,0.019248&amp;z=16&amp;iwloc=A||~Jeff&amp;nbsp;Busby||~1 Courthouse Sq.,  Suite 101~~^Oxford,~~^MS~~^38655~~^(662)234-4951~~^jeffbusby@lafayettecoms.com||~Faye~~^Phillips~~^District 1~~^126 CR 429~~^Oxford,~~^MS~~^38655~~^(662)232-2887~~^fayep1952@gmail.com^^~Laura~~^Antonow~~^District 4~~^3342 WHIPPORWILL~~^Oxford,~~^MS~~^38655~~^(662)232-2887~~^lantonow4@gmail.com^^~Lola~~^Pearson~~^District 3~~^~~^~~^MS~~^0~~^(662)232-2887~~^lolapearson@yahoo.com^^~Debbie~~^Black~~^District 5~~^152 CR 424~~^water VALLEY~~^MS~~^38965~~^(662)232-2887~~^dblack1956@yahoo.com^^~Erin~~^Smith~~^District 2~~^367 BRAMLETT BLVD #8~~^Oxford,~~^MS~~^38655~~^(662)232-2887~~^erins3142@gmail.com||^37||~Lamar||~Purvis~~^203 Main St.~~^39475~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Purvis,+203+Main+St.+39475&amp;sll=34.366607,-89.518619&amp;sspn=0.012824,0.019248&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Martin&amp;nbsp;Hankins||~P.O. Box 369~~^Purvis,~~^MS~~^39475~~^(601)794-3478~~^mhankins@lamarcountyms.gov||~Misty~~^Hood~~^District 1~~^50 BAYBERRY LOOP S~~^Purvis,~~^MS~~^39475~~^(601)794-3476~~^mhood@lamarcountyms.gov^^~CARRIE~~^HUMPHRIES~~^District 2~~^~~^~~^  ~~^0~~^()-~~^^^~Linda~~^Hartfield~~^District 3~~^43 LEDBETTER DR~~^Purvis,~~^MS~~^39475~~^(601)794-3476~~^lhartfield@lamarms.gov^^~Fleetwood~~^Loustalot~~^District 4~~^2 LAKEVIEW COVE~~^HATTIESBURG~~^MS~~^39401~~^(601)794-3476~~^floustalot@comcast.net^^~Shirley~~^Haddox~~^District 5~~^P.O. Box 369~~^Purvis,~~^MS~~^39475~~^(601)794-3476~~^shaddox@lamarcountyms.gov||^38||~Lauderdale||~Meridian~~^500 Constitution Ave.~~^39301~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Meridian,+500+Constitution+Ave.+39301&amp;sll=31.145246,-89.412213&amp;sspn=0.006648,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Donna Jill&amp;nbsp;Johnson||~P.O. Box 1005~~^Meridian,~~^MS~~^39302~~^(601)482-9731~~^circuitclerk@lauderdalecounty.org||~Chuck~~^Overby~~^District 1~~^2323 39TH ST~~^Meridian,~~^MS~~^39305~~^(601)484-3981~~^kgdmclowns@aol.com^^~BRENDA~~^HARRIS~~^District 2~~^1758 WILLOW LAKE RD~~^TOOMSUBA~~^MS~~^39364~~^(601)484-3980~~^bcarpenter1120@icloud.com^^~Awana~~^Simmons~~^District 3~~^9505 WEST LAUDERDALE RD~~^collINS~~^MS~~^39325~~^(601)482-9809~~^ruesimmons@gmail.com^^~Gloria~~^Dancy~~^District 4~~^110 39TH AVE~~^Meridian,~~^MS~~^39307~~^(601)482-9808~~^gloriatdan@aol.com^^~Cory~~^Reece~~^District 5~~^1941 JEFF DAVIS SCHOOL~~^Meridian,~~^MS~~^39301~~^(601)484-3982~~^creece@universitycharterschool.org||^39||~Lawrence||~Monticello~~^517 E. Broad St.~~^39654~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Monticello,+817+Bound+St.+39654&amp;sll=32.364578,-88.69876&amp;sspn=0.006561,0.009624&amp;g=Meridian,+500+Constitution+Ave.+39301&amp;ie=UTF8&amp;z=17||~Tracey&amp;nbsp;Carney||~P.O. Box 1249~~^Monticello,~~^MS~~^39654~~^(601)587-4791~~^carney.tracey@yahoo.com||~Lester~~^Bacon~~^District 1~~^1262 MAGNOLIA DRIVE~~^Monticello,~~^MS~~^39654~~^(601)587-7878~~^lestere.bacon@bellsouth.net^^~TORI SMITH~~^MARTIN~~^District 2~~^194 RAY SCHMIDT RD~~^SONTAG~~^MS~~^39665~~^(601)587-7878~~^torivsmith@icloud.com^^~Shanta~~^Killingsworth~~^District 3~~^402 RUTHERFORD RD~~^Monticello,~~^MS~~^39654~~^(601)587-7878~~^shantakillingsworth@gmail.com^^~PAMELA SUE~~^MELZER~~^District 4~~^201 CHERRY AVE~~^NEW HEBRON~~^MS~~^39140~~^(601)587-7878~~^pmelzer@aol.com^^~Karen~~^Hartwell~~^District 5~~^2244 HWY 43~~^SILVER CREEK~~^MS~~^39663~~^(601)587-7878~~^khartwell42@gmail.com||^40||~Leake||~Carthage~~^101 Court Square #115~~^39051~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Carthage,+Court+Square,+Main+St.+39051&amp;sll=32.364578,-88.69876&amp;sspn=0.006561,0.009624&amp;ie=UTF8&amp;z=17||~Ken&amp;nbsp;Adcock||~P.O. Box 67~~^Carthage,~~^MS~~^39051~~^(601)267-8357~~^kadcock@co.leake.ms.us||~Sandra~~^Grundy~~^District 1~~^3136 Rocky Point RD~~^CARTHAGE~~^MS~~^39051~~^(601)267-8625~~^sdgrundy@yahoo.com^^~Donna~~^Rawson~~^District 2~~^1666 CORINTH RD~~^Carthage,~~^MS~~^39051~~^(601)267-8625~~^rawsomdonna115@yahoo.com^^~Linda~~^Sanders~~^District 4~~^2755 HWY 488~~^Carthage,~~^MS~~^39051~~^(601)267-8625~~^lindasanders1845@icloud.com^^~Rose~~^Weathers~~^District 5~~^PO Box 9~~^WALNUT GROVE~~^MS~~^39189~~^(601)267-8625~~^roseweathers@att.net^^~Margaret~~^Smith~~^District 3~~^241 WIGGINS LOOP~~^Carthage,~~^MS~~^39051~~^(601)267-8625~~^msmith@leakeco.ms.org||^41||~Lee||~Tupelo~~^200 W. Jefferson St.~~^38802~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Tupelo,+200+Jefferson+38804&amp;sll=32.364578,-88.69876&amp;sspn=0.006561,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Camille&amp;nbsp;Roberts  Dulaney||~P.O. Box 762~~^Tupelo,~~^MS~~^38802~~^(662)432-2300~~^leecountycircuitclerk@gmail.com||~Joe~~^Hester~~^District 5~~^P.O. Box 762~~^Tupelo,~~^MS~~^38802~~^(662)432-2300~~^dcoon@co.lee.ms.us^^~Jacque~~^Grayson~~^District 4~~^P.O. Box 762~~^Tupelo,~~^MS~~^38802~~^(662)432-2300~~^dcoon@co.lee.ms.us^^~ROBERT~~^KELTZ~~^District 1~~^683 A RD 1460~~^TUPELO~~^MS~~^38804~~^(662)432-2300~~^robertkeltz@comcast.net^^~Jim~~^Jackson~~^District 3~~^1329 RD 41~~^Tupelo,~~^MS~~^38801~~^(662)432-2300~~^dcoon@co.lee.ms.us^^~Shelia~~^Landsell~~^District 2~~^106 N SECOND AVE~~^SALTILLO~~^MS~~^38866~~^(662)432-2300~~^deelansdell@gmail.com||^42||~Leflore||~Greenwood~~^310 W. Market St.~~^38930~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Leflore+County:+Courthouse,+Greenwood,+MS&amp;sll=37.0625,-95.677068&amp;sspn=46.630055,78.837891&amp;ie=UTF8&amp;hq=Leflore+County:+Courthouse,&amp;hnear=Greenwood,+MS&amp;ll=33.518446,-90.181725&amp;spn=0.01161,0.019248&amp;t=h&amp;z=16||~Elmus&amp;nbsp;Stockstill||~P.O. Box 1953~~^Greenwood,~~^MS~~^38935~~^(662)453-1435~~^ewstockstill@gmail.com||~Deveda~~^Dillon~~^District 1~~^P.O. Box 1953~~^Greenwood,~~^MS~~^38935~~^(662)453-1435~~^ddillon@southgroup.net^^~Preston~~^Ratliff~~^District 3~~^1933 BRADFORD AVE~~^Greenwood,~~^MS~~^38930~~^(662)453-1435~~^p_ratliff2000@yahoo.com^^~Cedric~~^Williams~~^District 4~~^P.O. Box 1953~~^Greenwood,~~^MS~~^38935~~^(662)453-1435~~^crenardwilliams@yahoo.com^^~Emma~~^Baker~~^District 2~~^3005 MCKENNEDY DR~~^Greenwood,~~^MS~~^38930~~^(662)453-1435~~^efb@yahoo.com^^~Gloria~~^White~~^District 5~~^P.O. Box 1953~~^Greenwood,~~^MS~~^38935~~^(662)453-1435~~^gloriawhite5353@gmail.com||^43||~Lincoln||~Brookhaven~~^301 S. First St., Room 205~~^39601~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Brookhaven,+301+S.+First+St.+39601&amp;sll=34.259237,-88.704475&amp;sspn=0.00642,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Christy&amp;nbsp;Sheppard||~301 S. 1st Street, Room 205~~^Brookhaven,~~^MS~~^39601~~^(601)835-3435~~^csheppard@co.lincoln.ms.us||~Beverly~~^Williams Howard~~^District 1~~^301 South First St. Room 205~~^Brookhaven,~~^MS~~^39601~~^(601)835-3497~~^^^~JANICE~~^HALEY~~^District 2~~^2435 HALEY TRL NE~~^WESSON~~^MS~~^39601~~^(601)835-3497~~^janicedhaley@hotmail.com^^~Ernie~~^Clark~~^District 3~~^1012 S CHURCH ST~~^Brookhaven,~~^MS~~^39601~~^(601)835-3497~~^erniecre@bellsouth.net^^~Denise~~^White~~^District 4~~^1186 W LINCOLN DR SW~~^Brookhaven,~~^MS~~^39601~~^(601)835-3497~~^white.denise@att.net^^~Jane~~^James~~^District 5~~^107 W MEADOWBROOK DR~~^Brookhaven,~~^MS~~^39601~~^(601)835-3497~~^janestuardjames@gmail.com||^44||~Lowndes||~Columbus~~^505 2nd Ave. N.~~^39701~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Columbus,+505+2nd+Ave.+N.+39701&amp;sll=31.576559,-90.441658&amp;sspn=0.006618,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Teresa&amp;nbsp;Barksdale||~P.O. Box 31~~^Columbus,~~^MS~~^39703~~^(662)329-5900~~^tbarksdale@lowndescountyms.com||~Yuvonda~~^Youngblood~~^District 3~~^59 PHILLIPS CV~~^Columbus,~~^MS~~^39705~~^(601)329-5910~~^election@lowndescountyms.com^^~Octavia~~^Dickerson~~^District 5~~^PO Box 31~~^Columbus,~~^MS~~^39703~~^(601)329-5910~~^election@lowndescountyms.com^^~Steve~~^Porter~~^District 2~~^PO Box 31~~^Columbus,~~^MS~~^39703~~^(601)329-5910~~^election@lowndescountyms.com^^~Sherry~~^Guyton O&#39;Dneal~~^District 4~~^P.O. Box 31~~^Columbus,~~^MS~~^39703~~^(601)329-5910~~^elections@lowndescountyms.com^^~Theresa~~^Hendrix~~^District 1~~^PO Box 31~~^COLUMBUS~~^MS~~^39703~~^(601)329-5910~~^election@lowndescountyms.com||^45||~Madison||~Canton~~^128 W. North St.~~^39046~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Canton,+128+W.+North+St.+39046&amp;sll=33.496344,-88.428334&amp;sspn=0.006478,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Anita&amp;nbsp;Wray||~P.O. Drawer 1626~~^Canton,~~^MS~~^39046~~^(601)859-4365~~^anita.wray@madison-co.com||~Pat~~^Truesdale~~^District 3~~^PO Box 608~~^Canton,~~^MS~~^39046~~^(601)790-2543~~^pat.truesdale@madison-co.com^^~Leroy~~^Lacy~~^District 5~~^PO Box 608~~^Canton,~~^MS~~^39046~~^(601)790-2545~~^leroy.lacy@madison-co.com^^~ANTHONY~~^DENTON~~^District 4~~^PO Box 608~~^Canton,~~^MS~~^39046~~^(601)790-2544~~^anthony.denton@madison-co.com^^~BARBARA~~^GROSS~~^District 2~~^PO Box 608~~^Canton,~~^MS~~^39046~~^(601)790-2542~~^barbara.gross@madison-co.com^^~Helen~~^Carney~~^District 1~~^PO Box 608~~^Canton,~~^MS~~^39046~~^(601)790-2541~~^helen.carney@madison-co.com||^46||~Marion||~Columbia~~^250 Broad St., Suite 1~~^39429~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Columbia,+250+Broad+St.+Ste.+1+39429&amp;sll=31.250756,-89.83337&amp;sspn=0.006641,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Janette&amp;nbsp;Nolan||~250 Broad St., Ste. 1~~^Columbia,~~^MS~~^39429~~^(601)736-8246~~^jnolan@marioncountyms.com||~Michael~~^Bennett~~^District 1~~^36 BAY LANE~~^Columbia,~~^MS~~^39429~~^(601)736-8929~~^mbennett9259@gmail.com^^~Van~~^Lowry~~^District 2~~^475 RIVER BEND RD~~^Columbia,~~^MS~~^39429~~^(601)736-8929~~^vlowery1968@outlook.com^^~Dale~~^Bracey~~^District 3~~^421 JOHN THORNHILL RD~~^FOXWORTH~~^MS~~^0~~^(601)736-8929~~^bracey.dale@gmail.com^^~Ada~~^Hammond~~^District 5~~^1416 HENDRICKS ST~~^Columbia,~~^MS~~^39429~~^(601)736-8929~~^hammondmj.78@gmail.com^^~Stacy~~^Reagan~~^District 4~~^640 HWY 98 W~~^koKOMO~~^MS~~^39643~~^(601)736-8929~~^reafanstacy31@yahoo.com||^47||~Marshall||~Holly Springs~~^128 E. Van Dorn Ave.~~^38635~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Holly+Springs,+128+E.+Van+Dorn+38635&amp;sll=31.250756,-89.83337&amp;sspn=0.006641,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Monet&#39; Bell&amp;nbsp;Autry||~P.O. Box 459~~^Holly Springs,~~^MS~~^38635~~^(662)252-3434~~^mautry@marshallcoms.org||~Naomi~~^Taylor~~^District 4~~^608 NORTH MILLINS RD~~^byhALIA~~^MS~~^38611~~^(662)252-3434~~^naomithomastaylor@gmail.com^^~Betty~~^Whaley~~^District 5~~^128 East Van Dorn~~^Holly Springs,~~^MS~~^38635~~^(662)252-3434~~^bettywhaley@marshallcoms.org^^~Jamarr~~^Walton~~^District 1~~^128 East Van Dorn~~^Holly Springs,~~^MS~~^38635~~^(662)252-3434~~^jamarrwalton24@gmail.com^^~Marsha~~^Taylor~~^District 2~~^166 CLEAR CREEK~~^HOLLY SPRINGS~~^MS~~^38635~~^(662)252-3434~~^taylorma24@gmail.com^^~September~~^Anderson~~^District 3~~^128 East Van Dorn~~^Holly Springs,~~^MS~~^38635~~^(662)252-3434~~^septcurl18@gmail.com||^48||~Monroe||~Aberdeen~~^301 S. Chestnut St., Suite D~~^39730~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Aberdeen,+601+S.+Chestnut+St.+39730&amp;sll=34.767532,-89.445565&amp;sspn=0.006381,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Dana&amp;nbsp;Sloan||~P.O. Box 843~~^Aberdeen,~~^MS~~^39730~~^(662)369-8695~~^dsloan@monroems.com||~Lowell~~^Worthy~~^District 1~~^60025 WORTHEY LANE~~^amoRY~~^MS~~^38821~~^(662)369-8695~~^lowellworthey@yahoo.com^^~Jason~~^Gallop~~^District 2~~^105 THOMAS ST~~^amoRY~~^MS~~^38821~~^(662)369-8695~~^jasongallop123@yahoo.com^^~Doris~~^Suggs~~^District 5~~^30166 BUCHANAN RD~~^netTLETON~~^MS~~^38858~~^(662)369-8695~~^dorisuggs52@yahoo.com^^~Andrew~~^Garvin~~^District 3~~^40173 HOLLOWAY RD~~^haMILTON~~^MS~~^39746~~^(662)369-8695~~^andrewgarvin@bellsouth.net^^~Earnestine~~^Metcalf~~^District 4~~^10013 BAPTIST GROVE RD~~^praIRIE~~^MS~~^39756~~^(662)369-8695~~^stine_met@att.net||^49||~Montgomery||~Winona~~^614 Summit St.~~^38967~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Winona,+614+Summit+St.+38967&amp;sll=33.818309,-88.541532&amp;sspn=0.006453,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=||~Robert&amp;nbsp;Perry||~P.O. Box 765~~^Winona,~~^MS~~^38967~~^(662)283-4161~~^circuitclerkofMontCo@gmail.com||~Jeanette~~^Pyron~~^District 2~~^339 SAWYER RD~~^WINONA~~^MS~~^38967~~^(662)283-4161~~^jcpyron@yahoo.com^^~Tracy~~^Campbell~~^District 3~~^41 CAMPBELL-NEAL RD~~^winONA~~^MS~~^38967~~^(662)283-4161~~^tshay_4207@yahoo.com^^~KEN~~^HOLIFIELD~~^District 4~~^~~^~~^MS~~^0~~^()-~~^^^~Orman~~^Knox~~^District 5~~^268 LOWER MILLIGAN SPRINGS RD~~^winONA~~^MS~~^38967~~^(662)283-4161~~^oknox@aol.com^^~Melodie~~^Corley~~^District 1~~^2122 GRAYSPORT RD~~^winONA~~^MS~~^38967~~^(662)283-4161~~^melodie_corley@yahoo.com||^50||~Neshoba||~Philadelphia~~^401 E. Beacon St., Suite 110~~^39350~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Philadelphia,+401+E.+Beacon+St.+Ste.+110+39350&amp;sll=33.48272,-89.736946&amp;sspn=0.006479,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Delana&amp;nbsp;Waddell||~401 E. Beacon St., Ste. 110~~^Philadelphia,~~^MS~~^39350~~^(601)656-4781~~^dwaddell@neshobacounty.net||~Sherry~~^Nance~~^District 1~~^14131 RD 602~~^cartHAGE~~^MS~~^39351~~^(601)656-5923~~^northside227@gmail.com^^~Deaneeb~~^Savell~~^District 2~~^11681 RD 743~~^Philadelphia,~~^MS~~^39350~~^(601)656-5923~~^savellcityjewelry@gmail.com^^~Charlene~~^Kirksey~~^District 5~~^205 SHELBY DR~~^Philadelphia,~~^MS~~^39350~~^(601)656-5923~~^charsy22@outlook.com^^~JOSEPH D~~^SHARP~~^District 3~~^~~^~~^MS~~^0~~^(601)656-5923~~^j.d.sharp@bellsouth.net^^~MELANIE~~^BARNETT~~^District 4~~^10810 RD 351~~^UNION~~^MS~~^39365~~^(601)656-5923~~^mbbarnett@bellsouth.net||^51||~Newton||~Decatur~~^92 W. Broad St.~~^39327~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;q=92+E+Broad+St,+Decatur,+Newton,+Mississippi+39327&amp;sll=32.771696,-89.110788&amp;sspn=0.006531,0.009624&amp;ie=UTF8&amp;cd=2&amp;geocode=FRn77gEdy1qw-g&amp;split=0&amp;ll=32.438157,-89.10396&amp;spn=0.006556,0.009624&amp;z=17&amp;iwloc=A||~Michael&amp;nbsp;Butler||~P.O. Box 447~~^Decatur,~~^MS~~^39327~~^(601)635-2368~~^mbutler@newtoncountyms.net||~Lesia~~^Taylor~~^District 3~~^1086 MORROW RD~~^conEHATTA~~^MS~~^39057~~^(601)635-7015~~^ltaylor@newtoncountyms.net^^~Amy~~^Hollingsworth~~^District 4~~^806 OLD 80 RD~~^lake~~^MS~~^39092~~^(601)635-7015~~^ahollingsworth@newtoncountyms.net^^~DEBORAH (DEBBY)~~^WALKER~~^District 5~~^47 NORTH HICKORY RD~~^HICKORY~~^MS~~^39332~~^(601)635-7015~~^dwalker@newtoncountyms.net^^~Nancy~~^Kidd-Smith~~^District 1~~^107 BURRAGE ST~~^newtON~~^MS~~^39345~~^(601)635-7015~~^nancy@newtoncountyms.net^^~Cindy~~^Alexander~~^District 2~~^7123 LITTLE ROCK-DECATUR RD~~^littlE ROCK~~^MS~~^39337~~^(601)635-7015~~^cindyalexander@gmail.com||^52||~Noxubee||~Macon~~^2832 Jefferson St., Suite 3~~^39341~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Macon,+505+S.+Jefferson+St.+39341&amp;sll=31.5504,-90.108332&amp;sspn=0.052956,0.07699&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Freda&amp;nbsp;Phillips||~P.O. Box 431~~^Macon,~~^MS~~^39341~~^(662)726-5737~~^circuitclerkfp@gmail.com||~Sylvester~~^Tate~~^District 1~~^5780 FOX CHASE RD~~^BROOKSVILLE~~^MS~~^39739~~^(662)726-5737~~^tatesylvester60@gmail.com^^~Teretha~~^Conner~~^District 2~~^244 DENT ST~~^Macon,~~^MS~~^39341~~^(662)726-5737~~^teretha.conner@yahoo.com^^~Janice~~^Harlan~~^District 3~~^~~^~~^MS~~^0~~^(662)726-5737~~^jhbinion@yahoo.com^^~NICOLE DENISE~~^STEWART~~^District 4~~^34 FRED MOUNTAIN ST~~^SHUQUALAK~~^MS~~^39361~~^(662)726-5737~~^ndcpgb@yahoo.com^^~John~~^Bankhead~~^District 5~~^32 ADE MIEKENS ST~~^BROOKSVILLE~~^MS~~^39739~~^(662)726-5737~~^circuitclerkfp@gmail.com||^53||~Oktibbeha||~Starkville~~^108 W. Main St., Suite 118~~^39759~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Starkville,+108+W.+Main+St.+39759&amp;sll=33.108357,-88.56073&amp;sspn=0.006507,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Tony&amp;nbsp;Rook||~108 W. Main St., Ste. 118~~^Starkville,~~^MS~~^39759~~^(662)323-1356~~^trook@oktcircuitcourt.org||~DAVE FRANKLIN~~^HOLLEY JR~~^District 1~~^223 BROOK AVE~~^Starkville,~~^MS~~^39756~~^(662)323-1356~~^daveholley@bellsouth.net^^~Myles~~^Carpenter~~^District 3~~^108 ST CHARLES AVE~~^Starkville,~~^MS~~^39759~~^(662)323-1356~~^mylescarpenter@bellsouth.net^^~MARNITA~~^HENDERSON~~^District 4~~^208 PINEBROOK RD~~^Starkville,~~^MS~~^39759~~^(662)323-1356~~^mnh@maxxsouth.net^^~Sissy~~^Smitherman~~^District 2~~^382 MORNINGSIDE DR~~^Starkville,~~^MS~~^39759~~^(662)323-1356~~^sissysmitherman@gmail.com^^~Ernest~~^Rogers~~^District 5~~^874 CRIGLER RD~~^craWFORD~~^MS~~^39743~~^(662)323-1356~~^runegraphy@gmail.com||^54||~Panola||~Sardis~~^215 S. Pocahontas St.~~^38666~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Sardis,+215+S.+Pocahontas+St.+38666&amp;sll=31.69389,-89.131105&amp;sspn=0.006609,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A^^~Batesville~~^151 Public Square, Suite A~~^38606~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Batesville,+151+Public+Sq.+38606&amp;sll=33.463884,-88.814131&amp;sspn=0.00648,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Kirk&amp;nbsp;Willingham||~P.O. Box 346~~^Batesville~~^MS~~^38606~~^(662)563-6210~~^kwillingham@panolacoms.com||~Dorothy~~^Wilbourn~~^District 1~~^412 TAYLOR ST~~^COMO~~^MS~~^38621~~^(662)563-6210~~^dmkerney@bellsouth.net^^~BRENDA~~^RUCKER~~^District 2~~^PO Box 51~~^CRENSHAW~~^MS~~^38621~~^(662)563-6210~~^brendarucker61@yahoo.com^^~Wayne~~^Belk~~^District 3~~^P.O. Box 346~~^Batesville,~~^MS~~^38606~~^(662)563-6210~~^cfsinc2003@yahoo.com^^~Wanda~~^Carmichael~~^District 4~~^5805 CENTRAL ACADEMY RD~~^SARDIS~~^MS~~^38666~~^(662)563-6210~~^wlawrence@lawrence-crane.com^^~Kaye~~^Smythe~~^District 5~~^200 B BRUCE ST~~^Batesville,~~^MS~~^38606~~^(662)563-6210~~^ksmythe@bellsouth.net||^55||~Pearl River||~Poplarville~~^200 S. Main St.~~^39470~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Poplarville,+200+S.+Main+St.+39470&amp;sll=34.317421,-89.951839&amp;sspn=0.006416,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Nance&amp;nbsp;Fitzpatrick Stokes||~P.O. Box 530~~^Poplarville,~~^MS~~^39470~~^(601)403-2328~~^nstokes@pearlrivercounty.net||~Katrina~~^Brown~~^District 1~~^PO Box 530~~^POPLARVILLE~~^MS~~^39470~~^(601)403-2328~~^kbrown@pearlrivercounty.net^^~Jamie~~^Garner~~^District 2~~^PO Box 530~~^POPLARVILLE~~^MS~~^39470~~^(601)403-2328~~^jgarner@pearlrivercounty.net^^~Tommy~~^Breland~~^District 3~~^PO Box 530~~^Poplarville,~~^MS~~^39470~~^(601)403-2328~~^tbreland@pearlrivercounty.net^^~Reggie~~^Hanberry~~^District 4~~^PO Box 530~~^POPLARVILLE~~^MS~~^39470~~^(601)403-2328~~^rhanberry@pearlrivercounty.net^^~Alana~~^Campo~~^District 5~~^PO Box 530~~^POPLARVILLE~~^MS~~^39470~~^(601)403-2328~~^acampo@pearlrivercounty.net||^56||~Perry||~New Augusta~~^103 Main St.~~^39462~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=New+Augusta,+103+Main+St.+39462&amp;sll=30.843738,-89.535545&amp;sspn=0.006669,0.009624&amp;ie=UTF8&amp;z=16&amp;iwloc=A||~Christy&amp;nbsp;Mayo||~P.O. Box 198~~^New Augusta,~~^MS~~^39462~~^(601)964-8663~~^circuitclerk@co.perry.ms.us||~Sherry~~^Hartfield~~^District 1~~^PO Box 141~~^BEAUMONT~~^MS~~^39643~~^(601)964-3660~~^hartfieldsherryd@bellsouth.net^^~Janet~~^Mayo~~^District 3~~^251 COCHRAN RD~~^RICHTON~~^MS~~^39476~~^(601)964-3660~~^janbmayo@yahoo.com^^~Dianne~~^Tossy~~^District 4~~^181 HINTONVILLE RD~~^BEAUMONT~~^MS~~^39643~~^(601)964-3660~~^bossytossy@gmail.com^^~Dianna~~^Clark~~^District 5~~^12 GLASS RD~~^BROOKLYN~~^MS~~^39425~~^(601)964-3660~~^diannaclark@gmail.com^^~Lillian Dianne~~^Carter~~^District 2~~^4798 HWY 29~~^PETAL~~^MS~~^39465~~^(601)964-3660~~^dcarter1044@hotmail.com||^57||~Pike||~Magnolia~~^218 East Bay St.~~^39652~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Magnolia,+218+East+Bay+St.+39652&amp;sll=31.20007,-89.035062&amp;sspn=0.013288,0.019248&amp;ie=UTF8&amp;cd=1&amp;ll=31.143774,-90.459838&amp;spn=0.006648,0.009624&amp;z=17&amp;iwloc=A||~Brenda&amp;nbsp;Robinson||~P.O. Drawer 31~~^Magnolia,~~^MS~~^39652~~^(601)783-2581~~^deniser@co.pike.ms.us||~ALICIA~~^FORREST~~^District 1~~^1034 RICHARD RD~~^Magnolia,~~^MS~~^39652~~^(601)869-7131~~^election2@co.pike.ms.us^^~LANA B~~^SMITH~~^District 2~~^P.O. Drawer 31~~^Magnolia,~~^MS~~^39652~~^()-~~^^^~Julie~~^Etheridge~~^District 4~~^1006 WARD DR~~^SUMMIT~~^MS~~^39666~~^(601)869-7134~~^election4@co.pike.ms.us^^~JEMIKA~~^BATES~~^District 3~~^607 LAKEVIEW AVE~~^MCCOMB~~^MS~~^39648~~^(601)869-7133~~^election1@co.pike.ms.us^^~Stacee~~^Ott~~^District 5~~^1024 ELARTON RD~~^osYKA~~^MS~~^39657~~^(601)869-7135~~^election5@co.pike.ms.us||^58||~Pontotoc||~Pontotoc~~^11 E. Washington St.~~^38863~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;q=11+E+Washington+St,+Pontotoc,+Mississippi+38863&amp;sll=31.145684,-90.459881&amp;sspn=0.102695,0.15398&amp;ie=UTF8&amp;cd=2&amp;geocode=FS2TCgId-_-x-g&amp;split=0&amp;z=17&amp;iwloc=A||~Melinda&amp;nbsp;Nowicki||~P.O Box 428~~^Pontotoc,~~^MS~~^38863~~^(662)489-3908~~^mnowicki@pontotoccountyms.gov||~ERICK~~^PETTIT~~^District 1~~^431 ANTIOCH RD~~^RANDOLPH~~^MS~~^38864~~^(662)489-3908~~^hankso17@yahoo.com^^~Nicky~~^Moore~~^District 2~~^5742 FRIENDSHIP RD~~^Pontotoc,~~^MS~~^38865~~^(662)489-3908~~^wooten-moore_00@yahoo,com^^~MICHAEL~~^MARTIN~~^District 3~~^3225 HWY 345~~^Pontotoc,~~^MS~~^38863~~^(662)489-3908~~^mikemartin701@gmail.com^^~Larry~~^Poe~~^District 5~~^8171 HWY 41~~^Pontotoc,~~^MS~~^38863~~^(662)489-3908~~^mnowicki@pontotoccountyms.gov||^59||~Prentiss||~Booneville~~^101A N. Main St.~~^38829~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Boonville,+101+N.+Main+St.+38829&amp;sll=34.247,-88.998849&amp;sspn=0.012842,0.019248&amp;g=Pontotoc,+11+Washington+St.+38863&amp;ie=UTF8&amp;z=11||~Michael&amp;nbsp;Kelley||~P.O. Box 727~~^Booneville,~~^MS~~^38829~~^(662)728-4611~~^circuitclerk@co.prentiss.ms.us||~Barbara Moore~~^Shackelford~~^District 1~~^200 HIDDEN HILLS~~^Booneville,~~^MS~~^38829~~^(662)728-7887~~^barbshackelford@yahoo.com^^~SHERRY (KAY)~~^CROW~~^District 2~~^904 HWY 4 E~~^Booneville,~~^MS~~^38829~~^(662)728-7887~~^kaydcrow@att.net^^~JOE D~~^EATON~~^District 4~~^~~^~~^MS~~^0~~^()-~~^^^~Cindi~~^Burns~~^District 3~~^P.O. Box 727~~^Booneville,~~^MS~~^38829~~^(662)728-7887~~^cindiburns2@gmail.com^^~Christine~~^Grove~~^District 5~~^29 CR 1411~~^Booneville,~~^MS~~^38829~~^(662)728-7887~~^christinefrost@yahoo.com||^60||~Quitman||~Marks~~^220 Chestnut St., Suite 4~~^38646~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Marks,+220+Chestnut+St.+38646&amp;sll=34.692934,-88.743907&amp;sspn=0.408747,0.615921&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Tia&amp;nbsp;Keeler||~220 Chestnut Street, Ste. 4~~^Marks,~~^MS~~^38646~~^(662)326-8003~~^teareatherawindless@yahoo.com||~PALESTINE PRESLEY~~^FLOOD~~^District 1~~^172 MAIN ST~~^sledGE~~^MS~~^38670~~^(662)326-8003~~^palestineflood1961@gmail.com^^~TERRY~~^WILLIAMS SR~~^District 2~~^PO Box 181 / 355 MALONE AVE~~^darlING~~^MS~~^38623~~^(662)326-8003~~^terrywilliams68@att.net^^~Taylor~~^Flowers~~^District 3~~^741 RIVERSIDE DR~~^Marks,~~^MS~~^38646~~^(662)326-8003~~^tclayton110@outlook.com^^~Dwight~~^Barfield~~^District 4~~^2574 W MARKS~~^Marks,~~^MS~~^38646~~^(662)326-8003~~^mayorbarfield@yahoo.com^^~Lynette~~^Bland~~^District 5~~^PO Box 154~~^CROWDER~~^MS~~^38622~~^(662)326-8003~~^lynettewb2000@yahoo.com||^61||~Rankin||~Brandon~~^215 E. Government St.~~^39042~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Brandon,+215+E.+Government+St.+39042&amp;sll=34.258754,-90.27178&amp;sspn=0.00642,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc||~Michelle&amp;nbsp;Adcock||~P.O. Box 1599~~^Brandon,~~^MS~~^39043~~^(601)825-1466~~^michelle@rankincounty.org||~Kelly~~^Wedgeworth~~^District 1~~^631 LOWE CR~~^Brandon~~^MS~~^39218~~^(601)824-7114~~^kwedgeworth@rankincounty.org^^~Andrew Stephen~~^Sorrentino~~^District 2~~^211 E. Government Street~~^Brandon~~^MS~~^39042~~^(601)824-7114~~^andrew.sorrentino@rankincounty.org^^~Tonya~~^Rivers~~^District 3~~^2351 SHELL OIL RD~~^Brandon~~^MS~~^39042~~^(601)824-7114~~^trivers@rankincounty.org^^~RICHARD~~^BAIN~~^District 4~~^270 EVERGREEN DR~~^Brandon~~^MS~~^0~~^(601)824-7114~~^rusty.bain@rankincounty.org^^~Trey~~^Fontaine~~^District 5~~^127 WOODLANDS GREEN DR~~^Brandon~~^MS~~^39047~~^(601)824-7114~~^tfontaine@rankincounty.org||^62||~Scott||~Forest~~^100 E. 1st St.~~^39074~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;q=100+E+1st+St,+Forest,+Scott,+Mississippi+39074&amp;sll=32.273125,-89.985658&amp;sspn=0.006568,0.009624&amp;ie=UTF8&amp;cd=1&amp;geocode=FQLQ7QEd97mq-g&amp;split=0&amp;z=17&amp;iwloc=A||~Becky&amp;nbsp;Gray||~P.O. Box 371~~^Forest,~~^MS~~^39074~~^(601)469-3601~~^scottcircuitclerk@scottcountyms.gov||~Sherrell~~^Brown~~^District 1~~^615 BIRCH ST~~^Forest,~~^MS~~^39074~~^(601)469-3601~~^sherrellbell1957@att.net^^~LOIS~~^GRAY~~^District 2~~^7103 MUDLINE RD~~^laKE~~^MS~~^39092~~^(601)469-3601~~^loisgray05@gmail.com^^~Virginia~~^Hannah~~^District 3~~^1559 SMITH RD~~^PULASKI~~^MS~~^39152~~^(601)469-3601~~^virginiarhannah@yahoo.com^^~Bettye~~^Nelson~~^District 4~~^448 CLIFTON HILLSBORO RD~~^LENA~~^MS~~^39094~~^(601)469-3601~~^nelsonbw@att.net^^~Delie~~^Shepard~~^District 5~~^148 BURNHAM RD~~^Forest,~~^MS~~^39074~~^(601)469-3601~~^dshep10399@gmail.com||^63||~Sharkey||~Rolling Fork~~^120 Locust St.~~^39159~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Rolling+Fork,+120+Locust+St.+39159&amp;sll=32.362498,-89.474569&amp;sspn=0.006561,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=||~Murindia&amp;nbsp;Williams||~P.O. Box 218~~^Rolling Fork,~~^MS~~^39159~~^(662)873-2755~~^murindiagail@yahoo.com||~Paul~~^Alford~~^District 4~~^PO Box 282~~^ANGUILLA~~^MS~~^38721~~^(662)873-2755~~^paulalford789@icloud.com^^~Vickey~~^Seaton~~^District 2~~^252 MAIDEN~~^cary~~^MS~~^39054~~^(662)873-2755~~^denetricewatley@yahoo.com^^~Dorothy~~^Pearson~~^District 3~~^~~^~~^MS~~^0~~^(662)873-2755~~^dpearson2000@bellsouth.net^^~Bertha~~^Lindsey~~^District 1~~^32 PERKINS RD~~^Rolling Fork,~~^MS~~^39159~~^(662)873-2755~~^bertha_lindsey@yahoo.com^^~Jan~~^Pearson~~^District 5~~^P.O. Box 218~~^Rolling Fork,~~^MS~~^39159~~^(662)873-2755~~^janpearson041@gmail.com||^64||~Simpson||~Mendenhall~~^100 Court Ave., Suite 2~~^39114~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Mendenhall,+100+Court+Ave.+Ste.+2+39114&amp;sll=32.907563,-90.877707&amp;sspn=0.006521,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Witt&amp;nbsp;Fortenberry||~P.O. Box 307~~^Mendenhall,~~^MS~~^39114~~^(601)847-2474~~^simpsoncircuit@co.simpson.ms.us||~Calvin~~^Edwards~~^District 1~~^PO Box 189~~^BRAXTON~~^MS~~^39044~~^(601)847-2475~~^calvin283995@att.net^^~Eugene~~^Blair~~^District 2~~^P.O. Box 307~~^Mendenhall,~~^MS~~^39114~~^(601)847-2475~~^^^~Donna~~^Magee~~^District 3~~^141 CAMPBELLS CREEK RD~~^Mendenhall,~~^MS~~^39114~~^(601)847-2475~~^donnamagee@bellsouth.net^^~Lola~~^McPhail~~^District 4~~^323 6TH ST SW~~^mageE~~^MS~~^39111~~^(601)847-2475~~^mamadiane322@yahoo.com^^~Wanda~~^Bridges~~^District 5~~^PO Box 277~~^harrisVILLE~~^MS~~^39082~~^(601)847-2475~~^wandabridges100@yahoo.com||^65||~Smith||~Raleigh~~^123 Main St.~~^39153~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Raleigh,+123+Main+St.+39153&amp;sll=31.962435,-89.869704&amp;sspn=0.00659,0.009624&amp;ie=UTF8&amp;z=16&amp;iwloc=A||~Anthony&amp;nbsp;Grayson||~P.O. Box 517~~^Raleigh,~~^MS~~^39153~~^(601)782-4751~~^anthonygrayson@co.smith.ms.us||~Perry~~^Duckworth~~^District 2~~^PO Box 898~~^TAYLORSVILLE~~^MS~~^39153~~^(601)782-4751~~^pdins@yahoo.com^^~Sherri~~^Darden~~^District 3~~^PO Box 100~~^mize~~^MS~~^39116~~^(601)782-4751~~^^^~Jimmy~~^Burns~~^District 4~~^1481 SCR 121~~^Raleigh,~~^MS~~^39153~~^(601)782-4751~~^^^~Glendell~~^Webb~~^District 5~~^P.O. Box 517~~^Raleigh,~~^MS~~^39153~~^(601)782-4751~~^^^~Willie~~^Myatt~~^District 1~~^175 SCR 79~~^MIZE~~^MS~~^39116~~^(601)782-4751~~^mgmyatt@bellsouth.net||^66||~Stone||~Wiggins~~^323 E. Cavers Ave.~~^39577~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Wiggins,+323+Cavers+Ave.+39577&amp;sll=37.825506,-88.533188&amp;sspn=0.012271,0.019248&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Treba&amp;nbsp;Davis||~323 East Cavers Ave~~^Wiggins,~~^MS~~^39577~~^(601)928-5246~~^tdavis@stonecountyms.gov||~Penny~~^Naramore~~^District 4~~^37 BEAVER DAM RD SOUTH~~^PERKINSTON~~^MS~~^39573~~^(601)928-6477~~^pennynaramore@gmail.com^^~Clifton~~^Anderson~~^District 2~~^~~^~~^MS~~^0~~^(601)928-6477~~^cliftonanderson1@gmail.com^^~Connie~~^Smith~~^District 3~~^1881 OLD HWY 26~~^Wiggins,~~^MS~~^39577~~^(601)928-6477~~^csmith75@att.net^^~Martha~~^Smith~~^District 1~~^144 INDA RD~~^PERKINSTON~~^MS~~^39573~~^(601)928-6477~~^ec@stonecountyms.gov^^~ANNIE L~~^WALKER~~^District 5~~^1109 KING BEE RD~~^PERKINSTON~~^MS~~^39573~~^(601)928-6477~~^anniewalker514@gmail.com||^67||~Sunflower||~Indianola~~^200 Main St.~~^38751~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Indianola,+200+Main+St.+38751&amp;sll=30.856617,-89.135228&amp;sspn=0.006668,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Carolyn&amp;nbsp;Hamilton||~P.O. Box 880~~^Indianola,~~^MS~~^38751~~^(662)887-1252~~^chamilton@suncirclerk.com||~Terosa~~^Bradley~~^District 1~~^455 WACO RD~~^IVERNESS~~^MS~~^38753~~^(662)887-1252~~^elecomm@suncirclerk.com^^~Porchia~~^Anthony~~^District 2~~^500 ALEXANDER AVE~~^Indianonla,~~^MS~~^38751~~^(662)887-1252~~^elecomm@suncirclerk.com^^~RON~~^CARLYLE~~^District 3~~^109 E AUGUSTA ST~~^Indianonla,~~^MS~~^38751~~^(662)887-1252~~^elecomm@suncirclerk.com^^~Shirley~~^Meeks~~^District 5~~^164 ROOSEVELT ST~~^DREW~~^MS~~^38737~~^(662)887-1252~~^elecomm@suncirclerk.com^^~DAVID~~^RUFFIN~~^District 4~~^1728 HWY 442 E~~^DODDSVILLE~~^MS~~^38736~~^(662)887-1252~~^elecomm@suncirclerk.com||^68||~Tallahatchie||~Charleston~~^1 Court Square~~^38921~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Charlseton,+1+Main+St.+38921&amp;sll=33.451637,-90.649688&amp;sspn=0.006481,0.009624&amp;g=Indianola,+200+Main+St.+38751&amp;ie=UTF8&amp;z=17^^~Sumner~~^401 W. Court St. ~~^38957~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Summer,+1+Main+St.+38957&amp;sll=34.434981,-89.917885&amp;sspn=0.006407,0.009624&amp;g=Sardis,+215+S.+Pocahontas+St.+38666&amp;ie=UTF8&amp;z=17||~Daphane&amp;nbsp;Neal||~P.O. Box 86~~^Charleston,~~^MS~~^38921~~^(662)647-8758~~^daphanen1@gmail.com^^~P.O. Box 96~~^Sumner,~~^MS~~^38957~~^(662)375-8515~~^daphanen1@gmail.com||~Margaret~~^Simmons~~^District 1~~^23172 MS HWY 32 CENTRAL~~^Charleston,~~^MS~~^38921~~^(662)647-8758~~^daphanen2@gmail.com^^~Dennis~~^Brown~~^District 2~~^300 MURPHY RD~~^Charleston,~~^MS~~^38921~~^(662)647-8758~~^dbrown57701@gmail.com^^~Yolanda~~^Cotton~~^District 3~~^168 S SABINE~~^Charleston,~~^MS~~^38921~~^(662)647-8758~~^harrys_angel662003@yahoo.com^^~Latrenda~~^Bounds~~^District 4~~^3415 SHARKEY RD~~^Charleston,~~^MS~~^38921~~^(662)647-8758~~^latrendabounds@yahoo.com^^~Charles~~^Huddleston~~^District 5~~^~~^~~^MS~~^0~~^(662)647-8758~~^trinab1977@gmail.com||^69||~Tate||~Senatobia~~^201 Ward St.~~^38668~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Senatobia,+201+Ward+St.+38668&amp;sll=33.451637,-90.649688&amp;sspn=0.006481,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Kenda&amp;nbsp;Blount||~201 Ward Street~~^Senatobia,~~^MS~~^38668~~^(662)562-5211~~^kblount@tatecountygov.com||~Dolores~~^Wooten~~^District 1~~^2708 COUNTRY CLUB RD~~^Senatobia,~~^MS~~^38668~~^(662)562-5211~~^dbwooten7412@att.net^^~Tammy~~^Johnston~~^District 2~~^1341 MERRY HILL RANCH RD~~^Senatobia,~~^MS~~^38668~~^(662)562-5211~~^tammyjohnston113@yahoo.com^^~Jocelynn~~^Dowl~~^District 3, Place 2~~^PO Box 42~~^COLDWATER~~^MS~~^38618~~^(662)562-5211~~^gg4grande@gmail.com^^~Edith~~^Floate~~^District 4~~^622 BOONE CR~~^COLD~~^MS~~^38618~~^(662)562-5211~~^edithfloate@gmail.com^^~Ellis~~^Blount~~^District 5~~^6107 HWY 305~~^COLDWATER~~^MS~~^38668~~^(662)562-5211~~^llblount@att.net||^70||~Tippah||~Ripley~~^102-A N. Main St.~~^38663~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Ripley,+102-A+N.+Main+38663&amp;sll=34.617209,-89.965674&amp;sspn=0.006393,0.009624&amp;g=Senatobia,+201+Ward+St.+38668&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Phil&amp;nbsp;Koon||~102-A N. Main Street~~^Ripley,~~^MS~~^38663~~^(662)837-7370~~^philkoon1@gmail.com||~Randle~~^Hall~~^District 1, Place 1~~^~~^~~^MS~~^0~~^(662)837-1567~~^randlehall9@gmail.com^^~Larry~~^Nabors~~^District 2~~^107 EATON LN~~^Ripley,~~^MS~~^38663~~^(662)837-1567~~^lnabor56@gmail.com^^~Danny~~^Simmons~~^District 3~~^102 C N. Main St.~~^Ripley,~~^MS~~^38663~~^(662)837-1567~~^dannysimmons623@yahoo.com^^~MARY B~~^HODGES~~^District 4~~^51 CR 651~~^Ripley,~~^MS~~^38663~~^(662)837-1567~~^ms_hallmama@yahoo.com^^~Jimmy~~^Benefield~~^District 5~~^472 CR 540~~^Ripley,~~^MS~~^38663~~^(662)837-1567~~^jbenefield@co.tippah.ms.us||^71||~Tishomingo||~Iuka~~^1008 Battleground Dr., Suite 204~~^38852~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Iuka,+1008+Battleground+Dr.+38852&amp;sll=34.729735,-88.949061&amp;sspn=0.006384,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc||~Rebecca&amp;nbsp;Oaks||~1008 Battleground Drive~~^Iuka,~~^MS~~^38852~~^(662)423-7026~~^roaks@co.tishomingo.ms.us||~Sherry~~^Gwatney~~^District 3~~^15 CR 461~~^Iuka,~~^MS~~^38852~~^(662)423-7025~~^sherry@co.tishomingo.ms.us^^~Nancy~~^Collier~~^District 5~~^PO Box 731~~^BELMONT~~^MS~~^0~~^(662)423-7025~~^ncollier@co.tishomingo.ms.us^^~James~~^Walker~~^District 1~~^258 CR 231~~^Iuka,~~^MS~~^38852~~^(662)423-7025~~^jwalker@co.tishomingo.ms.us^^~KERRI~~^MITCHELL~~^District 2~~^1159 HWY 25~~^TISHOMINGO~~^MS~~^38873~~^(662)423-7025~~^kerri.greg@gmail.com^^~SUSAN~~^EMMONS~~^District 4~~^33 CR 333~~^Iuka,~~^MS~~^38852~~^(662)423-7025~~^flowerpot1980@yahoo.com||^72||~Tunica||~Tunica~~^1300 School St.~~^38676~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Tunica,+1300+School+St.+38676&amp;sll=34.803554,-88.203087&amp;sspn=0.006378,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Sharon&amp;nbsp;Reynolds||~P.O. Box 184~~^Tunica,~~^MS~~^38676~~^(662)363-2842~~^sharon.reynolds@tunicagov.com||~Miriam~~^Kimble~~^District 2~~^P.O. Box 184~~^Tunica,~~^MS~~^38676~~^(662)363-2842~~^^^~Virginia~~^Fullilove~~^District 3~~^P.O. Box 184~~^Tunica,~~^MS~~^38676~~^(662)363-2842~~^^^~ROBERT~~^SMITH~~^District 4~~^~~^~~^MS~~^0~~^()-~~^^^~Mary Louise~~^Maples~~^District 5~~^P.O. Box 184~~^Tunica,~~^MS~~^38676~~^(662)363-2842~~^^^~CAITLIN LOUISE~~^WICKS~~^District 1~~^1347 EAST LAKE BLVD~~^ROBINSONVILLE~~^MS~~^38664~~^(662)363-2842~~^caitlinwicks97@gmail.com||^73||~Union||~New Albany~~^114 E. Bankhead St.~~^38652~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=New+Albany,+114+E.+Bankhead+St.+38652&amp;sll=34.688637,-90.381111&amp;sspn=0.006387,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Donna&amp;nbsp;Treadaway||~P.O. Box 298~~^New Albany,~~^MS~~^38652~~^(662)534-1910~~^dtreadaway@unioncoms.com||~Donald~~^Schuman~~^District 1~~^1011 NORTH ST~~^MYRTLE~~^MS~~^38650~~^(662)534-1910~~^schumand@hotmail.com^^~MIKE~~^CONWAY~~^District 3~~^704 HILLVIEW COVE~~^New Albany,~~^MS~~^38652~~^(662)534-1910~~^michaelr.conway@gmail.com^^~WANONA L~~^JUMPER~~^District 2~~^1081 CR 42~~^ETTA~~^MS~~^38627~~^(662)534-1910~~^jumperbama@yahoo.com^^~Mike~~^Beam~~^District 4~~^~~^~~^MS~~^0~~^(662)534-1910~~^tmbreel@yahoo.com^^~Wayne~~^Wilhite~~^District 5~~^P.O. Box 298~~^New Albany,~~^MS~~^38652~~^(662)534-1910~~^wwilhite@unioncoms.com||^74||~Walthall||~Tylertown~~^200 Ball Ave.~~^39667~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Tylertown,+200+Ball+Ave.+39667&amp;sll=34.493772,-89.008019&amp;sspn=0.006402,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Dan &#39;Nut&#39;&amp;nbsp;Hawn||~200 Ball Ave., Suite C~~^Tylertown,~~^MS~~^39667~~^(601)876-5677~~^dhawn@co.walthall.ms.us||~Elizabeth~~^Cowart~~^District 1~~^18 WILLIAMS HOLMES RD~~^Tylertown,~~^MS~~^39667~~^(601)876-5667~~^bethrcowart@gmail.com^^~Paulette~~^Jackson~~^District 5~~^28 MOSS RD~~^Tylertown,~~^MS~~^39667~~^(601)876-5667~~^paulettejackson57@gmail.com^^~Ricky~~^Dowell~~^District 2~~^56 FORTENBERRY RD~~^Tylertown,~~^MS~~^39667~~^(601)876-5667~~^rickydowell62@gmail.com^^~William~~^Ratliff~~^District 3~~^debragrayson1@yahoo.com~~^Tylertown,~~^MS~~^39667~~^(601)876-5667~~^williamratliffe56@gmail.com^^~CHRISTY~~^ALFORD~~^District 4~~^427 HARVEYTOWN RD~~^Tylertown,~~^MS~~^39667~~^(601)876-5667~~^christyplanche@msn.com||^75||~Warren||~Vicksburg~~^1009 Cherry St.~~^39181~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Vicksburg,+1009+Cherry+St.+39181&amp;sll=31.119294,-90.139948&amp;sspn=0.00665,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Jan&amp;nbsp;Daigre||~P.O. Box 351~~^Vicksburg,~~^MS~~^39181~~^(601)636-3961~~^jdaigre@co.warren.ms.us||~Bobbie Bingham~~^Morrow~~^District 2~~^PO Box 351~~^Vicksburg,~~^MS~~^39181~~^(601)630-8030~~^bmorrow@warrencountyms.gov^^~Sara~~^Dionne~~^District 4~~^P.O. Box 351~~^Vicksburg,~~^MS~~^39181~~^(601)638-8875~~^sdionne@warrencountyms.gov^^~Debra~~^Breland~~^District 5~~^PO Box 351~~^Vicksburg,~~^MS~~^39181~~^(601)638-8875~~^dbreland@warrencountyms.gov^^~James~~^Harper~~^District 1~~^PO Box 351~~^Vicksburg~~^MS~~^39181~~^(601)638-8875~~^jharper@warrencountyms.gov^^~Elva~~^Smith~~^District 3~~^PO Box 351~~^Vicksburg,~~^MS~~^39181~~^(601)638-8875~~^esmith@@warrencountyms.gov||^76||~Washington||~Greenville~~^900 Washington Ave.~~^38702~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Greenville,+900+Washington+Ave.+38702&amp;sll=32.35249,-90.878057&amp;sspn=0.006562,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=||~Barbara&amp;nbsp;Esters-Parker||~P.O. Box 1276~~^Greenville,~~^MS~~^38702~~^(662)378-2747~~^besters@co.washington.ms.us||~Rosie~~^Sturdevant~~^District 3~~^PO Box 154~~^METCALFE~~^MS~~^38760~~^(662)334-2650~~^rswright99@hotmail.com^^~Sadie~~^Seard-Sherdon~~^District 4~~^405 ABRAHAM ST~~^Greenville,~~^MS~~^38703~~^(662)334-2650~~^sadie_seard@bellsouth.net^^~Naomi~~^Curtis~~^District 5~~^924 NIXON ST~~^HOLLANDALE~~^MS~~^38748~~^(662)334-2650~~^ndillard@hollandalesd.org^^~Jacqueline~~^Thompson~~^District 1~~^2395 BLUEBIRD DR~~^Greenville,~~^MS~~^38702~~^(662)334-2650~~^jthompson2395@gmail.com^^~Sandra~~^Reed~~^District 2~~^1336 MARTHA DR~~^Greenville,~~^MS~~^38703~~^(662)334-2650~~^slreed@co.washington.ms.us||^77||~Wayne||~Waynesboro~~^609 Azalea Dr.~~^39367~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Waynesboro,+609+Azalea+Dr.+39367&amp;sll=33.407492,-91.053753&amp;sspn=0.006484,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Kathryn&amp;nbsp;Revette||~P.O. Box 428~~^Waynesboro,~~^MS~~^39367~~^(601)735-1171~~^krevette@waynecountyms.gov||~DENNIS R~~^MCRAE~~^District 2~~^~~^Buckatunna~~^MS~~^39322~~^(601)735-2983~~^dennisrae39367@yahoo.com^^~Kathy~~^Odom~~^District 3~~^138 MATHERVILLE FROST BRIDGE RD~~^Waynesboro,~~^MS~~^39367~~^(601)735-2983~~^odom60kathy@gmail.com^^~Imogene~~^Walley~~^District 5~~^484 BIG CREEK RD~~^Waynesboro,~~^MS~~^39367~~^(601)735-2983~~^imogenewalley@gmail.com^^~Katrina~~^Bender~~^District 1~~^1041 Woulard Bend River Road~~^State Line~~^MS~~^39362~~^(601)735-2983~~^katrinabender00@gmail.com^^~AVANGELIA~~^DAVIS~~^District 4~~^223 BUTLER RD~~^SHUBUTA~~^MS~~^39360~~^(601)735-2983~~^adavis71809@gmail.com||^78||~Webster||~Eupora~~^16 E. Fox Avenue~~^39744~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Walthall,+Courthouse+Sq.+39771&amp;sll=31.672149,-88.650206&amp;sspn=0.006611,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Wanda&amp;nbsp;Robinson||~6333 MS Hwy 9~~^Walthall,~~^MS~~^39771~~^(662)258-6287~~^shenderson@webstercountyms.org||~STEPHANIE~~^LANGSTON~~^District 2~~^675 EARNEST RD~~^CALHOUN CITY~~^MS~~^38916~~^(662)258-4144~~^stephanielangston5@gmail.com^^~Pauline~~^Quinn~~^District 1~~^2430 W ROANE AVE~~^EUPORA~~^MS~~^39744~~^(662)258-4144~~^paulinequinn49@gmail.com^^~CATHY F~~^CHANDLER~~^District 3~~^120 COLLEGE ST~~^MATHISTON~~^MS~~^39752~~^(662)258-4144~~^cathychandler80@gmail.com^^~ANNIE M~~^HEARD~~^District 4~~^1218 MS HWY 15~~^MABEN~~^MS~~^39750~~^(662)258-4144~~^annie_heard@yahoo.com^^~Dianne~~^Wright~~^District 5~~^2665 MANTEE RD~~^MANTEE~~^MS~~^39751~~^(662)258-4144~~^family2665@gmail.com||^79||~Wilkinson||~Woodville~~^525 Main St.~~^39669~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Woodville,+525+Main+St.+39669&amp;sll=33.608325,-89.278388&amp;sspn=0.006469,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Lynn&amp;nbsp;Delaney||~P.O. Box 327~~^Woodville,~~^MS~~^39669~~^(601)888-6697~~^circuitclerk@wilkinson.co.ms.gov||~Vicie~~^Rogers~~^District 1~~^966 GAULDEN CLINTON RD~~^CENTREVILLE~~^MS~~^39631~~^(601)888-6697~~^vsrshirtsplus@yahoo.com^^~Tracey~~^Ferguson-Smith~~^District 2~~^P.O. Box 327~~^Woodville,~~^MS~~^39669~~^(601)888-6697~~^traceys197@gmail.com^^~Monique~~^Moore-Arbuthnot~~^District 3~~^PO Box 173~~^CENTREVILLE~~^MS~~^39631~~^(601)888-6697~~^msmoore03@yahoo.com^^~Carla~~^Rowe~~^District 5~~^~~^~~^MS~~^0~~^(601)888-6697~~^carlarowe65@gmail.com^^~Edna~~^Harvey~~^District 4~~^~~^~~^MS~~^0~~^(601)888-6697~~^circuitclerk@wilkinson.co.ms.gov||^80||~Winston||~Louisville~~^113 W. Main St.~~^39339~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Louisville,+113+W.+Main+St.+39339&amp;sll=31.104116,-91.298579&amp;sspn=0.006651,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Gwenita&amp;nbsp;Mays||~P.O. Drawer 785~~^Louisville,~~^MS~~^39339~~^(662)773-3581~~^gwenita@winstoncounty.com||~BYRON~~^FOSTER~~^District 1~~^~~^~~^MS~~^0~~^()-~~^^^~JUDY~~^LOVORN~~^District 2~~^~~^~~^MS~~^0~~^()-~~^^^~Dean~~^Miller~~^District 3~~^63 HIGH AVE~~^Louisville,~~^MS~~^39339~~^(662)773-5589~~^williedean1953@att.net^^~Mattie~~^Cooper~~^District 4~~^147 SOUTH MARTIN LUTHER KING DR~~^Louisville,~~^MS~~^39339~~^(662)773-5589~~^mcooper@winstoncounty.org^^~TRACY~~^MCCULLOUGH~~^District 5~~^~~^~~^MS~~^0~~^()-~~^||^81||~Yalobusha||~Coffeeville~~^14400 Main St., Suite One~~^38922~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Coffeeville,+14400+Main+St.+38922&amp;sll=33.12349,-89.053423&amp;sspn=0.006505,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A^^~Water Valley~~^201 Blackmur Dr.~~^38965~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Water+Valley,+205+Blackmur+Dr.+38965&amp;sll=34.434981,-89.917885&amp;sspn=0.006407,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Daryl&amp;nbsp;Burney||~P.O. Box 260~~^Coffeeville,~~^MS~~^38922~~^(662)675-8187~~^daryl.burney@yalobushacounty.net^^~P.O. Box 1431~~^Water Valley,~~^MS~~^38965~~^(662)473-1341~~^daryl.burney@yalobushacounty.net||~COLLEEN~~^CRAVEN~~^District 1~~^~~^~~^MS~~^0~~^()-~~^^^~Missy~~^Kimzey~~^District 2~~^4344 HWY 315 E~~^Water Valley,~~^MS~~^38965~~^(662)473-1341~~^mkimzey@valleytoolinc.com^^~WILLINGHAM~~^BRAD~~^District 3~~^~~^~~^MS~~^0~~^()-~~^^^~Gerald~~^Booker~~^District 4~~^2559 CR 169~~^COFFEEVILLE~~^MS~~^38922~~^(662)473-1341~~^ggbooker@yahoo.com^^~Vivian~~^Simmons~~^District 5~~^~~^~~^MS~~^0~~^(662)473-1341~~^vbsimmons88@outlook.com||^82||~Yazoo||~Yazoo City~~^211 E. Broadway St.~~^39194~~^~~^~~^http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Yazoo+City,+211+E.+Broadway+39194&amp;sll=33.976151,-89.672461&amp;sspn=0.006442,0.009624&amp;ie=UTF8&amp;z=17&amp;iwloc=A||~Robert&amp;nbsp;Coleman||~P.O. Box 108~~^Yazoo City,~~^MS~~^39194~~^(662)746-1872~~^rcoleman@yazoocountyms.gov||~Jerry~~^Alexander~~^District 1~~^4401 LINK RD~~^BENTONIA~~^MS~~^39040~~^(662)751-1819~~^jerryalexander394@yahoo.com^^~James~~^Mood~~^District 2~~^299 HARPER LN~~^BENTON~~^MS~~^39194~~^(662)751-1819~~^timmood1964@gmail.com^^~Gretta~~^Winters~~^District 3~~^629 W SECOND ST~~^Yazoo City,~~^MS~~^39194~~^(662)751-1819~~^grettawinters@bettertomorrows.org^^~Lynn~~^McCallister~~^District 4~~^512 GLENDALE DR~~^Yazoo City,~~^MS~~^39194~~^(662)751-1819~~^userlynn7634@aol.com^^~Claude~~^Collum~~^District 5~~^902 PRENTISS AVE~~^Yazoo City,~~^MS~~^39194~~^(662)751-1819~~^ccollum17@gmail.com" />
+
+                </div>
+
+                <div class="row" style="text-align: center">
+                    <div class="cell">&nbsp;</div>
+                    <div class="cell">&nbsp;</div>
+                    <div class="cell" style="cursor: pointer;"><span onclick="VoterRegistration();">Voter Registration Form</span></div>
+                </div>
+                <div class="row">
+                    <div class="cell">&nbsp;</div>
+                </div>
+            </div>
+
+            <div class="container" id="openingContainer">
+                <div class="row">
+                    <div class="cell" style="width: 400px;">
+                        <div class="container" id="gifCell">
+                            <div class="row">
+                                <div class="cell">
+                                    <img id="countyIMG" src="counties/mississippi.gif" width="400" height="622" usemap="#counties" border="0" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="cell" style="width: 20px;"></div>
+                    <div class="cell" style="vertical-align: top;">
+                        <div class="container" id="countyCells">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="countyElectInfo"></div>
+
+        </div>
+
+        <div id="voterRegistration" style="display: none;">
+            <div class="container">
+                <div class="row">
+                    <div class="cell" style="width: 800px; text-align: center;">
+                        <h2>County Election Information</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">&nbsp;</div>
+                </div>
+                <div class="row">
+                    <div class="cell" style="font-weight: bold; font-size: 20px; width: 800px; text-align: center;">Voter Registration Form Instructions</div>
+                </div>
+                <div class="row">
+                    <div class="cell">&nbsp;</div>
+                </div>
+                <div class="row">
+                    <div class="cell" style="width: 800px; text-align: center;">
+                        After filling out the Voter Registration form, please make sure that you: 
+                            <br />
+                        Print the form
+                        <br />
+                        Sign and date the form
+                        <br />
+                        Deliver or mail the form to your County Clerk's Office
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="cell">&nbsp;</div>
+                </div>
+                <div class="row">
+                    <div class="cell" style="width: 800px; text-align: center; cursor: pointer;"><a style="color: black;" href="Voter_Registration2.pdf" target="_blank">Register to Vote</a></div>
+                </div>
+                <div class="row">
+                    <div class="cell" style="width: 800px; text-align: center; cursor: pointer;"><span onclick="ReturnToMap();"><u>Return to State Map </u></span></div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

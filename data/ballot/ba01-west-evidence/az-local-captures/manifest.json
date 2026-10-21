@@ -1,0 +1,63 @@
+[
+  {
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+    "finalUrl": "https://elections.maricopa.gov/asset/jcr:0d7d4499-0e97-4155-aee1-3017f9a12c75/City%20of%20Peoria%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+    "retrievedAt": "2026-10-21T00:09:35.705603+00:00",
+    "rawHash": "5005af65a90698f43f826ba35308549cab1958f125c971ae524bd5b039aeb57b",
+    "httpStatus": 200,
+    "name": "az-peoria-pamphlet",
+    "file": "az-peoria-pamphlet.gz",
+    "bytes": 1243218,
+    "textSnapshot": "az-peoria-pamphlet.txt",
+    "textHash": "c7b6fa55bcbdf368e96ea3d4f2c867e182fabe6adcaadcfd43440d337ae9d70c"
+  },
+  {
+    "sourceUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+    "finalUrl": "https://elections.maricopa.gov/asset/jcr:65da994f-65a3-415e-a3dd-4a6217f18a25/City%20of%20Tempe%20Publicity%20Pamphlet%202026%20General%20Election.pdf",
+    "retrievedAt": "2026-10-21T00:09:35.797512+00:00",
+    "rawHash": "67a14d5d4933f726fd954980526ced3c8da159c719bc191e559d135df18e39a5",
+    "httpStatus": 200,
+    "name": "az-tempe-pamphlet",
+    "file": "az-tempe-pamphlet.gz",
+    "bytes": 1004104,
+    "textSnapshot": "az-tempe-pamphlet.txt",
+    "textHash": "cb43cc8e76c723b828c951674db78ad0d756a76d7e002cd171d380f7928e0bb8"
+  },
+  {
+    "sourceUrl": "https://jpr.azcourts.gov/Portals/2/148/documents/2026RetentionJudges.pdf?ver=Hq4BMJYzOkcxBoacAo8Uwg%3D%3D",
+    "finalUrl": "https://jpr.azcourts.gov/Portals/2/148/documents/2026RetentionJudges.pdf?ver=Hq4BMJYzOkcxBoacAo8Uwg%3D%3D",
+    "retrievedAt": "2026-10-21T00:24:37.270Z",
+    "httpStatus": 200,
+    "rawHash": "066d4a90c0fe25f90e080ec7a1c5098717fc6f39824f5b708fd1afa04ba2f650",
+    "name": "az-2026-retention-judges",
+    "file": "az-2026-retention-judges.gz",
+    "bytes": 88841,
+    "textSnapshot": "az-2026-retention-judges.txt",
+    "textHash": "d03a5b0c5579d3c17ba97a9519b0c3c29dd7955d80c7dcb3ea317ebebd41e88f"
+  },
+  {
+    "sourceUrl": "https://www.azleg.gov/ars/12/00120-02.htm",
+    "finalUrl": "https://www.azleg.gov/ars/12/00120-02.htm",
+    "retrievedAt": "2026-10-21T00:24:37.237Z",
+    "httpStatus": 200,
+    "rawHash": "80d66ffe23f6da01d7a5079341882b076cee4d896a6e6e09fff844f806f42e90",
+    "name": "az-appeals-retention-electorates",
+    "file": "az-appeals-retention-electorates.gz",
+    "bytes": 1762,
+    "textSnapshot": "az-appeals-retention-electorates.txt",
+    "textHash": "e558c13d5d047e8f2994b231259ac06b9c871f7dda0445b029e36b9dba6df3a3"
+  },
+  {
+    "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+    "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/b54c9e42-8520-4201-be8d-10b859da80df",
+    "retrievedAt": "2026-10-21T00:27:33.832Z",
+    "httpStatus": 200,
+    "rawHash": "43b0f8ccbf82eb15ab4b1aba3c97f20628bc117547fbb22cbd1b55f2bed8ff00",
+    "linkingPage": "https://www.pima.gov/upcoming-elections-and-events",
+    "name": "az-pima-qualified-writeins",
+    "file": "az-pima-qualified-writeins.gz",
+    "bytes": 68704,
+    "textSnapshot": "az-pima-qualified-writeins.txt",
+    "textHash": "cc9f85f2e9e8896e850b9695692d1d7d59b76fa0366db6eda135c94c50768949"
+  }
+]

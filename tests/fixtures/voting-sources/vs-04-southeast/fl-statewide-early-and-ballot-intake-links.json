@@ -1,0 +1,118 @@
+[
+  {
+    "url": "https://dos.fl.gov/elections/data-statistics/voter-registration-statistics",
+    "label": "Voter Registration Statistics"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters",
+    "label": "For Voters"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/election-dates",
+    "label": "Election Dates"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/emergency-and-disaster-election-resources",
+    "label": "Emergency and Disaster - Election Resources"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/notices-of-general-election",
+    "label": "Notices of General Election"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/presidential-election-year",
+    "label": "Presidential Election Year"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/special-elections",
+    "label": "Special Elections"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place",
+    "label": "Voter Information Lookup"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/voter-precinct-lookup",
+    "label": "Voter Precinct Lookup"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/vote-by-mail-ballot-information-and-status-lookup",
+    "label": "Vote-by-Mail Ballot Information and Status Lookup"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voter-registration",
+    "label": "Voter Registration"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voting",
+    "label": "Voting"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/laws-rules/help-america-vote-act",
+    "label": "Help America Vote Act (HAVA)"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems",
+    "label": "Voting Systems"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems/about-voting-systems",
+    "label": "About Voting Systems"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems/non-voting-system-technologies",
+    "label": "Non-Voting System Technologies"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems/certified-voting-systems-and-vendors",
+    "label": "Certified Voting Systems and Vendors"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems/certificationapproval-status-and-test-schedule",
+    "label": "Certification/Approval Status and Test Schedule"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/contacts/supervisor-of-elections",
+    "label": "Contact Your County Supervisor of Elections"
+  },
+  {
+    "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+    "label": "General Election – PDF (zip)"
+  },
+  {
+    "url": "https://dos.fl.gov/media/711295/ev-and-secure-ballot-intake-station-locations-2026-pe.zip",
+    "label": "Primary Election – PDF (zip)"
+  },
+  {
+    "url": "https://dos.elections.myflorida.com/supervisors",
+    "label": "county Supervisor of Elections"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voting/vote-by-mail",
+    "label": "Vote-by-Mail"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voting/accessible-voting-for-persons-with-disabilities",
+    "label": "Accessible Voting for Persons with Disabilities"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voting/early-voting-and-secure-ballot-intake-stations",
+    "label": "Early Voting and Secure Ballot Intake Stations"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voting/election-day-voting",
+    "label": "Election Day Voting"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voting/language-assistance-for-voting",
+    "label": "Language Assistance for Voting"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voting/military-and-overseas-citizens-voting",
+    "label": "Military and Overseas Citizens Voting"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/election-resources",
+    "label": "Election Resources"
+  }
+]

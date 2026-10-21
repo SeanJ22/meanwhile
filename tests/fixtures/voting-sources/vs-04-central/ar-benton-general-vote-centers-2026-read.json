@@ -1,0 +1,1503 @@
+{
+  "doorId": "ar-benton-general-vote-centers-2026",
+  "sites": [
+    {
+      "id": "voting-a0b72248cc765a383c021e64",
+      "name": "Bella Vista Community Church",
+      "address": "75 E. Lancashire Blvd., Bella Vista",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e54d57fd67bdc146da524c9f",
+      "name": "Highlands Church",
+      "address": "371 Glasgow Road, Bella Vista",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b890c8e69763079331279c24",
+      "name": "Bella Vista Recreation Center",
+      "address": "3 Riordan Drive, Bella Vista",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-97bbe00946645cd1a7b96d37",
+      "name": "Bella Vista Assembly of God",
+      "address": "1771 Forest Hills Blvd., Bella Vista",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-70c98a28aa419dc1b9ce46e4",
+      "name": "Bella Vista Church of Christ",
+      "address": "989 N.W. McNelly Road, Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d50ed96da225e57485d887e6",
+      "name": "Bentonville Church of Christ, Activity Ctr",
+      "address": "708 N. Walton Blvd., Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f5b7f341883063004314b96b",
+      "name": "First Presbyterian Church",
+      "address": "901 N.E. J Street, Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-326e03108a0f40e836066193",
+      "name": "Bogle Family Public Services Building",
+      "address": "1204 S.W. 14th Street, Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8a66e787ec3d01ca0bf925fb",
+      "name": "First Landmark Baptist Church",
+      "address": "206 S.E. 28th Street, Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0a5b2bb04be2351fb4004f0e",
+      "name": "NWACC — Shewmaker Center",
+      "address": "1000 S.E. Eagle Way, Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-956984a135ac97a619e43042",
+      "name": "Benton County Fairgrounds",
+      "address": "7640 S.W. Regional Airport Blvd., Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-30b1822c85a58963f8958197",
+      "name": "Lakeview Baptist Church",
+      "address": "1351 E. Lowell Ave., Cave Springs",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d9692f99f9691771c6f4edbb",
+      "name": "Lifepoint Baptist Church",
+      "address": "11161 Gamble Road, Centerton",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6ae46bf929822b9c61a1d04e",
+      "name": "Centerton Municipal Complex",
+      "address": "210 Captain Kelley Drive, Centerton",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5e7f1fabaebc8351965f1d75",
+      "name": "Decatur Municipal Building",
+      "address": "310 Maple Ave., Decatur",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e90b4bf9ed0bce2b9c66e03c",
+      "name": "NEBCO Community Center",
+      "address": "17823 Marshall Street, Garfield",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9616006a66d8bc42e9ab8b32",
+      "name": "First Baptist Church of Gentry",
+      "address": "232 W. Main Street, Gentry",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4a1dccc053959989e1967fbe",
+      "name": "Gravette Civic Center",
+      "address": "401 Charlotte Street S.E., Gravette",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-dabcc742477fc93b751859e3",
+      "name": "Grace Lutheran Church",
+      "address": "415 N. 6th Place, Lowell",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2b758b2f4bf0827b90e24c74",
+      "name": "First Baptist Church of Lowell",
+      "address": "209 ",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-556992cd4006080eab22fcd0",
+      "name": "Discover Church",
+      "address": "577 Weston Street, Pea Ridge",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4b02e6b124f535b341ef1f22",
+      "name": "The Ridge Church",
+      "address": "836 N. Curtis Ave., Pea Ridge",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c0adeccb3b2d9868d08aa1ba",
+      "name": "Boundless Grace Baptist Church",
+      "address": "222 Little Flock Drive, Rogers",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f0195d9a0036b732ff758c0e",
+      "name": "Bland Chapel (Rocky Branch)",
+      "address": "8531 Twin Coves Road, Rogers",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8d24e94df3ea4a036f686946",
+      "name": "Central United Methodist Church",
+      "address": "2535 W. New Hope Road, Rogers",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0c891fb14ff97f08121b6550",
+      "name": "Centro Cristiano de Rogers",
+      "address": "2121 S. 1st Street, Rogers",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c531c77ed739106db196a36b",
+      "name": "First Baptist Church of Rogers",
+      "address": "3364 W. Pleasant Grove Road, Rogers",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-cb2bd6bf3d23fab49a9d1f32",
+      "name": "Southside Church Of Christ",
+      "address": "919 S. Dixieland Road, Rogers",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a8bd443fda9d27ccbe303d53",
+      "name": "Sunnyside Baptist Church",
+      "address": "210 E. Locust Street, Rogers",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-fa562e1c665ec5fc022405e8",
+      "name": "First Baptist Church Highfill",
+      "address": "11912 N.W. Main Street, Siloam Springs",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c47cab0d81123b7f508ef24d",
+      "name": "New Life Church",
+      "address": "1611 Cheri Whitlock Drive, Siloam Springs",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3d02e591e7a767ee904144bc",
+      "name": "Logan Community Building",
+      "address": "15249 Logan Road, Siloam Springs",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3ca1415c9c1ed92fb7366e1e",
+      "name": "Siloam Springs Community Building",
+      "address": "110 N. Mt. Olive Street, Siloam Springs",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5cc15b17da320ab4cc38d9fc",
+      "name": "St. Mary's Catholic Church Parish Hall",
+      "address": "1998 Hwy. 412 E., Siloam Springs",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-fa3c82384fa9513b03e189a8",
+      "name": "cco Event Center",
+      "address": "4149 N. Thompson Street, Springdale",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "2026 GENERAL ELECTION",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Benton County Election Commission",
+          "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+          "checkedAt": "2026-10-21T04:58:44.988Z",
+          "official": true,
+          "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+          "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+        }
+      ],
+      "hours": "7:30 AM - 7:30 PM",
+      "countyFips": "05007",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "hours": "7:30 AM - 7:30 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Benton County Election Commission",
+            "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+            "checkedAt": "2026-10-21T04:58:44.988Z",
+            "official": true,
+            "documentHash": "60e05860fde232340f94f0c6a2b995d5e8835adde908a038db687fef27d16b39",
+            "documentUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Benton County Election Commission",
+      "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+      "checkedAt": "2026-10-21T04:58:44.988Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://bentoncountyar.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt CANNOT_TELL for /vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf: robots.txt could not be retrieved with this client: Error: No saved response for https://bentoncountyar.gov/robots.txt. A transport failure is not a reading of the host's rules; recorded as unread — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+      "route": "direct",
+      "outcome": "Saved scanned PDF read with the installed OCR engine"
+    }
+  ],
+  "contacts": []
+}

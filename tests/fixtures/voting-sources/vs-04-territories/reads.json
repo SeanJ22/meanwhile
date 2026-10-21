@@ -1,0 +1,2347 @@
+[
+  {
+    "id": "mp-election-day-saipan-2026",
+    "state": "MP",
+    "sites": 10,
+    "read": {
+      "doorId": "mp-election-day-saipan-2026",
+      "sites": [
+        {
+          "id": "voting-2bc9eeb0bfba346c1f425253",
+          "name": "Hopwood Junior High School Cafeteria",
+          "address": "Hopwood Junior High School Cafeteria, San Antonio, saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "1A",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "1A",
+          "locationNotes": "Football field entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "1A"
+          ],
+          "assignments": [
+            {
+              "precinct": "1A",
+              "name": "Hopwood Junior High School Cafeteria",
+              "room": null,
+              "locationNotes": "Football field entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-bd10f8a82e296f8aa2d88b40",
+          "name": "Dandan Middle School Cafeteria",
+          "address": "Dandan Middle School Cafeteria, San Vicente / Dandan, saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "1B-2",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "1B-2",
+          "locationNotes": "Dandan baseball/softball field entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "1B-1",
+            "1B-2"
+          ],
+          "assignments": [
+            {
+              "precinct": "1B-1",
+              "name": "Dandan Middle School Cafeteria",
+              "room": null,
+              "locationNotes": "Dandan baseball/softball field entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            },
+            {
+              "precinct": "1B-2",
+              "name": "Dandan Middle School Cafeteria",
+              "room": null,
+              "locationNotes": "Dandan baseball/softball field entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-bafd207588d056d586d74705",
+          "name": "Saipan Southern High School",
+          "address": "Saipan Southern High School, Koblerville, saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "1C",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "1C",
+          "locationNotes": "Front entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "1C"
+          ],
+          "assignments": [
+            {
+              "precinct": "1C",
+              "name": "Saipan Southern High School",
+              "room": null,
+              "locationNotes": "Front entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-9a8e392c712134283ff4d919",
+          "name": "Joeten-Kiyu Public Library",
+          "address": "Joeten-Kiyu Public Library, Chalan Kanoa / Susupe, saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "2",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "2",
+          "locationNotes": "Front entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "2"
+          ],
+          "assignments": [
+            {
+              "precinct": "2",
+              "name": "Joeten-Kiyu Public Library",
+              "room": null,
+              "locationNotes": "Front entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-90497e4a002ffc16c2ee04c9",
+          "name": "Oleai Elementary School Cafeteria",
+          "address": "Oleai Elementary School Cafeteria, San Jose / Oleai, saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "3A",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "3A",
+          "locationNotes": "Front entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "3A"
+          ],
+          "assignments": [
+            {
+              "precinct": "3A",
+              "name": "Oleai Elementary School Cafeteria",
+              "room": null,
+              "locationNotes": "Front entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-2fa4acd05fbec26941297ee3",
+          "name": "Garapan Elementary School Cafeteria",
+          "address": "Garapan Elementary School Cafeteria, Garapan, saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "3B-2",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "3B-2",
+          "locationNotes": "Northern entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "3B-1",
+            "3B-2"
+          ],
+          "assignments": [
+            {
+              "precinct": "3B-1",
+              "name": "Garapan Elementary School Cafeteria",
+              "room": null,
+              "locationNotes": "Northern entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            },
+            {
+              "precinct": "3B-2",
+              "name": "Garapan Elementary School Cafeteria",
+              "room": null,
+              "locationNotes": "Northern entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-7c73084c1b056b5e1c6b677a",
+          "name": "Tanapag Youth Center",
+          "address": "Tanapag Youth Center, Tanapag, saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "4A",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "4A",
+          "locationNotes": "Main entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "4A"
+          ],
+          "assignments": [
+            {
+              "precinct": "4A",
+              "name": "Tanapag Youth Center",
+              "room": null,
+              "locationNotes": "Main entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-2ce27485cce8d94e5db020ce",
+          "name": "Gregorio T. Camacho Elementary School Cafeteria",
+          "address": "Gregorio T. Camacho Elementary School Cafeteria, San Roque / As Matius, saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "4B",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "4B",
+          "locationNotes": "Main entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "4B"
+          ],
+          "assignments": [
+            {
+              "precinct": "4B",
+              "name": "Gregorio T. Camacho Elementary School Cafeteria",
+              "room": null,
+              "locationNotes": "Main entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-c003f0763c542c710e023128",
+          "name": "Jesus P. Mafnas Legislative Building",
+          "address": "Jesus P. Mafnas Legislative Building, Capitol Hill, saipan",
+          "room": null,
+          "lat": 15.21156413889,
+          "lng": 145.75463643466355,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "4C",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "4C",
+          "locationNotes": "Main entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "4C"
+          ],
+          "assignments": [
+            {
+              "precinct": "4C",
+              "name": "Jesus P. Mafnas Legislative Building",
+              "room": null,
+              "locationNotes": "Main entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "geocodeSource": "PUBLISHER"
+        },
+        {
+          "id": "voting-49f96138de1fd92e93678c2c",
+          "name": "Chacha Oceanview Middle School",
+          "address": "Chacha Oceanview Middle School, Kagman, saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "5-2",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "5-2",
+          "locationNotes": "Main entrance",
+          "countyFips": "69110",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "5-1",
+            "5-2"
+          ],
+          "assignments": [
+            {
+              "precinct": "5-1",
+              "name": "Chacha Oceanview Middle School",
+              "room": null,
+              "locationNotes": "Main entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            },
+            {
+              "precinct": "5-2",
+              "name": "Chacha Oceanview Middle School",
+              "room": null,
+              "locationNotes": "Main entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Commonwealth Election Commission",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "title": "Polling Places - Commonwealth Election Commission",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 842
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "contentType": "text/html; charset=utf-8",
+          "byteLength": 158859
+        }
+      ],
+      "fileTitle": "Polling Places - Commonwealth Election Commission",
+      "contacts": []
+    }
+  },
+  {
+    "id": "mp-election-day-tinian-2026",
+    "state": "MP",
+    "sites": 1,
+    "read": {
+      "doorId": "mp-election-day-tinian-2026",
+      "sites": [
+        {
+          "id": "voting-632e751a4b357dfec6c4ebbc",
+          "name": "Tinian Youth Center",
+          "address": "Tinian Youth Center, Tinian & Aguiguan, tinian",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "6",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "6",
+          "locationNotes": "Main entrance",
+          "countyFips": "69120",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "6"
+          ],
+          "assignments": [
+            {
+              "precinct": "6",
+              "name": "Tinian Youth Center",
+              "room": null,
+              "locationNotes": "Main entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Commonwealth Election Commission",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "title": "Polling Places - Commonwealth Election Commission",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 842
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "contentType": "text/html; charset=utf-8",
+          "byteLength": 158859
+        }
+      ],
+      "fileTitle": "Polling Places - Commonwealth Election Commission",
+      "contacts": []
+    }
+  },
+  {
+    "id": "mp-election-day-rota-2026",
+    "state": "MP",
+    "sites": 1,
+    "read": {
+      "doorId": "mp-election-day-rota-2026",
+      "sites": [
+        {
+          "id": "voting-436d8a7fc0252ad0dcb289fe",
+          "name": "Rota NMC, Room B-1",
+          "address": "Rota NMC, Room B-1, Rota, rota",
+          "room": null,
+          "lat": 14.167070111495681,
+          "lng": 145.1616679051474,
+          "kind": "ELECTION_DAY",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": "7",
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "Tuesday, November 3",
+          "hours": "7:00 AM – 7:00 PM ChST",
+          "precinct": "7",
+          "locationNotes": "Main entrance",
+          "countyFips": "69100",
+          "matchingUnit": "PRECINCT",
+          "kinds": [
+            "ELECTION_DAY"
+          ],
+          "precincts": [
+            "7"
+          ],
+          "assignments": [
+            {
+              "precinct": "7",
+              "name": "Rota NMC, Room B-1",
+              "room": null,
+              "locationNotes": "Main entrance",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "schedules": [
+            {
+              "kind": "ELECTION_DAY",
+              "days": "Tuesday, November 3",
+              "hours": "7:00 AM – 7:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "geocodeSource": "PUBLISHER"
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Commonwealth Election Commission",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "title": "Polling Places - Commonwealth Election Commission",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 842
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "contentType": "text/html; charset=utf-8",
+          "byteLength": 158859
+        }
+      ],
+      "fileTitle": "Polling Places - Commonwealth Election Commission",
+      "contacts": []
+    }
+  },
+  {
+    "id": "mp-early-voting-saipan-2026",
+    "state": "MP",
+    "sites": 1,
+    "read": {
+      "doorId": "mp-early-voting-saipan-2026",
+      "sites": [
+        {
+          "id": "voting-235f78b64cacb67649d8988e",
+          "name": "Pedro P. Tenorio Multi-Purpose Center, Susupe",
+          "address": "Pedro P. Tenorio Multi-Purpose Center, Susupe, Saipan",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "EARLY_VOTING",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "2026-10-27 to 2026-11-02",
+          "hours": "8:30 AM – 4:00 PM ChST",
+          "locationNotes": "Also the early voting site for Northern Islands voters.",
+          "countyFips": "69110",
+          "kinds": [
+            "EARLY_VOTING"
+          ],
+          "schedules": [
+            {
+              "kind": "EARLY_VOTING",
+              "days": "2026-10-27 to 2026-11-02",
+              "hours": "8:30 AM – 4:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Commonwealth Election Commission",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "title": "Polling Places - Commonwealth Election Commission",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 842
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "contentType": "text/html; charset=utf-8",
+          "byteLength": 158859
+        }
+      ],
+      "fileTitle": "Polling Places - Commonwealth Election Commission",
+      "contacts": []
+    }
+  },
+  {
+    "id": "mp-early-voting-tinian-2026",
+    "state": "MP",
+    "sites": 1,
+    "read": {
+      "doorId": "mp-early-voting-tinian-2026",
+      "sites": [
+        {
+          "id": "voting-bc936fc4037cedede71e01e9",
+          "name": "Tinian Youth Center, San Jose",
+          "address": "Tinian Youth Center, San Jose, Tinian",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "EARLY_VOTING",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "2026-10-27 to 2026-11-02",
+          "hours": "8:30 AM – 4:00 PM ChST",
+          "locationNotes": "For voters from any district temporarily on Tinian.",
+          "countyFips": "69120",
+          "kinds": [
+            "EARLY_VOTING"
+          ],
+          "schedules": [
+            {
+              "kind": "EARLY_VOTING",
+              "days": "2026-10-27 to 2026-11-02",
+              "hours": "8:30 AM – 4:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Commonwealth Election Commission",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "title": "Polling Places - Commonwealth Election Commission",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 842
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "contentType": "text/html; charset=utf-8",
+          "byteLength": 158859
+        }
+      ],
+      "fileTitle": "Polling Places - Commonwealth Election Commission",
+      "contacts": []
+    }
+  },
+  {
+    "id": "mp-early-voting-rota-2026",
+    "state": "MP",
+    "sites": 1,
+    "read": {
+      "doorId": "mp-early-voting-rota-2026",
+      "sites": [
+        {
+          "id": "voting-daa1dec5aa7655a663a12374",
+          "name": "Northern Marianas College, Classroom B-1, Tatachok Village",
+          "address": "Northern Marianas College, Classroom B-1, Tatachok Village, Rota",
+          "room": null,
+          "lat": 14.167070111495681,
+          "lng": 145.1616679051474,
+          "kind": "EARLY_VOTING",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Commonwealth Election Commission",
+              "url": "https://www.votecnmi.gov.mp/polling-places.php",
+              "title": "Polling Places - Commonwealth Election Commission",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+              "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+            }
+          ],
+          "days": "2026-10-27 to 2026-11-02",
+          "hours": "8:30 AM – 4:00 PM ChST",
+          "locationNotes": "For voters from any district temporarily on Rota.",
+          "countyFips": "69100",
+          "kinds": [
+            "EARLY_VOTING"
+          ],
+          "schedules": [
+            {
+              "kind": "EARLY_VOTING",
+              "days": "2026-10-27 to 2026-11-02",
+              "hours": "8:30 AM – 4:00 PM ChST",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Commonwealth Election Commission",
+                "url": "https://www.votecnmi.gov.mp/polling-places.php",
+                "title": "Polling Places - Commonwealth Election Commission",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "24f50ef85471a3718607f25331f559874f1068ed3697732a3584989076ccd792",
+                "documentUrl": "https://www.votecnmi.gov.mp/polling-places.php"
+              }
+            }
+          ],
+          "geocodeSource": "PUBLISHER"
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Commonwealth Election Commission",
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "title": "Polling Places - Commonwealth Election Commission",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://www.votecnmi.gov.mp/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 842
+        },
+        {
+          "url": "https://www.votecnmi.gov.mp/polling-places.php",
+          "contentType": "text/html; charset=utf-8",
+          "byteLength": 158859
+        }
+      ],
+      "fileTitle": "Polling Places - Commonwealth Election Commission",
+      "contacts": []
+    }
+  },
+  {
+    "id": "vi-early-st-croix-2026",
+    "state": "VI",
+    "sites": 1,
+    "read": {
+      "doorId": "vi-early-st-croix-2026",
+      "sites": [
+        {
+          "id": "voting-a9fd3db55a4fae4998fae117",
+          "name": "Elections Office-Sunny Isle Shopping Center Unit 26",
+          "address": "Sunny Isle Shopping Center Unit 26",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "EARLY_VOTING",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/elections/early-voting/",
+              "title": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "154dd069ceb1f2d61aab678d47dd5b3bfae02d8ebdb0e3eea6cedd4d3c978a32",
+              "documentUrl": "https://vivote.gov/elections/early-voting/"
+            }
+          ],
+          "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+          "hours": "9:00 AM to 6:00 PM",
+          "town": "St. Croix",
+          "countyFips": "78010",
+          "kinds": [
+            "EARLY_VOTING"
+          ],
+          "schedules": [
+            {
+              "kind": "EARLY_VOTING",
+              "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+              "hours": "9:00 AM to 6:00 PM",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/elections/early-voting/",
+                "title": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "154dd069ceb1f2d61aab678d47dd5b3bfae02d8ebdb0e3eea6cedd4d3c978a32",
+                "documentUrl": "https://vivote.gov/elections/early-voting/"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Elections System of the Virgin Islands",
+          "url": "https://vivote.gov/elections/early-voting/",
+          "title": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://vivote.gov/elections/early-voting/",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 324
+        },
+        {
+          "url": "https://vivote.gov/elections/early-voting/",
+          "contentType": "text/html; charset=UTF-8",
+          "byteLength": 151450
+        }
+      ],
+      "fileTitle": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+      "contacts": []
+    }
+  },
+  {
+    "id": "vi-early-st-thomas-2026",
+    "state": "VI",
+    "sites": 1,
+    "read": {
+      "doorId": "vi-early-st-thomas-2026",
+      "sites": [
+        {
+          "id": "voting-3a72440229ceffea42ebc1c4",
+          "name": "St. Thomas Elections Office",
+          "address": "Lockhart Gardens (above Banco Popular)",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "EARLY_VOTING",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/elections/early-voting/",
+              "title": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "154dd069ceb1f2d61aab678d47dd5b3bfae02d8ebdb0e3eea6cedd4d3c978a32",
+              "documentUrl": "https://vivote.gov/elections/early-voting/"
+            }
+          ],
+          "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+          "hours": "9:00 AM to 6:00 PM",
+          "town": "St. Thomas",
+          "countyFips": "78030",
+          "kinds": [
+            "EARLY_VOTING"
+          ],
+          "schedules": [
+            {
+              "kind": "EARLY_VOTING",
+              "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+              "hours": "9:00 AM to 6:00 PM",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/elections/early-voting/",
+                "title": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "154dd069ceb1f2d61aab678d47dd5b3bfae02d8ebdb0e3eea6cedd4d3c978a32",
+                "documentUrl": "https://vivote.gov/elections/early-voting/"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Elections System of the Virgin Islands",
+          "url": "https://vivote.gov/elections/early-voting/",
+          "title": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://vivote.gov/elections/early-voting/",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 324
+        },
+        {
+          "url": "https://vivote.gov/elections/early-voting/",
+          "contentType": "text/html; charset=UTF-8",
+          "byteLength": 151450
+        }
+      ],
+      "fileTitle": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+      "contacts": []
+    }
+  },
+  {
+    "id": "vi-early-st-john-2026",
+    "state": "VI",
+    "sites": 1,
+    "read": {
+      "doorId": "vi-early-st-john-2026",
+      "sites": [
+        {
+          "id": "voting-c1fa353990bdb5a020564164",
+          "name": "Elections Office – The Market Place Suite II",
+          "address": "The Market Place Suite II",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "EARLY_VOTING",
+          "election": "2026 General Election",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/elections/early-voting/",
+              "title": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "154dd069ceb1f2d61aab678d47dd5b3bfae02d8ebdb0e3eea6cedd4d3c978a32",
+              "documentUrl": "https://vivote.gov/elections/early-voting/"
+            }
+          ],
+          "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+          "hours": "9:00 AM to 4:00 PM",
+          "town": "St. John",
+          "countyFips": "78020",
+          "kinds": [
+            "EARLY_VOTING"
+          ],
+          "schedules": [
+            {
+              "kind": "EARLY_VOTING",
+              "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+              "hours": "9:00 AM to 4:00 PM",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/elections/early-voting/",
+                "title": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "154dd069ceb1f2d61aab678d47dd5b3bfae02d8ebdb0e3eea6cedd4d3c978a32",
+                "documentUrl": "https://vivote.gov/elections/early-voting/"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Elections System of the Virgin Islands",
+          "url": "https://vivote.gov/elections/early-voting/",
+          "title": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://vivote.gov/elections/early-voting/",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 324
+        },
+        {
+          "url": "https://vivote.gov/elections/early-voting/",
+          "contentType": "text/html; charset=UTF-8",
+          "byteLength": 151450
+        }
+      ],
+      "fileTitle": "Early Voting - VIVOTE - Election System of the Virgin Islands",
+      "contacts": []
+    }
+  },
+  {
+    "id": "vi-general-st-croix-2026",
+    "state": "VI",
+    "sites": 5,
+    "read": {
+      "doorId": "vi-general-st-croix-2026",
+      "sites": [
+        {
+          "id": "voting-d8794f1fd9b64dfe66d15b4a",
+          "name": "D.C. CANEGATA RECREATION CENTER",
+          "address": "D.C. CANEGATA RECREATION CENTER, ST. CROIX",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Croix",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+              "title": "2026 General Election Voting Centers - St. Croix",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+            }
+          ],
+          "countyFips": "78010",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+                "title": "2026 General Election Voting Centers - St. Croix",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-a92795f1e23aeeb34ddc8228",
+          "name": "ST. DUNSTAN’S EPISCOPAL SCHOOL AUDITORIUM",
+          "address": "ST. DUNSTAN’S EPISCOPAL SCHOOL AUDITORIUM, ST. CROIX",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Croix",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+              "title": "2026 General Election Voting Centers - St. Croix",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+            }
+          ],
+          "countyFips": "78010",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+                "title": "2026 General Election Voting Centers - St. Croix",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-72e64aaded1b14330bc6393c",
+          "name": "ST. CROIX CENTRAL HIGH SCHOOL MODULAR GYMNASIUM",
+          "address": "ST. CROIX CENTRAL HIGH SCHOOL MODULAR GYMNASIUM, ST. CROIX",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Croix",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+              "title": "2026 General Election Voting Centers - St. Croix",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+            }
+          ],
+          "countyFips": "78010",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+                "title": "2026 General Election Voting Centers - St. Croix",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-1798d13a9be94d5795c9cf78",
+          "name": "ST. JOSEPH HOSPITALITY LOUNGE",
+          "address": "ST. JOSEPH HOSPITALITY LOUNGE, ST. CROIX",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Croix",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+              "title": "2026 General Election Voting Centers - St. Croix",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+            }
+          ],
+          "countyFips": "78010",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+                "title": "2026 General Election Voting Centers - St. Croix",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-e7b679407f40c7689e188ea9",
+          "name": "CLAUDE O. MARKOE ELEMENTARY SCHOOL",
+          "address": "CLAUDE O. MARKOE ELEMENTARY SCHOOL, ST. CROIX",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Croix",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+              "title": "2026 General Election Voting Centers - St. Croix",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+            }
+          ],
+          "countyFips": "78010",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+                "title": "2026 General Election Voting Centers - St. Croix",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "f8372be0a2e14041c50088dc000215a898aefd5bb74ac60a8d03099c69941dfd",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Elections System of the Virgin Islands",
+          "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+          "title": "2026 General Election Voting Centers - St. Croix",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://vivote.gov/?elections=2026-general-election",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 324
+        },
+        {
+          "url": "https://vivote.gov/?elections=2026-general-election",
+          "contentType": "text/html; charset=UTF-8",
+          "byteLength": 237334
+        },
+        {
+          "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+          "contentType": "application/pdf",
+          "byteLength": 206965
+        }
+      ],
+      "fileTitle": "2026 General Election Voting Centers - St. Croix",
+      "contacts": []
+    }
+  },
+  {
+    "id": "vi-general-st-thomas-2026",
+    "state": "VI",
+    "sites": 4,
+    "read": {
+      "doorId": "vi-general-st-thomas-2026",
+      "sites": [
+        {
+          "id": "voting-5b7cb92203cdafc2f9fceaef",
+          "name": "CHARLOTTE AMALIE HIGH SCHOOL (SPRUNG)",
+          "address": "CHARLOTTE AMALIE HIGH SCHOOL (SPRUNG), ST. THOMAS",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Thomas and St. John",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+              "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+            }
+          ],
+          "countyFips": "78030",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+                "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-57adfb41d9104e80b6256969",
+          "name": "IVANNA EUDORA KEAN HIGH SCHOOL CAFETERIA",
+          "address": "IVANNA EUDORA KEAN HIGH SCHOOL CAFETERIA, ST. THOMAS",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Thomas and St. John",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+              "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+            }
+          ],
+          "countyFips": "78030",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+                "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-90fa85dd3cb63d743b9121d6",
+          "name": "ELRIDGE BLAKE SPORTS & FITNESS CENTER (UVI)",
+          "address": "ELRIDGE BLAKE SPORTS & FITNESS CENTER (UVI), ST. THOMAS",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Thomas and St. John",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+              "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+            }
+          ],
+          "countyFips": "78030",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+                "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-e1e075f90ce35c706e4de7a2",
+          "name": "TUTU PARK MALL (OPPOSITE OF CARLOS FURNITURE)",
+          "address": "TUTU PARK MALL (OPPOSITE OF CARLOS FURNITURE), ST. THOMAS",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Thomas and St. John",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+              "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+            }
+          ],
+          "countyFips": "78030",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+                "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Elections System of the Virgin Islands",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+          "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://vivote.gov/?elections=2026-general-election",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 324
+        },
+        {
+          "url": "https://vivote.gov/?elections=2026-general-election",
+          "contentType": "text/html; charset=UTF-8",
+          "byteLength": 237334
+        },
+        {
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+          "contentType": "application/pdf",
+          "byteLength": 215480
+        }
+      ],
+      "fileTitle": "2026 General Election Voting Centers - St. Thomas and St. John",
+      "contacts": []
+    }
+  },
+  {
+    "id": "vi-general-st-john-2026",
+    "state": "VI",
+    "sites": 2,
+    "read": {
+      "doorId": "vi-general-st-john-2026",
+      "sites": [
+        {
+          "id": "voting-64814ecc2afaa8312d1fa2e4",
+          "name": "JULIUS SPRAUVE ELEMENTARY SCHOOL",
+          "address": "JULIUS SPRAUVE ELEMENTARY SCHOOL, ST. JOHN",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Thomas and St. John",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+              "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+            }
+          ],
+          "countyFips": "78020",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+                "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+              }
+            }
+          ]
+        },
+        {
+          "id": "voting-0b527248c4346a4c79d26c82",
+          "name": "GUY BENJAMIN COMMUNITY CENTER",
+          "address": "GUY BENJAMIN COMMUNITY CENTER, ST. JOHN",
+          "room": null,
+          "lat": null,
+          "lng": null,
+          "kind": "VOTE_CENTER",
+          "election": "2026 General Election Voting Centers - St. Thomas and St. John",
+          "electionDate": "2026-11-03",
+          "serves": null,
+          "sources": [
+            {
+              "publisher": "Elections System of the Virgin Islands",
+              "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+              "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+              "checkedAt": "2026-10-21T04:31:00.000Z",
+              "official": true,
+              "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+              "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+            }
+          ],
+          "countyFips": "78020",
+          "matchingUnit": "COUNTY",
+          "kinds": [
+            "VOTE_CENTER"
+          ],
+          "schedules": [
+            {
+              "kind": "VOTE_CENTER",
+              "electionDate": "2026-11-03",
+              "source": {
+                "publisher": "Elections System of the Virgin Islands",
+                "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+                "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+                "checkedAt": "2026-10-21T04:31:00.000Z",
+                "official": true,
+                "documentHash": "cc9211311c2f1d98a9445de209d66fddea201fa87021d50f73589ff9a2ad2591",
+                "documentUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf"
+              }
+            }
+          ]
+        }
+      ],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Elections System of the Virgin Islands",
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+          "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://vivote.gov/?elections=2026-general-election",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://vivote.gov/robots.txt",
+          "contentType": "text/plain; charset=utf-8",
+          "byteLength": 324
+        },
+        {
+          "url": "https://vivote.gov/?elections=2026-general-election",
+          "contentType": "text/html; charset=UTF-8",
+          "byteLength": 237334
+        },
+        {
+          "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+          "contentType": "application/pdf",
+          "byteLength": 215480
+        }
+      ],
+      "fileTitle": "2026 General Election Voting Centers - St. Thomas and St. John",
+      "contacts": []
+    }
+  },
+  {
+    "id": "as-local-absentee-2026",
+    "state": "AS",
+    "sites": 0,
+    "read": {
+      "doorId": "as-local-absentee-2026",
+      "sites": [],
+      "office": {
+        "name": "American Samoa Election Office",
+        "phone": "684-699-3570",
+        "email": "Info@eo.as.gov",
+        "url": "https://www.aselectionoffice.gov/"
+      },
+      "rules": [
+        {
+          "text": "Voters under this category are required to provide proof of travel and must vote at the election office before traveling.",
+          "source": {
+            "publisher": "Election Office, Pago Pago, AS",
+            "url": "https://www.aselectionoffice.gov/absentee-voting",
+            "checkedAt": "2026-10-21"
+          }
+        }
+      ],
+      "sources": [
+        {
+          "publisher": "Election Office, Pago Pago, AS",
+          "url": "https://www.aselectionoffice.gov/absentee-voting",
+          "title": "Absentee Voting",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": true
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.aselectionoffice.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://www.aselectionoffice.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /absentee-voting: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://www.aselectionoffice.gov/absentee-voting",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://www.aselectionoffice.gov/robots.txt",
+          "contentType": "text/plain;charset=UTF-8",
+          "byteLength": 0
+        },
+        {
+          "url": "https://www.aselectionoffice.gov/absentee-voting",
+          "contentType": "text/html; charset=utf-8",
+          "byteLength": 147069
+        }
+      ],
+      "fileTitle": "Absentee Voting",
+      "contacts": []
+    }
+  },
+  {
+    "id": "pr-general-election-cycle",
+    "state": "PR",
+    "sites": 0,
+    "read": {
+      "doorId": "pr-general-election-cycle",
+      "sites": [],
+      "rules": [],
+      "sources": [
+        {
+          "publisher": "Comisión Estatal de Elecciones de Puerto Rico",
+          "url": "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf",
+          "title": "Puerto Rico general-election calendar",
+          "checkedAt": "2026-10-21T04:31:00.000Z",
+          "official": false
+        }
+      ],
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://ww2.ceepur.org/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://ww2.ceepur.org/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ],
+      "rawBodies": [
+        {
+          "url": "https://ww2.ceepur.org/robots.txt",
+          "contentType": "text/plain;charset=UTF-8",
+          "byteLength": 0
+        },
+        {
+          "url": "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf",
+          "contentType": "application/pdf",
+          "byteLength": 2034086
+        }
+      ],
+      "fileTitle": "Puerto Rico general-election calendar",
+      "contacts": []
+    }
+  }
+]

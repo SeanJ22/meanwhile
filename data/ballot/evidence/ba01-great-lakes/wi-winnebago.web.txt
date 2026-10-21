@@ -1,0 +1,224 @@
+NEWS MEDIA PACKET (https://www.winnebagocountywi.gov/DocumentCenter/View/4097)
+【turn520184view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 5; Source: open({"ref_id":"https://www.winnebagocountywi.gov/DocumentCenter/View/4097","lineno":0}); Total lines: 222
+L0@P0: 1
+L1@P0: ELECTION INFORMATION PACKET
+L2@P0: GENERAL ELECTION
+L3@P0: November 3, 2026
+L4@P0: CONTENTS
+L5@P0: A. LIST OF CANDIDATES
+L6@P0: B. POLLING PLACES AND HOURS
+L7@P0: C. FACILITIES AVAILABLE TO MEDIA ON ELECTION NIGHT
+L8@P0: INFORMATION PROVIDED BY:
+L9@P0: JULIE A. BARTHELS,
+L10@P0: WINNEBAGO COUNTY CLERK
+L11@P0-1: 920-232-3430 2
+L12@P1: See what’s on your ballot at https://myvote.wi.gov
+L13@P1: STATEWIDE, CONGRESSIONAL, LEGISLATIVE, COUNTY AND REFERENDUMS
+L14@P1: GOVERNOR/LIEUTENANT GOVERNOR
+L15@P1: Countywide
+L16@P1: (Vote for 1)
+L17@P1: Tom Tiffany / David Varnam – Republican
+L18@P1: David Crowley / Sarah Godlewski – Democratic
+L19@P1: ATTORNEY GENERAL – Countywide
+L20@P1: (Vote for 1)
+L21@P1: Eric Toney – Republican
+L22@P1: Josh Kaul – Democratic
+L23@P1: SECRETARY OF STATE – Countywide
+L24@P1: (Vote for 1)
+L25@P1: Jay Schroeder – Republican
+L26@P1: JoCasta Zamarripa – Democratic
+L27@P1: Pete Karas – Wisconsin Green Party
+L28@P1: STATE TREASURER – Countywide
+L29@P1: (Vote for 1)
+L30@P1: John S. Leiber – Republican
+L31@P1: Yee Leng Xiong - Democratic
+L32@P1: REPRESENTATIVE IN CONGRESS
+L33@P1: DISTRICT 6
+L34@P1: Part of the City of Appleton – Wards 33 & 34;
+L35@P1: Cities of Menasha, Neenah, Omro and Oshkosh;
+L36@P1: Towns of Algoma, Black Wolf, Neenah, Nekimi,
+L37@P1: Nepeuskun, Omro, Oshkosh, Poygan, Rushford,
+L38@P1: Utica, Vinland, and Winneconne;
+L39@P1: Village of Fox Crossing and Village of Winneconne;
+L40@P1: Part of the Town of Clayton – Wards 1 – 3 & 7 – 9;
+L41@P1: Part of the Town of Winchester – Wards 3 & 4;
+L42@P1: Part of the Town of Wolf River – Wards 1 & 2A
+L43@P1: (Vote for 1)
+L44@P1: Glenn Grothman– Republican
+L45@P1: Brad Smith – Democratic
+L46@P1: Matthew Arndt – Wisconsin Green Party
+L47@P1: Elizabeth Anne Fitzgibbon – Independent
+L48@P1: Mike Thurow – Independent
+L49@P1: REPRESENTATIVE IN CONGRESS
+L50@P1: DISTRICT 8
+L51@P1: Part of the Town of Clayton – Wards 4 – 6;
+L52@P1: Part of the Town of Winchester – Wards 1 – 2;
+L53@P1: Part of the Town of Wolf River – Ward 2B
+L54@P1: (Vote for 1)
+L55@P1: Tony Wied – Republican
+L56@P1: Rick Crosson – Democratic
+L57@P1: STATE SENATE, DISTRICT 13
+L58@P1: Town of Nepeuskun - Ward 1
+L59@P1: (Vote for 1)
+L60@P1: John Jagler – Republican
+L61@P1: Sasha Ripley - Democratic
+L62@P1: STATE SENATE, DISTRICT 19
+L63@P1: Part of the City of Oshkosh – Wards 13, 15, 17-18, 21-22, 24,
+L64@P1: 28 & 31; City of Omro; Towns of Algoma, Black Wolf, Clayton,
+L65@P1: Nekimi, Omro, Poygan, Rushford, Utica, Winchester,
+L66@P1: Winneconne, and Wolf River; Village of Winneconne;
+L67@P1: Part of the Town of Vinland – Ward 1;
+L68@P1: Part of the Village of Fox Crossing – Wards 1 - 9;
+L69@P1: (Vote for 1)
+L70@P1: Rachael Ann Cabral-Guevara – Republican
+L71@P1: Emily Daniels Tseffos – Democratic
+L72@P1: REPRESENTATIVE TO THE ASSEMBLY,
+L73@P1: DISTRICT 39
+L74@P1: Town of Nepeuskun – Ward 1
+L75@P1: (Vote for 1)
+L76@P1: Alex Dallman – Republican
+L77@P1: Michael Skivington – Democratic
+L78@P1: REPRESENTATIVE TO THE ASSEMBLY,
+L79@P1: DISTRICT 53
+L80@P1: Part of the City of Appleton – Wards 33 and 34;
+L81@P1: City of Menasha;
+L82@P1: Part of the City of Neenah – Wards 1-22, 24, and 26-28;
+L83@P1: Town of Neenah;
+L84@P1: Part of the Village of Fox Crossing – Wards 10-19
+L85@P1: (Vote for 1)
+L86@P1: David Daniels – Republican
+L87@P1: Becky Nichols – Democratic
+L88@P1: Rachael Dowling – Independent
+L89@P1: REPRESENTATIVE TO THE ASSEMBLY,
+L90@P1: DISTRICT 54
+L91@P1: Part of the City of Neenah – Wards 23 and 25;
+L92@P1: Part of the City of Oshkosh - Wards 1-12, 14, 16, 19-20,
+L93@P1: 23, 25-27, 29-30 and 32-33; Town of Oshkosh;
+L94@P1: Part of the Town of Vinland – Ward 2
+L95@P1: (Vote for 1)
+L96@P1: Tim Paterson – Republican
+L97@P1-2: Lori Palmeri – Democratic 3
+L98@P2: REPRESENTATIVE TO THE ASSEMBLY,
+L99@P2: DISTRICT 55
+L100@P2: Part of the City of Oshkosh – Wards 13, 15, 17-18, 21-22, 24,
+L101@P2: 28 and 31 ; City of Omro; Towns of Algoma, Black Wolf, Clayton,
+L102@P2: Nekimi, Omro, Utica, Winchester, Winneconne, and Wolf River;
+L103@P2: Part of the Town of Vinland – Ward 1;
+L104@P2: Part of the Village of Fox Crossing - Wards 1 - 9;
+L105@P2: Village of Winneconne
+L106@P2: (Vote for 1)
+L107@P2: Nate Gustafson – Republican
+L108@P2: Alex Corrigan – Democratic
+L109@P2: REPRESENTATIVE TO THE ASSEMBLY,
+L110@P2: DISTRICT 57
+L111@P2: Towns of Poygan and Rushford
+L112@P2: (Vote for 1)
+L113@P2: Kevin Krentz – Republican
+L114@P2: Joey Marschall – Democratic
+L115@P2: COUNTY SHERIFF - Countywide
+L116@P2: (Vote for 1)
+L117@P2: Darin M. Rice – Republican
+L118@P2: Jason W. Rippl – Democratic
+L119@P2: Danielle Falesnik – Strong. Fair. Ready to Lead
+L120@P2: CLERK OF CIRCUIT COURT – Countywide
+L121@P2: (Vote for 1)
+L122@P2: Desiree Bongers – Democratic
+L123@P2: STATE REFERENDUMS
+L124@P2: Countywide
+L125@P2: Question Number I: "Partial veto. Shall section 10 (1) (c) of article V of the constitution be amended to prohibit the governor, in
+L126@P2: exercising his or her partial veto authority, from creating or increasing or authorizing the creation or increase of any tax or fee?"
+L127@P2:  Yes No
+L128@P2: Question Number II: "Freedom to gather in places of worship during an emergency. Shall section 18 of article I of the
+L129@P2: constitution, which deals with religious liberty, be amended to prohibit the state or a political subdivision of the state from ordering
+L130@P2: the closure of, or forbidding gatherings in places of worship in response to a state emergency, including a public health emergency?"
+L131@P2: Yes No
+L132@P2: Question Number III: "Governmental entity discrimination prohibited. Shall section 27 of article 1 of the constitution be created
+L133@P2: to prohibit governmental entities in the state from discriminating against, or granting preferential treatment to, any individual or group
+L134@P2: on the basis of race, sex, color, ethnicity, or national origin in public employment, public education, public contracting, or public
+L135@P2: administration?
+L136@P2: Yes No
+L137@P2: SCHOOL DISTRICT REFERENDUMS
+L138@P2: Ripon Area School District
+L139@P2: Town of Nepeuskun – Part of Ward 1; and Town of Utica – Part of Wards 1 & 3
+L140@P2: Question: Shall the Ripon Area School District, Fond du Lac, Winnebago and Green Lake Counties,
+L141@P2: Wisconsin be authorized to exceed the revenue limit specified in Section 121.91, Wisconsin Statutes, by
+L142@P2: $500,000 for the 2027-2028 school year and by $1,350,000 per year for the 2028-2029 school year
+L143@P2: through the 2032-2033 school year, on a non-recurring basis, for the purpose of maintaining current
+L144@P2: educational programming, academic resources, and district operations?
+L145@P2: Yes No
+L146@P2: School District of Weyauwega-Fremont
+L147@P2: Town of Wolf River – Wards 1 & 2A
+L148@P2: Question: Shall the School District of Weyauwega-Fremont, Waupaca, Winnebago and Waushara Counties, Wisconsin be authorized
+L149@P2: to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation bonds in an amount not to exceed $8,450,000 for the
+L150@P2: public purpose of paying the cost of a school facility improvement project consisting of: safety, security, building infrastructure and
+L151@P2: site improvements at Fremont Elementary School, Weyauwega Elementary School and Weyauwega Middle School; construction of a
+L152@P2: secure entrance at Weyauwega Elementary School; district-wide capital maintenance; and acquisition of furnishings, fixtures and
+L153@P2: equipment??
+L154@P2-3: Yes No4
+L155@P3: POLLING PLACES AND HOURS – NOVEMBER 3, 2026
+L156@P3: ALL POLLING PLACES WILL OPEN AT 7:00 A.M. AND WILL CLOSE AT 8:00 P.M.
+L157@P3: CITY OF APPLETON
+L158@P3: Wards 33 & 34 Saint Joseph Parish Center, 404 West Lawrence Street
+L159@P3: CITY OF MENASHA
+L160@P3: Dist. 1, Wards 1 & 2 Menasha Senior Center, 116 Main Street
+L161@P3: Dist. 2, Wards 3 & 4 Menasha Senior Center, 116 Main Street
+L162@P3: Dist. 3, Wards 7 & 8 Boys & Girls Club, 600 Racine Street
+L163@P3: Dist. 4, Wards 5 & 6 Boys & Girls Club, 600 Racine Street
+L164@P3: Dist. 5, Wards 9, 11 & 18 Crossroads Foursquare Church, 1209 London Street
+L165@P3: Dist. 6, Ward 13 Winnegamie Dog Club, 2043 Manitowoc Road
+L166@P3: Dist. 7, Wards 10, 12, 17 & 19 Crossroads Foursquare Church, 1209 London Street
+L167@P3: Dist. 6 & 8, Wards 14-16 (Calumet County) Winnegamie Dog Club, 2043 Manitowoc Road
+L168@P3: CITY OF NEENAH
+L169@P3:  Dist. 1, Wards 1 – 4 First Presbyterian Church Fellowship Hall, 200 South Church Street
+L170@P3:  Dist. 1, Wards 5 - 8 Washington Park Pavilion, 631 West Winneconne Avenue
+L171@P3:  Dist. 2, Wards 9 - 12 & 27 Peace Lutheran Church, Fellowship Hall, 1228 South Park Avenue
+L172@P3:  Dist. 2, Wards 13 – 15, 22 & 26 Neenah Police Station, 2111 Marathon Avenue
+L173@P3:  Dist. 3, Wards 16-19 & 24 Gloria Dei Lutheran Church Fellowship Hall, 1140 Tullar Road
+L174@P3:  Dist. 3, Wards 20, 21, 23, 25 & 28 Neenah City Services Building, 1495 Tullar Road
+L175@P3: CITY OF OMRO Future Omro City Hall, 125 West Huron Street
+L176@P3: CITY OF OSHKOSH
+L177@P3:  Dist. 1, Ward 1 Christ Our Savior Lutheran Church, 1860 Wisconsin Street
+L178@P3:  Dist. 2 & 3, Wards 2, 3, 4, 25, 26, 27, 29, 30, 32 & 33 Sunnyview Christian Church, 175 East County Road Y
+L179@P3:  Dist. 4, Wards 5 & 6 St. Andrew's Lutheran Church, 1100 East Murdock Avenue
+L180@P3:  Dist. 5, 6, 7 & 10, Wards 7, 8, 9 & 12 UW-Oshkosh Culver Welcome Center, 625 Pearl Avenue
+L181@P3:  Dist. 8, Ward 10 Oshkosh Public Library, 106 Washington Avenue
+L182@P3:  Dist. 9 & 13, Wards 11, 18, 19 & 23 Oshkosh Senior Center, 200 North Campbell Road
+L183@P3:  Dist. 11, Wards 13 & 14 Calvary Lutheran Church, 2580 West 9th Avenue
+L184@P3:  Dist. 12, Wards 15, 16, 17 & 24 Living Water Lutheran Church, 1585 South Oakwood Road
+L185@P3:  Dist. 14 & 15, Wards 20, 21, 22, 28 & 31 Wittman Field Regional Airport, 525 West 20th Avenue
+L186@P3: TOWN OF ALGOMA Town Hall, 15 North Oakwood Road
+L187@P3: TOWN OF BLACK WOLF Town Hall, 380 East Black Wolf Avenue
+L188@P3: TOWN OF CLAYTON Municipal Building, 8348 Hickory Avenue
+L189@P3: TOWN OF NEENAH Municipal Building, 1600 Breezewood Lane
+L190@P3: TOWN OF NEKIMI Town Hall, 3790 Pickett Road
+L191@P3: TOWN OF NEPEUSKUN Town Hall, 1475 County Road E
+L192@P3: TOWN OF OMRO Town Hall, 4205 Rivermoor Road
+L193@P3: TOWN OF OSHKOSH Town Hall, 230 East County Road Y
+L194@P3: TOWN OF POYGAN Town Hall, 8693 Town Hall Road
+L195@P3: TOWN OF RUSHFORD Town Hall, 3413 County Road K
+L196@P3: TOWN OF UTICA Town Hall, 1730 County Road FF
+L197@P3-4: TOWN OF VINLAND Town Hall, 6085 County Road T5
+L198@P4: TOWN OF WINCHESTER Town Hall, 8522 Park Way
+L199@P4: TOWN OF WINNECONNE Town Hall, 6494 County Road M
+L200@P4: TOWN OF WOLF RIVER Town Hall, 8800 County Road II
+L201@P4: VILLAGE OF FOX CROSSING
+L202@P4:  Wards 1, 2, 4, 7 & 9 Fox Crossing Municipal Complex, 2000 Municipal Drive
+L203@P4:  Wards 3, 5, 6, 8 & 19 Apple Valley Presbyterian Church, 1750 Olde Buggy Drive
+L204@P4: ** Wards 10, 11, 12 & 18 Pentecostals of the Fox Cities, 1445 Midway Road
+L205@P4:  Wards 13, 14, 15 & 16 Pentecostals of the Fox Cities, 1445 Midway Road
+L206@P4: VILLAGE OF WINNECONNE Winneconne Municipal Center, 30 South First Street
+L207@P4: ** This is a new polling place for Wards 10, 11, 12 & 18.
+L208@P4: **OBTAINING ELECTION INFORMATION ON ELECTION NIGHT**
+L209@P4: WINNEBAGO COUNTY’S WEBSITE
+L210@P4: On the night of the election, election information will be posted on the County’s website at:
+L211@P4: https://www.winnebagocountywi.gov/262/Election-Information
+L212@P4: We will continue to update election results until all results are in, we will make a final, unofficial posting of the
+L213@P4: results to the website.
+L214@P4: COUNTY CLERK’S OFFICE
+L215@P4: You are welcome to come to the County Clerk’s Office on election night to receive totals as they come in.
+L216@P4: POLLING PLACES
+L217@P4: State law allows that anyone may observe election night procedures after the polls are closed, but may not
+L218@P4: interfere with the orderly conduct of the election process. Exit polls are permitted by law, but must not interfere
+L219@P4: with the election or be done until the voters are through voting.
+L220@P4: CITY/VILLAGE/TOWN HALLS
+L221@P4: You are also welcome to observe election activities at any of the town, village or city offices.

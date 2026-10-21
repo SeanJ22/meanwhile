@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hancock%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Hancock%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:35.463320+00:00",
+  "rawHash": "3ed86168f3eddc450f4874f3e8d2805807b80e0efdb589a4599adc2bed7e7bdd",
+  "httpStatus": 200,
+  "bytes": 853443,
+  "extractedTextHash": "f1ff4367831bf1482c8cc21fa4f925565ff814a219b067afde21c0938fddb54a",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

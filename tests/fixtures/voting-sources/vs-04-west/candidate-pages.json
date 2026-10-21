@@ -1,0 +1,823 @@
+[
+  {
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "finalUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:25:40.805Z",
+    "rawHash": "07143cd91f99ce494b1071889c3f2fa70c3772ba2de0ac2002c6f7112f52e7ab",
+    "path": "tests/fixtures/voting-sources/vs-04-west/hi-800acdcc4baf.html",
+    "savedHash": "07143cd91f99ce494b1071889c3f2fa70c3772ba2de0ac2002c6f7112f52e7ab",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.googletagmanager.com/ns.html?id=GTM-KBF48G7",
+        "label": ""
+      },
+      {
+        "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit",
+        "label": "Voter Service Centers and Ballot Drop Boxes"
+      },
+      {
+        "url": "http://portal.ehawaii.gov",
+        "label": "Powered by eHawaii.gov"
+      },
+      {
+        "url": "https://portal.ehawaii.gov/government/departments-and-agencies",
+        "label": "Government Directory"
+      },
+      {
+        "url": "https://elections.hawaii.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://twitter.com/elections808",
+        "label": "Office of Elections on X Twitter"
+      },
+      {
+        "url": "https://www.facebook.com/elections808",
+        "label": "Office of Elections on Facebook"
+      },
+      {
+        "url": "https://www.youtube.com/channel/UCxSC4DC5HxSHx-2knh89p3g/feed",
+        "label": "Office of Elections on Youtube"
+      },
+      {
+        "url": "https://www.instagram.com/elections808",
+        "label": "Instagram icon"
+      },
+      {
+        "url": "https://elections.hawaii.gov/chinese-main",
+        "label": "中文 Chinese"
+      },
+      {
+        "url": "https://elections.hawaii.gov/ilocano-main",
+        "label": "Ilocano"
+      },
+      {
+        "url": "https://elections.hawaii.gov/tagalog-main",
+        "label": "Tagalog"
+      },
+      {
+        "url": "https://elections.hawaii.gov/japanese-main",
+        "label": "日本語 Japanese"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us",
+        "label": "About Us"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/contact-us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/calendar",
+        "label": "Calendar"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions",
+        "label": "Boards and Commissions"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/boards-of-registration",
+        "label": "Boards of Registration"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/elections-commission",
+        "label": "Elections Commission"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/reapportionment",
+        "label": "Reapportionment"
+      },
+      {
+        "url": "https://elections.hawaii.gov/about-us/boards-and-commissions/elections-accessibility-needs-advisory-committee",
+        "label": "Statewide Elections Accessibility Needs Advisory Committee"
+      },
+      {
+        "url": "https://elections.hawaii.gov/reports",
+        "label": "Reports"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote/registration",
+        "label": "Registration"
+      },
+      {
+        "url": "https://olvr.hawaii.gov",
+        "label": "Register Online to Vote"
+      },
+      {
+        "url": "https://elections.hawaii.gov/register-to-vote/voter-registration-drives",
+        "label": "Voter Registration Drives"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting",
+        "label": "Voting"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/voting-in-hawaii",
+        "label": "Voting in Hawaii"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/absentee-voting",
+        "label": "Absentee Voting"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/contest-schedule",
+        "label": "Contest Schedule"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/county-election-divisions",
+        "label": "County Elections Divisions"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/election-security",
+        "label": "Election Security"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/political-parties",
+        "label": "Political Parties"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/provisional-voting",
+        "label": "Provisional Voting"
+      },
+      {
+        "url": "https://elections.hawaii.gov/2026-primary-election-provisional-ballot-dispositions",
+        "label": "2026 Primary Election Provisional Ballot Dispositions"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/replacement-ballot",
+        "label": "Replacement Ballot"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/rumors-vs-facts",
+        "label": "Rumors Vs. Facts"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/volunteer",
+        "label": "Volunteer"
+      },
+      {
+        "url": "https://olvr.hawaii.gov/altballotsearch3.aspx",
+        "label": "Interactive Voter Guide"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_English.pdf",
+        "label": "English"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Chinese.pdf",
+        "label": "Chinese"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Hawaiian.pdf",
+        "label": "Hawaiian"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Ilocano.pdf",
+        "label": "Ilocano"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-content/uploads/VoterGuide_2026_General_Tagalog.pdf",
+        "label": "Tagalog"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voting/2026-proposed-amendments-to-the-hawaii-state-constitution",
+        "label": "2026 Proposed Amendments to the Hawaii State Constitution"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates",
+        "label": "Candidates"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates/candidate-filing",
+        "label": "Become a Candidate"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates/candidate-reports",
+        "label": "Candidate Reports"
+      },
+      {
+        "url": "https://elections.hawaii.gov/candidates/nonpartisan-candidates-in-partisan-contests",
+        "label": "Nonpartisan Candidates in Partisan Contests"
+      },
+      {
+        "url": "https://elections.hawaii.gov/presidential",
+        "label": "Presidential"
+      },
+      {
+        "url": "https://elections.hawaii.gov/electoral-college",
+        "label": "Electoral College"
+      },
+      {
+        "url": "https://elections.hawaii.gov/presidential-elections",
+        "label": "Presidential Elections"
+      },
+      {
+        "url": "https://elections.hawaii.gov/election-results",
+        "label": "Results"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources",
+        "label": "Resources"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/archives-2",
+        "label": "Archives"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/campaign-signs",
+        "label": "Campaign Signs Regulations"
+      },
+      {
+        "url": "https://ags.hawaii.gov/campaign",
+        "label": "Campaign Spending Commission"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/cast-your-vote-in-comfort",
+        "label": "Cast Your Vote in Comfort"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/districts-and-precincts",
+        "label": "Districts and Precincts"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/elected-officials",
+        "label": "Elected Officials & Terms of Office"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/election-laws",
+        "label": "Election Laws"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/election-objections",
+        "label": "Election Objections"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/hawaii-votes-program",
+        "label": "Hawaii Votes Program"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/maps",
+        "label": "Maps"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/registration-voter-turnout-statistics",
+        "label": "Registration and Turnout Statistics"
+      },
+      {
+        "url": "https://elections.hawaii.gov/resources/absentee-voting-report",
+        "label": "Voting Report"
+      },
+      {
+        "url": "https://elections.hawaii.gov/news",
+        "label": "News"
+      },
+      {
+        "url": "https://elections.hawaii.gov/category/newsletters",
+        "label": "Newsletters"
+      },
+      {
+        "url": "https://elections.hawaii.gov/category/news-release",
+        "label": "News Releases"
+      },
+      {
+        "url": "https://elections.hawaii.gov/proclamations",
+        "label": "Proclamations"
+      },
+      {
+        "url": "https://experience.arcgis.com/experience/9261f3a7058c4d98b13d6dad59b342b1/page/2026-General-Election",
+        "label": "here"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/college-students",
+        "label": "College Student"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/houseless-voter-2",
+        "label": "Houseless Voter"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/military-and-overseas-voters",
+        "label": "Military/Overseas Voter"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/voters-requiring-assistance",
+        "label": "Voter Requiring Assistance"
+      },
+      {
+        "url": "https://elections.hawaii.gov/voters/voters-with-a-felony-conviction",
+        "label": "Voter with a Felony Conviction"
+      },
+      {
+        "url": "https://elections.hawaii.gov?page_id=5378",
+        "label": "Time Off for Voting"
+      },
+      {
+        "url": "https://instagram.com",
+        "label": "Office of Elections on Instagram"
+      },
+      {
+        "url": "https://portal.ehawaii.gov/terms-of-use.html",
+        "label": "Terms of Use"
+      },
+      {
+        "url": "https://ags.hawaii.gov/accessibility",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://portal.ehawaii.gov/privacy-policy.html",
+        "label": "Privacy Policy"
+      },
+      {
+        "url": "https://elections.hawaii.gov/browser-requirements",
+        "label": "Browser Requirements"
+      },
+      {
+        "url": "https://elections.hawaii.gov/adobe-acrobat-reader-dc",
+        "label": "Adobe Acrobat Reader DC"
+      },
+      {
+        "url": "https://elections.hawaii.gov/cdn-cgi/l/email-protection",
+        "label": "[email protected]"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Felections.hawaii.gov%2Fvoter-service-centers-and-places-of-deposit%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://elections.hawaii.gov/wp-json/wp/v2/pages/10513",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "url": "https://sos.oregon.gov/elections/Documents/GE26-Oregon-Drop-Sites.pdf",
+    "finalUrl": "https://sos.oregon.gov/elections/Documents/GE26-Oregon-Drop-Sites.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "capturedAt": "2026-10-21T04:25:41.589Z",
+    "rawHash": "218f6cdda34ebe46d01b355cf5481293a081540330bff6d762ce621898cfb832",
+    "path": "tests/fixtures/voting-sources/vs-04-west/or-58be8a9e1425.pdf",
+    "savedHash": "218f6cdda34ebe46d01b355cf5481293a081540330bff6d762ce621898cfb832",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://www.elections.alaska.gov/doc/forms/A04.pdf",
+    "finalUrl": "https://www.elections.alaska.gov/doc/forms/A04.pdf",
+    "status": 503,
+    "contentType": "text/plain",
+    "capturedAt": "2026-10-21T04:25:40.693Z",
+    "rawHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-cc46e122c273.bin",
+    "savedHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://www.pima.gov/3199/Pima-Votes",
+    "finalUrl": "https://www.pima.gov/pima-votes",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:25:41.689Z",
+    "rawHash": "e42dfe6e1b7fa174f1379ede4149025addad1a26bde19300b3ae8f8480a9464b",
+    "path": "tests/fixtures/voting-sources/vs-04-west/az-4020a54b37b6.html",
+    "savedHash": "30f6c58f286152158b4ab0105a7e07e07964efd9f1ce0b949350f405826bddeb",
+    "redactions": 6,
+    "links": [
+      {
+        "url": "https://www.googletagmanager.com/ns.html?id=GTM-TBF9ZQ8",
+        "label": ""
+      },
+      {
+        "url": "https://www.pima.gov/pima-votes",
+        "label": "Skip to Main Content"
+      },
+      {
+        "url": "https://www.pima.gov",
+        "label": ""
+      },
+      {
+        "url": "https://www.pima.gov/government",
+        "label": "Government"
+      },
+      {
+        "url": "https://www.pima.gov/departments-offices",
+        "label": "Departments & Offices"
+      },
+      {
+        "url": "https://www.pima.gov/services",
+        "label": "Services"
+      },
+      {
+        "url": "https://www.pima.gov/i-want-to",
+        "label": "I want to..."
+      },
+      {
+        "url": "https://forecast7.com/en/32d06n111d67/pima-county?unit=us",
+        "label": "PIMA COUNTY WEATHER"
+      }
+    ]
+  },
+  {
+    "url": "https://adacounty.id.gov/elections/early-voting/",
+    "finalUrl": "https://adacounty.id.gov/elections/early-voting/",
+    "status": 403,
+    "contentType": "application/json",
+    "capturedAt": "2026-10-21T04:25:40.793Z",
+    "rawHash": "35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664",
+    "path": "tests/fixtures/voting-sources/vs-04-west/id-25d295ded3e4.json",
+    "savedHash": "35e642f0e1bd426b9d8b0ee0284aefe801873dc13c18819fbeeaf2bf47136664",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://www.washoecounty.gov/voters/elections/Polling_Location_Overview/index.php",
+    "finalUrl": "https://www.washoecounty.gov/voters/elections/Polling_Location_Overview/index.php",
+    "status": 404,
+    "contentType": "text/html; charset=iso-8859-1",
+    "capturedAt": "2026-10-21T04:25:41.064Z",
+    "rawHash": "f2e170f92403b8284c64f13d2fe9152196b6e35f411d8b5c13af20bc1af49b7d",
+    "path": "tests/fixtures/voting-sources/vs-04-west/nv-436d501e53a7.html",
+    "savedHash": "f2e170f92403b8284c64f13d2fe9152196b6e35f411d8b5c13af20bc1af49b7d",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://www.berncoclerk.gov/elections/early-voting/",
+    "finalUrl": "https://www.berncoclerk.gov/elections/early-voting/",
+    "status": 403,
+    "contentType": "text/html",
+    "capturedAt": "2026-10-21T04:25:40.946Z",
+    "rawHash": "9a4c8e6f7e9cb4ab0cb646526b2f9f89d0e8a71967c07233a1f1a5931181d122",
+    "path": "tests/fixtures/voting-sources/vs-04-west/nm-c36c7a7ccd21.html",
+    "savedHash": "9a4c8e6f7e9cb4ab0cb646526b2f9f89d0e8a71967c07233a1f1a5931181d122",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://www.saltlakecounty.gov/clerk/elections/voting-in-person/",
+    "finalUrl": "https://www.saltlakecounty.gov/clerk/elections/voting-in-person/",
+    "status": 404,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:25:40.817Z",
+    "rawHash": "eed65b5da6153e13bceb0ba083bce25742ae1ed6efbaf0b57d914638ada7dc66",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ut-f36d34a02de5.html",
+    "savedHash": "eed65b5da6153e13bceb0ba083bce25742ae1ed6efbaf0b57d914638ada7dc66",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.saltlakecounty.gov",
+        "label": ""
+      },
+      {
+        "url": "https://www.saltlakecounty.gov/search",
+        "label": "Sitewide Search"
+      }
+    ]
+  },
+  {
+    "url": "https://www.natronacounty-wy.gov/438/Polling-Places",
+    "finalUrl": "https://www.natronacounty-wy.gov/438/Polling-Places",
+    "status": 404,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:25:41.198Z",
+    "rawHash": "802ca3f05bbaa7fe279fb9feaabf91855e05101c0cf01304865f7271ebf3f44e",
+    "path": "tests/fixtures/voting-sources/vs-04-west/wy-b7061c8cc3bb.html",
+    "savedHash": "f5d48706c5f558e9298410f14d57e4712c7d3f87ba735732907c6e46786719db",
+    "redactions": 1,
+    "links": [
+      {
+        "url": "https://www.natronacounty-wy.gov/438/Polling-Places",
+        "label": "Skip to Main Content"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/27/Government",
+        "label": "Government"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/31/Services",
+        "label": "Services"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/68/Parks-Recreation",
+        "label": "Parks & Recreation"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/8/Departments",
+        "label": "Departments"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/663/How-Do-I",
+        "label": "How Do I..."
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Search/Results",
+        "label": ""
+      },
+      {
+        "url": "https://www.facebook.com/people/Natrona-County-WY/100064678448170",
+        "label": ""
+      },
+      {
+        "url": "https://www.youtube.com/channel/UCASaHUpncE4V3GngjMjHAaQ",
+        "label": "Watch Public Meetings Online"
+      },
+      {
+        "url": "https://wy-natronacounty2.civicplus.com/FormCenter/Opinion-Poll-3/Website-Opinion-Poll-46",
+        "label": "Didn't Find What You Were Looking For?"
+      },
+      {
+        "url": "https://weather.natronacounty-wy.gov",
+        "label": "Webcam"
+      },
+      {
+        "url": "http://www.natronacounty-wy.gov/agendacenter",
+        "label": "Meeting Agendas and Minutes"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/100/Vehicle-Licensing",
+        "label": "Motor Vehicles"
+      },
+      {
+        "url": "http://wy-natronacounty2.civicplus.com/DocumentCenter/Home/View/754",
+        "label": "Parks Rules and Regulations"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/cdn-cgi/l/email-protection",
+        "label": "[email protected] ."
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Jobs.aspx",
+        "label": "Employment"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/871/Property-Information",
+        "label": "Property Search"
+      },
+      {
+        "url": "https://data-cityofcasper.opendata.arcgis.com",
+        "label": "GIS Mapping"
+      },
+      {
+        "url": "https://secure.rec1.com/WY/natrona-county-wy/catalog",
+        "label": "Camping"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/835/Sheriff",
+        "label": "Sheriff"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/sitemap",
+        "label": "Site Map"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/directory.aspx",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/accessibility",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/copyright",
+        "label": "Copyright Notices"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/885/Employee-Benefits",
+        "label": "Employee Benefits"
+      },
+      {
+        "url": "https://connect.civicplus.com/referral",
+        "label": "CivicPlus&reg;"
+      }
+    ]
+  },
+  {
+    "url": "https://www.acvote.org/dropbox",
+    "finalUrl": "https://www.acvote.org/dropbox",
+    "status": 404,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:25:41.208Z",
+    "rawHash": "3a544106eb185ab7aed03b7da8745541506521877bd1599266f837c86bcd25d3",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ca-5f8a765f5dda.html",
+    "savedHash": "3a544106eb185ab7aed03b7da8745541506521877bd1599266f837c86bcd25d3",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://www.jeffco.us/3907/Find-a-Voting-Location",
+    "finalUrl": "https://www.jeffco.us/3907/Find-a-Voting-Location",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:25:40.895Z",
+    "rawHash": "4f9f1541c8be4e3a6aa7dcae3a151906093e306ff9a4beb555999d0347f46b2d",
+    "path": "tests/fixtures/voting-sources/vs-04-west/co-cd69bcba5cae.html",
+    "savedHash": "8fcca2109643c972ffee3ebca32df4f42e769e5a855e5f459177ea6c4b54cd28",
+    "redactions": 1,
+    "links": [
+      {
+        "url": "https://www.jeffco.us/3907/Find-a-Voting-Location",
+        "label": "Drop Boxes"
+      },
+      {
+        "url": "https://www.jeffco.us/4947",
+        "label": ""
+      },
+      {
+        "url": "https://www.jeffco.us/5044/Voters",
+        "label": "Voters"
+      },
+      {
+        "url": "https://www.jeffco.us/3901/Election-Information",
+        "label": "Election Information"
+      },
+      {
+        "url": "https://www.jeffco.us/5028/Candidates-Jurisdictions",
+        "label": "Candidates & Jurisdictions"
+      },
+      {
+        "url": "https://www.jeffco.us/4687/Get-Involved",
+        "label": "Get Involved"
+      },
+      {
+        "url": "https://www.jeffco.us/358/About-Us",
+        "label": "About Us"
+      },
+      {
+        "url": "https://www.jeffco.us/3896/Contact-Us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.jeffco.us",
+        "label": "County Home"
+      },
+      {
+        "url": "https://www.jeffco.us/Search/Results",
+        "label": ""
+      },
+      {
+        "url": "https://www.jeffco.us/4652/On-the-Ballot",
+        "label": "On the Ballot"
+      },
+      {
+        "url": "https://www.jeffco.us/578/Voter-Turnout-Election-Results",
+        "label": "Voter Turnout & Election Results"
+      },
+      {
+        "url": "https://www.jeffco.us/4734/Election-Night-Beyond",
+        "label": "Election Night & Beyond"
+      },
+      {
+        "url": "https://www.jeffco.us/4871/Clerk-Recorder",
+        "label": "Clerk & Recorder"
+      },
+      {
+        "url": "https://www.jeffco.us/687/Sitemap",
+        "label": "Sitemap"
+      },
+      {
+        "url": "https://www.jeffco.us/359/Services",
+        "label": "Services"
+      },
+      {
+        "url": "https://www.jeffco.us/4947/Elections",
+        "label": "Elections"
+      },
+      {
+        "url": "https://www.jeffco.us/5015/Upcoming-Election",
+        "label": "Upcoming Election"
+      },
+      {
+        "url": "https://www.jeffco.us/DocumentCenter/View/58898/2026-General-VSPC-and-Drop-Box-Combined-Location-Sheet-PDF",
+        "label": "Download a list of voting locations"
+      },
+      {
+        "url": "https://www.google.com/maps/d/embed?ehbc=2E312F&mid=1d7R5C2YZ1hu6-JOuzb1gu_q4O0EAZQw&noprof=1",
+        "label": "Interactive map of Jefferson County ballot drop box locations"
+      },
+      {
+        "url": "https://vspc.jeffco.us/WaitTimes.aspx",
+        "label": "Open them in a new window"
+      },
+      {
+        "url": "https://www.google.com/maps/d/embed?ehbc=2E312F&mid=1rg_s0K2MzvFIZ9bUi7KqGQplcePlXTo&noprof=1",
+        "label": "Interactive map of Jefferson County ballot drop box locations"
+      },
+      {
+        "url": "https://www.jeffco.us/formcenter/Clerk-Recorder-9/Clerk-and-Recorders-Office-Administratio-151",
+        "label": "Email us"
+      },
+      {
+        "url": "http://eepurl.com/gS-ouH",
+        "label": "Sign up here"
+      },
+      {
+        "url": "https://www.jeffco.us/3907/Find-a-Voting-Site",
+        "label": "Voting Sites"
+      },
+      {
+        "url": "https://www.jeffco.us/578/Election-Results",
+        "label": "Turnout & Results"
+      },
+      {
+        "url": "https://www.jeffco.us/608/Be-an-Election-Worker",
+        "label": "Election Workers"
+      },
+      {
+        "url": "https://www.jeffco.us/5010/Register-to-Vote",
+        "label": "Voter Registration"
+      },
+      {
+        "url": "https://www.jeffco.us/4112/Election-Security",
+        "label": "Election Security"
+      },
+      {
+        "url": "https://www.facebook.com/Jeffcoclerk",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://www.instagram.com/jeffcoclerk",
+        "label": "Instagram"
+      },
+      {
+        "url": "https://www.youtube.com/user/JeffCoClerk",
+        "label": "YouTube"
+      },
+      {
+        "url": "https://bsky.app/profile/jeffcoclerk.bsky.social",
+        "label": "Bluesky"
+      },
+      {
+        "url": "https://www.jeffco.us/QuickLinks.aspx?CID=649",
+        "label": "Quick Links"
+      },
+      {
+        "url": "https://www.jeffco.us/578",
+        "label": "Election Results"
+      },
+      {
+        "url": "https://www.jeffco.us/4686/Voter-Information",
+        "label": "Voter Information"
+      },
+      {
+        "url": "https://www.jeffco.us/4112",
+        "label": "Election Security"
+      },
+      {
+        "url": "https://www.jeffco.us/4652",
+        "label": "On the Ballot"
+      },
+      {
+        "url": "https://www.jeffco.us/608",
+        "label": "Election Workers"
+      },
+      {
+        "url": "https://www.jeffco.us/QuickLinks.aspx?CID=14",
+        "label": "County Site Links"
+      },
+      {
+        "url": "https://www.jeffco.us/sitemap",
+        "label": "Sitemap"
+      },
+      {
+        "url": "https://www.jeffco.us/5175/Contact-Us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.jeffco.us/3558/Accessibility",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://www.jeffco.us/3557/Non-Discrimination",
+        "label": "Non-Discrimination Notice"
+      },
+      {
+        "url": "https://www.jeffco.us/749/Website-Photography",
+        "label": "Website Photography"
+      },
+      {
+        "url": "https://www.jeffco.us/2845/Privacy-and-Site-Disclaimer",
+        "label": "Privacy & Site Disclaimer"
+      },
+      {
+        "url": "https://jeffersoncountyco.qscend.com/311/request/add/29bea368333e479791ea6e75d1feed02",
+        "label": "Report a website issue"
+      },
+      {
+        "url": "https://connect.civicplus.com/referral",
+        "label": "CivicPlus&reg;"
+      }
+    ]
+  }
+]

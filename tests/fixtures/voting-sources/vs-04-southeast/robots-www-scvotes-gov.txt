@@ -1,0 +1,21 @@
+User-agent: meta-externalagent
+Disallow: /calendar/
+Disallow: /page/
+
+User-agent: GPTBot
+Disallow: /calendar/
+
+User-agent: Amazonbot
+Disallow: /calendar/
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /calendar/
+
+User-agent: *
+Disallow: /calendar/category/general/page/
+Disallow: /calendar/list/page/
+Disallow: /calendar/category/*/page/
+Disallow: /*?tribe-bar-date=

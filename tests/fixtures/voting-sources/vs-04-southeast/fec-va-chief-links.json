@@ -1,0 +1,98 @@
+[
+  {
+    "url": "https://www.elections.virginia.gov/registration/election-voter-faq",
+    "label": "Election and Voter FAQ"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/voterid",
+    "label": "Do I need an ID to vote?"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/voter-forms",
+    "label": "Voter Forms"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/registration-drives",
+    "label": "Voter Registration Drive Training"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/designated-state-agencies",
+    "label": "State-designated Voter Registration"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/same-day-voter-registration",
+    "label": "Same Day Voter Registration"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/registration/felony-convictions-and-voter-eligibility",
+    "label": "Felony Convictions and Voter Eligibility"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/polling-place-lookup",
+    "label": "What’s on Your Ballot?"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/in-person-voting",
+    "label": "Voting on Election Day"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/early-absentee",
+    "label": "Absentee and Early Voting"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/accessible-voting",
+    "label": "Accessible Voting"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/early-voting-office-locations",
+    "label": "Early Voting Locations"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/voter-ed",
+    "label": "Voter Education & Outreach"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/voter-rights",
+    "label": "Voter Rights"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/ranked-choice-voting",
+    "label": "Ranked Choice Voting"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/resultsreports/registration-statistics",
+    "label": "Registration Statistics & Polling Places"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/resultsreports/maintenance-reports",
+    "label": "Voter Registration List Maintenance"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/officer-of-elections",
+    "label": "Officer of Elections/Poll Worker"
+  },
+  {
+    "url": "https://vote.elections.virginia.gov/VoterInformation",
+    "label": "Visit Citizen Portal"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/voter-pocket-guide",
+    "label": "Voter Pocket Guide"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/casting-a-ballot/absentee-voting",
+    "label": "Absentee Voting"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/elect-backgrounders/what-elect-does-before-you-vote",
+    "label": "Before You Vote"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/elect-backgrounders/what-elect-does-when-you-vote",
+    "label": "When You Vote"
+  },
+  {
+    "url": "https://www.elections.virginia.gov/elect-backgrounders/what-elect-does-after-you-vote",
+    "label": "After You Vote"
+  }
+]

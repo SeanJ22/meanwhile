@@ -1,0 +1,110 @@
+[
+  {
+    "url": "https://dos.fl.gov/elections/data-statistics/voter-registration-statistics",
+    "label": "Voter Registration Statistics"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters",
+    "label": "For Voters"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/election-dates",
+    "label": "Election Dates"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/emergency-and-disaster-election-resources",
+    "label": "Emergency and Disaster - Election Resources"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/notices-of-general-election",
+    "label": "Notices of General Election"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/presidential-election-year",
+    "label": "Presidential Election Year"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/special-elections",
+    "label": "Special Elections"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place",
+    "label": "Voter Information Lookup"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/voter-precinct-lookup",
+    "label": "Voter Precinct Lookup"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/vote-by-mail-ballot-information-and-status-lookup",
+    "label": "Vote-by-Mail Ballot Request / Status Lookup"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voter-registration",
+    "label": "Voter Registration"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voting",
+    "label": "Voting"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/laws-rules/help-america-vote-act",
+    "label": "Help America Vote Act (HAVA)"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems",
+    "label": "Voting Systems"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems/about-voting-systems",
+    "label": "About Voting Systems"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems/non-voting-system-technologies",
+    "label": "Non-Voting System Technologies"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems/certified-voting-systems-and-vendors",
+    "label": "Certified Voting Systems and Vendors"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/voting-systems/certificationapproval-status-and-test-schedule",
+    "label": "Certification/Approval Status and Test Schedule"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/contacts/supervisor-of-elections",
+    "label": "Contact Your County Supervisor of Elections"
+  },
+  {
+    "url": "https://registertovoteflorida.gov",
+    "label": "RegisterToVoteFlorida.gov"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voter-registration/felon-voting-rights",
+    "label": "Felon Voting Rights"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voter-registration/third-party-voter-registration-organizations-3pvro",
+    "label": "Third-Party Voter Registration Organizations (3PVRO)"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/data-statistics/voter-registration-statistics/bookclosing",
+    "label": "Book Closing Reports"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/data-statistics/elections-data/absentee-and-early-voting",
+    "label": "Early Voting and Vote-by-Mail Ballot Request Reports"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/data-statistics/elections-data/voter-turnout",
+    "label": "Voter Turnout"
+  },
+  {
+    "url": "https://dos.fl.gov/elections/for-voters/voting/early-voting-and-secure-ballot-intake-stations",
+    "label": "Early Voting Sites/Secure Ballot Intake Stations"
+  },
+  {
+    "url": "https://registration.elections.myflorida.com/CheckVoterStatus",
+    "label": "Voter Information Lookup"
+  }
+]

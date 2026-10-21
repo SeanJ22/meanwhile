@@ -1,0 +1,12 @@
+{
+  "requestedUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=1960__1&bpty=X",
+  "finalUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/getballot.aspx?elect=20261103G&prsid=1960__1&bpty=X",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:30:52.861000+00:00",
+  "rawHash": "513af88b1163ba0ae749b06e23f040fd11326b9c16a77cf486e59ab0886029bd",
+  "contentType": "application/pdf; charset=utf-8",
+  "county": "montgomery",
+  "selectionUrl": "https://lookup.boe.ohio.gov/vtrapp/montgomery/ballotlist.aspx",
+  "selectionDistrict": "VILL 0F NEW LEBANON",
+  "sourceElection": "20261103G"
+}

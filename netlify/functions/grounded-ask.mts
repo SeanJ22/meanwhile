@@ -23,11 +23,13 @@ const groundedAsk = async (request: Request, context: { waitUntil(work: Promise<
   const processAgeMs = Math.round(process.uptime() * 1000);
   const ordinal = ++requests;
   const { POST, prefetchReaderGeography } = await engine;
+  const engineWaitMs = performance.now() - started;
   // Start the same file reads used by the Reader beside the first request's
   // manifest/network reads, as /api/meetings and representation already do.
   // This work belongs to the current cold invocation.
   prefetchReaderGeography();
   const response = await withResponseLifetime(work => context.waitUntil(work), () => POST(request));
+  response.headers.append("Server-Timing", `module;dur=${ordinal === 1 ? Math.round(moduleMs) : 0}, engine;dur=${Math.round(engineWaitMs)}, handler;dur=${Math.round(performance.now() - started)}`);
   response.headers.set("x-wtp-ask-instance", instance);
   response.headers.set("x-wtp-ask-instance-request", String(ordinal));
   response.headers.set("x-wtp-ask-module-ms", String(Math.round(moduleMs)));

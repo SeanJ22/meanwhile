@@ -1,0 +1,637 @@
+[
+  {
+    "url": "https://elections.canyoncounty.id.gov/upcoming",
+    "finalUrl": "https://elections.canyoncounty.id.gov/upcoming/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:31:08.375Z",
+    "rawHash": "458f196d3eb0cd9d1742fdf84936233e69ba25435af36cf999d04055dd058ba5",
+    "path": "tests/fixtures/voting-sources/vs-04-west/id-b1cf5d812167-458f196d3eb0.html",
+    "savedHash": "458f196d3eb0cd9d1742fdf84936233e69ba25435af36cf999d04055dd058ba5",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://elections.canyoncounty.id.gov",
+        "label": "Canyon County Elections"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/faq",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://www.youtube.com/@CanyonCo/streams",
+        "label": "Livestream"
+      },
+      {
+        "url": "https://www.canyoncounty.id.gov",
+        "label": "County Site"
+      },
+      {
+        "url": "https://www.canyoncounty.id.gov/cc-public-records-request",
+        "label": "Submit Here"
+      },
+      {
+        "url": "https://run.voteidaho.gov?_gl=1*1tg1bfs*_ga*MTY2MjMzNzQ1NC4xNzY5MDE2OTU2*_ga_20546Y1CC5*czE3NzIwNDE3MjMkbzgkZzAkdDE3NzIwNDE3MjMkajYwJGwwJGgw",
+        "label": "voteidaho.gov"
+      },
+      {
+        "url": "https://voteidaho.gov/calendar",
+        "label": "CLICK HERE to see the 2026 Idaho Election Calendar."
+      },
+      {
+        "url": "https://voteidaho.gov/voter-registration",
+        "label": "voteidaho.gov"
+      },
+      {
+        "url": "https://voteidaho.gov",
+        "label": "voteidaho.gov"
+      },
+      {
+        "url": "https://elections.sos.idaho.gov/ElectionLink/ElectionLink/ViewPollingLocation.aspx",
+        "label": "Voter Lookup Tool."
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/feed",
+        "label": "Canyon County Elections &raquo; Feed"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/comments/feed",
+        "label": "Canyon County Elections &raquo; Comments Feed"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Felections.canyoncounty.id.gov%2Fupcoming%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://elections.canyoncounty.id.gov/wp-json/wp/v2/pages/261",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "url": "https://www.arapahoevotes.gov/ballot-dropbox-locations",
+    "finalUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/index.php",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:31:03.308Z",
+    "rawHash": "a6c602d41d82e48a58ac236e223ac0d2154327ccb7dc40260cab08ce5b7c1ad1",
+    "path": "tests/fixtures/voting-sources/vs-04-west/co-f84e33fb50fd-a6c602d41d82.html",
+    "savedHash": "a6c602d41d82e48a58ac236e223ac0d2154327ccb7dc40260cab08ce5b7c1ad1",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/index.php",
+        "label": "Read More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/faqs/index.php",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/index.php",
+        "label": "Zulu"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/votes/records_data/election_results.php",
+        "label": "Election Results\n\n\n\nLearn More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/voting_locations/index.php",
+        "label": "Voting Locations\n\n\n\nLearn More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/voter_registration/index.php",
+        "label": "Voter Registration\n\n\n\nLearn More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/records_data/index.php",
+        "label": "Records & Data\n\n\n\nLearn More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/get_involved/index.php",
+        "label": "Get Involved\n\n\n\nLearn More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/election_resources/index.php",
+        "label": "Election Resources\n\n\n\nLearn More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/transparency/index.php",
+        "label": "Transparency\n\n\n\nLearn More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/media/index.php",
+        "label": "Media\n\n\n\nLearn More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/calendar.php?calendar=6",
+        "label": "See All Dates"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1711.php",
+        "label": "Read more about In-Person Voting Is Here!"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1700.php",
+        "label": "Read more about Arapahoe County to Hear Protest by Sheridan Board of Education Member"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1698.php",
+        "label": "Read more about Proposition 7A FAQs: What If My Ballot Is Affected?"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1687.php",
+        "label": "Read more about Arapahoe County Statement on Ballot Measure 7A"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1684.php",
+        "label": "Read more about Voters with Disabilities: Make a Plan to Vote!"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1695.php",
+        "label": "Read more about Columbine Valley Ballots May Be Missing Ballot Measure 7A"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1676.php",
+        "label": "Read more about Information/Status of Sheridan School Board Recall Efforts"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1652.php",
+        "label": "Read more about Arapahoe In Action: Elections Division Adds 24-hr. Drop Boxes and Voting Centers"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1633.php",
+        "label": "Read more about Arapahoe County Elections' Statement on Federal Efforts to Change Voting by Mail"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1619.php",
+        "label": "Read more about Job Fairs Coming For Elections Work"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1589.php",
+        "label": "Read more about “Lot Draw” for Candidates’ Ballot Order Complete"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1588.php",
+        "label": "Read more about 2026 Primary Election Results Certified"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1560.php",
+        "label": "Read more about NOTICE OF CANDIDATE WITHDRAWAL"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1525.php",
+        "label": "Read more about Primary Election is Tuesday, June 30!"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1524.php",
+        "label": "Read more about Important Election Deadlines and In-Person Voting Arrive Monday"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1520.php",
+        "label": "Read more about Primary Election FAQs"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1523.php",
+        "label": "Read more about Go Behind the Scenes: Sign Up Now for Election Facility Tours"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1521.php",
+        "label": "Read more about Bipartisan Ballot Tabulator Test Successful"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1522.php",
+        "label": "Read more about Aurora student wins Colorado County Clerks Association Scholarship"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1475.php",
+        "label": "Read more about “We want them to feel empowered.” Elections Division registers unhoused voters."
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1418.php",
+        "label": "Read more about What's a VSPC? In-person voting centers offer more than just ballots"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1383.php",
+        "label": "Read more about Where do you want to vote?"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1337.php",
+        "label": "Read more about Colorado Clerks Announce 2026 Scholarship Contest"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1306.php",
+        "label": "Read more about Help Us Make Elections (Even) Better: Take This Short Survey"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1304.php",
+        "label": "Read more about Durango Herald Salutes Colorado County Clerks for Keeping Politics Out of Elections"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1284.php",
+        "label": "Read more about 2025 Coordinated Election: Wrap up and Thank Yous"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1251.php",
+        "label": "Read more about Statement on Aurora Voter Who Received Two ballots"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1247.php",
+        "label": "Read more about In their own words: Arapahoe County ensures voters can use languages they understand"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1248.php",
+        "label": "Read more about “They deserve to vote.” Clerk’s and Sheriff’s Office team up for voting access"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1237.php",
+        "label": "Read more about Statement Regarding Littleton Public Schools Ballot Measure"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1202.php",
+        "label": "Read more about 2025 \"I Voted\" Sticker Contest Winning Design Announced"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1174.php",
+        "label": "Read more about Sign up now for a tour of our Election Facility"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1117.php",
+        "label": "Read more about CCM and Denver Gazette Cover 2025 Sticker Contest"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1100.php",
+        "label": "Read more about Enter the Arapahoe County \"I Voted\" or \"First Time Voter\" Sticker Contest!"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1101.php",
+        "label": "Read more about Read CPR's Detailed Coverage of Colorado's Voter Privacy Protections"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1078.php",
+        "label": "Read more about Statement Regarding the 2020 General Election Cast Vote Record (CVR)"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1077.php",
+        "label": "Read more about Clerk and Recorder's Office Statement Regarding 2020 General Election CVR"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1030.php",
+        "label": "Read more about County clerks unite to increase teen voter registration"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1129.php",
+        "label": "Read more about Elections Division Wins National Award for Cross-County Partnerships"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1038.php",
+        "label": "Read more about Giving thanks for a successful General Election"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1042.php",
+        "label": "Read more about 2024 General Election Certified"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1041.php",
+        "label": "Read more about WATCH: Next on 9News' Story on Arapahoe Elections Workers Saving One Voter's 57-year Voting Streak"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1088.php",
+        "label": "Read more about CBS4 Covers Election night 2024 from the Elections Facility"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1089.php",
+        "label": "Read more about Fox 31 Problem Solvers explain how signature verification works"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1036.php",
+        "label": "Read more about Elections Division, Sheriff’s Office Serve Confined Voters"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1092.php",
+        "label": "Read more about \"Ballot Bingo\" gets voters with disabilities into the (voting) game"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1037.php",
+        "label": "Read more about What to do if your ballot is lost, damaged or never arrived"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1083.php",
+        "label": "Read more about Littleton Independent 2024 General Election Coverage"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1039.php",
+        "label": "Read more about Ballot Bingo Gets Voters with Disabilities Into the Game"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R920.php",
+        "label": "Read more about Bipartisan Canvass Certifies June Election Results"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R921.php",
+        "label": "Read more about Thank You Election Workers And Partners"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R922.php",
+        "label": "Read more about Thank You VSPC Judges"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R924.php",
+        "label": "Read more about Take a Tour of our Elections Facility"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R925.php",
+        "label": "Read more about Secure Ballot Processing"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1084.php",
+        "label": "Read more about Colorado Newsline features New Tri-County Drop Box"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1090.php",
+        "label": "Read more about CPR News covers the entire vote-by-mail system in Colorado"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1091.php",
+        "label": "Read more about Risk-Limiting Audits begin in Colorado counties"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1086.php",
+        "label": "Read more about The Denver Post reports on voters who prefer in-person voting"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1085.php",
+        "label": "Read more about Denver Post covers Arapahoe county's new BallotTrax system"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/news_detail_votes_T90_R1087.php",
+        "label": "Read more about Littleton Independent covers historic early turnout in the General Election"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/votes_newslist.php",
+        "label": "See All News"
+      },
+      {
+        "url": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.arapahoeco.gov%2Fyour_county%2Farapahoevotes%2Findex.php",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://www.twitter.com/intent/tweet?url=http%3A%2F%2Fwww.arapahoeco.gov%2Fyour_county%2Farapahoevotes%2Findex.php",
+        "label": "Twitter"
+      },
+      {
+        "url": "https://www.reddit.com/submit?url=http%3A%2F%2Fwww.arapahoeco.gov%2Fyour_county%2Farapahoevotes%2Findex.php",
+        "label": "Reddit"
+      },
+      {
+        "url": "https://userway.org",
+        "label": "website accessibility"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/arapahoevotes/contact_us/index.php",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/your_county/county_departments/information_technology/technology_accessibility.php",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://www.facebook.com/ArapahoeClerk",
+        "label": ""
+      },
+      {
+        "url": "https://twitter.com/ArapahoeClerk",
+        "label": ""
+      },
+      {
+        "url": "https://www.instagram.com/ArapahoeClerk",
+        "label": ""
+      },
+      {
+        "url": "https://www.youtube.com/user/arapahoecountygov",
+        "label": ""
+      },
+      {
+        "url": "https://www.revize.com",
+        "label": ""
+      },
+      {
+        "url": "https://cms3.revize.com/revize/security/index.jsp?filename=%2Fyour_county%2Farapahoevotes%2Findex.php&webspace=arapahoe",
+        "label": "Login"
+      }
+    ]
+  },
+  {
+    "url": "https://www.cochise.az.gov/509/Voter-Information",
+    "finalUrl": "https://www.cochise.az.gov/509/Voter-Information",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:31:03.253Z",
+    "rawHash": "ae3bdf26f6f138a61331fa4968077b2240c9b54e3a1cb005df1a2b4c422b860b",
+    "path": "tests/fixtures/voting-sources/vs-04-west/az-207951e62d4f-ae3bdf26f6f1.html",
+    "savedHash": "fefadd8281b4ce864d602a24a86a9fe96d270d97d6477dec0a21ce3a5cc0fc56",
+    "redactions": 1,
+    "links": [
+      {
+        "url": "https://www.cochise.az.gov/509/Voter-Information",
+        "label": "Skip to Main Content"
+      },
+      {
+        "url": "https://www.cochise.az.gov/MyAccount/ProfileCreate",
+        "label": "Create a Website Account"
+      },
+      {
+        "url": "https://www.cochise.az.gov/MyAccount",
+        "label": "Website Sign In"
+      },
+      {
+        "url": "https://www.cochise.az.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://www.cochise.az.gov/9/How-Do-I",
+        "label": "How Do I..."
+      },
+      {
+        "url": "https://www.cochise.az.gov/101/Departments",
+        "label": "Departments"
+      },
+      {
+        "url": "https://www.cochise.az.gov/780/Economic-Development",
+        "label": "Economy and Tourism"
+      },
+      {
+        "url": "https://www.cochise.az.gov/31/Resources",
+        "label": "Resources"
+      },
+      {
+        "url": "https://www.cochise.az.gov/Search/Results",
+        "label": ""
+      },
+      {
+        "url": "https://www.cochise.az.gov/925/Register-to-Vote-Online",
+        "label": "Register to Vote Online"
+      },
+      {
+        "url": "https://www.cochise.az.gov/Faq.aspx?TID=50",
+        "label": "View All"
+      },
+      {
+        "url": "https://www.cochise.az.gov/Faq.aspx?QID=401",
+        "label": "Who can register to vote?"
+      },
+      {
+        "url": "https://www.cochise.az.gov/Faq.aspx?QID=402",
+        "label": "How do I register to vote?"
+      },
+      {
+        "url": "https://www.cochise.az.gov/Faq.aspx?QID=403",
+        "label": "Where are the voter registration forms available?"
+      },
+      {
+        "url": "https://www.cochise.az.gov/498/Recorder",
+        "label": ""
+      },
+      {
+        "url": "https://my.arizona.vote/PortalList.aspx",
+        "label": "Arizona Voter Information Portal"
+      },
+      {
+        "url": "https://trackmyballot.azsos.gov/voter",
+        "label": "Ballottrax"
+      },
+      {
+        "url": "https://cochise-az.nextrequest.com",
+        "label": "Public Record Requests"
+      },
+      {
+        "url": "https://www.cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+        "label": "Vew Election Day Polling Locations (PDF)"
+      },
+      {
+        "url": "https://www.cochise.az.gov/DocumentCenter/View/25363/Life-Cycle-of-a-Mail-In-PDF",
+        "label": ""
+      },
+      {
+        "url": "https://azsos.gov/elections/election-information/voter-registration-counts",
+        "label": "View Archive"
+      },
+      {
+        "url": "https://www.cochise.az.gov/DocumentCenter/View/1098/Voter-Registration-Form-and-Instructions-PDF",
+        "label": "Voter Registration Form and Instructions (PDF)"
+      },
+      {
+        "url": "https://www.cochise.az.gov/DocumentCenter/View/22733/Voluntary-Cancellation-of-Voter-Registration-Form-PDF",
+        "label": "Voluntary Cancellation of Voter Registration Form (PDF)"
+      },
+      {
+        "url": "https://www.cochise.az.gov/DocumentCenter/View/5457/Ballot-by-Mail--Active-Early-Voting-List-Request-Form-PDF",
+        "label": "Ballot by Mail & Active Early Voting List Request Form (PDF)"
+      },
+      {
+        "url": "https://www.cochise.az.gov/DocumentCenter/View/1096/Remove-from-Ballot-by-Mail--Active-Early-Voting-List-Request-Form-PDF",
+        "label": "Remove from Ballot by Mail & Active Early Voting List Request Form (PDF)"
+      },
+      {
+        "url": "https://www.cochise.az.gov/DocumentCenter/View/1095/Political-Observer-Guidelines-PDF",
+        "label": "Political Observer Guidelines (PDF)"
+      },
+      {
+        "url": "https://www.cochise.az.gov/DocumentCenter/View/1097/Request-for-appointment-of-Political-Observer-PDF",
+        "label": "Request for appointment of Political Observer (PDF)"
+      },
+      {
+        "url": "https://www.cochise.az.gov/DocumentCenter/View/19342/Ballot-Box-Information-PDF",
+        "label": "Ballot Box Information (PDF)"
+      },
+      {
+        "url": "https://www.cochise.az.gov/m/directory/department?did=132",
+        "label": "Directory"
+      },
+      {
+        "url": "https://www.cochise.az.gov/592/Agendas-Minutes",
+        "label": "Agendas & Minutes"
+      },
+      {
+        "url": "https://www.cochise.az.gov/387/Job-Opportunities",
+        "label": "Employment"
+      },
+      {
+        "url": "https://www.cochise.az.gov/610/Pay",
+        "label": "Pay Online"
+      },
+      {
+        "url": "https://www.citizenserve.com/Portal/PortalController?Action=showHomePage&ctzPagePrefix=Portal_&installationID=335&original_contactID=0&original_iid=0",
+        "label": "Permits"
+      },
+      {
+        "url": "https://public.alertsense.com/SignUp?RegionId=1341",
+        "label": "Notifications"
+      },
+      {
+        "url": "https://www.cochise.az.gov/383/Birth-Death-Certificates",
+        "label": "Vital Records"
+      },
+      {
+        "url": "https://www.cochise.az.gov/facebook",
+        "label": ""
+      },
+      {
+        "url": "https://www.instagram.com/cochisecountyaz",
+        "label": ""
+      },
+      {
+        "url": "https://www.linkedin.com/company/18321583",
+        "label": ""
+      },
+      {
+        "url": "https://nextdoor.com/agency/cochise-county?i=hhqxmfcxbnzbywrbqlmc",
+        "label": ""
+      },
+      {
+        "url": "https://twitter.com/CochiseCountyAZ",
+        "label": ""
+      },
+      {
+        "url": "https://www.cochise.az.gov/QuickLinks.aspx?CID=27",
+        "label": "Quick Links"
+      },
+      {
+        "url": "https://azdor.gov/forms/property-tax-forms",
+        "label": "Arizona Department of Revenue Property Tax Forms"
+      },
+      {
+        "url": "https://azstateparks.com/state-historic-property-tax-reclassification-spt-for-owneroccupied-homes",
+        "label": "State Historic Property Tax Reclassification (SPT) Owner-Occupied Homes"
+      },
+      {
+        "url": "https://www.cochise.az.gov/QuickLinks.aspx?CID=18",
+        "label": "Site Links"
+      },
+      {
+        "url": "https://www.cochise.az.gov/sitemap",
+        "label": "Site Map"
+      },
+      {
+        "url": "https://www.cochise.az.gov/accessibility",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://connect.civicplus.com/referral",
+        "label": "CivicPlus&reg;"
+      }
+    ]
+  },
+  {
+    "url": "https://www.elections.alaska.gov/Core/pollinglocations.php",
+    "finalUrl": "https://www.elections.alaska.gov/Core/pollinglocations.php",
+    "status": 503,
+    "contentType": "text/plain",
+    "capturedAt": "2026-10-21T04:31:02.849Z",
+    "rawHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-5ba4e4f4bf20-b5b660bc2bb9.bin",
+    "savedHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "redactions": 0,
+    "links": []
+  }
+]

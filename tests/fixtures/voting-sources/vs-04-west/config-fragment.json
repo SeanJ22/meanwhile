@@ -1,0 +1,1559 @@
+[
+  {
+    "id": "mt-statewide-polling-2026",
+    "publisher": "Office of the Secretary of State, Helena, MT",
+    "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt",
+      "name": "Montana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://votemt.gov/",
+    "discoveredFrom": "https://votemt.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Original statewide XLSX downloaded October 13, 2026, after robots permission; 730 polling precinct rows. Official VoteMT general-election page links this workbook.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "2026 Polling Location Satellite Office General Final",
+    "extraction": {
+      "format": "xlsx",
+      "sheet": "Polling Places",
+      "headerRow": 3,
+      "kind": "ELECTION_DAY",
+      "columns": {
+        "countyName": "County",
+        "name": "Polling Place Location",
+        "address": [
+          "Polling Place Address",
+          "Polling Place City",
+          "Polling Place Zip"
+        ],
+        "precinct": "Precinct Number",
+        "hours": "Polling Place Hours",
+        "locationNotes": [
+          "Late Registration Location(if different or in addition to county election office)*Election Day Registration location only",
+          "Late Registration Address(if different or in addition to county election office)"
+        ]
+      },
+      "constants": {
+        "election": "2026 General Election"
+      },
+      "templates": {
+        "districtOcdIds": "ocd-division/country:us/state:mt/sldl:{HD}|ocd-division/country:us/state:mt/sldu:{SD}"
+      }
+    },
+    "matchingUnit": "PRECINCT",
+    "fileUpdatedAt": "October, 1, 2026",
+    "electionAssociationVerified": true
+  },
+  {
+    "id": "mt-statewide-satellite-2026",
+    "publisher": "Office of the Secretary of State, Helena, MT",
+    "url": "https://sosmt.gov/docs/23/elections/77688/2026-polling-location-satellite-office-general-final",
+    "shape": "file",
+    "covers": [
+      "SATELLITE"
+    ],
+    "scope": {
+      "state": "MT",
+      "ocdId": "ocd-division/country:us/state:mt",
+      "name": "Montana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://votemt.gov/",
+    "discoveredFrom": "https://votemt.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Original statewide XLSX downloaded October 13, 2026, after robots permission; 30 satellite location rows after aligned multi-site cells are separated.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "2026 Polling Location Satellite Office General Final",
+    "extraction": {
+      "format": "xlsx",
+      "sheet": "Satellite",
+      "headerRow": 3,
+      "kind": "SATELLITE",
+      "columns": {
+        "countyName": "County",
+        "name": "Satellite Location/Alternate Election Office",
+        "address": "Satellite Location/Alternate Election Office",
+        "days": "Satellite Days\r\n(Absentee Period)",
+        "hours": "Satellite Hours\r\n(Absentee Period)",
+        "tribalNation": "Tribe",
+        "reservation": "Reservation"
+      },
+      "splitRows": {
+        "column": "Satellite Location/Alternate Election Office",
+        "pattern": "\\r?\\n(?:\\s*\\r?\\n)*(?=[^\\r\\n]*,\\s*#?\\d)",
+        "alignedColumns": [
+          "Satellite Days\r\n(Absentee Period)",
+          "Satellite Hours\r\n(Absentee Period)"
+        ],
+        "alignedPattern": "\\r?\\n(?:\\s*\\r?\\n)+"
+      },
+      "transforms": {
+        "name": {
+          "column": "Satellite Location/Alternate Election Office",
+          "pattern": "^(.*?),\\s*([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "Satellite Location/Alternate Election Office",
+          "pattern": "^(.*?),\\s*([\\s\\S]+)$",
+          "group": 2
+        },
+        "countyName": {
+          "column": "County",
+          "pattern": "^(.*?)(?:,\\s*cont\\.)?$",
+          "group": 1
+        }
+      },
+      "constants": {
+        "election": "2026 General Election"
+      }
+    },
+    "matchingUnit": "COUNTY",
+    "fileUpdatedAt": "October, 1, 2026",
+    "electionAssociationVerified": true
+  },
+  {
+    "id": "wa-statewide-dropboxes-2026",
+    "publisher": "Washington Secretary of State",
+    "url": "https://www.sos.wa.gov/sites/default/files/2026-01/Drop%20Boxes_0.xlsx",
+    "shape": "file",
+    "covers": [
+      "DROP_BOX",
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "WA",
+      "ocdId": "ocd-division/country:us/state:wa",
+      "name": "Washington"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations",
+    "extraction": {
+      "format": "xlsx",
+      "columns": {
+        "countyName": "County",
+        "name": "Place",
+        "kind": "Type",
+        "address": "Address",
+        "locationNotes": "Description",
+        "lat": "ppLatitude",
+        "lng": "ppLongitude"
+      }
+    }
+  },
+  {
+    "id": "or-statewide-drop-sites-2026",
+    "publisher": "Oregon Secretary of State",
+    "url": "https://sos.oregon.gov/elections/Documents/GE26-Oregon-Drop-Sites.pdf",
+    "shape": "file",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "OR",
+      "ocdId": "ocd-division/country:us/state:or",
+      "name": "Oregon"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sos.oregon.gov/voting/pages/drop-box-locator.aspx",
+    "extraction": {
+      "format": "pdf",
+      "pdfColumns": [
+        {
+          "name": "County",
+          "x": 12
+        },
+        {
+          "name": "Name",
+          "x": 76
+        },
+        {
+          "name": "Address",
+          "x": 268
+        },
+        {
+          "name": "Directions",
+          "x": 459
+        }
+      ],
+      "pdfRecordStart": {
+        "column": "County",
+        "pattern": "^(?:Baker|Benton|Clackamas|Clatsop|Columbia|Coos|Crook|Curry|Deschutes|Douglas|Gilliam|Grant|Harney|Hood River|Jackson|Jefferson|Josephine|Klamath|Lake|Lane|Lincoln|Linn|Malheur|Marion|Morrow|Multnomah|Polk|Sherman|Tillamook|Umatilla|Union|Wallowa|Wasco|Washington|Wheeler|Yamhill)$"
+      },
+      "pdfTop": 535,
+      "pdfBottom": 50,
+      "columns": {
+        "countyName": "County",
+        "name": "Name",
+        "address": "Address",
+        "locationNotes": "Directions"
+      },
+      "constants": {
+        "election": "NOVEMBER 3, 2026 GENERAL ELECTION",
+        "hours": "All drop sites are open until 8 PM Election Day"
+      }
+    }
+  },
+  {
+    "id": "hi-hawaii-centers-1",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:hawaii",
+      "name": "Hawaii",
+      "countyFips": "15001"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Hawaii Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Hawaii Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "VOTE_CENTER"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-maui-centers-2",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:maui",
+      "name": "Maui",
+      "countyFips": "15009"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Maui Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Maui Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "VOTE_CENTER"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-maui-centers-3",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:maui",
+      "name": "Maui",
+      "countyFips": "15009"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 31, 2026, through November 2, 2026\n\nDaily except Sunday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Maui Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Maui Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "VOTE_CENTER"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-maui-centers-4",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:maui",
+      "name": "Maui",
+      "countyFips": "15009"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 24, 2026\n\n10:00 a.m. to 3:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Maui Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Maui Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "VOTE_CENTER"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-kauai-centers-5",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:kauai",
+      "name": "Kauai",
+      "countyFips": "15007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Kauai Voter Service Center",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Kauai Voter Service Center",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "VOTE_CENTER"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-honolulu-centers-6",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+      "name": "Honolulu",
+      "countyFips": "15003"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "City and County of Honolulu Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "City and County of Honolulu Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "VOTE_CENTER"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-honolulu-centers-7",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+      "name": "Honolulu",
+      "countyFips": "15003"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 27, 2026, through October 31, 2026\n\nTuesday through Saturday\n\n9:00 a.m. to 5:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "City and County of Honolulu Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "City and County of Honolulu Voter Service Centers",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "VOTE_CENTER"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-hawaii-dropboxes-8",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:hawaii",
+      "name": "Hawaii",
+      "countyFips": "15001"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026"
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Hawaii Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Hawaii Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "DROP_BOX"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-hawaii-dropboxes-9",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:hawaii",
+      "name": "Hawaii",
+      "countyFips": "15001"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Hawaii Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Hawaii Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "DROP_BOX"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-maui-dropboxes-10",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:maui",
+      "name": "Maui",
+      "countyFips": "15009"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOpen facility/park hours from October 14, 2026,\n\nuntil 7:00 p.m. on November 3, 2026"
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Maui Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Maui Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "DROP_BOX"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-maui-dropboxes-11",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:maui",
+      "name": "Maui",
+      "countyFips": "15009"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 24, 2026\n\n10:00 a.m. to 3:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Maui Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Maui Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "DROP_BOX"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-kauai-dropboxes-12",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:kauai",
+      "name": "Kauai",
+      "countyFips": "15007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOpen 24 hours a day from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026"
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Kauai Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Kauai Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "DROP_BOX"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-kauai-dropboxes-13",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:kauai",
+      "name": "Kauai",
+      "countyFips": "15007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 14, 2026, through October 19, 2026\n\nMonday through Friday\n\n7:45 a.m. to 4:30 p.m.\n\n\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n7:45 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Kauai Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Kauai Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "DROP_BOX"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-kauai-dropboxes-14",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:kauai",
+      "name": "Kauai",
+      "countyFips": "15007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOctober 20, 2026, through November 2, 2026\n\nMonday through Saturday\n\n8:00 a.m. to 4:30 p.m.\n\n\n\nNovember 3, 2026\n\n7:00 a.m. to 7:00 p.m."
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "County of Kauai Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "County of Kauai Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "DROP_BOX"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-honolulu-dropboxes-15",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+      "name": "Honolulu",
+      "countyFips": "15003"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOpen daily in accordance with park hours from October 14, 2026, through 7:00 p.m. on\n\nNovember 3, 2026"
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "City and County of Honolulu Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "City and County of Honolulu Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "DROP_BOX"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "hi-honolulu-dropboxes-16",
+    "publisher": "Hawaii Office of Elections",
+    "url": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "HI",
+      "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+      "name": "Honolulu",
+      "countyFips": "15003"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.hawaii.gov/voter-service-centers-and-places-of-deposit/",
+    "extraction": {
+      "format": "html",
+      "filters": {
+        "0": "General Election\n\nOpen daily from October 14, 2026,\n\nthrough 7:00 p.m. on November 3, 2026"
+      },
+      "columns": {
+        "hours": "0",
+        "election": "0"
+      },
+      "transforms": {
+        "name": {
+          "column": "City and County of Honolulu Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "City and County of Honolulu Places of Deposit",
+          "pattern": "^([^\\n]+)[\\r\\n\\s]+([\\s\\S]+)$",
+          "group": 2
+        }
+      },
+      "kind": "DROP_BOX"
+    },
+    "matchingUnit": "COUNTY"
+  },
+  {
+    "id": "nv-washoe-vote-centers-2026",
+    "publisher": "Washoe County Registrar of Voters",
+    "url": "https://www.washoecounty.gov/voters/voting/files/2026%20General%20Election%20Vote%20Centers.xlsx",
+    "shape": "file",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "NV",
+      "ocdId": "ocd-division/country:us/state:nv/county:washoe",
+      "name": "Washoe County",
+      "countyFips": "32031"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.washoecounty.gov/voters/voting/vote-in-person.php",
+    "extraction": {
+      "format": "xlsx",
+      "headerRow": 2,
+      "columns": {
+        "name": "1",
+        "address": "Address"
+      },
+      "kind": "VOTE_CENTER"
+    }
+  },
+  {
+    "id": "ut-utah-county-vote_center-1",
+    "publisher": "Utah County Elections",
+    "url": "https://vote.utahcounty.gov/voting-locations",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "UT",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "name": "Utah County",
+      "countyFips": "49049"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.utahcounty.gov/voting-locations",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<li class=\"rounded-sm border border-gray-200 bg-gray-50[^>]*>([\\s\\S]*?)</li>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<h3[^>]*>([\\s\\S]*?)</h3>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<a [^>]*maps/search[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "hours": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "days": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>[\\s\\S]*?</span>[\\s\\S]*?<p[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "kind": "hours"
+      },
+      "kind": "VOTE_CENTER",
+      "filters": {
+        "hours": "Election Day 7am - 8pm"
+      }
+    }
+  },
+  {
+    "id": "ut-utah-county-vote_center-2",
+    "publisher": "Utah County Elections",
+    "url": "https://vote.utahcounty.gov/voting-locations",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "UT",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "name": "Utah County",
+      "countyFips": "49049"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.utahcounty.gov/voting-locations",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<li class=\"rounded-sm border border-gray-200 bg-gray-50[^>]*>([\\s\\S]*?)</li>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<h3[^>]*>([\\s\\S]*?)</h3>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<a [^>]*maps/search[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "hours": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "days": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>[\\s\\S]*?</span>[\\s\\S]*?<p[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "kind": "hours"
+      },
+      "kind": "VOTE_CENTER",
+      "filters": {
+        "hours": "Election Day 7am-8pm"
+      }
+    }
+  },
+  {
+    "id": "ut-utah-county-early_voting-3",
+    "publisher": "Utah County Elections",
+    "url": "https://vote.utahcounty.gov/voting-locations",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "UT",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "name": "Utah County",
+      "countyFips": "49049"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.utahcounty.gov/voting-locations",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<li class=\"rounded-sm border border-gray-200 bg-gray-50[^>]*>([\\s\\S]*?)</li>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<h3[^>]*>([\\s\\S]*?)</h3>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<a [^>]*maps/search[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "hours": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "days": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>[\\s\\S]*?</span>[\\s\\S]*?<p[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "kind": "hours"
+      },
+      "kind": "EARLY_VOTING",
+      "filters": {
+        "hours": "8AM - 5PM October 26th-30th, November 2nd"
+      }
+    }
+  },
+  {
+    "id": "ut-utah-county-drop_box-4",
+    "publisher": "Utah County Elections",
+    "url": "https://vote.utahcounty.gov/voting-locations",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "UT",
+      "ocdId": "ocd-division/country:us/state:ut/county:utah",
+      "name": "Utah County",
+      "countyFips": "49049"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.utahcounty.gov/voting-locations",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<li class=\"rounded-sm border border-gray-200 bg-gray-50[^>]*>([\\s\\S]*?)</li>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<h3[^>]*>([\\s\\S]*?)</h3>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<a [^>]*maps/search[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "hours": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "days": {
+            "pattern": "<p class=\"flex items-start gap-2 text-gray-500\"[^>]*>[\\s\\S]*?<span>[\\s\\S]*?</span>[\\s\\S]*?<p[^>]*>[\\s\\S]*?<span>([\\s\\S]*?)</span>",
+            "group": 1
+          }
+        }
+      },
+      "columns": {
+        "kind": "hours"
+      },
+      "kind": "DROP_BOX",
+      "filters": {
+        "hours": "24/7 Access October 12th - November 3rd at 8pm"
+      }
+    }
+  },
+  {
+    "id": "ca-alameda-vote-centers-2026",
+    "publisher": "Alameda County Registrar of Voters",
+    "url": "https://alamedacountyca.gov/rov_app/vcalist",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "CA",
+      "ocdId": "ocd-division/country:us/state:ca/county:alameda",
+      "name": "Alameda County",
+      "countyFips": "06001"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://alamedacountyca.gov/rov_app/vcalist",
+    "extraction": {
+      "format": "html",
+      "dataUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays=",
+      "columns": {
+        "name": "Location",
+        "address": "Address",
+        "days": "Voting Days Available"
+      },
+      "transforms": {
+        "name": {
+          "column": "Location",
+          "pattern": "^Location\\s+([\\s\\S]+)$",
+          "group": 1
+        },
+        "address": {
+          "column": "Address",
+          "pattern": "^Address\\s+([\\s\\S]+)$",
+          "group": 1
+        },
+        "days": {
+          "column": "Voting Days Available",
+          "pattern": "^Availability\\s+([\\s\\S]+)$",
+          "group": 1
+        }
+      },
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "election": "November 3, 2026",
+        "hours": "7:00 AM to 8:00 PM"
+      }
+    }
+  },
+  {
+    "electionDate": "2026-11-03",
+    "matchingUnit": "COUNTY",
+    "id": "id-canyon-early-voting-2026",
+    "publisher": "Canyon County Elections",
+    "url": "https://elections.canyoncounty.id.gov/upcoming/",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "ID",
+      "ocdId": "ocd-division/country:us/state:id/county:canyon",
+      "name": "Canyon County",
+      "countyFips": "16027"
+    },
+    "electionPageUrl": "https://elections.canyoncounty.id.gov/upcoming/",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<li>((?:October 19, 2026, through October 30, 2026|Saturday, October 24, 2026):[\\s\\S]*?)</li>",
+        "group": 1,
+        "fields": {
+          "days": {
+            "pattern": "^([^:]+):",
+            "group": 1
+          },
+          "name": {
+            "pattern": ":\\s*([\\s\\S]*?)\\s*&#8211;",
+            "group": 1
+          },
+          "address": {
+            "pattern": "&#8211;\\s*([\\s\\S]+)$",
+            "group": 1
+          }
+        }
+      },
+      "constants": {
+        "hours": "Monday through Friday, 8:00 a.m. to 5:00 p.m., and Saturday 8:00 a.m. to 5:00 p.m.",
+        "election": "November 3, 2026"
+      },
+      "kind": "EARLY_VOTING"
+    }
+  },
+  {
+    "electionDate": "2026-11-03",
+    "matchingUnit": "COUNTY",
+    "id": "nm-santa-fe-early_voting-2026",
+    "publisher": "Santa Fe County Clerk",
+    "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "NM",
+      "ocdId": "ocd-division/country:us/state:nm/county:santa_fe",
+      "name": "Santa Fe County",
+      "countyFips": "35049"
+    },
+    "electionPageUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "within": {
+          "pattern": "<h2[^>]*>Expanded Early Voting Locations</h2>([\\s\\S]*?)(?=<h2|<div class=\"container px-4\">|$)",
+          "group": 1
+        },
+        "pattern": "<p><a[^>]+>([\\s\\S]*?)</p>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "^([\\s\\S]*?)</a>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<br\\s*/?>([\\s\\S]+)$",
+            "group": 1
+          }
+        }
+      },
+      "constants": {
+        "hours": "Tues - Fri: 11am - 7pm,\n\nSaturdays: 10am - 6pm",
+        "days": "Oct 17 - Oct 31, 2026"
+      },
+      "kind": "EARLY_VOTING"
+    }
+  },
+  {
+    "electionDate": "2026-11-03",
+    "matchingUnit": "COUNTY",
+    "id": "nm-santa-fe-vote_center-2026",
+    "publisher": "Santa Fe County Clerk",
+    "url": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "NM",
+      "ocdId": "ocd-division/country:us/state:nm/county:santa_fe",
+      "name": "Santa Fe County",
+      "countyFips": "35049"
+    },
+    "electionPageUrl": "https://www.santafecountynm.gov/clerk/elections/pollinglocations",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "within": {
+          "pattern": "<h2[^>]*>Election Day Polling Locations</h2>([\\s\\S]*?)(?=<h2|<div class=\"container px-4\">|$)",
+          "group": 1
+        },
+        "pattern": "<p><a[^>]+>([\\s\\S]*?)</p>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "^([\\s\\S]*?)</a>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<br\\s*/?>([\\s\\S]+)$",
+            "group": 1
+          }
+        }
+      },
+      "constants": {
+        "hours": "7am-7pm"
+      },
+      "kind": "VOTE_CENTER"
+    }
+  },
+  {
+    "id": "co-arapahoe-drop-boxes-2026",
+    "publisher": "Arapahoe County Clerk and Recorder",
+    "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "CO",
+      "ocdId": "ocd-division/country:us/state:co/county:arapahoe",
+      "name": "Arapahoe County",
+      "countyFips": "08005"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+    "extraction": {
+      "format": "html",
+      "columns": {
+        "town": [],
+        "hours": "SCHEDULE"
+      },
+      "transforms": {
+        "name": {
+          "column": "LOCATION",
+          "pattern": "^([^\\n]+?)(?:\\s*\\(\\s*Map\\s*\\))?(?:[\\r\\n]|$)",
+          "group": 1
+        },
+        "address": {
+          "column": "LOCATION",
+          "pattern": "[\\r\\n]+([\\s\\S]*?)(?:\\s*\\(\\s*Map\\s*\\))?$",
+          "group": 1
+        }
+      },
+      "constants": {
+        "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+        "election": "November 3, 2026"
+      },
+      "kind": "DROP_BOX"
+    }
+  },
+  {
+    "id": "wy-natrona-early-voting-2026",
+    "publisher": "Natrona County Clerk",
+    "url": "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "WY",
+      "ocdId": "ocd-division/country:us/state:wy/county:natrona",
+      "name": "Natrona County",
+      "countyFips": "56025"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "Early voting takes place at the Natrona County Clerk's Office",
+        "200 N. Center St.",
+        "Casper, WY 82601",
+        "2026 General Election"
+      ],
+      "constants": {
+        "name": "Natrona County Clerk's Office",
+        "address": "200 N. Center St. Room 154 Casper, WY 82601",
+        "hours": "8:00 am - 5:00 pm, Monday thru Friday",
+        "days": "October 6th and ends November 2nd",
+        "election": "2026 General Election"
+      },
+      "kind": "EARLY_VOTING"
+    }
+  },
+  {
+    "id": "legacy:cochise:vote-center-pdf",
+    "publisher": "Cochise County Elections Department",
+    "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+    "shape": "file",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "AZ",
+      "ocdId": "ocd-division/country:us/state:az/county:cochise",
+      "name": "Cochise County",
+      "countyFips": "04003"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.cochise.az.gov/292/Elections",
+    "discoveredFrom": "https://www.cochise.az.gov/509/Voter-Information",
+    "title": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+    "extraction": {
+      "format": "pdf",
+      "kind": "VOTE_CENTER",
+      "pdfColumns": [
+        {
+          "name": "id",
+          "x": 0
+        },
+        {
+          "name": "area",
+          "x": 150
+        },
+        {
+          "name": "location",
+          "x": 320
+        }
+      ],
+      "pdfRecordStart": {
+        "column": "id",
+        "pattern": "^VC\\s*\\d+$"
+      },
+      "pdfTop": 605,
+      "pdfBottom": 100,
+      "columns": {
+        "id": "id",
+        "name": "location",
+        "address": "location",
+        "locationNotes": "area"
+      },
+      "constants": {
+        "hours": "6:00 a.m. to 7:00 p.m.",
+        "days": "Election Day"
+      },
+      "pdfCenteredRecords": true,
+      "transforms": {
+        "name": {
+          "column": "location",
+          "pattern": "^(.*?)\\s+(\\d+\\s+.*)$",
+          "group": 1
+        },
+        "address": {
+          "column": "location",
+          "pattern": "^(.*?)\\s+(\\d+\\s+.*)$",
+          "group": 2
+        }
+      }
+    },
+    "rules": [
+      {
+        "text": "Voters may vote at any of the Vote Centers listed below.",
+        "source": {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      }
+    ],
+    "office": {
+      "name": "Cochise County Elections Department",
+      "phone": "520-432-8970",
+      "url": "https://cochise.az.gov/Elections"
+    },
+    "model": "VOTE_CENTER",
+    "electionAssociationVerified": true
+  },
+  {
+    "id": "cochise:ballot-box-table",
+    "publisher": "Cochise County Recorder",
+    "url": "https://www.cochise.az.gov/509/Voter-Information",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "AZ",
+      "ocdId": "ocd-division/country:us/state:az/county:cochise",
+      "name": "Cochise County",
+      "countyFips": "04003"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.cochise.az.gov/292/Elections",
+    "electionAssociationVerified": true,
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "kind": "DROP_BOX",
+      "columns": {
+        "hours": "Times"
+      },
+      "transforms": {
+        "name": {
+          "column": "Ballot Box Locations",
+          "pattern": "^([^:]+):\\s*(.*?),\\s*(\\d.*)$",
+          "group": 2
+        },
+        "address": {
+          "column": "Ballot Box Locations",
+          "pattern": "^([^:]+):\\s*(.*?),\\s*(\\d.*)$",
+          "group": 3
+        },
+        "town": {
+          "column": "Ballot Box Locations",
+          "pattern": "^([^:]+):",
+          "group": 1
+        }
+      }
+    },
+    "office": {
+      "name": "Cochise County Recorder",
+      "address": "1415 Melody Lane, Building B, Bisbee, AZ 85603",
+      "phone": "520-432-8350",
+      "url": "https://www.cochise.az.gov/509/Voter-Information"
+    },
+    "rules": [
+      {
+        "text": "Ballot drop boxes will remain open through November 2nd at 5:00 pm. On Election day, you may drop off your early ballot at any Vote Center or the Recorder's Office in Bisbee from 6:00 am to 7:00 pm.",
+        "source": {
+          "publisher": "Cochise County Recorder",
+          "url": "https://www.cochise.az.gov/509/Voter-Information",
+          "checkedAt": "2026-10-13"
+        }
+      }
+    ]
+  },
+  {
+    "id": "co-arapahoe-vote-centers-2026",
+    "publisher": "Arapahoe County Clerk and Recorder",
+    "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "CO",
+      "ocdId": "ocd-division/country:us/state:co/county:arapahoe",
+      "name": "Arapahoe County",
+      "countyFips": "08005"
+    },
+    "matchingUnit": "COUNTY",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<div class=\"rz-business-block\"[^>]*>([\\s\\S]*?)</div><!--/\\.rz-business-block-->",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<h2>([\\s\\S]*?)</h2>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<span class=\"sr-only\">Address</span>([\\s\\S]*?)</a>",
+            "group": 1
+          },
+          "hours": {
+            "pattern": "<span class=\"rz-business-desc\">([\\s\\S]*?)</span>",
+            "group": 1
+          },
+          "phone": {
+            "pattern": "<span class=\"sr-only\">Phone Number</span>([\\s\\S]*?)</a>",
+            "group": 1
+          }
+        }
+      },
+      "kind": "VOTE_CENTER"
+    }
+  },
+  {
+    "id": "wy-natrona-polling-precincts",
+    "publisher": "Natrona County Clerk and City of Casper GIS",
+    "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+    "shape": "map-service",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "WY",
+      "ocdId": "ocd-division/country:us/state:wy/county:natrona",
+      "name": "Natrona County",
+      "countyFips": "56025"
+    },
+    "matchingUnit": "PRECINCT",
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.natronacounty-wy.gov/",
+    "extraction": {
+      "columns": {
+        "name": "POLLING_PL",
+        "address": "ADDRESS",
+        "precinct": "PRECINCT",
+        "locationNotes": "Information"
+      },
+      "kind": "ELECTION_DAY"
+    }
+  }
+]

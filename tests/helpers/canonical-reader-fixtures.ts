@@ -1,3 +1,4 @@
+import {PEOPLE_SOURCE_IDS,peopleSourceRecordClass,peopleSourceScope} from "../../lib/officials/people-sources.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore, type RoutineDataStore } from "../../lib/civic-data/store.ts";
 import { clearPromotedReadModelCache, type PromotedEdgeEntry } from "../../lib/civic-data/read-model.ts";
 import { serializeUnchangedConfirmation } from "../../lib/civic-data/unchanged-confirmation.ts";
@@ -49,6 +50,7 @@ function censusRows(value: CensusDistrictEdge, state?: unknown): Record<string, 
 
 function canonicalRows(sql: string, params: readonly unknown[]): Record<string, unknown>[] | undefined {
   const held = fixture().store as unknown as { promotions: Map<string, PromotedProjection>; candidates: Map<string, CandidateVersionRecord> };
+  const zipPeople = sql.includes("AS zip_people") && sql.includes("selected(ordinal_index)");
   const selectedOutcomes = sql.includes("AS snapshot_shape_valid") && sql.includes("p.record_class='MEETING_OUTCOME'");
   const selectedKeys = sql.includes("FROM civic_data_promotions p") && sql.includes("p.key=ANY($1::text[]");
   if (!selectedOutcomes && !selectedKeys) return undefined;
@@ -80,10 +82,16 @@ function canonicalRows(sql: string, params: readonly unknown[]): Record<string, 
       geography: value ? censusRows(value, state).filter(row => row.row_kind === "scope" || types.includes(String(row.type))) : [],
       local_divisions: registration?.divisions.filter(row => divisionIds.includes(row.ocdId)) ?? [], canonical_keys: canonicalKeys }] });
   }
+  const zipKey = zipPeople ? `STATE_LEGISLATOR:US-${String(params[5])}:openstates-people:v1` : null;
+  const registryKey = sql.includes("AS zip_registry") ? `REGISTRY_RUNTIME_BINDING:US-${String(params[5])}:reader-registry-runtime` : null;
+  const officialKey = sql.includes("AS zip_official") ? `STATE_LEGISLATOR:US-${String(params[5])}` : null;
+  const sourceKeys=sql.includes("AS zip_sources") ? [`FEDERAL_DIRECTORY:US-${String(params[5])}:current-congress-directory`,
+    ...PEOPLE_SOURCE_IDS.map(source=>`${peopleSourceRecordClass(source)}:${peopleSourceScope(`US-${String(params[5])}`,source)}`)] : [];
+  const queryKeys = [...keys,...sourceKeys,...(zipKey?[zipKey]:[]),...(registryKey?[registryKey]:[]),...(officialKey?[officialKey]:[])];
   const rows: Record<string, unknown>[] = [...held.promotions.values()].filter(p => selectedOutcomes
     ? p.recordClass === "MEETING_OUTCOME" && (stateScoped(p) || exactKeys.includes(p.key)
       || stateOutcomes && p.scope.startsWith("door:") && (p.payload as OutcomeSnapshot).sittings?.some(bodySelected))
-    : keys.includes(p.key)).map(p => {
+    : queryKeys.includes(p.key)).map(p => {
       const c = held.candidates.get(p.versionId);
       const snapshot = p.payload as OutcomeSnapshot;
       const shape = Array.isArray(snapshot?.sittings) && Array.isArray(snapshot?.tenants);
@@ -98,7 +106,11 @@ function canonicalRows(sql: string, params: readonly unknown[]): Record<string, 
         temporal: c?.candidate.temporal, confirmation: null, published, ...(selectedOutcomes ? { snapshot_shape_valid: shape,
           selected_by_body: stateOutcomes && shape && snapshot.sittings.some(bodySelected) } : {}) };
     });
-  return structuredClone([...rows, ...additional]);
+  if (zipKey && additional.length) (additional[0].part_payload as Record<string, unknown>[])[0].zip_people = rows.find(row=>row.key===zipKey) ?? null;
+  if (registryKey && additional.length) (additional[0].part_payload as Record<string, unknown>[])[0].zip_registry = rows.find(row=>row.key===registryKey) ?? null;
+  if (officialKey && additional.length) (additional[0].part_payload as Record<string, unknown>[])[0].zip_official = rows.find(row=>row.key===officialKey) ?? null;
+  if (sourceKeys.length && additional.length) (additional[0].part_payload as Record<string, unknown>[])[0].zip_sources = rows.filter(row=>sourceKeys.includes(String(row.key)));
+  return structuredClone([...rows.filter(row=>![zipKey,registryKey,officialKey,...sourceKeys].includes(String(row.key)) || keys.includes(String(row.key))), ...additional]);
 }
 
 let patched = false;

@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Upshur%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Upshur%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.900162+00:00",
+  "rawHash": "bc41350433c2a811697e6c6a4f789dc1c4d1cf179e7d93cbb58509e2e505bbc7",
+  "httpStatus": 200,
+  "bytes": 821773,
+  "extractedTextHash": "a5a2a578e79dc7e95fd0a8ee95f68b976f9c8d2f74cfdbac6245db3e37bf9bf7",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

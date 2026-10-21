@@ -1,16 +1,22 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { resolveReaderZip, lookupReaderZip } from "../lib/reader/zip.ts";
-import { GET } from "../app/api/location/zip/route.ts";
-import { resolveZip } from "../lib/geo/zcta.ts";
+import { lookupZcta, resolveZip } from "../lib/geo/zcta.ts";
 import type { ZctaCentroid } from "../lib/geo/zcta-core.ts";
+
+function shard(input: string | URL | Request) {
+  const requestUrl = new URL(input instanceof Request ? input.url : input, "http://localhost");
+  const prefix=/\/geo\/reader-zips\/(\d{2})\.json$/.exec(requestUrl.pathname)?.[1];
+  assert.ok(prefix);
+  return Response.json({locations:Object.fromEntries(["05009","85701","89109"].filter(zip=>zip.startsWith(prefix)).map(zip=>[zip,lookupZcta(zip)]))});
+}
 
 test("typed ZIP lookups validate immediately and share only successful source-resolved places for thirty seconds", async (t) => {
   const requests: string[] = [];
   let now = Date.now(); t.mock.method(Date, "now", () => now);
   t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
     const request = input instanceof Request ? input : new Request(new URL(input, "http://localhost"));
-    requests.push(request.url); return GET(request);
+    requests.push(request.url); return shard(request);
   });
   for (const input of ["0509", "123456", "abcde", "85701-1234"]) assert.deepEqual(await resolveReaderZip(input), { ok: false, reason: "malformed" });
   assert.equal(requests.length, 0);
@@ -33,8 +39,8 @@ test("failed and malformed location responses never poison later ZIP retries", a
     attempt++;
     if (attempt === 1) throw new Error("offline");
     if (attempt === 2) return Response.json({ error: "temporarily unavailable" }, { status: 503 });
-    if (attempt === 3) return Response.json({ resolution: { ok: true, centroid: { zip: "85701", lat: 100, lng: -110 } } });
-    return GET(new Request("http://localhost/api/location/zip?zip=85701"));
+    if (attempt === 3) return Response.json({ locations: { "85701": { zip: "85701", lat: 100, lng: -110 } } });
+    return shard("http://localhost/geo/reader-zips/85.json");
   });
   await assert.rejects(resolveReaderZip("85701"), /offline/);
   await assert.rejects(resolveReaderZip("85701"), /503/);
@@ -43,12 +49,10 @@ test("failed and malformed location responses never poison later ZIP retries", a
   assert.equal(attempt, 4);
 });
 
-test("ZIP selection accepts the previous route shape while a deploy changes over", async (t) => {
-  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
-    const response = await GET(input instanceof Request ? input : new Request(new URL(input, "http://localhost")));
-    const { location } = await response.json();
-    return Response.json({ location });
-  });
+test("an unavailable regional projection cannot claim an uncovered ZIP", async (t) => {
+  let attempts=0;
+  t.mock.method(globalThis,"fetch",async(input:string|URL|Request)=>++attempts===1?Response.json({unavailable:true}):shard(input));
+  await assert.rejects(resolveReaderZip("89109"),/Invalid ZIP/);
   assert.deepEqual(await resolveReaderZip("89109"), resolveZip("89109"));
   assert.deepEqual(await resolveReaderZip("99999"), { ok: false, reason: "uncovered" });
 });

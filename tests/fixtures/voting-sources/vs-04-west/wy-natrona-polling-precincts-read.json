@@ -1,0 +1,1789 @@
+{
+  "doorId": "wy-natrona-polling-precincts",
+  "sites": [
+    {
+      "id": "voting-2b094da0703f7477a2ea94d8",
+      "name": "RESTORATION CHURCH",
+      "address": "411 S WALSH DR",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "3-6",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "3-6",
+      "ward": "3",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "3-5",
+        "3-9",
+        "3-3",
+        "3-2",
+        "3-4",
+        "3-6"
+      ],
+      "assignments": [
+        {
+          "precinct": "3-5",
+          "ward": "3",
+          "name": "RESTORATION CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "3-9",
+          "ward": "3",
+          "name": "RESTORATION CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "3-3",
+          "ward": "3",
+          "name": "RESTORATION CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "3-2",
+          "ward": "3",
+          "name": "RESTORATION CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "3-4",
+          "ward": "3",
+          "name": "RESTORATION CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "3-6",
+          "ward": "3",
+          "name": "RESTORATION CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3773a771fda82e411b3ac131",
+      "name": "PRINCE OF PEACE LUTHERAN CHURCH",
+      "address": "2300 E 15TH ST",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "3-8",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "3-8",
+      "ward": "3",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "3-8"
+      ],
+      "assignments": [
+        {
+          "precinct": "3-8",
+          "ward": "3",
+          "name": "PRINCE OF PEACE LUTHERAN CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b50ef458f304bfb10f009b3c",
+      "name": "INDUSTRIAL BUILDING",
+      "address": "1700 FAIRGROUNDS RD",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "2-1",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "2-1",
+      "ward": "2",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "1-12",
+        "1-3",
+        "2-1",
+        "2-3",
+        "1-11",
+        "2-4",
+        "1-5",
+        "1-6",
+        "1-9",
+        "2-9",
+        "2-8",
+        "2-2",
+        "2-7"
+      ],
+      "assignments": [
+        {
+          "precinct": "1-12",
+          "ward": "1",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "1-3",
+          "ward": "1",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "2-1",
+          "ward": "2",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "2-3",
+          "ward": "2",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "1-11",
+          "ward": "1",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "2-4",
+          "ward": "2",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "1-5",
+          "ward": "1",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "1-6",
+          "ward": "1",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "1-9",
+          "ward": "1",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "2-9",
+          "ward": "2",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "2-8",
+          "ward": "2",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "2-2",
+          "ward": "2",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "2-7",
+          "ward": "2",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "2-8",
+          "name": "INDUSTRIAL BUILDING",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f9fd7cd3e84fdd244aa46c97",
+      "name": "SENIOR CITIZENS CENTER",
+      "address": "1831 E 4TH ST",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "1-7",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "1-7",
+      "ward": "1",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "1-7"
+      ],
+      "assignments": [
+        {
+          "precinct": "1-7",
+          "ward": "1",
+          "name": "SENIOR CITIZENS CENTER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b364db397c9aa19390d88c2d",
+      "name": "BETHEL BAPTIST CHURCH",
+      "address": "3030 S POPLAR ST",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "2-10",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "2-10",
+      "ward": "2",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "2-10"
+      ],
+      "assignments": [
+        {
+          "precinct": "2-10",
+          "ward": "2",
+          "name": "BETHEL BAPTIST CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-47417280be52de2ac28c57be",
+      "name": "THUNDERBIRD GYM - CASPER COLLEGE",
+      "address": "1944 LISCO DR",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "1-4",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "1-4",
+      "ward": "1",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "1-4"
+      ],
+      "assignments": [
+        {
+          "precinct": "1-4",
+          "ward": "1",
+          "name": "THUNDERBIRD GYM - CASPER COLLEGE",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7d775c166bf85a30eb4dfd1a",
+      "name": "EVANSVILLE COMMUNITY CENTER",
+      "address": "71 CURTIS ST",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "5-1",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "5-1",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "4-1",
+        "4-2",
+        "5-1"
+      ],
+      "assignments": [
+        {
+          "precinct": "4-1",
+          "name": "EVANSVILLE COMMUNITY CENTER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "4-2",
+          "name": "EVANSVILLE COMMUNITY CENTER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "5-1",
+          "name": "EVANSVILLE COMMUNITY CENTER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d13e687361278329d57d88d3",
+      "name": "URBAN THISTLE FARM",
+      "address": "1014 GLENARM ST",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "1-1",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "1-1",
+      "ward": "1",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "1-1"
+      ],
+      "assignments": [
+        {
+          "precinct": "1-1",
+          "ward": "1",
+          "name": "URBAN THISTLE FARM",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ffadb451636620d943cff93d",
+      "name": "RADIUS CHURCH",
+      "address": "4301 CASPER MOUNTAIN RD",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "2-6",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "2-6",
+      "ward": "2",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "2-6"
+      ],
+      "assignments": [
+        {
+          "precinct": "2-6",
+          "ward": "2",
+          "name": "RADIUS CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d3d0e93c84182696048cba0d",
+      "name": "ST. PATRICK'S COMMONS",
+      "address": "400 COUNTRY CLUB RD",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "3-10",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "3-10",
+      "ward": "3",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "3-10"
+      ],
+      "assignments": [
+        {
+          "precinct": "3-10",
+          "ward": "3",
+          "name": "ST. PATRICK'S COMMONS",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c3552934b56947d677551270",
+      "name": "WY GAME AND FISH",
+      "address": "3030 ENERGY LN",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "9-1",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "9-1",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "9-1"
+      ],
+      "assignments": [
+        {
+          "precinct": "9-1",
+          "name": "WY GAME AND FISH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-48425bba88faa3e37e325bd6",
+      "name": "NATRONA COUNTY PUBLIC LIBRARY",
+      "address": "307 E 2ND ST",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "1-2",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "1-2",
+      "ward": "1",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "1-2"
+      ],
+      "assignments": [
+        {
+          "precinct": "1-2",
+          "ward": "1",
+          "name": "NATRONA COUNTY PUBLIC LIBRARY",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4489f31e735ebff14a6a3ed5",
+      "name": "MILLS COMMUNITY CENTER",
+      "address": "401 WASATCH AVE",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "8-2",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "8-2",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "8-1",
+        "8-2"
+      ],
+      "assignments": [
+        {
+          "precinct": "8-1",
+          "name": "MILLS COMMUNITY CENTER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "8-2",
+          "name": "MILLS COMMUNITY CENTER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-18317bc8f07c15bd79ff3070",
+      "name": "HOUSE OF OUR SHEPARD CHURCH",
+      "address": "12540 NOTCHES AVE, POWDER RIVER",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "13-2",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "13-2",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "13-2"
+      ],
+      "assignments": [
+        {
+          "precinct": "13-2",
+          "name": "HOUSE OF OUR SHEPARD CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6df6a61ee0b5c2f6a91a2bd0",
+      "name": "EDGERTON TOWN HALL",
+      "address": "311 N SECOND ST, EDGERTON",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "14-1",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "14-1",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "7-2",
+        "14-1"
+      ],
+      "assignments": [
+        {
+          "precinct": "7-2",
+          "name": "EDGERTON TOWN HALL",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "14-1",
+          "name": "EDGERTON TOWN HALL",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-356a09d135a75ce11c583384",
+      "name": "MIDWEST TOWN HALL",
+      "address": "531 PEAKE ST, MIDWEST",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "7-1",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "7-1",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "7-1"
+      ],
+      "assignments": [
+        {
+          "precinct": "7-1",
+          "name": "MIDWEST TOWN HALL",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5dd8c6b47a23c49dc56405b4",
+      "name": "CHRISTIAN CHURCH OF CASPER",
+      "address": "8188 ZERO RD",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "8-4",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "8-4",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "13-1",
+        "8-4"
+      ],
+      "assignments": [
+        {
+          "precinct": "13-1",
+          "name": "CHRISTIAN CHURCH OF CASPER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "8-4",
+          "name": "CHRISTIAN CHURCH OF CASPER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c788a2bd0be607838cee2e0b",
+      "name": "BAR NUNN TOWN HALL & COMMUNITY CENTER",
+      "address": "1500 PALOMINO AVE",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "8-3",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "8-3",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "8-3",
+        "8-5"
+      ],
+      "assignments": [
+        {
+          "precinct": "8-3",
+          "name": "BAR NUNN TOWN HALL & COMMUNITY CENTER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "8-5",
+          "name": "BAR NUNN TOWN HALL & COMMUNITY CENTER",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d18467afb9e89ada6c50833f",
+      "name": "POISON SPIDER SCHOOL",
+      "address": "14200 POISON SPIDER RD",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "11-3",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "11-3",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "11-4",
+        "11-3"
+      ],
+      "assignments": [
+        {
+          "precinct": "11-4",
+          "name": "POISON SPIDER SCHOOL",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        },
+        {
+          "precinct": "11-3",
+          "name": "POISON SPIDER SCHOOL",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4c0c2c7b4329c4dd86f4497e",
+      "name": "ST STEPHENS EPISCOPAL CHURCH",
+      "address": "4700 S POPLAR ST",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "12-2",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "12-2",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "12-2"
+      ],
+      "assignments": [
+        {
+          "precinct": "12-2",
+          "name": "ST STEPHENS EPISCOPAL CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a671aa6d634366db8d8ceb47",
+      "name": "ALCOVA COMMUNITY CHURCH",
+      "address": "21925 KORTES RD, ALCOVA",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "11-2",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "11-2",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "11-2"
+      ],
+      "assignments": [
+        {
+          "precinct": "11-2",
+          "name": "ALCOVA COMMUNITY CHURCH",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-43c45f2a66d86731c864cdc0",
+      "name": "RED CREEK SCHOOL",
+      "address": "15651 STATE HIGHWAY 487",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "11-1",
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk and City of Casper GIS",
+          "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+          "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "11-1",
+      "locationNotes": "https://www.natronacounty-wy.gov/elections",
+      "countyFips": "56025",
+      "matchingUnit": "PRECINCT",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "11-1"
+      ],
+      "assignments": [
+        {
+          "precinct": "11-1",
+          "name": "RED CREEK SCHOOL",
+          "room": null,
+          "locationNotes": "https://www.natronacounty-wy.gov/elections",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Natrona County Clerk and City of Casper GIS",
+            "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+            "documentUrl": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Natrona County Clerk and City of Casper GIS",
+      "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://maps.casperwy.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://maps.casperwy.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://maps.casperwy.gov/robots.txt",
+      "contentType": "text/html",
+      "rawHash": "dc1d54dab6ec8c00f70137927504e4f222c8395f10760b6beecfcfa94e08249f",
+      "path": "tests/fixtures/voting-sources/vs-04-west/wy-213335cfff60-dc1d54dab6ec.html"
+    },
+    {
+      "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+      "contentType": "application/json; charset=UTF-8",
+      "rawHash": "cb5a13c9e1e38db1b2fb53cae92ffc50d1762c817c1c80a593f4d92e9978de0d",
+      "path": "tests/fixtures/voting-sources/vs-04-west/wy-c23d09906af0-cb5a13c9e1e3.json"
+    },
+    {
+      "url": "https://maps.casperwy.gov/nrgisc/rest/services/County_Elections/Precincts_2018/MapServer/0/query?f=json&where=1%3D1&objectIds=501%2C497%2C481%2C500%2C495%2C477%2C2059%2C490%2C2064%2C473%2C472%2C485%2C461%2C859%2C1659%2C464%2C507%2C460%2C491%2C469%2C487%2C2067%2C858%2C476%2C484%2C470%2C467%2C502%2C465%2C510%2C511%2C505%2C1259%2C493%2C503%2C468%2C458%2C499%2C506%2C488%2C466%2C2066%2C463%2C471%2C509%2C494%2C489%2C462%2C475%2C480%2C474%2C478%2C483%2C498%2C459%2C482%2C508%2C486%2C2060%2C479%2C496&outFields=*&returnGeometry=false",
+      "contentType": "application/json; charset=UTF-8",
+      "rawHash": "57252e1844dc7caac45936cdf66e71ac10814d2295d95e58d1dae037cce257bc",
+      "path": "tests/fixtures/voting-sources/vs-04-west/wy-94afb1055b58-57252e1844dc.json"
+    }
+  ],
+  "contacts": []
+}

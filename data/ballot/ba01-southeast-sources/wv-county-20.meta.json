@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Lewis%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Lewis%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:35.535767+00:00",
+  "rawHash": "cc2f8abdd5043d46dae6e46830cd134274eb67199140476bd9a2272e8e729a2b",
+  "httpStatus": 200,
+  "bytes": 862855,
+  "extractedTextHash": "e1f73d2d36d0f3c71245a0a8167c74e326816a66e30ace6186ef5254a9a12a67",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

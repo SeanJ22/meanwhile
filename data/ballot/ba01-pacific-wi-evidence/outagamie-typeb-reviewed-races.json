@@ -1,0 +1,276 @@
+[
+  [
+    "Representative in Congress District 6",
+    "ocd-division/country:us/state:wi/cd:6",
+    [
+      [
+        "Glenn Grothman",
+        "Republican"
+      ],
+      [
+        "Brad Smith",
+        "Democratic"
+      ],
+      [
+        "Matthew Arndt",
+        "Wisconsin Green"
+      ],
+      [
+        "Elizabeth Anne Fitzgibbon",
+        "Independent"
+      ],
+      [
+        "Mike Thurow",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Representative in Congress District 8",
+    "ocd-division/country:us/state:wi/cd:8",
+    [
+      [
+        "Tony Wied",
+        "Republican"
+      ],
+      [
+        "Rick Crosson",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 1",
+    "ocd-division/country:us/state:wi/sldu:1",
+    [
+      [
+        "Nic Cravillion",
+        "Republican"
+      ],
+      [
+        "Mark Becker",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 19",
+    "ocd-division/country:us/state:wi/sldu:19",
+    [
+      [
+        "Rachael Ann Cabral-Guevara",
+        "Republican"
+      ],
+      [
+        "Emily Daniels Tseffos",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 2",
+    "ocd-division/country:us/state:wi/sldl:2",
+    [
+      [
+        "Shae Sortwell",
+        "Republican"
+      ],
+      [
+        "Alicia Saunders",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 3",
+    "ocd-division/country:us/state:wi/sldl:3",
+    [
+      [
+        "Ron Tusler",
+        "Republican"
+      ],
+      [
+        "Michael J. Goodwin",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 4",
+    "ocd-division/country:us/state:wi/sldl:4",
+    [
+      [
+        "David Steffen",
+        "Republican"
+      ],
+      [
+        "Alexia Unertl",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 5",
+    "ocd-division/country:us/state:wi/sldl:5",
+    [
+      [
+        "Joy Goeben",
+        "Republican"
+      ],
+      [
+        "Justin Schumacher",
+        "Democratic"
+      ],
+      [
+        "David Schupbach",
+        "Wisconsin Green"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 52",
+    "ocd-division/country:us/state:wi/sldl:52",
+    [
+      [
+        "Reive Pullen",
+        "Republican"
+      ],
+      [
+        "Lee Snodgrass",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 53",
+    "ocd-division/country:us/state:wi/sldl:53",
+    [
+      [
+        "David Daniels",
+        "Republican"
+      ],
+      [
+        "Becky Nichols",
+        "Democratic"
+      ],
+      [
+        "Rachael Dowling",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 55",
+    "ocd-division/country:us/state:wi/sldl:55",
+    [
+      [
+        "Nate Gustafson",
+        "Republican"
+      ],
+      [
+        "Alex Corrigan",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 56",
+    "ocd-division/country:us/state:wi/sldl:56",
+    [
+      [
+        "Anthony W. Phillips",
+        "Republican"
+      ],
+      [
+        "Grace Abitz",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 57",
+    "ocd-division/country:us/state:wi/sldl:57",
+    [
+      [
+        "Kevin Krentz",
+        "Republican"
+      ],
+      [
+        "Joey Marschall",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Outagamie County Sheriff",
+    "ocd-division/country:us/state:wi/county:outagamie",
+    [
+      [
+        "Clint C. Kriewaldt",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Outagamie County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:outagamie",
+    [
+      [
+        "Diane Leith",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Calumet County Sheriff",
+    "ocd-division/country:us/state:wi/county:calumet",
+    [
+      [
+        "Brett Bowe",
+        "Republican"
+      ],
+      [
+        "Nick Sablich",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Calumet County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:calumet",
+    [
+      [
+        "Kayla Bembenek",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Winnebago County Sheriff",
+    "ocd-division/country:us/state:wi/county:winnebago",
+    [
+      [
+        "Darin M. Rice",
+        "Republican"
+      ],
+      [
+        "Jason W. Rippl",
+        "Democratic"
+      ],
+      [
+        "Danielle Falesnik",
+        "Strong. Fair. Ready to Lead"
+      ]
+    ]
+  ],
+  [
+    "Winnebago County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:winnebago",
+    [
+      [
+        "Desiree Bongers",
+        "Democratic"
+      ]
+    ]
+  ]
+]

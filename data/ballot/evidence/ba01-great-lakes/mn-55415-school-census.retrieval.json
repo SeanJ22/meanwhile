@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?geometry=%7B%22x%22%3A-93.262318051568%2C%22y%22%3A44.975370123052%7D&geometryType=esriGeometryPoint&spatialRel=esriSpatialRelIntersects&inSR=4326&outFields=%2A&returnGeometry=false&f=json",
+  "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?geometry=%7B%22x%22%3A-93.262318051568%2C%22y%22%3A44.975370123052%7D&geometryType=esriGeometryPoint&spatialRel=esriSpatialRelIntersects&inSR=4326&outFields=%2A&returnGeometry=false&f=json",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:13:42.105970+00:00",
+  "rawHash": "fc4b75b35641c6307d2e58f6f437e79a731bd1ed98146ee5ad4a3b5fc24c8b40"
+}

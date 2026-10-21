@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /GREBHandbook/
+Disallow: /FOIA/
+Disallow: /beta-home/
+Disallow: /registration/voting-systems/
+Disallow: *.json
+Disallow: *.csv
+Disallow: *.xls
+Disallow: *.xlsx
+Disallow: /cfr-footer/
+Sitemap: https://www.elections.virginia.gov/Google-Sitemap/sitemap-en.xml
+

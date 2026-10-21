@@ -1,0 +1,487 @@
+{
+  "state": "OH",
+  "before": [
+    215,
+    429
+  ],
+  "after": [
+    218,
+    433
+  ],
+  "verifiedLocalContests": 65,
+  "verifiedLocalCandidates": 109,
+  "countyToAppealsMemberships": 88,
+  "contests": [
+    {
+      "county": "cuyahoga",
+      "office": "For County Executive",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-cuyahoga-county-for-county-executive"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Member of County Council (District 1)",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-1"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Member of County Council (District 3)",
+      "term": "",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-3"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Member of County Council (District 5)",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-5"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Member of County Council (District 7)",
+      "term": "",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-7"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Member of County Council (District 9)",
+      "term": "",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-9"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Member of County Council (District 11)",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-cuyahoga-county-for-member-of-county-council-district-11"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Appeals (8th District)",
+      "term": "Full Term Commencing 2/9/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-9-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Appeals (8th District)",
+      "term": "Full Term Commencing 2/10/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-10-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Appeals (8th District)",
+      "term": "Full Term Commencing 2/11/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-11-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Appeals (8th District)",
+      "term": "Full Term Commencing 2/12/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Appeals (8th District)",
+      "term": "Unexpired Term Ending 12/31/28",
+      "candidates": 1,
+      "contestId": "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-unexpired-term-ending-12-31-28"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (General Division)",
+      "term": "Full Term Commencing 1/1/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (General Division)",
+      "term": "Full Term Commencing 1/2/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (General Division)",
+      "term": "Full Term Commencing 1/3/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (General Division)",
+      "term": "Full Term Commencing 1/4/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (General Division)",
+      "term": "Full Term Commencing 1/5/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (General Division)",
+      "term": "Full Term Commencing 1/6/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (General Division)",
+      "term": "Full Term Commencing 1/7/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (General Division)",
+      "term": "Full Term Commencing 1/10/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (General Division)",
+      "term": "Full Term Commencing 2/9/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (Domestic Relations Division)",
+      "term": "Full Term Commencing 1/8/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (Domestic Relations Division)",
+      "term": "Full Term Commencing 1/9/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (Probate Division)",
+      "term": "Full Term Commencing 1/1/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027"
+    },
+    {
+      "county": "cuyahoga",
+      "office": "For Judge of the Court of Common Pleas (Probate Division)",
+      "term": "Full Term Commencing 2/9/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Appeals 1st District",
+      "term": "2/9/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-ohio-court-of-appeals-judge-court-of-appeals-1st-district-2-9-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "1/1/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-1-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "1/2/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-2-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "1/4/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-1-4-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "2/9/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-9-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "2/10/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-10-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "2/11/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-11-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "2/12/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-12-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "2/13/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-2-13-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, Drug Court Divison",
+      "term": "1/3/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-drug-court-divison-1-3-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, Probate Division",
+      "term": "2/9/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-probate-division-2-9-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, Juvenile Division",
+      "term": "2/14/2027",
+      "candidates": 2,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-juvenile-division-2-14-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, Domestic Relations",
+      "term": "7/1/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-domestic-relations-7-1-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "UTE 1/3/29",
+      "candidates": 2,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-3-29"
+    },
+    {
+      "county": "hamilton",
+      "office": "Judge, Court of Common Pleas, General Division",
+      "term": "UTE 1/14/29",
+      "candidates": 2,
+      "contestId": "oh-ba01-hamilton-county-judge-court-of-common-pleas-general-division-ute-1-14-29"
+    },
+    {
+      "county": "hamilton",
+      "office": "County Commissioner",
+      "term": "1/1/2027",
+      "candidates": 3,
+      "contestId": "oh-ba01-hamilton-county-county-commissioner-1-1-2027"
+    },
+    {
+      "county": "hamilton",
+      "office": "County Auditor",
+      "term": "3/8/2027",
+      "candidates": 1,
+      "contestId": "oh-ba01-hamilton-county-county-auditor-3-8-2027"
+    },
+    {
+      "county": "summit",
+      "office": "SUMMIT COUNTY COUNCIL-AT-LARGE",
+      "term": "Term commencing 01/01/27",
+      "candidates": 6,
+      "contestId": "oh-ba01-summit-county-summit-county-council-at-large-term-commencing-01-01-27"
+    },
+    {
+      "county": "summit",
+      "office": "COMMON PLEAS COURT JUDGE",
+      "term": "Term commencing 01/02/27",
+      "candidates": 2,
+      "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-01-02-27"
+    },
+    {
+      "county": "summit",
+      "office": "COMMON PLEAS COURT JUDGE",
+      "term": "Term commencing 01/03/27",
+      "candidates": 1,
+      "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-01-03-27"
+    },
+    {
+      "county": "summit",
+      "office": "COMMON PLEAS COURT JUDGE",
+      "term": "Term commencing 01/05/27",
+      "candidates": 2,
+      "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-01-05-27"
+    },
+    {
+      "county": "summit",
+      "office": "COMMON PLEAS COURT JUDGE",
+      "term": "Term commencing 01/06/27",
+      "candidates": 2,
+      "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-01-06-27"
+    },
+    {
+      "county": "summit",
+      "office": "COMMON PLEAS COURT JUDGE",
+      "term": "Term commencing 02/09/27",
+      "candidates": 2,
+      "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-02-09-27"
+    },
+    {
+      "county": "summit",
+      "office": "COMMON PLEAS COURT JUDGE",
+      "term": "Term commencing 05/01/27",
+      "candidates": 2,
+      "contestId": "oh-ba01-summit-county-common-pleas-court-judge-term-commencing-05-01-27"
+    },
+    {
+      "county": "summit",
+      "office": "JUVENILE COURT JUDGE",
+      "term": "Term commencing 01/01/27",
+      "candidates": 2,
+      "contestId": "oh-ba01-summit-county-juvenile-court-judge-term-commencing-01-01-27"
+    },
+    {
+      "county": "summit",
+      "office": "DOMESTIC RELATIONS JUDGE",
+      "term": "Term commencing 01/04/27",
+      "candidates": 2,
+      "contestId": "oh-ba01-summit-county-domestic-relations-judge-term-commencing-01-04-27"
+    },
+    {
+      "county": "summit",
+      "office": "PROBATE COURT JUDGE",
+      "term": "Term commencing 02/09/27",
+      "candidates": 2,
+      "contestId": "oh-ba01-summit-county-probate-court-judge-term-commencing-02-09-27"
+    },
+    {
+      "county": "summit",
+      "office": "9TH DISTRICT COURT OF APPEALS JUDGE",
+      "term": "Term commencing 02/09/27",
+      "candidates": 2,
+      "contestId": "oh-ba01-ohio-court-of-appeals-9th-district-court-of-appeals-judge-term-commencing-02-09-27"
+    },
+    {
+      "county": "summit",
+      "office": "9TH DISTRICT COURT OF APPEALS JUDGE",
+      "term": "Unexpired term ending 02/09/29",
+      "candidates": 2,
+      "contestId": "oh-ba01-ohio-court-of-appeals-9th-district-court-of-appeals-judge-unexpired-term-ending-02-09-29"
+    },
+    {
+      "county": "montgomery",
+      "office": "Judge of the Court of Appeals- 2nd Dist (1) Term Begins 2/9/2027",
+      "term": "",
+      "candidates": 1,
+      "contestId": "oh-ba01-ohio-court-of-appeals-judge-of-the-court-of-appeals-2nd-dist-1-term-begins-2-9-2027"
+    },
+    {
+      "county": "montgomery",
+      "office": "Judge of the Court of Common Pleas (1) Term Begins 1/1/2027",
+      "term": "",
+      "candidates": 1,
+      "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-1-1-2027"
+    },
+    {
+      "county": "montgomery",
+      "office": "Judge of the Court of Common Pleas (1) Term Begins 1/2/2027",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-1-2-2027"
+    },
+    {
+      "county": "montgomery",
+      "office": "Judge of the Court of Common Pleas (1) Term Begins 1/3/2027",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-1-3-2027"
+    },
+    {
+      "county": "montgomery",
+      "office": "Judge of the Court of Common Pleas (1) Term Begins 7/1/2027",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-7-1-2027"
+    },
+    {
+      "county": "montgomery",
+      "office": "Judge of the Court of Common Pleas (1) Term Begins 7/2/2027",
+      "term": "",
+      "candidates": 1,
+      "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-1-term-begins-7-2-2027"
+    },
+    {
+      "county": "montgomery",
+      "office": "Judge of the Court of Common Pleas- Probate Division (1) Term Begins 2/9/2027",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-probate-division-1-term-begins-2-9-2027"
+    },
+    {
+      "county": "montgomery",
+      "office": "Judge of the Court of Common Pleas- Juvenile Division (1) UTE 12/31/2028",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-montgomery-county-judge-of-the-court-of-common-pleas-juvenile-division-1-ute-12-31-2028"
+    },
+    {
+      "county": "montgomery",
+      "office": "County Commissioner (1) Term Begins 1/1/2027",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-montgomery-county-county-commissioner-1-term-begins-1-1-2027"
+    },
+    {
+      "county": "montgomery",
+      "office": "County Auditor (1)",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-montgomery-county-county-auditor-1"
+    },
+    {
+      "county": "montgomery",
+      "office": "New Lebanon Council (1) UTE 12/31/2029",
+      "term": "",
+      "candidates": 2,
+      "contestId": "oh-ba01-montgomery-county-new-lebanon-council-1-ute-12-31-2029"
+    }
+  ],
+  "explicitExcludedFilings": [
+    {
+      "county": "cuyahoga",
+      "name": "Tariq K. Shabazz",
+      "reason": "Removed by Board action",
+      "sourceRow": "Tariq K. Shabazz                       Nonpartisan | No Partidista           5/4/2026          Removed by Board action |"
+    },
+    {
+      "county": "cuyahoga",
+      "name": "Tariq K. Shabazz",
+      "reason": "Removed by Board action",
+      "sourceRow": "Tariq K. Shabazz                       Nonpartisan | No Partidista          8/24/2026          Removed by Board action |"
+    }
+  ],
+  "remainingSampleNameChecks": [],
+  "liveVerified": false
+}

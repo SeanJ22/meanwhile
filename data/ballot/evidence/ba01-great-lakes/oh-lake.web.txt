@@ -1,0 +1,110 @@
+(https://wpassets.lakecountyohio.gov/wp-content/uploads/sites/12/2026/10/15161638/2026-Candidate-Filings.pdf)
+【turn321758view2】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 4; Source: open({"ref_id":"https://wpassets.lakecountyohio.gov/wp-content/uploads/sites/12/2026/10/15161638/2026-Candidate-Filings.pdf","lineno":null}); Total lines: 108
+L0@P0: PARTY NAME ADDRESS CITY/ZIP
+L1@P0: U.S. SENATOR D Sherrod Brown 970 Vernon Rd Columbus, OH 43209
+L2@P0: Unexpired term ending 1/3/29 R Jon Husted 4110 Fenwick Rd Columbus, OH 43220
+L3@P0: (Held by Husted) Other-party Greg Levy 3834 Faversham Rd University Heights, OH 44118
+L4@P0: L William B. Redpath 1223 Timberbrook Ct Perrysburg, OH 43551
+L5@P0: Stephen Faris (Write-in) 1009 Ashbrooke Lane Xenia, OH 45385
+L6@P0: Anthony Holliman (Write-in) 1609 Flora Ave Cincinnati, OH 45231
+L7@P0: Timothy Telymonde (Write-in) 5077 State Rt 348 Otway, OH 45657
+L8@P0: Representative to Congress
+L9@P0: District 14 PARTY NAME ADDRESS CITY/ZIP
+L10@P0: (Held by Joyce)
+L11@P0: All of Ashtabula, Geauga, Lake, R David P. Joyce 116 Manor Brook Dr. Chagrin Falls, OH 44022
+L12@P0: and Trumbull Counties. D Maria Jukic 360 Walworth Ave. Euclid, OH 44132
+L13@P0: Part: Portage and Mahoning Counties
+L14@P0: GOVERNOR AND
+L15@P0: LIEUTENANT GOVERNOR PARTY NAME ADDRESS CITY/ZIP
+L16@P0: D Amy Acton 932 Pleasant Ridge Ave Bexley, OH 43209
+L17@P0: and David Pepper 7750 Graves Rd Indian Hill, OH 45243
+L18@P0: L Don Kissick 113 Eastowne Dr Ottawa, OH 45875
+L19@P0: and James L. Mills 990 Hampton Ct Lebanon, OH 45036
+L20@P0: R Vivek Ramaswamy 5045 Squirrel Bend Columbus, OH 43220
+L21@P0: and Robert A. McColley 331 W Clinton St Napoleon, OH 43545
+L22@P0: Timothy Grady (Write-in) 1285 Wittmer Rd Mansfield, OH 44903
+L23@P0: and Andrea Neutzling 2440 Union Aly Syracuse, OH 45779
+L24@P0: Heather Hill (Write-in) 5975 Upper Oil Springs Rd Malta, OH 43758
+L25@P0: and Patrick Manley 4405 Olentangy Blvd Columbus, OH 43214
+L26@P0: Renea Turner (Write-in) 1618 Lexington Ave Springfield, OH 44505
+L27@P0: and Jalen Turner 2737 Woodthrush Rd Springfield, OH 45502
+L28@P0: STATE OFFICES
+L29@P0: November 3, 2026 General Election Candidate List Updated: 10/15/2026
+L30@P0-1: FEDERAL OFFICESPARTY NAME ADDRESS CITY/ZIP
+L31@P1: ATTORNEY GENERAL R Keith Faber 7025 Dibble Rd Celina, OH 45822
+L32@P1: D John J. Kulewicz 2104 Yorkshire Rd Upper Arlington, OH 43221
+L33@P1: AUDITOR PARTY NAME ADDRESS CITY/ZIP
+L34@P1: D Annette Blackwell 15357 Longvale Ave Maple Heights, OH 44137
+L35@P1: R Frank LaRose 1821 Suffolk Rd Columbus, OH 43221
+L36@P1: SECRETARY OF STATE PARTY NAME ADDRESS CITY/ZIP
+L37@P1: L Tom Pruss 4725 Southbridge Rd Toledo, OH 43623
+L38@P1: D Allison Russo 1850 Tewksbury Rd Columbus, OH 43221
+L39@P1: R Robert Sprague 830 S Main St Findlay, OH 45840
+L40@P1: TREASURER PARTY NAME ADDRESS CITY/ZIP
+L41@P1: R Jay Edwards 8 Blair Ct Nelsonville, OH 45764
+L42@P1: D Seth Walsh 205 W 4th St #1104 Cincinnati, OH 45202
+L43@P1: STATE REPRESENTATIVE
+L44@P1: 23rd District PARTY NAME ADDRESS CITY/ZIP
+L45@P1: (Held by Troy) R Julie A. Belich 37200 Chardon Rd. Willoughby Hills, OH 44094
+L46@P1: D Daniel P. Troy 31600 Lakeshore Blvd. Willowick, OH 44095
+L47@P1: STATE REPRESENTATIVE
+L48@P1: 57th District PARTY NAME ADDRESS CITY/ZIP
+L49@P1: (Held by Callender) Nonparty Belinda Grassi 6351 Painesville Ravenna Rd. Concord, OH 44077
+L50@P1: R Jesse Styles 10286 Longview Dr. Kirtland, OH 44094
+L51@P1: D Rick Walker 4122 Green St. Perry, OH 44081
+L52@P1-2: STATE OFFICES continuedCOMMISSIONER
+L53@P2: 1/1/27 TERM
+L54@P2: (Held by Plecnik) PARTY NAME ADDRESS CITY/ZIP
+L55@P2: R John T. Plecnik 38079 Euclid Ave. STE 3 Willoughby, OH 44094
+L56@P2: D Tom Trombley 7353 Raccoon Hill Dr. Kirtland, OH 44094
+L57@P2: COMMISSIONER
+L58@P2: UTE 1/1/29
+L59@P2: (Held by McIntosh) PARTY NAME ADDRESS CITY/ZIP
+L60@P2: D Lisa Lewins 448 Mentor Ave. Painesville, OH 44077
+L61@P2: R Morgan R. McIntosh 9880 Judges Court Concord, OH 44060
+L62@P2: AUDITOR 3/8/27 TERM PARTY NAME ADDRESS CITY/ZIP
+L63@P2: (Held by Galloway) R Christopher A. Galloway 6440 Auburn Rd. Concord, OH 44077
+L64@P2: JUSTICE OF THE SUPREME COURT
+L65@P2: OF OHIO 1/1/2027
+L66@P2: TERM PARTY NAME ADDRESS CITY/ZIP
+L67@P2: R Daniel R. Hawkins
+L68@P2: D Marilyn Zayas
+L69@P2: JUSTICE OF THE SUPREME COURT
+L70@P2: OF OHIO 1/2/2027
+L71@P2: TERM PARTY NAME ADDRESS CITY/ZIP
+L72@P2: D Jennifer Brunner
+L73@P2: R Colleen O'Donnell
+L74@P2: JUDGE OF COURT OF
+L75@P2: APPEALS 11TH DISTRICT
+L76@P2: 2/9/2027 TERM
+L77@P2: (Held by Matt Lynch) PARTY NAME ADDRESS CITY/ZIP
+L78@P2: R Marisa L. Cornachio
+L79@P2: JUDGE OF COURT OF
+L80@P2: APPEALS 11TH DISTRICT
+L81@P2: 2/10/2027 TERM
+L82@P2: (Held by Patton) PARTY NAME ADDRESS CITY/ZIP
+L83@P2: R Robert J. Patton
+L84@P2: JUDICIAL OFFICES
+L85@P2-3: COUNTY OFFICESJudge of Common Pleas Court
+L86@P3: (Domestic Relations) 1/2/2027
+L87@P3: (Held by Falkowski) PARTY NAME ADDRESS CITY/ZIP
+L88@P3: R Jeffrey H. Black
+L89@P3: Judge of Common Pleas Court
+L90@P3: (Juvenile) 1/4/2027
+L91@P3: (Held by DeLeone) PARTY NAME ADDRESS CITY/ZIP
+L92@P3: R Michael L. DeLeone
+L93@P3: Judge of Common Pleas Court
+L94@P3: (General) 1/5/2027
+L95@P3: (Held by O'Donnell) PARTY NAME ADDRESS CITY/ZIP
+L96@P3: R John P. O'Donnell
+L97@P3: Judge of Common Pleas Court
+L98@P3: (Probate) 2/9/2027
+L99@P3: (Held by Bartolotta) PARTY NAME ADDRESS CITY/ZIP
+L100@P3: R Mark J. Bartolotta
+L101@P3: (Files August 5, 2026 for November 3, 2026 General Election)
+L102@P3: Mentor City PARTY NAME ADDRESS CITY/ZIP
+L103@P3: Council Ward 3 *Jessie Baginski 7034 W. Jefferson Dr. Mentor, OH 44060
+L104@P3: Unexpired term ending (12/31/27) *Charles E. Pinkerman 6517 Ambrose Dr. Mentor, OH 44060
+L105@P3: *Certified on 8/13/2026
+L106@P3: MUNICIPAL OFFICES
+L107@P3: JUDICIAL OFFICES continued

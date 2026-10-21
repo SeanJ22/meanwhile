@@ -1,0 +1,351 @@
+ (https://www.boe.ohio.gov/miami/c/upload/FWAB_11November46Day.pdf)
+【turn485414view2】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 7; Source: click({"ref_id":"turn845559view3","id":14}); Total lines: 348
+L0@P0: Page 1 of 7 Revised: 9/15/2026 2:05 PM
+L1@P0: ELECTION NOTICE FOR USE WITH THE
+L2@P0: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB)
+L3@P0: R.C. 3511.16
+L4@P0: Issued by the Miami County Board of Elections
+L5@P0: 46 Day Notice
+L6@P0: (to be posted 46 days prior to date of election)
+L7@P0: November 3, 2026 General Election
+L8@P0: All Offices
+L9@P0: Name of Candidate (Party) Office, To Elect, Term Precincts
+L10@P0: Amy Acton and David Pepper
+L11@P0: (Democratic)
+L12@P0: Don Kissick and James L.
+L13@P0: Mills (Libertarian)
+L14@P0: Vivek Ramaswamy and
+L15@P0: Robert A. McColley
+L16@P0: (Republican)
+L17@P0: Write-In Candidates:
+L18@P0: Timothy Grady and Andrea
+L19@P0: Neutzling
+L20@P0: Heather Hill and Patrick
+L21@P0: Manley
+L22@P0: Renea Turner and Jalen
+L23@P0: Turner
+L24@P0: Ron Ula and Michael C.
+L25@P0: Lehnerd
+L26@P0: GOVERNOR
+L27@P0: 1 to be elected
+L28@P0: Full 4 Year Term Commencing 01/11/2027
+L29@P0: All Precincts
+L30@P0: Keith Faber (Republican)
+L31@P0: John J. Kulewicz
+L32@P0: (Democratic)
+L33@P0: ATTORNEY GENERAL
+L34@P0: 1 to be elected
+L35@P0: Full 4 Year Term Commencing 01/11/2027
+L36@P0: All Precincts
+L37@P0: Annette Blackwell
+L38@P0: (Democratic)
+L39@P0: Frank LaRose (Republican)
+L40@P0: AUDITOR OF STATE
+L41@P0: 0 to be elected
+L42@P0: Full 4 Year Term Commencing 01/11/2027
+L43@P0: All Precincts
+L44@P0: Tom Pruss (Libertarian)
+L45@P0: Allison Russo (Democratic)
+L46@P0: Robert Sprague (Republican)
+L47@P0: SECRETARY OF STATE
+L48@P0: 1 to be elected
+L49@P0: Full 4 Year Term Commencing 01/11/2027
+L50@P0-1: All PrecinctsPage 2 of 7 Revised: 9/15/2026 2:05 PM
+L51@P1: Jay Edwards (Republican)
+L52@P1: Seth Walsh (Democratic)
+L53@P1: TREASURER OF STATE
+L54@P1: 1 to be elected
+L55@P1: Full 4 Year Term Commencing 01/11/2027
+L56@P1: All Precincts
+L57@P1: Daniel R. Hawkins
+L58@P1: (Republican)
+L59@P1: Marilyn Zayas (Democratic)
+L60@P1: JUSTICE OF THE SUPREME COURT
+L61@P1: 1 to be elected
+L62@P1: Full 6 Year Term Commencing 01/01/2027
+L63@P1: All Precincts
+L64@P1: Jennifer Brunner
+L65@P1: (Democratic)
+L66@P1: Colleen O'Donnell
+L67@P1: (Republican)
+L68@P1: JUSTICE OF THE SUPREME COURT
+L69@P1: 1 to be elected
+L70@P1: Full 6 Year Term Commencing 01/02/2027
+L71@P1: All Precincts
+L72@P1: Sherrod Brown (Democratic)
+L73@P1: Jon Husted (Republican)
+L74@P1: Greg Levy (Other Party
+L75@P1: Candidate)
+L76@P1: William B. Redpath
+L77@P1: (Libertarian)
+L78@P1: Write-In Candidates:
+L79@P1: Stephen Faris
+L80@P1: Anthony Holliman
+L81@P1: Timothy Telymonde
+L82@P1: U.S. SENATE
+L83@P1: 1 to be elected
+L84@P1: Unexpired Term Ending 1-3-2029
+L85@P1: All Precincts
+L86@P1: Warren Davidson
+L87@P1: (Republican)
+L88@P1: Vanessa Enoch (Democratic)
+L89@P1: U.S. CONGRESS - 8TH DISTRICT
+L90@P1: 1 to be elected
+L91@P1: Full 2 Year Term Commencing 01/03/2027
+L92@P1: 017/1, 017/2, 017/3, 018/1, 019/1,
+L93@P1: 020/1, 020/2, 021/1, 021/2, 021/3,
+L94@P1: 021/4, 022/1, 023/1, 024/1, 025/1,
+L95@P1: 026/1, 027/1, 028/1, 029/1, 030/1,
+L96@P1: 031/1, 032/1, 033/1, 034/1, 035/1,
+L97@P1: 036/1, 037/1, 038/1, 039/1, 039/2,
+L98@P1: 040/1, 041/1, 042/1, 043/1, 044/1,
+L99@P1: 045/1, 045/2, 051/1, 051/2, 052/1,
+L100@P1: 053/1, 054/1, 055/1, 058/1, 059/1,
+L101@P1: 059/2, 060/1, 061/1, 062/1, 062/2,
+L102@P1: 062/3, 074/3, 075/3, 076/2, 076/3,
+L103@P1: 077/1, 078/1, 079/1, 080/1, 080/2,
+L104@P1-2: 080/3, 081/1, 081/2, 081/3, 081/4Page 3 of 7 Revised: 9/15/2026 2:05 PM
+L105@P2: Mike Carey (Republican)
+L106@P2: Don Leonard (Democratic)
+L107@P2: Brennan Barrington
+L108@P2: (Libertarian)
+L109@P2: Write-In Candidates:
+L110@P2: Gary Josephson
+L111@P2: Samuel Ronan
+L112@P2: U.S. CONGRESS - 15TH DISTRICT
+L113@P2: 1 to be elected
+L114@P2: Full 2 Year Term Commencing 01/03/2027
+L115@P2: 001/1, 002/1, 003/1, 004/1, 005/1,
+L116@P2: 006/1, 007/1, 007/2, 008/1, 009/1,
+L117@P2: 010/1, 011/1, 012/1, 013/1, 014/1,
+L118@P2: 015/1, 016/1, 017/4, 021/5, 046/1,
+L119@P2: 047/1, 047/2, 048/1, 048/2, 049/1,
+L120@P2: 049/2, 050/1, 050/2, 056/1, 057/1,
+L121@P2: 057/2, 063/1, 064/1, 065/1, 066/1,
+L122@P2: 067/1, 067/2, 068/1, 069/1, 069/2,
+L123@P2: 069/3, 069/4, 070/1, 070/2, 070/3,
+L124@P2: 070/4, 072/1, 073/1, 073/2, 074/1,
+L125@P2: 074/2, 074/4, 075/1, 075/2, 075/4,
+L126@P2: 076/1, 076/4, 080/4, 082/1, 082/2,
+L127@P2: 082/3, 083/1, 083/2, 084/1, 084/2,
+L128@P2: 085/1, 085/2, 086/1, 086/2, 087/1,
+L129@P2: 088/1
+L130@P2: Jeffrey Harris (Democratic)
+L131@P2: Phil Plummer (Republican)
+L132@P2: STATE SENATOR
+L133@P2: 1 to be elected
+L134@P2: Full 4 Year Term Commencing 01/01/2027
+L135@P2: All Precincts
+L136@P2: Johnathan Newman
+L137@P2: (Republican)
+L138@P2: Katie Koehler Wagner
+L139@P2: (Democratic)
+L140@P2: STATE REPRESENTATIVE
+L141@P2: 1 to be elected
+L142@P2: Full 2 Year Term Commencing 01/01/2027
+L143@P2: All Precincts
+L144@P2: Chris Epley (Republican) JUDGE OF THE 2ND DISTRICT COURT
+L145@P2: OF APPEALS
+L146@P2: 1 to be elected
+L147@P2: Full 6 Year Term Commencing 02/09/2027
+L148@P2: All Precincts
+L149@P2: Jeannine N. Pratt
+L150@P2: (Republican)
+L151@P2: JUDGE OF THE COURT OF COMMON
+L152@P2: PLEAS
+L153@P2: 1 to be elected
+L154@P2: Full 6 Year Term Commencing 02/09/2027
+L155@P2: All Precincts
+L156@P2: Katherine Kemp Severt
+L157@P2: (Republican)
+L158@P2: JUDGE OF THE COURT OF COMMON
+L159@P2: PLEAS - JUVENILE/PROBATE
+L160@P2: 1 to be elected
+L161@P2: Full 6 Year Term Commencing 02/09/2027
+L162@P2: All Precincts
+L163@P2: Ted Mercer (Republican)
+L164@P2: Bill Whitten (Democratic)
+L165@P2: COUNTY COMMISSIONER
+L166@P2: 1 to be elected
+L167@P2: Full 4 Year Term Commencing 01/01/2027
+L168@P2-3: All PrecinctsPage 4 of 7 Revised: 9/15/2026 2:05 PM
+L169@P3: Matthew W. Gearhardt
+L170@P3: (Republican)
+L171@P3: COUNTY AUDITOR
+L172@P3: 1 to be elected
+L173@P3: Full 4 Year Term Commencing 03/08/2027
+L174@P3: All Precincts
+L175@P3: All Issues
+L176@P3: Issues Precincts
+L177@P3: Issue 3
+L178@P3: Proposed Constitutional Amendment
+L179@P3: TO REQUIRE VOTERS TO PRESENT PHOTO IDENTIFICATION IN ORDER TO VOTE
+L180@P3: Proposed by Joint Resolution of the General Assembly
+L181@P3: To enact Section 5 of Article V of the Constitution of the State of Ohio
+L182@P3: A majority yes vote is required for the adoption of Section 5.
+L183@P3: This proposed amendment would:
+L184@P3: • Require voters to present an approved form of government-issued photo identification in order
+L185@P3: to vote.
+L186@P3: • Allow state law to provide for an alternative method of verifying a voter’s identity for a voter who
+L187@P3: has a sincere religious objection to being photographed and, therefore, does not possess an
+L188@P3: approved form of government-issued photo identification.
+L189@P3: • Require that voters who do not vote in person provide an approved form of government-issued
+L190@P3: photo identification, unless the law authorizes those persons to vote by providing a signature and
+L191@P3: at least one other specified unique identifier.
+L192@P3: • Define approved forms of government-issued photo identification as an unexpired Ohio driver
+L193@P3: license or state identification card; a United States passport or passport card; or a United States
+L194@P3: military identification card, Ohio National Guard identification card, or United States Department
+L195@P3: of Veterans Affairs identification card.
+L196@P3: If approved, the amendment shall take effect immediately.
+L197@P3: A "YES" vote means approval of the amendment.
+L198@P3: A "NO" vote means disapproval of the amendment.
+L199@P3: All Precincts
+L200@P3: Proposed Tax Levy (Renewal)
+L201@P3: Tri-County Board of Recovery and Mental Health Services Serving Darke, Miami
+L202@P3: and Shelby Counties
+L203@P3: Miami County
+L204@P3: A majority affirmative vote is necessary for passage.
+L205@P3: A renewal of a tax for the benefit of the Tri-County Board of Recovery and Mental Health
+L206@P3: Services for the purpose of providing counseling and supportive services to children and adults
+L207@P3: through the operation of alcohol and drug addiction programs, and mental health programs, that
+L208@P3: the county auditor estimates will collect $2,596,848 annually, at a rate not exceeding 0.6 mill for
+L209@P3: each $1 of taxable value, which amounts to $10 for each $100,000 of the county auditor's market
+L210@P3: value, for 5 years, commencing in 2027, first due in calendar year 2028.
+L211@P3-4: All PrecinctsPage 5 of 7 Revised: 9/15/2026 2:05 PM
+L212@P4: Proposed Tax Levy (Additional)
+L213@P4: Miami County
+L214@P4: A majority affirmative vote is necessary for passage.
+L215@P4: An additional tax for the benefit of Miami County Park District for the purpose of continuing to
+L216@P4: fund the maintenance and improvement of the nature reserves, preserves, and facilities of the
+L217@P4: District, such as Charleston Falls Preserve, Garbry Big Woods Reserve and Sanctuary, Hobart
+L218@P4: Urban Nature Preserve, Stillwater Prairie Reserve, Goode Prairie, Greenville Creek Scenic River
+L219@P4: and Lost Creek Reserve; emphasizing the conservation of lands and natural resources; public
+L220@P4: outdoor passive leisure facilities and programs; increased visitor security and comfort; urban and
+L221@P4: suburban partnerships; educational and entertainment programs for all generations, such as Hug
+L222@P4: The Earth Festival, Summer Eco-splorers, Fall FarmFest, the Holiday Lights Event at Lost Creek
+L223@P4: Reserve, and various school and public education programs; historic preservation of rural
+L224@P4: lifestyles and traditions; wildlife protection and observation; recognition and protection of the area
+L225@P4: river corridors, wetlands and watersheds; and the maintenance of District facilities, being
+L226@P4: operations presently funded by the district's existing 1.5 mill levy, which the Board of Park
+L227@P4: Commissioners has by resolution committed shall not be collected if this tax is approved, that the
+L228@P4: county auditor estimates will collect $5,966,102 annually, at a rate not exceeding 1.4 mills for
+L229@P4: each $1 of taxable value, which amounts to $49 for each $100,000 of the county auditor's market
+L230@P4: value, for 10 years, commencing in 2026, first due in calendar year 2027.
+L231@P4: All Precincts
+L232@P4: Proposed Tax Levy (Renewal)
+L233@P4: Village of Casstown
+L234@P4: A majority affirmative vote is necessary for passage.
+L235@P4: A renewal of a tax for the benefit of the Village of Casstown for the purpose of general operating
+L236@P4: expenses, that the county auditor estimates will collect $10,478 annually, at a rate not exceeding
+L237@P4: 0.3 mill for each $1 of taxable value, which amounts to $56 for each $100,000 of the county
+L238@P4: auditor's market value, for 5 years, commencing in 2027, first due in calendar year 2028.
+L239@P4: 057/1
+L240@P4: Local Liquor Option
+L241@P4: For Particular Location
+L242@P4: (By Petition)
+L243@P4: Village of Pleasant Hill
+L244@P4: A majority affirmative vote is necessary for passage.
+L245@P4: Shall the sale of beer be permitted by The PHill Exchange LLC, a holder for a D-1 liquor permit,
+L246@P4: who is engaged in the business of a restaurant/stationary food truck at 210 W. High St. Pleasant
+L247@P4: Hill, OH 45359 in this precinct?
+L248@P4: 068/1
+L249@P4: Proposed Tax Levy (Renewal)
+L250@P4: Monroe Township
+L251@P4: A majority affirmative vote is necessary for passage.
+L252@P4: A renewal of a tax for the benefit of the incorporated and unincorporated areas of Monroe
+L253@P4: Township for the purpose of current expenses of the Tipp Monroe Community Services and the
+L254@P4: recreational and enrichment programs and activities of the same, that the county auditor
+L255@P4: estimates will collect $248,022 annually, at a rate not exceeding 0.5 mill for each $1 of taxable
+L256@P4: value, which amounts to $10 for each $100,000 of the county auditor's market value, for 5 years,
+L257@P4: commencing in 2027, first due in calendar year 2028.
+L258@P4: 038/1, 039/1, 039/2, 040/1, 041/1,
+L259@P4: 042/1, 043/1, 044/1, 045/1, 058/1,
+L260@P4: 059/1, 059/2, 060/1, 061/1, 062/1,
+L261@P4-5: 062/2, 062/3Page 6 of 7 Revised: 9/15/2026 2:05 PM
+L262@P5: Proposed Tax Levy (Renewal)
+L263@P5: Troy City School District
+L264@P5: A majority affirmative vote is necessary for passage.
+L265@P5: A renewal of a tax for the benefit of the Troy City School District for the purpose of current
+L266@P5: expenses, that the county auditor estimates will collect $4,630,513 annually, at a rate not
+L267@P5: exceeding 5.8 mills for each $1 of taxable value, which amounts to $111 for each $100,000 of
+L268@P5: the county auditor's market value, for 5 years, commencing in 2026, first due in calendar year
+L269@P5: 2027. The county auditor has certified that the amount by which the carry-over balance in the
+L270@P5: District's general operating budget from the preceding fiscal year exceeds the District's general
+L271@P5: fund expenditures made in the preceding fiscal year is $0, which is 0% of those expenditures.
+L272@P5: 017/1, 018/1, 019/1, 020/1, 021/1,
+L273@P5: 021/4, 022/1, 023/1, 024/1, 025/1,
+L274@P5: 026/1, 027/1, 028/1, 029/1, 030/1,
+L275@P5: 031/1, 032/1, 033/1, 034/1, 035/1,
+L276@P5: 036/1, 037/1, 039/2, 051/1, 052/1,
+L277@P5: 053/1, 054/1, 055/1, 059/2, 062/2,
+L278@P5: 069/3, 073/2, 080/2, 082/3
+L279@P5: Proposed Tax Levy (Renewal)
+L280@P5: Bethel Township Fire District One
+L281@P5: A majority affirmative vote is necessary for passage.
+L282@P5: A renewal of a tax for the benefit of Bethel Township Fire District One for the purpose of fire and
+L283@P5: emergency medical services, that the county auditor estimates will collect $795,046 annually, at
+L284@P5: a rate not exceeding 4.9 mills for each $1 of taxable value, which amounts to $103 for each
+L285@P5: $100,000 of the county auditor's market value, for 5 years, commencing in 2027, first due in
+L286@P5: calendar year 2028.
+L287@P5: 046/1, 047/1, 047/2, 048/1, 049/1,
+L288@P5: 049/2
+L289@P5: Proposed Tax Levy (Renewal)
+L290@P5: Concord Township (Unincorporated)
+L291@P5: A majority affirmative vote is necessary for passage.
+L292@P5: A renewal of a tax for the benefit of the unincorporated areas of Concord Township for the
+L293@P5: purpose of fire protection, ambulance and emergency medical services that the county auditor
+L294@P5: estimates will collect $668,475 annually, at a rate not exceeding 3.7 mills for each $1 of taxable
+L295@P5: value, which amounts to $70 for each $100,000 of the county auditor's market value, for 5 years,
+L296@P5: commencing in 2027, first due in calendar year 2028.
+L297@P5: 051/1, 051/2, 052/1, 053/1, 054/1,
+L298@P5: 055/1
+L299@P5: Proposed Tax Levy (Renewal and Increase)
+L300@P5: Monroe Township Fire District One
+L301@P5: A majority affirmative vote is necessary for passage.
+L302@P5: A renewal of 4 mills and an increase of 2 mills for each $1 of taxable value to constitute a tax for
+L303@P5: the benefit of Monroe Township Fire District One for the purpose of fire protection services and
+L304@P5: emergency medical services that the county auditor estimates will collect $1,332,732 annually, at
+L305@P5: a rate not exceeding 6 mills for each $1 of taxable value, which amounts to $160 for each
+L306@P5: $100,000 of the county auditor's market value, for 5 years, commencing in 2027, first due in
+L307@P5: calendar year 2028.
+L308@P5: 058/1, 059/1, 059/2, 060/1, 061/1,
+L309@P5: 062/1, 062/2, 062/3
+L310@P5: SPECIAL ELECTION
+L311@P5: Proposed Charter Amendment
+L312@P5: City of Piqua
+L313@P5: Be it Resolved by the People of the City of Piqua that the Charter of the City of Piqua is hereby
+L314@P5: amended to add Section 138 to Miscellaneous Provisions to read as follows:
+L315@P5: Section 138 Prohibition of Construction of a Data Center
+L316@P5: (A) the construction of a data center is hereby prohibited.
+L317@P5: 001/1, 002/1, 003/1, 004/1, 005/1,
+L318@P5: 006/1, 007/1, 007/2, 008/1, 009/1,
+L319@P5: 010/1, 011/1, 012/1, 013/1, 014/1,
+L320@P5-6: 015/1, 016/1Page 7 of 7 Revised: 9/15/2026 2:05 PM
+L321@P6: (B) As used in this Section, "construction" shall mean the erection of one or more buildings,
+L322@P6: infrastructure, facilities, and related activities, which include preparations and modifications for
+L323@P6: same, for a common purpose.
+L324@P6: (C) As used in this Section, "data center" shall mean one or more buildings or physical facilities
+L325@P6: or infrastructure, located on a single real property parcel or on contiguous, adjacent, or otherwise
+L326@P6: aggregated real property parcels that:
+L327@P6: (1) Are used primarily or exclusively for digital information services such as the management,
+L328@P6: storage, processing, and dissemination of electronic data and information through the use of
+L329@P6: computer systems, servers, networking equipment, and related components, including
+L330@P6: equipment cooling systems; and
+L331@P6: (2) Has an aggregate monthly demand or peak load of greater than twenty-five (25) megawatts,
+L332@P6: however derived from any energy source, or a combination thereof.
+L333@P6: (D) This section is self-executing.
+L334@P6: INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L335@P6: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L336@P6: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of downloading a blank, hard
+L337@P6: copy FWAB to complete by hand, or proceeding through electronic completion of the FWAB using the website’s FWAB Wizard.
+L338@P6: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to count.
+L339@P6: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before the election and the
+L340@P6: updated election notice issued on the 46th day before the election as a guide to:
+L341@P6: (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L342@P6: (2) write the name of your choice of candidate or choice for or against an issue.
+L343@P6: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of elections at this
+L344@P6: address: Miami County Board of Elections, 215 West Main Street, Troy, OH 45373.
+L345@P6: A complete listing of all county board of elections mailing addresses and contact information is available at
+L346@P6: https://ohiosos.gov/SOS/elections/electionsofficials/boeDirectory.aspx#dir.
+L347@P6: Do not send your ballot via e-mail or fax; Ohio law prohibits electronic transmission of a voted ballot.
+

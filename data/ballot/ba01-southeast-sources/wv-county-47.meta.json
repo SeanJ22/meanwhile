@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Tyler%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Tyler%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.637831+00:00",
+  "rawHash": "9146c41fed9a2311c63765708da1da8a279a4c7c673e54716ea27e605904a3f3",
+  "httpStatus": 200,
+  "bytes": 729381,
+  "extractedTextHash": "4a29641a1e11f6febb28886b39c150ec05d36003a136ae70cbf8532b385faa8f",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

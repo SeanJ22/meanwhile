@@ -1,0 +1,30 @@
+[
+  {
+    "name": "queens-0.json",
+    "url": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543202962",
+    "retrievedAt": "2026-10-21T00:40:03.137Z",
+    "httpStatus": 200,
+    "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4"
+  },
+  {
+    "name": "queens-1.json",
+    "url": "https://electionstreet.com/api/nyc/addresses?streetnumber=90-27&streetname=Sutphin%20Boulevard&postalcode=11435&callback=jQuery35106218545601709021_1792543202923&_=1792543202924",
+    "retrievedAt": "2026-10-21T00:40:04.217Z",
+    "httpStatus": 200,
+    "rawHash": "0df72f985830c307864446b83893f10dbda2d564a81ed97b00efa7177223fcc0"
+  },
+  {
+    "name": "queens-2.json",
+    "url": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.702339700519126&longitude=-73.80814789883522&county=Queens&streetnumber=90-27&streetname=Sutphin%20Boulevard&postalcode=11435&districtkey=009/32",
+    "retrievedAt": "2026-10-21T00:40:04.384Z",
+    "httpStatus": 200,
+    "rawHash": "70ed366adf26fd4b10e58b4100e0830684ae87d348efb5935c5d5ccc28b879d7"
+  },
+  {
+    "name": "queens-3.json",
+    "url": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
+    "retrievedAt": "2026-10-21T00:40:04.573Z",
+    "httpStatus": 200,
+    "rawHash": "f991083f49f009dcd56b44415a263b231a4c705cdd78dd309be10e2c3f150f51"
+  }
+]

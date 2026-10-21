@@ -1,0 +1,1876 @@
+{
+  "doorId": "co-arapahoe-drop-boxes-2026",
+  "sites": [
+    {
+      "id": "voting-7ee24e07c6f112468f6ecd7d",
+      "name": "Arapahoe County CentrePoint Plaza",
+      "address": "14980 E Alameda Dr, Aurora, CO 80012",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f23138d73e4195329d0fd0c4",
+      "name": "Arapahoe County Fairgrounds",
+      "address": "25690 E Quincy Ave, Aurora, CO 80016",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8933a275ab3ebba3f7d3043c",
+      "name": "Aurora Center for Active Adults (Del Mar Park)",
+      "address": "30 Del Mar Cir, Aurora, CO 80011",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7e7ad470ff6d0e075c1a4896",
+      "name": "Aurora Public Library (Central)",
+      "address": "14949 E Alameda Pkwy, Aurora, CO 80012",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-73073ff2154d096e879b4a40",
+      "name": "Beck Recreation Center",
+      "address": "800 Telluride St, Aurora, CO 80011",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-043f0022bf57d90b31cdd808",
+      "name": "Central Recreation Center",
+      "address": "18150 E Vassar Pl, Aurora, CO 80013",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a29b91a5de944c3a3d4fe848",
+      "name": "Community College of Aurora - CentreTech",
+      "address": "16000 E CentreTech Pkwy Aurora, CO 80011",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6a481a9d3391e8f0f5763ca5",
+      "name": "Heather Gardens Clubhouse",
+      "address": "2888 S Heather Gardens Way, Aurora, CO 80012",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8298e10b08f6716b915a3214",
+      "name": "Iliff RTD Parking Structure",
+      "address": "14000 E Wesley Ave, Aurora, CO 80014",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6175b35e2c7149196c573c55",
+      "name": "Martin Luther King Jr. Library",
+      "address": "9898 E Colfax Ave, Aurora, CO 80010",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-beca620dfb4d0011a8ab921b",
+      "name": "Mission Viejo Library",
+      "address": "15324 E Hampden Cir, Aurora, CO 80013",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6db025c4011a2ed60ed41145",
+      "name": "Saddle Rock Golf Course",
+      "address": "21705 E Arapahoe Rd, Aurora, CO 80016",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-515dcca8e59d3234912ca4ff",
+      "name": "Tallyn's Reach Library",
+      "address": "23911 E Arapahoe Rd, Aurora, CO 80016",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-94b9d21dec4b4739dd19c5bf",
+      "name": "Traditions Clubhouse",
+      "address": "5300 E 4th Ave, Aurora, CO 80018",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-973e4b3ac23dcd2b5c971f6b",
+      "name": "Utah Park Pool",
+      "address": "1800 S Peoria St, Aurora, CO 80012",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4e4f557adf4b05f0c5493d0b",
+      "name": "Adams County Bennett Motor Vehicle",
+      "address": "355 S First St, Bennett, CO 80102",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-516350c5ef0458429f53eab9",
+      "name": "Kelver Library",
+      "address": "585 S Main St, Byers, CO 80103",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-de785ae4dc83effbc2a4d914",
+      "name": "Arapahoe County Lima Plaza",
+      "address": "6954 S Lima St, Centennial, CO 80112",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-45544de27afee77a96c62c7b",
+      "name": "Centennial Civic Center",
+      "address": "13133 E Arapahoe Rd, Centennial, CO 80112",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-09dff3cc903eea41571d8c36",
+      "name": "Goodson Recreation Center",
+      "address": "6315 S University Blvd, Centennial, CO 80121",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-04facbf5f58f449d853520ec",
+      "name": "Koelbel Library",
+      "address": "5955 S Holly St, Centennial, CO 80121",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c0c860f2d45045e6f35d4b07",
+      "name": "Smoky Hill Library",
+      "address": "5430 S Biscay Cir, Centennial, CO 80015",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-29bfa75121bd75d9410aae2d",
+      "name": "Trails Recreation Center",
+      "address": "16799 E Lake Ave, Centennial, CO 80016",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-80ca77f1030cf70016ce21c9",
+      "name": "Cherry Hills Village Center",
+      "address": "2450 E Quincy Ave, Cherry Hills Village, CO 80113",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6631ee238faca5cc5cd39cf0",
+      "name": "Deer Trail Town Hall",
+      "address": "555 Second Ave, Deer Trail, CO 80105",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f8cd318ffa3c18d228d2236e",
+      "name": "Cook Park Recreation Center",
+      "address": "7100 Cherry Creek S Dr, Denver, CO 80224",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9149bf73706a9abde24c0b1e",
+      "name": "Eloise May Library",
+      "address": "1471 S Parker Rd, Denver, CO 80231",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-fb45356b5f54b54d2a23a081",
+      "name": "Hampden Branch Library",
+      "address": "9755 E Girard Ave, Denver CO 80231",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-75dc5082b043a1e56eafc851",
+      "name": "Arapahoe County Public Health",
+      "address": "4857 S Broadway, Englewood, CO 80113",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e2df0eae4cc6c2b16002373f",
+      "name": "Englewood Civic Center",
+      "address": "1000 Englewood Pkwy, Englewood, CO 80110",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7ffd904c4fc9affb7393ef0e",
+      "name": "Glendale City Hall",
+      "address": "950 S Birch St, Glendale, CO 80246",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3d88f6416fb0c5dd9485a5d3",
+      "name": "Greenwood Village City Hall",
+      "address": "6060 S Quebec St, Greenwood Village, CO 80111",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-099fa2351fc3d41fa2f7a0c8",
+      "name": "Arapahoe Community College",
+      "address": "5900 S Santa Fe Dr, Littleton, CO 80120",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d9f3e15493ca65607dd63792",
+      "name": "Arapahoe County Administration Building",
+      "address": "5334 S Prince St, Littleton, CO 80120",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-71bde2eea6bfcba2a5b258b9",
+      "name": "Arapahoe County Warehouse",
+      "address": "5251 S Federal Blvd, Littleton, CO 80123",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-679196507d737901f7b0e0b7",
+      "name": "Littleton-Mineral RTD Station",
+      "address": "3203 W Mineral Ave, Littleton, CO 80120",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c28c03698836e3813352f391",
+      "name": "South Suburban Sports Complex",
+      "address": "4810 E County Line Rd, Littleton, CO 80126",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c0af36ea31d9aac9ef601c56",
+      "name": "City of Sheridan Municipal Center",
+      "address": "4101 S Federal Blvd, Sheridan, CO 80110",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-40f98d81984c626326109015",
+      "name": "Adams County Sheriff Substation",
+      "address": "2550 Strasburg Rd, Strasburg, CO 80136",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Arapahoe County Clerk and Recorder",
+          "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+          "title": "Welcome to Arapahoe County, CO - Official Website",
+          "checkedAt": "2026-10-21T04:43:13.557Z",
+          "official": true,
+          "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+          "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+        }
+      ],
+      "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+      "hours": "24-Hour",
+      "countyFips": "08005",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "days": "October 2, 2026 to November 3, 2026 at 7:00 P.M.",
+          "hours": "24-Hour",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Arapahoe County Clerk and Recorder",
+            "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+            "title": "Welcome to Arapahoe County, CO - Official Website",
+            "checkedAt": "2026-10-21T04:43:13.557Z",
+            "official": true,
+            "documentHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+            "documentUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Arapahoe County Clerk and Recorder",
+      "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+      "title": "Welcome to Arapahoe County, CO - Official Website",
+      "checkedAt": "2026-10-21T04:43:13.557Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://www.arapahoeco.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 302"
+    },
+    {
+      "url": "https://www.arapahoeco.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt CANNOT_TELL for /your_county/arapahoevotes/voting_locations/ballot_drop_locations.php: robots.txt could not be retrieved with this client: Error: robots.txt redirects to another host. A transport failure is not a reading of the host's rules; recorded as unread — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+      "contentType": "text/html; charset=UTF-8",
+      "rawHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+      "path": "tests/fixtures/voting-sources/vs-04-west/co-bd66a8c6102b-161cee87da6c.html"
+    }
+  ],
+  "fileTitle": "Welcome to Arapahoe County, CO - Official Website",
+  "contacts": []
+}

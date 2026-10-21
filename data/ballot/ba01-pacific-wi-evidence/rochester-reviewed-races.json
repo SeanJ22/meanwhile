@@ -1,0 +1,68 @@
+[
+  [
+    "Representative in Congress District 1",
+    "ocd-division/country:us/state:wi/cd:1",
+    [
+      [
+        "Bryan Steil",
+        "Republican"
+      ],
+      [
+        "Mitchell Berman",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 11",
+    "ocd-division/country:us/state:wi/sldu:11",
+    [
+      [
+        "Ellen Schutt",
+        "Republican"
+      ],
+      [
+        "Adam Duda",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 33",
+    "ocd-division/country:us/state:wi/sldl:33",
+    [
+      [
+        "Steve Wicklund",
+        "Republican"
+      ],
+      [
+        "Maria Elena Bisabarros",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Racine County Sheriff",
+    "ocd-division/country:us/state:wi/county:racine",
+    [
+      [
+        "Cary A. Madrigal",
+        "Republican"
+      ],
+      [
+        "Donald E. Vandervest",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Racine County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:racine",
+    [
+      [
+        "Amy Vanderhoef",
+        "Republican"
+      ]
+    ]
+  ]
+]

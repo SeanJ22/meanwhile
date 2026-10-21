@@ -1,0 +1,119 @@
+Candidate & Petition Activity (https://elections.bcohio.gov/2026/November/PetitionActivityReport.pdf)
+【turn982174view1】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 4; Source: open({"ref_id":"turn648666view3","lineno":0}); Total lines: 117
+L0@P0: Candidate & Petition Activity
+L1@P0: November 3, 2026, General Election
+L2@P0: Page 1 of 4 10/6/2026 1:42 PM
+L3@P0: Report Overview
+L4@P0: This document shows the activity of candidates who have pulled or filed petitions with the Board of Elections. Candidates are not required to pull petitions from the
+L5@P0: Board of Elections, therefore “(P) Not pulled” may appear by some of the listed candidates, otherwise the date the candidate pulled their petitions will be displayed
+L6@P0: (ex. (P) 01-01-2026). If a candidate has not yet filed their petitions, “(F) Not filed” will appear by their name. Once a candidate files their petitions, the date will be
+L7@P0: displayed (ex. (F) 01-02-2026). If a candidate’s petitions have not been certified to the ballot, “(C) Not certified” will appear by their name. Once a candidate is
+L8@P0: certified by the Board, the date will be displayed (ex. (c) 01-03-2026). Candidates and issues for districts that overlap with surrounding counties may be required to
+L9@P0: file their petitions with another county board of elections, in this case the name of the other county will appear by their name.
+L10@P0: State of Ohio - For Governor and Lieutenant Governor - (Vote for not more than 1)
+L11@P0: (D) Amy Acton and David Pepper Files with Secretary of State
+L12@P0: (L) Don Kissick and James L. Mills Files with Secretary of State
+L13@P0: (N) Write-in Candidate Files with Secretary of State
+L14@P0: (N) Write-in Candidate Files with Secretary of State
+L15@P0: (N) Write-in Candidate Files with Secretary of State
+L16@P0: (N) Write-in Candidate Files with Secretary of State
+L17@P0: (R) Vivek Ramaswamy and Robert A. McColley Files with Secretary of State
+L18@P0: State of Ohio - For Attorney General - (Vote for not more than 1)
+L19@P0: (D) John J. Kulewicz Files with Secretary of State
+L20@P0: (R) Keith Faber Files with Secretary of State
+L21@P0: State of Ohio - For Auditor of State - (Vote for not more than 1)
+L22@P0: (D) Annette Blackwell Files with Secretary of State
+L23@P0: (R) Frank LaRose Files with Secretary of State
+L24@P0: State of Ohio - For Secretary of State - (Vote for not more than 1)
+L25@P0: (D) Allison Russo Files with Secretary of State
+L26@P0: (L) Tom Pruss Files with Secretary of State
+L27@P0: (R) Robert Sprague Files with Secretary of State
+L28@P0: State of Ohio - For Treasurer of State - (Vote for not more than 1)
+L29@P0: (D) Seth Walsh Files with Secretary of State
+L30@P0: (R) Jay Edwards Files with Secretary of State
+L31@P0: State of Ohio - For Justice of the Supreme Court (Full term commencing 1-1-2027) - (Vote for not more than 1)
+L32@P0: (D) Marilyn Zayas Files with Secretary of State
+L33@P0: (R) Daniel R. Hawkins Files with Secretary of State
+L34@P0: State of Ohio - For Justice of the Supreme Court (Full term commencing 1-2-2027) - (Vote for not more than 1)
+L35@P0-1: (D) Jennifer Brunner Files with Secretary of StateCandidate & Petition Activity
+L36@P1: November 3, 2026, General Election
+L37@P1: Page 2 of 4 10/6/2026 1:42 PM
+L38@P1: (R) Colleen O'Donnell Files with Secretary of State
+L39@P1: State of Ohio - For U.S. Senator (Unexpired term ending 1-3-2029) - (Vote for not more than 1)
+L40@P1: (D) Sherrod Brown Files with Secretary of State
+L41@P1: (L) William B. Redpath Files with Secretary of State
+L42@P1: (N) Write-in Candidate Files with Secretary of State
+L43@P1: (N) Write-in Candidate Files with Secretary of State
+L44@P1: (N) Write-in Candidate Files with Secretary of State
+L45@P1: (R) Jon Husted Files with Secretary of State
+L46@P1: (o) Greg Levy Files with Secretary of State
+L47@P1: 8th Congressional District - For Representative to Congress (8th District) - (Vote for not more than 1)
+L48@P1: (D) Vanessa Enoch Files with Hamilton County
+L49@P1: (R) Warren Davidson Files with Hamilton County
+L50@P1: 10th Congressional District - Representative to Congress (10th District) - (Vote for not more than 1)
+L51@P1: (D) Kristina Knickerbocker Files with Montgomery County
+L52@P1: (L) Thomas F. McMasters Files with Montgomery County
+L53@P1: (R) Mike Turner Files with Montgomery County
+L54@P1: 5th State Senate District - State Senator (5th District) - (Vote for not more than 1)
+L55@P1: (D) Jeffrey Harris Files with Montgomery County
+L56@P1: (R) Phil Plummer Files with Montgomery County
+L57@P1: 40th House District - For State Representative (40th District) - (Vote for not more than 1)
+L58@P1: (D) Timothy B. Hornbacker Files with Montgomery County
+L59@P1: (L) Joshua A. Umbaugh Files with Montgomery County
+L60@P1: (R) Rodney Creech Files with Montgomery County
+L61@P1: 45th House District - For State Representative (45th District) - (Vote for not more than 1)
+L62@P1: (D) Jayson Ameer Rasheed (P) 12-17-2025 (F) 02-03-2026 (C) 08-20-2026
+L63@P1: (R) Jennifer Gross (P) 10-27-2025 (F) 01-28-2026 (C) 08-20-2026
+L64@P1: 46th House District - For State Representative (46th District) - (Vote for not more than 1)
+L65@P1: (D) Benjamin McCall (P) Not Pulled (F) 01-28-2026 (C) 08-20-2026
+L66@P1: (R) Thomas Hall (P) 12-03-2025 (F) 02-02-2026 (C) 08-20-2026
+L67@P1: 47th House District - For State Representative (47th District) - (Vote for not more than 1)
+L68@P1: (D) Jordan Haire (P) Not Pulled (F) 02-03-2026 (C) 08-20-2026
+L69@P1: (L) Jason Purviance (P) 12-08-2025 (F) 02-04-2026 (C) 08-20-2026
+L70@P1-2: (R) Diane Mullins (P) 12-08-2025 (F) 01-29-2026 (C) 08-20-2026Candidate & Petition Activity
+L71@P2: November 3, 2026, General Election
+L72@P2: Page 3 of 4 10/6/2026 1:42 PM
+L73@P2: 12th County Court of Appeal District - For Judge of the Court of Appeals (12th District) (Full term commencing 1-1-2027) - (Vote for not more
+L74@P2: than 1)
+L75@P2: (N) Write-in Candidate (P) Not Pulled (F) 08-13-2026
+L76@P2: (R) Matthew Byrne (P) 04-08-2025 (F) 10-23-2025
+L77@P2: 12th County Court of Appeal District - For Judge of the Court of Appeals (12th District) (Full term commencing 2-9-2027) - (Vote for not more
+L78@P2: than 1)
+L79@P2: (R) Robert A. Hendrickson (P) 11-12-2025 (F) 01-22-2026 (C) 08-25-2026
+L80@P2: Butler County - For Judge of the Court of Common Pleas (Full term commencing 1-1-2027) - (Vote for not more than 1)
+L81@P2: (N) Jennifer McElfresh (P) 03-11-2025 (F) 09-29-2025 (C) 08-20-2026
+L82@P2: Butler County - For Judge of the Court of Common Pleas (Full term commencing 1-3-2027) - (Vote for not more than 1)
+L83@P2: (N) Daniel Haughey (P) 06-09-2025 (F) 12-30-2025 (C) 08-20-2026
+L84@P2: Butler County - For Judge of the Court of Common Pleas (Full term commencing 2-9-2027) - (Vote for not more than 1)
+L85@P2: (N) Michael A. Oster, Jr. (P) 08-15-2025 (F) 01-23-2026 (C) 08-20-2026
+L86@P2: Butler County - For Judge of the Court of Common Pleas (Juvenile Division) (Full term commencing 1-2-2027) - (Vote for not more than 1)
+L87@P2: (N) Erik D. Niehaus (P) 05-13-2025 (F) 10-27-2025 (C) 08-20-2026
+L88@P2: Butler County - For Judge of the Court of Common Pleas (Probate Division) (Full term commencing 2-9-2027) - (Vote for not more than 1)
+L89@P2: (N) John M. Holcomb (P) 09-09-2025 (F) 01-16-2026 (C) 08-20-2026
+L90@P2: Butler County - For County Commissioner - (Vote for not more than 1)
+L91@P2: (D) Mike Miller (P) Not Pulled (F) 02-04-2026 (C) 08-20-2026
+L92@P2: (R) Michael V. Ryan (P) 05-19-2025 (F) 06-20-2025 (C) 08-20-2026
+L93@P2: Butler County - For County Auditor - (Vote for not more than 1)
+L94@P2: (D) Amy Hines (P) Not Pulled (F) 02-03-2026 (C) 08-20-2026
+L95@P2: (R) Nancy Nix (P) 02-11-2025 (F) 03-17-2025 (C) 08-20-2026
+L96@P2-3: Withdrawn 9/16/2026Candidate & Petition Activity
+L97@P3: November 3, 2026, General Election
+L98@P3: Page 4 of 4 10/6/2026 1:42 PM
+L99@P3: Issues & Local Options
+L100@P3: Issue 3 - State of Ohio - Constitutional Amendment - To enact Section 5 of Article V of the Constitution of the State of Ohio Files with State
+L101@P3: Issue 1 - Fairfield City School District - Earnings Tax (1.25%/5 years) (F) 07-28-2026 (C) 08-17-2026
+L102@P3: Issue 2 - Lakota Local School District - Bond Issue ($223,483,492/37 years) (F) 06-15-2026 (C) 08-17-2026
+L103@P3: Issue 4 - Northwest Local School District - Earnings Tax (1.5 per cent/CPT) Files with Hamilton County
+L104@P3: Issue 5 - Southwest Local School District - Earnings Tax (.25 percent/CPT) Files with Hamilton County
+L105@P3: Issue 6 - Butler County - Renewal Mental Health Tax Levy - (1mill/10 years) (F) 07-27-2026 (C) 08-17-2026
+L106@P3: Issue 7 - City of Oxford - Charter Amendments - Sections: 2.12, 3.05, 4.01, 4.02(7), 9.07, and 10.01 (F) 07-23-2026 (C) 08-17-2026
+L107@P3: Issue 8 - City of Oxford - Charter Amendment - Sections: 2.11(4) (F) 07-23-2026 (C) 08-17-2026
+L108@P3: Issue 9 - Village of College Corner - Renewal Fire Tax Levy (5.2mills/5 years) Files with Preble County
+L109@P3: Issue 10 - Village of New Miami - Additional Police Tax Levy (5mills/5 years) (F) 07-21-2026 (C) 08-17-2026
+L110@P3: Issue 11 - Village of New Miami - Additional Fire Tax Levy (3mills/CPT) (F) 07-21-2026 (C) 08-17-2026
+L111@P3: Issue 12 - Fairfield Township Police District - Additional Tax Levy (2.99mills/CPT) (F) 07-17-2026 (C) 08-17-2026
+L112@P3: Issue 13 - Hanover Township Fire District - Additional Tax Levy (3.5mills/5 years) (F) 07-17-2026 (C) 08-17-2026
+L113@P3: Issue 14 - Madison Township Fire District - Renewal Fire & EMS Tax Levy (3mills/5 years) (F) 07-28-2026 (C) 08-17-2026
+L114@P3: Issue 15 - MIDD2WD3 - Broken Barrel Bar & Grill - Sunday Sales (F) 06-17-2026 (C) 08-17-2026
+L115@P3: Issue 16 - WC39 - Wawa 7229 - Sunday Sales (F) 07-30-2026 (C) 08-17-2026
+L116@P3: Issue 17 - City of Trenton - Charter Amendment - Article IX, Section 9.06 "Prohibition of Construction of a Data Center" (F) 09-04-2026 (C) 09-09-2026

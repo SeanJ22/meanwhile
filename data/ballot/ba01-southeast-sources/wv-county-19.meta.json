@@ -1,0 +1,11 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf",
+  "httpStatus": 200,
+  "contentType": "application/pdf",
+  "retrievedAt": "2026-10-20T22:52:21.499751+00:00",
+  "rawHash": "50f8f2a7742fa1447a0be1f516f27a686bda5a979e0698e0f2462e1219188dbd",
+  "bytes": 5345212,
+  "extractedTextHash": "e6c1f89674880be574b9779e16496bb930363e2d13a605e4f2bc15fb7407a045",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

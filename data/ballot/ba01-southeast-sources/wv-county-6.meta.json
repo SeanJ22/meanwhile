@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Calhoun%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Calhoun%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.005411+00:00",
+  "rawHash": "c279d7eff3e928c1ea9971b39bc4de84170feed34cdffe6cf11fb53934fd2975",
+  "httpStatus": 200,
+  "bytes": 738392,
+  "extractedTextHash": "4c3ede28ac53b3dfb6231d1b49c7e11859ee0ed8632541530de06dd417ef1e80",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

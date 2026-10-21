@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mercer%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Mercer%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:36.482626+00:00",
+  "rawHash": "2378d2a0cc34cee727ed14da78559a1bad502762142cc544ff94f47dd8ff756c",
+  "httpStatus": 200,
+  "bytes": 1023482,
+  "extractedTextHash": "9fdf7062538b599f5ffefb818e104f7f6804e5f67a14ac64b3d9c56a62bc0d56",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

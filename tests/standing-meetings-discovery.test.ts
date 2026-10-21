@@ -21,7 +21,7 @@ test("registered governments with websites have standing free discovery with no 
   const expected = Object.values(REGISTRIES).flatMap(reg => standingDiscoveryNeeds(reg).map(meetingsDiscoveryObligationId));
   assert.ok(expected.length > 0);
   assert.deepEqual(pass.units.map(unit => unit.obligation.id).sort(), expected.sort());
-  assert.ok(pass.units.every(unit => unit.route.executorClass === "DETERMINISTIC" && unit.route.open.kind === "ROUTINE_READ"));
+  assert.ok(pass.units.every(unit => unit.route.executorClass === "DETERMINISTIC" && unit.route.open.kind === "HTTP_GET"));
   assert.ok(pass.units.every(unit => unit.obligation.materializedBy === undefined));
 });
 

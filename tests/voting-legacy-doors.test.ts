@@ -15,13 +15,15 @@ const doors = JSON.parse(readFileSync("data/reference/voting-legacy-doors.json",
 const named = (id: string) => { const door = doors.find(row => row.id === id); assert.ok(door); return door; };
 const at = "2026-10-13T00:00:00.000Z";
 
-test("FEC directory provenance remains the first discovery stop in every requested jurisdiction", () => {
+test("FEC directory provenance retains a chief-office discovery root in every requested jurisdiction", () => {
   const reference = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
   const roots = votingChiefRoots(reference);
-  assert.equal(new Set(roots.map(door => door.scope.state)).size, 52);
-  assert.ok(roots.every(door => door.discoveredFrom === "data/reference/fec_state_election_offices.csv"));
+  assert.equal(new Set(roots.map(door => door.scope.state)).size, 56);
+  assert.ok(roots.every(door => door.discoveredFrom === "data/reference/fec_state_election_offices.csv" ||
+    door.discoveredFrom === "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/"));
   assert.ok(roots.some(door => door.scope.state === "DC"));
   assert.ok(roots.some(door => door.scope.state === "PR"));
+  for (const state of ["AS", "GU", "MP", "VI"]) assert.ok(roots.some(door => door.scope.state === state));
 });
 
 test("the actual Census registry fixes county and town identity without borrowing a same-name place from another state", () => {

@@ -465,6 +465,7 @@ export default readerRoute("/ballot", async function BallotPage({
 }) {
   const place = ballotPlaceFromParams(await searchParams);
   const { zip, centroid } = place;
+  const ballotRead = (async () => {
   let filingRead: Promise<Awaited<ReturnType<typeof readOfficialFilingsForReader>> | null> = Promise.resolve(null);
 
   let set: BallotSet | null = null;
@@ -1478,6 +1479,24 @@ export default readerRoute("/ballot", async function BallotPage({
   );
   })();
   void contents.catch(() => {});
+  return { contents, controls: (
+    <>
+      {zip && <>
+        <div className="flex flex-wrap items-center gap-3">
+          {certainty && [...candidacyContests, ...measureContests].some(contest => needsPill(certainty.certaintyOf(contest.ocdId))) && <JurisdictionNote />}
+          <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
+        </div>
+        <Link href={`/about-area?zip=${zip}`} prefetch={false} className="ballot-top-pill">About this area</Link>
+        <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
+      </>}
+    </>
+  ) };
+  })();
+  void ballotRead.catch(() => {});
+  const pills = ballotRead.then(result => result.controls);
+  const contents = ballotRead.then(result => result.contents);
+  void pills.catch(() => {});
+  void contents.catch(() => {});
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
       <BallotCapture zip={zip} />
@@ -1502,14 +1521,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
       <div className="ballot-top-pills items-start">
         <WhereToVote />
-        {zip && <>
-          <div className="flex flex-wrap items-center gap-3">
-            {certainty && [...candidacyContests, ...measureContests].some(contest => needsPill(certainty.certaintyOf(contest.ocdId))) && <JurisdictionNote />}
-            <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
-          </div>
-          <Link href={`/about-area?zip=${zip}`} prefetch={false} className="ballot-top-pill">About this area</Link>
-          <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
-        </>}
+        <Suspense fallback={null}>{pills}</Suspense>
       </div>
 
       <Suspense fallback={<p role="status" className="my-6 text-paper-dim">Loading your ballot…</p>}>

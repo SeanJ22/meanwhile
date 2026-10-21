@@ -43,13 +43,14 @@ test("BAL-26: Ask is reachable from the pill row under the heading, and mounted 
   // Source definitions can precede their render position when contests stream.
   // Inspect the main's actual child order: the pill precedes the streamed body.
   const main = src.slice(src.lastIndexOf("<main"), src.lastIndexOf("</main>"));
-  const inPillRow = main.indexOf("<BallotAskPill");
+  const inPillRow = main.indexOf("{pills}");
+  assert.match(src, /const pills = ballotRead\.then\(result => result\.controls\)/, "the shared ballot read supplies the controls");
   const contests = main.indexOf("{contents}");
   assert.ok(
     inPillRow > 0 && inPillRow < contests,
     "the affordance must sit ABOVE the contest list, not below it",
   );
-  assert.equal((main.match(/<BallotAskPill\b/g) ?? []).length,1,"the page mounts one pill");
+  assert.equal((src.match(/<BallotAskPill\b/g) ?? []).length,1,"the page mounts one pill");
 
   assert.ok(
     !/<BallotAsk\s/.test(src),

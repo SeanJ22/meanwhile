@@ -17,3 +17,31 @@ test("office readers share in-flight and recent coordinates, expire them, and re
   assert.deepEqual(await locate("One office"), { lat: 32, lng: -110 });
   assert.equal(calls, 3);
 });
+
+test("a stalled public-office lookup gets one overlapping read, keeps a valid point and cancels the loser", async context => {
+  context.mock.timers.enable({apis:["setTimeout"]});
+  const signals:AbortSignal[]=[];
+  let calls=0;
+  const locate=createOfficeLocator((async(_url,init)=>{
+    calls++;signals.push(init!.signal!);
+    if(calls===1)return new Promise<Response>((_resolve,reject)=>init!.signal!.addEventListener("abort",()=>reject(new Error("canceled"))));
+    return Response.json({match:true,lat:40.8,lng:-74.5});
+  })as typeof fetch);
+  const first=locate("1250 Sussex Turnpike, Randolph, NJ 07869");
+  assert.equal(calls,1);context.mock.timers.tick(499);assert.equal(calls,1);
+  context.mock.timers.tick(1);assert.equal(calls,2);
+  assert.deepEqual(await first,{lat:40.8,lng:-74.5});assert.equal(signals[0].aborted,true);
+  context.mock.timers.tick(10000);assert.equal(calls,2,"the locator cannot create a retry loop");
+});
+
+test("a postal contact box never starts a street geocoder; actual office streets still resolve", async () => {
+  const addresses:string[]=[];
+  const locate=createOfficeLocator((async(_url,init)=>{addresses.push(JSON.parse(String(init?.body)).address);return Response.json({match:true,lat:40.8,lng:-74.5});})as typeof fetch);
+  for(const address of ["P.O. Box 25, Mt. Freedom, NJ 07970","PO Box 25","P O Box 25","POBox25","Post Office Box #25"]){
+    assert.equal(await locate(address),null,address);
+  }
+  assert.deepEqual(addresses,[],"mailing contacts do not become guessed office pins or eight-second Census requests");
+  assert.deepEqual(await locate("1250 Sussex Turnpike Suite D, Randolph, NJ 07869"),{lat:40.8,lng:-74.5});
+  assert.deepEqual(await locate("12 Post Office Road, Randolph, NJ 07869"),{lat:40.8,lng:-74.5});
+  assert.equal(addresses.length,2);
+});

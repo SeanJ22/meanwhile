@@ -216,7 +216,9 @@ try{
   context.on("requestfailed",request=>pending.delete(request));
   context.on("requestfinished",async request=>{
    pending.delete(request);const sizes=await request.sizes().catch(()=>null);bytes+=sizes?.responseBodySize??0;
-   if(request.url().includes("/api/"))requests.push({url:request.url(),timing:request.timing(),sizes,serverTiming:(await request.response())?.headers()["server-timing"]});
+   if(request.url().includes("/api/"))requests.push({url:request.url(),timing:request.timing(),sizes,serverTiming:(await request.response())?.headers()["server-timing"],
+    ...(built&&process.argv.includes("--office-requests")&&new URL(request.url()).pathname==="/api/geocode"
+      ? {publicOfficeAddress:(JSON.parse(request.postData()??"{}") as {address?:string}).address} : {})});
   });
   page.on("pageerror",error=>errors.push(error.message));
   const ready = (selector: string) => page.waitForFunction(selector=>Array.from(document.querySelectorAll<HTMLElement>(selector)).some(element=>{

@@ -1,0 +1,33 @@
+{
+  "n": 72,
+  "branch": "release/72",
+  "river_sha": "f4a3a289d84db170322dcacda398f56aa2e40dbf",
+  "tested_sha": "f4a3a289d84db170322dcacda398f56aa2e40dbf",
+  "steps": [
+    "OF-01",
+    "AQ-03",
+    "BA-01",
+    "EX-01",
+    "HN-01",
+    "RN-02",
+    "VS-04",
+    "RS-03"
+  ],
+  "lanes": [
+    "of-01",
+    "aq-03",
+    "ba-01",
+    "ex-01",
+    "hn-01",
+    "rn-02",
+    "vs-04",
+    "rs-03"
+  ],
+  "integration_from": 265,
+  "integration_count": 273,
+  "pr": {
+    "number": 782,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/782"
+  },
+  "at": "2026-10-21T21:09:25Z"
+}

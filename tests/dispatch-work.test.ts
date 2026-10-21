@@ -464,8 +464,8 @@ test("creating work opens no paid lane: the owner's PAUSE stands and nothing but
 
   const [t] = dispatchWorkReading(plan, applied, CONTEXT).targets;
   const says = t.says.join(" ");
-  assert.match(says, /need a model and wait: paused by owner intent pause-1/);
-  assert.match(says, /\$105\.00 rolling 24-hour ceiling \(your dial\) first, then this Send's own \$0\.00 rolling 24-hour budget over the work it reached, and this geography's\./);
+  assert.match(says, /run on the plain-code lane as they come due, at no model cost/);
+  assert.doesNotMatch(says, /need a model and wait:/);
   assert.doesNotMatch(says, /no per-assignment budget/);
   assert.match(says, /without waiting for free routes to fail/);
 });
@@ -617,10 +617,10 @@ test("explicit paid meetings discovery keeps the materialized needs in the regis
   assert.deepEqual(pass.units.map((u) => u.obligation.id).sort(), [...ids].sort(), "a need whose basis moved, and another provider's id, are not emitted");
   for (const u of pass.units) {
     assert.equal(u.obligation.recordClass, "meetings-discovery");
-    assert.equal(u.route.open.kind, "NOT_MACHINE_EXECUTABLE");
+    assert.equal(u.route.open.kind, "HTTP_GET");
   }
   const ownUnit = pass.units.find((u) => u.obligation.subjectId === own.jurisdictionId)!;
-  assert.equal(ownUnit.route.open.kind === "NOT_MACHINE_EXECUTABLE" ? ownUnit.route.open.target : null, own.ownWebAddress);
+  assert.equal(ownUnit.route.open.kind === "HTTP_GET" ? ownUnit.route.open.url : null, own.ownWebAddress);
   assert.equal(ownUnit.route.routeId, "own-site-meetings");
   assert.equal(pass.units.find((u) => u.obligation.subjectId === noSite.jurisdictionId)!.route.routeId, "find-own-site");
 });

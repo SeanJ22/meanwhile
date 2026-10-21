@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import {build} from "esbuild";
 import meetings,{config as meetingConfig} from "../netlify/functions/reader-meetings.mts";
 import geocode,{config as geocodeConfig} from "../netlify/functions/reader-geocode.mts";
 import {PUBLIC_SITE_ORIGIN,ADMIN_ORIGIN} from "../lib/ops/origins.ts";
@@ -20,5 +21,14 @@ test("native reader adapters preserve public validation and the Admin host's abs
     const response=await handler(new Request(`${ADMIN_ORIGIN}${path}`,{method,headers:{host:new URL(ADMIN_ORIGIN).host}}),context);
     assert.equal(response.status,404);assert.equal(await response.text(),"");
     assert.equal(response.headers.get("x-robots-tag"),"noindex, nofollow, noarchive");
+  }
+});
+
+test("the native place reader does not package acquisition adapters, PDF processing or the field-manual bank",async()=>{
+  const result=await build({entryPoints:["netlify/functions/reader-meetings.mts"],bundle:true,write:false,metafile:true,
+    platform:"node",format:"esm",target:"node24",external:["next","next/*"],logLevel:"silent"});
+  const inputs=Object.values(result.metafile!.outputs).flatMap(output=>Object.keys(output.inputs));
+  for(const name of ["pdfjs-dist","field-manual-notes.json","sources/composite/wiring.ts"]){
+    assert.ok(!inputs.some(input=>input.includes(name)),`${name} must not initialize on a reader's first visit`);
   }
 });

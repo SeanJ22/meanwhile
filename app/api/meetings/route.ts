@@ -6,7 +6,7 @@ import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/l
 import { readStatePackage } from "@/lib/reader/state";
 import { readPlacePackage } from "@/lib/reader/place";
 import { stateCoverage } from "@/lib/reader/coverage";
-import { meetingBodyIds, searchMeetings } from "@/lib/meetings/query";
+import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
 import { readReaderMeetingSettings } from "@/lib/meetings/reader-settings";
 import { readerMeetingScope } from "@/lib/meetings/reader-scope";

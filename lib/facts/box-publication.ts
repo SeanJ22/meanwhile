@@ -11,9 +11,9 @@ import type { ProbeFetch } from "../doors/probe.ts";
 import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
-import { ensureGoverningBody, learnOfficialHost } from "./entities.ts";
+import { bodyNamed, ensureGoverningBody, learnOfficialHost, officeNamed } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, namesOtherOffice, slotFor, type FindingSlot } from "./finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, isGoverningName, otherOffice, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
@@ -43,7 +43,7 @@ interface BoxPublicationReport {
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
 
 type Routed = Exclude<FindingSlot, { waiting: string } | { lead: string } | { election: string }>;
-const kindOf = (slot: Routed): FieldKind => slot.class === "rosters" || slot.class === "body links" && slot.slot === "name" ? "officeholder"
+const kindOf = (slot: Routed): FieldKind => slot.class === "rosters" || slot.class === "bodies" || slot.class === "body links" && slot.slot === "name" ? "officeholder"
   : slot.class === "schedules" || slot.class === "sittings" && slot.slot === "video_url" ? "meeting"
   : slot.class === "meeting routes" || slot.class === "sittings" ? "agenda" : slot.class === "comment rules" ? "comment_rule" : "contact";
 
@@ -137,6 +137,21 @@ async function reviewBoxSeats(query: Query, purge?: ReaderCachePurger): Promise<
 
 const named = (quote: string, name: string) => boundedIndexOf(normalizeText(quote).toLowerCase(), normalizeText(name).toLowerCase()) !== -1;
 
+/** The office a contact belongs to as the saved page names it: in the finding's own sentence, or in the page text just before the contact. */
+export function officeNameOn(pageText: string, quote: string, value: string): { readonly name: string; readonly quote: string } | undefined {
+  const own = OFFICE_NAME.exec(quote)?.[0].trim();
+  if (own) return { name: own, quote };
+  const at = pageText.indexOf(normalizeText(value));
+  if (at === -1) return undefined;
+  const window = pageText.slice(Math.max(0, at - 300), at + normalizeText(value).length);
+  let found: RegExpExecArray | undefined;
+  for (const match of window.matchAll(new RegExp(OFFICE_NAME.source, "g"))) found = match;
+  return found ? { name: found[0].trim(), quote: window.slice(found.index) } : undefined;
+}
+
+/** The office as the page names it: "Cochise County Recorder", "Elections Department", "Public Works Department". */
+const OFFICE_NAME = /(?:(?:[A-Z][a-z]+\s+)County\s+|City of [A-Z][a-z]+\s+|Town of [A-Z][a-z]+\s+)?(?:Office of the\s+)?(?:Recorder|Elections?|Voter Registration|Assessor|Treasurer|Sheriff|Public Works|Police|Fire|Library|Utilities|Transportation|Transit|Airport|Human Resources|Attendance|Athletics|Nutrition|Food Services?|Help ?Desk|Business Office)(?:['’]s)?(?:\s+(?:Office|Department|Dept\.?|Division|District|Services?))?/;
+
 const PHONE_IN_QUOTE = /\+?1?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;
 const DATED: readonly ElectionFieldKind[] = ["registration_deadline", "early_voting", "certified_outcome"];
 
@@ -176,7 +191,7 @@ export async function publishBoxFindings(input: {
     }
   };
 
-  const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string }[] = [];
+  const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string; name?: string }[] = [];
   const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
   for (const row of rows) {
     report.looked++;
@@ -196,6 +211,18 @@ export async function publishBoxFindings(input: {
     }
     let target = await targetOf(facts.query, row.subjectId);
     if (!target) { await ensureGoverningBody(facts.query, row.subjectId); target = await targetOf(facts.query, row.subjectId); }
+    // A body or an office is added under its government even where the government has no governing board of its own, as a state has none.
+    if (slot.class === "bodies") {
+      const named = await bodyNamed(facts.query, row.subjectId, target?.body ?? null, String(finding.value), isGoverningName(String(finding.value)));
+      if (named) ready.push({ finding, slot, body: named, holder: null, entityId: named.id });
+      else await hold(row, slot.class, "NAME_IS_NOT_ON_A_GOVERNMENT");
+      continue;
+    }
+    if (slot.class === "other offices") {
+      // The office is found or added once the saved page is read, because the page is what names it.
+      ready.push({ finding, slot, body: target?.body ?? { id: row.subjectId, name: "", state: null, parentId: null }, holder: null, entityId: target?.entityId ?? row.subjectId });
+      continue;
+    }
     if (!target) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
     if ((slot.class === "sittings") !== target.entityId.startsWith("meeting:")) { await hold(row, slot.class, slot.class === "sittings" ? "SUBJECT_IS_NOT_A_SITTING" : "SUBJECT_IS_A_SITTING"); continue; }
     ready.push({ finding, slot, body: target.body, holder: target.holder, entityId: target.entityId });
@@ -245,7 +272,10 @@ export async function publishBoxFindings(input: {
         const { finding, slot: own, holder } = entry;
         const name = own.slot === "member_name" ? String(finding.value) : holder ?? known.find(candidate => named(finding.exactQuote, candidate));
         if (!name) {
-          if (own.class === "contacts" && (own.slot === "phone" || own.slot === "email") && !namesOtherOffice(finding.field, String(finding.value), finding.exactQuote, finding.sourceUrl)) forOffice.push({ ...entry, slot: { class: "office contacts", slot: own.slot === "phone" ? "office_phone" : "office_email" } });
+          if (own.class === "contacts" && (own.slot === "phone" || own.slot === "email")) {
+            const field = own.slot === "phone" ? "office_phone" : "office_email", elsewhere = otherOffice(finding.field, String(finding.value), finding.exactQuote, finding.sourceUrl);
+            forOffice.push({ ...entry, slot: elsewhere ? { class: "other offices", slot: field, office: elsewhere } : { class: "office contacts", slot: field } });
+          }
           else await settle(finding.row, { blank: "NO_PERSON_NAMED_IN_QUOTE" }, own.class);
           continue;
         }
@@ -269,12 +299,21 @@ export async function publishBoxFindings(input: {
     }
     const own = [...group.filter(entry => entry.slot.class !== "rosters" && entry.slot.class !== "contacts"), ...forOffice];
     if (!own.length) continue;
-    const entity = (await readCheckEntity(facts.query, entityId))!;
     const copy = await facts.transaction(query => saveCaptureCopy(query, read.capture));
-    const provenance = captureProvenance(read.capture, entity.hosts);
-    const claim = (field: string, value: unknown, valueText: string, quote: string) =>
-      publishClaim(facts, { entity, field, fieldKind: kind, provenance, value, valueText, quote, copy, producedBy: "box", costUsd: 0 }, clocks, now, { purge: input.purge });
-    for (const { finding, slot } of own) {
+    const entities = new Map<string, NonNullable<Awaited<ReturnType<typeof readCheckEntity>>>>();
+    const entityOf = async (id: string) => entities.get(id) ?? entities.set(id, (await readCheckEntity(facts.query, id))!).get(id)!;
+    const pageText = normalizeText(copy.text);
+    for (const { finding, slot, entityId: held, body: governing } of own) {
+      let at = held, name: { readonly name: string; readonly quote: string } | undefined;
+      if (slot.class === "other offices") {
+        name = officeNameOn(pageText, finding.exactQuote, String(finding.value));
+        const office = name && await officeNamed(facts.query, finding.row.subjectId, governing, slot.office, name.name);
+        if (!office) { await settle(finding.row, { blank: "OFFICE_NAME_NOT_ON_THE_PAGE" }, slot.class); continue; }
+        at = office.id;
+      }
+      const entity = await entityOf(at), provenance = captureProvenance(read.capture, entity.hosts);
+      const claim = (field: string, value: unknown, valueText: string, quote: string) =>
+        publishClaim(facts, { entity, field, fieldKind: kind, provenance, value, valueText, quote, copy, producedBy: "box", costUsd: 0 }, clocks, now, { purge: input.purge });
       const value = String(finding.value), quote = linkQuote(value, finding.exactQuote);
       if (slot.class === "official hosts") {
         const host = /^https?:\/\//i.test(value) ? value : `https://${value}`;
@@ -283,7 +322,13 @@ export async function publishBoxFindings(input: {
         await settle(finding.row, checked.ok ? { decision: "PUBLISH", factId: null } : { blank: checked.reason }, slot.class);
         continue;
       }
-      const outcome = slot.slot === "comment:period" ? await claim(slot.slot, value.toUpperCase(), finding.exactQuote, finding.exactQuote) : await claim(slot.slot, value, value, quote);
+      // A body the Box added is shown to readers once its name is on a saved page.
+      if (name) {
+        const named = await claim("name", name.name, name.name, name.quote);
+        if ("blank" in named) { await settle(finding.row, named, slot.class); continue; }
+      }
+      const outcome = slot.class === "bodies" ? await claim("name", value, value, quote)
+        : slot.slot === "comment:period" ? await claim(slot.slot, value.toUpperCase(), finding.exactQuote, finding.exactQuote) : await claim(slot.slot, value, value, quote);
       // A page's own words on how to comment show the body takes it.
       if (slot.class === "comment rules" && slot.slot !== "comment:period" && !("blank" in outcome)) await claim("comment:period", "YES", finding.exactQuote, finding.exactQuote);
       await settle(finding.row, outcome, slot.class);

@@ -7,6 +7,8 @@ export type FindingSlot =
   | { readonly class: "contacts"; readonly slot: "email" | "phone" | "website" }
   | { readonly class: "office contacts"; readonly slot: "office_address" | "office_phone" | "office_email" }
   | { readonly class: "body links"; readonly slot: "name" | "homepage" }
+  | { readonly class: "bodies"; readonly slot: "body_name" }
+  | { readonly class: "other offices"; readonly slot: "office_phone" | "office_email" | "office_address"; readonly office: string }
   | { readonly class: "schedules"; readonly slot: "meeting_cadence" }
   | { readonly class: "meeting routes"; readonly slot: "agenda_url" }
   | { readonly class: "sittings"; readonly slot: "agenda_url" | "video_url" }
@@ -17,7 +19,7 @@ export type FindingSlot =
   | { readonly class: string; readonly waiting: string };
 
 /** Moves whenever a class gains slots, so findings waiting on it are looked at again. */
-export const FINDING_SLOTS_VERSION = "6";
+export const FINDING_SLOTS_VERSION = "7";
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";
@@ -34,9 +36,29 @@ const isTelephone = (value: string): boolean => {
   return digits.length === 10 || digits.length === 11 && digits.startsWith("1");
 };
 
-/** A phone or email that its own words give to another office is that office's, not the governing body's. */
-const OTHER_OFFICE = /recorder|election|voter|public[ _-]?works|police|sheriff|\bfire\b|library|utilit|assessor|treasurer|\bservice|transportation|attendance|athletic|nutrition|cafeteria|transit|airport|human[ _-]?resources|help ?desk|department|\bdept\b/i;
-export const namesOtherOffice = (...words: readonly string[]): boolean => OTHER_OFFICE.test(words.join(" "));
+/** The kind of office a contact's own words give it to, when that is not the governing body: "recorder", "elections", "public works". */
+const OTHER_OFFICE = /recorder|election|voter ?registration|public[ _-]?works|police|sheriff|\bfire\b|library|utilit|assessor|treasurer|food ?service|transportation|attendance|athletic|nutrition|cafeteria|transit|airport|human[ _-]?resources|help ?desk/ig;
+const GENERIC_OFFICE = /department|\bdept\b|\bservices?\b/ig;
+const HOME_KEY = /town[ _-]?hall|city[ _-]?hall|governing|board|council|administration|district[ _-]?office|main[ _-]?office|^body\b/i;
+const KINDS: Readonly<Record<string, string>> = { publicworks: "public works", humanresources: "human resources", helpdesk: "help desk", dept: "department" };
+const lastKind = (words: string): string | null => {
+  const found = ([...words.matchAll(OTHER_OFFICE)].at(-1) ?? [...words.matchAll(GENERIC_OFFICE)].at(-1))?.[0].toLowerCase().replace(/[ _-]+/g, "");
+  return found === undefined ? null : KINDS[found] ?? (found === "dept" ? "department" : found);
+};
+/** The office a contact belongs to by its own sentence first (the last office it names), then its label, then the page address unless the label says it is the governing body's own. */
+export function otherOffice(key: string, value: string, quote: string, sourceUrl: string): string | null {
+  return lastKind(quote) ?? lastKind(value) ?? lastKind(key) ?? (HOME_KEY.test(key) ? null : lastKind(sourceUrl));
+}
+
+const STREET = /^\d{1,6}\s+(?:[NSEW]\.?\s+)?[\w.'-]+(?:\s+[\w.'-]+){0,4}?\s+(?:st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|way|hwy|highway|pkwy|parkway|ct|court|pl|place|cir|circle|loop|trail|trl|sq|square)\b\.?(?:[\s,].*)?$/i;
+const SCHEDULE = /\b(first|second|third|fourth|fifth|last|1st|2nd|3rd|4th|every|each)\b[^.]{0,60}\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)s?\b|\b(monthly|weekly|bi-?weekly)\b/i;
+const BODY_NAME = /\b(board|council|commission|committee|authority|trustees|supervisors|selectmen|aldermen)\b/i;
+const GOVERNING_NAME = /^(?:(?:the )?(?:mayor and )?(?:town|city|village|borough|township|county) council|(?:the )?(?:town|city|county) commission|(?:the )?board of (?:supervisors|education|trustees|directors|commissioners|selectmen|aldermen)|(?:the )?(?:governing|school) board|.*\bgoverning (?:school )?board|council)$/i;
+/** Whether a body name is the government's own governing board, and not a committee or commission under it. */
+export const isGoverningName = (name: string): boolean => GOVERNING_NAME.test(name.trim());
+const PERSON_NAME = /^(?:(?:dr|mr|mrs|ms)\.?\s+)?[A-Z][\w.'’-]+(?:\s+(?:[A-Z]\.?|[A-Z][\w.'’-]+|\([\w ]+\))){1,3}$/;
+const SEAT_WORDS = /\b(mayor|vice[- ]?mayor|council ?(?:member|man|woman)|alder(?:man|woman)|board (?:member|president|chair|clerk|vice)|president|chair(?:man|woman|person)?|trustee|supervisor|commissioner|selectm[ae]n|member)\b/i;
+const STAFF_KEY = /manager|clerk|director|superintendent|attorney|administrator|recorder|treasurer|assessor|secretary|coordinator|staff|business|filer|custodian|head|principal/;
 
 const lookup = (quote: string): ElectionFieldKind | null => /polling|vote center|voting location|where to vote/i.test(quote) ? "polling_lookup"
   : /sample ballot|my ballot|ballot (lookup|status)/i.test(quote) ? "ballot_lookup" : /regist/i.test(quote) ? "registration_lookup" : null;
@@ -152,14 +174,25 @@ export function slotFor(field: string, value: unknown, recordClass: string | nul
   }
   if (last === "member" && /^(officeholder|board|council|governingboard|governingbody)$/.test(head)) return { class: "rosters", slot: "member_name" };
   if (/^(officeholder(\.contact)?)?$/.test(head) && (last === "email" || last === "phone")) return { class: "contacts", slot: last };
-  const elsewhere = namesOtherOffice(key, String(value), quote, sourceUrl);
+  const text = String(value).trim(), elsewhere = otherOffice(key, text, quote, sourceUrl);
   if (!elsewhere && BODY.test(head) && (last === "phone" || last === "mainphone")) return { class: "office contacts", slot: "office_phone" };
   if (!elsewhere && BODY.test(head) && (last === "address" || last === "physicaladdress" || last === "officeaddress")) return { class: "office contacts", slot: "office_address" };
-  if (/^(homepageurl|district\.website|body\.website)$/.test(key) && URL_VALUE.test(String(value))) return { class: "body links", slot: "homepage" };
+  if (/^(homepageurl|district\.website|body\.website)$/.test(key) && URL_VALUE.test(text)) return { class: "body links", slot: "homepage" };
+  // From here a finding is sorted by what its value is, whatever label the hunter gave it.
+  if (/comment|speaker|call.?to.?the.?public|public.?(hearing|forum|participation)/.test(key) && !/^adopted\b/i.test(text) && !/^(yes|no)$/i.test(text)) {
+    const words = `${key} ${text}`;
+    return { class: "comment rules", slot: /limit|minutes|seconds/i.test(words) ? "comment:time_limit" : /sign.?up|register|speaker.?(card|slip)|request.?to.?speak/i.test(words) ? "comment:signup"
+      : /written|e-?mail|mail/i.test(words) ? "comment:written" : /attend|in.?person/i.test(words) ? "comment:attend" : "comment:detail" };
+  }
+  if (SCHEDULE.test(text) && /meeting|schedule|session|regular/.test(key) && !/location|place/.test(key)) return { class: "schedules", slot: "meeting_cadence" };
   if (key.startsWith("meeting")) return { class: "meetings", waiting: "FINDING_NAMES_NO_SITTING" };
-  const shape = String(value).trim();
-  if (elsewhere && (EMAIL.test(shape) || PHONE.test(shape))) return { class: "other", waiting: "CONTACT_IS_ANOTHER_OFFICES" };
-  if (EMAIL.test(shape)) return { class: "office contacts", slot: "office_email" };
-  if (PHONE.test(shape) && isTelephone(shape) && !/fax/.test(key)) return { class: "office contacts", slot: "office_phone" };
+  const person = /person|officeholder|member|home|residen|personal|mailing/.test(key);
+  if ((last === "name" || /name$/.test(key) || /(body|board|committee|commission|council)$/.test(key)) && BODY_NAME.test(text) && text.split(/\s+/).length <= 10 && !STREET.test(text) && !EMAIL.test(text)) {
+    return { class: "bodies", slot: "body_name" };
+  }
+  if (/^(name|president|chair|vicepresident|vicechair|mayor|vicemayor|member|councilmember|trustee|supervisor|commissioner)$/.test(last) && !STAFF_KEY.test(key.replace(/officeholder|governing/g, "")) && PERSON_NAME.test(text) && !BODY_NAME.test(text) && (SEAT_WORDS.test(quote) || last !== "name")) return { class: "rosters", slot: "member_name" };
+  if (EMAIL.test(text)) return elsewhere ? { class: "other offices", slot: "office_email", office: elsewhere } : { class: "office contacts", slot: "office_email" };
+  if (PHONE.test(text) && isTelephone(text) && !/fax/.test(key)) return elsewhere ? { class: "other offices", slot: "office_phone", office: elsewhere } : { class: "office contacts", slot: "office_phone" };
+  if ((STREET.test(text) || /address/.test(key) && /^\d{1,6}\s+[A-Za-z]/.test(text)) && !person && !/meeting|mailing/.test(key)) return elsewhere ? { class: "other offices", slot: "office_address", office: elsewhere } : { class: "office contacts", slot: "office_address" };
   return { class: "other", waiting: "NO_FACT_SLOT" };
 }

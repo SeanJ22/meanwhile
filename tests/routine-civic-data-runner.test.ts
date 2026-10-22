@@ -2334,3 +2334,19 @@ test("campaign money checks hourly state clocks from one serial coordinator", ()
   assert.equal(money.length,1);assert.equal(money[0].id,CAMPAIGN_MONEY_SOURCE_ID);
   assert.equal(money[0].cadenceMs,ROUTINE_DATA_ADMISSION_MS);
 });
+
+test("a paused runner still publishes Box findings; only the paid hunt-source reads wait for the resume", () => {
+  const runner = readFileSync(new URL("../scripts/routine-civic-data-runner.mts", import.meta.url), "utf8");
+  const read = runner.slice(runner.indexOf("async function readHuntSourceTasks"), runner.indexOf("function newestConsideredAt"));
+  const pause = read.indexOf("intents.runnerPause.paused");
+  assert.ok(pause > read.indexOf("publishBoxFindings("), "the Box publishing pass runs before any pause is consulted");
+  assert.ok(pause > read.indexOf("return publication"), "owed facts, door probes and publication tasks run under a pause");
+  assert.ok(pause < read.indexOf("huntSourceTasks(admitted"), "paid hunt-source reads still wait for the resume");
+  assert.equal(read.match(/runnerPause\.paused/g)?.length, 1);
+});
+
+test("a pause never deactivates paid hunts; they stay as they were and the paid lane stays closed", () => {
+  const shadow = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  assert.match(shadow, /if\(!dry && !filteredCycle && !huntsPaused\)await deactivateUnfundedHunts\(repos,fundedRefs,NOW\);/);
+  assert.doesNotMatch(shadow, /fundedRefs=huntsPaused\?\[\]/);
+});

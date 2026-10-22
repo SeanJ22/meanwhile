@@ -474,8 +474,8 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
   const intents = readIntents([...(await readPlanningIntents(repos))]);
-  if (intents.runnerPause.paused) return [];
 
+  // Publishing what is already found (Box findings, saved worker results, changed doors) is free: a pause never holds it.
   if (PUBLISH_NOW || (ONLY && WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) {
     const sql = neon(connection);
     const query = (text: string, params: readonly unknown[]) => sql.query(text, [...params]) as Promise<Record<string, unknown>[]>;
@@ -533,6 +533,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
       MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
   }
+  if (intents.runnerPause.paused) return [];
   const tasks:RoutineSourceTask[]=[];
   for(const state of HUNT_STATES) {
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}});

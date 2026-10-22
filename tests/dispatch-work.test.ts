@@ -712,6 +712,48 @@ test("an Admin order still creates its paid hunt packet beside the free meeting 
     "materializing the paid job preserves the owner's budget");
 });
 
+test("a paused place's stopped paid hunt comes back on when it is funded; an owner stop given after the funding still holds", async () => {
+  const repos = createMemoryRepositories();
+  const place = "ocd-division/country:us/state:az/place:tucson";
+  const packetId = `hunt:packet:${place}`;
+  const runCycle = async (target: ReturnType<typeof scopeWorkTarget>, now: string) => {
+    const { world } = await cycleWorld(repos, now);
+    const plan = planDispatchWork({ targets: [target], world: { ...world, packetDivisions: new Map([[target.key, [place]]]) } });
+    const applied = await applyDispatchWork(repos, plan, { now });
+    assert.deepEqual(applied.failed, []); assert.deepEqual(applied.markFailed ?? [], []);
+    return (await repos.obligations.mustRead(packetId)).value;
+  };
+  const stop = async (now: string) => {
+    const row = await repos.obligations.mustRead(packetId);
+    await repos.obligations.compareAndSet(packetId, row.revision, { ...row.value, active: false, nextDueAt: null, updatedAt: now }, now);
+  };
+  const funded = scopeWorkTarget(await planned(decision(PIMA)));
+  assert.equal((await runCycle(funded, T0)).active, true, "the funded place owns a paid hunt");
+
+  await stop(T1);
+  assert.equal((await runCycle(funded, T1)).active, true, "stopped while paused (no owner stop): resuming turns it back on");
+
+  await stop(T1);
+  await repos.huntOrders.put("stop-1", { id: "stop-1", receiptId: "stop-1", state: "az", scopeKey: funded.key, requestedAt: T1, requestedBy: "owner",
+    confirmedAt: T1, affected: 1 }, T1);
+  const before = await repos.obligations.mustRead(packetId);
+  const held = await runCycle(funded, T2);
+  assert.equal(held.active, false, "an owner stop given after the funding decision holds");
+  assert.deepEqual(held.assignments, before.value.assignments, "no fresh mark outdates the stop");
+
+  const refunded = scopeWorkTarget(await planned(decision(PIMA, 1, 5, T2)));
+  assert.equal((await runCycle(refunded, T2)).active, true, "funding the place again after the stop turns its hunt back on");
+});
+
+test("a pause holds paid work, never free work: hunts are not stopped while paused, and Box publishing still runs", () => {
+  const planner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
+  assert.match(planner, /if\(!dry && !filteredCycle && !huntsPaused\)await deactivateUnfundedHunts\(repos,fundedRefs,NOW\);/);
+  const runner = readFileSync(join(ROOT, "scripts/routine-civic-data-runner.mts"), "utf8");
+  const read = runner.slice(runner.indexOf("async function readHuntSourceTasks("));
+  assert.ok(read.indexOf("publishBoxFindings(") > 0 && read.indexOf("publishBoxFindings(") < read.indexOf("if (intents.runnerPause.paused) return [];"),
+    "the free Box publishing pass runs before the pause can return");
+});
+
 test("candidate enrichment enumerates the tracked states and names one with no ballot authority", async () => {
   const holdings = await readCandidateEnrichmentAuthorities("AZ", { store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
   const y = candidateEnrichmentProvider({ holdings, trackedStates: trackedStatesFrom(["az", "co"], "a test coverage set") }).enumerate({ root: ROOT, nowIso: T0 });

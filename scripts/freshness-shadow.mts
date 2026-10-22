@@ -561,7 +561,7 @@ const planningPolicy=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScop
 const huntsPaused=intents.paused || intents.runnerPause.paused || intentLogUnreadable!==null || ownerIntentsUnreadableByRunner;
 const fundedRefs=huntsPaused?[]:[...expansionScopesOf(planningPolicy?.value??null).scopes.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId),
   ...intentLog.flatMap(intent=>intent.kind==="INTENT" && intent.action==="DISPATCH" && !intents.cancelledDispatch.has(intent.intentId)?[intent.intentId]:[])];
-if(!dry && !filteredCycle)await deactivateUnfundedHunts(repos,fundedRefs,NOW);
+if(!dry && !filteredCycle && !huntsPaused)await deactivateUnfundedHunts(repos,fundedRefs,NOW);
 const planningSections={expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}} as const;
 const cycleObservation = observeCyclePhases(repos);
 

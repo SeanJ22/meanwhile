@@ -17,7 +17,7 @@ export interface DoorNumberReadings {
   readonly overdue: readonly OverdueDoor[] | null;
   /** Open doors a routine task reads on a clock: the only doors that can be overdue. */
   readonly scheduled: number | null;
-  readonly posting: readonly PostingToLiveRow[] | null;
+  readonly posting: readonly (PostingToLiveRow & {readonly pageSeenAt?:string})[] | null;
   readonly fixes: readonly FixItem[] | null;
 }
 
@@ -62,10 +62,12 @@ function postedRow(r: DoorNumberReadings): ScoreboardRow {
   const within = live.filter((p) => p.minutesToLive! <= POSTED_TARGET_MINUTES).length;
   const fromPosted = live.filter((p) => p.basis === "POSTED").length;
   const slow = live.filter((p) => p.minutesToLive! > POSTED_TARGET_MINUTES).map((p) => p.minutesToLive!);
+  const missing=inWindow.filter(p=>p.liveAt===null),seenWithoutStamp=missing.filter(p=>p.pageSeenAt).length;
   return row(id, {
-    value: share(within, inWindow.length),
-    counts: `${n(within)} of ${n(inWindow.length)} changes live within an hour${inWindow.length - live.length > 0 ? ` · ${n(inWindow.length - live.length)} not live yet` : ""} · ${n(fromPosted)} timed from the body's own posting, ${n(live.length - fromPosted)} from when we first saw it`,
-    says: `The target is an hour, over the last ${WINDOW_DAYS} days.${slow.length > 0 ? ` The slowest took ${minutesWords(Math.max(...slow))}.` : ""} A change with no posting time from the body is timed from when we first saw it, and says so.`,
+    value: `${missing.length?'at least ':''}${share(within, inWindow.length)}`,
+    counts: `${n(within)} of ${n(inWindow.length)} changes confirmed live within an hour${inWindow.length - live.length > 0 ? ` · ${n(inWindow.length - live.length)} without a delivery stamp` : ""} · ${n(fromPosted)} timed from the body's own posting, ${n(live.length - fromPosted)} from when we first saw it`,
+    says: `The target is an hour, over the last ${WINDOW_DAYS} days.${slow.length > 0 ? ` The slowest confirmed change took ${minutesWords(Math.max(...slow))}.` : ""} A missing stamp leaves delivery time unmeasured.${seenWithoutStamp?` The hourly check saw ${n(seenWithoutStamp)} of the unstamped changes live on the page.`:''} A change with no posting time is timed from when we first saw it.`,
+    items: ['MEETING_NEW','MEETING_CHANGED','AGENDA_LINK','STATUS','OUTCOME'].map(kind=>{const rows=inWindow.filter(p=>p.kind===kind);return `${kind.replaceAll('_',' ')}: ${n(rows.filter(p=>p.liveAt!==null).length)} stamped · ${n(rows.filter(p=>p.liveAt===null).length)} without a stamp`; }),
   });
 }
 

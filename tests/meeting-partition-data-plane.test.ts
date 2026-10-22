@@ -371,9 +371,9 @@ test("meeting Reader repair reads each partition once and correlates exact parti
     generatedAt: FIRST,
   });
   assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
-  // A partition promotion reads no sibling partition; the repair below is the one read that records every receipt.
+  // Publication stamps its own partition without waiting for the later fleet repair.
   assert.equal(store.readPromotionsCalls, 0, "a partition promotion never reads the sibling partitions' payloads");
-  assert.equal(promoted.every(({ outcome }) => outcome.readerReadback === null), true);
+  assert.equal(promoted.every(({ outcome }) => outcome.readerReadback?.status === "PASS"), true,JSON.stringify(promoted.map(p=>p.outcome.readerReadback)));
   const before = await Promise.all(promoted.map(async ({ candidate }) => ({
     contractId: candidate.scope === legistar.scope ? legistar.id : insite.id,
     pointer: await store.readPromotion("MEETING", candidate.scope),
@@ -734,4 +734,24 @@ test("DB-01: the validator accepts a V1 removal for one pass and refuses removin
     { ...window("MEETING_READER_SERVING_WINDOW_V1", 90, HELD_LATER), key: `meeting:${old.id}`, priorStartsAt: old.startsAt },
   ]);
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
+});
+
+test('an unavailable meeting stamp writer never holds publication, and the next unchanged check repairs its stamp',async()=>{
+ class StampFailureStore extends MemoryRoutineDataStore {
+   fail=true;
+   override async appendEvidence(...args:Parameters<MemoryRoutineDataStore['appendEvidence']>){
+     if(this.fail&&args[3].startsWith(READER_PROJECTION_READBACK_PREFIX))throw Error('Stamp store unavailable');
+     return super.appendEvidence(...args);
+   }
+ }
+ const store=new StampFailureStore();
+ const [first]=await promoteMeetingPartitions({store,partitions:[legistar],meetings:[meeting(legistar,FIRST,'stamp-retry')],agendaDocuments:[],reports:[report(legistar.meetingSource,FIRST)],generatedAt:FIRST});
+ assert.equal(first.outcome.candidate.state,'PROMOTED');assert.ok(first.outcome.promoted);
+ assert.equal(first.outcome.readerReadback,null);
+ assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),false);
+ store.fail=false;
+ const [second]=await promoteMeetingPartitions({store,partitions:[legistar],meetings:[meeting(legistar,SECOND,'stamp-retry')],agendaDocuments:[],reports:[report(legistar.meetingSource,SECOND)],generatedAt:SECOND});
+ assert.equal(second.outcome.promoted?.versionId,first.outcome.promoted?.versionId);
+ assert.equal(second.outcome.readerReadback?.status,'PASS');
+ assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),true);
 });

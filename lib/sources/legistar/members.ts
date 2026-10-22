@@ -91,14 +91,23 @@ export function* legistarMemberRosters(raw: LegistarMembers, rows: readonly Body
     if (!body) throw new Error(`LEGISTAR_MEMBERS_BODY_UNBOUND:${wiring.bodyId}`);
     const sourceUrl = memberSourceUrl(raw, "officerecords", "OfficeRecordId");
     const members: RosterMember[] = [];
+    // One seat per person on a body: when several current records overlap, the most recently started one speaks for the person.
+    const seats = new Map<number, { office: MemberOffice; termStart: string | null; termEnd: string | null }>();
     for (const office of raw.offices) {
-      if (office.OfficeRecordBodyId !== nativeId || pageUrl && memberSourceUrl(raw, "officerecords", "OfficeRecordId", office.OfficeRecordId) !== pageUrl) continue;
+      if (office.OfficeRecordBodyId !== nativeId) continue;
       const termStart = termDate(office.OfficeRecordStartDate), termEnd = termDate(office.OfficeRecordEndDate);
       if ((termStart && termStart > today) || (termEnd && termEnd < today)) continue;
+      const held = seats.get(office.OfficeRecordPersonId);
+      if (!held || (termStart ?? "") > (held.termStart ?? "") || (termStart ?? "") === (held.termStart ?? "") && office.OfficeRecordId > held.office.OfficeRecordId) {
+        seats.set(office.OfficeRecordPersonId, { office, termStart, termEnd });
+      }
+    }
+    for (const { office, termStart, termEnd } of seats.values()) {
+      if (pageUrl && memberSourceUrl(raw, "officerecords", "OfficeRecordId", office.OfficeRecordId) !== pageUrl) continue;
       const person = persons.get(office.OfficeRecordPersonId);
       const name = office.OfficeRecordFullName?.trim();
-      const officeTitle = office.OfficeRecordTitle?.trim() || office.OfficeRecordMemberType?.trim();
-      if (!name || !officeTitle) throw new Error("LEGISTAR_MEMBERS_MINIMUMS_MISSING");
+      const officeTitle = office.OfficeRecordTitle?.trim() || office.OfficeRecordMemberType?.trim() || "";
+      if (!name) continue;
       const source = { kind: "OFFICIAL" as const, sourceUrl: memberSourceUrl(raw, "officerecords", "OfficeRecordId", office.OfficeRecordId), sourceOrg: wiring.publishingOrg, collectedAt: raw.collectedAt, verifiedAt: raw.collectedAt };
       if (!Number.isSafeInteger(office.OfficeRecordPersonId) || office.OfficeRecordPersonId <= 0) throw new Error("LEGISTAR_MEMBERS_PERSON_ID_MISSING");
       const personId = `legistar:${raw.slug}:person:${office.OfficeRecordPersonId}`;
@@ -107,7 +116,7 @@ export function* legistarMemberRosters(raw: LegistarMembers, rows: readonly Body
         name, officeTitle, termStart, termEnd, termNote: null, email: null, phone: null, websiteUrl: null,
         fieldSources: { name: { ...source, quote: office.OfficeRecordFullName },
           ...(person?.PersonFullName === name ? { personId: { ...source, sourceUrl: memberSourceUrl(raw, "persons", "PersonId", person.PersonId), quote: String(person.PersonId) } } : {}),
-          officeTitle: { ...source, quote: officeTitle }, ...(termStart ? { termStart: { ...source, quote: office.OfficeRecordStartDate! } } : {}),
+          ...(officeTitle ? { officeTitle: { ...source, quote: officeTitle } } : {}), ...(termStart ? { termStart: { ...source, quote: office.OfficeRecordStartDate! } } : {}),
           ...(termEnd ? { termEnd: { ...source, quote: office.OfficeRecordEndDate! } } : {}) } });
     }
     yield { bodyId: wiring.bodyId, bodyName: body.BodyName, members, sourceUrl,

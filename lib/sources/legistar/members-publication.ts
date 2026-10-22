@@ -6,6 +6,7 @@ import { nameKey, publishRosterFacts } from "../../facts/roster-facts.ts";
 import { jsonValues } from "../../facts/source-copy.ts";
 import type { Clocks, FactDb, Query } from "../../facts/publish.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
+import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../../reader/cache.ts";
 import { legistarMemberRosters } from "./members.ts";
 import { memberProbe, type LegistarMembers } from "./members-model.ts";
 import { legistarMemberCapture } from "./members-cache.ts";
@@ -29,6 +30,10 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
     candidates.set(id, [...candidates.get(id) ?? [], { body, row: { ...owner, bodyId: id, config: { ...owner.config, eventBodyId: String(body.BodyId), bodyName: body.BodyName } } }]);
   }
   const seated = new Set(raw.offices.map(office => office.OfficeRecordBodyId));
+  const listed = new Set(raw.bodies.map(body => body.BodyId));
+  for (const id of [...seated].filter(id => !listed.has(id)).sort((a, b) => a - b)) {
+    unbound.push({ key: `${raw.slug}:office-body:${id}`, detail: "Current office records name a body this tenant does not list" });
+  }
   const bound: BodySourceWiring[] = [];
   for (const group of candidates.values()) {
     // Two tenant bodies that read as one government body (a renamed or re-entered board) are one body only while a single one holds current seats.
@@ -53,13 +58,13 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
 
 export async function publishLegistarMembers(input: {
   facts: FactDb & { readonly query: Query }; vault: EvidenceStore; clocks: Clocks;
-  raw: LegistarMembers; rows: readonly BodySourceWiring[]; now: string;
+  raw: LegistarMembers; rows: readonly BodySourceWiring[]; now: string; purge?: ReaderCachePurger;
 }) {
   const prepared = legistarMembersPackage(input.raw, input.rows, input.now);
   const source = `legistar-members:${input.raw.slug}`;
   const [prior] = await input.facts.query("SELECT sha256 FROM fact_store_load WHERE source = $1", [source]);
   const unchanged = prior?.sha256 === prepared.signature;
-  let records = 0;
+  let records = 0, held = 0;
   if (!unchanged) {
     const offices = new Map(input.raw.offices.map(office => [office.OfficeRecordId, office]));
     const bodyFor = (owner: BodySourceWiring) => ({ id: owner.bodyId, name: owner.config.bodyName ?? owner.bodyId,
@@ -77,7 +82,7 @@ export async function publishLegistarMembers(input: {
         const members = roster.members;
         if (!members.length) continue;
         const owner = prepared.bound.find(row => row.bodyId === roster.bodyId)!;
-        const report = await publishRosterFacts(input.facts, { body: bodyFor(owner), capture, complete: false, producedBy: source,
+        const report = await publishRosterFacts(input.facts, { body: bodyFor(owner), capture, complete: false, producedBy: source, purge: input.purge,
           shownMemberIds: new Map(members.map(member => [nameKey(member.name), member.id])),
           members: members.map(member => {
             const office = offices.get(Number(member.id.split(":office:").at(-1)))!;
@@ -87,11 +92,11 @@ export async function publishLegistarMembers(input: {
               fieldSources: { termStart: { ...member.fieldSources!.name!, quote }, termEnd: { ...member.fieldSources!.name!, quote } } };
           }),
         }, input.clocks, new Date(input.now));
-        if (report.held || report.blanks) {
-          const reasons = [...report.outcomes.values()].flatMap(fields => [...fields].flatMap(([field, outcome]) =>
-            "blank" in outcome ? [`${field}:${outcome.blank}`] : !["PUBLISH", "CONFIRM"].includes(outcome.decision) ? [`${field}:${outcome.decision}`] : []));
-          throw new Error(`LEGISTAR_MEMBERS_FACTS_HELD:held=${report.held};blanks=${report.blanks};${[...new Set(reasons)].join(",")}`);
+        if (report.blanks) {
+          const reasons = [...report.outcomes.values()].flatMap(fields => [...fields].flatMap(([field, outcome]) => "blank" in outcome ? [`${field}:${outcome.blank}`] : []));
+          throw new Error(`LEGISTAR_MEMBERS_FACTS_BLANK:blanks=${report.blanks};${[...new Set(reasons)].join(",")}`);
         }
+        held += report.held;
         records += report.live;
       }
     }
@@ -104,13 +109,13 @@ export async function publishLegistarMembers(input: {
           AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.entity_id = substr(own.field, 8) AND x.scheme = $3 AND x.value = ANY($4::text[])) RETURNING f.id`,
       [roster.bodyId, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords?`, `legistar:${input.raw.slug}`,
         roster.members.map(member => member.nativeIds![`legistar:${input.raw.slug}`][0])]);
-      if (departed.length) await input.facts.query("INSERT INTO rebuild_queue (place_id) SELECT place_id FROM entity_place WHERE entity_id = $1 ON CONFLICT DO NOTHING", [roster.bodyId]);
+      if (departed.length) await invalidateReaderCache(await readerCacheScopeForEntity(input.facts.query, roster.bodyId), input.purge);
       records += departed.length;
     }
   }
   await input.facts.query(`INSERT INTO fact_store_load (source, sha256, loaded_at) VALUES ($1, $2, $3)
     ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = EXCLUDED.loaded_at`,
   [source, prepared.signature, input.now]);
-  return { records, signature: prepared.signature, versionId: `${source}:${prepared.signature}`, checkedAt: input.now, unchanged,
+  return { records, held, signature: prepared.signature, versionId: `${source}:${prepared.signature}`, checkedAt: input.now, unchanged,
     members: prepared.members, bodies: prepared.bound.length, gaps: prepared.unbound };
 }

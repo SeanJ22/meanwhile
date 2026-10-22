@@ -185,7 +185,7 @@ test("a shared tenant binds only the exact governments named by its own doors", 
   rows[1] = { ...rows[1], ocdId: "ocd-division/country:us/state:az/place:other" };
   const prepared = legistarMembersPackage(raw, rows, NOW);
   assert.deepEqual(prepared.bound.map(row => row.bodyId), rows.map(row => row.bodyId));
-  assert.equal(prepared.unbound.length, raw.bodies.length - rows.length);
+  assert.equal(prepared.unbound.filter(gap => gap.key.includes(":body:")).length, raw.bodies.length - rows.length);
 });
 
 test("the indexed door read returns one tenant's manual and derived bindings without duplicates", async t => {
@@ -236,4 +236,41 @@ test("two tenant bodies with one name are one body while a single one holds seat
   const both = legistarMembersPackage({ ...only, offices: [{ ...seat, OfficeRecordBodyId: 901 }, { ...seat, OfficeRecordId: seat.OfficeRecordId + 1, OfficeRecordBodyId: 902 }] }, rows, NOW);
   assert.equal(both.bound.length, 0);
   assert.deepEqual(both.unbound.map(gap => gap.key).sort(), ["pima:body:901", "pima:body:902"]);
+});
+
+test("current seats on a body the tenant does not list are a named gap, never a silent empty roster", () => {
+  const source = rawFor("pima"), seat = source.offices.find(office => office.OfficeRecordBodyId === 138)!;
+  const rows = wiring(source, "AZ", "America/Phoenix");
+  const raw = { ...source, offices: [seat, { ...seat, OfficeRecordId: seat.OfficeRecordId + 1000, OfficeRecordBodyId: 987654 }] };
+  const report = legistarMembersPackage(raw, rows, NOW);
+  assert.deepEqual(report.unbound.map(gap => gap.key), ["pima:office-body:987654"]);
+  assert.equal(report.members, 1);
+});
+
+test("a person with two current records on one body is one member, spoken for by the most recent record", async t => {
+  const db = await factDb(); t.after(() => db.pg.close());
+  const source = rawFor("pima"), rows = wiring(source, "AZ", "America/Phoenix"), seat = source.offices.find(office => office.OfficeRecordBodyId === 138)!;
+  const earlier = { ...seat, OfficeRecordStartDate: "2019-01-01T00:00:00", OfficeRecordEndDate: "2099-01-01T00:00:00", OfficeRecordTitle: "District 2 - First Deputy" };
+  const later = { ...seat, OfficeRecordId: seat.OfficeRecordId + 5000, OfficeRecordStartDate: "2026-06-23T00:00:00", OfficeRecordEndDate: "2099-07-31T00:00:00", OfficeRecordTitle: "District 2 - Second Deputy" };
+  const vault = new MemoryEvidenceStore(), page = source.readings.find(officePage)!, offices = [earlier, later];
+  const reading = await saveLegistarReading(vault, "pima", { url: page.artifact.canonicalUrl, text: JSON.stringify(offices), body: offices, retrievedAt: page.artifact.retrievedAt });
+  const raw = { ...source, offices, readings: [...source.readings.filter(read => read !== page), reading] };
+  const members = [...legistarMemberRosters(raw, rows, NOW)].flatMap(roster => roster.members);
+  assert.deepEqual(members.map(member => [member.officeTitle, member.termStart]), [["District 2 - Second Deputy", "2026-06-23"]]);
+  const report = await publishLegistarMembers({ facts: db, vault, raw, rows, clocks: factClocks(null), now: NOW, purge: async () => ({ purged: true }) });
+  assert.equal(report.held, 0);
+});
+
+test("a seat with no title still lists its holder, and a record with no name is skipped rather than failing the tenant", async t => {
+  const db = await factDb(); t.after(() => db.pg.close());
+  const source = rawFor("pima"), rows = wiring(source, "AZ", "America/Phoenix"), seat = source.offices.find(office => office.OfficeRecordBodyId === 138)!;
+  const untitled = { ...seat, OfficeRecordTitle: null, OfficeRecordMemberType: null };
+  const nameless = { ...seat, OfficeRecordId: seat.OfficeRecordId + 7000, OfficeRecordPersonId: seat.OfficeRecordPersonId + 7000, OfficeRecordFullName: " " };
+  const vault = new MemoryEvidenceStore(), page = source.readings.find(officePage)!, offices = [untitled, nameless];
+  const reading = await saveLegistarReading(vault, "pima", { url: page.artifact.canonicalUrl, text: JSON.stringify(offices), body: offices, retrievedAt: page.artifact.retrievedAt });
+  const raw = { ...source, offices, readings: [...source.readings.filter(read => read !== page), reading] };
+  const report = await publishLegistarMembers({ facts: db, vault, raw, rows, clocks: factClocks(null), now: NOW, purge: async () => ({ purged: true }) });
+  assert.equal(report.members, 1);
+  const live = (await readFactRosters(db.query, rows.map(row => row.bodyId))).rosters.flatMap(roster => roster.members);
+  assert.deepEqual(live.map(member => member.name), [seat.OfficeRecordFullName.trim()]);
 });

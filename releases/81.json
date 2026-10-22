@@ -1,0 +1,22 @@
+{
+  "n": 81,
+  "branch": "release/81",
+  "river_sha": "ca24f6707c7e2c5543a956939eff58d053c1646d",
+  "tested_sha": "ca24f6707c7e2c5543a956939eff58d053c1646d",
+  "steps": [
+    "OR-01",
+    "NE-01",
+    "R3-LEGISTAR-MEMBERS"
+  ],
+  "lanes": [
+    "ds-01",
+    "pm-01"
+  ],
+  "integration_from": 287,
+  "integration_count": 289,
+  "pr": {
+    "number": 791,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/791"
+  },
+  "at": "2026-10-22T17:45:47Z"
+}

@@ -415,11 +415,11 @@ test("the staging host size accounts for its already-running parent", () => {
   }
 });
 
-test("a script's reservation follows its measured peak, and a never-measured script keeps its table peak", async () => {
+test("a job's reservation follows its measured peak, and a never-measured job keeps its table peak", async () => {
   const mib = 1024 * 1024;
   const crashed = 3.57e9;
   const host = workerMemoryHost({ processes: () => [] });
-  host.transact(state => { state.peaks = { "national-people-refresh.mts": [1.1e9, crashed, 1.2e9] }; }, false);
+  host.transact(state => { state.peaks = { "people-wikidata-people-*/national-people-refresh.mts": [1.1e9, crashed, 1.2e9] }; }, false);
   let free = crashed + 768 * mib;
   const slots = routineProcessSlots({ host, availableBytes: () => free });
   const people = "people-wikidata-people-ca/national-people-refresh.mts";
@@ -448,7 +448,7 @@ test("a running child's high-water memory is sampled, raises its live reservatio
   release();
   await yieldToEventLoop();
   let recorded: number[] = [];
-  host.transact(state => { recorded = state.peaks?.["peak-probe.mts"] ?? []; }, false);
+  host.transact(state => { recorded = state.peaks?.["probe/peak-probe.mts"] ?? []; }, false);
   assert.equal(recorded.length, 1);
   assert.ok(recorded[0]! >= 160 * mib);
   const next = await slots.acquire("probe/peak-probe.mts");

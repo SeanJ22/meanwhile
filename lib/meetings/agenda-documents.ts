@@ -140,6 +140,11 @@ export class AgendaDocumentStore {
     return null;
   }
 
+  /** A state's calendar program reads boards in turn; each board starts with only its own held documents. */
+  clear(): void {
+    this.byMeeting.clear();
+  }
+
   get documentCount(): number {
     let n = 0;
     for (const versions of this.byMeeting.values()) n += versions.length;

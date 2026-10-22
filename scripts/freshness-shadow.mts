@@ -19,7 +19,7 @@ import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } fr
 import { workerMemoryHost, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
-import { heldEventContract, legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
+import { HELD_EVENT_URL_PREFIXES, heldEventContract, legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
 import { legacyArtifactActivityRepositories, readLegacyActivityCaptures } from "../lib/control-plane/workers/activity.ts";
 import { persistVerifiedPublicationAnchors, readStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing-plan.ts";
@@ -2195,7 +2195,7 @@ async function runAutonomousWave() {
   const fleet = await makeAutonomousFleet();
 
   const legacyRepos = await legacyArtifactActivityRepositories(repos, artifact => heldEventContract(ROOT, artifact) !== null,
-    () => readLegacyActivityCaptures(PLANNING_STATE));
+    () => readLegacyActivityCaptures(PLANNING_STATE, undefined, HELD_EVENT_URL_PREFIXES));
   const legacyFleet = legacyRepos ? { ...fleet, repos: legacyRepos } : null;
   const held = legacyFleet && await legacyHeldWorkOwed(ROOT, legacyFleet) ? await planHeldWorkerFleet(ROOT, legacyFleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();

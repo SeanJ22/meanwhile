@@ -18,7 +18,7 @@ export function legistarMemberTasks(slugs: readonly string[]): RoutineSourceTask
       sourceId: "registry-reviewed-bindings", recordClass: "REGISTRY_RUNTIME_BINDING", scope: `legistar-members:${slug}`,
       acquisitionFailureDomain: `legistar:${slug}`, requestedUrl: `https://webapi.legistar.com/v1/${slug}/officerecords`,
       authorityMode: "REGISTERED_SOURCE_ROUTES", parserVersion: "registry-runtime-bindings/3",
-      command: [process.execPath, "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/legistar-members-refresh.mts", `--legistar-client=${slug}`], cadenceMs: 12 * 60 * 60_000, retryMs: 60 * 60_000,
+      command: ["scripts/legistar-members-refresh.mts", `--legistar-client=${slug}`], cadenceMs: 12 * 60 * 60_000, retryMs: 60 * 60_000,
       contract: { readerProjection: null, cadence: { defaultEveryMs: 12 * 60 * 60_000, description: "Twice-daily public members and terms" } } };
   });
 }

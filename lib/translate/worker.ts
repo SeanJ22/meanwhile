@@ -129,7 +129,7 @@ export async function translateText(input: {
       subject.meeting.documentHash !== hash)) throw new Error("Meeting translation lacks its held body, sitting and document revision.");
   if (!subject.subjectId.startsWith(`${subject.kind.toLowerCase()}:`) || !subject.label.trim() ||
       !evidence.text.includes(subject.label) || !evidence.text.trim() ||
-      evidence.contentHash !== `sha256-${translationHash(evidence.text)}` || !/^https:\/\//.test(evidence.canonicalUrl) ||
+      evidence.contentHash !== `sha256-${translationHash(evidence.text)}` || !(subject.kind === "COMMENT_RULES" ? /^https?:\/\//.test(evidence.canonicalUrl) : /^https:\/\//.test(evidence.canonicalUrl)) ||
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Text translation lacks its exact source-named subject.");
   // Read the same live translator playbook as measures; the task-specific tool
   // supplies the output shape. Existing Bank edits and model routing apply here.
@@ -138,6 +138,7 @@ export async function translateText(input: {
     ? "Describe only what this class of body is under the supplied creating law. Do not assert that a named body possesses those powers."
     : subject.kind === "BODY" ? "Describe only this named body's powers under its own charter or creating law. Do not import powers from its general class."
     : subject.kind === "OFFICE" ? "Describe this state's legally defined office. Do not import duties from a similarly named office in another state."
+    : subject.kind === "COMMENT_RULES" ? "Write a short plain-English summary of how a member of the public may take part in this one body's meetings: how to attend, how to sign up to speak, any time limit, and how to send written comments. Use only what the supplied page states, and state only rules for this body's meetings. Leave out grants, notices, elections, surveys and anything about other bodies. One sentence per rule; never invent a deadline, an address or a limit."
     : subject.kind === "AGENDA" ? "Describe what is on this held agenda, preserving dates, conditions and proposed status. The clerk's verbatim list remains alongside this text. Never describe a proposal as adopted."
     : "Describe only what these held minutes record. Preserve votes, outcomes, qualifications and uncertainty; never invent a vote or speaker.";
   if (input.preservedText && (input.preservedText.origin.kind !== "CURATED_MIGRATION" ||

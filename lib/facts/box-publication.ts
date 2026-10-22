@@ -10,10 +10,12 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import type { ProbeFetch } from "../doors/probe.ts";
 import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
+import { looksLikeNameCell } from "../hunt/roster-page.ts";
+import { isPlainSentence, OTHER_NOTICE, schedulePhrase } from "../hunt/page-rules.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
 import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, officeNamed, splitSubject } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, isGoverningName, otherOffice, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, isGoverningName, otherOffice, COMMENT_SUMMARY_LEAD, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
@@ -38,6 +40,8 @@ interface BoxPublicationReport {
   readonly byPlace: Readonly<Record<string, { published: number; refused: number; waiting: number }>>;
   /** Box seats taken down for never showing the seat, and those flagged for naming a ward another member holds. */
   readonly seats: { readonly pulled: number; readonly flagged: number };
+  /** Box facts taken down for being a label, a heading, a notice or a bare link rather than the thing itself. */
+  readonly labels: { readonly pulled: number; readonly moved: number; readonly cut: number };
 }
 
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
@@ -47,7 +51,7 @@ const kindOf = (slot: Routed): FieldKind => slot.class === "rosters" || slot.cla
   : slot.class === "schedules" || slot.class === "sittings" && slot.slot === "video_url" ? "meeting"
   : slot.class === "meeting routes" || slot.class === "sittings" ? "agenda" : slot.class === "comment rules" ? "comment_rule" : "contact";
 
-interface Target { readonly body: { id: string; name: string; state: string | null; parentId: string | null }; readonly holder: string | null; readonly entityId: string }
+export interface Target { readonly body: { id: string; name: string; state: string | null; parentId: string | null }; readonly holder: string | null; readonly entityId: string }
 
 const BODY_SQL = "SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND id = $1";
 const SITTING_SQL = "SELECT m.id AS meeting_id, m.parent_id AS body_id FROM entity m WHERE m.kind = 'meeting' AND m.id = $1";
@@ -89,6 +93,15 @@ async function targetOf(query: Query, subjectId: string): Promise<Target | null>
   return governing ? { body: governing, holder: null, entityId: governing.id } : null;
 }
 
+/** The board a subject stands for: found by its parent government, or made when its government has none (a committee is never answered with the council). */
+export async function boardFor(query: Query, subject: string): Promise<Target | null> {
+  const found = await targetOf(query, subject);
+  // Only a government, its governing board or its school board makes the board; a committee, an inventory or a sitting is found or not at all.
+  if (found || !["", "#governing", "#board"].includes(splitSubject(subject).tail)) return found;
+  const made = await ensureGoverningBody(query, subject);
+  return made ? { body: made, holder: null, entityId: made.id } : null;
+}
+
 const PACKET = "hunt:packet:";
 const placeOf = (row: BoxFinding) => row.origins.find(origin => origin.resultKey?.startsWith(PACKET))?.resultKey!.slice(PACKET.length) ?? row.subjectId;
 
@@ -97,13 +110,16 @@ const JOB_SUPERVISOR = "(?:maintenance|road|roads|highway|street|streets|bridge|
 const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff|${JOB_SUPERVISOR}|supervisors? of (?:maintenance|roads?|highways?|streets?|public works|operations|parks))\\b`, "i");
 const COUNCIL_SEAT = /\b((vice|deputy)[- ]?)?mayor\b|\bcouncil[- ]?(m[ae]n|member|woman|person|or|lor|president)s?\b|\balder(m[ae]n|woman|person)\b|\bselect(m[ae]n|woman|board)\b|\b(trustee|supervisor|freeholder|legislator|commissioner)s?\b/i;
 const BOARD_SEAT = /\b(vice[- ]?)?(chair(person|man|woman)?|president)\b|\bboard members?\b|\bmember of the board\b/i;
+const SEAT_NUMBER = /\b(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?\d+|at[- ]large)\b/i;
 const WARD = /\b(?:ward|district)\s*(?:no\.?\s*)?(\d+)\b/i;
 
 /** The seat a person's own words show on this body, or null: a staff title never seats anyone, and a council seats only by its own titles. */
 export function seatIn(words: string, bodyId: string): { readonly ward: string | null } | null {
   const council = bodyId.endsWith("#governing"), board = bodyId.endsWith("#board");
   if (STAFF_TITLE.test(words)) return null;
-  if (!COUNCIL_SEAT.test(words) && (council || !BOARD_SEAT.test(words)) && (council || board || !/\bmembers?\b/i.test(words))) return null;
+  // On a council or a board, the district, ward or seat a person holds is a seat on its own ("Annie Williams, District 1").
+  const numbered = (council || board) && SEAT_NUMBER.test(words);
+  if (!numbered && !COUNCIL_SEAT.test(words) && (council || !BOARD_SEAT.test(words)) && (council || board || !/\bmembers?\b/i.test(words))) return null;
   return { ward: council || board ? WARD.exec(words)?.[1] ?? null : null };
 }
 
@@ -141,6 +157,62 @@ async function reviewBoxSeats(query: Query, purge?: ReaderCachePurger): Promise<
   return { pulled, flagged };
 }
 
+const SCHEDULE_WORDS = /\b(?:mon|tues|wednes|thurs|fri|satur|sun)day|\bmonthly\b|\bweekly\b|\bbi-?weekly\b|\bquarterly\b|\bannual(?:ly)?\b/i;
+
+/** What a Box fact that is a label, a heading, a notice, a bare link or a paragraph should become: come down, move to the field it belongs to, or be cut to the part that states the thing. */
+export type Remedy = { readonly pull: string } | { readonly move: "comment:detail" } | { readonly value: string } | null;
+export function remedyFor(field: string, kind: string, value: string, quote: string, name: string | null): Remedy {
+  if (field.startsWith("member:")) return name !== null && !looksLikeNameCell(name.replace(/\s+[-–—]\s+.*$/, "")) ? { pull: "NOT_A_PERSON" } : null;
+  if (field === "agenda_url") return kind === "body" && normalizeText(quote) === normalizeText(value) ? { pull: "BARE_LINK" } : null;
+  if (field === "meeting_cadence") {
+    const phrase = schedulePhrase(value);
+    if (value.length <= 160 && SCHEDULE_WORDS.test(value)) return null;
+    return phrase !== null ? { value: phrase } : { pull: "NOT_A_SCHEDULE" };
+  }
+  // A comment period is yes or no; a sentence about how to comment is the rule itself, so it moves to the rule.
+  if (field === "comment:period") return /^(yes|no)$/i.test(value) ? null : isPlainSentence(value) && !OTHER_NOTICE.test(value) ? { move: "comment:detail" } : { pull: "NOT_YES_OR_NO" };
+  if (field === "comment:detail") return isPlainSentence(value) && !OTHER_NOTICE.test(value) ? null : { pull: "NOT_A_COMMENT_RULE" };
+  return null;
+}
+
+/** Box facts that are a label, a heading, a notice, a bare link or a paragraph get their remedy, and the walk's better reading of the same page takes their place; the pass reads only facts added since its last. */
+async function reviewBoxFacts(query: Query, purge?: ReaderCachePurger): Promise<{ readonly pulled: number; readonly moved: number; readonly cut: number }> {
+  const since = Number(await readPassCursor(query, "box-labels") ?? 0);
+  const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
+  const rows = await query(`SELECT f.id, f.entity_id, f.field, e.kind, coalesce(f.value_text, '') AS value_text, coalesce(f.quote, '') AS quote, f.value->>'name' AS name
+    FROM fact f JOIN entity e ON e.id = f.entity_id
+    WHERE f.id > $1 AND f.id <= $2 AND f.produced_by = 'box' AND f.status = 'live'
+      AND (f.field IN ('agenda_url', 'meeting_cadence', 'comment:period', 'comment:detail') OR f.field LIKE 'member:%')`, [since, newest]);
+  const tally = { pulled: 0, moved: 0, cut: 0 };
+  for (const row of rows) {
+    const remedy = remedyFor(String(row.field), String(row.kind), String(row.value_text), String(row.quote), row.name === null ? null : String(row.name));
+    if (!remedy) continue;
+    if ("move" in remedy) {
+      const [moved] = await query(`UPDATE fact SET field = $2 WHERE id = $1 AND status = 'live'
+        AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = fact.entity_id AND d.field = $2 AND d.status = 'live') RETURNING id`, [row.id, remedy.move]);
+      if (moved) {
+        // The page's own words on how to comment show the body takes it.
+        await query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, cost_usd)
+          SELECT entity_id, 'comment:period', '"YES"'::jsonb, 'YES', 'live', provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, 0 FROM fact WHERE id = $1
+          AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = $2 AND d.field = 'comment:period' AND d.status = 'live')`, [row.id, row.entity_id]);
+        tally.moved++;
+      } else {
+        await query("UPDATE fact SET status = 'pulled', held_reason = 'NOT_YES_OR_NO' WHERE id = $1 AND status = 'live'", [row.id]);
+        tally.pulled++;
+      }
+    } else if ("value" in remedy) {
+      await query("UPDATE fact SET value = to_jsonb($2::text), value_text = $2 WHERE id = $1 AND status = 'live'", [row.id, remedy.value]);
+      tally.cut++;
+    } else {
+      await query("UPDATE fact SET status = 'pulled', held_reason = $2 WHERE id = $1 AND status = 'live'", [row.id, remedy.pull]);
+      tally.pulled++;
+    }
+    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge);
+  }
+  await writePassCursor(query, "box-labels", String(newest));
+  return tally;
+}
+
 const named = (quote: string, name: string) => boundedIndexOf(normalizeText(quote).toLowerCase(), normalizeText(name).toLowerCase()) !== -1;
 
 /** The office a contact belongs to as the saved page names it: in the finding's own sentence, or in the page text just before the contact. */
@@ -170,7 +242,7 @@ export async function publishBoxFindings(input: {
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
   const now = new Date(input.now);
-  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.purge),
+  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.purge), labels: await reviewBoxFacts(facts.query, input.purge),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   // A packet's findings count toward its government; any other finding toward its own subject.
@@ -211,12 +283,7 @@ export async function publishBoxFindings(input: {
   const names = new Map<string, Promise<string>>();
   const subjectOf = (id: string) => names.get(id) ?? names.set(id, canonicalSubject(facts.query, id)).get(id)!;
   const targets = new Map<string, Promise<Target | null>>();
-  const targetFor = (subject: string) => targets.get(subject) ?? targets.set(subject, (async () => {
-    const found = await targetOf(facts.query, subject);
-    if (found || splitSubject(subject).tail.startsWith("#body:")) return found;
-    const made = await ensureGoverningBody(facts.query, subject);
-    return made ? { body: made, holder: null, entityId: made.id } : null;
-  })()).get(subject)!;
+  const targetFor = (subject: string) => targets.get(subject) ?? targets.set(subject, boardFor(facts.query, subject)).get(subject)!;
   const slotOfRow = (row: BoxFinding) => {
     const fact = findingFact(row);
     return fact && row.exactQuote && row.sourceUrl ? slotFor(fact.field, fact.value, fact.recordClass, row.exactQuote, row.sourceUrl, row.subjectId) : null;
@@ -235,7 +302,7 @@ export async function publishBoxFindings(input: {
     const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote, row.sourceUrl, row.subjectId);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
     // A link is a page to go read: the next walk of the government's own site reads it first and turns what it holds into facts.
-    if ("handoff" in slot) { await wait(row, slot.class, SITE_WALK_LEAD); report.handed++; continue; }
+    if ("handoff" in slot) { await wait(row, slot.class, slot.handoff === "site-walk" ? SITE_WALK_LEAD : COMMENT_SUMMARY_LEAD); report.handed++; continue; }
     if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
     const subject = await subjectOf(row.subjectId);
     const finding: Finding = { row, subject, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };
@@ -297,7 +364,9 @@ export async function publishBoxFindings(input: {
     const key = `${entry.entityId}|${entry.finding.origin.artifactIds[0] ?? entry.finding.sourceUrl}|${kindOf(entry.slot)}`;
     groups.set(key, [...groups.get(key) ?? [], entry]);
   }
-  for (const group of groups.values()) {
+  // People come first: a member's phone or email names a member the same pass has to have made, or it would land on the board's own office.
+  const peopleFirst = (group: typeof ready) => kindOf(group[0]!.slot) === "officeholder" ? 0 : 1;
+  for (const group of [...groups.values()].sort((a, b) => peopleFirst(a) - peopleFirst(b))) {
     const { body, entityId } = group[0]!, kind = kindOf(group[0]!.slot);
     const read = await captureFor(group[0]!.finding, kind);
     if ("error" in read) {

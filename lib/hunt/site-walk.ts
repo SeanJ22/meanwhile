@@ -7,6 +7,11 @@ import {meetingSourceLinks} from './meeting-source-links.ts';
 import {openBlanksOf} from '../coverage/open-blanks.ts';
 import {checklistItem} from '../coverage/checklist-map.ts';
 
+/** A host that carries the government's own name (prichardcitycouncil.org for Prichard): its own site, once its own pages link to it. */
+function namesGovernment(host:string,name:string):boolean{
+  const core=name.toLowerCase().replace(/^(?:city|town|village|borough|township|county)(?: and county)? of /,'').replace(/ (?:city|town|county|school district|schools?)$/,'').replace(/[^a-z0-9]/g,'');
+  return core.length>=5 && host.replace(/[^a-z0-9]/g,'').includes(core);
+}
 interface Frontier { url:string; checkedAt?:string; error?:string; bodyId?:string; bodyName?:string; via?:{page:string;artifactId:string} }
 export interface SiteWalkInput {
   scope:SiteScope;
@@ -89,7 +94,11 @@ export async function walkPlaceBlanks(input:SiteWalkInput) {
     const platforms=meetingSourceLinks(page.html,page.url).filter(candidate=>candidate.platform);
     for(const link of blankLinks(page,families)) {
       const host=new URL(link.url).hostname.toLowerCase().replace(/^www\./,'');
-      if(host!==own && !host.endsWith(`.${own}`))continue;
+      if(host!==own && !host.endsWith(`.${own}`)){
+        // The government's own pages link to a site of its own (a council's, a clerk's) under its name; that site is read as the government's.
+        if(!namesGovernment(host,scope.name))continue;
+        scope.hosts=[...new Set([...scope.hosts??[],host])];
+      }
       // Platform routes are findings for the platform lane; this walk reads
       // the government's ordinary pages, including its own calendars.
       if(platforms.some(platform=>link.url===platform.url || link.url.startsWith(platform.url+'/')))continue;

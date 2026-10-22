@@ -19,6 +19,7 @@ export type FindingSlot =
   | { readonly class: "ballot navigation"; readonly election: ElectionFieldKind }
   | { readonly class: "campaign sites" | "candidates"; readonly lead: "campaign-site" | "candidate-profile" }
   | { readonly class: "site walk"; readonly handoff: "site-walk" }
+  | { readonly class: "comment summary"; readonly handoff: "comment-summary" }
   | { readonly class: string; readonly waiting: string };
 
 /** The code that sorts a finding and publishes it; a change to any of it can change what a parked finding does. */
@@ -32,6 +33,9 @@ export const FINDING_SLOTS_VERSION = slotsVersionOf(SORTING_AND_PUBLISHING_CODE.
 
 /** The reason a link finding waits in the Box: a page the government linked is a page to go read, and the next walk of that government's own site reads it first. */
 export const SITE_WALK_LEAD = "SITE_WALK_TAKES_IT";
+
+/** The reason a long page about taking part waits in the Box: the comment-rules writer summarises it in plain English, each sentence quoted from the page and checked by a second model. */
+export const COMMENT_SUMMARY_LEAD = "COMMENT_SUMMARY_TAKES_IT";
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";
@@ -182,6 +186,7 @@ export function slotFor(field: string, value: unknown, recordClass: string | nul
     return id === null ? { class: "candidates", waiting: "NO_FACT_SLOT" } : CHECKLIST[id]?.(String(value).trim(), quote, subjectId) ?? { class: "candidates", waiting: checklistWait(id) };
   }
   if (key === "commentperiod") return /^(yes|no)$/i.test(String(value)) ? { class: "comment rules", slot: "comment:period" } : { class: "comment rules", slot: "comment:detail" };
+  if (key === "publiccomment.page") return URL_VALUE.test(String(value).trim()) ? { class: "comment summary", handoff: "comment-summary" } : { class: "comment rules", waiting: "PAGE_IS_NOT_AN_ADDRESS" };
   if (COMMENT[key]) return { class: "comment rules", slot: COMMENT[key] };
   if (key === "meeting.schedule" || key === "body.meetingschedule" || key === "meetingschedule") return { class: "schedules", slot: "meeting_cadence" };
   if (PERSON.test(head) || head === "superintendent" || head === "") {

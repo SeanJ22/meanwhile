@@ -50,6 +50,8 @@ export interface RosterExtraction {
   bytes: number;
 }
 
+import { revealProtectedEmails } from "../extract/visible-text.ts";
+
 /* ── Small HTML helpers, deliberately dependency-free ───────────────────── */
 
 const ENTITIES: Record<string, string> = {
@@ -76,7 +78,7 @@ export function decodeEntities(s: string): string {
 /** Cell text with `<br>` preserved as a line break — the layout carries meaning. */
 export function cellText(html: string): string {
   return decodeEntities(
-    html
+    revealProtectedEmails(html)
       /*
        * `<style>` and `<script>` bodies are not text; some page builders emit
        * a `<style>` block inside the content region.
@@ -105,13 +107,17 @@ const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
  * term parenthetical municipal pages glue on beneath the name.
  */
 const OFFICE_WORD =
-  /\b(?:secretary|treasurer|pending|appointment|commission|members?|social media|policy|public safety|council|councilmember|councilman|councilwoman|mayor|trustee|commissioner|selectman|selectwoman|chair|chairman|chairwoman|committee|board|township|borough|city|county|department|division|office|clerk|administrator|attorney|engineer|manager|coordinator|director|supervisor|meetings?|agendas?|minutes?|phone|email|address|term|ward|at[- ]large|vacant|vacancy)\b/i;
+  /\b(?:secretary|treasurer|pending|appointment|commission|members?|social media|policy|public safety|council|councilmember|councilman|councilwoman|councilors?|councillors?|councils|boards|committees|commissions|offices|alderman|alderwoman|alderperson|mayor|trustees?|commissioners?|officials?|staff|leadership|selectman|selectmen|selectwoman|chair|chairman|chairwoman|committee|board|township|borough|city|county|department|division|office|clerk|administrator|attorney|engineer|manager|coordinator|director|supervisor|meetings?|agendas?|minutes?|phone|email|address|term|ward|district|at[- ]large|vacant|vacancy)\b/i;
+
+/** Words a page puts in a heading, a notice, a menu or a place's name, never in a person's: a cell holding one is not a name. */
+const NOT_A_NAME =
+  /\b(?:announcements?|notices?|elections?|portal|calendar|events?|news|agenda|minutes|meetings?|departments?|services?|online|links?|ticket|tickets|permits?|forms?|applications?|apply|resources?|information|contact|directory|archives?|documents?|reports?|budget|ordinances?|resolutions?|hearings?|public|works|safety|municipal|complex|center|centre|building|courthouse|library|home|about|welcome|search|login|subscribe|facebook|twitter|instagram|youtube|webcam|police|utilities|airport|inspections?|licenses?|zoning|planning|recycling|trash|sewer|taxes|careers|employment|volunteer|history|visit|visiting|living|working|business|businesses)\b/i;
 
 export function looksLikeNameCell(text: string): boolean {
   const first = text.split("\n")[0]?.trim() ?? "";
   if (first.length < 5 || first.length > 60 || /^(?:contact|email|meet|about|biography of)\b/i.test(first)) return false;
-  if (OFFICE_WORD.test(first)) return false;
-  if (EMAIL.test(first) || PHONE.test(first)) return false;
+  if (OFFICE_WORD.test(first) || NOT_A_NAME.test(first)) return false;
+  if (EMAIL.test(first) || PHONE.test(first) || /\d/.test(first)) return false;
   const tokens = first.replace(/[,.]$/, "").split(/\s+/);
   if (tokens.length < 2 || tokens.length > 5) return false;
   let capitalised = 0;
@@ -182,6 +188,8 @@ function fromTables(html: string, attempts: Attempt[]): PageRosterMember[] {
     const headers=(rows.find(row=>/<th\b/i.test(row))?.match(/<t[dh][\s\S]*?<\/t[dh]>/gi)??[]).map(cell=>cellText(cell).toLowerCase().trim());
     const nameColumn=headers.findIndex(label=>/^(?:full |member |official )?name$/.test(label));
     const firstColumn=headers.indexOf('first name'),lastColumn=headers.indexOf('last name');
+    // A table of meetings (date, time, location, status) lists sittings and places, not people.
+    if(nameColumn<0 && !(firstColumn>=0 && lastColumn>=0) && headers.some(label=>/\b(?:date|time|location|status|agenda|minutes|video)\b/.test(label)))continue;
     for (const row of rows) {
       const cells = row.match(/<t[dh][\s\S]*?<\/t[dh]>/gi) ?? [];
       if (cells.length < 2) continue;
@@ -289,6 +297,45 @@ function fromBlocks(html: string, attempts: Attempt[]): PageRosterMember[] {
   return out;
 }
 
+/** The line under a member's name that makes them a member: a seat title, or the district, ward or seat they hold. */
+const SEAT_LINE =
+  /\b(?:(?:vice[- ]?|deputy )?mayor|council[- ]?(?:member|man|woman|person|or|lor|president)s?|councilors?|councillors?|alder(?:man|woman|person)|select(?:man|woman|person)|commissioner|trustee|supervisor|board (?:member|president|chair)|chair(?:man|woman|person)?|vice[- ]?chair|president|vice[- ]?president|member|(?:district|ward|seat|position|place|zone)\s*\d+|at[- ]large)\b/i;
+
+/**
+ * A card per member: the person's name on the first line, the seat or title they hold on the next, and whatever
+ * contact the card shows (a plain address counts as much as a `mailto:`). Cards are the smallest block holding one
+ * name-shaped line, so a wrapper around several members is not taken for one.
+ */
+function fromTitledBlocks(html: string): PageRosterMember[] {
+  const out: PageRosterMember[] = [];
+  // Every opening tag is tried, so a card inside a wrapper is found as well as the wrapper.
+  const open = /<(div|li|p|article|td|section)\b[^>]*>/gi;
+  for (let tag = open.exec(html); tag !== null; tag = open.exec(html)) {
+    const close = html.indexOf(`</${tag[1]!.toLowerCase()}`, open.lastIndex);
+    const inner = close < 0 || close - open.lastIndex > 1500 ? null : html.slice(open.lastIndex, close);
+    if (inner === null) continue;
+    const text = cellText(inner);
+    const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+    if (lines.length < 2 || lines.length > 8) continue;
+    const { name, officeTitle: glued } = splitNameCell(lines[0]);
+    if (!looksLikeNameCell(name) || lines.slice(1).some((l) => looksLikeNameCell(l))) continue;
+    const seatLine = lines.slice(1).find((l) => l.length <= 70 && !EMAIL.test(l) && !PHONE.test(l) && SEAT_LINE.test(l)) ?? glued;
+    if (!seatLine || out.some((m) => m.name === name)) continue;
+    const seat = /\b((?:district|ward|seat|position|place|zone)\s*\d+|at[- ]large)\b/i.exec(seatLine)?.[1] ?? null;
+    out.push({
+      name,
+      sourceQuote: text,
+      officeTitle: seatLine,
+      seat: seat === null ? null : /^at[- ]large$/i.test(seat) ? "At-Large" : seat.replace(/\s+/g, " ").replace(/^(\w)/, (c) => c.toUpperCase()),
+      termNote: null,
+      phone: PHONE.exec(text)?.[0]?.replace(/\s+/g, " ").trim() ?? null,
+      email: EMAIL.exec(text)?.[0] ?? null,
+      emailHrefMismatch: null,
+    });
+  }
+  return out;
+}
+
 /* ── Strategy 3: a list of links, one per member ────────────────────────── */
 
 /**
@@ -357,7 +404,9 @@ export function extractRoster(url: string, html: string): RosterExtraction {
     return { url, members: table, strategy: "table-rows-with-contact", attempts, failure: null, bytes: html.length };
   }
 
-  const blocks = fromBlocks(body, attempts);
+  const titled = fromTitledBlocks(body);
+  attempts.push({ strategy: "titled-member-cards", rows: titled.length, note: null });
+  const blocks = [...fromBlocks(body, attempts), ...titled].filter((member, at, all) => all.findIndex((other) => other.name === member.name) === at);
   if (blocks.length >= 1) {
     return { url, members: blocks, strategy: "repeated-contact-blocks", attempts, failure: null, bytes: html.length };
   }

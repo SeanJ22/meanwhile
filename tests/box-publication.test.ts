@@ -11,7 +11,7 @@ import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { projectCampaignSiteChains, type CampaignSiteSubject } from "../lib/control-plane/promotion/campaign-site-chain.ts";
-import { officeNameOn, publishBoxFindings, seatIn } from "../lib/facts/box-publication.ts";
+import { officeNameOn, publishBoxFindings, remedyFor, seatIn } from "../lib/facts/box-publication.ts";
 import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { ensureEntity, ensureFactEntities, ensureGoverningBody } from "../lib/facts/entities.ts";
@@ -169,7 +169,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
 
   const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 },
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 }, labels: { pulled: 0, moved: 0, cut: 0 },
     publishedByRoute: { "office contacts": 1, rosters: 3, bodies: 1 },
     waitingByClass: { rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
   assert.deepEqual(report.byPlace[TCCC], { published: 4, refused: 0, waiting: 1 });
@@ -441,7 +441,7 @@ test("an office is named from the saved page when the finding's own sentence is 
 test("a finding about a city's #governing council makes one council and is built; a finding about a #body: committee does not land on it", async () => {
   const { facts, repos, vault, hold } = await setup();
   await ensureFactEntities(facts, ROOT, ["al"]);
-  const HUNTSVILLE = "al:city:city-of-huntsville", PLACE = "ocd-division/country:us/state:al/place:huntsville", URL = "https://www.huntsvilleal.gov/contact";
+  const HUNTSVILLE = "al:city:city-of-huntsville", URL = "https://www.huntsvilleal.gov/contact";
   const page = await hold(URL, "<html><body><h1>Huntsville, AL</h1><p>City offices: (256) 427-5000.</p></body></html>", "2026-09-01T15:00:00.000Z");
   const drop = (subjectId: string, index: number) => indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-huntsville",
     missionPart: null, finding: { subjectId, field: "officeholder.phone", value: "(256) 427-5000", exactQuote: "City offices: (256) 427-5000", sourceUrl: URL, artifactIds: [page], subjectHint: null, index } }, NOW);
@@ -576,4 +576,104 @@ test("a supervisor of a kind of work is staff and never seated; a supervisor who
   assert.deepEqual(seatIn("Town Supervisor", "az:city:town-of-example#governing"), { ward: null });
   assert.deepEqual(seatIn("Supervisor Rex Scott\nChair, Board of Supervisors", governing), { ward: null });
   assert.notEqual(seatIn("Supervisor Dana Cruz, District 4", governing), null);
+});
+
+test("a label, a notice or a bare link the Box published comes down; a real schedule, comment rule and member stay", async () => {
+  const { facts, repos, vault } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  const body = async (id: string, government: string) => { await ensureEntity(facts.query, { id, kind: "body", name: "City Council", state: "AL", parentId: government }); return id; };
+  const BREWTON = await body("ocd-division/country:us/state:al/place:brewton#governing", "al:city:city-of-brewton");
+  const CHATOM = await body("ocd-division/country:us/state:al/place:chatom#governing", "al:city:town-of-chatom");
+  const PRICHARD = await body("ocd-division/country:us/state:al/place:prichard#governing", "al:city:city-of-prichard");
+  const SAFFORD = await body("ocd-division/country:us/state:al/place:safford#governing", "al:city:city-of-safford");
+  const [copy] = await facts.query(`INSERT INTO source_copy (url, final_url, fetched_at, sha256, blob_key) VALUES ('http://x', 'http://x', now(), $1, 'k') RETURNING id`, ["0".repeat(64)]);
+  const put = (entity: string, field: string, valueText: string, quote = valueText, value: unknown = valueText) => facts.query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, checked_at, live_at, produced_by)
+    VALUES ($1, $2, $3::jsonb, $4, 'live', 'OFFICIAL', $5, $6, now(), now(), 'box')`, [entity, field, JSON.stringify(value), valueText, copy!.id, quote]);
+  // As they stand on the live site today.
+  await put(BREWTON, "meeting_cadence", "The City Council is the financial arm of the City, with the Mayor as CEO. Council members have no authority as individuals; their authority is asserted during the Regular Meetings held each 2nd and 4th Monday of each month at 6:00 p.m. in the Council Chambers.");
+  await put(BREWTON, "agenda_url", "http://www.cityofbrewton.org/Living-in-Brewton/Calendar");
+  await put(CHATOM, "comment:detail", "There are three primary purposes for this notice.  First, people who may be affected by activities in a 100 Year Floodplain and those who have an interest in the floodplain are given a chance to comment.");
+  await put(CHATOM, "comment:period", "There are three primary purposes for this notice.  First, people who may be affected by activities in a 100 Year Floodplain");
+  await put(PRICHARD, "agenda_url", "http://thecityofprichard.org/request-a-business-meeting-with-the-mayor/");
+  await put(PRICHARD, "member:ocd-person/junk", "AJ Cooper Municipal Complex", "AJ Cooper Municipal Complex\nCouncilor District 1", { name: "AJ Cooper Municipal Complex" });
+  await put(SAFFORD, "comment:period", "Each speaker is given three minutes to speak.");
+  // What should stay.
+  await put(PRICHARD, "meeting_cadence", "first and third Tuesdays at 6 p.m.");
+  await put(PRICHARD, "comment:detail", "Residents may address the Council during public comment at each regular meeting and are limited to three minutes.");
+  await put(PRICHARD, "comment:period", "YES");
+  await put(PRICHARD, "member:ocd-person/annie", "Annie Williams", "Annie Williams\nDistrict 1", { name: "Annie Williams" });
+  const fetch: ProbeFetch = async () => { throw new Error("nothing to read"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  assert.deepEqual(report.labels, { pulled: 5, moved: 1, cut: 1 }, JSON.stringify(report));
+  const state = async (entity: string) => (await facts.query("SELECT field, status, held_reason FROM fact WHERE entity_id = $1 ORDER BY field", [entity])).map(row => `${row.field}=${row.status}${row.held_reason ? `:${row.held_reason}` : ""}`);
+  assert.deepEqual(await state(BREWTON), ["agenda_url=pulled:BARE_LINK", "meeting_cadence=live"]);
+  assert.deepEqual(await facts.query("SELECT value_text FROM fact WHERE entity_id = $1 AND field = 'meeting_cadence'", [BREWTON]), [{ value_text: "each 2nd and 4th Monday of each month at 6:00 p.m." }], "a paragraph is cut to the schedule it states");
+  assert.deepEqual(await facts.query("SELECT field, value_text FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [SAFFORD]),
+    [{ field: "comment:detail", value_text: "Each speaker is given three minutes to speak." }, { field: "comment:period", value_text: "YES" }], "a rule filed as the period moves to the rule, and the period reads yes");
+  assert.deepEqual(await state(CHATOM), ["comment:detail=pulled:NOT_A_COMMENT_RULE", "comment:period=pulled:NOT_YES_OR_NO"]);
+  assert.deepEqual(await state(PRICHARD), ["agenda_url=pulled:BARE_LINK", "comment:detail=live", "comment:period=live", "meeting_cadence=live", "member:ocd-person/annie=live", "member:ocd-person/junk=pulled:NOT_A_PERSON"]);
+  assert.equal((await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 })).labels.pulled, 0, "a fact is read once");
+});
+
+test("a school district the registration never paired with a government gets its board on its place, named by the NCES id the hunter used", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  // Pelham City (NCES 0100194) is a school district place in the registration with no government attached.
+  const PLACE = "ocd-division/country:us/state:al/school_district:pelham_city_school_district", URL = "https://www.pelhamcityschools.org/board";
+  assert.deepEqual(await facts.query("SELECT 1 FROM entity WHERE kind = 'government' AND parent_id = $1", [PLACE]), []);
+  const page = await hold(URL, "<html><body><h1>Pelham City Schools, Alabama</h1><p>Board office: (205) 620-6400.</p></body></html>", "2026-09-01T15:00:00.000Z");
+  await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-pelham", missionPart: null, finding: { subjectId: "government:US-AL:nces:0100194#board",
+    field: "officeholder.phone", value: "(205) 620-6400", exactQuote: "Board office: (205) 620-6400", sourceUrl: URL, artifactIds: [page], subjectHint: null, index: 0 } }, NOW);
+  const fetch: ProbeFetch = async () => { throw new Error("held"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  assert.equal(report.published, 1, JSON.stringify(report));
+  assert.deepEqual(await facts.query("SELECT e.id, e.parent_id, f.field, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.kind = 'body' AND f.status = 'live'"),
+    [{ id: `${PLACE}#board`, parent_id: PLACE, field: "office_phone", value_text: "(205) 620-6400" }]);
+});
+
+// Values as they stand live in Arizona, Alaska and Alabama today.
+test("what is live today: labels, fragments, bare links and junk names come down or are cut; real schedules, rules and members stay", () => {
+  const stays = (field: string, value: string, quote = value, kind = "body") => assert.equal(remedyFor(field, kind, value, quote, null), null, `${field}: ${value}`);
+  const goes = (field: string, value: string, reason: string, quote = value) => assert.deepEqual(remedyFor(field, "body", value, quote, null), { pull: reason }, `${field}: ${value}`);
+  for (const value of ["Request to speak at a City Council meeting - deadline is 10 days before the Monday meeting", "Request to Speak form before the beginning of the board meeting",
+    "Time is allotted during a Call to the Public for members of the public to address the town council regarding any issue within the jurisdiction of the Town Council",
+    "NOTE: WORKSHOP MEETINGS ARE FOR COUNCIL DISCUSSIONS AND DELIBERATIONS AND DO NOT OFFER OPPORTUNITIES FOR PUBLIC COMMENT AND/OR INTERACTION."]) stays("comment:detail", value);
+  for (const value of ["Accreditation Public Comment Portal", "Call to the Public", "agenda and non-agenda items", "beginning of each meeting", "commentary only", "open call to the public", "brought to any public meeting",
+    "City of Mobile Community Development Block Grant - Disaster Recovery Local Recovery Plan Public Comment Period pdf",
+    "There are three primary purposes for this notice.  First, people who may be affected by activities in a 100 Year Floodplain are given a chance to comment."]) goes("comment:detail", value, "NOT_A_COMMENT_RULE");
+  for (const value of ["YES", "NO"]) stays("comment:period", value);
+  for (const value of ["Each speaker is given three minutes to speak.", "Comments will be limited to three minutes.", "Visitors are welcome to speak at board meetings during the Call to the Public."])
+    assert.deepEqual(remedyFor("comment:period", "body", value, value, null), { move: "comment:detail" }, value);
+  for (const value of ["4. Call to the Public", "Accreditation Public Comment Portal"]) goes("comment:period", value, "NOT_YES_OR_NO");
+  for (const value of ["second Tuesday at 6:00 p.m.", "2nd & 4th Mondays, 6:00 p.m.", "first Wednesday of every month at 5:30 pm", "TOWN COUNCIL MEETS EVERY SECOND TUESDAY OF THE MONTH AT 7:00PM",
+    "Meets 1st and 3rd Monday of every month at 6 p.m.", "last Tuesday of each month at 5:30 PM"]) stays("meeting_cadence", value, "quote");
+  goes("meeting_cadence", "6:00 p.m.", "NOT_A_SCHEDULE");
+  assert.deepEqual(remedyFor("meeting_cadence", "body", "The City Council meets on the 2nd and 4th Tuesday of each month. Pre-Council begins at 5:00 pm and Council at 5:30 pm in the conference room of City Hall, 100 Main Street, for all regular sessions.", "q", null),
+    { value: "2nd and 4th Tuesday of each month" });
+  goes("meeting_cadence", "The objectives of the Planning Commission are to assist the Mayor and Town Council in the preparation, maintenance and implementation of plans, regulations and ordinances for the town and its growth over many years.", "NOT_A_SCHEDULE");
+  for (const url of ["https://amc.matsuk12.us/calendar.html", "http://www.cityofbrewton.org/Living-in-Brewton/Calendar", "https://rental.indianspringsvillage.org/events/"]) goes("agenda_url", url, "BARE_LINK");
+  assert.equal(remedyFor("agenda_url", "meeting", "https://example.gov/agenda.pdf", "https://example.gov/agenda.pdf", null), null, "a sitting's own agenda document is that meeting's record");
+  const member = (name: string) => remedyFor("member:ocd-person/x", "body", name, name, name);
+  for (const name of ["Priscilla Alderete - President", "Anicleto (Nick) Maldonado", "DEANNA M. DAY, M.Ed.", "Mr. Mario Ramos, Sr", "Vaché Brooks", "Frank M. Nalty JR.", "Ms. Cynthia Butterworth"]) assert.equal(member(name), null, name);
+  assert.deepEqual(member("Election Announcement"), { pull: "NOT_A_PERSON" });
+});
+
+test("a name a page gives its own governing board, with the place in front, is that board and not a second body", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  const CHATOM = "al:city:town-of-chatom", PRICHARD = "al:city:city-of-prichard";
+  const names = [[CHATOM, "Chatom Town Council", "http://www.chatom.org/dept/", "Town of Chatom, Alabama"], [PRICHARD, "Prichard City Council", "http://thecityofprichard.org/government/", "City of Prichard, Alabama"],
+    [PRICHARD, "Finance Committee", "http://thecityofprichard.org/finance/", "City of Prichard, Alabama"]] as const;
+  let index = 0;
+  for (const [government, name, url, place] of names) {
+    const page = await hold(url, `<html><body><h1>${place}</h1><h2>${name}</h2></body></html>`, "2026-09-01T15:00:00.000Z");
+    await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: `at-${index}`, missionPart: null, finding: { subjectId: `${government}#body:${name.toLowerCase().replace(/\W+/g, "-")}`,
+      field: "GOV-02", value: name, exactQuote: name, sourceUrl: url, artifactIds: [page], subjectHint: null, index: index++ } }, NOW);
+  }
+  const fetch: ProbeFetch = async () => { throw new Error("held"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  assert.equal(report.published, 3, JSON.stringify(report));
+  assert.deepEqual(await facts.query("SELECT e.id, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.kind = 'body' AND f.field = 'name' AND f.status = 'live' ORDER BY e.id"), [
+    { id: `${CHATOM}#governing`, value_text: "Chatom Town Council" }, { id: `${PRICHARD}#body:finance-committee`, value_text: "Finance Committee" },
+    { id: `${PRICHARD}#governing`, value_text: "Prichard City Council" }].sort((a, b) => a.id.localeCompare(b.id)));
 });

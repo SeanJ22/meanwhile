@@ -34,6 +34,8 @@ export interface Claim {
   /** The value exactly as written on the page. */
   readonly valueText: string;
   readonly quote: string;
+  /** A plain-English rewrite of the page: each sentence with the exact passage of the page it was written from. The value is those sentences, and every passage is on the page. */
+  readonly derived?: readonly { readonly text: string; readonly quote: string }[];
   readonly copy: SavedCopy;
   readonly second?: { readonly copy: SavedCopy; readonly quote: string } | null;
 }
@@ -112,8 +114,16 @@ function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
 }
 
 /** The value is on a saved page about this entity, captured inside its freshness window, and nothing more. */
+function derivedHolds(copy: SavedCopy, derived: NonNullable<Claim["derived"]>, valueText: string): "ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE" | number {
+  if (copy.isArchive) return "ARCHIVE_NEVER_PROVES_PRESENT";
+  if (!derived.length || derived.map(part => part.text).join(" ") !== valueText) return "VALUE_NOT_IN_QUOTE";
+  const page = normalizeText(copy.text);
+  const starts = derived.map(part => normalizeText(part.quote)).map(quote => quote ? page.indexOf(quote) : -1);
+  return starts.includes(-1) ? "QUOTE_NOT_ON_SAVED_COPY" : starts[0]!;
+}
+
 export function checkFact(c: Claim, now: Date, windowHours: (k: FieldKind) => number): CheckResult {
-  const held = quoteHolds(c.copy, c.quote, c.valueText);
+  const held = c.derived ? derivedHolds(c.copy, c.derived, c.valueText) : quoteHolds(c.copy, c.quote, c.valueText);
   if (typeof held === "string") return { ok: false, reason: held };
   if (!aboutEntity(c.entity, c.copy)) return { ok: false, reason: "PAGE_NOT_ABOUT_ENTITY" };
   if ((now.getTime() - c.copy.fetchedAt.getTime()) / 3_600_000 > windowHours(c.fieldKind)) return { ok: false, reason: "COPY_OUTSIDE_FRESHNESS_WINDOW" };

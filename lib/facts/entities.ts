@@ -234,7 +234,11 @@ async function registeredGovernment(query: Query, id: string): Promise<string> {
   if (school) {
     const [found] = await query(`SELECT g.id FROM entity_external_id x JOIN entity g ON g.parent_id = x.entity_id AND g.kind = 'government'
       WHERE x.scheme = ANY($1::text[]) AND x.value = $2 AND g.state = $3 ORDER BY g.id LIKE '%:school:%' DESC, g.id LIMIT 1`, [SCHOOL_DISTRICT_LAYERS, school[2], school[1]]);
-    return found ? String(found.id) : id;
+    if (found) return String(found.id);
+    // A school district the registration never paired with a government is still a place: the place stands for its government, as it does for any board hung straight on a place.
+    const [place] = await query(`SELECT x.entity_id AS id FROM entity_external_id x JOIN entity p ON p.id = x.entity_id AND p.kind = 'place'
+      WHERE x.scheme = ANY($1::text[]) AND x.value = $2 AND p.state = $3 LIMIT 1`, [SCHOOL_DISTRICT_LAYERS, school[2], school[1]]);
+    return place ? String(place.id) : id;
   }
   const census = /^government:US-([A-Z]{2}):cog:(\d+)$/.exec(id);
   if (census) {
@@ -254,7 +258,8 @@ export async function canonicalSubject(query: Query, subjectId: string): Promise
 /** A city's, county's, special district's or school district's governing board when the fact store holds none: a board named `<government id>#governing` (`#board` for schools) on the government, and on its place, where readers look for it. */
 export async function ensureGoverningBody(query: Query, subjectId: string): Promise<BodyRef | null> {
   const { root } = splitSubject(subjectId);
-  const kind = /^[a-z]{2}:(city|county|special|school|depschool):/.exec(root)?.[1];
+  const kind = /^[a-z]{2}:(city|county|special|school|depschool):/.exec(root)?.[1]
+    ?? (/^ocd-division\/.*\/school_district:[^/]+$/.test(root) ? "school" : /^ocd-division\/.*\/county:[^/]+$/.test(root) ? "county" : /^ocd-division\/.*\/place:[^/]+$/.test(root) ? "city" : undefined);
   const government = kind ? await governmentAt(query, [root]) : null;
   if (!kind || !government) return null;
   const school = kind === "school" || kind === "depschool";
@@ -277,10 +282,20 @@ async function bodyUnder(query: Query, government: GovernmentRef, find: { readon
   return { id, name, state: government.state, parentId: government.id };
 }
 
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/** Whether a body name is a government's own governing board under its place's name: "Chatom Town Council", "Prichard City Council", "Huntsville City Schools Board of Education". */
+function namesOwnBoard(name: string, governmentName: string): boolean {
+  const place = governmentName.replace(/^(?:city|town|village|borough|county|township|municipality)(?: and county)? of /i, "").replace(/\s+(?:city|town|county|school district|schools?|independent school district|unified school district)$/i, "").trim();
+  return place.length >= 3 && new RegExp(`^(?:the )?${escapeRegExp(place)}(?: (?:city|town|village|borough|county|township|municipal|school|schools))? (?:council|commission|board(?: of (?:education|trustees|commissioners|supervisors|directors))?|governing board)$`, "i").test(name.trim());
+}
+
 /** The body a name on a government's page stands for: its governing board, a body of that name it already holds, or a new body named `<government id>#body:<slug>`. */
 export async function bodyNamed(query: Query, subjectId: string, governing: BodyRef | null, name: string, governingName: boolean): Promise<BodyRef | null> {
   if (governingName && governing) return governing;
   const government = await governmentAt(query, [governing?.parentId ?? null, governing?.id ?? null, subjectId]);
+  // "Chatom Town Council" on Chatom's own page is its governing board under the name the page gives it.
+  if (government && !governingName && namesOwnBoard(name, government.name)) return governing ?? await ensureGoverningBody(query, government.id);
   return government ? bodyUnder(query, government, { sql: "lower(name) = lower($3)", param: name }, subBodyId(government.id, name), name) : null;
 }
 

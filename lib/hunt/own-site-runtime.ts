@@ -18,6 +18,7 @@ import {heldCaptureReader} from '../civic-data/worker-publication-context.ts';
 import {readPlaceArtifacts} from '../control-plane/repository/pg-store.ts';
 import {join} from 'node:path';
 import {readerQuery} from '../civic-data/promoted-reader-query.ts';
+import {readStateReference} from '../control-plane/expansion/state-references.ts';
 import type {ControlPlaneRepositories,ArtifactRecord} from '../control-plane/repository/types.ts';
 import type {Query} from '../facts/publish.ts';
 import type {RunWork,WorkOutcome} from '../control-plane/scheduler/dispatch.ts';
@@ -81,7 +82,12 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
      scope.website=site;
    }
    handed=await handedLinks({boxFindings:input.repos.boxFindings,governmentIds:[...new Set([reference.jurisdictionId,reference.governmentId,governmentId].filter((id):id is string=>!!id))],website:scope.website,now:input.now(),limit:HANDED_LINKS_PER_WALK});
-   const meetingPage=sourceMeetings({repos:input.repos,governmentId,website:scope.website,workItemId:job.workItemId,currentArtifacts:()=>reader.artifacts});
+   // The county tells which clock the body meets by where a state has more than one; the Census of Governments file records it.
+   const countyFips=await (async()=>{try{
+     const [pid]=await query("SELECT value FROM entity_external_id WHERE scheme='census-pid6' AND entity_id=$1 LIMIT 1",[governmentId]);
+     return pid?(readStateReference(input.root??process.cwd(),reference.state,{facts:true}).facts[String(pid.value)]?.countyFips??null):null;
+   }catch{return null;}})();
+   const meetingPage=sourceMeetings({repos:input.repos,governmentId,website:scope.website,workItemId:job.workItemId,currentArtifacts:()=>reader.artifacts,countyFips});
    const report=await walkPlaceBlanks({scope,repos:input.repos,now:input.now,canRead,plan,pageRead:meetingPage,
     // Canonical national holdings, the current place and native reader facts
     // precede local requests. They are independent of the original job or ZIP.

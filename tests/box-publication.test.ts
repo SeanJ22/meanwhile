@@ -434,3 +434,30 @@ test("an office is named from the saved page when the finding's own sentence is 
     [{ id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "name", value_text: "Greenlee County Recorder" },
       { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "office_phone", value_text: "(928) 865-2632" }]);
 });
+
+test("a finding about a city's #governing council makes one council and is built; a finding about a #body: committee does not land on it", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  const HUNTSVILLE = "al:city:city-of-huntsville", PLACE = "ocd-division/country:us/state:al/place:huntsville", URL = "https://www.huntsvilleal.gov/contact";
+  const page = await hold(URL, "<html><body><h1>Huntsville, AL</h1><p>City offices: (256) 427-5000.</p></body></html>", "2026-09-01T15:00:00.000Z");
+  const drop = (subjectId: string, index: number) => indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-huntsville",
+    missionPart: null, finding: { subjectId, field: "officeholder.phone", value: "(256) 427-5000", exactQuote: "City offices: (256) 427-5000", sourceUrl: URL, artifactIds: [page], subjectHint: null, index } }, NOW);
+  const fetch: ProbeFetch = async () => { throw new Error("the cited page is held inside its clock"); };
+  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
+  const states = async () => (await repos.boxFindings.list()).map(row => row.value.state);
+  const councils = () => facts.query("SELECT id FROM entity WHERE kind = 'body' AND parent_id = $1", [HUNTSVILLE]);
+
+  await drop(`${HUNTSVILLE}#body:planning-commission`, 0);
+  const committee = await publishBoxFindings(input);
+  assert.equal(committee.published, 0, JSON.stringify(committee));
+  assert.deepEqual(await states(), ["waiting"], "a committee's finding is not built on the council");
+  assert.deepEqual(await facts.query("SELECT 1 FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1 AND f.status = 'live'", [HUNTSVILLE]), [], "no fact lands on the council");
+
+  await drop(`${HUNTSVILLE}#governing`, 1);
+  const governing = await publishBoxFindings(input);
+  assert.equal(governing.published, 1, JSON.stringify(governing));
+  assert.deepEqual(await councils(), [{ id: `${PLACE}#governing` }], "one council, filed under the city's place");
+  assert.deepEqual((await states()).sort(), ["built", "waiting"]);
+  assert.deepEqual(await facts.query("SELECT e.id, f.field, f.value FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1 AND f.status = 'live'", [HUNTSVILLE]),
+    [{ id: `${PLACE}#governing`, field: "office_phone", value: "(256) 427-5000" }]);
+});

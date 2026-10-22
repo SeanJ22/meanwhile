@@ -3701,5 +3701,75 @@
     "tested_sha": "33139a56cb2a512d670634457da91e011f66d884",
     "gates": "pass",
     "at": "2026-10-22T05:44:14Z"
+  },
+  {
+    "lane": "pm-01",
+    "steps": [
+      "R3-LEGISTAR-MEMBERS",
+      "CK-01",
+      "SRC-MN",
+      "PM-01"
+    ],
+    "ready_sha": "b949985b805f322cb7d189ea7f17618327f1b738",
+    "merge_sha": "58a2e4e7e73efbab58328a43bbb18ec25da83125",
+    "river_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "tested_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "gates": "pass",
+    "at": "2026-10-22T07:46:39Z"
+  },
+  {
+    "lane": "cal-01",
+    "steps": [
+      "CAL-01",
+      "DB-29",
+      "RH-01"
+    ],
+    "ready_sha": "ad877ee195783299f3b481949c970206950b17ab",
+    "merge_sha": "b4619ca578c4a56293f069eee7775af9ba726c6a",
+    "river_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "tested_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "gates": "pass",
+    "at": "2026-10-22T07:46:39Z"
+  },
+  {
+    "lane": "ds-01",
+    "steps": [
+      "DS-01"
+    ],
+    "ready_sha": "148150dfe67bdc7fed9ca0cd0bbb6eff50632403",
+    "merge_sha": "3f1e9823efedec470696c9aed43dae64efd82b5f",
+    "river_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "tested_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "gates": "pass",
+    "at": "2026-10-22T07:46:39Z"
+  },
+  {
+    "lane": "ex-02",
+    "steps": [
+      "EX-02"
+    ],
+    "ready_sha": "06761fca1bdd38aea07ebcee9fb0d69e48517d05",
+    "merge_sha": "6cdfe33ae7afe7912c2e617996ff9056b68a9fc6",
+    "river_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "tested_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "gates": "pass",
+    "at": "2026-10-22T07:46:39Z"
+  },
+  {
+    "lane": "pg-01",
+    "steps": [
+      "PG-01",
+      "MTG-01",
+      "DOC-02",
+      "GOV-03",
+      "FIN-01",
+      "ELE-01"
+    ],
+    "ready_sha": "77afd872a9e2d9d8141ed8660a9baba949cfe825",
+    "merge_sha": "ccd17edd244a365af88064aad59843ebb811c361",
+    "river_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "tested_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
+    "gates": "pass",
+    "at": "2026-10-22T07:46:39Z"
   }
 ]

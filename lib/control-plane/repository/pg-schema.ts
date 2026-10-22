@@ -6,6 +6,7 @@ import { CONTROL_READS_BACKFILL_DDL } from "./control-reads-backfill.ts";
 import { ADMIN_SECTION_TABLES, ADMIN_SECTIONS_DDL, ADMIN_SECTION_INDEXES, ADMIN_SCOPED_SAVE_DDL } from "./admin-config.ts";
 import { MODEL_CHARGES_DDL } from "./model-charges.ts";
 import { DISPATCH_STATE_DDL, DISPATCH_ARCHIVE_TABLES } from "./dispatch-state.ts";
+import { LEGISTAR_TENANT_SQL } from "../../doors/legistar-tenant.ts";
 import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 import { MANUAL_ORDER_INDEXES } from "./field-manual-sql.ts";
@@ -160,6 +161,7 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_box_findings_due", "cp_box_findings ((value #>> '{waitingFor,slots}'), (value->>'lastRecordedAt')) WHERE value->>'state' = 'waiting'"),
   onlineIndex("cp_box_findings_lease", "cp_box_findings ((value #>> '{claim,expiresAt}')) WHERE value->>'state' = 'taken'"),
   onlineIndex("cp_box_findings_reason", "cp_box_findings ((value #>> '{waitingFor,reason}'), id) WHERE value->>'state' = 'waiting'"),
+  onlineIndex("cp_doors_legistar_tenant", `cp_doors ((${LEGISTAR_TENANT_SQL}))`),
 ];
 
 export const CHANGED_AT_TABLES: readonly string[] = [

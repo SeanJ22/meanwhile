@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://webapi.legistar.com/v1/madison/persons?$top=1000",
+  "state": "WI",
+  "retrievedAt": "2026-10-13T19:22:19.887405+00:00",
+  "sha256": "1c31c96ed388fc6fb791a68f2aa97a5f31926b9d77c645e6cde1c9c492d05968",
+  "records": 1000
+}

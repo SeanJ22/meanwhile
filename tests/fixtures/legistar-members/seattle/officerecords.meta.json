@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://webapi.legistar.com/v1/seattle/officerecords?$top=1000",
+  "state": "WA",
+  "retrievedAt": "2026-10-13T19:21:40.785614+00:00",
+  "sha256": "a0881dc88206af59bee083ce0d6fa7445bda492368f32f224ead59c27bfa1359",
+  "records": 855
+}

@@ -12,6 +12,7 @@ import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-h
 
 import { hostname } from "node:os";
 import { resolve } from "node:path";
+import { heldLegistarMemberTasks, legistarMemberClocks } from "../lib/sources/legistar/members-tasks.ts";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { STATE_BINDING_REFRESH_TASKS } from "../lib/civic-data/state-binding-refresh-contracts.ts";
 import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
@@ -230,6 +231,7 @@ const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : a
   ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
   ...STATE_BINDING_REFRESH_TASKS,
+  ...await heldLegistarMemberTasks().catch(error => { console.warn(`RCD_TASK legistar-members: ${sanitizedErrorDiagnostic(error)}`); return []; }),
 ], process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
@@ -793,11 +795,13 @@ if (PUBLISH_NOW && selectedTasks.length === 0) {
   process.exit(supervisorFailures.length === 0 ? 0 : 2);
 }
 step = "reading the routine task clocks";
+const memberClocks = !FORCE && selectedTasks.some(task => task.id.startsWith("legistar-members:"))
+  ? await legistarMemberClocks(readerFactDb().query, selectedTasks.filter(task => task.id.startsWith("legistar-members:")).map(task => task.id)) : new Map();
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
   : await readRoutineTaskClocks(
       selectedTasks,
-      (task) => store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
+      (task) => task.id.startsWith("legistar-members:") ? Promise.resolve(memberClocks.get(task.id)) : store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
     );
 
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
@@ -1223,7 +1227,9 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     child.kind === "SUPERVISOR_FAILURE" ? null : child.receipt.candidateId);
   if (child.kind === "VERIFIED_SOURCE_SUCCESS") {
     await recordTaskDoorOutcome(pending.task.id, "SUCCESS", child.receipt.promotedVersion !== null && child.receipt.confirmedAt === undefined, null,
-      () => store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
+      () => pending.task.id.startsWith("legistar-members:")
+        ? Promise.resolve({ lastSucceededObservedAt: child.receipt.confirmedAt })
+        : store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
     verifiedSourceSuccesses += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_SUCCESS");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));

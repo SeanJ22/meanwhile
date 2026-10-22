@@ -160,7 +160,7 @@ export async function publishBoxFindings(input: {
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
   const now = new Date(input.now);
-  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.purge),
+  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   // A packet's findings count toward its government; any other finding toward its own subject.

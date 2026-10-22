@@ -79,3 +79,32 @@ test('the deployed target constraint permits scalar and named reader flags and r
  assert.equal((await readOwnerFlags(db.query)).length,1);
  }finally{await db.pg.close();}
 });
+
+test("a flagged board member is gone from the next live roster, the reader cache is purged, and the same source words do not put the member back",async()=>{
+ const {MemoryEvidenceStore}=await import("../lib/control-plane/evidence/store.ts");
+ const {publishLegistarMembers}=await import("../lib/sources/legistar/members-publication.ts");
+ const {readFactRosters}=await import("../lib/facts/roster-read.ts");
+ const {rawFor,wiring,storeMemberFixtures}=await import("./helpers/legistar-member-fixtures.ts");
+ const db=await factDb();
+ try{
+ const raw=rawFor("pima"),rows=wiring(raw,"AZ","America/Phoenix"),vault=new MemoryEvidenceStore(),tags:string[][]=[];
+ const purge=async(next:readonly string[])=>{tags.push([...next]);return{purged:true};};
+ await storeMemberFixtures(vault,raw);
+ const input={facts:db,vault,raw,rows,clocks:factClocks(null),now:"2026-10-13T20:00:00.000Z",purge};
+ await publishLegistarMembers(input);
+ const bodyIds=rows.map(row=>row.bodyId);
+ const members=async()=>(await readFactRosters(db.query,bodyIds)).rosters.flatMap(roster=>roster.members.map(member=>member.name));
+ const before=await members();assert.ok(before.length>1);
+ const [target]=await db.query("SELECT id,entity_id,field FROM fact WHERE field LIKE 'member:%' AND status='live' ORDER BY id LIMIT 1");
+ const [person]=await db.query("SELECT value->>'name' AS name FROM fact WHERE id=$1",[target.id]);
+ await flagReaderRecord(db.query,{id:`fact-store:${target.id}`,family:"fact-store",area:"AZ",record:{id:String(target.id)},sourceUrl:"https://webapi.legistar.com/v1/pima/officerecords",verifiedAt:NOW},{reason:"Sean says this person does not sit on this board."});
+ const [flag]=await readOwnerFlags(db.query);assert.equal(flag.factId,Number(target.id));
+ assert.deepEqual(await members(),before,"a flag alone removes nothing");
+ await resolveOwnerFlag(db,{id:Number(flag.id),choice:"REMOVE"},"2026-10-13T21:00:00.000Z",purge);
+ const after=await members();assert.deepEqual(after,before.filter((name,index)=>!(name===person.name&&index===before.indexOf(name))));
+ assert.ok(tags.some(list=>list.some(tag=>tag.startsWith("reader-state:"))),"readers are told the next version changed");
+ await db.query("DELETE FROM fact_store_load");
+ await publishLegistarMembers({...input,now:"2026-10-14T20:00:00.000Z"});
+ assert.deepEqual(await members(),after,"the source repeating the removed value does not restore it");
+ }finally{await db.pg.close();}
+});

@@ -1,5 +1,6 @@
 import { checkFact, type Claim, type FieldKind } from "./check.ts";
 import { decide, type Decision } from "./decide.ts";
+import { canonicalJson } from "../control-plane/repository/types.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
@@ -47,14 +48,17 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
       return { blank: verdict.reason };
     }
     // Scope first: a sparse live-status index can otherwise scan every published fact for one claim.
-    const [row] = await query(`WITH head AS MATERIALIZED (
+    const [head] = await query(`WITH head AS MATERIALIZED (
       SELECT id FROM fact WHERE entity_id = $1 AND field = $2
       ORDER BY (status = 'live') DESC, id DESC LIMIT 1 FOR UPDATE
     ), own AS MATERIALIZED (
-      SELECT id, value, provenance_kind, source_copy_id, checked_at, status FROM fact WHERE id = (SELECT id FROM head)
-    ) SELECT f.id, f.value, f.provenance_kind,
+      SELECT id, value, provenance_kind, source_copy_id, checked_at, status, held_reason FROM fact WHERE id = (SELECT id FROM head)
+    ) SELECT f.id, f.value, f.provenance_kind, f.status, f.held_reason,
       coalesce((SELECT fetched_at FROM source_copy WHERE id = f.source_copy_id), f.checked_at) AS fetched_at
-      FROM own f WHERE f.status = 'live'`, [c.entity.id, c.field]);
+      FROM own f`, [c.entity.id, c.field]);
+    const row = head?.status === "live" ? head : undefined;
+    // Sean removed this value; the same words from a source do not put it back, a different value does.
+    if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
     const decision = decide(row ? { value: row.value, provenance: row.provenance_kind as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string) } : null,
       { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt });
     if (decision === "CONFIRM") {

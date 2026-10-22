@@ -1,5 +1,5 @@
 import type { LiveFact, LiveAuditResult } from "../control-plane/workers/live-audit.ts";
-import { invalidateReaderCache, readerCacheScopeForEntity } from "../reader/cache.ts";
+import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
 import type { FactDb, Query } from "./publish.ts";
 import { createHash } from "node:crypto";
 import { publishOwnerChoice, readOwnerChoicesFromEdge } from "./owner-choices-edge.ts";
@@ -93,7 +93,7 @@ export async function readerRecordsWithOwnerChoices<T extends { readonly id: str
 
 export async function resolveOwnerFlag(db: FactDb & { readonly query: Query }, input: {
   readonly id: number; readonly choice: FlagChoice; readonly values?: Readonly<Record<string, unknown>>; readonly sourceUrl?: string | null;
-}, now: string): Promise<{ readonly factId: number | null; readonly entityId: string | null; readonly readerId: string | null; readonly family: string | null; readonly detail: string }> {
+}, now: string, purge?: ReaderCachePurger): Promise<{ readonly factId: number | null; readonly entityId: string | null; readonly readerId: string | null; readonly family: string | null; readonly detail: string }> {
   const outcome = await db.transaction(async query => {
     const [flag] = await query(`SELECT o.*,f.entity_id,f.field,f.value,f.status FROM owner_flag o
       LEFT JOIN fact f ON f.id=o.fact_id WHERE o.id=$1 FOR UPDATE OF o`, [input.id]);
@@ -116,7 +116,8 @@ export async function resolveOwnerFlag(db: FactDb & { readonly query: Query }, i
     if (flag.fact_id !== null && ["REMOVE", "TYPED_VALUE"].includes(input.choice)) {
       const [live] = await query("SELECT id FROM fact WHERE entity_id=$1 AND field=$2 AND status='live' FOR UPDATE", [flag.entity_id, flag.field]);
       if (!live || Number(live.id) !== Number(flag.fact_id)) throw new Error("The published value changed. Refresh before answering this flag.");
-      await query("UPDATE fact SET status=$2 WHERE id=$1", [flag.fact_id, input.choice === "REMOVE" ? "pulled" : "superseded"]);
+      await query("UPDATE fact SET status=$2,held_reason=$3 WHERE id=$1", [flag.fact_id, input.choice === "REMOVE" ? "pulled" : "superseded",
+        input.choice === "REMOVE" ? "OWNER_REMOVED" : null]);
       if (input.choice === "TYPED_VALUE") {
         const value = withOwnerValues({value:original},input.values!).value;
         let copyId: unknown = null;
@@ -138,6 +139,6 @@ export async function resolveOwnerFlag(db: FactDb & { readonly query: Query }, i
     return { factId: flag.fact_id === null ? null : Number(flag.fact_id),entityId: flag.entity_id as string | null, readerId: flag.reader_id as string | null, family: flag.reader_family as string | null,
       detail: String(flag.reason ?? "A published value needs investigation.") };
   });
-  await invalidateReaderCache(outcome.entityId ? await readerCacheScopeForEntity(db.query,outcome.entityId) : {national:true});
+  await invalidateReaderCache(outcome.entityId ? await readerCacheScopeForEntity(db.query,outcome.entityId) : {national:true},purge);
   return outcome;
 }

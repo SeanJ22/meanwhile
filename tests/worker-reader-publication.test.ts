@@ -5,6 +5,8 @@ import { type StateBallotFamily, stateBallotScope, stateBallotContractId } from 
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { factDb } from "./helpers/fact-db.ts";
+import { installFactReader } from "../lib/facts/db.ts";
+import { readOwnerFlags, resolveOwnerFlag } from "../lib/facts/owner-flags.ts";
 import { type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { readerBallotSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import {candidateEnrichmentUniversesFromHoldings} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
@@ -438,7 +440,9 @@ test("normal voter-access workers publish the independently verified statewide r
   assert.deepEqual(await publishWorkerReaderResults(input), result);
 });
 
-test("a BROKE audit names the published reader members it takes out of the next version (DP-15)", async () => {
+test("a BROKE audit flags the published reader member it challenges, and only Sean's Remove takes it out of the next version (DP-15)", async t => {
+  const facts = await factDb(); t.after(() => facts.pg.close());
+  installFactReader(facts.query); t.after(() => installFactReader(undefined));
   const { input, h, store, results } = await workerFixture("ballot-navigation", ["REGISTRATION_LINK", "POLLING_PLACE_LINK"].map(kind => ({ state: "AZ", kind, url: FIXTURE_URL,
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." })));
   const published = await publishWorkerReaderResults(input);
@@ -460,14 +464,19 @@ test("a BROKE audit names the published reader members it takes out of the next 
       findings: [], artifactIds: [parser.result.artifactId], survivingRecordCount: 0, reopenRequired: true } };
   await h.repos.attempts.put(closedAttempt.id, closedAttempt, at);
   await h.repos.workerResults.append(h.item.id, broke.id, broke, at);
-  const removed = await publishWorkerReaderResults({ ...input, now: at });
-  assert.equal(removed[0].outcome.status, "PUBLISHED", JSON.stringify(removed));
-  assert.notEqual(removed[0].outcome.versionId, published[0].outcome.versionId);
-  const after = await readCuratedReaderProjection("ballot-navigation", { store, now: at, bypassCache: true });
-  if (after.kind !== "PROMOTED") throw new Error("reader missing after audit");
+  const kept = await publishWorkerReaderResults({ ...input, now: at });
+  assert.equal(kept[0].outcome.status, "PUBLISHED", JSON.stringify(kept));
   const pulledId = `ballot-navigation:${parser.result.records[0].fields.kind}:AZ`;
-  assert.deepEqual(after.value.records.map(row => row.id), live.value.records.filter(row => row.id !== pulledId).map(row => row.id),
-    "only the exact audited member is removed");
+  const read = async () => {
+    const reader = await readCuratedReaderProjection("ballot-navigation", { store, now: at, bypassCache: true });
+    if (reader.kind !== "PROMOTED") throw new Error("reader missing after audit");
+    return reader.value.records.map(row => row.id);
+  };
+  assert.deepEqual(await read(), live.value.records.map(row => row.id), "the audit alone removes nothing");
+  const flags = await readOwnerFlags(facts.query);
+  assert.deepEqual(flags.map(flag => [flag.family, flag.readerId]), [["ballot-navigation", pulledId]], "only the exact audited member is flagged for Sean");
+  await resolveOwnerFlag(facts, { id: Number(flags[0].id), choice: "REMOVE" }, at);
+  assert.deepEqual(await read(), live.value.records.filter(row => row.id !== pulledId).map(row => row.id), "Sean's Remove takes out only that member");
 });
 
 test("CP-09: an amountless filing reaches its reader as a document without manufacturing Money", async () => {

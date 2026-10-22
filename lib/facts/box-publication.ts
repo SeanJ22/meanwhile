@@ -210,7 +210,7 @@ export async function publishBoxFindings(input: {
       continue;
     }
     let target = await targetOf(facts.query, row.subjectId);
-    if (!target) { await ensureGoverningBody(facts.query, row.subjectId); target = await targetOf(facts.query, row.subjectId); }
+    if (!target) { await ensureGoverningBody(facts.query, row.subjectId); const made = /^(.+)#(governing|board)$/.exec(row.subjectId); target = await targetOf(facts.query, made ? made[1]! : row.subjectId); }
     // A body or an office is added under its government even where the government has no governing board of its own, as a state has none.
     if (slot.class === "bodies") {
       const named = await bodyNamed(facts.query, row.subjectId, target?.body ?? null, String(finding.value), isGoverningName(String(finding.value)));

@@ -96,6 +96,12 @@ test("assembles only the named state and never opens another state's malformed f
     assert.equal(read.kind, "PROMOTED");
     const rerun = await publishBallotState({ state: "TX", directory, store, now });
     assert.deepEqual(rerun.payload, result.payload);
+    const reused = await runBallotState({ state: "TX", directory, store, now: "2026-10-14T12:00:00.000Z" });
+    assert.equal(reused.report.status, "PUBLISHED", reused.report.reason ?? "");
+    assert.ok(reused.receipt);
+    assert.equal(reused.receipt.confirmedAt, undefined, "state reuse must not claim a confirmation event it never wrote");
+    assert.equal(await durableRoutineRunnerReceiptIssue(reused.receipt, { id: "ballot-contests:TX",
+      sourceId: "official-ballot-authorities", recordClass: "BALLOT_CANDIDACY", scope: stateBallotScope("ballot-contests", "TX") }, store, "SUCCESS"), null);
     await rm(resolve(directory, "tx.json"));
     store.create = async () => assert.fail("missing input must not write a candidate");
     store.confirmUnchanged = async () => assert.fail("missing input must not create a confirmation");

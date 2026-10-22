@@ -8,8 +8,10 @@ import type { PublishedLookupState } from "./reader.ts";
 /** The stored place and its touching districts, confined to its county states.
  * Filtering happens in the existing promoted store: no national payload is
  * transferred to, parsed by, or cached in a worker or its parent. */
-export async function loadPublishedAreaLookupState(zips: readonly string[], query: ReadOnlyQuery | null = readerQuery()): Promise<PublishedLookupState> {
-  if (!zips.length || zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
+export async function loadPublishedAreaLookupState(zips: readonly string[], query?: ReadOnlyQuery | null): Promise<PublishedLookupState> {
+  if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
+  if (!zips.length) return { lookup: notYetPublishedLookup("NO_PLACES_REQUESTED"), source: "unavailable", versionId: "NO_PLACES_REQUESTED" };
+  if (query === undefined) query = readerQuery();
   if (!query) return { lookup: notYetPublishedLookup("STORE_UNAVAILABLE"), source: "unavailable", versionId: "STORE_UNAVAILABLE" };
   const [rows] = await query([{ params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...new Set(zips)]], text: `
     WITH source AS MATERIALIZED (

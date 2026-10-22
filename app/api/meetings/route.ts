@@ -8,6 +8,7 @@ import { readPlacePackageHttp as readPlacePackage } from "@/lib/reader/place";
 import { stateCoverage } from "@/lib/reader/coverage";
 import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
+import { wireSnapshot } from "@/lib/meetings/freshness";
 import { readReaderMeetingSettings } from "@/lib/meetings/reader-settings";
 import { readerMeetingScope } from "@/lib/meetings/reader-scope";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
@@ -87,8 +88,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       commentAccess: place.bodies.flatMap(body => body.comment ?? []), commentAccessDataState: "PROMOTED",
       everydayRouting: place.everydayRouting,
       everydayRoutingDataState: place.everydayRouting ? "PROMOTED" : "NOT_RECORDED",
-      snapshot: { version: 2, generatedAt: place.snapshot.generatedAt, failed: place.snapshot.sources.filter(source => !source.ok)
-        .map(source => ({ source: source.source, ocdIds: source.unreachableOcdIds ?? [] })) },
+      snapshot: wireSnapshot(place.snapshotHeldAt, place.snapshot.sources),
       nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
     }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"} : readerCacheHeaders({ states: [location.state], places: ids })),
       "Netlify-Vary": "query=lat|lng|radiusKm|zip|include", "Server-Timing": timing.header() } });

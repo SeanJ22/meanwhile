@@ -3,6 +3,7 @@ import { TRANSLATION_SCOPE, translationScope, translationRecordIssue, type Trans
 import { translationProjectionProblems, type TranslationProjection } from "./projection-contract.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "../ballot/types.ts";
+import { measureLabels, pageNamesMeasure } from "./routine-measure-pages.ts";
 
 export async function readTranslationProjection(options: PromotedCivicDataReadOptions & { scope?: string } = {}) {
   const { scope = TRANSLATION_SCOPE, ...readOptions } = options;
@@ -36,8 +37,11 @@ export function withMeasureTranslations(ballot: BallotSet, records: readonly Tra
     // These are the sources the existing ballot card links. Keep the explainer
     // attached to the exact contest and a source readers can follow there.
     const sources = new Set([prior?.sourceUrl, measure?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance?.sourceUrl].filter(Boolean));
+    // A page found on the election office's own site is not linked by the ballot card. Its saved text
+    // must name this exact measure, as it had to when the explainer was written and checked.
+    const names = measureLabels({ title: contest.title, questionText: measure?.questionText, officialNumber: measure?.officialNumber, analysisText: analysis?.text });
     const translation = records.filter(row => row.kind === "MEASURE" && row.subjectId === contest.id && row.ocdId === contest.ocdId &&
-      sources.has(row.sourceUrl) && (!prior || row.sourceHash === prior.sourceHash || Date.parse(row.retrievedAt) >= Date.parse(prior.writtenAt)) &&
+      (sources.has(row.sourceUrl) || pageNamesMeasure(row.sourceText, names)) && (!prior || row.sourceHash === prior.sourceHash || Date.parse(row.retrievedAt) >= Date.parse(prior.writtenAt)) &&
       !translationRecordIssue(row)).sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt) || Date.parse(b.writtenAt) - Date.parse(a.writtenAt))[0];
     if (translation?.kind !== "MEASURE") continue;
     // Legacy reaction targets remain available while the summary and vote

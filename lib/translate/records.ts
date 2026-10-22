@@ -67,8 +67,8 @@ export interface CuratedTranslationOrigin {
 }
 export interface PreservedCuratedText { readonly text: string; readonly origin: CuratedTranslationOrigin }
 export interface TextTranslation extends TranslationEvidence {
-  readonly kind: "BODY_CLASS" | "BODY" | "OFFICE" | "AGENDA" | "MINUTES";
-  /** BODY_CLASS names the class, BODY names one body, OFFICE names the state-defined office. */
+  readonly kind: "BODY_CLASS" | "BODY" | "OFFICE" | "AGENDA" | "MINUTES" | "COMMENT_RULES";
+  /** BODY_CLASS names the class, BODY names one body, OFFICE names the state-defined office, COMMENT_RULES the page that says how the public takes part in one body's meetings. */
   readonly curatedOrigin?: CuratedTranslationOrigin;
   readonly label: string;
   readonly text: string;
@@ -83,8 +83,8 @@ const outputFields = (measure: MeasureRecord) => [
 
 /** Every written sentence has its own source passage and independent check. */
 export function translationRecordIssue(row: TranslationRecord): string | null {
-  if (!row || !["MEASURE", "BODY_CLASS", "BODY", "OFFICE", "AGENDA", "MINUTES"].includes(row.kind) || !row.subjectId || row.id !== `translation:${row.subjectId}` ||
-      !jurisdictionFromOcdId(row.ocdId ?? "") || !/^https:\/\//.test(row.sourceUrl) ||
+  if (!row || !["MEASURE", "BODY_CLASS", "BODY", "OFFICE", "AGENDA", "MINUTES", "COMMENT_RULES"].includes(row.kind) || !row.subjectId || row.id !== `translation:${row.subjectId}` ||
+      !jurisdictionFromOcdId(row.ocdId ?? "") || !(row.kind === "COMMENT_RULES" ? /^https?:\/\//.test(row.sourceUrl) : /^https:\/\//.test(row.sourceUrl)) ||
       !/^[a-f0-9]{64}$/.test(row.sourceHash) || !row.sourceText?.trim() || translationHash(row.sourceText) !== row.sourceTextHash ||
       !Number.isFinite(Date.parse(row.retrievedAt)) || !Number.isFinite(Date.parse(row.writtenAt)) ||
       !row.writerModel || !row.checkerModel || row.writerModel === row.checkerModel ||

@@ -18,9 +18,19 @@ function safeCodePoint(n: number): string {
   }
 }
 
+/** An address a page hides from scrapers with Cloudflare's `data-cfemail` is still the address the page shows its readers; the first byte is the key. */
+export function revealProtectedEmails(html: string): string {
+  return html.replace(/<a\b[^>]*\bdata-cfemail=["']([0-9a-f]{4,})["'][^>]*>[\s\S]*?<\/a>/gi, (_, hex: string) => {
+    const key = parseInt(hex.slice(0, 2), 16);
+    let out = "";
+    for (let at = 2; at + 1 < hex.length; at += 2) out += String.fromCharCode(parseInt(hex.slice(at, at + 2), 16) ^ key);
+    return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(out) ? out : " ";
+  });
+}
+
 /** Visible text: scripts, styles, noscript, templates and comments removed; block ends become newlines. */
 export function visibleText(html: string): string {
-  const stripped = html
+  const stripped = revealProtectedEmails(html)
     .replace(/<!--[\s\S]*?-->/g, " ")
     .replace(/<(script|style|noscript|template|svg)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ")
     .replace(/<\s*(br|\/p|\/div|\/li|\/tr|\/h[1-6]|\/section|\/article|\/table|\/ul|\/ol|\/header|\/footer|\/nav|\/dd|\/dt|\/blockquote|\/pre)\b[^>]*>/gi, "\n")

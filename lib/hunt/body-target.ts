@@ -3,6 +3,7 @@ import {readCheckEntity} from '../facts/entity-read.ts';
 import {checkFact,hostOf} from '../facts/check.ts';
 import {captureProvenance} from '../facts/capture.ts';
 import {saveCaptureCopy} from '../facts/source-copy.ts';
+import {canonicalSubject} from '../facts/entities.ts';
 import type {FactDb,Query,Clocks} from '../facts/publish.ts';
 import type {WorkerPublicationCapture} from '../civic-data/worker-roster-publication.ts';
 
@@ -13,7 +14,8 @@ const bodyTypeWord=(name:string):string|null=>/\b(?:agency|council|commission|as
  * does. Its government's native identity and state remain the parent. */
 export async function ensureHuntBodyTarget(input:{facts:FactDb&{query:Query};subjectId:string;name:string;quote:string;capture:WorkerPublicationCapture;clocks:Clocks;now:Date}){
  if(!bodyTypeWord(input.name) || input.capture.httpStatus!==200 || input.capture.partial)return null;
- const root=input.subjectId.split('#')[0]!,host=hostOf(input.capture.evidence.canonicalUrl);
+ // A native agency id (NCES, Census of Governments) is the registered government it stands for, so the committee hangs under that government.
+ const subject=await canonicalSubject(input.facts.query,input.subjectId),root=subject.split('#')[0]!,host=hostOf(input.capture.evidence.canonicalUrl);
  const governments=await input.facts.query(`SELECT g.id,g.name,g.state,g.parent_id FROM entity g WHERE g.kind='government'
    AND (g.id=$1 OR g.parent_id=$1 AND EXISTS(SELECT 1 FROM entity_host h WHERE h.entity_id=g.id AND ($2=h.host OR $2 LIKE '%.'||h.host)))
    ORDER BY g.id LIMIT 2`,[root,host]);
@@ -23,7 +25,7 @@ export async function ensureHuntBodyTarget(input:{facts:FactDb&{query:Query};sub
  const copy=await input.facts.transaction(q=>saveCaptureCopy(q,input.capture));
  const checked=checkFact({entity,fieldKind:'officeholder',provenance:captureProvenance(input.capture,entity.hosts),valueText:input.name,quote:input.quote,copy},input.now,input.clocks.windowHours);
  if(!checked.ok)return null;
- const id=huntBodySubject(input.subjectId,input.name);
+ const id=huntBodySubject(subject,input.name);
  const other=await input.facts.query("SELECT id FROM entity WHERE parent_id=$1 AND kind='body' AND lower(name)=lower($2) AND id<>$3 LIMIT 1",[government.id,input.name,id]);
  if(other.length)return null;
  const existing=await input.facts.query('SELECT id,name,state,parent_id,kind FROM entity WHERE id=$1',[id]);

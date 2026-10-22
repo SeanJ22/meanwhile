@@ -80,3 +80,12 @@ test("a byte-identical retry under the SAME Attempt is idempotent (the pre-fix b
   assert.equal(once.appended, true);
   assert.equal(twice.appended, false, "an exact retry was already idempotent and still is");
 });
+
+test("the same bytes seen at another address (a page served under two spellings, or one robots.txt on two hosts) are one artifact, not a refusal", async () => {
+  const repos = createMemoryRepositories();
+  await repos.attempts.put("at-A", attemptRow("at-A"), NOW_A);
+  const first = await recordArtifactMetadata(repos, artifact({ attemptId: "at-A", canonicalUrl: "https://example.gov/government/city-council/" }), NOW_A);
+  const second = await recordArtifactMetadata(repos, artifact({ attemptId: "at-A", canonicalUrl: "https://example.gov/Government/City-Council" }), NOW_A);
+  assert.deepEqual([first.appended, second.appended], [true, false]);
+  assert.equal((await repos.artifacts.read("wi-1")).length, 1, "one record, the first address stands");
+});

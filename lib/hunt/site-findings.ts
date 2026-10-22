@@ -8,6 +8,7 @@ import { visibleText } from '../extract/visible-text.ts';
 import { extractLinks } from './page-links.ts';
 import { pageCopy } from '../facts/source-copy.ts';
 import { boundedIndexOf, normalizeText } from '../facts/check.ts';
+import { commentRuleSentences, isCommentLinkText, mentionsComment, schedulePhrase, sentenceWith } from './page-rules.ts';
 
 export interface SiteFinding {
   subjectId: string;
@@ -32,6 +33,8 @@ export interface SiteScope {
   /** A previously read standing-body page linked to this page. */
   bodyContext?:boolean;
   bodies?:readonly {id:string;name:string}[];
+  /** Other sites this government's own pages link to as its own (a council with a site of its own); their pages are read as the government's. */
+  hosts?:readonly string[];
   members?: readonly {id:string;name:string;office:string;bodyId:string}[];
 }
 export interface SitePage {
@@ -76,7 +79,7 @@ export function isBodyName(name:string):boolean {
   if(name.length>120)return false;
   if(name.split(/\s+/).length<2)return /^(?:council|assembly|selectboard|selectmen|trustees)$/i.test(name);
   if(/^(?:meet|contact|about|join|welcome|ask|visit|watch|view|be aware)\b/i.test(name) || /\b(?:20\d{2}|meetings?|agendas?|minutes|news|archives?|calendar|reappointed|appointed|elected|announces?|approved?|adopted?|welcomes?|reappoints?|honors?|events?|council member|establishes?|blessing|launches?|invites?|seeks?|seeking|receives?|opens?|celebrates?|chambers|projects|responsibilities|documents)\b/i.test(name))return false;
-  return /\b(?:agency|council|commission|assembly|selectboard|selectmen|trustees|committee|board)(?:\s*\([^)]*\))?$/i.test(name) ||
+  return /\b(?:agency|council|commission|assembly|selectboard|selectmen|aldermen|alderpersons|supervisors|commissioners|trustees|committee|board|police jury|(?:fiscal|quorum|levy|commissioners) court)(?:\s*\([^)]*\))?$/i.test(name) ||
     /\b(?:board|commission|council|committee)\s+(?:of|on|for)\s+[\p{L}\p{N}&,'’.\- ]+$/iu.test(name);
 }
 
@@ -86,7 +89,7 @@ export function siteFindings(scope: SiteScope, page: SitePage): SiteFinding[] {
   const ownHost = new URL(scope.website).hostname.toLowerCase().replace(/^www\./, '');
   const pageAddress = new URL(page.url);
   const pageHost = pageAddress.hostname.toLowerCase().replace(/^www\./, '');
-  if (ownHost !== pageHost && !pageHost.endsWith(`.${ownHost}`)) return [];
+  if (ownHost !== pageHost && !pageHost.endsWith(`.${ownHost}`) && !scope.hosts?.some(host => pageHost === host || pageHost.endsWith(`.${host}`))) return [];
   let subjectId = scope.bodyId ?? scope.governmentId;
   const out = new Map<string, SiteFinding>();
   let shownMemberId:string|undefined;
@@ -170,12 +173,23 @@ export function siteFindings(scope: SiteScope, page: SitePage): SiteFinding[] {
     if (/\b\d{1,6}\s+[^\n]+\b(street|st\.?|road|rd\.?|avenue|ave\.?|drive|dr\.?|boulevard|blvd\.?|way|highway|hwy\.?|lane|ln\.?|plaza)\b/i.test(text)) add('body.officeAddress',text,match[0]);
   }
   const words=visibleText(main);
-  for (const line of words.split('\n')) {
-    if (/\b(meet|meets|meetings)\b/i.test(line) && /\b(every|each|monthly|weekly|first|second|third|fourth|last)\b/i.test(line) &&
-      /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i.test(line)) add('MTG-04',line,line);
-    if (/\b(public comment|written comments?|speak at|attend the meeting|register to speak)\b/i.test(line)) add('PAR-02',line,line);
-  }
   const links=extractLinks(main,new URL(page.url),Number.MAX_SAFE_INTEGER);
+  const linkTexts=new Set(links.map(link=>normalizeText(link.text).toLowerCase()));
+  let commentRules=0;
+  for (const line of words.split('\n')) {
+    // A schedule is the phrase the page states ("each 2nd and 4th Monday of each month"), with its own sentence as the quote.
+    const cadence=/\b(meet|meets|meetings?)\b/i.test(line) ? schedulePhrase(line) : null;
+    if (cadence) add('MTG-04',cadence,sentenceWith(line,cadence));
+    // A comment rule is a sentence. A heading or a link's text is not one: a link is followed, and its page is read.
+    for (const sentence of commentRuleSentences(line,linkTexts)) {add('PAR-02',sentence,sentence);commentRules++;}
+  }
+  // A page about taking part with no rule sentence in it is long instructions or a form: it goes to the plain-English summary.
+  const participation=/\/(?:public[-_]?comments?|participat\w*|speak\w*|address-(?:the-)?(?:council|board)|citizen\w*)(?:\/|[-_.?]|$)/i.test(pageAddress.pathname) ||
+    [...main.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].some(m=>mentionsComment(cellText(m[1])));
+  if (participation && !commentRules && words.length>=600) {
+    const heading=cellText(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(main)?.[1]??'').split('\n')[0]??'';
+    if (heading && holds(heading,heading.split(/\s+/)[0]!)) out.set(`${subjectId}\u0000PAGE\u0000${page.url}`,{subjectId,field:'publicComment.page',value:page.url,exactQuote:heading,sourceUrl:page.url,artifactIds:[page.artifactId],observedAt:page.observedAt,...(page.sourceWorkItemId?{sourceWorkItemId:page.sourceWorkItemId,sourceAttemptId:page.sourceAttemptId}:{})});
+  }
   for (const link of links) {
     const linkAddress = new URL(link.url);
     if (/\b(meetings?|agendas?|minutes|calendar|icalendar)\b|\.ics(?:$|[?#])/i.test(`${link.text} ${linkAddress.pathname}`)) {
@@ -207,6 +221,7 @@ export function blankLinks(page: SitePage, families: ReadonlySet<string>): reado
   };
   return extractLinks(page.html,new URL(page.url),Number.MAX_SAFE_INTEGER).filter(link=>{
     const linkAddress=new URL(link.url);
-    return [...families].some(family=>patterns[family]?.test(`${link.text} ${linkAddress.pathname}`));
+    // A link that says how to comment is followed whether or not the family is open: its page holds the instructions.
+    return isCommentLinkText(link.text) || [...families].some(family=>patterns[family]?.test(`${link.text} ${linkAddress.pathname}`));
   });
 }

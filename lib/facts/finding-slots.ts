@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import type { ElectionFieldKind } from "../civic-data/election-fields.ts";
 import { CHECKLIST_FAMILIES } from "../coverage/checklist-map.ts";
 
@@ -18,8 +20,14 @@ export type FindingSlot =
   | { readonly class: "campaign sites" | "candidates"; readonly lead: "campaign-site" | "candidate-profile" }
   | { readonly class: string; readonly waiting: string };
 
-/** Moves whenever a class gains slots, so findings waiting on it are looked at again. */
-export const FINDING_SLOTS_VERSION = "7";
+/** The code that sorts a finding and publishes it; a change to any of it can change what a parked finding does. */
+const SORTING_AND_PUBLISHING_CODE = ["finding-slots.ts", "box-publication.ts", "entities.ts", "roster-facts.ts", "publish.ts", "check.ts"] as const;
+
+/** A short hash of the given sources, in order. */
+export const slotsVersionOf = (sources: readonly string[]): string => createHash("sha256").update(JSON.stringify(sources)).digest("hex").slice(0, 16);
+
+/** The hash of the sorting and publishing code, so any change to it makes findings parked under the old code look again, in every state. */
+export const FINDING_SLOTS_VERSION = slotsVersionOf(SORTING_AND_PUBLISHING_CODE.map(file => readFileSync(new URL(file, import.meta.url), "utf8")));
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";

@@ -15,7 +15,7 @@ import { officeNameOn, publishBoxFindings } from "../lib/facts/box-publication.t
 import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { ensureEntity, ensureFactEntities, ensureGoverningBody } from "../lib/facts/entities.ts";
-import { FINDING_SLOTS_VERSION, slotFor } from "../lib/facts/finding-slots.ts";
+import { FINDING_SLOTS_VERSION, slotFor, slotsVersionOf } from "../lib/facts/finding-slots.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
 import type { RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
 import { fetchCapture } from "../lib/facts/capture.ts";
@@ -460,4 +460,11 @@ test("a finding about a city's #governing council makes one council and is built
   assert.deepEqual((await states()).sort(), ["built", "waiting"]);
   assert.deepEqual(await facts.query("SELECT e.id, f.field, f.value FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1 AND f.status = 'live'", [HUNTSVILLE]),
     [{ id: `${PLACE}#governing`, field: "office_phone", value: "(256) 427-5000" }]);
+});
+
+test("the slot version is a hash of the sorting and publishing code, so any edit to that code makes parked findings look again", () => {
+  assert.match(FINDING_SLOTS_VERSION, /^[0-9a-f]{16}$/);
+  assert.equal(slotsVersionOf(["a", "b"]), slotsVersionOf(["a", "b"]));
+  assert.notEqual(slotsVersionOf(["a", "b"]), slotsVersionOf(["a", "b "]));
+  assert.notEqual(slotsVersionOf(["a", "b"]), slotsVersionOf(["b", "a"]));
 });

@@ -9,9 +9,6 @@ import { parseDispatchTarget, unitMatchesTarget, type DispatchTarget } from "../
 import type { MeetingPartitionOwnership } from "../scheduler/provider-inputs.ts";
 import { jurisdictionRequirements } from "../scheduler/providers/local-jurisdictions.ts";
 import { huntPacketObligation } from "../../hunt/packet-plan.ts";
-import { HUNT_PACKET_NAMESPACE } from "../../hunt/packet.ts";
-import { huntPlaceKey } from "../admin-view/v6-hunts-read.ts";
-import type { HuntOrder } from "../hunt-orders.ts";
 import {
   MEETINGS_DISCOVERY_RECORD_CLASS,
   meetingsDiscoveryObligationId,
@@ -594,8 +591,6 @@ export type PlannedWrite = PlannedInstance & { readonly target: DispatchWorkTarg
 export interface PlannedMark {
   readonly obligationId: string;
   readonly target: DispatchWorkTarget;
-  /** A stopped hunt this funded target owns: it turns back on unless an owner stop came after the funding. */
-  readonly reactivate?: true;
 }
 
 export interface DispatchWorkPlan {
@@ -671,9 +666,8 @@ export function planDispatchWork(input: {
       }
       if (row?.materializedBy === OWNER_DISPATCH) {
         planned.push({ instance, state: "CREATED", existsUnmarked: false });
-        const stopped = row.active === false && id.startsWith(HUNT_PACKET_NAMESPACE);
-        if (stopped) marks.push({ obligationId: id, target, reactivate: true });
-        else if (!recorded(row) && (row.assignments ?? []).some((a) => a.relation === "CREATED")) marks.push({ obligationId: id, target });
+
+        if (!recorded(row) && (row.assignments ?? []).some((a) => a.relation === "CREATED")) marks.push({ obligationId: id, target });
         continue;
       }
       if (corpusIds.has(id) && row?.active !== false) {
@@ -721,12 +715,6 @@ export interface DispatchWorkApplied {
   readonly marksDeferred?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
 
   readonly recorded?: readonly { readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }[];
-}
-
-/** An owner stop given after this target was funded still holds; a pause, or funding the place again after a stop, does not. */
-export function stoppedSinceFunding(target: DispatchWorkTarget, stops: readonly HuntOrder[]): boolean {
-  const keys = new Set([target.key, ...(target.kind === "SCOPE" ? [huntPlaceKey(target.scope.decision)] : [])]);
-  return stops.some(order => order.confirmedAt !== null && order.requestedAt >= target.requestedAt && (order.scopeKey === null || keys.has(order.scopeKey)));
 }
 
 export async function applyDispatchWork(
@@ -781,22 +769,18 @@ export async function applyDispatchWork(
   }
 
   const heldMarks = new Map((plan.marks.length ? await repos.obligations.list() : []).map(row => [row.id, row]));
-  const stops = plan.marks.some(mark => mark.reactivate) ? (await repos.huntOrders.list()).map(row => row.value).filter(order => order.confirmedAt !== null) : [];
   for (const mark of plan.marks) {
     const key = { obligationId: mark.obligationId, assignmentKey: mark.target.key };
     const reordered = assignmentEntry(mark.target, "REORDERED", input.now);
     try {
       const held = heldMarks.get(mark.obligationId) ?? await repos.obligations.mustRead(mark.obligationId);
-      // A hunt an owner stop still holds is left exactly as it is: no fresh mark that would outdate the stop.
-      if (mark.reactivate === true && held.value.active === false && stoppedSinceFunding(mark.target, stops)) continue;
       const next = withAssignment(held.value.assignments, reordered);
       const autonomousPlan = inheritPublicationConnection(held.value.autonomousPlan, plan.targets.find(target => target.target.key === mark.target.key)?.instances
         .find(instance => instance.instance.obligation.id === mark.obligationId)?.instance.obligation.autonomousPlan);
       const stopped = held.value.materializedBy === OWNER_DISPATCH && !held.value.active && mark.obligationId.startsWith("hunt:packet:");
-      const reopen = stopped || (mark.reactivate === true && held.value.active === false);
-      if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan || reopen) {
+      if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan || stopped) {
         heldMarks.set(mark.obligationId, await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
-          ...(autonomousPlan ? { autonomousPlan } : {}), ...(reopen ? { active: true, nextDueAt: null } : {}), updatedAt: input.now }, input.now));
+          ...(autonomousPlan ? { autonomousPlan } : {}), ...(stopped ? { active: true, nextDueAt: null } : {}), updatedAt: input.now }, input.now));
       }
       marked.push(key);
       recorded.push({ obligationId: mark.obligationId, subjectId: held.value.subjectId, entry: reordered });

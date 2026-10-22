@@ -35,7 +35,7 @@ interface CopyRow {
 async function saveCopy(query: Query, row: CopyRow): Promise<number> {
   const [saved] = await query(`INSERT INTO source_copy (url, final_url, fetched_at, http_status, sha256, blob_key, is_archive)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
-    ON CONFLICT (blob_key) DO UPDATE SET fetched_at = greatest(source_copy.fetched_at,EXCLUDED.fetched_at) RETURNING id`,
+    ON CONFLICT (blob_key) DO UPDATE SET blob_key = EXCLUDED.blob_key RETURNING id`,
   [row.url, row.finalUrl, row.fetchedAt, row.httpStatus, row.contentHash.replace(/^sha256-/, ""), `artifact:${row.artifactId}`,
     isArchive(row.finalUrl)]);
   return Number(saved!.id);

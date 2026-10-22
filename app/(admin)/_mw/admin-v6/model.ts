@@ -661,11 +661,14 @@ export interface ScoreboardMissionRow {
   readonly withinHour: boolean | null;
 }
 
+/** One full hour from the independent line keeper (Now). A number nobody recorded is null and shows "—". */
 export interface ScoreboardVitalHour {
   readonly hour: string;
   readonly factsLive: number | null;
+  readonly factsLiveConfirmed?:boolean;
   readonly costPerFactUsd: number | null;
   readonly neonGb: number | null;
+  readonly neonAtLeast?:boolean;
   readonly overNeonTarget: boolean | null;
   readonly roundsFinished: number | null;
   readonly roundsKilled: number | null;
@@ -674,6 +677,7 @@ export interface ScoreboardVitalHour {
 }
 
 export interface ScoreboardView {
+  readonly lineKeeper?: string;
   readonly rows: readonly ScoreboardRow[];
   readonly byPlace: readonly ScoreboardPlaceRow[];
   readonly byFamily: readonly ScoreboardFamilyRow[];

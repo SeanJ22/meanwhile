@@ -44,7 +44,7 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 
 function peopleSourceAuthority(input: {
   readonly id: string; readonly publisher: string; readonly official: boolean;
-  readonly federal?: boolean; readonly routePrefixes: readonly string[];
+  readonly federal?: boolean; readonly routePrefixes: readonly string[]; readonly parserVersion?: string;
 }): SourceAuthorityContract {
   return {
     id: input.id, publisher: input.publisher,
@@ -59,7 +59,7 @@ function peopleSourceAuthority(input: {
     horizonSemantics: input.official
       ? "Each person must be named in the office on their captured own official page. Statewide election and appointment labels come from explicit state-page evidence. A failed page preserves prior verified facts."
       : "Every native fact is attributed to its source. Shared identifiers join complementary evidence; secondary sources never establish an official photo or statewide elected-office label.",
-    parserVersion: "people-sources/1", freshnessExpectation: "Daily standing per-state acquisition with independent source clocks.",
+    parserVersion: input.parserVersion ?? "people-sources/1", freshnessExpectation: "Daily standing per-state acquisition with independent source clocks.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
   };
 }
@@ -101,7 +101,7 @@ const AUTHORITIES = {
   },
   "legiscan-api": peopleSourceAuthority({ id: "legiscan-api", publisher: "LegiScan current-session people API", official: false, routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"] }),
   "official-state-people": peopleSourceAuthority({ id: "official-state-people", publisher: "Each state legislature's captured official roster and member pages", official: true, routePrefixes: ["https://"] }),
-  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"] }),
+  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"], parserVersion: "people-sources/2" }),
   "wikidata-people": peopleSourceAuthority({ id: "wikidata-people", publisher: "Wikidata; image licenses attributed to Wikimedia Commons", official: false, routePrefixes: ["https://query.wikidata.org/", "https://www.wikidata.org/", "https://www.wikimedia.org/", "https://commons.wikimedia.org/"] }),
   "people-portraits": {
     id: "people-portraits", publisher: "Each person's own official page, verified against saved portrait evidence",

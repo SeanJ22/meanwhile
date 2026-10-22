@@ -1,19 +1,27 @@
 # River status
 
-build_state: RELEASE 78 SHIPPED AND LIVE (main a84c70057); RELEASE 79 TESTING (PM-01, CAL-01 items 4 to 6, DS-01, EX-02, PG-01); DG-01 HELD
+build_state: RELEASES 72 TO 79 SHIPPED AND LIVE (main f8e4670e4); DG-01 SENT BACK; WAITING ON NEW READYS
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
 heartbeat: 2026-10-22T07:38:36Z
 
-## Where things stand (Oct 22, 2:15 AM EDT)
+## Where things stand (Oct 22, 4:35 AM EDT)
 
-- Standing order from Sean (15-minute scan, all night): fold every READY, gates on the combination, release PR, merge by hand, live check, status.md. Branch deletion only for a lane's final READY with its tip in main (TX-01 and LK-01 confirmed final).
-- Release 78 SHIPPED: PR #788 merged a84c70057, live 2:07 AM EDT, observer run 39731763611 succeeded. TX-01 and LK-01. Gates 8 of 8 (9,123 pass), CI green. River fix: tests/admin-narrow-reads.test.ts pulse section list now includes "national" (LK-01 makes the country section readable from the snapshot alone and changed the same list in admin-capability-pulse; the duplicate assertion was stale).
-- Branch deletion: stream/tx-01 and stream/lk-01 are in main and final but could not be deleted from this session: the GitHub API and git push --delete are refused by the session proxy ("Write access to this GitHub API path is not permitted through this proxy"). Needs Sean or a session with that access.
-- Release 79 in gates: PM-01 (R3-LEGISTAR-MEMBERS, CK-01, SRC-MN, PM-01), CAL-01 (items 4 to 6 plus RH-01), DS-01, EX-02 (06761fca1), PG-01 (77afd872a, now merges PM-01). River fixes so far: CAL-01 vs PM-01 clash in lib/control-plane/expansion/dispatch-work.ts (both reopen conditions kept) and lib/facts/publish.ts (PM-01's confirm behaviour kept, CAL-01's restamp kept for its page-refresh path, unused no-receipt branch removed); PM-01's second migration numbered 0049 and the three references PG-01 still had as 0048 corrected; River's rename had rewritten the READY subject in tests/river.test.ts (restored); pnpm install after PM-01's postgres dependency. The earlier PG-01 hold (returns/pg-01.md) is cleared by the lane's new READY.
-- DG-01: held until CAL-01's items 1 and 2 are in main.
+- Release 79 SHIPPED: PR #789 merged f8e4670e4 (3:58 AM EDT), live 4:11 AM EDT. PM-01 (R3-LEGISTAR-MEMBERS, CK-01, SRC-MN, PM-01), CAL-01 (items 1 to 6, RH-01, and item 7's pause fix), DS-01, EX-02, PG-01. Gates 8 of 8 (9,209 pass), CI green. CAL-01's calendar fix (items 1 and 2) is now in main.
+- Post-deploy integrity for 79: the observer's first reading REFUSED at 4:11 AM EDT (08:11:17Z), seconds after the deploy: contract migrations 0047_ck01_flag_target and 0049_r3_legistar_members_retire_index were not applied yet. Expand migrations applied at 4:09 AM; the runner applied the contract half at 4:30 AM EDT (digest db-migration:contract, f8e4670). Re-run at 4:31 AM: observer succeeded on attempt 3. Integrity is back to healthy. A release with contract migrations is refused by the observer for about 20 minutes after its deploy; the next release's gates are frozen until the passing re-check, so plan the next fold after it.
+- River fixes in release 79: PM-01 vs CAL-01 clashes (dispatch-work.ts, publish.ts); the contradiction between PM-01's and CAL-01's tests is settled in PM-01's favour for now: CAL-01's reactivation (item 7, dispatch-work.ts) and its first test are left out, its pause fix stays (returns/cal-01.md has the exact contradiction for Sean or the lane); PM-01's saved-copy date bump reverted (CAL-01's test needs the copy left alone; nothing of PM-01's depends on it); migration references renumbered to 0049; River's rename had rewritten a READY subject in tests/river.test.ts (restored); pnpm install after the postgres dependency.
+- DG-01 sent back (returns/dg-01.md): not one test clash. It deletes the Avondale-specific held-event code that CAL-01 item 4 builds on (HELD_EVENT_URL_PREFIXES, heldEventContract in scripts/freshness-shadow.mts and tests/legacy-activity-reads.test.ts) and conflicts with CAL-01 item 1's readStateCalendars in scripts/ingest.ts, plus tests/worker-fleet-standing.test.ts. Needs the lane to merge main and reconcile.
+- Branch deletion: stream/tx-01 and stream/lk-01 (final, in main) cannot be deleted from this session; the proxy refuses it. Nothing else qualifies.
+
+## Live check after release 79 (4:11 to 4:35 AM EDT)
+
+- Voting at street addresses: Los Angeles 1,077 places and pins; Houston 697; Atlanta 40 (was 41); Milwaukee 1; New York 1; Lansing 14. None: Columbus, San Francisco, Lansing at 2500 S Washington Ave. 0.7 to 2.6 s.
+- Ballot pages 94110 and 43215: 2.1 s and 1.2 s; 28 and 16 contests.
+- Vice President in AZ, TX, NJ, OH, CA: still missing. AZ's first read after the deploy 3.4 s.
+- Runner: 24 state cycles since midnight UTC, all SUCCEEDED, none FAILED, on releases 72 to 78.
+- Alabama findings in the Box (subject starting al:), 4:15 AM EDT: built 970 (was 0 at 10:35 PM EDT), refused 27, waiting 15,698. Sean's Huntsville fix and the later releases are building findings.
 
 ## Live check after release 78 (2:07 to 2:15 AM EDT)
 

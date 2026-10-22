@@ -3771,5 +3771,17 @@
     "tested_sha": "86f53e2c6e4c0cd5bcfb1c6d3c3dd0cfaf0f9693",
     "gates": "pass",
     "at": "2026-10-22T07:46:39Z"
+  },
+  {
+    "lane": "pm-01",
+    "steps": [
+      "CK-01"
+    ],
+    "ready_sha": "cd1bf861cec08e414460e8dce0a21b6fd15f0e9a",
+    "merge_sha": "229108e684f3ba7a5b784c1fc81620576f4f8fdf",
+    "river_sha": "229108e684f3ba7a5b784c1fc81620576f4f8fdf",
+    "tested_sha": "229108e684f3ba7a5b784c1fc81620576f4f8fdf",
+    "gates": "pass",
+    "at": "2026-10-22T16:26:44Z"
   }
 ]

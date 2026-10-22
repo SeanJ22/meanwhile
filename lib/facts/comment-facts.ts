@@ -5,6 +5,7 @@ import { ensureEntity } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
 import { publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
+import { publishBodyNameFromPage } from "./roster-facts.ts";
 
 
 
@@ -36,5 +37,6 @@ export async function publishCommentFacts(db: FactDb & { readonly query: Query }
   // Whether a body takes comment is read from the page's own words about how, so that passage is both value text and quote.
   const support = quoteOf("commentPeriod") ?? FIELDS.map(([from]) => quoteOf(from) ?? text(input.reading.fields[from])).find((quote): quote is string => quote !== null);
   if ((period === "YES" || period === "NO") && support) out.push(await claim(PERIOD, period, support, support));
+  if (out.some(row => "decision" in row && (row.decision === "PUBLISH" || row.decision === "CONFIRM"))) await publishBodyNameFromPage(db, { entity, copy, provenance, producedBy: input.producedBy }, clocks, now);
   return out;
 }

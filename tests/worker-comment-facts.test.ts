@@ -136,9 +136,9 @@ test("an owed comment-rule extraction publishes each rule as a live fact citing 
   assert.match(rules.fieldSources!.timeLimit!.quote!, /3 minutes per speaker/);
   assert.deepEqual(await facts.query("SELECT entity_id, field, reason FROM blank"), []);
   const count = async () => Number((await facts.query("SELECT count(*)::int AS n FROM fact"))[0]!.n);
-  assert.equal(await count(), 4);
+  assert.equal(await count(), 5, "four rules and the body's name, which the saved page states");
   assert.deepEqual(await publishOwedCommentFacts(input), [published], "a restart reuses the durable publication outcome");
-  assert.equal(await count(), 4, "no duplicate facts");
+  assert.equal(await count(), 5, "no duplicate facts");
 });
 
 test("the runner's normal pass offers an owed comment-rule extraction once, and not again after it publishes", async () => {

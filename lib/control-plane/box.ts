@@ -64,7 +64,7 @@ export const PUBLISHER = "fact-publisher";
 
 /** The Box's reads for builders, filtered and limited by the store rather than read whole. */
 interface BoxQueue {
-  /** Rows a pass must look at: waiting under another slot map, refused by the fact publisher under another slot map, or taken past their lease; at most `limit`. */
+  /** Rows a pass must look at, at most `limit`: parked ones first (waiting or refused by the fact publisher under another slot map, or taken past their lease), then ones never looked at. */
   due(input: { readonly slots: string; readonly now: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them. */
   waitingFor(reason: string, limit: number, subjectIds?: readonly string[]): Promise<readonly BoxFinding[]>;
@@ -75,9 +75,13 @@ export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue;
 export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxRepository {
   const rows = async () => (await repo.list()).map(row => row.value).sort((a, b) => a.id.localeCompare(b.id));
   return { ...repo,
-    due: async ({ slots, now, limit }) => (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.slots !== slots ||
-      row.state === "refused" && row.attempts.at(-1)?.builder === PUBLISHER && row.waitingFor?.slots !== slots ||
-      row.state === "taken" && row.claim !== null && row.claim.expiresAt <= now).slice(0, limit),
+    due: async ({ slots, now, limit }) => {
+      const parked = (row: BoxFinding) => row.state !== "waiting" || row.waitingFor !== undefined;
+      const due = (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.slots !== slots ||
+        row.state === "refused" && row.attempts.at(-1)?.builder === PUBLISHER && row.waitingFor?.slots !== slots ||
+        row.state === "taken" && row.claim !== null && row.claim.expiresAt <= now);
+      return [...due.filter(parked), ...due.filter(row => !parked(row))].slice(0, limit);
+    },
     waitingFor: async (reason, limit, subjectIds) => {
       const subjects = subjectIds ? new Set(subjectIds) : null;
       return (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason && (!subjects || subjects.has(row.subjectId))).slice(0, limit);

@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, indexBoxFinding, indexScoutFindings, takeBoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
+import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, holdBoxFinding, indexBoxFinding, indexScoutFindings, takeBoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
 import type { Attempt } from "../lib/control-plane/attempt.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -126,4 +126,14 @@ test("a Box row keeps its finding's field and value; a row from before that gain
   assert.deepEqual([row.fact, row.lastRecordedAt], [{ field: "officeholder.name", value: "Alice Adams", recordClass: "roster" }, NOW]);
   assert.deepEqual((await repos.boxFindings.due({ slots: "5", now: LATER, limit: 10 })).map(due => due.id), [id], "never looked at under this slot map");
   assert.deepEqual(await repos.boxFindings.waitingFor("ANY_REASON", 10), []);
+});
+
+test("the due queue hands back findings parked under another slot map before ones never looked at", async () => {
+  const repos = createMemoryRepositories();
+  const never = await indexBoxFinding(repos.boxFindings, { ...input, subjectId: "al:city:city-of-aaa#governing" }, NOW);
+  const parked = await indexBoxFinding(repos.boxFindings, { ...input, subjectId: "al:city:city-of-zzz#governing" }, NOW);
+  await holdBoxFinding(repos.boxFindings, parked.id, { class: "other", reason: "NO_FACT_SLOT", slots: "old" }, NOW);
+  const due = await repos.boxFindings.due({ slots: "new", now: LATER, limit: 10 });
+  assert.deepEqual(due.map(row => row.id), [parked.id, never.id], "the parked one comes first even though the other sorts first");
+  assert.deepEqual((await repos.boxFindings.due({ slots: "new", now: LATER, limit: 1 })).map(row => row.id), [parked.id], "a short pass spends its limit on the parked one");
 });

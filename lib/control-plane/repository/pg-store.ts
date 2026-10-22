@@ -915,13 +915,15 @@ export function pgAppendOnlyRepository<T>(
   });
 }
 
-const BOX_DUE_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL
-  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') < $1
-  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') > $1
-  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'refused' AND (value #>> '{attempts,-1,builder}') = '${PUBLISHER}'
-    AND coalesce(value #>> '{waitingFor,slots}', '') <> $1
-  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2
-  LIMIT $3`;
+// Parked findings (looked at under another slot map, refused by the publisher under another one, or taken past their lease) come before never-looked-at ones;
+// each branch is cut to `limit` first, so the outer sort reads at most three pages.
+const BOX_DUE_SQL = `SELECT id, value FROM (
+    (SELECT 0 AS rank, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NOT NULL AND (value #>> '{waitingFor,slots}') <> $1 LIMIT $3)
+    UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'refused' AND (value #>> '{attempts,-1,builder}') = '${PUBLISHER}'
+      AND coalesce(value #>> '{waitingFor,slots}', '') <> $1 LIMIT $3)
+    UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 LIMIT $3)
+    UNION ALL (SELECT 1, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL LIMIT $3)
+  ) due ORDER BY rank, id LIMIT $3`;
 const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 AND ($3::text[] IS NULL OR value->>'subjectId'=ANY($3::text[])) ORDER BY id LIMIT $2`;
 
 function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxRepository {

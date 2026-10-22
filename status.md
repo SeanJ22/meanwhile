@@ -4,8 +4,8 @@ build_state: IDLE; RELEASES 72 TO 77 SHIPPED AND LIVE (main 41ef7e9ce); NEXT REL
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
-lock: session_017bJhG9VbQvb1KubNxKCKjA
-heartbeat: 2026-10-22T02:03:56Z
+lock: none
+heartbeat: 2026-10-22T02:31:57Z
 
 ## Where things stand (Oct 21, 10:40 PM EDT)
 

@@ -40,7 +40,8 @@ async function bindPageGovernment(repos: ControlPlaneRepositories, door: DoorRec
   return (await repos.doors.compareAndSet(door.doorId, row.revision, next, now)).value;
 }
 
-async function queuePageRead(repos: ControlPlaneRepositories, door: DoorRecord, now: string, changedAt: string) {
+/** The page goes back to its worker as ordinary work: an acquirer re-reads it from its saved instructions, named with what moved when that is known. */
+export async function queuePageRead(repos: ControlPlaneRepositories, door: DoorRecord, now: string, changedAt: string, changedFields: readonly string[] = []) {
   if (typeof door.config.workItemId !== "string") throw new Error(`${door.doorId}: no saved work instructions for this page`);
   const item = await repos.workItems.mustRead(door.config.workItemId);
   const plan = item.value.autonomousPlan;
@@ -50,7 +51,7 @@ async function queuePageRead(repos: ControlPlaneRepositories, door: DoorRecord, 
   if (!acquisitions.length) throw new Error(`${door.doorId}: no saved acquisition route for the page`);
   for (const acquisition of acquisitions) await enqueueWorkerTask(repos, { workItemId: item.id, role: "ACQUIRER", contract: plan.contract,
     artifactId: acquisition.route.observation.artifactId, now, acquisition: { ...acquisition, held: [] },
-    replayLabel: `page-check:${door.doorId}:${changedAt}` });
+    replayLabel: `page-check:${door.doorId}:${changedAt}${changedFields.length ? `:${changedFields.join(",")}` : ""}` });
 }
 
 export async function runPageDoorChecks(repos: ControlPlaneRepositories, runtime: DiscoveryRuntime, doors: readonly DoorRecord[], root = process.cwd()) {

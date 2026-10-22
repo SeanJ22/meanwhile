@@ -1,12 +1,17 @@
 import {subBodyId} from '../civic-data/meeting-body-crosswalk.ts';
+import {isGoverningBoardName,type GoverningContext} from '../civic-data/governing-board-name.ts';
 
-/** A source-stated governing body, including a city's named commission. */
+/** What the registry says about the government a body name was read under. */
+function governmentContext(governmentLabel?:string,governmentClass?:string):GoverningContext{
+ return {name:governmentLabel??null,
+  school:/SCHOOL/i.test(governmentClass??'') || /school/i.test(governmentLabel??''),
+  special:/SPECIAL|AUTHORITY|DISTRICT/i.test(governmentClass??'') && !/SCHOOL/i.test(governmentClass??''),
+  county:/COUNTY|BOROUGH|PARISH/i.test(governmentClass??'') || /^(?:county|borough|parish|city and borough)\b/i.test(governmentLabel??'')};
+}
+
+/** A source-stated governing body by any common name: council, commission, assembly, board of aldermen, fiscal court, school board, "Mayor and Council", "Autauga County Commission". */
 export function isGoverningBodyName(name:string,governmentLabel?:string,governmentClass?:string):boolean{
- const value=name.trim();
- if(/^(?:(?:city|town|village|borough|county|municipal|common|tribal) council|council|board of (?:supervisors|commissioners)|(?:city|county|town) commission|selectboard|selectmen|town board)$/i.test(value))return true;
- if(!governmentLabel || !(/^(?:city|town|village|borough|county)(?: and county)? of /i.test(governmentLabel) || ['CITY_OR_TOWN','COUNTY'].includes(governmentClass??'')))return false;
- const place=governmentLabel.replace(/^(?:city|town|village|borough|county)(?: and county)? of /i,'').trim().toLowerCase();
- return value.toLowerCase()===`${place} commission`;
+ return isGoverningBoardName(name.trim(),governmentContext(governmentLabel,governmentClass));
 }
 
 /** An inventory is a discovery target. A sourced body's name gives that body
@@ -15,8 +20,9 @@ export function huntBodySubject(subjectId:string,name:string,governmentLabel?:st
  if(subjectId.includes('#') && !subjectId.includes('#inventory:'))return subjectId.replace(/#calendar$/,'');
  const root=subjectId.split('#')[0];
  const governing=isGoverningBodyName(name,governmentLabel);
- const education=/^(?:school board|board of education)$/i.test(name.trim());
- return governing?`${root}#governing`:education?`${root}#board`:subBodyId(root,name);
+ // A school system's governing board is its board; any other government's is its governing body.
+ const school=/:(?:school|depschool):|school_district:|:nces:/.test(root) || /\b(?:school board|board of education|education board)\b/i.test(name);
+ return governing?`${root}#${school?'board':'governing'}`:subBodyId(root,name);
 }
 export function huntFindingSubject<T extends {subjectId?:string;field?:string;value?:unknown}>(finding:T,governmentLabel?:string):T{
  if(!finding.subjectId || !finding.field || finding.value===undefined)return finding;

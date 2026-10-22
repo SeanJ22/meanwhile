@@ -7,6 +7,11 @@ import {meetingSourceLinks} from './meeting-source-links.ts';
 import {openBlanksOf} from '../coverage/open-blanks.ts';
 import {checklistItem} from '../coverage/checklist-map.ts';
 
+/** A host that carries the government's own name (prichardcitycouncil.org for Prichard): its own site, once its own pages link to it. */
+function namesGovernment(host:string,name:string):boolean{
+  const core=name.toLowerCase().replace(/^(?:city|town|village|borough|township|county)(?: and county)? of /,'').replace(/ (?:city|town|county|school district|schools?)$/,'').replace(/[^a-z0-9]/g,'');
+  return core.length>=5 && host.replace(/[^a-z0-9]/g,'').includes(core);
+}
 interface Frontier { url:string; checkedAt?:string; error?:string; bodyId?:string; bodyName?:string; via?:{page:string;artifactId:string} }
 export interface SiteWalkInput {
   scope:SiteScope;
@@ -21,6 +26,8 @@ export interface SiteWalkInput {
   /** The existing request/time allowance determines when this pass yields. */
   canRead:()=>boolean;
   frontier?:readonly Frontier[];
+  /** Pages hunters found linked from this government's own pages; they are read before anything else. */
+  leads?:readonly Frontier[];
   saveFrontier:(rows:readonly Frontier[],read:readonly Frontier[])=>Promise<void>;
   plan?:Awaited<ReturnType<typeof planPlaceHunt>>;
 }
@@ -44,11 +51,11 @@ export async function walkPlaceBlanks(input:SiteWalkInput) {
   });
   const families=new Set(blanks.map(blank=>blank.checklistId.split('-')[0]!));
   if(!blanks.length)return {read:0,findings:0,remaining:0,plan};
-  // Retained sources and an interrupted frontier precede a fresh homepage.
+  // Pages hunters found precede the homepage, which precedes an interrupted frontier.
   const queue=new Map<string,Frontier>();
-  queue.set(scope.website,{url:scope.website});
+  for(const row of input.leads??[])if(!queue.has(row.url))queue.set(row.url,row);
+  if(!queue.has(scope.website))queue.set(scope.website,{url:scope.website});
   for(const row of input.frontier??[])if(!queue.has(row.url))queue.set(row.url,row);
-  if(!queue.size)queue.set(scope.website,{url:scope.website});
   const seen=new Set<string>(),read:Frontier[]=[],failed:Frontier[]=[];
   let findings=0;
   let own=new URL(scope.website).hostname.toLowerCase().replace(/^www\./,'');
@@ -87,7 +94,11 @@ export async function walkPlaceBlanks(input:SiteWalkInput) {
     const platforms=meetingSourceLinks(page.html,page.url).filter(candidate=>candidate.platform);
     for(const link of blankLinks(page,families)) {
       const host=new URL(link.url).hostname.toLowerCase().replace(/^www\./,'');
-      if(host!==own && !host.endsWith(`.${own}`))continue;
+      if(host!==own && !host.endsWith(`.${own}`)){
+        // The government's own pages link to a site of its own (a council's, a clerk's) under its name; that site is read as the government's.
+        if(!namesGovernment(host,scope.name))continue;
+        scope.hosts=[...new Set([...scope.hosts??[],host])];
+      }
       // Platform routes are findings for the platform lane; this walk reads
       // the government's ordinary pages, including its own calendars.
       if(platforms.some(platform=>link.url===platform.url || link.url.startsWith(platform.url+'/')))continue;

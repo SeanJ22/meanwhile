@@ -305,6 +305,7 @@ export type OfficialEventShape =
   | "microdata"
   | "ics"
   | "event-card"
+  | "table-row"
   | "dated-heading"
   | "next-meeting";
 
@@ -743,6 +744,38 @@ function cardRoot(el: HtmlElement): HtmlElement {
   }
 }
 
+/** A table of meetings: a header row naming a date column, then one meeting per row, with its time, place and status in their own columns. */
+export function extractTableRows(root: HtmlElement, pageUrl: string): ExtractedEvent[] {
+  const out: ExtractedEvent[] = [];
+  const cellsOf = (row: HtmlElement) => row.children.filter((c): c is HtmlElement => typeof c !== "string" && (c.tag === "td" || c.tag === "th"));
+  for (const table of descendants(root, (e) => e.tag === "table")) {
+    const rows = descendants(table, (e) => e.tag === "tr");
+    const header = rows.find((row) => cellsOf(row).length > 1 && cellsOf(row).every((cell) => cell.tag === "th"));
+    if (!header) continue;
+    const labels = cellsOf(header).map((cell) => textLines(cell).join(" ").toLowerCase());
+    const column = (pattern: RegExp) => labels.findIndex((label) => pattern.test(label));
+    const dateAt = column(/^(?:meeting )?(?:date|when)\b/), timeAt = column(/\btime\b/), placeAt = column(/\b(?:location|where|place|venue)\b/), statusAt = column(/\bstatus\b/);
+    const titleAt = column(/^(?:meeting|event|title|body|committee|name|what)\b/);
+    if (dateAt < 0 || titleAt < 0) continue;
+    for (const row of rows.filter((candidate) => candidate !== header)) {
+      const cells = cellsOf(row);
+      if (cells.length !== labels.length) continue;
+      const text = (at: number) => (at < 0 ? [] : textLines(cells[at]));
+      const dates = fullDates(text(dateAt).join("\n"));
+      if (new Set(dates.map((d) => d.iso)).size !== 1) continue;
+      const titleLines = text(titleAt);
+      const time = statedTime(text(timeAt >= 0 ? timeAt : dateAt).join("\n"));
+      const place = text(placeAt).join(" ").trim();
+      out.push({
+        shape: "table-row", title: titleLines[0] ?? "", context: null, date: dates[0].iso, printedDate: dates[0].printed, start: time.start, end: time.end,
+        venue: place && place.length <= 160 ? place : null, canceled: CANCELED.test(`${titleLines.join(" ")} ${text(statusAt).join(" ")}`),
+        links: linksIn(row, pageUrl), evidence: excerpt([...new Set(cells.flatMap((cell) => textLines(cell)))]), dateProblem: null,
+      });
+    }
+  }
+  return out.filter((event) => event.title !== "");
+}
+
 export function extractCards(root: HtmlElement, pageUrl: string): ExtractedEvent[] {
   const cards: HtmlElement[] = [];
   for (const el of descendants(root, EVENTISH)) {
@@ -934,6 +967,7 @@ export function extractOfficialPageEvents(
     ...extractMicrodata(root, options.timeZone, options.pageUrl),
     ...(options.ics ?? []).flatMap((f) => extractIcs(f.text, f.url, options.timeZone)),
     ...extractCards(root, options.pageUrl),
+    ...extractTableRows(root, options.pageUrl),
     ...headings.events,
   ];
   return {

@@ -4,9 +4,11 @@ import type {SiteScope,SitePage} from './site-findings.ts';
 import type {WorkArtifact} from '../control-plane/scheduler/dispatch.ts';
 import type {ControlPlaneRepositories,ArtifactRecord} from '../control-plane/repository/types.ts';
 import type {MeetingsDiscoveryAttempt,DiscoveryStep,DiscoveryFind} from './meetings-site-discovery.ts';
+import {verifyOfficialPageEvents} from '../sources/official-page-events/index.ts';
+import {governmentTimeZone} from '../time/county-time-zones.ts';
 /** The existing discovery log carries actual source-page observations to the
  * existing crosswalk and wiring path. Platform URLs remain unrequested leads. */
-export function sourceMeetings(input:{repos:ControlPlaneRepositories;governmentId:string;website:string;workItemId:string;currentArtifacts:()=>readonly WorkArtifact[]}){
+export function sourceMeetings(input:{repos:ControlPlaneRepositories;governmentId:string;website:string;workItemId:string;currentArtifacts:()=>readonly WorkArtifact[];countyFips?:string|null}){
  let home:NonNullable<MeetingsDiscoveryAttempt['site']>['homepage']=null;
  const inherited=new Map<string,Promise<readonly ArtifactRecord[]>>();
  return async(scope:SiteScope,page:SitePage)=>{
@@ -17,6 +19,12 @@ export function sourceMeetings(input:{repos:ControlPlaneRepositories;governmentI
   if(/^\s*BEGIN:VCALENDAR/i.test(page.html) && scope.bodyName && page.html.toLowerCase().includes(scope.bodyName.toLowerCase())){
    const count=[...page.html.matchAll(/^BEGIN:VEVENT/gim)].length;
    if(count)found.push({vendor:'ical',url:page.url,basis:'LINKED',evidence:page.url,count,detail:`The saved calendar contains ${count} events and names ${scope.bodyName}`,artifactId:page.artifactId,bodyName:scope.bodyName,via:page.via??null});
+  }
+  // A page that lists the body's own dated meetings is itself a calendar door, once code has verified the dates, times and the body's name on it.
+  const zone=scope.bodyName?governmentTimeZone(scope.state,input.countyFips):null;
+  if(zone && scope.bodyName && !found.some(find=>find.url===page.url)){
+   const listed=verifyOfficialPageEvents({body:{id:scope.bodyId??input.governmentId,name:scope.bodyName,officialDomain:new URL(input.website).host,timeZone:zone},url:page.url,html:page.html,now:page.observedAt});
+   if(listed.verdict==='YIELDED')found.push({vendor:'official-page-events',url:page.url,basis:'LINKED',evidence:page.url,count:listed.sampleEvents.length,detail:`The saved page lists ${listed.sampleEvents.length} dated meeting(s) that name ${scope.bodyName}: ${listed.sampleEvents.slice(0,2).map(event=>`${event.title} (${event.startsAt.slice(0,10)})`).join('; ')}`,artifactId:page.artifactId,bodyName:scope.bodyName,via:page.via??null});
   }
   if(!found.length && !leads.length)return;
   const work=page.sourceWorkItemId??input.workItemId;

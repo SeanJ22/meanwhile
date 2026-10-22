@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import type { ElectionFieldKind } from "../civic-data/election-fields.ts";
 import { CHECKLIST_FAMILIES } from "../coverage/checklist-map.ts";
 
@@ -16,10 +18,24 @@ export type FindingSlot =
   | { readonly class: "official hosts"; readonly slot: "host" }
   | { readonly class: "ballot navigation"; readonly election: ElectionFieldKind }
   | { readonly class: "campaign sites" | "candidates"; readonly lead: "campaign-site" | "candidate-profile" }
+  | { readonly class: "site walk"; readonly handoff: "site-walk" }
+  | { readonly class: "comment summary"; readonly handoff: "comment-summary" }
   | { readonly class: string; readonly waiting: string };
 
-/** Moves whenever a class gains slots, so findings waiting on it are looked at again. */
-export const FINDING_SLOTS_VERSION = "7";
+/** The code that sorts a finding and publishes it; a change to any of it can change what a parked finding does. */
+const SORTING_AND_PUBLISHING_CODE = ["finding-slots.ts", "box-publication.ts", "entities.ts", "roster-facts.ts", "publish.ts", "check.ts"] as const;
+
+/** A short hash of the given sources, in order. */
+export const slotsVersionOf = (sources: readonly string[]): string => createHash("sha256").update(JSON.stringify(sources)).digest("hex").slice(0, 16);
+
+/** The hash of the sorting and publishing code, so any change to it makes findings parked under the old code look again, in every state. */
+export const FINDING_SLOTS_VERSION = slotsVersionOf(SORTING_AND_PUBLISHING_CODE.map(file => readFileSync(new URL(file, import.meta.url), "utf8")));
+
+/** The reason a link finding waits in the Box: a page the government linked is a page to go read, and the next walk of that government's own site reads it first. */
+export const SITE_WALK_LEAD = "SITE_WALK_TAKES_IT";
+
+/** The reason a long page about taking part waits in the Box: the comment-rules writer summarises it in plain English, each sentence quoted from the page and checked by a second model. */
+export const COMMENT_SUMMARY_LEAD = "COMMENT_SUMMARY_TAKES_IT";
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";
@@ -53,9 +69,6 @@ export function otherOffice(key: string, value: string, quote: string, sourceUrl
 const STREET = /^\d{1,6}\s+(?:[NSEW]\.?\s+)?[\w.'-]+(?:\s+[\w.'-]+){0,4}?\s+(?:st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|way|hwy|highway|pkwy|parkway|ct|court|pl|place|cir|circle|loop|trail|trl|sq|square)\b\.?(?:[\s,].*)?$/i;
 const SCHEDULE = /\b(first|second|third|fourth|fifth|last|1st|2nd|3rd|4th|every|each)\b[^.]{0,60}\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)s?\b|\b(monthly|weekly|bi-?weekly)\b/i;
 const BODY_NAME = /\b(board|council|commission|committee|authority|trustees|supervisors|selectmen|aldermen)\b/i;
-const GOVERNING_NAME = /^(?:(?:the )?(?:mayor and )?(?:town|city|village|borough|township|county) council|(?:the )?(?:town|city|county) commission|(?:the )?board of (?:supervisors|education|trustees|directors|commissioners|selectmen|aldermen)|(?:the )?(?:governing|school) board|.*\bgoverning (?:school )?board|council)$/i;
-/** Whether a body name is the government's own governing board, and not a committee or commission under it. */
-export const isGoverningName = (name: string): boolean => GOVERNING_NAME.test(name.trim());
 const PERSON_NAME = /^(?:(?:dr|mr|mrs|ms)\.?\s+)?[A-Z][\w.'’-]+(?:\s+(?:[A-Z]\.?|[A-Z][\w.'’-]+|\([\w ]+\))){1,3}$/;
 const SEAT_WORDS = /\b(mayor|vice[- ]?mayor|council ?(?:member|man|woman)|alder(?:man|woman)|board (?:member|president|chair|clerk|vice)|president|chair(?:man|woman|person)?|trustee|supervisor|commissioner|selectm[ae]n|member)\b/i;
 const STAFF_KEY = /manager|clerk|director|superintendent|attorney|administrator|recorder|treasurer|assessor|secretary|coordinator|staff|business|filer|custodian|head|principal/;
@@ -67,10 +80,14 @@ const navigation = (value: string, quote: string): FindingSlot => {
   return kind ? { class: "ballot navigation", election: kind } : { class: "ballot navigation", waiting: URL_VALUE.test(value) ? "LOOKUP_KIND_NOT_STATED" : "LOOKUP_IS_NOT_AN_ADDRESS" };
 };
 
+/** Ids whose finding is a link to a page: meeting calendars and agendas, meeting documents, boards and departments, budgets, candidate and election pages. The link is not the record; the page it leads to is read. */
+const LINKS = new Set("MTG-01 DOC-02 GOV-03 FIN-01 ELE-01".split(" "));
+
 /** A State Run Checklist item a packet hunter reports, routed where that record publishes; some take their route from the value's shape. */
-const CHECKLIST: Readonly<Record<string, (value: string, quote: string) => FindingSlot>> = {
+const CHECKLIST: Readonly<Record<string, (value: string, quote: string, subjectId: string) => FindingSlot>> = {
   "GOV-01": () => ({ class: "body links", slot: "name" }),
-  "GOV-02": () => ({ class: "body links", slot: "name" }),
+  // A committee's name names the committee: it goes where bodies are made, under its own government.
+  "GOV-02": (_value, _quote, subjectId) => subjectId.includes("#body:") ? { class: "bodies", slot: "body_name" } : { class: "body links", slot: "name" },
   "GOV-08": value => PHONE.test(value) ? { class: "office contacts", slot: "office_phone" } : URL_VALUE.test(value) ? { class: "body links", slot: "homepage" }
     : EMAIL.test(value) ? { class: "office contacts", slot: "office_email" } : { class: "office contacts", slot: "office_address" },
   "REF-07": () => ({ class: "official hosts", slot: "host" }),
@@ -81,7 +98,7 @@ const CHECKLIST: Readonly<Record<string, (value: string, quote: string) => Findi
   "OFF-08": value => URL_VALUE.test(value) ? { class: "contacts", slot: "website" } : { class: "contacts", waiting: "PAGE_IS_NOT_AN_ADDRESS" },
   "OFF-09": value => EMAIL.test(value) ? { class: "contacts", slot: "email" } : PHONE.test(value) ? { class: "contacts", slot: "phone" }
     : { class: "contacts", waiting: "CONTACT_IS_NEITHER_EMAIL_NOR_PHONE" },
-  "MTG-01": value => URL_VALUE.test(value) ? { class: "meeting routes", slot: "agenda_url" } : { class: "meeting routes", waiting: "ROUTE_IS_NOT_AN_ADDRESS" },
+  "MTG-01": () => ({ class: "meeting routes", waiting: "ROUTE_IS_NOT_AN_ADDRESS" }),
   "MTG-02": value => URL_VALUE.test(value) ? { class: "meeting routes", slot: "agenda_url" } : { class: "meeting routes", waiting: "ROUTE_IS_NOT_AN_ADDRESS" },
   "MTG-04": () => ({ class: "schedules", slot: "meeting_cadence" }),
   "DOC-01": value => URL_VALUE.test(value) ? { class: "sittings", slot: "agenda_url" } : { class: "sittings", waiting: "LINK_IS_NOT_AN_ADDRESS" },
@@ -153,18 +170,20 @@ export function candidateChecklistId(field: string, value: unknown): string | nu
 }
 
 /** A checklist id, or a hunter's own field name matched to a slot by its words; candidate findings belong to the ballot classes. */
-export function slotFor(field: string, value: unknown, recordClass: string | null, quote = "", sourceUrl = ""): FindingSlot {
+export function slotFor(field: string, value: unknown, recordClass: string | null, quote = "", sourceUrl = "", subjectId = ""): FindingSlot {
   const item = /^([A-Z]{3})-\d{2}$/.exec(field.trim());
-  if (item) return CHECKLIST[item[0]]?.(String(value).trim(), quote)
+  if (item && LINKS.has(item[0]) && URL_VALUE.test(String(value).trim())) return { class: "site walk", handoff: "site-walk" };
+  if (item) return CHECKLIST[item[0]]?.(String(value).trim(), quote, subjectId)
     ?? { class: CHECKLIST_FAMILIES[item[1]!]?.name.toLowerCase() ?? "other", waiting: checklistWait(item[0]) };
   // Hunters annotate names, as in `officeholder.name (Board Member)` or `officeholder.name/office`.
   const key = field.replace(/\(.*?\)/g, "").split("/")[0]!.toLowerCase().replace(/[^a-z0-9.]/g, "");
   const dot = key.lastIndexOf("."), head = dot < 0 ? "" : key.slice(0, dot), last = key.slice(dot + 1);
   if (key.startsWith("candidate") || recordClass === "candidate-enrichment") {
     const id = candidateChecklistId(field, value);
-    return id === null ? { class: "candidates", waiting: "NO_FACT_SLOT" } : CHECKLIST[id]?.(String(value).trim(), quote) ?? { class: "candidates", waiting: checklistWait(id) };
+    return id === null ? { class: "candidates", waiting: "NO_FACT_SLOT" } : CHECKLIST[id]?.(String(value).trim(), quote, subjectId) ?? { class: "candidates", waiting: checklistWait(id) };
   }
   if (key === "commentperiod") return /^(yes|no)$/i.test(String(value)) ? { class: "comment rules", slot: "comment:period" } : { class: "comment rules", slot: "comment:detail" };
+  if (key === "publiccomment.page") return URL_VALUE.test(String(value).trim()) ? { class: "comment summary", handoff: "comment-summary" } : { class: "comment rules", waiting: "PAGE_IS_NOT_AN_ADDRESS" };
   if (COMMENT[key]) return { class: "comment rules", slot: COMMENT[key] };
   if (key === "meeting.schedule" || key === "body.meetingschedule" || key === "meetingschedule") return { class: "schedules", slot: "meeting_cadence" };
   if (PERSON.test(head) || head === "superintendent" || head === "") {

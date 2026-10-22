@@ -96,9 +96,21 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   SELECT id, parent_id FROM entity WHERE id=ANY(ARRAY(SELECT id FROM selected_places)) AND state=$1::char(2) AND id<>$4
   UNION
   SELECT p.id,p.parent_id FROM ancestors a JOIN entity p ON p.id=a.parent_id WHERE p.state=$1::char(2) AND p.id<>$4
+), linked_bodies AS MATERIALIZED (
+  -- A board filed on the state belongs to the one local government here that shares its website.
+  SELECT DISTINCT ON (b.id) b.id,a->>'divisionId' AS division FROM local_governments lg
+    CROSS JOIN LATERAL jsonb_array_elements(lg.g->'associations') a
+    JOIN entity_host gh ON gh.entity_id=lg.g->>'jurisdictionId'
+    JOIN entity_host bh ON bh.host=gh.host
+    JOIN entity b ON b.id=bh.entity_id AND b.kind='body' AND b.parent_id=$4 AND b.state=$1::char(2)
+    WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places))
+      AND NOT EXISTS (SELECT 1 FROM entity_host o JOIN entity og ON og.id=o.entity_id AND og.kind='government' WHERE o.host=gh.host AND o.entity_id<>gh.entity_id)
+      AND NOT EXISTS (SELECT 1 FROM domains d WHERE d.d->>'domain'=gh.host AND d.d->>'type' ~ '^(State|Federal|Interstate)')
+    ORDER BY b.id,a->>'divisionId'
 ), covered AS (
   SELECT id FROM ancestors
   UNION SELECT ep.entity_id FROM entity_place ep JOIN ancestors a ON a.id=ep.place_id
+  UNION SELECT id FROM linked_bodies
 ), owned AS (
   SELECT e.id,e.kind,e.name,e.parent_id,e.state FROM entity e JOIN covered c ON c.id=e.id
   UNION
@@ -373,7 +385,8 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) ELSE '[]'::jsonb END AS governments,
   CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
     WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places))),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
-  coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('division',coalesce(
+  coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('linked',b.id IN (SELECT id FROM linked_bodies),'division',coalesce(
+    (SELECT l.division FROM linked_bodies l WHERE l.id=b.id),
     (SELECT ep.place_id FROM entity_place ep WHERE ep.entity_id=b.id ORDER BY ep.place_id LIMIT 1),
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
     split_part(b.id,'#',1)))) FROM bodies b),'[]'::jsonb) AS entities,
@@ -467,7 +480,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   const sittings = sittingFactsFromRows(rawSittings), disposition = new Map(dispositions.map(d => [d.sourceId,d]));
   const bodies: BodyFacts[] = entities.map(e => {
     const id = String(e.id), own = roster.get(id) ?? null;
-    return { id, division: String(e.division), fields: fields[id] ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
+    return { id, division: String(e.division), fields: fields[id] || e.linked === true ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [] };
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });

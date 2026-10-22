@@ -64,6 +64,9 @@ function linksOfficialPortal(evidence: WorkerEvidence): boolean {
 const HELD_EVENT_FIELDS = { artifactId: true, workItemId: true, partial: true, canonicalUrl: true } as const;
 type HeldEventCapture = Pick<ArtifactRecord, keyof typeof HELD_EVENT_FIELDS>;
 
+/** Every address heldEventContract can accept starts with one of these (case aside), so a store can narrow by them first. */
+export const HELD_EVENT_URL_PREFIXES: readonly string[] = ["https://webapi.legistar.com/v1/pima/events", `https://${API_HOST}/v1/Events`];
+
 export function heldEventContract(root: string, artifact: Pick<ArtifactRecord, "partial" | "canonicalUrl">): LegacyCivicExtractionContract | null {
   if (!artifact.partial) {
     const registered = registeredHeldMeetingContract(artifact.canonicalUrl);

@@ -69775,8 +69775,6 @@
    "homepageUrl": "https://rinconvalleyfdaz.gov/",
    "demandCount": 0,
    "sourceDataset": "COG_2022",
-   "censusId": "203941",
-   "censusUnitType": "SPECIAL_DISTRICT",
    "provenance": {
     "sourceUrl": "https://rinconvalleyfdaz.gov/",
     "sourceOrg": "2022 Census of Governments government-units listing; the body's own site",
@@ -69797,8 +69795,6 @@
    "homepageUrl": "https://www.coronafire.org/",
    "demandCount": 0,
    "sourceDataset": "COG_2022",
-   "censusId": "205798",
-   "censusUnitType": "SPECIAL_DISTRICT",
    "provenance": {
     "sourceUrl": "https://www.coronafire.org/",
     "sourceOrg": "2022 Census of Governments government-units listing; the body's own site",

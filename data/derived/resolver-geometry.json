@@ -5,7 +5,7 @@
     "Every canonical state geometry and national geometry file appears on exactly one list."
   ],
   "schemaVersion": 2,
-  "generatedAt": "2026-10-21",
+  "generatedAt": "2026-10-06",
   "coveredStateFips": [
     "10",
     "11",
@@ -65,156 +65,39 @@
     "09"
   ],
   "totals": {
-    "features": 12780,
-    "coordinates": 1493575
+    "features": 2268,
+    "coordinates": 116378
   },
   "files": [
-    "data/states/ak/geo/aiannh-02.geojson",
-    "data/states/al/geo/aiannh-01.geojson",
-    "data/states/al/geo/district-01.geojson",
-    "data/states/ar/geo/district-05.geojson",
-    "data/states/az/geo/aiannh-04.geojson",
     "data/states/az/geo/cousub-04.geojson",
-    "data/states/az/geo/district-04.geojson",
     "data/states/az/geo/elsd-04.geojson",
     "data/states/az/geo/place-04.geojson",
     "data/states/az/geo/scsd-04.geojson",
     "data/states/az/geo/sldl-04.geojson",
     "data/states/az/geo/sldu-04.geojson",
     "data/states/az/geo/unsd-04.geojson",
-    "data/states/ca/geo/aiannh-06.geojson",
-    "data/states/ca/geo/district-06.geojson",
-    "data/states/co/geo/aiannh-08.geojson",
-    "data/states/co/geo/district-08.geojson",
-    "data/states/ct/geo/aiannh-09.geojson",
-    "data/states/ct/geo/district-09.geojson",
-    "data/states/dc/geo/district-11.geojson",
-    "data/states/de/geo/aiannh-10.geojson",
-    "data/states/de/geo/district-10.geojson",
-    "data/states/fl/geo/aiannh-12.geojson",
-    "data/states/fl/geo/district-12.geojson",
-    "data/states/ga/geo/aiannh-13.geojson",
-    "data/states/ga/geo/district-13.geojson",
-    "data/states/hi/geo/aiannh-15.geojson",
-    "data/states/ia/geo/aiannh-19.geojson",
-    "data/states/ia/geo/district-19.geojson",
-    "data/states/id/geo/aiannh-16.geojson",
-    "data/states/id/geo/district-16.geojson",
-    "data/states/il/geo/district-17.geojson",
-    "data/states/in/geo/aiannh-18.geojson",
-    "data/states/in/geo/district-18.geojson",
-    "data/states/ks/geo/aiannh-20.geojson",
-    "data/states/ks/geo/district-20.geojson",
-    "data/states/ky/geo/district-21.geojson",
-    "data/states/la/geo/aiannh-22.geojson",
-    "data/states/ma/geo/aiannh-25.geojson",
-    "data/states/ma/geo/district-25.geojson",
-    "data/states/md/geo/district-24.geojson",
-    "data/states/me/geo/aiannh-23.geojson",
-    "data/states/me/geo/district-23.geojson",
-    "data/states/mi/geo/aiannh-26.geojson",
-    "data/states/mi/geo/district-26.geojson",
-    "data/states/mn/geo/aiannh-27.geojson",
-    "data/states/mn/geo/district-27.geojson",
-    "data/states/mo/geo/district-29.geojson",
-    "data/states/ms/geo/aiannh-28.geojson",
-    "data/states/ms/geo/district-28.geojson",
-    "data/states/mt/geo/aiannh-30.geojson",
-    "data/states/mt/geo/district-30.geojson",
-    "data/states/nc/geo/aiannh-37.geojson",
-    "data/states/nc/geo/district-37.geojson",
-    "data/states/nd/geo/aiannh-38.geojson",
-    "data/states/nd/geo/district-38.geojson",
-    "data/states/ne/geo/aiannh-31.geojson",
-    "data/states/ne/geo/district-31.geojson",
     "data/states/nh/geo/cousub-33.geojson",
-    "data/states/nh/geo/district-33.geojson",
     "data/states/nh/geo/elsd-33.geojson",
     "data/states/nh/geo/place-33.geojson",
     "data/states/nh/geo/scsd-33.geojson",
     "data/states/nh/geo/sldl-33.geojson",
     "data/states/nh/geo/sldu-33.geojson",
     "data/states/nh/geo/unsd-33.geojson",
-    "data/states/nj/geo/aiannh-34.geojson",
     "data/states/nj/geo/cousub-34.geojson",
-    "data/states/nj/geo/district-34.geojson",
     "data/states/nj/geo/elsd-34.geojson",
     "data/states/nj/geo/place-34.geojson",
     "data/states/nj/geo/scsd-34.geojson",
     "data/states/nj/geo/sldl-34.geojson",
     "data/states/nj/geo/sldu-34.geojson",
     "data/states/nj/geo/unsd-34.geojson",
-    "data/states/nm/geo/aiannh-35.geojson",
-    "data/states/nm/geo/district-35.geojson",
-    "data/states/nv/geo/aiannh-32.geojson",
-    "data/states/nv/geo/district-32.geojson",
-    "data/states/ny/geo/aiannh-36.geojson",
-    "data/states/ny/geo/district-36.geojson",
-    "data/states/oh/geo/district-39.geojson",
-    "data/states/ok/geo/aiannh-40.geojson",
-    "data/states/ok/geo/district-40.geojson",
-    "data/states/or/geo/aiannh-41.geojson",
-    "data/states/or/geo/district-41.geojson",
-    "data/states/pa/geo/district-42.geojson",
-    "data/states/ri/geo/district-44.geojson",
-    "data/states/sc/geo/aiannh-45.geojson",
-    "data/states/sc/geo/district-45.geojson",
-    "data/states/sd/geo/aiannh-46.geojson",
-    "data/states/sd/geo/district-46.geojson",
-    "data/states/tn/geo/aiannh-47.geojson",
-    "data/states/tn/geo/district-47.geojson",
-    "data/states/tx/geo/aiannh-48.geojson",
-    "data/states/tx/geo/district-48.geojson",
-    "data/states/ut/geo/aiannh-49.geojson",
-    "data/states/ut/geo/district-49.geojson",
-    "data/states/va/geo/aiannh-51.geojson",
-    "data/states/va/geo/district-51.geojson",
-    "data/states/vt/geo/district-50.geojson",
-    "data/states/wa/geo/aiannh-53.geojson",
-    "data/states/wa/geo/district-53.geojson",
-    "data/states/wi/geo/aiannh-55.geojson",
-    "data/states/wi/geo/district-55.geojson",
-    "data/states/wv/geo/district-54.geojson",
-    "data/states/wy/geo/aiannh-56.geojson",
-    "data/states/wy/geo/district-56.geojson",
     "public/geo/cd119.geojson",
     "public/geo/county-us.geojson"
   ],
   "detail": [
     {
-      "file": "data/states/ak/geo/aiannh-02.geojson",
-      "features": 210,
-      "coordinates": 15932
-    },
-    {
-      "file": "data/states/al/geo/aiannh-01.geojson",
-      "features": 8,
-      "coordinates": 1956
-    },
-    {
-      "file": "data/states/al/geo/district-01.geojson",
-      "features": 82,
-      "coordinates": 9135
-    },
-    {
-      "file": "data/states/ar/geo/district-05.geojson",
-      "features": 65,
-      "coordinates": 11627
-    },
-    {
-      "file": "data/states/az/geo/aiannh-04.geojson",
-      "features": 21,
-      "coordinates": 15164
-    },
-    {
       "file": "data/states/az/geo/cousub-04.geojson",
       "features": 53,
       "coordinates": 1605
-    },
-    {
-      "file": "data/states/az/geo/district-04.geojson",
-      "features": 164,
-      "coordinates": 48798
     },
     {
       "file": "data/states/az/geo/elsd-04.geojson",
@@ -247,239 +130,9 @@
       "coordinates": 1922
     },
     {
-      "file": "data/states/ca/geo/aiannh-06.geojson",
-      "features": 98,
-      "coordinates": 5085
-    },
-    {
-      "file": "data/states/ca/geo/district-06.geojson",
-      "features": 482,
-      "coordinates": 85464
-    },
-    {
-      "file": "data/states/co/geo/aiannh-08.geojson",
-      "features": 2,
-      "coordinates": 352
-    },
-    {
-      "file": "data/states/co/geo/district-08.geojson",
-      "features": 2487,
-      "coordinates": 199043
-    },
-    {
-      "file": "data/states/ct/geo/aiannh-09.geojson",
-      "features": 4,
-      "coordinates": 178
-    },
-    {
-      "file": "data/states/ct/geo/district-09.geojson",
-      "features": 36,
-      "coordinates": 1547
-    },
-    {
-      "file": "data/states/dc/geo/district-11.geojson",
-      "features": 46,
-      "coordinates": 949
-    },
-    {
-      "file": "data/states/de/geo/aiannh-10.geojson",
-      "features": 2,
-      "coordinates": 156
-    },
-    {
-      "file": "data/states/de/geo/district-10.geojson",
-      "features": 1,
-      "coordinates": 42
-    },
-    {
-      "file": "data/states/fl/geo/aiannh-12.geojson",
-      "features": 7,
-      "coordinates": 255
-    },
-    {
-      "file": "data/states/fl/geo/district-12.geojson",
-      "features": 257,
-      "coordinates": 10531
-    },
-    {
-      "file": "data/states/ga/geo/aiannh-13.geojson",
-      "features": 2,
-      "coordinates": 238
-    },
-    {
-      "file": "data/states/ga/geo/district-13.geojson",
-      "features": 17,
-      "coordinates": 7736
-    },
-    {
-      "file": "data/states/hi/geo/aiannh-15.geojson",
-      "features": 59,
-      "coordinates": 1799
-    },
-    {
-      "file": "data/states/ia/geo/aiannh-19.geojson",
-      "features": 1,
-      "coordinates": 125
-    },
-    {
-      "file": "data/states/ia/geo/district-19.geojson",
-      "features": 5,
-      "coordinates": 246
-    },
-    {
-      "file": "data/states/id/geo/aiannh-16.geojson",
-      "features": 5,
-      "coordinates": 900
-    },
-    {
-      "file": "data/states/id/geo/district-16.geojson",
-      "features": 507,
-      "coordinates": 77397
-    },
-    {
-      "file": "data/states/il/geo/district-17.geojson",
-      "features": 444,
-      "coordinates": 47597
-    },
-    {
-      "file": "data/states/in/geo/aiannh-18.geojson",
-      "features": 1,
-      "coordinates": 178
-    },
-    {
-      "file": "data/states/in/geo/district-18.geojson",
-      "features": 249,
-      "coordinates": 16427
-    },
-    {
-      "file": "data/states/ks/geo/aiannh-20.geojson",
-      "features": 4,
-      "coordinates": 263
-    },
-    {
-      "file": "data/states/ks/geo/district-20.geojson",
-      "features": 16,
-      "coordinates": 945
-    },
-    {
-      "file": "data/states/ky/geo/district-21.geojson",
-      "features": 167,
-      "coordinates": 137137
-    },
-    {
-      "file": "data/states/la/geo/aiannh-22.geojson",
-      "features": 14,
-      "coordinates": 2435
-    },
-    {
-      "file": "data/states/ma/geo/aiannh-25.geojson",
-      "features": 3,
-      "coordinates": 131
-    },
-    {
-      "file": "data/states/ma/geo/district-25.geojson",
-      "features": 74,
-      "coordinates": 25741
-    },
-    {
-      "file": "data/states/md/geo/district-24.geojson",
-      "features": 1,
-      "coordinates": 6
-    },
-    {
-      "file": "data/states/me/geo/aiannh-23.geojson",
-      "features": 6,
-      "coordinates": 1462
-    },
-    {
-      "file": "data/states/me/geo/district-23.geojson",
-      "features": 82,
-      "coordinates": 9260
-    },
-    {
-      "file": "data/states/mi/geo/aiannh-26.geojson",
-      "features": 12,
-      "coordinates": 1324
-    },
-    {
-      "file": "data/states/mi/geo/district-26.geojson",
-      "features": 12,
-      "coordinates": 646
-    },
-    {
-      "file": "data/states/mn/geo/aiannh-27.geojson",
-      "features": 12,
-      "coordinates": 5784
-    },
-    {
-      "file": "data/states/mn/geo/district-27.geojson",
-      "features": 8,
-      "coordinates": 20799
-    },
-    {
-      "file": "data/states/mo/geo/district-29.geojson",
-      "features": 38,
-      "coordinates": 3019
-    },
-    {
-      "file": "data/states/ms/geo/aiannh-28.geojson",
-      "features": 1,
-      "coordinates": 1033
-    },
-    {
-      "file": "data/states/ms/geo/district-28.geojson",
-      "features": 15,
-      "coordinates": 1354
-    },
-    {
-      "file": "data/states/mt/geo/aiannh-30.geojson",
-      "features": 8,
-      "coordinates": 7696
-    },
-    {
-      "file": "data/states/mt/geo/district-30.geojson",
-      "features": 290,
-      "coordinates": 66405
-    },
-    {
-      "file": "data/states/nc/geo/aiannh-37.geojson",
-      "features": 8,
-      "coordinates": 2786
-    },
-    {
-      "file": "data/states/nc/geo/district-37.geojson",
-      "features": 14,
-      "coordinates": 2312
-    },
-    {
-      "file": "data/states/nd/geo/aiannh-38.geojson",
-      "features": 5,
-      "coordinates": 4386
-    },
-    {
-      "file": "data/states/nd/geo/district-38.geojson",
-      "features": 298,
-      "coordinates": 31248
-    },
-    {
-      "file": "data/states/ne/geo/aiannh-31.geojson",
-      "features": 7,
-      "coordinates": 935
-    },
-    {
-      "file": "data/states/ne/geo/district-31.geojson",
-      "features": 436,
-      "coordinates": 27081
-    },
-    {
       "file": "data/states/nh/geo/cousub-33.geojson",
       "features": 195,
       "coordinates": 2338
-    },
-    {
-      "file": "data/states/nh/geo/district-33.geojson",
-      "features": 9,
-      "coordinates": 1262
     },
     {
       "file": "data/states/nh/geo/elsd-33.geojson",
@@ -512,19 +165,9 @@
       "coordinates": 1129
     },
     {
-      "file": "data/states/nj/geo/aiannh-34.geojson",
-      "features": 2,
-      "coordinates": 148
-    },
-    {
       "file": "data/states/nj/geo/cousub-34.geojson",
       "features": 220,
       "coordinates": 2777
-    },
-    {
-      "file": "data/states/nj/geo/district-34.geojson",
-      "features": 5,
-      "coordinates": 1427
     },
     {
       "file": "data/states/nj/geo/elsd-34.geojson",
@@ -557,171 +200,6 @@
       "coordinates": 1488
     },
     {
-      "file": "data/states/nm/geo/aiannh-35.geojson",
-      "features": 22,
-      "coordinates": 13518
-    },
-    {
-      "file": "data/states/nm/geo/district-35.geojson",
-      "features": 33,
-      "coordinates": 4662
-    },
-    {
-      "file": "data/states/nv/geo/aiannh-32.geojson",
-      "features": 26,
-      "coordinates": 2418
-    },
-    {
-      "file": "data/states/nv/geo/district-32.geojson",
-      "features": 51,
-      "coordinates": 14313
-    },
-    {
-      "file": "data/states/ny/geo/aiannh-36.geojson",
-      "features": 11,
-      "coordinates": 1023
-    },
-    {
-      "file": "data/states/ny/geo/district-36.geojson",
-      "features": 216,
-      "coordinates": 17316
-    },
-    {
-      "file": "data/states/oh/geo/district-39.geojson",
-      "features": 19,
-      "coordinates": 1528
-    },
-    {
-      "file": "data/states/ok/geo/aiannh-40.geojson",
-      "features": 30,
-      "coordinates": 8062
-    },
-    {
-      "file": "data/states/ok/geo/district-40.geojson",
-      "features": 33,
-      "coordinates": 1658
-    },
-    {
-      "file": "data/states/or/geo/aiannh-41.geojson",
-      "features": 10,
-      "coordinates": 2374
-    },
-    {
-      "file": "data/states/or/geo/district-41.geojson",
-      "features": 145,
-      "coordinates": 27877
-    },
-    {
-      "file": "data/states/pa/geo/district-42.geojson",
-      "features": 107,
-      "coordinates": 17162
-    },
-    {
-      "file": "data/states/ri/geo/district-44.geojson",
-      "features": 28,
-      "coordinates": 2151
-    },
-    {
-      "file": "data/states/sc/geo/aiannh-45.geojson",
-      "features": 8,
-      "coordinates": 421
-    },
-    {
-      "file": "data/states/sc/geo/district-45.geojson",
-      "features": 8,
-      "coordinates": 4519
-    },
-    {
-      "file": "data/states/sd/geo/aiannh-46.geojson",
-      "features": 9,
-      "coordinates": 8626
-    },
-    {
-      "file": "data/states/sd/geo/district-46.geojson",
-      "features": 69,
-      "coordinates": 6604
-    },
-    {
-      "file": "data/states/tn/geo/aiannh-47.geojson",
-      "features": 1,
-      "coordinates": 1033
-    },
-    {
-      "file": "data/states/tn/geo/district-47.geojson",
-      "features": 87,
-      "coordinates": 13761
-    },
-    {
-      "file": "data/states/tx/geo/aiannh-48.geojson",
-      "features": 3,
-      "coordinates": 211
-    },
-    {
-      "file": "data/states/tx/geo/district-48.geojson",
-      "features": 1445,
-      "coordinates": 131075
-    },
-    {
-      "file": "data/states/ut/geo/aiannh-49.geojson",
-      "features": 6,
-      "coordinates": 12040
-    },
-    {
-      "file": "data/states/ut/geo/district-49.geojson",
-      "features": 67,
-      "coordinates": 8915
-    },
-    {
-      "file": "data/states/va/geo/aiannh-51.geojson",
-      "features": 5,
-      "coordinates": 283
-    },
-    {
-      "file": "data/states/va/geo/district-51.geojson",
-      "features": 4,
-      "coordinates": 2420
-    },
-    {
-      "file": "data/states/vt/geo/district-50.geojson",
-      "features": 5,
-      "coordinates": 348
-    },
-    {
-      "file": "data/states/wa/geo/aiannh-53.geojson",
-      "features": 27,
-      "coordinates": 5059
-    },
-    {
-      "file": "data/states/wa/geo/district-53.geojson",
-      "features": 897,
-      "coordinates": 115142
-    },
-    {
-      "file": "data/states/wi/geo/aiannh-55.geojson",
-      "features": 12,
-      "coordinates": 3072
-    },
-    {
-      "file": "data/states/wi/geo/district-55.geojson",
-      "features": 7,
-      "coordinates": 297
-    },
-    {
-      "file": "data/states/wv/geo/district-54.geojson",
-      "features": 5,
-      "coordinates": 2163
-    },
-    {
-      "file": "data/states/wy/geo/aiannh-56.geojson",
-      "features": 1,
-      "coordinates": 712
-    },
-    {
-      "file": "data/states/wy/geo/district-56.geojson",
-      "features": 306,
-      "coordinates": 30552
-    },
-    {
       "file": "public/geo/cd119.geojson",
       "features": 441,
       "coordinates": 80115
@@ -735,7 +213,7 @@
   "excluded": [
     {
       "file": "data/states/az/geo/body-territories.geojson",
-      "reason": "BODY territories, not DIVISION boundaries (NH233) — recorded plats belonging to governments the Census enumerates no division for, such as the Rocking K South Community Facilities District. It is loaded and point-tested by lib/registry/body-territory.ts on the same sweep, and it is excluded HERE because every feature in this manifest is keyed by ocdId and these features deliberately have none. Including it would make the division resolver answer with a body id, which is the join confusion this session spent its day removing."
+      "reason": "BODY territories, not DIVISION boundaries — recorded plats belonging to governments the Census enumerates no division for. lib/registry/body-territory.ts point-tests them; they have no ocdId, so including them would make the division resolver answer with a body id."
     },
     {
       "file": "public/geo/state-outlines.geojson",

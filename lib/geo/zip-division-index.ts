@@ -15,26 +15,14 @@ export interface ZipDivisionEntry {
   readonly samples: number;
   /** State/families replaced by qualified Census ZIP rows, such as az/sldu. */
   readonly qualifiedDistricts?: readonly string[];
-  /** Divisions reaching into the ZIP where too few of its residents live to be shown as theirs: named, never listed as governing. */
-  readonly fringe?: readonly string[];
 }
 
-export interface ZipDivisionShard {
+interface Shard {
   readonly divisions: readonly string[];
   readonly zips: Readonly<Record<string, readonly number[]>>;
   readonly partial: Readonly<Record<string, readonly number[]>>;
   readonly zipSamples: Readonly<Record<string, number>>;
-  /** 2020 residents of each `zips` division inside the ZIP, index-aligned; -1 where the blocks do not measure it. */
-  readonly residents?: Readonly<Record<string, readonly number[]>>;
-  readonly zipResidents?: Readonly<Record<string, number>>;
 }
-type Shard = ZipDivisionShard;
-
-/** A division home to a smaller share of a ZIP's residents than this is named for the ZIP, never shown as governing it. */
-export const ZIP_RESIDENT_SHARE_SHOWN = 0.05;
-/** At this share a division holds the whole ZIP; below it the ZIP is split. */
-const WHOLE_ZIP_SHARE = 0.995;
-const STATEWIDE = /^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/;
 
 export const ZIP_DIVISIONS_DIR = ["data", "derived", "zip-divisions"] as const;
 /** A shard's name: the ZIP's first two digits. */
@@ -66,28 +54,21 @@ function shardFor(name: string): Promise<Shard | null> {
   return read;
 }
 
-/** One ZIP's entry from its shard, judged by where its residents live when the shard counts them. */
-export function shardEntry(shard: Shard, zip: string): ZipDivisionEntry | null {
+function entryOf(shard: Shard, zip: string): ZipDivisionEntry | null {
   const refs = shard.zips[zip];
   if (refs === undefined) return null;
-  const counts = shard.residents?.[zip], total = shard.zipResidents?.[zip] ?? 0;
-  const ids: string[] = [], partial: string[] = [], fringe: string[] = [];
-  refs.forEach((ref, k) => {
-    const id = shard.divisions[ref];
-    if (STATEWIDE.test(id)) { ids.push(id); return; }
-    const residents = counts && total > 0 ? counts[k] ?? -1 : -1;
-    if (residents >= 0 && residents / total < ZIP_RESIDENT_SHARE_SHOWN) { fringe.push(id); return; }
-    ids.push(id);
-    if (residents < 0 || residents / total < WHOLE_ZIP_SHARE) partial.push(id);
-  });
-  return { ids, partial, samples: shard.zipSamples[zip] ?? 0, ...(fringe.length ? { fringe } : {}) };
+  return {
+    ids: refs.map((i) => shard.divisions[i]),
+    partial: refs.map((i) => shard.divisions[i]).filter(id => !/^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(id)),
+    samples: shard.zipSamples[zip] ?? 0,
+  };
 }
 
 /** The held local divisions in one ZIP shard, before Census district qualification. */
 export async function indexedZipDivisionEntry(zip: string | null): Promise<ZipDivisionEntry | null> {
   if (zip === null || !/^\d{5}$/.test(zip)) return null;
   const shard = await shardFor(zipShardOf(zip));
-  return shard === null ? null : shardEntry(shard, zip);
+  return shard === null ? null : entryOf(shard, zip);
 }
 
 /** A ZIP's divisions, or null when it is not indexed or its shard could not be read — our gap, never a claim about the place. */
@@ -150,7 +131,7 @@ export function readAllZipDivisions(root: string): Map<string, ZipDivisionEntry>
   for (const file of readdirSync(dir).filter((f) => SHARD_FILE.test(f)).sort()) {
     const shard = JSON.parse(readFileSync(join(dir, file), "utf8")) as Shard;
     for (const zip of Object.keys(shard.zips)) {
-      const entry = shardEntry(shard, zip);
+      const entry = entryOf(shard, zip);
       if (entry !== null) out.set(zip, entry);
     }
   }

@@ -19,7 +19,7 @@ import type { Body, Division, DivisionType } from "../registry/types.ts";
 
 export type RegistrationDivision = Division & {
   readonly geoid: string;
-  readonly sourceDataset: "TIGER_CB2023" | "CENSUS_AIANNH2020" | "DISTRICT_BOUNDARY";
+  readonly sourceDataset: "TIGER_CB2023";
   readonly canonicalOcdId: null;
   readonly canonicalMatch: "none";
   readonly canonicalGap: "UNDETERMINED";
@@ -88,23 +88,15 @@ const DIVISION_TYPE: Readonly<Record<Exclude<ReferenceLayer, "state">, DivisionT
   unsd: "school_district",
   elsd: "school_district",
   scsd: "school_district",
-  district: "special_district",
-  aiannh: "tribal_area",
 };
 /** The functional statuses that govern: active, partially consolidated, consolidated, subordinate. */
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 /** The layers a territory's functional status is read for. */
 const STATUS_LAYERS = new Set<ReferenceLayer>(["county", "cousub", "place"]);
 
-/** Where a division's boundary was read: a 2023 cartographic boundary file, the AIANNH code list, or a district's own layer. */
-function boundarySource(layer: Exclude<ReferenceLayer, "state">, geoid: string, ref: LoadedReference["reference"]): { url: string; org: string; dataset: RegistrationDivision["sourceDataset"] } {
-  if (layer === "aiannh") return { url: "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt", org: "U.S. Census Bureau", dataset: "CENSUS_AIANNH2020" };
-  if (layer === "district") {
-    const source = ref.boundarySources?.[geoid.split("#")[0]!];
-    if (!source) throw new Error(`REGISTRATION_BOUNDARY_SOURCE_MISSING:${geoid}`);
-    return { url: source.url, org: source.publisher, dataset: "DISTRICT_BOUNDARY" };
-  }
-  return { url: `https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_${layer}_500k.zip`, org: "U.S. Census Bureau", dataset: "TIGER_CB2023" };
+/** The 2023 cartographic boundary file a layer's divisions were read from. */
+function boundaryUrl(layer: Exclude<ReferenceLayer, "state">): string {
+  return `https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_${layer}_500k.zip`;
 }
 
 
@@ -143,27 +135,27 @@ export function registrationCandidate(input: {
   const countyByGeoid = new Map(ref.divisions.filter(([, layer]) => layer === "county").map(([ocdId, , geoid]) => [geoid, ocdId]));
   const violations: string[] = [];
 
-  const allDivisions: RegistrationDivision[] = ref.divisions.flatMap(([ocdId, layer, geoid, censusName, lsad, funcstat, classfp]): RegistrationDivision[] => {
-    if (layer === "state") return [];
-    const source = boundarySource(layer, geoid, ref);
-    return [{
+  const allDivisions: RegistrationDivision[] = ref.divisions.flatMap(([ocdId, layer, geoid, censusName, lsad, funcstat, classfp]): RegistrationDivision[] =>
+    layer === "state"
+      ? []
+      : [{
           ocdId,
           divisionType: DIVISION_TYPE[layer],
           tier: "local",
           state: target.state,
           label: censusName,
           parentOcdId: parentOf(ocdId, layer, geoid, stateOcdId, countyByGeoid),
-          lsad: layer === "district" ? null : lsad ?? null,
+          lsad: lsad ?? null,
           funcstat: funcstat ?? null,
           classfp: classfp ?? null,
           geoid,
           canonicalOcdId: null,
           canonicalMatch: "none",
           canonicalGap: "UNDETERMINED",
-          sourceDataset: source.dataset,
-          provenance: { sourceUrl: source.url, sourceOrg: source.org, collectedAt: loaded.generatedAt, verifiedAt: null },
-        }];
-  });
+          sourceDataset: "TIGER_CB2023",
+          provenance: { sourceUrl: boundaryUrl(layer), sourceOrg: "U.S. Census Bureau", collectedAt: loaded.generatedAt, verifiedAt: null },
+        }],
+  );
 
   const previousListings = new Map(input.previous?.governments?.map(row => [row.id, row]) ?? []);
   const governmentListings = referenceGovernmentListings(loaded).map(government => {

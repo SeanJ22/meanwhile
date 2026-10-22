@@ -202,8 +202,6 @@ export interface CoverageSummary {
   governments?: RegistrationGovernmentListing[];
   governmentInventoryStates?: string[];
   governmentInventoryUnavailableStates?: string[];
-  /** Divisions reaching into the ZIP where few of its residents live: named, their boards not shown. */
-  fringeDivisions?: { ocdId: string; label: string }[];
   /** National FEC directories selected for the states this place touches. */
   stateOffices?: StateOfficeContact[];
   federalDirectoryUnavailable?: boolean;

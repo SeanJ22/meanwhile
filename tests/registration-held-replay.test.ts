@@ -13,7 +13,7 @@ import { heldRegistrationReceipt } from "../lib/registration/acquire.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { reconcileRegistrationHeldReceipt, registrationHeldReplayIsExact } from "../lib/registration/held-evidence.ts";
 import { REGISTRATION_HELD_RETRIEVED_AT, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
-import { loadRegistrationReference, type LoadedReference } from "../lib/registration/reference.ts";
+import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -21,20 +21,9 @@ const recheckedAt = "2026-10-09T10:24:23.616Z";
 const replayAt = "2026-10-10T00:25:00.000Z";
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 
-/** The held reference as the Census of Governments alone built it, before district boundaries and tribal areas joined it. */
-function censusOnly(loaded: LoadedReference): LoadedReference {
-  const { boundarySources: _sources, ...rest } = loaded.reference;
-  const divisions = rest.divisions.filter(d => d[1] !== "district" && d[1] !== "aiannh");
-  const at = (index: number) => index < 0 ? -1 : divisions.indexOf(rest.divisions[index]);
-  const governments = rest.governments.filter(g => g[5] !== "AIANNH_CODE" && g[5] !== "BOUNDARY_SOURCE_ONLY").map(([pid, id, name, type, division, how, alternate]) =>
-    how === "BOUNDARY_SOURCE" || how === "COUNTY_NAMED" ? [pid, id, name, type, -1, "NO_CENSUS_GEOGRAPHY", at(alternate)] as const : [pid, id, name, type, at(division), how, at(alternate)] as const);
-  const reference = { ...rest, divisions, governments };
-  return { ...loaded, reference, sha256: hash(`${JSON.stringify(reference)}\n`), generatedAt: "2026-09-23" };
-}
-
 async function legacyRegistration() {
   const store = new MemoryRoutineDataStore(), target = registrationTarget("NH");
-  const reference = censusOnly(loadRegistrationReference(ROOT, target.state));
+  const reference = loadRegistrationReference(ROOT, target.state);
   const baseline = registrationCandidate({ target, reference, receipt: heldRegistrationReceipt() });
   const model = baseline.readModel as RegistrationReadModel;
   const government = model.governments!.find(row => row.nativeIds.census_pid6 && row.associations.length)!;

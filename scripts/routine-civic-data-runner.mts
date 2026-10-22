@@ -114,7 +114,8 @@ import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-loo
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
-import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
+import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
+import { groupCalendarReadsByState, stateCalendarMemberResults, type StateCalendarGroup } from "../lib/civic-data/state-calendars.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
@@ -305,14 +306,14 @@ const childMemoryReleases = new Map<string, () => void>();
 const startedSourceChildren = new Set<string>();
 /** Every child this pass started: what it ran is what its edge publish carries. */
 const ranThisPass = new Set<string>();
-async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
+async function acquireChildMemory(command: BoundedChildCommand, ran: readonly string[] = [command.id]): Promise<void> {
   const script = command.args.find(arg => /[.](?:mts|ts)$/.test(arg))?.split(/[\\/]/).at(-1) ?? "";
   const deadline = script === "routine-civic-data-reader-repair.mts" ? PASS_REPAIR_DEADLINE_MS : PASS_LAUNCH_DEADLINE_MS;
   const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, deadline));
   childMemoryReleases.set(command.id, release);
   (command as { onStarted?: (pid: number) => void }).onStarted = pid => {
     startedSourceChildren.add(command.id);
-    ranThisPass.add(command.id);
+    for (const id of ran) ranThisPass.add(id);
     release.observe?.(pid);
   };
 }
@@ -1046,7 +1047,6 @@ const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admi
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
 attempted = pendingRuns.length;
 
-const sourceConcurrency = Math.max(1, pendingRuns.length);
 function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
   return {
     id: pending.id,
@@ -1087,27 +1087,72 @@ function recordSourceSettlementFailures(runs: readonly BoundedChildResult[]): vo
 step = "running the source pass";
 for (const { id } of pendingRuns) unsettledSourceRuns.add(id);
 
-const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => runBoundedChildPass(
-  runs.map(sourceChildCommand),
+/** One child per state reads all of that state's due boards; every other task keeps its own child. */
+type SourceUnit = PendingRun | StateCalendarGroup<PendingRun>;
+function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
+  if (unit.kind !== "STATE_CALENDARS") return sourceChildCommand(unit);
+  return {
+    id: unit.id,
+    failureDomain: unit.id,
+    executable: process.execPath,
+    args: ["--experimental-strip-types", ...unit.command],
+    env: withPassDeadline(admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "STATE_CALENDARS", contract: unit.id, parentPid: process.pid }),
+      PASS_LAUNCH_DEADLINE_MS),
+    ...(meetingReadQuietMs() !== undefined ? { timeoutMs: meetingReadQuietMs()! } : {}),
+  };
+}
+function unitMembers(unit: SourceUnit): readonly PendingRun[] {
+  return unit.kind === "STATE_CALENDARS" ? unit.members : [unit];
+}
+
+const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
+  const units = groupCalendarReadsByState(runs);
+  return runBoundedChildPass(
+  units.map(sourceUnitCommand),
   {
     cwd: ROOT,
     env: process.env,
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
     deadlineMs: PASS_LAUNCH_DEADLINE_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
-    concurrency: sourceConcurrency,
+    concurrency: Math.max(1, units.length),
 
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
-      await acquireChildMemory(command);
-      await recordHuntSourceProgress(runs[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
+      await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id));
+      for (const member of unitMembers(units[index]!)) {
+        await recordHuntSourceProgress(member.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
+      }
     },
-    onSettled: async (run, index) => settlePendingRun(runs[index]!, run),
+    onSettled: async (run, index) => {
+      const unit = units[index]!;
+      if (unit.kind === "STATE_CALENDARS") await settleStateCalendars(unit, run);
+      else await settlePendingRun(unit, run);
+    },
 
     discardOutputAfterSettlement: true,
   },
-));
+  );
+});
+
+/** Each board of a state's program settles exactly as it would have alone; boards the program never reached stay owed. */
+async function settleStateCalendars(group: StateCalendarGroup<PendingRun>, run: BoundedChildResult): Promise<void> {
+  try {
+    const started = startedSourceChildren.has(run.id);
+    const results = stateCalendarMemberResults(run, group.members.map((member) => member.id), started);
+    console.log(`RCD_TASK ${group.id}: ${group.members.length} board(s) given to the state's calendar program; ` +
+      `${results.filter((result) => "run" in result).length} read, ${results.filter((result) => "owed" in result).length} still owed`);
+    for (const [index, result] of results.entries()) {
+      const member = group.members[index]!;
+      if ("run" in result) { await settlePendingRunResult(member, result.run); continue; }
+      laneLastEndedMs.set(member.task.acquisitionFailureDomain, Date.now());
+      unsettledSourceRuns.delete(member.id);
+      attempted -= 1;
+      console.log(`RCD_DEFER ${member.id}: ${safeFailure(result.owed)}; source work remains owed`);
+    }
+  } finally { releaseChildMemory(run.id); }
+}
 
 async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): Promise<void> {
   try { await settlePendingRunResult(pending, run); }
@@ -1464,7 +1509,7 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
     deadlineMs: hotReadLimitsMs.REPAIR,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: 1,
-    onStarting: acquireChildMemory,
+    onStarting: command => acquireChildMemory(command),
     onSettled: async (result) => settlePendingRun(run, result),
     discardOutputAfterSettlement: true,
   }));

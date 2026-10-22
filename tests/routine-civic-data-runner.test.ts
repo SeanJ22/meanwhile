@@ -1394,9 +1394,8 @@ test("the pilot outer bound contains the source and meeting frontier", () => {
   assert.match(runner, /routineFailureDomainFrontier\(/);
   assert.match(runner, /latestUnreceiptedSupervisorAttempts\(/);
   assert.match(runner, /failureDomain:\s*pending\.task\.acquisitionFailureDomain/);
-  assert.match(runner, /const sourceConcurrency = Math\.max\(1, pendingRuns\.length\)/);
-  assert.match(runner, /concurrency:\s*sourceConcurrency/);
-  assert.match(runner, /onSettled:\s*async \(run, index\) => settlePendingRun/);
+  assert.match(runner, /concurrency: Math\.max\(1, units\.length\)/);
+  assert.match(runner, /else await settlePendingRun\(unit, run\)/);
   assert.match(runner, /discardOutputAfterSettlement:\s*true/);
   assert.doesNotMatch(runner, /waveStart|pendingWave/);
   assert.doesNotMatch(runner, /spawnSync/);

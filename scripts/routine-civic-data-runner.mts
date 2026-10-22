@@ -118,6 +118,7 @@ import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
+import { refreshDuePageDoors } from "../lib/doors/page-refresh.ts";
 import { stateOfPlace } from "../lib/method/fix-map.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
@@ -734,6 +735,24 @@ if (!PUBLISH_NOW) {
     }
   } catch (error) {
     supervisorFailures.push({ taskId: "fact-store-import", code: "FACT_IMPORT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+  step = "re-reading pages whose facts are past their refresh date";
+  try {
+    const connection = controlPlaneUrlFromEnv();
+    if (connection) {
+      const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+      const doors = (await listDoors(repos.doors)).doors;
+      const sizeFor = websiteSizeFromHoldings([...new Set(doors.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
+      const pages = await refreshDuePageDoors({ repos, facts: readerFactDb(), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
+        fetch: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), doors, now: new Date().toISOString() });
+      if (pages.looked > 0 || pages.waiting > 0 || pages.failures.length > 0) {
+        console.log(`RCD_PAGE_REFRESH looked at ${pages.looked} page(s): ${pages.confirmed} re-confirmed (${pages.restamped} fact(s) restamped), ` +
+          `${pages.changed} changed, ${pages.unreadable} unreadable; ${pages.waiting} waiting on their website` +
+          (pages.failures.length ? `; ${pages.failures.length} could not finish — ${safeFailure(pages.failures.join("; "))}` : ""));
+      }
+    }
+  } catch (error) {
+    console.log(`RCD_PAGE_REFRESH CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; pages past their refresh date are read again next pass`);
   }
 }
 

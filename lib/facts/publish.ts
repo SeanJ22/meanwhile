@@ -1,6 +1,6 @@
-import { checkFact, type Claim, type FieldKind } from "./check.ts";
+import { checkFact, normalizeText, type Claim, type FieldKind, type SavedCopy } from "./check.ts";
 import { decide, type Decision } from "./decide.ts";
-import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
+import { invalidateReaderCache, readerCacheScopeForEntity, withBatchedReaderInvalidation, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 
@@ -51,8 +51,7 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
     const decision = decide(row ? { value: row.value, provenance: row.provenance_kind as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string) } : null,
       { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt });
     if (decision === "CONFIRM") {
-      await query("UPDATE fact SET checked_at = $2 WHERE id = $1", [row!.id, now.toISOString()]);
-      await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
+      await restamp(query, { id: row!.id, entityId: c.entity.id, field: c.field }, now);
       changed = await readerCacheScopeForEntity(query, c.entity.id);
       return { decision, factId: Number(row!.id) };
     }
@@ -75,4 +74,37 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
   });
   if (changed) await invalidateReaderCache(changed, options.purge);
   return outcome;
+}
+
+/** A live value seen again: its checked date moves to `at`, and when it was seen on a fresh saved copy its receipt moves to that copy. Its blank closes. */
+async function restamp(query: Query, fact: { readonly id: unknown; readonly entityId: string; readonly field: string }, at: Date,
+  receipt?: { readonly copyId: number; readonly quoteStart: number | null }): Promise<boolean> {
+  if (!receipt) await query("UPDATE fact SET checked_at = $2 WHERE id = $1", [fact.id, at.toISOString()]);
+  else if (!(await query(`UPDATE fact SET checked_at = greatest(checked_at, $2::timestamptz), source_copy_id = $3, quote_start = $4
+    WHERE id = $1 AND status = 'live' RETURNING id`, [fact.id, at.toISOString(), receipt.copyId, receipt.quoteStart])).length) return false;
+  await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [fact.entityId, fact.field]);
+  return true;
+}
+
+/** Live facts a fresh read of their page still shows: each one's checked date and receipt move to that saved copy. Returns how many moved. */
+export async function restampFacts(db: FactDb, facts: readonly { readonly id: number; readonly entityId: string; readonly field: string; readonly quote: string }[],
+  copy: Pick<SavedCopy, "id" | "text" | "fetchedAt">, options: { readonly purge?: ReaderCachePurger } = {}): Promise<number> {
+  if (!facts.length) return 0;
+  const page = normalizeText(copy.text);
+  return withBatchedReaderInvalidation(async purge => {
+    const moved = await db.transaction(async query => {
+      let count = 0;
+      const entities = new Set<string>(), scopes: ReaderCacheScope[] = [];
+      for (const fact of facts) {
+        const start = fact.quote ? page.indexOf(normalizeText(fact.quote)) : -1;
+        if (!await restamp(query, fact, copy.fetchedAt, { copyId: copy.id, quoteStart: start < 0 ? null : start })) continue;
+        count++;
+        if (!entities.has(fact.entityId)) scopes.push(await readerCacheScopeForEntity(query, fact.entityId));
+        entities.add(fact.entityId);
+      }
+      return { count, scopes };
+    });
+    for (const scope of moved.scopes) await invalidateReaderCache(scope, purge);
+    return moved.count;
+  }, options.purge);
 }

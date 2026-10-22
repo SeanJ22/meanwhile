@@ -95,8 +95,15 @@ test("ZIP-01: absent and known-but-unplaced five-digit ZIPs offer an address, wi
   assert.match(postalAreaMessage(lookupZcta("05009")!.postal!), /unique to one institution/);
 });
 
+test("ZIP-01: a mail-only ZIP that is its own Census ZCTA keeps its residents' school district", async () => {
+  // Bethel's residents get their mail at the post office; the Census still counts them in ZCTA 99559.
+  const bethel = await zipDivisionEntry("99559");
+  assert.ok(bethel?.ids.includes("ocd-division/country:us/state:ak/school_district:lower_kuskokwim_school_district"));
+  for (const zip of ["73960", "10540"]) assert.ok((await zipDivisionEntry(zip))?.ids.some(id => /\/school_district:/.test(id)), zip);
+});
+
 test("ZIP-01: mail-only ZIPs cannot acquire residential legislative or school districts from a ZCTA or its point", async () => {
-  for (const zip of ["73960", "05009", "10540", "10008", "00501"]) {
+  for (const zip of ["10008", "00501"]) {
     const entry = await zipDivisionEntry(zip);
     assert.ok(entry, zip);
     assert.equal(entry.samples, 0);

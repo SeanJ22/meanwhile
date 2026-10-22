@@ -257,8 +257,13 @@ export interface WorkerMemoryRelease {
   observe?(pid: number): void;
 }
 export interface WorkerProcessSlots {
-  acquire(entry?: string, deadlineMs?: number): Promise<WorkerMemoryRelease>;
+  acquire(entry?: string, deadlineMs?: number, order?: WorkerMemoryOrder): Promise<WorkerMemoryRelease>;
 }
+
+/** A lower priority is offered memory first; equal priorities keep their arrival order. A held waiter that does not
+ * fit keeps later waiters out for up to MEMORY_HOLD_MS, so the memory a finishing child frees is not taken first. */
+export interface WorkerMemoryOrder { readonly priority: number; readonly hold?: boolean }
+export const MEMORY_HOLD_MS = 5 * 60_000;
 
 function statePublicationPeakBytes(entry: string): number {
   const script = entry.split(/[\\/]/).at(-1)!;
@@ -293,7 +298,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     const kind = /(?:^|\/|\\)(route|scout|lease|national)-worker[.]ts$/.exec(entry)?.[1] ?? "lease";
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
-  const waiting: { entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
+  const waiting: { entry: string; deadline: number; priority: number; holdUntil: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
   const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
     try {
       void Promise.resolve(host.transact(operation, false)).then(applied => {
@@ -363,10 +368,12 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           const participants = new Set(state.parents.flatMap(parent => [...idsFor(parent.pid)]));
           const used = rows.reduce((sum, row) => participants.has(row.pid) ? sum + row.rss : sum, 0);
           const free = Math.min(available(), Number.isFinite(hostMiB) && hostMiB > 0 ? Math.max(0, hostMiB * MIB - used) : Infinity);
-          const index = waiting.findIndex(item => {
-            if (Date.now() >= item.deadline) return false;
-            return inherited || free >= headroom + growth + reserve(item.entry);
-          });
+          let index = -1;
+          for (const [at, item] of waiting.entries()) {
+            if (Date.now() >= item.deadline) continue;
+            if (inherited || free >= headroom + growth + reserve(item.entry)) { index = at; break; }
+            if (item.holdUntil > Date.now()) break;
+          }
           if (index < 0) break;
           const [item] = waiting.splice(index, 1);
           const id = randomUUID();
@@ -410,8 +417,15 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     drainScheduled = true;
     queueMicrotask(() => { drainScheduled = false; void drain(); });
   };
-  return { acquire: (entry = "lease-worker.ts", deadlineMs = Date.now() + (memory.waitMs ?? 120_000)) =>
-    new Promise<WorkerMemoryRelease>((resolve, reject) => { waiting.push({ entry, deadline: deadlineMs, resolve, reject }); requestDrain(); }) };
+  return { acquire: (entry = "lease-worker.ts", deadlineMs = Date.now() + (memory.waitMs ?? 120_000), order) =>
+    new Promise<WorkerMemoryRelease>((resolve, reject) => {
+      // A child that starts late in a pass, the next read in a serial lane, keeps the place its pass gave it.
+      const priority = order?.priority ?? Number.POSITIVE_INFINITY;
+      const at = waiting.findIndex(item => item.priority > priority);
+      waiting.splice(at < 0 ? waiting.length : at, 0,
+        { entry, deadline: deadlineMs, priority, holdUntil: order?.hold ? Date.now() + MEMORY_HOLD_MS : 0, resolve, reject });
+      requestDrain();
+    }) };
 }
 
 /** How often a wait for host memory says it is still waiting. */
@@ -428,7 +442,7 @@ export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   const everyMs = options.everyMs ?? MEMORY_WAIT_REPORT_EVERY_MS;
   const minuteMs = options.minuteMs ?? 60_000;
   let waits = 0;
-  return { acquire: (entry, deadlineMs) => {
+  return { acquire: (entry, deadlineMs, order) => {
     const wait = ++waits;
     const started = Date.now();
     const kind = (entry ?? "lease-worker.ts").split(/[\\/]/).at(-1);
@@ -438,7 +452,7 @@ export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
       write(`  waiting for memory: wait ${wait} (${kind}) ${minutes}${limit === null ? "" : ` of ${limit}`} min; the work stays owed`);
     }, everyMs);
     timer.unref?.();
-    const settled = slots.acquire(entry, deadlineMs);
+    const settled = slots.acquire(entry, deadlineMs, order);
     void settled.then(() => clearInterval(timer), () => clearInterval(timer));
     return settled;
   } };

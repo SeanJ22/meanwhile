@@ -25,7 +25,7 @@ export async function readerLocation(lat: number, lng: number, zip?: string | nu
   if (!state) throw new Error("The state's location could not be identified");
   const near = zip ?? (nearest && haversineKm(lat, lng, nearest.lat, nearest.lng) <= 60 ? nearest.zip : null);
   const entry = near ? await readZipPlace(postalArea(near)?.zcta ?? near) : undefined;
-  return { state, zip: near, divisionIds: entry?.ids ?? [], partial: entry?.partial ?? [] };
+  return { state, zip: near, divisionIds: entry?.ids ?? [], partial: entry?.partial ?? [], fringe: entry?.fringe ?? [] };
 }
 
 export function territoryBodies(lat: number, lng: number, territory: BodyTerritoryFile | null): readonly string[] {

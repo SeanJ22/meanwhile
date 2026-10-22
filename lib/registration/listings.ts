@@ -27,7 +27,7 @@ export interface RegistrationGovernmentListing {
     readonly divisionId: string;
     readonly layer: string;
     readonly geoid: string;
-    readonly basis: "SOURCE_CODE" | "GOVERNING_FUNCSTAT";
+    readonly basis: "SOURCE_CODE" | "GOVERNING_FUNCSTAT" | "SOURCE_BOUNDARY" | "COUNTY_IN_NAME";
   }[];
   readonly bodyIds: readonly string[];
   readonly provenance: RegistryProvenance;
@@ -36,7 +36,7 @@ export interface RegistrationGovernmentListing {
   readonly contactProvenance?: Readonly<Partial<Record<"website" | "mailingAddress" | "officePhone" | "officeAddress", RegistryProvenance>>>;
 }
 
-export function governmentNativeId(state: string, namespace: "cog" | "nces" | "tiger", id: string): string {
+export function governmentNativeId(state: string, namespace: "cog" | "nces" | "tiger" | "aiannh" | "boundary", id: string): string {
   if (!/^[a-z]{2}$/i.test(state) || !id || !/^[a-z0-9:_-]+$/i.test(id)) throw new Error("Invalid native government identity");
   return `government:US-${state.toUpperCase()}:${namespace}:${id}`;
 }
@@ -126,23 +126,31 @@ export function referenceGovernmentListings(loaded: LoadedReference): Registrati
   const rows: RegistrationGovernmentListing[] = [];
   for (const [pid, jurisdictionId, name, kind, division, how, alternate] of reference.governments) {
     if (kind === "STATE") continue;
-    const territory = how === "TIGER_FUNCSTAT";
-    const id = governmentNativeId(state, territory ? "tiger" : "cog", pid);
-    const qualified = territory || ["COUNTY_FIPS", "PLACE_FIPS", "COUSUB_FIPS"].includes(how);
+    const territory = how === "TIGER_FUNCSTAT", tribal = how === "AIANNH_CODE", boundaryOnly = how === "BOUNDARY_SOURCE_ONLY";
+    const bounded = how === "BOUNDARY_SOURCE" || boundaryOnly, countyNamed = how === "COUNTY_NAMED";
+    const id = governmentNativeId(state, territory ? "tiger" : tribal ? "aiannh" : boundaryOnly ? "boundary" : "cog", pid);
+    const qualified = territory || tribal || bounded || countyNamed || ["COUNTY_FIPS", "PLACE_FIPS", "COUSUB_FIPS"].includes(how);
     const associations = qualified ? [...new Set([division, alternate])].flatMap(index => {
       const item = index >= 0 ? reference.divisions[index] : undefined;
-      return item ? [{ divisionId: item[0], layer: item[1], geoid: item[2], basis: territory ? "GOVERNING_FUNCSTAT" as const : "SOURCE_CODE" as const }] : [];
+      return item ? [{ divisionId: item[0], layer: item[1], geoid: item[2],
+        basis: territory ? "GOVERNING_FUNCSTAT" as const : bounded ? "SOURCE_BOUNDARY" as const : countyNamed ? "COUNTY_IN_NAME" as const : "SOURCE_CODE" as const }] : [];
     }) : [];
+    // A district drawn only by its own official layer is listed from that layer.
+    const layer = boundaryOnly ? reference.boundarySources?.[String(reference.divisions[division]?.[2]).split("#")[0]!] : undefined;
     const held = enrich.get(id);
     rows.push({
       state, name,
       kind: kind === "DEPENDENT SCHOOL SYSTEM" ? "DEPENDENT_SCHOOL_SYSTEM" : "GOVERNMENT",
-      governmentClass: kind, nativeIds: { [territory ? "tiger_geoid" : "census_pid6"]: pid },
-      status: null, sourceVintage: territory ? "TIGER/Line 2023" : "2022 Census of Governments",
+      governmentClass: kind,
+      nativeIds: { [territory ? "tiger_geoid" : tribal ? "census_aiannh" : boundaryOnly ? "boundary_feature" : "census_pid6"]: tribal ? pid.slice("aiannh:".length) : pid },
+      status: null,
+      sourceVintage: territory ? "TIGER/Line 2023" : tribal ? "2020 Census AIANNH areas" : layer ? `${layer.title}, read ${layer.readAt}` : "2022 Census of Governments",
       website: null, officePhone: null, officeAddress: null, countyFips: null,
       bodyIds: [],
-      provenance: { sourceUrl: territory ? reference.functionalStatus?.sources[reference.divisions[division]?.[1] ?? ""] ?? null : "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP",
-        sourceOrg: "U.S. Census Bureau", collectedAt: territory ? loaded.generatedAt : "2026-09-23", verifiedAt: null },
+      provenance: tribal ? { sourceUrl: "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt", sourceOrg: "U.S. Census Bureau", collectedAt: loaded.generatedAt, verifiedAt: null }
+        : layer ? { sourceUrl: layer.url, sourceOrg: layer.publisher, collectedAt: layer.readAt, verifiedAt: null }
+        : { sourceUrl: territory ? reference.functionalStatus?.sources[reference.divisions[division]?.[1] ?? ""] ?? null : "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP",
+          sourceOrg: "U.S. Census Bureau", collectedAt: territory ? loaded.generatedAt : "2026-09-23", verifiedAt: null },
       ...held,
       // Independent source enrichment cannot replace this source's stable identity or turn location into territory.
       id, aliases: [...new Set([jurisdictionId, ...(held?.aliases ?? [])])], jurisdictionId, associations,

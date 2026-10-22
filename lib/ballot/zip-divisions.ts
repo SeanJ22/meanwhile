@@ -23,7 +23,8 @@ export async function divisionIdsForZipArea(
   if (zip && zipNeedsAddress(zip)) {
     return [...new Set([...pointDivisionIds, ...(entry?.ids ?? [])].filter(isTownOrCountyDivision))];
   }
-  const areaIds = new Set(entry?.ids ?? []);
+  // A ballot keeps the divisions few of the ZIP's residents live in: a missing contest costs more than a hedged one.
+  const areaIds = new Set([...entry?.ids ?? [], ...entry?.fringe ?? []]);
   const qualified = new Set(entry?.qualifiedDistricts ?? []);
   const out = new Set([...pointDivisionIds, ...areaIds]);
   for (const id of out) {

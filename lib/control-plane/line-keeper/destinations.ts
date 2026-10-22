@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { zipNeedsAddress } from '../../geo/postal.ts';
+import { shardEntry, type ZipDivisionShard } from '../../geo/zip-division-index.ts';
 
 const held=new Map<string,Promise<ReadonlyMap<string,string>>>();
 /** A ZIP wholly within the division comes before a boundary ZIP. A partial ZIP's centroid
@@ -13,15 +14,15 @@ export function readerDestinations(state:string):Promise<ReadonlyMap<string,stri
     const choices=new Map<string,{zip:string;partial:boolean}>();
     const shards=code==='US'?[...new Set(Object.values(index.statesToShards).flat())]:index.statesToShards[code]??[];
     for(const name of [...shards].sort()){
-      const shard=JSON.parse(await readFile(join(root,`${name}.json`),'utf8')) as {divisions:string[];zips:Record<string,number[]>;partial:Record<string,number[]>};
+      const shard=JSON.parse(await readFile(join(root,`${name}.json`),'utf8')) as ZipDivisionShard;
       for(const zip of Object.keys(shard.zips).sort()){
         if(zipNeedsAddress(zip))continue;
         if(!choices.has('ocd-division/country:us'))choices.set('ocd-division/country:us',{zip,partial:false});
-        for(const id of shard.zips[zip]){
-          const division=shard.divisions[id];
+        const entry=shardEntry(shard,zip)!;
+        for(const division of entry.ids){
           const state=/^(ocd-division\/country:us\/(?:state|territory|district):[a-z]{2})(?:\/|$)/.exec(division)?.[1];
           if(state&&!choices.has(state))choices.set(state,{zip,partial:false});
-          const partial=shard.partial[zip]?.includes(id)??false,prior=choices.get(division);
+          const partial=entry.partial.includes(division),prior=choices.get(division);
           if(!prior||prior.partial&&!partial)choices.set(division,{zip,partial});
         }
       }

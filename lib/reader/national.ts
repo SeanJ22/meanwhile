@@ -14,6 +14,7 @@ import { postalArea, postalTable } from "../geo/postal.ts";
 import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 import { readerMemory, serverReaderValue } from "./memory.ts";
 import { indexedZipDivisionEntry } from "../geo/zip-division-index.ts";
+import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 export { readerMemory } from "./memory.ts";
 
 export interface NationalShelf {
@@ -110,17 +111,17 @@ export function stateForZip(zip: string): string | null {
   return /^\d{5}$/.test(zip) ? postalArea(zip)?.state || null : null;
 }
 
-/** Current national executive memberships; historical holders remain retrievable separately. */
+/** Current national executive memberships (the President, the Vice President and the Cabinet); historical holders remain retrievable separately. */
 export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet | null {
-  const countryLinks = roster.divisions.filter(link => link.ocdId === "ocd-division/country:us");
-  const currentIds = new Set(countryLinks.filter(link => {
-    const holder = roster.officeholders.find(person => person.id === link.officeholderId);
-    return holder && (!link.membershipId || holder.memberships?.find(membership => membership.id === link.membershipId)?.current !== false);
-  }).map(link => link.officeholderId));
-  const officeholders = roster.officeholders.filter(holder => currentIds.has(holder.id) && /^(?:President|Vice President)(?: of the United States)?$/i.test(holder.officeTitle));
-  if (!officeholders.length) return null;
-  const ids = new Set(officeholders.map(holder => holder.id));
-  return { ...roster, officeholders, divisions: countryLinks.filter(link => ids.has(link.officeholderId)), unmatched: roster.unmatched.filter(row => ids.has(row.officeholderId)) };
+  const byId = new Map(roster.officeholders.map(person => [person.id, person]));
+  const links = roster.divisions.filter(link => {
+    const holder = link.ocdId === "ocd-division/country:us" ? byId.get(link.officeholderId) : undefined;
+    const membership = link.membershipId ? holder?.memberships?.find(row => row.id === link.membershipId) : undefined;
+    return holder && membership?.current !== false && whiteHouseOffice(membership?.officeTitle ?? holder.officeTitle) !== null;
+  });
+  const ids = new Set(links.map(link => link.officeholderId));
+  if (!ids.size) return null;
+  return { ...roster, officeholders: roster.officeholders.filter(holder => ids.has(holder.id)), divisions: links, unmatched: roster.unmatched.filter(row => ids.has(row.officeholderId)) };
 }
 
 /** The national roster is deliberately resident in each server, independent of runner publication copies. */
@@ -144,7 +145,7 @@ const residentPresident = serverReaderValue("national-president", () => readerMe
   return president;
 }));
 
-/** A state's existing batch can supply the President without opening another connection. */
+/** A state's existing batch can supply the national executives without opening another connection. */
 export function readNationalPresident(store?: () => Promise<CivicDataReadStore>): Promise<OfficeholderSet | null> {
   return store ? presidentContext.run(store,residentPresident) : residentPresident();
 }

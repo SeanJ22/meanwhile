@@ -12,7 +12,8 @@ import { mergePeopleSets } from "../officials/merge-people.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 import { statewidePageText, verifyStatewideOfficialPage } from "../sources/statewide/parse.ts";
-import { verifiedWhiteHouseOfficial, whiteHouseOffice, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
+import { verifiedWhiteHouseOfficial, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
+import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
@@ -71,7 +72,7 @@ async function peopleSourceViolations(input:{state:string;sourceId:string;roster
       try {
         const office = whiteHouseOffice(person.officeTitle);
         if (!index || !office || !countryIds.has(person.id)) throw new Error("NATIONAL_OFFICIAL_CURRENT_OFFICE_UNRESOLVED");
-        const verified = verifiedWhiteHouseOfficial(office, { url: index.finalUrl, html: await textOf(index), retrievedAt:index.retrievedAt }, { url: capture.finalUrl, html: body, retrievedAt: capture.retrievedAt });
+        const verified = verifiedWhiteHouseOfficial(office, { url: index.finalUrl, html: await textOf(index), retrievedAt:index.retrievedAt }, { url: capture.finalUrl, requestedUrl: capture.requestedUrl, html: body, retrievedAt: capture.retrievedAt });
         const held = verified.officeholders[0];
         if (held.id !== person.id || held.name !== person.name || held.officeTitle !== person.officeTitle ||
           !person.memberships?.some(membership=>membership.id === held.memberships?.[0].id && membership.current === true && membership.divisionId === "ocd-division/country:us" && membership.officeTitle === held.officeTitle)) throw new Error("NATIONAL_OFFICIAL_PUBLISHED_IDENTITY_MISMATCH");
@@ -151,10 +152,13 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
     const office = whiteHouseOffice(person.officeTitle);
     return office ? [[office,person.id] as const] : [];
   }));
+  // A verified holder ends the prior holder's membership in that office, and a verified person now named in another office leaves the old one.
+  const nowHolds = new Map(incoming.officeholders.map(person=>[person.id,whiteHouseOffice(person.officeTitle)]));
   const endedMemberships: NonNullable<OfficeholderSet["endedMemberships"]>[number][] = [];
   const priorPeople = national ? held?.officeholders.map(person=>({ ...person,memberships:person.memberships?.map(membership=>{
     const office = whiteHouseOffice(membership.officeTitle);
-    if (!office || membership.current === false || !replacing.has(office) || replacing.get(office) === person.id) return membership;
+    const moved = Boolean(office && nowHolds.get(person.id) && nowHolds.get(person.id) !== office);
+    if (!office || membership.current === false || !moved && (!replacing.has(office) || replacing.get(office) === person.id)) return membership;
     const ended = { ...membership,current:false };
     endedMemberships.push(ended);
     return ended;

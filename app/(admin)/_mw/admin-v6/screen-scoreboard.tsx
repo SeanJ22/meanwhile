@@ -1,7 +1,7 @@
 "use client";
 
 import { WeeklyColumns } from "./charts.tsx";
-import { useV6 } from "./context.tsx";
+import { useKeeperScoreboard } from "./use-keeper-scoreboard.ts";
 import type { ScoreboardGateRow } from "./model.ts";
 import { mst } from "./model.ts";
 import { Card, cx, Empty, Technical } from "./ui.tsx";
@@ -14,8 +14,7 @@ const GATE_WORDS: Readonly<Record<ScoreboardGateRow["state"], { readonly words: 
 };
 
 export function ScoreboardScreen() {
-  const v = useV6();
-  const b = v.data.scoreboard.data;
+  const b = useKeeperScoreboard();
   return (
     <>
       <header>

@@ -51,7 +51,7 @@ interface HuntFact {
 
 function huntFacts(hunts: NationalHuntSources): readonly HuntFact[] | null {
   if (hunts.scopes === null || hunts.malformedScopes > 0) return null;
-  return hunts.scopes.filter((d) => typeof d.budgetStartedAt === "string").map((d): HuntFact => {
+  return hunts.scopes.map((d): HuntFact => {
     const row = exactHuntAccounting(hunts.attribution, d);
     const num = (n: unknown) => (typeof n === "number" && Number.isFinite(n) ? n : 0);
     const worked = row === null ? null : num(row.budgetConsumedKnownUsd) > 0 || num(row.knownCombinedUsd) > 0 || num(row.budgetUnpriced) > 0 || num(row.unpriced) > 0;
@@ -220,7 +220,7 @@ async function targetsOf(scope: V6PlaceScope, districts: readonly DistrictInfo[]
 }
 
 /** A state whose districts cannot be read answers a refusal, never an empty list. */
-export async function v6NationalSection(input: { readonly scopeKey: string; readonly scope: V6PlaceScope; readonly sources: NationalSources; readonly deps: NationalDeps }): Promise<AdminV6SectionEnvelope<readonly AdminV6NationalRow[]> | V6Refusal> {
+export async function v6NationalSection(input: { readonly scopeKey: string; readonly scope: V6PlaceScope; readonly sources: NationalSources; readonly deps: NationalDeps; readonly publishedScores?:ReadonlyMap<string,number|null> }): Promise<AdminV6SectionEnvelope<readonly AdminV6NationalRow[]> | V6Refusal> {
   const { scope, deps, sources } = input;
   const state = scope.kind === "country" ? null : scope.state;
   const districtsRead = state === null || (scope.kind === "geo" && scope.type !== "congressional_district") ? null : await deps.districts(state);
@@ -231,7 +231,7 @@ export async function v6NationalSection(input: { readonly scopeKey: string; read
   const wantsScores = scope.kind !== "geo" || scope.type === "congressional_district";
   const [zipCounts, scored] = await Promise.all([
     scope.kind === "country" ? deps.zipCounts() : Promise.resolve(null),
-    wantsScores ? scoresWithin(input.scopeKey, () => targetsOf(scope, districts, deps), deps, deps.scoreBudgetMs)
+    input.publishedScores ? Promise.resolve({scores:input.publishedScores,ready:true}) : wantsScores ? scoresWithin(input.scopeKey, () => targetsOf(scope, districts, deps), deps, deps.scoreBudgetMs)
       : Promise.resolve({ scores: new Map<string, number | null>() as ReadonlyMap<string, number | null>, ready: true }),
   ]);
   const data = nationalRows({ scope, hunts: sources.hunts, stuck: sources.stuck, zipCounts, districts, scores: scored.scores });

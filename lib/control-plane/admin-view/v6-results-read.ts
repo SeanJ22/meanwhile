@@ -44,35 +44,51 @@ const PIPELINE_STAGE_ORDER = ["SCOUTED", "VERIFIED", "APPROVED_FOR_PROMOTION"] a
 export type PipelineStageName = (typeof PIPELINE_STAGE_ORDER)[number];
 
 const SNAPSHOT_ARRAY = (path: string) => `CASE WHEN jsonb_typeof(${path}) = 'array' THEN ${path} ELSE '[]'::jsonb END`;
-const PENDING = "s.value->'deliveryTrail'->'pending'";
-const PROMOTIONS = "s.value->'deliveryTrail'->'promotions'";
 const WITNESSES = "s.value->'servedReaderReadback'->'witnesses'";
 
 export const PIPELINE_HEAD_SQL = `SELECT s.updated_at AS published_at, s.revision AS revision,
-  jsonb_typeof(${PENDING}) AS pending_kind, jsonb_typeof(${PROMOTIONS}) AS promotions_kind,
+  jsonb_typeof(t.value->'assignments'->'states') AS states_kind,
   jsonb_typeof(s.value->'servedReaderReadback') AS readback_kind
-  FROM cp_owner_snapshots s WHERE s.id = 'current'`;
-export const PIPELINE_PENDING_SQL = `SELECT x->>'recordClass' AS record_class, x->>'stage' AS stage,
-  split_part(coalesce(x->>'subjectId', ''), ':', 1) AS prefix, count(*)::int AS n
-  FROM cp_owner_snapshots s, jsonb_array_elements(${SNAPSHOT_ARRAY(PENDING)}) AS x
-  WHERE s.id = 'current' AND x->>'recordClass' IS NOT NULL GROUP BY 1, 2, 3`;
-export const PIPELINE_APPROVED_SQL = `SELECT p->>'recordClass' AS record_class, split_part(coalesce(p->>'subjectId', ''), ':', 1) AS prefix,
+  FROM cp_owner_snapshots s JOIN cp_owner_snapshots t ON t.id='totals' WHERE s.id = 'current'`;
+export const PIPELINE_PENDING_SQL = `WITH latest AS (
+ SELECT DISTINCT ON (log_key) log_key,record FROM cp_log_promotion_pipeline
+ WHERE record->>'stage' IN ('SCOUTED','VERIFIED','APPROVED_FOR_PROMOTION') ORDER BY log_key,position DESC
+), scouted AS (SELECT DISTINCT ON (log_key) log_key,record FROM cp_log_promotion_pipeline
+ WHERE record->>'stage'='SCOUTED' ORDER BY log_key,position)
+ SELECT coalesce(scouted.record->>'recordClass',scouted.record->'source'->>'sourceRecordClass','Unclassified findings') AS record_class,
+ CASE WHEN latest.record->>'stage'='APPROVED_FOR_PROMOTION' THEN 'VERIFIED' ELSE latest.record->>'stage' END AS stage,
+ split_part(coalesce(scouted.record->>'subjectId',''),':',1) AS prefix,count(*)::int AS n
+ FROM latest JOIN scouted USING(log_key)
+ LEFT JOIN cp_work_items work ON work.id=latest.record->>'itemId'
+ WHERE coalesce(work.value#>>'{publicationOutcome,status}','') NOT IN ('PUBLISHED','PARTIALLY_PUBLISHED') GROUP BY 1,2,3`;
+/** Reuse the current assignment publisher's retained publications. deliveryTrail was removed from current. */
+export const PIPELINE_APPROVED_SQL = `SELECT p->'autonomousPlan'->'contract'->>'recordClass' AS record_class, st.key AS prefix,
   CASE WHEN w.state IS NULL THEN 'NONE'
     WHEN w.state = 'CONFIRMED' AND w.checked_at >= $1::timestamptz - interval '${RESULTS_WITNESS_MAX_AGE_HOURS} hours' THEN 'CONFIRMED_FRESH'
     WHEN w.state = 'CONFIRMED' THEN 'CONFIRMED_STALE' ELSE 'NOT_OBSERVED' END AS witness,
-  count(*)::int AS n, max(p->>'approvedAt') AS approved_at, max(w.checked_at) AS checked_at, max(w.url) AS url
-  FROM cp_owner_snapshots s
-  CROSS JOIN LATERAL jsonb_array_elements(${SNAPSHOT_ARRAY(PROMOTIONS)}) AS p
+  sum(CASE WHEN jsonb_typeof(p->'publicationOutcome'->'acceptedRecordIds')='array' THEN jsonb_array_length(p->'publicationOutcome'->'acceptedRecordIds')
+    ELSE coalesce((wi.value#>>'{publicationOutcome,records,added}')::int,0)+coalesce((wi.value#>>'{publicationOutcome,records,changed}')::int,0)+coalesce((wi.value#>>'{publicationOutcome,records,reused}')::int,0) END)::int AS n,
+  count(*) FILTER(WHERE jsonb_typeof(p->'publicationOutcome'->'acceptedRecordIds') IS DISTINCT FROM 'array'
+    AND jsonb_typeof(wi.value#>'{publicationOutcome,records}') IS DISTINCT FROM 'object')::int AS unknown_publications,
+  max(wi.value#>>'{publicationOutcome,at}') AS approved_at, max(w.checked_at) AS checked_at, max(w.url) AS url
+  FROM cp_owner_snapshots s JOIN cp_owner_snapshots t ON t.id='totals'
+  CROSS JOIN LATERAL jsonb_each(t.value->'assignments'->'states') st
+  CROSS JOIN LATERAL jsonb_array_elements(coalesce(st.value->'publications','[]'::jsonb)) AS p
+  LEFT JOIN cp_work_items wi ON wi.id=p->>'id'
   LEFT JOIN LATERAL (SELECT e->>'state' AS state, (e->>'checkedAt')::timestamptz AS checked_at, e->>'url' AS url
     FROM jsonb_array_elements(${SNAPSHOT_ARRAY(WITNESSES)}) AS e
-    WHERE e->>'approvalId' = p->>'version' ORDER BY (e->>'checkedAt')::timestamptz DESC LIMIT 1) AS w ON true
-  WHERE s.id = 'current' AND p->>'recordClass' IS NOT NULL GROUP BY 1, 2, 3`;
+    WHERE e->>'itemId'=p->>'id' AND e->>'approvalId'=p->'publicationOutcome'->>'workerResultId'
+      AND e->>'versionId'=p->'publicationOutcome'->>'versionId'
+    ORDER BY (e->>'checkedAt')::timestamptz DESC LIMIT 1) AS w ON true
+  WHERE s.id = 'current' AND p->'publicationOutcome'->>'status' IN ('PUBLISHED','PARTIALLY_PUBLISHED')
+    AND p->'autonomousPlan'->'contract'->>'recordClass' IS NOT NULL GROUP BY 1, 2, 3`;
 
 export interface PipelineGroupRow { readonly recordClass: string; readonly stage: PipelineStageName; readonly prefix: string; readonly n: number }
 export type ApprovalWitness = "NONE" | "CONFIRMED_FRESH" | "CONFIRMED_STALE" | "NOT_OBSERVED";
 export interface ApprovedGroupRow {
   readonly recordClass: string; readonly prefix: string; readonly witness: ApprovalWitness; readonly n: number;
   readonly approvedAt: string | null; readonly checkedAt: string | null; readonly url: string | null;
+  readonly unknownPublications?:number;
 }
 export interface PipelineRead {
   readonly state: "READ";
@@ -92,12 +108,12 @@ const count = (v: unknown): number => {
   return Number.isSafeInteger(n) && n > 0 ? n : 0;
 };
 
-/** Three small grouped reads of the published snapshot. A snapshot without the pipeline lists is unread, never zero. */
+/** Group in the database; Admin never downloads the national assignment document. */
 export async function readPipeline(sql: Sql, nowIso: string): Promise<PipelineRead | PipelineUnread> {
   const head = await boundedQuery(sql, { operation: "cp_owner_snapshots.results_head", callClass: "POINT" }, PIPELINE_HEAD_SQL, []) as readonly Record<string, unknown>[];
   const h = head[0];
   if (h === undefined) return { state: "UNREAD", says: "No owner snapshot has been published." };
-  if (h.pending_kind !== "array" || h.promotions_kind !== "array") return { state: "UNREAD", says: "The published snapshot does not list its promotion pipeline items." };
+  if (h.states_kind !== "object") return { state: "UNREAD", says: "The published assignment totals could not be read." };
   const [pending, approved] = await Promise.all([
     boundedQuery(sql, { operation: "cp_owner_snapshots.results_pending", callClass: "DOCUMENT" }, PIPELINE_PENDING_SQL, []),
     boundedQuery(sql, { operation: "cp_owner_snapshots.results_approved", callClass: "DOCUMENT" }, PIPELINE_APPROVED_SQL, [nowIso]),
@@ -107,10 +123,10 @@ export async function readPipeline(sql: Sql, nowIso: string): Promise<PipelineRe
     state: "READ", publishedAt: isoOf(h.published_at), revision: h.revision === null || h.revision === undefined ? null : String(h.revision),
     pending: pending.flatMap((r) => typeof r.record_class === "string" && typeof r.stage === "string" && stages.includes(r.stage) && count(r.n) > 0
       ? [{ recordClass: r.record_class, stage: r.stage as PipelineStageName, prefix: typeof r.prefix === "string" ? r.prefix : "", n: count(r.n) }] : []),
-    approved: approved.flatMap((r) => typeof r.record_class === "string" && count(r.n) > 0
+    approved: approved.flatMap((r) => typeof r.record_class === "string" && (count(r.n) > 0||count(r.unknown_publications)>0)
       ? [{ recordClass: r.record_class, prefix: typeof r.prefix === "string" ? r.prefix : "",
         witness: (["CONFIRMED_FRESH", "CONFIRMED_STALE", "NOT_OBSERVED"] as const).find((w) => w === r.witness) ?? "NONE",
-        n: count(r.n), approvedAt: isoOf(r.approved_at), checkedAt: isoOf(r.checked_at), url: typeof r.url === "string" ? r.url : null }] : []),
+        n: count(r.n),...(count(r.unknown_publications)?{unknownPublications:count(r.unknown_publications)}:{}), approvedAt: isoOf(r.approved_at), checkedAt: isoOf(r.checked_at), url: typeof r.url === "string" ? r.url : null }] : []),
   };
 }
 
@@ -136,8 +152,9 @@ interface ClassTally {
   n: number; atScouted: number; atVerified: number; approved: number;
   fresh: number; stale: number; notObserved: number; unread: number;
   approvedAt: string | null; checkedAt: string | null; url: string | null;
+  unknownPublications:number;
 }
-const emptyTally = (): ClassTally => ({ n: 0, atScouted: 0, atVerified: 0, approved: 0, fresh: 0, stale: 0, notObserved: 0, unread: 0, approvedAt: null, checkedAt: null, url: null });
+const emptyTally = (): ClassTally => ({ n: 0, atScouted: 0, atVerified: 0, approved: 0, fresh: 0, stale: 0, notObserved: 0, unread: 0, approvedAt: null, checkedAt: null, url: null,unknownPublications:0 });
 const later = (a: string | null, b: string | null) => (a === null ? b : b === null ? a : a >= b ? a : b);
 
 export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6PlaceScope): readonly AdminV6Result[] {
@@ -157,6 +174,7 @@ export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6P
     const t = tally(r.recordClass);
     t.n += r.n;
     t.approved += r.n;
+    t.unknownPublications+=r.unknownPublications??0;
     if (r.witness === "CONFIRMED_FRESH") t.fresh += r.n;
     else if (r.witness === "CONFIRMED_STALE") t.stale += r.n;
     else if (r.witness === "NOT_OBSERVED") t.notObserved += r.n;
@@ -169,7 +187,7 @@ export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6P
     const checked = t.atVerified + t.approved;
     const seen = t.fresh;
     const stage6: ResultMark = t.approved === 0 ? "waiting" : seen >= t.approved ? "done" : seen > 0 ? "partial" : t.notObserved > 0 ? "wrong" : "reported";
-    const stages: readonly ResultMark[] = [
+    const stages: readonly ResultMark[] = t.n===0&&t.unknownPublications>0 ? ['unreported','unreported','unreported','unreported','reported','unreported'] : [
       "done",
       share(checked, t.n, "unreported"),
       share(checked, t.n, "unreported"),
@@ -179,18 +197,19 @@ export function pipelineResults(read: PipelineRead, scopeKey: string, scope: V6P
     ];
     const url = t.url !== null && t.url.startsWith(`${PUBLIC_SITE_ORIGIN}/`) ? t.url : null;
     const trail: readonly AdminV6ResultStage[] = [
-      { name: RESULT_STAGE_NAMES[0], mark: stages[0], when: NONE, what: `${num(t.n)} items` },
+      { name: RESULT_STAGE_NAMES[0], mark: stages[0], when: NONE, what: t.n>0?`${num(t.n)} items`:"Accepted record count unreported" },
       { name: RESULT_STAGE_NAMES[1], mark: stages[1], when: NONE, what: checked > 0 ? `${of(checked, t.n)} with a saved copy` : NONE },
       { name: RESULT_STAGE_NAMES[2], mark: stages[2], when: NONE, what: checked > 0 ? `${of(checked, t.n)}` : NONE },
-      { name: RESULT_STAGE_NAMES[3], mark: stages[3], when: NONE, what: of(checked, t.n) },
-      { name: RESULT_STAGE_NAMES[4], mark: stages[4], when: t.approvedAt ?? NONE, what: of(t.approved, t.n) },
+      { name: RESULT_STAGE_NAMES[3], mark: stages[3], when: NONE, what: t.n>0?of(checked, t.n):NONE },
+      { name: RESULT_STAGE_NAMES[4], mark: stages[4], when: t.approvedAt ?? NONE, what: t.n>0?of(t.approved, t.n):"Published; record count unreported" },
       { name: RESULT_STAGE_NAMES[5], mark: stages[5], when: t.checkedAt ?? NONE,
         what: t.approved === 0 ? NONE : `${of(seen, t.approved)} seen on the page${t.notObserved > 0 ? ` · ${num(t.notObserved)} not found there` : ""}${t.stale > 0 ? ` · ${num(t.stale)} last seen over ${RESULTS_WITNESS_MAX_AGE_HOURS} hours ago` : ""}`,
         ...(url === null ? {} : { publicLink: { url, label: "The public page", seenAt: t.checkedAt } }) },
     ];
     return {
       id: `results:${scopeKey}:${rc}`, title: recordClassTitle(rc), applies: [scopeKey], kind: null, stages,
-      readerSees: t.approved === 0 ? `${of(0, t.n)} published` : `${of(t.approved, t.n)} published · ${of(seen, t.approved)} checked on the page`,
+      readerSees: (t.n===0&&t.unknownPublications>0?'Published; accepted record count unreported':t.approved === 0 ? `${of(0, t.n)} published` : `${of(t.approved, t.n)} published · ${of(seen, t.approved)} checked on the page`)+
+        (t.unknownPublications?` · ${num(t.unknownPublications)} published jobs did not record their accepted record count`:''),
       problem: stages.includes("wrong"), trail: trail.map((s) => ({ ...s, technical: [`record class ${rc}`] })),
     };
   });

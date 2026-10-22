@@ -9,6 +9,9 @@ let nextQueryId = 0;
 
 /** A view of an already promoted pointer, like Admin's promoted slices. It
  * carries pointer metadata; it is not a newly validated candidate or receipt. */
+/** A caller retaining immutable inputs can reuse an unchanged source read. */
+export type PlaceInputMemo = <T>(recordClass:string,scope:string,load:()=>Promise<T>)=>Promise<T>;
+
 export type PlaceCaptureRead<T> = {
   readonly kind: CivicDataReadResult<T>["kind"];
   readonly value: T | null;

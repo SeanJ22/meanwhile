@@ -6,7 +6,7 @@ import { readCensusGovernmentFacts, type CensusGovernmentFacts } from "../regist
 import type { FactDb, Query } from "./publish.ts";
 import { hostOf, isOfficialUrl } from "./check.ts";
 import { subBodyId } from "../civic-data/meeting-body-crosswalk.ts";
-import { isGoverningName } from "./finding-slots.ts";
+import { governingBoardName, type GoverningContext } from "../civic-data/governing-board-name.ts";
 
 type EntityKind = "place" | "government" | "body" | "seat" | "person" | "meeting" | "agenda_item" | "bill" | "vote_event"
   | "election" | "contest" | "candidacy" | "measure" | "committee" | "statement" | "law_question" | "news_item";
@@ -254,10 +254,19 @@ async function registeredGovernment(query: Query, id: string): Promise<string> {
 export async function canonicalSubject(query: Query, subjectId: string): Promise<string> {
   const { root, tail } = splitSubject(subjectId);
   const government = await registeredGovernment(query, root);
-  // A committee whose name is the governing board's, however the page dressed it ("Our Governing Board"), is that board.
-  const named = tail.startsWith("#body:") ? tail.slice(6).replace(/-/g, " ") : null;
-  if (named !== null && isGoverningName(named)) return `${government}${/:(?:school|depschool):|school_district:|:nces:/.test(government) ? "#board" : "#governing"}`;
+  // A committee whose name is the governing board's, however the page dressed it ("Our Governing Board", "Mayor and Council"), is that board.
+  if (tail.startsWith("#body:")) {
+    const context = await governmentContext(query, government);
+    if (governingBoardName(tail.slice(6).replace(/-/g, " "), context) !== null) return `${government}${context.school ? "#board" : "#governing"}`;
+  }
   return `${government}${tail}`;
+}
+
+/** What the fact store says kind of government this is and what it is called, for reading a body's name against it. */
+async function governmentContext(query: Query, id: string): Promise<GoverningContext> {
+  const [row] = await query("SELECT name FROM entity WHERE id = $1", [id]);
+  return { name: row ? String(row.name) : null,
+    school: /:(?:school|depschool):|school_district:|:nces:/.test(id), special: /:special:/.test(id), county: /:county:|\/county:[^/]+$/.test(id) };
 }
 
 /** A city's, county's, special district's or school district's governing board when the fact store holds none: a board named `<government id>#governing` (`#board` for schools) on the government, and on its place, where readers look for it. */
@@ -287,22 +296,16 @@ async function bodyUnder(query: Query, government: GovernmentRef, find: { readon
   return { id, name, state: government.state, parentId: government.id };
 }
 
-const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-/** Whether a body name is a government's own governing board under its place's name: "Chatom Town Council", "Prichard City Council", "Huntsville City Schools Board of Education". */
-function namesOwnBoard(name: string, governmentName: string): boolean {
-  const place = governmentName.replace(/^(?:city|town|village|borough|county|township|municipality)(?: and county)? of /i, "").replace(/\s+(?:city|town|county|school district|schools?|independent school district|unified school district)$/i, "").trim();
-  return place.length >= 3 && new RegExp(`^(?:the )?${escapeRegExp(place)}(?: (?:city|town|village|borough|county|township|municipal|school|schools))? (?:council|commission|board(?: of (?:education|trustees|commissioners|supervisors|directors))?|governing board)$`, "i").test(name.trim());
-}
-
-/** The body a name on a government's page stands for: its governing board, a body of that name it already holds, or a new body named `<government id>#body:<slug>`. */
-export async function bodyNamed(query: Query, subjectId: string, governing: BodyRef | null, name: string, governingName: boolean): Promise<BodyRef | null> {
-  if (governingName && governing) return governing;
+/** The body a name on a government's page stands for: its governing board under whatever name the page gives it, a body of that name it already holds, or a new body named `<government id>#body:<slug>`. */
+export async function bodyNamed(query: Query, subjectId: string, governing: BodyRef | null, name: string): Promise<(BodyRef & { readonly asNamed?: string }) | null> {
   const government = await governmentAt(query, [governing?.parentId ?? null, governing?.id ?? null, subjectId]);
-  if (government && governingName) return await ensureGoverningBody(query, government.id);
-  // "Chatom Town Council" on Chatom's own page is its governing board under the name the page gives it.
-  if (government && !governingName && namesOwnBoard(name, government.name)) return governing ?? await ensureGoverningBody(query, government.id);
-  return government ? bodyUnder(query, government, { sql: "lower(name) = lower($3)", param: name }, subBodyId(government.id, name), name) : null;
+  if (!government) return null;
+  const board = governingBoardName(name, await governmentContext(query, government.id));
+  if (board !== null) {
+    const found = governing ?? await ensureGoverningBody(query, government.id);
+    return found ? { ...found, asNamed: board } : null;
+  }
+  return bodyUnder(query, government, { sql: "lower(name) = lower($3)", param: name }, subBodyId(government.id, name), name);
 }
 
 /** The office of a government that a phone, email or address belongs to (a recorder, an elections office): the body already held, or a new one named as the page names it. */

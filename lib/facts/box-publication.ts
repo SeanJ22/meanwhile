@@ -15,7 +15,7 @@ import { isPlainSentence, OTHER_NOTICE, schedulePhrase } from "../hunt/page-rule
 import { readPassCursor, writePassCursor } from "./db.ts";
 import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, officeNamed, splitSubject } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, isGoverningName, otherOffice, plainBoardName, COMMENT_SUMMARY_LEAD, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, otherOffice, COMMENT_SUMMARY_LEAD, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
@@ -111,6 +111,7 @@ const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|directo
 const COUNCIL_SEAT = /\b((vice|deputy)[- ]?)?mayor\b|\bcouncil[- ]?(m[ae]n|member|woman|person|or|lor|president)s?\b|\balder(m[ae]n|woman|person)\b|\bselect(m[ae]n|woman|board)\b|\b(trustee|supervisor|freeholder|legislator|commissioner)s?\b/i;
 const BOARD_SEAT = /\b(vice[- ]?)?(chair(person|man|woman)?|president)\b|\bboard members?\b|\bmember of the board\b/i;
 const SEAT_NUMBER = /\b(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?\d+|seat\s+[a-f]|at[- ]large)\b/i;
+const TERM_LINE = /\bterms?\s*(?:expires?|ends?|:|\()|\bterm of office\b|\b(?:elected|appointed) (?:to|in|for) /i;
 const SEAT_MARKER = /\b(?:(?:seat|position|place|zone|ward)\s*(?:no\.?\s*)?\d+|seat\s+[a-f])\b/i;
 const WARD = /\b(?:ward|district)\s*(?:no\.?\s*)?(\d+)\b/i;
 
@@ -123,7 +124,8 @@ export function seatIn(words: string, bodyId: string): { readonly ward: string |
   // On a council or a board, the district, ward or seat a person holds is a seat on its own ("Annie Williams, District 1"), and a school board's plain "Member" is a member.
   // A county board's "Chairman" is a seat on it, unless the words put that chair on a committee, department or authority.
   const chairs = council && /\b(?:vice[- ]?)?chair(?:man|woman|person)?\b/i.test(words) && !/\b(?:committee|department|commission|authority|library|hospital|district board)\b/i.test(words);
-  const numbered = (council || board) && SEAT_NUMBER.test(words) || board && /\bmember\b/i.test(words) || chairs;
+  // A term served is a seat held: staff do not serve terms ("Term: October 2023 - October 2026", "Term Expires 3/28").
+  const numbered = (council || board) && (SEAT_NUMBER.test(words) || TERM_LINE.test(words)) || board && /\bmember\b/i.test(words) || chairs;
   if (!numbered && !COUNCIL_SEAT.test(words) && (council || !BOARD_SEAT.test(words)) && (council || board || !/\bmembers?\b/i.test(words))) return null;
   return { ward: council || board ? WARD.exec(words)?.[1] ?? null : null };
 }
@@ -296,7 +298,7 @@ export async function publishBoxFindings(input: {
   // A committee is made by the finding that names it, so those are read first and the findings about the committee find it.
   const naming = new Set(rows.filter(row => slotOfRow(row)?.class === "bodies").map(row => row.id));
 
-  const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string; name?: string }[] = [];
+  const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string; asNamed?: string }[] = [];
   const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
   for (const row of [...rows.filter(row => naming.has(row.id)), ...rows.filter(row => !naming.has(row.id))]) {
     report.looked++;
@@ -326,10 +328,10 @@ export async function publishBoxFindings(input: {
     const target = await targetFor(subject);
     // A body or an office is added under its government even where the government has no governing board of its own, as a state has none.
     if (slot.class === "bodies") {
-      const named = await bodyNamed(facts.query, subject, target?.body ?? null, String(finding.value), isGoverningName(String(finding.value)));
+      const named = await bodyNamed(facts.query, subject, target?.body ?? null, String(finding.value));
       if (named) {
         targets.delete(subject); targets.delete(named.id);
-        queue(ready, each => ({ finding: each, slot, body: named, holder: null, entityId: named.id }));
+        queue(ready, each => ({ finding: each, slot, body: named, holder: null, entityId: named.id, asNamed: named.asNamed }));
       }
       else await hold(row, slot.class, "NAME_IS_NOT_ON_A_GOVERNMENT");
       continue;
@@ -423,7 +425,7 @@ export async function publishBoxFindings(input: {
     const entities = new Map<string, NonNullable<Awaited<ReturnType<typeof readCheckEntity>>>>();
     const entityOf = async (id: string) => entities.get(id) ?? entities.set(id, (await readCheckEntity(facts.query, id))!).get(id)!;
     const pageText = normalizeText(copy.text);
-    for (const { finding, slot, entityId: held, body: governing } of own) {
+    for (const { finding, slot, entityId: held, body: governing, asNamed } of own) {
       let at = held, name: { readonly name: string; readonly quote: string } | undefined;
       if (slot.class === "other offices") {
         name = officeNameOn(pageText, finding.exactQuote, String(finding.value));
@@ -448,7 +450,7 @@ export async function publishBoxFindings(input: {
         if ("blank" in named) { await settle(finding.row, named, slot.class); continue; }
       }
       // The board is named as the page names it, without what the page hangs on it ("Board of Education Home" names the Board of Education).
-      const shown = slot.class === "bodies" && isGoverningName(value) ? plainBoardName(value) : value;
+      const shown = slot.class === "bodies" ? asNamed ?? value : value;
       const outcome = slot.class === "bodies" ? await claim("name", shown, shown, quote)
         : slot.slot === "comment:period" ? await claim(slot.slot, value.toUpperCase(), finding.exactQuote, finding.exactQuote) : await claim(slot.slot, value, value, quote);
       // A page's own words on how to comment show the body takes it.

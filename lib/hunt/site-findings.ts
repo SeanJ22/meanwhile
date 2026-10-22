@@ -79,7 +79,7 @@ export function isBodyName(name:string):boolean {
   if(name.length>120)return false;
   if(name.split(/\s+/).length<2)return /^(?:council|assembly|selectboard|selectmen|trustees)$/i.test(name);
   if(/^(?:meet|contact|about|join|welcome|ask|visit|watch|view|be aware)\b/i.test(name) || /\b(?:20\d{2}|meetings?|agendas?|minutes|news|archives?|calendar|reappointed|appointed|elected|announces?|approved?|adopted?|welcomes?|reappoints?|honors?|events?|council member|establishes?|blessing|launches?|invites?|seeks?|seeking|receives?|opens?|celebrates?|chambers|projects|responsibilities|documents)\b/i.test(name))return false;
-  return /\b(?:agency|council|commission|assembly|selectboard|selectmen|trustees|committee|board)(?:\s*\([^)]*\))?$/i.test(name) ||
+  return /\b(?:agency|council|commission|assembly|selectboard|selectmen|aldermen|alderpersons|supervisors|commissioners|trustees|committee|board|police jury|(?:fiscal|quorum|levy|commissioners) court)(?:\s*\([^)]*\))?$/i.test(name) ||
     /\b(?:board|commission|council|committee)\s+(?:of|on|for)\s+[\p{L}\p{N}&,'’.\- ]+$/iu.test(name);
 }
 

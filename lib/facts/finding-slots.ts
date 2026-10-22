@@ -69,13 +69,6 @@ export function otherOffice(key: string, value: string, quote: string, sourceUrl
 const STREET = /^\d{1,6}\s+(?:[NSEW]\.?\s+)?[\w.'-]+(?:\s+[\w.'-]+){0,4}?\s+(?:st|street|ave|avenue|rd|road|blvd|boulevard|dr|drive|ln|lane|way|hwy|highway|pkwy|parkway|ct|court|pl|place|cir|circle|loop|trail|trl|sq|square)\b\.?(?:[\s,].*)?$/i;
 const SCHEDULE = /\b(first|second|third|fourth|fifth|last|1st|2nd|3rd|4th|every|each)\b[^.]{0,60}\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)s?\b|\b(monthly|weekly|bi-?weekly)\b/i;
 const BODY_NAME = /\b(board|council|commission|committee|authority|trustees|supervisors|selectmen|aldermen)\b/i;
-const GOVERNING_NAME = /^(?:(?:the )?(?:mayor and )?(?:town|city|village|borough|township|county) council|(?:the )?(?:town|city|county) commission|(?:the )?board of (?:supervisors|education|trustees|directors|commissioners|selectmen|aldermen)|(?:the )?(?:governing|school) board|.*\bgoverning (?:school )?board|council)$/i;
-/** A board's name without what a page hangs on it: "Our Governing Board", "Board of Education Home", "Council Members" and "Board of Education Policy" are the board itself. */
-export const plainBoardName = (name: string): string => name.trim().replace(/^(?:our|the|your|meet (?:the|your|our)|about (?:the|our)?)\s+/i, "")
-  .replace(/\s+(?:home(?: ?page)?|page|members?|membership|overview|information|info|policy|policies|meetings?|agendas?|minutes|news|calendar|contacts?|directory|roster|bylaws|governance)$/i, "").trim();
-
-/** Whether a body name is the government's own governing board, and not a committee or commission under it. */
-export const isGoverningName = (name: string): boolean => GOVERNING_NAME.test(plainBoardName(name));
 const PERSON_NAME = /^(?:(?:dr|mr|mrs|ms)\.?\s+)?[A-Z][\w.'’-]+(?:\s+(?:[A-Z]\.?|[A-Z][\w.'’-]+|\([\w ]+\))){1,3}$/;
 const SEAT_WORDS = /\b(mayor|vice[- ]?mayor|council ?(?:member|man|woman)|alder(?:man|woman)|board (?:member|president|chair|clerk|vice)|president|chair(?:man|woman|person)?|trustee|supervisor|commissioner|selectm[ae]n|member)\b/i;
 const STAFF_KEY = /manager|clerk|director|superintendent|attorney|administrator|recorder|treasurer|assessor|secretary|coordinator|staff|business|filer|custodian|head|principal/;

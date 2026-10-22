@@ -7,13 +7,16 @@ import type { AskedGap } from "../control-plane/ask-gap-observations.ts";
 import { blankFingerprint, withAskedBlanks, packetCostEstimateUsd, packetFamilies, packetsFrom, type FamilyCount, type HuntPacket } from "./packet.ts";
 import { statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
 import { SEARCH_PRICE_USD } from "./search.ts";
+import { factReader } from "../facts/db.ts";
+import { readSourceCheckFailures, withSourceCheckFailures, type SourceCheckFailure } from "../facts/detective.ts";
 
 type HeldReader = (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
 const readHeld: HeldReader = (ids, now) => readHeldPlaceCapture(ids, { now, bypassCache: true });
 
 /** Each government's packet as it stands now, recomputed from held data and what Ask could not answer. A government with nothing open has no blanks. */
 export async function readGovernmentPackets(governmentIds: readonly string[], now: string, asked: readonly AskedGap[] = [],
-  read: HeldReader = readHeld): Promise<ReadonlyMap<string, HuntPacket>> {
+  read: HeldReader = readHeld,
+  failures: (ids: readonly string[])=>Promise<readonly SourceCheckFailure[]> = ids=>readSourceCheckFailures(factReader(),ids)): Promise<ReadonlyMap<string, HuntPacket>> {
   const ids = [...new Set(governmentIds)];
   if (ids.length === 0) return new Map();
   const groups = new Map<string, string[]>();
@@ -30,7 +33,8 @@ export async function readGovernmentPackets(governmentIds: readonly string[], no
     for (const packet of packetsFrom({ divisions, items })) packets.set(packet.governmentId, withAskedBlanks(packet, asked));
     for (const division of divisions) if (!packets.has(division.id)) packets.set(division.id, withAskedBlanks({ governmentId: division.id, label: division.label, held: [], blanks: [] }, asked));
   }
-  return packets;
+  const failed = await failures(ids);
+  return new Map([...packets].map(([id,packet])=>[id,withSourceCheckFailures(packet,failed)]));
 }
 
 /** Every division a sent place touches: each ZIP's divisions, its states and the country. */

@@ -65,3 +65,11 @@ test("the sample re-check finds the saved document no longer says it: every quot
   assert.ok(result.brokenRecordIds!.length >= 1);
   assert.equal(result.survivingRecordCount, 0);
 });
+
+test('a quoted source has no independent row inventory to compare with a claimed universe or rendered count',()=>{
+ const given=input();
+ const result=auditExtraction({...given,candidate:{...given.candidate,claimsUniverseComplete:true,renderedRecordCount:1}});
+ assert.equal(result.findings.some(f=>f.code==='AUDIT_RECORD_NOT_IN_SOURCE'||f.code==='AUDIT_RENDERED_COUNT_MISMATCH'),false);
+ assert.ok(result.coverage);
+ assert.equal(result.coverage.sourceRecords,null);
+});

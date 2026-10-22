@@ -76,9 +76,9 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
       verdict.quoteStart, c.second?.copy.id ?? null, now.toISOString(),
       live ? null : decision === "FLAG_OWNER" ? "OWNER_VALUE_CONTESTED" : "LOSES_TO_CURRENT", c.producedBy, c.costUsd]);
     const factId = Number(inserted!.id);
-    if (decision === "FLAG_OWNER") await query(`INSERT INTO owner_flag (fact_id,kind)
-      SELECT $1,'OWNER_VALUE_CONTESTED' WHERE NOT EXISTS(SELECT 1 FROM owner_flag WHERE fact_id=$1 AND resolved IS NULL)`,
-    [row!.id]);
+    if (decision === "FLAG_OWNER") await query(`INSERT INTO owner_flag (fact_id,kind,reason,source_url)
+      SELECT $1,'OWNER_VALUE_CONTESTED',$2,$3 WHERE NOT EXISTS(SELECT 1 FROM owner_flag WHERE fact_id=$1 AND resolved IS NULL)`,
+    [row!.id,`An official source states a different value: ${c.valueText}`,c.copy.finalUrl]);
     if (live) {
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
       changed = await readerCacheScopeForEntity(query, c.entity.id);

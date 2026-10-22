@@ -18,7 +18,7 @@ import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome,
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
-import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
+import type { ReaderCachePurger } from "../reader/cache.ts";
 
 interface Finding {
   readonly row: BoxFinding; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
@@ -36,8 +36,8 @@ interface BoxPublicationReport {
   readonly waitingByClass: Readonly<Record<string, number>>;
   readonly failuresByReason: Readonly<Record<string, number>>;
   readonly byPlace: Readonly<Record<string, { published: number; refused: number; waiting: number }>>;
-  /** Box seats taken down for never showing the seat, and those flagged for naming a ward another member holds. */
-  readonly seats: { readonly pulled: number; readonly flagged: number };
+  /** Published seats needing Sean's decision. */
+  readonly seats: { readonly flagged: number };
 }
 
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
@@ -112,27 +112,23 @@ async function liveMembers(query: Query, bodyIds: readonly string[]): Promise<re
     .map(row => ({ factId: Number(row.id), bodyId: String(row.entity_id), name: String(row.name), words: String(row.words), producedBy: String(row.produced_by) }));
 }
 
-/** Box seats whose words never showed the seat come down; one naming a ward another member holds is flagged for Sean. */
-async function reviewBoxSeats(query: Query, purge?: ReaderCachePurger): Promise<{ readonly pulled: number; readonly flagged: number }> {
+/** A suspect published seat goes to Sean, including one whose quote never showed the seat. */
+async function reviewBoxSeats(query: Query): Promise<{ readonly flagged: number }> {
   const since = Number(await readPassCursor(query, "box-seats") ?? 0);
   const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
   // Only bodies whose members changed since the last pass; the pass starts where this one read up to.
   const bodies = (await query("SELECT DISTINCT entity_id FROM fact WHERE id > $1 AND id <= $2 AND field LIKE 'member:%'", [since, newest])).map(row => String(row.entity_id));
   const members = bodies.length ? await liveMembers(query, bodies) : [];
-  let pulled = 0, flagged = 0;
+  let flagged = 0;
   for (const member of members.filter(row => row.producedBy === "box")) {
     const seat = seatIn(member.words, member.bodyId);
-    if (!seat) {
-      await query("UPDATE fact SET status = 'pulled', held_reason = 'SEAT_NOT_IN_QUOTE' WHERE id = $1", [member.factId]);
-      await invalidateReaderCache(await readerCacheScopeForEntity(query, member.bodyId), purge);
-      pulled++;
-    } else if (seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
+    if (!seat || seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
       flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'
         WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
     }
   }
   await writePassCursor(query, "box-seats", String(newest));
-  return { pulled, flagged };
+  return { flagged };
 }
 
 const named = (quote: string, name: string) => boundedIndexOf(normalizeText(quote).toLowerCase(), normalizeText(name).toLowerCase()) !== -1;
@@ -234,7 +230,7 @@ export async function publishBoxFindings(input: {
   const captureFor = (finding: Finding, kind: FieldKind) => {
     const key = `${finding.origin.artifactIds[0] ?? ""}|${finding.sourceUrl}|${kind}`;
     if (!captures.has(key)) captures.set(key, (async () => {
-      const records = (await repos.artifacts.read(finding.origin.workItemId)).filter(record => finding.origin.artifactIds.includes(record.artifactId));
+      const records = (await repos.artifacts.read(finding.origin.workItemId)).filter(record => finding.origin.artifactIds.includes(record.artifactId) && record.canonicalUrl === finding.sourceUrl);
       for (const record of records) {
         const held = await readHeld(record);
         if (held && (now.getTime() - Date.parse(held.observedAt)) / 3_600_000 <= clocks.windowHours(kind)) return { capture: held };

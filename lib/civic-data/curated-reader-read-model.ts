@@ -12,6 +12,8 @@ import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
+import { readerRecordsWithOwnerChoices } from "../facts/owner-flags.ts";
+import { factReader } from "../facts/db.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
@@ -71,8 +73,10 @@ export async function readCuratedReaderProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<CuratedReaderProjection>> {
   const contract = requiredManualProductionContract(id);
-  const result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, options);
+  let result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, options);
   if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown");
+  if (result.kind === "PROMOTED") result = { ...result,value:{...result.value,
+    records:await readerRecordsWithOwnerChoices(factReader(),id,result.value.records)} };
   readerStates().set(id, result);
   return result;
 }
@@ -102,6 +106,10 @@ export function primeCuratedReaderProjection(
   versionId: string,
 ): void {
   validateOnce(id, value, versionId, () => validate(id, value, versionId));
+  storeCuratedReaderProjection(id,value,versionId);
+}
+
+function storeCuratedReaderProjection(id:CuratedReaderContractId,value:CuratedReaderProjection,versionId:string):void {
   const contract = requiredManualProductionContract(id);
   readerStates().set(id, {
     kind: "BOOTSTRAP",
@@ -121,6 +129,14 @@ export function primeCuratedReaderProjection(
     },
     detail: `Served from the ${id} edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
   });
+}
+
+/** Apply the owner's edge choices before the request primes its serving projection. */
+export async function primeCuratedReaderProjectionWithOwnerChoices(id: CuratedReaderContractId,value:CuratedReaderProjection,versionId:string):Promise<void> {
+  const records=await readerRecordsWithOwnerChoices(null,id,value.records);
+  // Validate the government's original projection, which may become empty after an owner removal.
+  validateOnce(id,value,versionId,()=>validate(id,value,versionId));
+  storeCuratedReaderProjection(id,{...value,records},versionId);
 }
 
 export const refreshBallotNavigationFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>

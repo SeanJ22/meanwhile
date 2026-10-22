@@ -182,13 +182,13 @@ export interface ModalSubject {
   /** The office title of whoever represents the district, for that office's explainer. */
   representedByOfficeTitle?: string | null;
   representation: SeatHolder[];
-  vacancy?: import("@/lib/officials/chamber-directory").FederalVacancy;
+  vacancy?: import("@/lib/officials/types").SeatVacancy;
   /** Each legislative district at the clicked point and its statewide offices. */
   spotRepresentation?: {
     ocdId: string;
     label: string;
     holders: SeatHolder[];
-    vacancy?: import("@/lib/officials/chamber-directory").FederalVacancy;
+    vacancy?: import("@/lib/officials/types").SeatVacancy;
     rosterGaps?: RosterReaderGap[];
     note: string;
   }[];
@@ -713,7 +713,7 @@ export function Representation({
   showTopOffices = true,
 }: {
   holders: SeatHolder[];
-  vacancy?: import("@/lib/officials/chamber-directory").FederalVacancy;
+  vacancy?: import("@/lib/officials/types").SeatVacancy;
   note: string;
   gaps?: readonly RosterReaderGap[];
   onOpenHolder?: (holder: SeatHolder) => void;

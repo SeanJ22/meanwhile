@@ -170,7 +170,7 @@ function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; 
     >
       {seat.label && <span className={TYPE_LABEL_CLASS}>{seat.label}</span>}
       {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
-      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">Seat vacant · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">House Clerk</a></span>}
+      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">{seat.vacancy.since ? `Vacant since ${new Date(`${seat.vacancy.since}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}` : "Seat vacant"} · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">{seat.vacancy.sourceOrg}</a></span>}
       {seat.representatives.length > 0 && <span className="block person-under-heading">
         <HolderList holders={[...seat.representatives]} seatLabel={seat.label ?? ""} seatOcdId={seat.ocdId} tier={seat.tier} onOpenOfficial={onOpenOfficial} />
       </span>}

@@ -1,6 +1,7 @@
 import type { Dependency } from "./model.ts";
 
 export const SECTION_DEP = {
+  officials: { id: "DEP-OFFICIALS-CHECK", owner: "Codex (officials refresh)", need: "The officials source checks and their changes for this place." },
   places: {
     id: "DEP-SCOPE-IDENTITIES",
     owner: "Codex (admin-view)",

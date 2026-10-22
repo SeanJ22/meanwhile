@@ -4,6 +4,8 @@ import { readerCacheHeaders, readerCacheScopeForPublication } from "@/lib/reader
 import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { representationDivisionMetadata, seatHoldersForDivision } from "@/lib/registry/server";
 import { federalDirectoryReadState } from "@/lib/officials/federal-directory-read-model";
+import { statePeopleScopeForDivision } from "@/lib/officials/people-identity";
+import { currentStatePeopleProjection } from "@/lib/state-rollcalls/legislators";
 
 
 
@@ -45,8 +47,10 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   const holders = seats;
   const { known } = metadata;
   const federal = federalDirectoryReadState();
-  const vacancy = !holders.length && (federal.kind === "PROMOTED" || federal.kind === "BOOTSTRAP")
-    ? federal.value.vacancies?.find(row => row.ocdId === ocdId) : undefined;
+  const scope = statePeopleScopeForDivision(ocdId);
+  // A vacancy shows only where the office's own source states it and no holder remains.
+  const vacancy = holders.length ? undefined : [...(federal.kind === "PROMOTED" || federal.kind === "BOOTSTRAP" ? federal.value.vacancies ?? [] : []),
+    ...(scope ? currentStatePeopleProjection(scope)?.roster.vacancies ?? [] : [])].find(row => row.ocdId === ocdId);
 
   return Response.json(
     {

@@ -15,6 +15,7 @@ import { statewidePageText, verifyStatewideOfficialPage } from "../sources/state
 import { verifiedWhiteHouseOfficial, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
+import { rosterChanges, type RosterChange } from "../officials/roster-changes.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 export { peopleJurisdiction, readPeopleSourceProjection, type PeopleSourceReadModel } from "./people-source-read.ts";
@@ -37,6 +38,8 @@ interface PublishPeopleSourceInput {
 type PeopleCandidateInput = Omit<PublishPeopleSourceInput,"store"|"vault"|"acquisitions"> & {
   readonly captures: readonly StatePeopleCapture[];
   readonly violations: readonly string[];
+  /** Seats this read changed against the source's last published read, for Admin's officials check. */
+  readonly changes?: readonly RosterChange[];
 };
 const words = (text:string) => text.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 
@@ -85,6 +88,14 @@ async function peopleSourceViolations(input:{state:string;sourceId:string;roster
       if (!("person" in bound) || person.selectionMethod && person.selectionMethod !== bound.person.selectionMethod) violations.push(`PEOPLE_OWN_OFFICIAL_OFFICE_UNVERIFIED:${person.id}`);
     }
   }
+  // An empty seat publishes only in the official page's own words.
+  for (const vacancy of input.roster.vacancies ?? []) {
+    const capture = input.captures.filter(row=>row.finalUrl === vacancy.sourceUrl).sort((a,b)=>b.retrievedAt.localeCompare(a.retrievedAt))[0];
+    const body = capture ? await textOf(capture) : "";
+    let official = capture ? isOfficialSource(capture.finalUrl) : false;
+    if (capture && !official) for (const row of input.captures) if (isOfficialSource(capture.finalUrl,{url:row.finalUrl,html:await textOf(row)})) { official = true; break; }
+    if (!capture || !official || !words(statewidePageText(body)).includes(words(vacancy.reason))) violations.push(`PEOPLE_VACANCY_UNVERIFIED:${vacancy.ocdId}`);
+  }
   return violations;
 }
 function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
@@ -92,10 +103,12 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
   const recordClass = peopleSourceRecordClass(input.sourceId), parserVersion = sourceAuthority(input.sourceId)?.parserVersion ?? "people-sources/1";
   const acquiredAt = input.captures.map(row=>row.retrievedAt).sort().at(-1) ?? input.now;
   const readModel: PeopleSourceReadModel = JSON.parse(JSON.stringify({formatVersion:1,sourceId:input.sourceId,jurisdiction,term:input.releaseId,generatedAt:acquiredAt,roster:input.roster}));
-  const people = input.roster.officeholders;
+  const people = input.roster.officeholders, vacancies = input.roster.vacancies ?? [];
+  // A stated empty seat is a sourced record of its own.
+  const records = people.length + vacancies.length;
   const excludedFacts = [...(input.excludedFacts ?? []), ...(input.gaps ?? []).map(gap=>({key:gap.sourceUrl,code:"PEOPLE_SOURCE_GAP",detail:gap.detail,record:gap})),
     ...(input.roster.disagreements ?? []).map(row=>({key:row.key,code:"PEOPLE_FIELD_DISAGREEMENT",detail:`${row.field} has conflicting source values; the preferred value is published and BL-01 is owed the disagreement.`,record:row}))];
-  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,excludedFacts}));
+  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,excludedFacts,...(input.changes?.length ? {changes:input.changes} : {})}));
   const rawHash = hash(payload), normalizedHash = hash(readModel);
   const derived = input.derivedInputs?.length ? derivedRetrieval(input.derivedInputs) : null;
   // The read's own instant orders versions; the "read:" prefix sorts after any content-hash version.
@@ -103,13 +116,14 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
   return {id:`cv-${hash([input.sourceId, scope, rawHash, normalizedHash]).slice(0,32)}`, sourceId:input.sourceId,recordClass,scope,
     retrieval: derived ? {succeeded:true,requestedUrl:derivedRequestedUrl(input.sourceId,scope),finalUrl:null,httpStatus:null,retrievedAt:derived.retrievedAt!,rawHash:derived.rawHash,derived:{inputs:input.derivedInputs!}}
       : {succeeded:input.captures.length>0 && input.captures.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.capture.byteLength>0),requestedUrl:input.captures[0]?.requestedUrl ?? "",finalUrl:input.captures[0]?.finalUrl ?? null,httpStatus:input.captures[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash},
-    normalization:{succeeded:input.violations.length===0,parserVersion,schemaVersion:"people-sources/1",normalizedHash,normalizedPayloadHash:rawHash,inputRecords:people.length,outputRecords:people.length,droppedRecords:0,
+    normalization:{succeeded:input.violations.length===0,parserVersion,schemaVersion:"people-sources/1",normalizedHash,normalizedPayloadHash:rawHash,inputRecords:records,outputRecords:records,droppedRecords:0,
       missingRequiredFields:people.some(row=>!row.id || !row.name || !row.officeTitle || !row.provenance.sourceUrl) ? ["person/office/source"] : []},
-    identities:people.map(row=>({subjectId:row.id,jurisdiction,identifiers:{person_id:row.personId ?? row.id},matchBasis:"OFFICIAL_ID" as const,ambiguous:false,office:row.officeTitle,chamber:row.chamber})),
+    identities:[...people.map(row=>({subjectId:row.id,jurisdiction,identifiers:{person_id:row.personId ?? row.id},matchBasis:"OFFICIAL_ID" as const,ambiguous:false,office:row.officeTitle,chamber:row.chamber})),
+      ...vacancies.map(row=>({subjectId:row.ocdId,jurisdiction,identifiers:{office_id:row.ocdId},matchBasis:"OFFICIAL_ID" as const,ambiguous:false,...(row.officeTitle ? {office:row.officeTitle} : {})}))],
     temporal:{version,expectedVersion:version,sourceThrough:acquiredAt,staleAtRetrieval:false},semantics:{factKind:"source-bound people and current offices",violations:[...input.violations]},
-    horizon:{kind:"OPEN_FACT_SET",query:`${jurisdiction} ${input.sourceId} known current people`,returnedRecords:people.length,declaredTotal:null,paginationComplete:false,claimsComplete:false},
+    horizon:{kind:"OPEN_FACT_SET",query:`${jurisdiction} ${input.sourceId} known current people and stated vacancies`,returnedRecords:records,declaredTotal:null,paginationComplete:false,claimsComplete:false},
     absence:{claimsAbsence:false,basis:"NONE",exactSubject:null,exactHorizon:null},sourceProjectionEvidence:sourceProjectionEvidence(input.sourceId,recordClass,scope),
-    dependentChecks:[{consumer:"people readers",passed:new Set(people.map(row=>row.id)).size===people.length,detail:`${people.length} sourced people; partial acquisition never establishes absence.`}],excludedFacts,normalizedPayload:payload,readModel};
+    dependentChecks:[{consumer:"people readers",passed:new Set(people.map(row=>row.id)).size===people.length,detail:`${people.length} sourced people and ${vacancies.length} stated vacancies; partial acquisition never establishes absence.`}],excludedFacts,normalizedPayload:payload,readModel};
 }
 /** Publish one source/state independently. A failed or partial route retains prior verified facts. */
 export async function publishPeopleSource(input: PublishPeopleSourceInput) {
@@ -172,7 +186,9 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
       const office = whiteHouseOffice(person.officeTitle);
       return !office || !replacing.has(office) || replacing.get(office) === person.id;
     }),endedMemberships:[...(held.endedMemberships ?? []),...endedMemberships] } : held;
-  let roster = mergePeopleSets([...(priorRoster ? [priorRoster] : []),incoming])!;
+  // A reread page's newer read replaces its earlier statement that a seat is empty.
+  const carriedPrior = priorRoster ? { ...priorRoster, vacancies: (priorRoster.vacancies ?? []).filter(row=>!reread.has(row.sourceUrl)) } : null;
+  let roster = mergePeopleSets([...(carriedPrior ? [carriedPrior] : []),incoming])!;
   if (national) {
     const referenced = new Set(roster.officeholders.flatMap(person=>[person.provenance,...Object.values(person.fieldSources ?? {})])
       .map(source=>`${source.sourceUrl}|${source.collectedAt}`));
@@ -196,7 +212,7 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   }
   const violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,verifyNationalCurrent:!national});
   if (national && !roster.officeholders.length) violations.push("NATIONAL_OFFICIAL_NONE_VERIFIED");
-  const candidate = peopleSourceCandidate({...input,roster,captures,violations,excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
+  const candidate = peopleSourceCandidate({...input,roster,captures,violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"
     ? `people-portraits-${state}`

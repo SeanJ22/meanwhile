@@ -1,11 +1,32 @@
 # River status
 
-build_state: RELEASES 72 TO 79 SHIPPED AND LIVE (main f8e4670e4); DG-01 SENT BACK; WAITING ON NEW READYS
+build_state: RELEASES 72 TO 81 SHIPPED AND LIVE (main be812bacc); RELEASE 82 (AG-01) IN GATES; VICE PRESIDENT NOT LIVE YET (returned to DS-01); MEETINGS READBACK FAILURES RETURNED TO PM-01
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
-heartbeat: 2026-10-22T18:44:50Z
+heartbeat: 2026-10-22T18:58:00Z
+
+## Where things stand (Oct 22, 2:58 PM EDT)
+
+- Release 80 SHIPPED (PM-01's CK-01 alone): PR #790 merged 094c487db at 1:07 PM EDT, live 1:13 PM, observer green. The runner followed at about 1:34 PM EDT.
+- Release 81 SHIPPED (DS-01's NE-01 and OR-01, PM-01's Legistar fix): PR #791 merged be812bacc at 2:07 PM EDT, observer green at 2:10 PM. The runner followed at about 2:20 PM EDT. Gates 8 of 8 (9,229 pass, 0 fail, 6 skipped), CI green. River fixes: both lanes touched lib/control-plane/gateway/registry.ts (kept both entries); OR-01 added data/reference/official-legislature-rosters.json without declaring it, so River wrote the provenance note data/reference/official-legislature-rosters.md and added the dataset to JSON_REFERENCE_DATASETS in tests/reference-data.test.ts.
+- Release 82 (AG-01 alone: a place with no held calendar shows no "Checked" date instead of "20747 days ago") passed gates 8 of 8 (9,233 pass); River refused to release because main had gained release 81's merge commit, so the gates are re-running on the merged tip (the tree is byte-identical).
+- NOT done: the Vice President is not on the live page. AZ, TX, OH and CA state data carry the President and 0 Vice President entries at 2:53 PM EDT, 33 minutes after the runner followed release 81. Returned to DS-01 (returns/ds-01.md). Legistar member names were not checked (the runner's meetings readback is failing, see below).
+
+## Server checks after release 80 (Sean's four checks, 1:13 PM to 2:20 PM EDT)
+
+1. Calendar doors with a new lastSuccessAt: AZ 1 (first at 1:54 PM EDT); NH 0 then 15 after release 81 (8 failures); NJ 0; none outside AZ, NH and NJ.
+2. "Planning round" line newer than the release: only "3 states completed, 54 failed" (2:19 PM EDT). That round began 1:36 PM on release 80's code and was cut short when the runner moved to release 81 (ak took about 18 min, al about 20, ar about 4). A full 57-state round takes hours, so no round can finish between deploys; a "round finishes" check cannot pass while releases ship this often. This is a design question for Sean, not a lane return.
+3. "not configured to use Netlify Blobs": gone. 0 of 25 digests after release 80, 0 of 19 after release 81.
+4. Box built after the release: yes. 5,957 built at release 80, 6,049 at 2:50 PM EDT (+92). Rising.
+- Still failing: publish-now-supervisor ends ROUTINE_CHILD_EXITED (exit 2) every pass; the routine supervisor's task failures went 135 (release 79 code) to 86 (release 80) to 156 (release 81). The receipt-count errors for meeting partitions (iCal, Clerk boards, schedule page) are gone. What remains: one child, reader-readback:meetings-aggregate (5-minute timeout for every meeting contract), "did not emit one exact result" for 59 then 141 doors. Returned to PM-01 (returns/pm-01.md).
+
+## Live check after release 81 (2:10 to 2:55 PM EDT)
+
+- /api/reader/state for AZ, TX, OH, CA: 200, 1.2 to 4.1 s (AZ 3.9 s and TX 4.1 s are the first reads after the deploy; over three seconds, open). President present, Vice President absent.
+- Pages for ZIPs 85001, 85016, 75201, 43215, 94110: load; "Checked 20 days ago" still shows for places without a held calendar until release 82.
+- Not yet run after 81: voting pins, ballot pages, two random states (waiting for the runner pass).
 
 ## Where things stand (Oct 22, 4:35 AM EDT)
 

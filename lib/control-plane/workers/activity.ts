@@ -11,16 +11,26 @@ import { canonicalJson, projectRecord, readByKeys, type AppendOnlyRepository } f
 import type { Sql } from "../repository/pg-store.ts";
 
 type ActivityCapture = Pick<ArtifactRecord, "artifactId" | "workItemId" | "partial" | "canonicalUrl">;
-export const LEGACY_ACTIVITY_CAPTURES_SQL = `SELECT a.log_key, a.position,
-  jsonb_build_object('artifactId',a.record->'artifactId','workItemId',a.record->'workItemId',
-    'partial',a.record->'partial','canonicalUrl',a.record->'canonicalUrl') AS capture
-  FROM cp_log_artifacts a WHERE EXISTS (SELECT 1 FROM cp_work_items_history w
-    WHERE w.id=coalesce(a.record->>'workItemId',a.log_key) AND cp_control_state(w.value)=$1)
-  AND (a.log_key,a.position)>($2::text,$3::bigint) ORDER BY a.log_key,a.position LIMIT 100`;
+/** One page: the state's next jobs in id order (its own state index on both job tables), then each job's saved pages
+ * through the work-item and log-key indexes. A page is a batch of jobs, so no page sorts the state's whole history. */
+export const LEGACY_ACTIVITY_CAPTURES_SQL = `WITH w AS (SELECT id FROM (
+    SELECT id FROM cp_work_items WHERE cp_control_state(value)=$1 AND id>$2
+    UNION SELECT id FROM cp_work_items_archive WHERE cp_control_state(value)=$1 AND id>$2) jobs ORDER BY id LIMIT $3)
+  SELECT (SELECT max(id) FROM w) AS last_job, (SELECT count(*) FROM w) AS jobs, coalesce((SELECT jsonb_agg(jsonb_build_object(
+      'artifactId',r.record->'artifactId','workItemId',r.record->'workItemId','partial',r.record->'partial','canonicalUrl',r.record->'canonicalUrl')
+      ORDER BY r.log_key, r.position)
+    FROM w CROSS JOIN LATERAL (
+      SELECT log_key, position, record FROM cp_log_artifacts WHERE record #>> '{workItemId}'=w.id
+      UNION ALL SELECT log_key, position, record FROM cp_log_artifacts WHERE log_key=w.id AND record #>> '{workItemId}' IS NULL) r
+    WHERE cardinality($4::text[])=0 OR (r.record->>'partial' IS DISTINCT FROM 'true' AND r.record->>'canonicalUrl' ILIKE ANY($4::text[]))), '[]'::jsonb) AS captures`;
+/** Production's 221,000 system jobs read in 12 pages of about 0.6 s each; a state's own jobs fit in one. */
+const LEGACY_ACTIVITY_JOBS_PER_PAGE = 20_000;
 
 /** This projection happens in Postgres. readAllNarrowed on a held log narrows
  * only after downloading its full records, which is too late for this probe. */
-export async function readLegacyActivityCaptures(state: string, sql?: Sql): Promise<ActivityCapture[]> {
+/** `fullPagesStartingWith` narrows in Postgres to complete saved pages at those addresses; empty reads every saved page. */
+export async function readLegacyActivityCaptures(state: string, sql?: Sql, fullPagesStartingWith: readonly string[] = [],
+  jobsPerPage: number = LEGACY_ACTIVITY_JOBS_PER_PAGE): Promise<ActivityCapture[]> {
   if (!/^(?:[a-z]{2}|system)$/.test(state)) throw new Error("LEGACY_ACTIVITY_STATE_INVALID");
   if (!sql) {
     const [{ neon }, { controlPlaneUrlFromEnv }] = await Promise.all([import("@neondatabase/serverless"), import("../repository/pg-store.ts")]);
@@ -30,13 +40,13 @@ export async function readLegacyActivityCaptures(state: string, sql?: Sql): Prom
   }
   const { boundedQuery } = await import("../repository/request-bounds.ts");
   const captures: ActivityCapture[] = [];
-  let key = "", position = -1;
+  let after = "";
   for (;;) {
-    const rows = await boundedQuery(sql, { operation: "cp_log_artifacts.legacyActivityCaptures", callClass: "PAGE" },
-      LEGACY_ACTIVITY_CAPTURES_SQL, [state, key, position]) as { log_key: string; position: string | number; capture: ActivityCapture }[];
-    captures.push(...rows.map(row => row.capture));
-    if (rows.length < 100) return captures;
-    key = rows.at(-1)!.log_key; position = Number(rows.at(-1)!.position);
+    const [page] = await boundedQuery(sql, { operation: "cp_log_artifacts.legacyActivityCaptures", callClass: "PAGE" },
+      LEGACY_ACTIVITY_CAPTURES_SQL, [state, after, jobsPerPage, fullPagesStartingWith.map(prefix => `${prefix.replace(/[\\%_]/g, "\\$&")}%`)]) as { last_job: string | null; jobs: string | number; captures: ActivityCapture[] }[];
+    captures.push(...page?.captures ?? []);
+    if (!page?.last_job || Number(page.jobs) < jobsPerPage) return captures;
+    after = page.last_job;
   }
 }
 

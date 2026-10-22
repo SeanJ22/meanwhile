@@ -10,9 +10,7 @@ import { primeReaderProjection } from "../civic-data/read-model.ts";
 import { stateAuthorityPointers } from "../civic-data/state-reader.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import { requiredRoutineContract } from "../civic-data/contracts.ts";
-import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../funding/data-plane.ts";
 import { translationScope } from "../translate/records.ts";
-import { campaignFinanceStateScope } from "../funding/state-sources.ts";
 import { withStateRegistryFacts, combineStateRegistries } from "../registry/state-composition.ts";
 import { withRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
 import { withCensusDistricts } from "../geo/zip-census-districts.ts";
@@ -63,7 +61,6 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   for (const division of divisions) {
     if (!jurisdictionFromOcdId(division)) continue;
     entries.push({ recordClass: "CURATED_READER_RECORD", scope: translationScope(division) });
-    entries.push({ recordClass: "CURATED_READER_RECORD", scope: campaignFinanceStateScope(division) });
   }
   const unique = [...new Map(entries.map(entry => [`${entry.recordClass}:${entry.scope}`, entry])).values()];
   const ballots = unique.filter(entry => entry.recordClass === "BALLOT_CANDIDACY");
@@ -83,7 +80,6 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
     const pointersRead = Promise.all(packages.map(({ read }) => primeStateDistrictPointers(read)));
     const extra = (value?.ids ?? []).filter(id => !divisions.includes(id) && jurisdictionFromOcdId(id)).flatMap(id => [
       { recordClass: "CURATED_READER_RECORD" as const, scope: translationScope(id) },
-      { recordClass: "CURATED_READER_RECORD" as const, scope: campaignFinanceStateScope(id) },
     ]);
     const missing = extra.filter(entry => !readerCanonicalEntry(entry.recordClass, entry.scope));
     await Promise.all([pointersRead, missing.length ? primeReaderCanonicalStore(missing, readCanonicalShelf(missing)) : Promise.resolve()]);
@@ -160,12 +156,6 @@ export async function primeBallotCandidateDetails(set: BallotSet, contests: read
       return entry;
     },
   });
-}
-
-/** The ballot reads state money only for its displayed candidate cards. */
-export async function primeBallotStateMoneyRead(state: StateCampaignFinanceJurisdiction, set: BallotSet, contests: readonly Contest[]): Promise<void> {
-  if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
-  await primeReaderProjection("STATE_CAMPAIGN_FINANCE",STATE_CAMPAIGN_FINANCE_SOURCES[state].scope,ballotCandidateKeys(set,contests),{exactKeys:true});
 }
 
 /** Read money for the exact displayed contests, retaining candidates and earlier filings. */

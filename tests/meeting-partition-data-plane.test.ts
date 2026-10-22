@@ -524,12 +524,18 @@ test("one partition invocation narrows a shared adapter to exactly one body", ()
   );
 });
 
-test("the executable promotion door accepts exactly one registered partition", () => {
+test("the executable promotion door accepts each registered partition once, in the order given", () => {
   assert.deepEqual(
     selectedMeetingPartitions(["--promote", `--only-partition=${legistar.id}`]).map((row) => row.id),
     [legistar.id],
   );
-  assert.throws(() => selectedMeetingPartitions(["--promote"]), /MEETING_PARTITION_EXACTLY_ONE_REQUIRED/);
+  assert.deepEqual(
+    selectedMeetingPartitions(["--promote", `--only-partition=${insite.id}`, `--only-partition=${legistar.id}`]).map((row) => row.id),
+    [insite.id, legistar.id],
+  );
+  assert.throws(() => selectedMeetingPartitions(["--promote"]), /MEETING_PARTITION_REQUIRED/);
+  assert.throws(() => selectedMeetingPartitions([`--only-partition=${legistar.id}`, `--only-partition=${legistar.id}`]), /MEETING_PARTITION_NAMED_TWICE/);
+  assert.throws(() => selectedMeetingPartitions(["--only-partition=meetings:legistar:not-registered"]), /MEETING_PARTITION_NOT_REGISTERED/);
   assert.throws(
     () => selectedMeetingPartitions([`--partitions=${legistar.id},${insite.id}`]),
     /MEETING_PARTITION_BATCH_ARGUMENT_RETIRED/,

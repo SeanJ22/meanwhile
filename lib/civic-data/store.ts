@@ -60,6 +60,7 @@ import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda
 import { freezeDurableJson } from "./durable-json.ts";
 import { projectionKey } from "./projection-key.ts";
 import { invalidateReaderCache, readerCacheScopeForPublication, type ReaderCachePurger } from "../reader/cache.ts";
+import { stateCalendarsCovers } from "./state-calendars.ts";
 export { projectionKey } from "./projection-key.ts";
 
 export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate"> & {
@@ -259,6 +260,11 @@ export function routineDataStoreCandidateAuthorityIssue(
   if (authority.capability === "FEDERAL_PEOPLE_SPLIT") {
     return !hasAuthorityTransferMarker && (federalDirectoryStateOf(contract.id) !== null || contract.id === "congress-rollcalls")
       ? null : `the federal people split cannot mutate ${contract.id}`;
+  }
+  // A state's calendar program writes only its own state's boards and their history.
+  if (authority.capability === "STATE_CALENDARS") {
+    return !hasAuthorityTransferMarker && contract.kind === "routine" && stateCalendarsCovers(authority.contract, contract.id)
+      ? null : `${authority.contract ?? "a state calendar program"} cannot mutate ${contract.id}`;
   }
   const expectedCapability = contract.kind === "manual" ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT";
   if (authority.capability !== expectedCapability) {

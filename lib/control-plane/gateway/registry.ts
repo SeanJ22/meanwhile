@@ -6,6 +6,7 @@ import "../../facts/clocks.ts";
 import { requestRoutineDue } from "../../civic-data/routine-due-request.ts";
 import { playbookUpdateAction } from "./playbook-action.ts";
 import { officialsCheckAction } from "./officials-action.ts";
+import { auditFlagAction, auditFlagRaiseAction } from "./audit-flag-action.ts";
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
 import { addFixItem, completeFixItem, fixItems, fixDispatchNote, recordFixDispatch } from "../fix-list.ts";
@@ -1264,6 +1265,8 @@ const REGISTRY: readonly RegisteredAction[] = [
 
   ...OWED_ACTIONS,
   officialsCheckAction(),
+  auditFlagAction,
+  auditFlagRaiseAction,
 ];
 
 export const ACTION_REGISTRY: Readonly<Record<string, RegisteredAction>> = Object.freeze(

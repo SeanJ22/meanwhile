@@ -38,6 +38,8 @@ export interface MeasureTranslationProviderInput extends Pick<HeldInput, "repos"
   readonly loadBallotsForState?: (state: string) => Promise<readonly BallotSet[]>;
   readonly loadCapturesForState: (state: string, ballots: readonly BallotSet[]) => Promise<readonly WorkerPublicationCapture[]>;
   readonly readAttemptsForState: (state: string) => Promise<readonly TranslationAttempt[]>;
+  /** Pages found for measures whose cited pages never name them, by contest. */
+  readonly foundSources?: ReadonlyMap<string, readonly string[]>;
 }
 
 /**

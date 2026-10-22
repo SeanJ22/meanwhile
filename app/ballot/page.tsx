@@ -1,6 +1,6 @@
 import {Suspense} from "react";
 import {preload as preloadResource} from "react-dom";
-import { readBallotReaderData, primeBallotFundingRead, primeBallotStateMoneyRead, primeBallotCandidateDetails } from "@/lib/ballot/reader-data";
+import { readBallotReaderData, primeBallotFundingRead, primeBallotCandidateDetails } from "@/lib/ballot/reader-data";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "@/lib/db/reader-route";
@@ -61,8 +61,8 @@ import { BallotAskPill } from "@/components/ballot/ballot-ask-pill";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
-import { StateMoneySection } from "@/components/funding/state-money-section";
-import { stateMoneyForCard } from "@/lib/funding/nominee-money";
+import { StateCampaignSection } from "@/components/funding/state-campaign-section";
+
 import {
   MemberCommitteesContent,
   MemberOfficesContent,
@@ -105,9 +105,6 @@ import {
   type FundingAnswer,
 } from "@/lib/funding/display";
 import { settleFundingRead } from "@/lib/funding/snapshot";
-import { settleStateMoneyRead } from "@/lib/funding/state-snapshot";
-import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
-import { settleCampaignFinanceReads } from "@/lib/funding/campaign-finance-reader";
 import { officeIdentity } from "@/lib/officials/office-identity";
 import { settleFundingHoldingAnswer } from "@/lib/funding/holding-answer";
 
@@ -150,7 +147,6 @@ import {
 } from "@/lib/registry/server";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
-import type { ReactionViewContext } from "@/lib/reactions/client";
 import { BallotCapture } from "@/components/ballot/ballot-capture";
 import { tierForOcdId, tierForOffice } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
@@ -258,14 +254,6 @@ async function CandidateFunding({
   );
 }
 
-function stateCandidateFunding(
-  records: ReturnType<typeof stateMoneyForCard>["records"],
-  context: ReactionViewContext | null,
-) {
-  if (records.length === 0) return null;
-  return <StateMoneySection records={records} bare context={context} />;
-}
-
 async function BallotBattlecard({
   name,
   partyLine,
@@ -279,7 +267,6 @@ async function BallotBattlecard({
   officeBlurb,
   federal,
   resolvedStanding,
-  contestId,
   context,
   authorityAvailability,
   readerSelection,
@@ -304,7 +291,6 @@ async function BallotBattlecard({
   federal: boolean;
 
   resolvedStanding: Awaited<ReturnType<typeof contestIncumbency>> | null;
-  contestId: string;
 
   context: { zip: string; lat: number; lng: number } | null;
   authorityAvailability: BallotAuthorityAvailability;
@@ -335,16 +321,6 @@ async function BallotBattlecard({
     }
   }
 
-  let stateMoney: ReturnType<typeof stateMoneyForCard>["records"] = [];
-  let stateMoneyUnavailable = !federal && (!authorityAvailability.campaignFinance ||
-    (authorityAvailability.stateMoneyApplicable && !authorityAvailability.stateMoney));
-  if (!federal) {
-    try {
-      stateMoney = await withBallotReader(readerSelection, async () => stateMoneyForCard(targetKey, contestId).records);
-    } catch {
-      stateMoneyUnavailable = true;
-    }
-  }
   const filingContact = await withBallotReader(readerSelection, async () => {
     const candidacyId = targetKey.includes("|") ? reconciledCandidacyIdForCard(targetKey) : targetKey;
     return candidacyId ? candidateContactForCandidacy(state, candidacyId) : null;
@@ -398,7 +374,7 @@ async function BallotBattlecard({
           ) : null,
         money: federal ? (
           <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerSelection={readerSelection} />
-        ) : <>{stateMoneyUnavailable && unavailableHolding("state campaign-finance")}{stateCandidateFunding(stateMoney, context)}</>,
+        ) : <StateCampaignSection divisionId={contestOcdId} personId={targetKey} bare context={context}/>,
 
         record: !officeholdersAvailable ? (
           unavailableHolding("officeholder-directory")
@@ -434,9 +410,6 @@ interface BallotAuthorityAvailability {
   readonly candidateProfiles: boolean;
   readonly candidatePublications: boolean;
   readonly funding: boolean;
-  readonly stateMoney: boolean;
-  readonly stateMoneyApplicable: boolean;
-  readonly campaignFinance: boolean;
   readonly officeholders: boolean;
   readonly federalOfficeholders: boolean;
 }
@@ -577,18 +550,7 @@ export default readerRoute("/ballot", async function BallotPage({
         return settleFundingRead();
       });
     }
-    preload("campaign-finance", () => settleCampaignFinanceReads(askOcdIds));
-    if (matched.contests.some((contest) => !isFederalContest(contest)) &&
-        Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, set.election.state)) {
-      const state = set.election.state as StateCampaignFinanceJurisdiction;
-      preload(
-        "state-money",
-        async () => {
-          if (readerData) await primeBallotStateMoneyRead(state,set!,matched.contests.filter(contest=>!isFederalContest(contest)));
-          return settleStateMoneyRead(state);
-        },
-      );
-    }
+
   }
   const candidacyContests =
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
@@ -659,10 +621,6 @@ export default readerRoute("/ballot", async function BallotPage({
       auxiliaryPreloads.has("candidate-publications") && !auxiliaryFailed.has("candidate-publications"),
     funding:
       auxiliaryPreloads.has("federal-funding") && !auxiliaryFailed.has("federal-funding"),
-    stateMoney:
-      auxiliaryPreloads.has("state-money") && !auxiliaryFailed.has("state-money"),
-    stateMoneyApplicable: auxiliaryPreloads.has("state-money"),
-    campaignFinance: auxiliaryPreloads.has("campaign-finance") && !auxiliaryFailed.has("campaign-finance"),
     officeholders:
       auxiliaryPreloads.has("registry-runtime") &&
       !auxiliaryFailed.has("registry-runtime"),
@@ -1078,7 +1036,6 @@ export default readerRoute("/ballot", async function BallotPage({
                             contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null}
                             federal={isFederalContest(contest)}
-                            contestId={contest.id}
                             resolvedStanding={contestResolutions.get(contest.id) ?? null}
                             context={
                               centroid && zip
@@ -1178,7 +1135,6 @@ export default readerRoute("/ballot", async function BallotPage({
                               contestOcdId={contest.ocdId}
                               officeBlurb={officeBlurbs.get(contest.id) ?? null}
                               federal={isFederalContest(contest)}
-                              contestId={contest.id}
                               resolvedStanding={contestResolutions.get(contest.id) ?? null}
                               context={
                                 centroid && zip
@@ -1235,7 +1191,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             card={availableCardForCandidacy(candidate.id)} links={availableLinksForCandidacy(candidate.id)} targetKey={candidate.id}
                             filingSource={provenance} contestTitle={contest.title} contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(contest)}
-                            contestId={contest.id} resolvedStanding={null}
+                            resolvedStanding={null}
                             context={centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null}
                             authorityAvailability={authorityAvailability} readerSelection={readerSelection} stanceTopics={stanceTopics} />}
                         />
@@ -1283,6 +1239,7 @@ export default readerRoute("/ballot", async function BallotPage({
                     className="mt-2.5 rounded-md bg-[var(--surface,rgba(255,255,255,0.04))] p-3"
                     data-measure-summary="PRESENT"
                   >
+                    <CardSourcesContribution id={`measure-summary:${contest.id}`} sources={[{ what: "Plain-language summary", provenance: { sourceUrl: summary.summarizesUrl, sourceOrg: new URL(summary.summarizesUrl).hostname.replace(/^www\./, ""), collectedAt: summary.writtenAt, verifiedAt: null } }]} />
                     <p className="t-eyebrow text-muted">
                       Plain-language summary — read the official text below
                     </p>

@@ -1,7 +1,12 @@
 import { randomUUID } from "node:crypto";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { readPlanningIntents } from "../control-plane/repository/pg-store.ts";
-import { ADMIN_CONFIG_ID, adminConfigForPaidWork, fleetSpendCeilingOverrideUsd, type AdminConfigRead } from "../control-plane/gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, adminConfigForPaidWork, discoverySearchEnabled, fleetSpendCeilingOverrideUsd, type AdminConfigRead } from "../control-plane/gateway/admin-config.ts";
+import { recordCost } from "../control-plane/repository/coordinator.ts";
+import { durableSearchBudget } from "../control-plane/discovery/search-runtime.ts";
+import { makeHuntSearch } from "../hunt/search.ts";
+import { huntSearchCost } from "../hunt/runtime.ts";
+import type { MeasurePageSearch } from "./routine-sources.ts";
 import { FleetSafetyController, resolveRollingCeiling, type ProviderCircuit } from "../control-plane/fleet-safety.ts";
 import { readSpendWindow } from "../control-plane/spend-window.ts";
 import { loadExpansionPlan, type ExpansionLoad } from "../control-plane/expansion/runner-load.ts";
@@ -12,7 +17,7 @@ import { ModelProviderQueue, modelLaneClosure } from "../control-plane/scheduler
 import { RESEARCH_STATE_ID, ceilingPermits, readIntents, type ResearchIntent } from "../control-plane/scheduler/research-policy.ts";
 import type { ModelTransport } from "../control-plane/scheduler/scout-executor.ts";
 import type { backgroundBatchTransport } from "../control-plane/model-batch.ts";
-import { jurisdictionFromOcdId } from "../coverage/states.ts";
+import { US_JURISDICTIONS, jurisdictionFromOcdId } from "../coverage/states.ts";
 
 export interface RoutineTranslationPaidWorkInput {
   readonly repos: ControlPlaneRepositories;
@@ -30,6 +35,7 @@ export interface RoutineTranslationPaidWorkInput {
   readonly loadExpansion?: (input: Parameters<typeof loadExpansionPlan>[0]) => Promise<ExpansionLoad>;
 }
 
+const placeOcdId = (state: string) => `ocd-division/country:us/${US_JURISDICTIONS.find(row => row.slug === state)!.prefix}:${state}`;
 const emptyTerritory = (): TerritoryIndex => ({ bySubject: new Map(), unplaced: new Map(), statewide: new Set(), unregisteredUnitsByState: new Map() });
 const detail = (error: unknown) => error instanceof Error ? error.message : String(error);
 /** All routine children reserve the same existing Admin spending allowance. */
@@ -82,14 +88,14 @@ export async function armRoutineTranslationPaidWork(input: RoutineTranslationPai
       spendHold: spend === null ? "the cost ledger could not be read" : ceilingPermits(spend.windowUsd, ceiling.rollingCeilingUsd).permits
         ? null : `the owner's $${ceiling.rollingCeilingUsd.toFixed(2)} model ceiling is reached`,
     });
-    if (closed || !spend) return { closed: closed ?? { code: "LANE_DISABLED", reason: "the cost ledger could not be read" }, guards: null };
+    if (closed || !spend) return { closed: closed ?? { code: "LANE_DISABLED", reason: "the cost ledger could not be read" }, guards: null, searchOn: false };
     let expansion: ExpansionLoad;
     try {
       expansion = await (input.loadExpansion ?? loadExpansionPlan)({ repos: scopeRepos, root: input.root, now,
         obligations: input.subjects.map(subject => ({ id: `translation:${subject.subjectId}`, subjectId: subject.subjectId, scopeDivisions: [subject.ocdId] })),
         loadTerritory: emptyTerritory });
     } catch (error) {
-      return { closed: { code: "SCOPE_BUDGET", reason: `the owner's area budgets could not be read (${detail(error)})` }, guards: null };
+      return { closed: { code: "SCOPE_BUDGET", reason: `the owner's area budgets could not be read (${detail(error)})` }, guards: null, searchOn: false };
     }
     expansion.conditions.forEach(say);
     const areas = expansion.plan === null ? null : armExpansionBudget(expansion.plan, { now,
@@ -119,13 +125,31 @@ export async function armRoutineTranslationPaidWork(input: RoutineTranslationPai
       fleetSafety, providerQueue: queue, spendHolds: holds, assignmentBudget: { linesFor: () => ({ lines: [] }) }, expansionBudget,
       messages: input.messages, batch: input.batch, batchEnv: input.batchEnv, modelLaneEnabled: true,
       ceilingUsd: () => ceiling.rollingCeilingUsd, onCondition: say });
-    return { closed: null, guards, fleetSafety };
+    return { closed: null, guards, fleetSafety, searchOn: !holdPaidWork && discoverySearchEnabled(config) };
   }
 
   let current = await readGate();
   return {
     get closed() { return current.closed; },
     paidWorkerCapacity: (readyWork?: number) => current.guards?.paidWorkerCapacity(readyWork) ?? 0,
+    /** The existing paid discovery search, only while Admin has it on and paid work is open. Each request is
+     * admitted by the fleet's search guard and recorded in the cost ledger. */
+    measurePageSearch(keys: { readonly braveKey?: string | null; readonly exaKey?: string | null }): MeasurePageSearch | null {
+      const open = current;
+      if (!open.searchOn || !open.fleetSafety) return null;
+      const budget = durableSearchBudget({ repos: input.repos, perCycle: Number.MAX_SAFE_INTEGER, perDay: Number.MAX_SAFE_INTEGER, now: input.now,
+        admit: () => {
+          try { open.fleetSafety!.admitProviderRequest("discovery-search", "paid-search"); return null; }
+          catch (error) { return detail(error); }
+        } });
+      const id = `measure-search:${state}:${randomUUID()}`;
+      const search = makeHuntSearch({ ...keys, budget, onCharge: async charge => {
+        await recordCost(input.repos, huntSearchCost({ charge, attemptId: id, workItemId: id, routeTaskId: `measure-translations:${state.toUpperCase()}`,
+          governmentId: placeOcdId(state), assignmentKeys: [], recordedAt: input.now() }), input.now());
+      } });
+      return search === null ? null : async (query, domains) =>
+        (await search({ query, ...(domains.length ? { includeDomains: domains } : {}) })).hits.map(hit => ({ url: hit.url, title: hit.title }));
+    },
     guardedTransportFor: (subject: { readonly subjectId: string; readonly state: string }): ModelTransport => async request => {
       if (!subjects.has(subject.subjectId) || subject.state.toLowerCase() !== state) throw new Error("Translation request is outside its admitted state or measure set.");
       // A pause or lower spending limit applies to the next model call,

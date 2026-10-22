@@ -56,3 +56,42 @@ test("legacy catch-up keeps archived source work while leaving unrelated and mod
   console.log(`RN-01 legacy activity: ${bytes} scoped response bytes vs ${before} full-history bytes`);
   assert.equal(await legacyArtifactActivityRepositories(repos, () => false, () => readLegacyActivityCaptures("az", sql)), null);
 });
+
+test("legacy captures start from the state's own jobs and page by job, so a large state never sorts its whole history", async t => {
+  const pg = new PGlite();
+  t.after(() => pg.close());
+  for (const ddl of BOOTSTRAP_DDL) await pg.exec(ddl.replaceAll("CREATE INDEX CONCURRENTLY", "CREATE INDEX"));
+  const now = "2026-10-20T00:00:00Z";
+  const job = (id: string, state: string) => JSON.stringify({ ...createWorkItem({ project: "rn01", subject: `ocd-division/country:us/state:${state}/place:fixture`, obligation: "Saved meeting page", why: "Catch-up", now }), id });
+  await pg.query(`INSERT INTO cp_work_items(id,revision,updated_at,value) SELECT 'az-'||lpad(n::text,5,'0'),1,$1::timestamptz,$2::jsonb || jsonb_build_object('id','az-'||lpad(n::text,5,'0')) FROM generate_series(1,2100) n`, [now, job("az", "az")]);
+  await pg.query("INSERT INTO cp_work_items_archive(id,revision,updated_at,value) VALUES('az-archived',1,$1,$2),('nh-1',1,$1,$3)", [now, job("az-archived", "az"), job("nh-1", "nh")]);
+  const saved = (log: string, id: string, workItemId: string | null) => pg.query("INSERT INTO cp_log_artifacts(log_key,record_id,position,recorded_at,record) VALUES($1,$2,1,$3,$4)",
+    [log, id, now, JSON.stringify({ artifactId: id, ...(workItemId ? { workItemId } : {}), partial: false, canonicalUrl: `https://example.gov/${id}` })]);
+  await saved("az-00007", "first", "az-00007");
+  await saved("az-02050", "past-first-page", "az-02050");
+  await saved("az-archived", "keyed-by-log", null);
+  await saved("nh-1", "another-state", "nh-1");
+  let pages = 0;
+  const sql: Sql = { query: async (text, params = []) => { pages += 1; return (await pg.query<Record<string, unknown>>(text, [...params])).rows; } };
+  const captures = await readLegacyActivityCaptures("az", sql, [], 2000);
+  assert.deepEqual(captures.map(row => row.artifactId).sort(), ["first", "keyed-by-log", "past-first-page"]);
+  assert.equal(pages, 2, "2,101 jobs are two pages of 2,000");
+  assert.deepEqual((await readLegacyActivityCaptures("nh", sql, [], 2000)).map(row => row.artifactId), ["another-state"]);
+});
+
+test("the planning round asks Postgres only for complete saved pages at the held event addresses", async t => {
+  const { HELD_EVENT_URL_PREFIXES } = await import("../lib/control-plane/workers/standing.ts");
+  const pg = new PGlite();
+  t.after(() => pg.close());
+  for (const ddl of BOOTSTRAP_DDL) await pg.exec(ddl.replaceAll("CREATE INDEX CONCURRENTLY", "CREATE INDEX"));
+  const now = "2026-10-20T00:00:00Z";
+  await pg.query("INSERT INTO cp_work_items(id,revision,updated_at,value) VALUES('job',1,$1,$2)",
+    [now, JSON.stringify({ ...createWorkItem({ project: "rn01", subject: "ocd-division/country:us/state:az/place:fixture", obligation: "Saved meeting page", why: "Catch-up", now }), id: "job" })]);
+  const pages: [string, string, boolean][] = [["pima", "https://webapi.legistar.com/v1/Pima/Events?$top=1000", false], ["partial", "https://webapi.legistar.com/v1/pima/events", true],
+    ["avondale", "https://avondaleaz.api.civicclerk.com/v1/Events?$filter=x", false], ["other", "https://webapi.legistar.com/v1/tucson/events", false], ["wildcard", "https://webapi.legistar.com/v1/pimaXevents", false]];
+  for (const [id, canonicalUrl, partial] of pages) await pg.query("INSERT INTO cp_log_artifacts(log_key,record_id,position,recorded_at,record) VALUES('job',$1,$2,$3,$4)",
+    [id, pages.findIndex(page => page[0] === id), now, JSON.stringify({ artifactId: id, workItemId: "job", partial, canonicalUrl })]);
+  const sql: Sql = { query: async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows };
+  assert.deepEqual((await readLegacyActivityCaptures("az", sql, HELD_EVENT_URL_PREFIXES)).map(row => row.artifactId), ["pima", "avondale"]);
+  assert.equal((await readLegacyActivityCaptures("az", sql)).length, pages.length);
+});

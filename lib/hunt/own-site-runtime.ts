@@ -6,6 +6,7 @@ import {planPlaceHunt} from './place-plan.ts';
 import {walkPlaceBlanks} from './site-walk.ts';
 import {placePageReader} from './source-page-reader.ts';
 import {readScopedBank} from './place-bank.ts';
+import {handedLinks,settleHandedLinks,type HandedLinks} from './site-walk-handoff.ts';
 import {indexReportedFinding} from '../control-plane/box.ts';
 import {newFieldManualEntry,writeFieldManual,fieldManualEntryId} from '../control-plane/field-manual.ts';
 import {ZERO_COST} from '../control-plane/attempt.ts';
@@ -17,12 +18,15 @@ import {heldCaptureReader} from '../civic-data/worker-publication-context.ts';
 import {readPlaceArtifacts} from '../control-plane/repository/pg-store.ts';
 import {join} from 'node:path';
 import {readerQuery} from '../civic-data/promoted-reader-query.ts';
+import {readStateReference} from '../control-plane/expansion/state-references.ts';
 import type {ControlPlaneRepositories,ArtifactRecord} from '../control-plane/repository/types.ts';
 import type {Query} from '../facts/publish.ts';
 import type {RunWork,WorkOutcome} from '../control-plane/scheduler/dispatch.ts';
 import type {OpenOne,VaultPut} from '../control-plane/scheduler/route-executor.ts';
 import type {SiteScope} from './site-findings.ts';
 
+/** Links hunters found that go to the front of one walk; the walk's own allowance decides how many it reaches. */
+const HANDED_LINKS_PER_WALK=25;
 export interface HuntSourceScope {jurisdictionId:string;governmentId:string|null;bodyId:string|null;name:string;state:string;website:string;knownOwnSite?:boolean;directorySeeds?:readonly string[];govClass?:string;}
 export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:HuntSourceScope;open:OpenOne;vault:VaultPut;spaceOut:(host:string)=>Promise<void>;now:()=>string;root?:string;query?:Query;readHeld?:(ids:readonly string[])=>Promise<import('./place-plan.ts').PlaceCapture>;canRead?:()=>boolean;prepareBody?:PrepareHuntBody;readHeldPage?:(url:string)=>Promise<import('./site-findings.ts').SitePage|null>;}):RunWork{
  return async (job):Promise<WorkOutcome>=>{
@@ -43,6 +47,8 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
   const payload=prior?.value.payload as {website?:string;siteFrontier?:string[];frontier?:{url:string;checkedAt?:string}[];read?:{url:string;checkedAt?:string}[]}|undefined;
   if(payload?.website)scope.website=payload.website;
   let checked=0,findings=0;
+  const readUrls=new Set<string>();
+  let handed:HandedLinks={leads:[],rows:new Map()};
   const retained=new Map<string,ArtifactRecord>();
   const readHeld=heldCaptureReader(new DurableEvidenceStore(join(input.root??process.cwd(),...VAULT_DIR)));
   const held=async(url:string)=>{
@@ -59,7 +65,7 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
    job.assertLeaseHealthy?.();
    const saved=await (input.readHeldPage??held)(url);
    const page=saved?await retainHuntPage(input.repos,job.workItemId,saved,input.now()):await reader.read(url);
-   if(page)checked++;
+   if(page){checked++;readUrls.add(url);readUrls.add(page.url);}
    return page;
   };
   try{
@@ -75,17 +81,24 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
      if(!site)return {ranAs:'DETERMINISTIC',kind:checked?'DISPOSED':'ABORTED',artifacts:reader.artifacts,cost:{...ZERO_COST,...reader.cost,usd:0,durationMs:Date.now()-started},...(checked?{disposition:{disposition:'WALKED_NO_YIELD',observation:null,permission:'CANNOT_TELL',transport:'REACHABLE',note:`Read ${checked} directory pages; ${siteRemaining.length} directory links remain. The website stays an open blank.`}}:{}),detail:`${scope.name}: the government website remains open after ${checked} source directory page(s).`};
      scope.website=site;
    }
-   const meetingPage=sourceMeetings({repos:input.repos,governmentId,website:scope.website,workItemId:job.workItemId,currentArtifacts:()=>reader.artifacts});
+   handed=await handedLinks({boxFindings:input.repos.boxFindings,governmentIds:[...new Set([reference.jurisdictionId,reference.governmentId,governmentId].filter((id):id is string=>!!id))],website:scope.website,now:input.now(),limit:HANDED_LINKS_PER_WALK});
+   // The county tells which clock the body meets by where a state has more than one; the Census of Governments file records it.
+   const countyFips=await (async()=>{try{
+     const [pid]=await query("SELECT value FROM entity_external_id WHERE scheme='census-pid6' AND entity_id=$1 LIMIT 1",[governmentId]);
+     return pid?(readStateReference(input.root??process.cwd(),reference.state,{facts:true}).facts[String(pid.value)]?.countyFips??null):null;
+   }catch{return null;}})();
+   const meetingPage=sourceMeetings({repos:input.repos,governmentId,website:scope.website,workItemId:job.workItemId,currentArtifacts:()=>reader.artifacts,countyFips});
    const report=await walkPlaceBlanks({scope,repos:input.repos,now:input.now,canRead,plan,pageRead:meetingPage,
     // Canonical national holdings, the current place and native reader facts
     // precede local requests. They are independent of the original job or ZIP.
     readHeld:readBank,national:async()=>({subjects:[],held:[]}),
     read:readPage,
     report:async finding=>{job.assertLeaseHealthy?.();const at=input.now();const row=await indexReportedFinding(input.repos.boxFindings,{workItemId:job.workItemId,attemptId:job.attemptId,obligationId:`hunt:packet:${governmentId}`,missionPart:null,finding:{...finding,index:findings++,subjectHint:scope.name}},at);await retainHuntFinding(input.repos,row,job.workItemId,finding.artifactIds,at,retained);await input.prepareBody?.(finding,{workItemId:job.workItemId,attemptId:job.attemptId});},
-    frontier:payload?.frontier,
+    frontier:payload?.frontier,leads:handed.leads,
     saveFrontier:async(frontier,read)=>{const at=input.now();const written=await writeFieldManual(input.repos,[newFieldManualEntry('place-hunt',reference.jurisdictionId,{role:'SHARED',kind:'SOURCE_PAGE',title:reference.name,url:scope.website,states:[scope.state.toLowerCase()],ocdIds:[governmentId],outcome:findings?'YIELDED':'REFERENCE',summary:`${checked} source page(s) read, ${findings} finding(s); ${frontier.length} published link(s) remain`,observedAt:at,payload:{website:scope.website,frontier,read}})],at);if(written.error)throw new Error(written.error);}});
+   await settleHandedLinks({boxFindings:input.repos.boxFindings,handed,read:readUrls,failed:new Map((report.failures??[]).map(row=>[row.url,row.error??'HUNT_SOURCE_UNREADABLE'])),attemptId:job.attemptId,now:input.now()});
    if(!report.read && report.failures?.length)return {ranAs:'DETERMINISTIC',kind:'ABORTED',artifacts:reader.artifacts,cost:{...ZERO_COST,...reader.cost,usd:0,durationMs:Date.now()-started},detail:`${scope.name}: no source page was readable; ${report.failures.length} source failure(s) remain open.`};
    return {ranAs:'DETERMINISTIC',kind:'DISPOSED',artifacts:reader.artifacts,cost:{...ZERO_COST,...reader.cost,usd:0,durationMs:Date.now()-started},disposition:{disposition:'INGESTED',observation:{rawCount:report.read,normalizedCount:report.findings,routeOnlyCount:null,earliest:null,latest:null},permission:'ALLOWED',transport:report.read?'REACHABLE':'OTHER_NAMED_FAILURE',note:`Read ${report.read} saved source page(s); ${report.findings} finding(s) entered the Box; ${report.remaining} source links remain. Open checklist blanks stay owed.`},detail:`${scope.name}: ${report.read} pages, ${report.findings} findings, $0 source reads`};
-  }catch(error){return {ranAs:'DETERMINISTIC',kind:'ABORTED',artifacts:reader.artifacts,cost:{...ZERO_COST,...reader.cost,usd:0,durationMs:Date.now()-started},detail:`${scope.name}: ${checked} saved pages, ${findings} findings; source remains owed: ${error instanceof Error?error.message:String(error)}`};}
+  }catch(error){await settleHandedLinks({boxFindings:input.repos.boxFindings,handed,read:readUrls,failed:new Map(),attemptId:job.attemptId,now:input.now()}).catch(()=>undefined);return {ranAs:'DETERMINISTIC',kind:'ABORTED',artifacts:reader.artifacts,cost:{...ZERO_COST,...reader.cost,usd:0,durationMs:Date.now()-started},detail:`${scope.name}: ${checked} saved pages, ${findings} findings; source remains owed: ${error instanceof Error?error.message:String(error)}`};}
  };
 }

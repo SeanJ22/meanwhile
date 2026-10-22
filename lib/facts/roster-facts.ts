@@ -1,6 +1,6 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { Provenance as FieldSource } from "../sources/types.ts";
-import { boundedIndexOf, normalizeText, type CheckEntity, type FieldKind } from "./check.ts";
+import { boundedIndexOf, normalizeText, type CheckEntity, type FieldKind, type SavedCopy } from "./check.ts";
 import { captureProvenance } from "./capture.ts";
 import { ensureEntity, resolvePerson } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
@@ -8,9 +8,24 @@ import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome 
 import { saveCaptureCopy } from "./source-copy.ts";
 import { invalidateReaderCache, readerCacheScopeForPublication, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
 
+const rosterCopies = new WeakMap<FactDb, WeakMap<WorkerPublicationCapture, Promise<SavedCopy>>>();
+
+async function rosterCopy(db: FactDb, capture: WorkerPublicationCapture): Promise<SavedCopy> {
+  let pages = rosterCopies.get(db);
+  if (!pages) { pages = new WeakMap(); rosterCopies.set(db, pages); }
+  let copy = pages.get(capture);
+  if (!copy) {
+    copy = db.transaction(query => saveCaptureCopy(query, capture));
+    pages.set(capture, copy);
+    void copy.catch(() => pages.delete(capture));
+  }
+  return copy;
+}
+
 export interface RosterMember {
   readonly recordId: string;
   readonly fields: Readonly<Record<string, unknown>>;
+  readonly externalIds?: readonly (readonly [string, string])[];
   readonly fieldSources?: Readonly<Record<string, FieldSource>>;
 }
 
@@ -59,7 +74,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
   const { body, capture } = input;
   await ensureEntity(db.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: body.state, parentId: body.parentId });
   const bodyEntity = (await readCheckEntity(db.query, body.id))!;
-  const copy = await db.transaction(query => saveCaptureCopy(query, capture));
+  const copy = await rosterCopy(db, capture);
   const provenance = captureProvenance(capture, bodyEntity.hosts);
   const tally = { live: 0, confirmed: 0, held: 0, blanks: 0, departed: 0, people: new Map<string, string>(), outcomes: new Map<string, Map<string, PublishOutcome>>() };
   const count = (outcome: PublishOutcome, recordId?: string, field?: string) => {
@@ -85,7 +100,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
       continue;
     }
     const personId = await resolvePerson(db, { name, state: body.state, placeId: place ?? body.parentId,
-      externalIds: [["roster-name:" + body.id, nameKey(name)],
+      externalIds: [...(member.externalIds ?? []), ["roster-name:" + body.id, nameKey(name)],
         ...(input.shownMemberIds?.has(nameKey(name)) ? [["roster-member", input.shownMemberIds.get(nameKey(name))!] as const] : [])] });
     seated.add(personId);
     tally.people.set(member.recordId, personId);

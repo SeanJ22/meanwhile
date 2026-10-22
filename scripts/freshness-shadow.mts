@@ -20,7 +20,7 @@ import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } fr
 import { workerMemoryHost, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
-import { heldEventContract, legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
+import { HELD_EVENT_URL_PREFIXES, heldEventContract, legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
 import { legacyArtifactActivityRepositories, readLegacyActivityCaptures } from "../lib/control-plane/workers/activity.ts";
 import { persistVerifiedPublicationAnchors, readStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
 import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing-plan.ts";
@@ -560,9 +560,9 @@ if(!dry && !filteredCycle) {
 }
 const planningPolicy=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}});
 const huntsPaused=intents.paused || intents.runnerPause.paused || intentLogUnreadable!==null || ownerIntentsUnreadableByRunner;
-const fundedRefs=huntsPaused?[]:[...expansionScopesOf(planningPolicy?.value??null).scopes.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId),
+const fundedRefs=[...expansionScopesOf(planningPolicy?.value??null).scopes.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId),
   ...intentLog.flatMap(intent=>intent.kind==="INTENT" && intent.action==="DISPATCH" && !intents.cancelledDispatch.has(intent.intentId)?[intent.intentId]:[])];
-if(!dry && !filteredCycle)await deactivateUnfundedHunts(repos,fundedRefs,NOW);
+if(!dry && !filteredCycle && !huntsPaused)await deactivateUnfundedHunts(repos,fundedRefs,NOW);
 const planningSections={expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}} as const;
 const cycleObservation = observeCyclePhases(repos);
 
@@ -2198,7 +2198,7 @@ async function runAutonomousWave() {
   const fleet = await makeAutonomousFleet();
 
   const legacyRepos = await legacyArtifactActivityRepositories(repos, artifact => heldEventContract(ROOT, artifact) !== null,
-    () => readLegacyActivityCaptures(PLANNING_STATE));
+    () => readLegacyActivityCaptures(PLANNING_STATE, undefined, HELD_EVENT_URL_PREFIXES));
   const legacyFleet = legacyRepos ? { ...fleet, repos: legacyRepos } : null;
   const held = legacyFleet && await legacyHeldWorkOwed(ROOT, legacyFleet) ? await planHeldWorkerFleet(ROOT, legacyFleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();

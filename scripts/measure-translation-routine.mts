@@ -14,6 +14,7 @@ import { measureTranslationRoutineId } from "../lib/translate/routine-contract.t
 import { armRoutineTranslationPaidWork } from "../lib/translate/routine-paid-work.ts";
 import { routineTranslationAttempts } from "../lib/translate/routine-attempts.ts";
 import { loadRoutineMeasureSources } from "../lib/translate/routine-sources.ts";
+import { routineMeasureFinds } from "../lib/translate/routine-finds.ts";
 import { measureTranslationRoutineReceipt } from "../lib/translate/routine-receipt.ts";
 import { routineMeasureSourceOpener } from "../lib/translate/routine-source-http.ts";
 
@@ -56,17 +57,21 @@ if (!process.argv.includes("--manual-child")) {
       credentialVar: WORKER_CREDENTIAL_VAR, providerQueue: queue,
       onCondition: reason => console.log(`MEASURE_TRANSLATION_HOLD ${reason}`) });
     // Publisher reads remain free while Admin holds paid work.
+    // A measure whose cited pages never name it gets its own page found on the election office's site:
+    // free links first, then the Admin-allowed paid search.
     const sources = await loadRoutineMeasureSources({ repos, root: process.cwd(), state, ballots, now,
-      open: routineMeasureSourceOpener({ repos, state, root: process.cwd(), now }) });
+      open: routineMeasureSourceOpener({ repos, state, root: process.cwd(), now }), finds: routineMeasureFinds(repos, state),
+      search: armed.measurePageSearch({ braveKey: process.env.BRAVE_SEARCH_API_KEY, exaKey: process.env.EXA_API_KEY }) });
     const attempts = routineTranslationAttempts(repos, state);
     const result = await runMeasureTranslationPass({ states: [state], repos, store, now: now(),
       modelLaneEnabled: armed.closed === null, modelLaneReason: armed.closed?.reason,
       paidWorkerCapacity: () => armed.paidWorkerCapacity(), guardedTransportFor: armed.guardedTransportFor,
       loadBallotsForState: async () => ballots, loadCapturesForState: async () => sources.captures,
-      readAttemptsForState: async () => attempts.read(), saveAttempt: attempts.save });
-    console.log("MEASURE_TRANSLATION_RESULT=" + JSON.stringify({ state, ...result, sourceFailures: sources.failures }));
-    holdReason = result.persistenceError ?? result.unreadable[0]?.reason ?? result.held[0]?.reason ??
-      (result.checkedAfter < result.totalMeasures ? "Some measure explainers still need source checking." : null);
+      readAttemptsForState: async () => attempts.read(), saveAttempt: attempts.save, foundSources: sources.discovered });
+    console.log("MEASURE_TRANSLATION_RESULT=" + JSON.stringify({ state, ...result, sourceFailures: sources.failures, foundSources: Object.fromEntries(sources.discovered) }));
+    // A failed save or an unreadable state ballot holds the run. A measure without saved official text
+    // stays an open blank (listed in the result line above); every other measure and state continues.
+    holdReason = result.persistenceError ?? result.unreadable[0]?.reason ?? null;
   } catch (error) { holdReason = error instanceof Error ? error.message : String(error); }
   const receipt = await measureTranslationRoutineReceipt({ store, state, now: now(), holdReason });
   console.log(receipt.line);

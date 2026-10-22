@@ -201,10 +201,23 @@ export async function publishOwedRosterFacts(input: {
       if (!body || !prior) throw new Error("ROSTER_BODY_UNREGISTERED");
       const parser = latestParserResult(records, id);
       const pull = parser ? auditPull(records, parser) : null;
+      if (pull?.all) await input.facts.query(`INSERT INTO owner_flag(fact_id,kind,reason,source_url)
+        SELECT f.id,'AUDIT_LOOKS_WRONG','The audit challenged this published roster.',s.url FROM fact f
+        JOIN source_copy s ON s.id=f.source_copy_id WHERE f.entity_id=$1 AND f.field LIKE 'member:%' AND f.status='live'
+        AND NOT EXISTS(SELECT 1 FROM owner_flag o WHERE o.fact_id=f.id AND o.resolved IS NULL)`,[bodyId]);
       const captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId,
         results: records, readCapture, officialLinks: manual.officialLinks }) : [];
       reading = parser && !pull?.all ? parserReading(parser, plan.contract, captures) : null;
-      if (reading && pull) reading = { ...reading, members: reading.members.filter(member => !pull.recordIds.has(member.recordId)) };
+      if (reading && pull) {
+        for (const member of reading.members.filter(member=>pull.recordIds.has(member.recordId))) {
+          const name=String(member.fields.name ?? "");
+          await input.facts.query(`INSERT INTO owner_flag(fact_id,kind,reason,source_url)
+            SELECT f.id,'AUDIT_LOOKS_WRONG','The audit challenged this published member.',s.url FROM fact f
+            JOIN source_copy s ON s.id=f.source_copy_id WHERE f.entity_id=$1 AND f.field LIKE 'member:%' AND f.status='live'
+            AND f.value->>'name'=$2 AND NOT EXISTS(SELECT 1 FROM owner_flag o WHERE o.fact_id=f.id AND o.resolved IS NULL)`,[bodyId,name]);
+        }
+        reading = { ...reading,complete:false,members:reading.members.filter(member => !pull.recordIds.has(member.recordId)) };
+      }
       if (!reading) {
         if (!heldByBody.has(bodyId)) heldByBody.set(bodyId, (async () => {
           const siblings = await itemsOf(input.repos, other => other.autonomousPlan?.publication?.bodyId === bodyId, [[["autonomousPlan", "publication", "bodyId"], bodyId]]);
@@ -213,6 +226,7 @@ export async function publishOwedRosterFacts(input: {
         })());
         reading = await heldByBody.get(bodyId)!;
       }
+      if (reading && pull?.all) reading = {...reading,complete:false};
       if (!reading) throw new Error("ROSTER_NO_READABLE_SAVED_PAGE:No extraction yet, and no saved page for this body has a member table");
       if (item.publicationOutcome?.workerResultId === reading.id && item.publicationOutcome.status !== "HELD" && !(pull && pull.at > item.publicationOutcome.at)) {
         report.push({ workItemId: id, outcome: item.publicationOutcome });

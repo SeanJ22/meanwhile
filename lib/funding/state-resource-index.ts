@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { saveFederalBulkBytes } from "../federal-money/bulk.ts";
-import { federalJsonRecords } from "../federal-money/streams.ts";
+import { federalJsonRecords,type FederalJsonEnvelope } from "../federal-money/streams.ts";
 import { createHash } from "node:crypto";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
@@ -17,6 +17,7 @@ interface IndexOptions {
   readonly vault: EvidenceStore;
   readonly signal: AbortSignal;
   readonly fetch?: typeof fetch;
+  readonly minimumYear?:number;
   readonly onFailure?: (resource: string, url: string, error: unknown) => Promise<void>;
 }
 
@@ -25,13 +26,24 @@ async function* jsonIndexedResources(resource: CampaignFinanceResource, options:
   const directory = await mkdtemp(join(tmpdir(), "campaign-finance-index-"));
   let found = false;
   try {
+    const body={...index.body};
+    if(index.throughDateArray){
+      const dates=body[index.throughDateArray];
+      if(!Array.isArray(dates) || typeof dates[0]!=="string")throw new Error("The source date window is missing its start");
+      body[index.throughDateArray]=[dates[0],new Date().toISOString().slice(0,10)+"T23:59:59.000Z"];
+    }
     const { path } = await saveFederalBulkBytes({ root: directory, vault: options.vault, signal: options.signal }, () => campaignSourceResponse(index.url, {
-      ...(index.method ? { method: index.method, headers: { "content-type": "application/json" }, body: JSON.stringify(index.body) } : {}),
+      ...(index.method ? { method: index.method, headers: { "content-type": "application/json",...index.headers }, body: JSON.stringify(body) } : {}),
     }, options), directory, index.url);
-    const envelope = { rows: 0, found: false };
-    for await (const text of federalJsonRecords(createReadStream(path), index.rowPath!, envelope)) {
+    const envelope:FederalJsonEnvelope = { rows: 0, found: false };
+    for await (const text of federalJsonRecords(createReadStream(path), index.singleUrlField ? "__download_metadata__" : index.rowPath!, envelope)) {
       const parsed = JSON.parse(text), row = parsed !== null && typeof parsed === "object" ? parsed : { value: parsed };
       if (index.filter && row[index.filter.field] !== index.filter.value) continue;
+      if(index.yearField){
+        const year=Number(row[index.yearField]);
+        if(!Number.isInteger(year))throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID","The campaign index no longer states its publication year");
+        if(year<(options.minimumYear??2020))continue;
+      }
       const values = index.split ? String(row[index.split.field] ?? "").split(index.split.delimiter).filter(Boolean) : [null];
       for (const value of values) {
         const item = { ...context, ...row, ...(index.split ? { [index.split.field]: value } : {}) };
@@ -72,6 +84,11 @@ async function* jsonIndexedResources(resource: CampaignFinanceResource, options:
             ...(Object.keys(expectedFields).length ? { expectedFields } : {}), ...(resource.method ? { body } : {}) };
         }
       }
+    }
+    if(index.singleUrlField){
+      const route=envelope.value?.[index.singleUrlField];
+      if(typeof route!=="string" || !new RegExp(index.pattern,"i").test(route) || !route.toLowerCase().startsWith(index.downloadPrefix.toLowerCase()))throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID","The official bulk response has no permitted download address");
+      yield {...resource,url:route};return;
     }
     if (!envelope.found || requireFiles && !found) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The official campaign download index contains no declared native files.");
   } finally { await rm(directory, { recursive: true, force: true }); }
@@ -119,7 +136,9 @@ async function* indexedResources(resource: CampaignFinanceResource, options: Ind
       const href = attributes(match[0]).href;
       return href && !href.startsWith("javascript:") ? [{ url: new URL(href, base).href }] : [];
     });
+    publications.sort((a,b)=>(campaignResourceYear({...resource,url:b.url,...(b.body?{body:b.body}:{})})??0)-(campaignResourceYear({...resource,url:a.url,...(a.body?{body:a.body}:{})})??0));
     for (const { url: listedUrl, body } of publications) {
+      if((campaignResourceYear({...resource,url:listedUrl,...(body?{body}:{})})??2020)<(options.minimumYear??2020))continue;
       if (!new RegExp(index.pattern, "i").test(listedUrl)) continue;
       const url = listedUrl;
       const identity = url.toLowerCase() + JSON.stringify(body ?? null);
@@ -157,9 +176,26 @@ async function* indexedResources(resource: CampaignFinanceResource, options: Ind
   if (requireFiles && !found) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The official campaign download index contains no declared native files.");
 }
 
-export async function* campaignFinanceResources(state: string, options: IndexOptions): AsyncGenerator<CampaignFinanceResource> {
-  for (const resource of campaignFinanceSource(state).resources) {
-    if (resource.index) yield* indexedResources(resource, options);
-    else yield resource;
+function campaignResourceYear(resource:CampaignFinanceResource):number|null {
+  const url=new URL(resource.url),file=/(?:^|\/|Receipts|Disbursements)((?:19|20)\d{2})(?=[_/-]|Election|Calendar)/.exec(url.pathname);
+  if(file)return Number(file[1]);
+  const parameter=resource.index?.selectParameter?.parameter ?? resource.periodQueryParameter ?? resource.index?.parameters?.find(parameter=>/date|year/i.test(parameter.parameter))?.parameter;
+  const value=parameter ? resource.body?.[parameter] ?? url.searchParams.get(parameter) : null;
+  const selected=value===null || value===undefined ? null : /(?:^|\D)((?:19|20)\d{2})(?:\D|\d{4}-[A-Z]|$)/.exec(String(value));
+  return selected ? Number(selected[1]) : null;
+}
+export async function* campaignFinanceResources(state:string,options:IndexOptions&{readonly profiles?:readonly CampaignFinanceResource[]}):AsyncGenerator<CampaignFinanceResource>{
+  const publications:CampaignFinanceResource[]=[];
+  for(const resource of options.profiles??campaignFinanceSource(state).resources){
+    try{
+      if(resource.index){
+        for await(const indexed of indexedResources(resource,options))if((campaignResourceYear(indexed)??2020)>=campaignFinanceSource(state).minimumYear)publications.push(indexed);
+      }else if((campaignResourceYear(resource)??2020)>=campaignFinanceSource(state).minimumYear)publications.push(resource);
+    }catch(error){
+      if(!options.onFailure)throw error;
+      await options.onFailure(resource.id,resource.index?.url??resource.url,error);
+    }
   }
+  publications.sort((a,b)=>(campaignResourceYear(b)??new Date().getUTCFullYear())-(campaignResourceYear(a)??new Date().getUTCFullYear()));
+  yield* publications;
 }

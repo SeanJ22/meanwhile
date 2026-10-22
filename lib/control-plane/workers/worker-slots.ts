@@ -23,9 +23,9 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
-  "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
+  "legistar-members-refresh.mts": 512,
   // RH-01 measured complete native ACS peak: 3,922,288,640 bytes.
   "acs-population-promote.mts": 3928,
   "fetch-congress-legislators.mts": 384,
@@ -39,7 +39,32 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "promote-registry-runtime.mts": STATE_PUBLICATION_PEAK_MIB,
   "retire-state-authorities.mts": STATE_PUBLICATION_PEAK_MIB,
 };
+/**
+ * One state's calendar program before its own runs are measured on this host: the retained data-worker bound. Every
+ * finished program records its measured peak under the calendar-read job, and the largest of its last five runs
+ * (5% over) replaces this number, so a single board read and a state's whole list are reserved the same way.
+ */
+export const CALENDAR_READ_PEAK_MIB = WORKER_ENTRY_PEAK_MIB.national!;
+export const CALENDAR_READ_JOB = "calendar-read";
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
+
+/** Only clean inactive disk pages are available without freeing a job's memory. */
+function reclaimableInactiveFileBytes(source: string, version: 1 | 2, hierarchical: boolean): number {
+  const values = new Map<string, number>();
+  for (const line of source.trim().split("\n")) {
+    const match = /^(\S+)\s+(\d+)$/.exec(line);
+    if (!match || values.has(match[1]!)) return 0;
+    values.set(match[1]!, Number(match[2]));
+  }
+  const prefix = hierarchical ? "total_" : "";
+  const fields = [version === 2 ? "file" : "cache", "shmem", "inactive_file",
+    version === 2 ? "file_dirty" : "dirty", version === 2 ? "file_writeback" : "writeback", "unevictable"];
+  const bytes = fields.map(field => values.get(prefix + field));
+  if (bytes.some(value => value === undefined || !Number.isSafeInteger(value) || value < 0)) return 0;
+  const [file, shmem, inactive, dirty, writeback, unevictable] = bytes as number[];
+  // Dirty, writeback and unevictable pages may overlap other file counters; subtracting them whole is conservative.
+  return Math.max(0, Math.min(inactive!, Math.max(0, file! - shmem!)) - dirty! - writeback! - unevictable!);
+}
 
 export function availableWorkerMemoryBytes(): number {
   let available = freemem();
@@ -48,6 +73,26 @@ export function availableWorkerMemoryBytes(): number {
       const match = /^MemAvailable:\s+(\d+)\s+kB$/m.exec(readFileSync("/proc/meminfo", "utf8"));
       if (match) available = Number(match[1]) * 1024;
     } catch { /* os.freemem remains conservative. */ }
+    // MemAvailable describes the machine, which may be larger than this runner's cgroup.
+    for (const [version, directory, limitName, usedName] of [
+      [2, "/sys/fs/cgroup", "memory.max", "memory.current"],
+      [1, "/sys/fs/cgroup/memory", "memory.limit_in_bytes", "memory.usage_in_bytes"],
+    ] as const) {
+      try {
+        const limit = Number(readFileSync(join(directory, limitName), "utf8").trim());
+        const used = Number(readFileSync(join(directory, usedName), "utf8").trim());
+        if (Number.isFinite(limit) && limit > 0 && Number.isFinite(used) && used >= 0) {
+          let reclaimable = 0;
+          try {
+            // v1 usage follows use_hierarchy; never mix local and descendant counters.
+            const hierarchy = version === 1 ? readFileSync(join(directory, "memory.use_hierarchy"), "utf8").trim() : "0";
+            if (hierarchy === "0" || hierarchy === "1") reclaimable = reclaimableInactiveFileBytes(
+              readFileSync(join(directory, "memory.stat"), "utf8"), version, hierarchy === "1");
+          } catch { /* Missing cache evidence keeps the complete usage charged. */ }
+          available = Math.min(available, Math.max(0, limit - used + Math.min(used, reclaimable)));
+        }
+      } catch { /* This cgroup interface is not mounted, or has no limit ("max"). */ }
+    }
   }
   const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
   return Number.isFinite(hostMiB) && hostMiB > 0
@@ -95,6 +140,12 @@ function descendants(root: number, rows: readonly WorkerProcessMemory[]): Set<nu
   return ids;
 }
 function alive(pid: number): boolean {
+  if (platform() === "linux") try {
+    const stat = readFileSync(`/proc/${pid}/stat`, "utf8");
+    // A zombie still answers kill(pid,0), but has no process memory left to reserve.
+    const state = stat.slice(stat.lastIndexOf(")") + 2, stat.lastIndexOf(")") + 3);
+    if (state === "Z" || state === "X") return false;
+  } catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return false; }
   try { process.kill(pid, 0); return true; }
   catch (error) { return (error as NodeJS.ErrnoException).code !== "ESRCH"; }
 }
@@ -108,13 +159,23 @@ function parentMemoryEntry(): string {
   return script === "freshness-shadow.mts" ? `${script}:${state?.slice(8).toLowerCase() ?? "round"}` : script;
 }
 
-/** How often a running reserved child's peak is read, and how many recent run peaks set its script's reservation. */
+/** How often a running reserved child's peak is read, and how many recent run peaks set its job's reservation. */
 const PEAK_SAMPLE_MS = 2000;
 const MEASURED_PEAK_RUNS = 5;
-/** The script an entry runs ("…/national-people-refresh.mts"); entries that name no script keep their table peak. */
-function measuredPeakKey(entry: string): string | null {
-  const script = entry.split(/[\\/]/).at(-1)!;
-  return /[.](?:mts|ts|mjs|js)$/.test(script) ? script : null;
+/**
+ * The job an entry ("<task id>/<script>") runs, which its measured memory is filed under: every calendar read is one
+ * job, whatever script reads it; a statewide job is its family, the task id with its two-letter state segment set
+ * aside; a job with no task id is its script. Entries that name no script keep their table peak.
+ */
+export function workerJobType(entry: string): string | null {
+  const parts = entry.split(/[\\/]/);
+  const script = parts.at(-1)!;
+  if (!/[.](?:mts|ts|mjs|js)$/.test(script)) return null;
+  const task = parts.slice(0, -1).join("/");
+  if (/^meetings(?:-state)?:/.test(task)) return CALENDAR_READ_JOB;
+  if (!task) return script;
+  const family = task.split(/([-:/])/).map(part => /^[a-z]{2}$/i.test(part) ? "*" : part).join("");
+  return `${family}/${script}`;
 }
 /** The largest recent measured peak, 5% over and rounded up to a whole MiB. */
 function measuredReservationBytes(peaks: readonly number[]): number {
@@ -216,7 +277,7 @@ export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProce
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     // Recent small-state runs cannot lower the full-state publication reservation.
     minimumPeakBytes: memory.minimumPeakBytes ?? routineMinimumPeakBytes,
-    peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
+    peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : workerJobType(entry) === CALENDAR_READ_JOB ? CALENDAR_READ_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
           ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB)) });
 }
 
@@ -292,7 +353,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         // A child past its reserved peak has shown it can reach that size again.
         for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
         const reserve = (entry: string): number => {
-          const measured = state.peaks?.[measuredPeakKey(entry) ?? ""];
+          const measured = state.peaks?.[workerJobType(entry) ?? ""];
           return Math.max(measured?.length ? measuredReservationBytes(measured) : peakFor(entry), memory.minimumPeakBytes?.(entry) ?? 0);
         };
         while (active < maximum && waiting.length) {
@@ -315,7 +376,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           let released = false;
           let measured = 0;
           let sampler: ReturnType<typeof setInterval> | undefined;
-          const key = measuredPeakKey(item!.entry);
+          const key = workerJobType(item!.entry);
           const release: WorkerMemoryRelease = Object.assign(() => {
             if (released) return;
             released = true; active--;

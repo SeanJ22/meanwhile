@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://webapi.legistar.com/v1/seattle/bodies?$top=1000",
+  "state": "WA",
+  "retrievedAt": "2026-10-13T19:21:38.816145+00:00",
+  "sha256": "54a36c2d024063658092f4f4eabeec4ba27a0f241b5d1635655dfa84bfc1ebac",
+  "records": 83
+}

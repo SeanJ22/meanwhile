@@ -712,6 +712,15 @@ test("an Admin order still creates its paid hunt packet beside the free meeting 
     "materializing the paid job preserves the owner's budget");
 });
 
+test("a pause holds paid work, never free work: hunts are not stopped while paused, and Box publishing still runs", () => {
+  const planner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
+  assert.match(planner, /if\(!dry && !filteredCycle && !huntsPaused\)await deactivateUnfundedHunts\(repos,fundedRefs,NOW\);/);
+  const runner = readFileSync(join(ROOT, "scripts/routine-civic-data-runner.mts"), "utf8");
+  const read = runner.slice(runner.indexOf("async function readHuntSourceTasks("));
+  assert.ok(read.indexOf("publishBoxFindings(") > 0 && read.indexOf("publishBoxFindings(") < read.indexOf("if (intents.runnerPause.paused) return [];"),
+    "the free Box publishing pass runs before the pause can return");
+});
+
 test("candidate enrichment enumerates the tracked states and names one with no ballot authority", async () => {
   const holdings = await readCandidateEnrichmentAuthorities("AZ", { store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
   const y = candidateEnrichmentProvider({ holdings, trackedStates: trackedStatesFrom(["az", "co"], "a test coverage set") }).enumerate({ root: ROOT, nowIso: T0 });

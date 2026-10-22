@@ -65,3 +65,33 @@ test("the ballot's body-facts projection preserves contacts and calendar-derived
     assert.deepEqual(facts.governments,[]);assert.deepEqual(facts.publicationAttempts,[]);
   }finally{await pg.close();}
 });
+
+test("a board filed on the state shows where the one local government sharing its website governs",async()=>{
+  const {pg,publish}=await migratedReaderDb();
+  const legacy=BOOTSTRAP_DDL.find(ddl=>ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("));
+  assert.ok(legacy);await pg.exec(legacy);
+  const state="ocd-division/country:us/state:az",county=`${state}/county:fixture`,other=`${state}/county:other`,at="2026-10-21T00:00:00.000Z";
+  const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  try{
+    await pg.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES
+      ($1,'place','Arizona','AZ',NULL),($2,'place','Fixture County','AZ',$1),($3,'place','Other County','AZ',$1),
+      ('az:county:county-of-fixture','government','County Of Fixture','AZ',$2),('az:county:county-of-other','government','County Of Other','AZ',$3),
+      ('az:special:fixture-water','government','Fixture Water','AZ',$2),('az:state:arizona','government','Arizona','AZ',$1),
+      ('wtp-body/fixture/parks#governing','body','Parks Commission','AZ',$1),('wtp-body/fixture/shared#governing','body','Shared Board','AZ',$1),
+      ('wtp-body/fixture/state#governing','body','State Board','AZ',$1),('wtp-body/fixture/elsewhere#governing','body','Other Board','AZ',$1)`,[state,county,other]);
+    await pg.query(`INSERT INTO entity_place(entity_id,place_id) VALUES('az:county:county-of-fixture',$1),('az:county:county-of-other',$2),('az:special:fixture-water',$1)`,[county,other]);
+    await pg.query(`INSERT INTO entity_host(entity_id,host) VALUES('az:county:county-of-fixture','fixture.gov'),('wtp-body/fixture/parks#governing','fixture.gov'),
+      ('az:special:fixture-water','shared.org'),('az:county:county-of-other','shared.org'),('wtp-body/fixture/shared#governing','shared.org'),
+      ('az:county:county-of-fixture','az.gov'),('wtp-body/fixture/state#governing','az.gov'),
+      ('az:county:county-of-other','other.gov'),('wtp-body/fixture/elsewhere#governing','other.gov')`);
+    const government=(jurisdictionId:string,divisionId:string|null)=>({id:`government:US-AZ:cog:${jurisdictionId}`,jurisdictionId,name:jurisdictionId,state:"AZ",
+      kind:"GOVERNMENT",governmentClass:"COUNTY",aliases:[],nativeIds:{},bodyIds:[],associations:divisionId ? [{divisionId,layer:"county",geoid:"04000",basis:"SOURCE_CODE"}] : []});
+    await publish({id:"registration",recordClass:"REGISTRATION",scope:"US-AZ:registration:v1",sourceId:"fixture",at,
+      value:{formatVersion:1,state:"AZ",divisions:[],bodies:[],governments:[government("az:county:county-of-fixture",county),government("az:county:county-of-other",other),government("az:special:fixture-water",null)]}});
+    await publish({id:"dotgov",recordClass:"DOTGOV_REFERENCE",scope:"US:current-full:domains",sourceId:"fixture",at,
+      value:{domains:[{domain:"az.gov",type:"State or territory",state:"AZ",organization:"State of Arizona"}],source:{url:"https://example.gov/dotgov",readAt:"2026-10-13"}}});
+    const place=await readPlacePackage({state:"AZ",divisionIds:[county]},query);
+    assert.deepEqual(place.bodies.map(body=>[body.id,body.fields.ocdId]),[["wtp-body/fixture/parks#governing",county]],
+      "a website two governments share, a state agency's website and another county's board never place a board here");
+  }finally{await pg.close();}
+});

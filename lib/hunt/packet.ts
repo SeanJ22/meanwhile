@@ -39,6 +39,7 @@ export interface HeldFact extends PacketField {
 
 export interface HuntPacket {
   readonly directions?: readonly string[];
+  readonly sourceFailures?: readonly import("../facts/detective.ts").SourceCheckFailure[];
   /** The government's OCD division. */
   readonly governmentId: string;
   readonly label: string;
@@ -130,8 +131,8 @@ export function withAskedBlanks(packet: HuntPacket, asked: readonly AskedGap[]):
 }
 
 /** Changes whenever a blank opens or closes, so a packet is re-sent only when something changed. */
-export function blankFingerprint(packet: Pick<HuntPacket, "blanks">): string {
-  return contentHash(packet.blanks.map(fieldKey).sort().join("\n"));
+export function blankFingerprint(packet: Pick<HuntPacket, "blanks" | "sourceFailures">): string {
+  return contentHash([...packet.blanks.map(fieldKey),...(packet.sourceFailures ?? []).map(row=>JSON.stringify([row.entityId,row.field,row.reason,row.detail]))].sort().join("\n"));
 }
 
 /** Subject ids a finding may be reported for: the government itself and every subject in its packet. */

@@ -1,7 +1,6 @@
 import { currentStatewideExecutives } from "../officials/statewide-executives.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition } from "../registry/body-rosters.ts";
 import { fundingAnswerForTarget, type FundingAnswer } from "./display.ts";
-import { stateMoneyForCard, type CardMoney } from "./nominee-money.ts";
 import type { CivicDataReadMetadata } from "../civic-data/read-model.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
@@ -9,19 +8,17 @@ import { officialCandidacySeatMatches, type OfficialCandidacyBridgeRow } from ".
 import { directFundingTargetPlan } from "./target-authorities.ts";
 import { currentStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { statePeopleScopeForDivision } from "../officials/people-identity.ts";
+import type { CampaignFinancePlaceRead } from "./state-reader.ts";
 
 export type OfficialFinanceIdentity = "NOT_OFFICIAL" | "RESOLVED" | "NO_APPLICABLE_CANDIDACY" | "IDENTITY_UNRESOLVED";
 export interface CampaignMoney {
   requestedTargetKey: string;
   federal: FundingAnswer;
-  state: CardMoney;
   officialIdentity: OfficialFinanceIdentity;
 }
 export type CampaignMoneyApiAnswer = FundingAnswer
-  | { kind: "state"; data: CardMoney }
-  | { kind: "combined"; federal: Exclude<FundingAnswer, { kind: "none" }>; state: CardMoney }
   | { kind: "identity-unresolved"; statement: string };
-export type CampaignMoneyApiResponse = CampaignMoneyApiAnswer & {
+export type CampaignMoneyApiResponse = (CampaignMoneyApiAnswer | {kind:"state-cycle";data:CampaignFinancePlaceRead}) & {
   readonly dataState: "PROMOTED" | "BOOTSTRAP" | "PARTIAL";
   readonly dataMetadata: CivicDataReadMetadata | null;
   readonly holdingStatus?: "HELD" | "PARTIAL";
@@ -31,8 +28,6 @@ export type CampaignMoneyApiResponse = CampaignMoneyApiAnswer & {
 export interface CampaignMoneyReadSelection {
   /** The FEC holding applies to this exact target and was read successfully. */
   readonly federal?: boolean;
-  /** The exact state holding applies to this target and was read successfully. */
-  readonly state?: boolean;
   /** The canonical person/candidacy graph was read successfully. */
   readonly identity?: boolean;
 }
@@ -57,12 +52,6 @@ function bridgeIndex() {
   indexedBridge = { source, byHolder, byCandidacy };
   return indexedBridge;
 }
-const emptyState = (federal = false): CardMoney => ({
-  records: [],
-  resolution: federal ? "FEDERAL_NOT_APPLICABLE" : "DIRECT_CANDIDACY_KEY",
-  resolvedTargetKey: null,
-});
-
 /** A reusable office/roster slot must never give its successor the predecessor's money. */
 export function officialFinanceIdentityMatches(row: BridgeRow, current: { id: string; name: string; officeTitle: string; divisions: readonly string[] } | null): boolean {
   return current !== null && current.id === row.holder.id && current.name === row.holder.name
@@ -148,35 +137,26 @@ export function campaignMoneyForTarget(
     (targetKey.startsWith("congress:") || !(direct.federal || direct.state !== null) || targetKey.includes("|"));
   const roster = readIdentity ? currentRosterMemberReaderDisposition(targetKey) : null;
   if (roster?.state === "IDENTITY_UNRESOLVED") return {
-    requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",
+    requestedTargetKey: targetKey, federal: { kind: "none" }, officialIdentity: "IDENTITY_UNRESOLVED",
   };
   if (roster?.state === "EXACT_DUPLICATE") return { ...campaignMoneyForTarget(roster.canonicalId!, contestId), requestedTargetKey: targetKey };
   const official = readIdentity ? bridgeIndex().byHolder.get(targetKey) : undefined;
   if (official && (!officialFinanceIdentityMatches(official, currentHolder(official)) || official.status === "IDENTITY_UNRESOLVED" || official.status === "NOT_CHECKED")) return {
-    requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",
+    requestedTargetKey: targetKey, federal: { kind: "none" }, officialIdentity: "IDENTITY_UNRESOLVED",
   };
   const candidacy = official && officialCandidacySeatMatches(official) ? official.candidacy : null;
   const plan = candidacy ? directFundingTargetPlan(candidacy.candidacyId) : direct;
   const readFederal = selection.federal ?? (official
     ? official.holder.authority === "FEDERAL_DIRECTORY" || plan.federal
     : direct.contestId === null || direct.federal);
-  const readState = selection.state ?? (official
-    ? plan.state !== null
-    : direct.contestId === null || direct.state !== null);
   const federal = readFederal ? fundingAnswerForTarget(targetKey) : { kind: "none" } as const;
   if (official) {
     if (!candidacy) {
-      return { requestedTargetKey: targetKey, federal, state: emptyState(), officialIdentity: "NO_APPLICABLE_CANDIDACY" };
+      return { requestedTargetKey: targetKey, federal, officialIdentity: "NO_APPLICABLE_CANDIDACY" };
     }
-    const state = readState
-      ? stateMoneyForCard(candidacy.candidacyId, candidacy.contestId)
-      : emptyState();
-    return { requestedTargetKey: targetKey, federal, state, officialIdentity: "RESOLVED" };
+    return { requestedTargetKey: targetKey, federal, officialIdentity: "RESOLVED" };
   }
-  const state = readState
-    ? stateMoneyForCard(targetKey, contestId ?? targetKey.split("|")[0])
-    : emptyState(direct.federal);
-  return { requestedTargetKey: targetKey, federal, state, officialIdentity: "NOT_OFFICIAL" };
+  return { requestedTargetKey: targetKey, federal, officialIdentity: "NOT_OFFICIAL" };
 }
 
 export function campaignMoneyApiAnswer(
@@ -185,8 +165,6 @@ export function campaignMoneyApiAnswer(
   selection: CampaignMoneyReadSelection = {},
 ): CampaignMoneyApiAnswer {
   const answer = campaignMoneyForTarget(targetKey, contestId, selection);
-  if (answer.state.records.length && answer.federal.kind !== "none") return { kind: "combined", federal: answer.federal, state: answer.state };
-  if (answer.state.records.length) return { kind: "state", data: answer.state };
   if (answer.officialIdentity === "IDENTITY_UNRESOLVED") return {
     kind: "identity-unresolved", statement: "We have not established which campaign-finance candidacy belongs to this officeholder.",
   };

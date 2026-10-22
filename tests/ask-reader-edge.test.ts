@@ -250,20 +250,21 @@ test("a named place absent from its state registry gives a specific holding", as
 });
 
 test("Ask reads source-bound campaign facts for the state and exact place", async () => {
-  const { factDb } = await import("./helpers/fact-db.ts");
+  const { campaignDb,publishMoneyFixture } = await import("./helpers/campaign-money-db.ts");
   const { installFactReader } = await import("../lib/facts/db.ts");
   const { campaignSourceRecord } = await import("../lib/funding/state-source-records.ts");
   const { campaignFinanceSource } = await import("../lib/funding/state-sources.ts");
-  const { bindCampaignMoney } = await import("../lib/funding/state-people.ts");
-  const facts = await factDb();
+  const { bindCampaignMoney,campaignMoneyPeopleIndex } = await import("../lib/funding/state-people.ts");
+  const {rebuildCampaignCycles}=await import("../lib/funding/state-cycles.ts");
+  const facts = await campaignDb();
   const state = "ocd-division/country:us/state:wa", place = `${state}/place:seattle`;
   const resource = campaignFinanceSource("WA").resources[0]!;
   const source = JSON.parse(readFileSync(new URL("./fixtures/campaign-finance/wa-native-excerpt.json", import.meta.url), "utf8"))[0];
   const base = campaignSourceRecord("WA", resource, source, { url: resource.url, rawHash: "a".repeat(64),
     vaultKey: "test", byteLength: 10, retrievedAt: "2026-10-17T00:00:00.000Z", publicationDate: null });
-  const person = { id: "published-ask-person", name: source.filer_name, seat: "seattle-judge", office: source.office,
+  const person = { id: "published-ask-person", name: "Anita Crawford-Willis", seat: place+"#court", office: source.office,
     division: place, incumbent: true, sourceUrl: "https://www.seattle.gov/courts" };
-  const bound = bindCampaignMoney(base, [person]);
+  const bound = bindCampaignMoney(base, campaignMoneyPeopleIndex([person]));
   assert.ok(bound, "the saved native filer matches the published person and exact seat");
   const rows = [{ ...bound, id: "WA:ask-place" }, { ...base, id: "WA:unbound" }, { ...bound, id: "WA:historical", period: "2018" }];
   const placesRead: string[] = [];
@@ -283,6 +284,8 @@ test("Ask reads source-bound campaign facts for the state and exact place", asyn
     await facts.query(`INSERT INTO fact (entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by,cost_usd)
       VALUES ($1,'campaign-money:WA:withdrawn',$2::jsonb,'','live','OFFICIAL',(SELECT id FROM source_copy WHERE blob_key='test'),'','2026-10-17','2026-10-17','legacy-fixture',0)`,
     [withdrawn, JSON.stringify({ ...base, id: "WA:withdrawn", filerName: "Small Donor Fixture", period: "2026", amounts: [{ label: "Contribution", amount: 150 }] })]);
+    await publishMoneyFixture(facts,{recordClass:"REGISTRY_RUNTIME_BINDING",scope:"US-WA",payload:{bodyRosters:[{bodyId:person.seat,sourceUrl:person.sourceUrl,members:[{id:person.id,name:person.name,officeTitle:person.office}]}]}});
+    await rebuildCampaignCycles(facts,"WA",[person.id],"2026-10-17T00:00:00.000Z",async()=>({purged:true}));
     const key = await createReaderFixture(true, {}, {
       "registry-runtime": stateRegistryArtifacts("edge-test:ask:campaign", ["WA"]),
     });
@@ -305,7 +308,7 @@ test("Ask reads source-bound campaign facts for the state and exact place", asyn
     assert.match(campaignRecords[0].text, /2026 cycle/);
     assert.equal(campaignRecords[0].sourceUrl, base.filingUrl);
     assert.doesNotMatch(JSON.stringify(payload), /Small Donor Fixture|WA:unbound|WA:historical|WA:withdrawn/);
-    assert.ok(payload.trace.preloads.campaignFinance !== undefined, "the applicable campaign preloader survived the merge");
+    assert.equal(campaignRecords[0].official,true,"the shared filing remains official evidence");
     assert.ok(placesRead.includes(state));
     assert.ok(placesRead.includes(place));
     const named = await POST(new Request("https://wtp.test/api/ask/grounded", {

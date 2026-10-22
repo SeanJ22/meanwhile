@@ -18,6 +18,7 @@ import type { ReaderProjectionReadbackReceipt } from "./reader-readback.ts";
 import { recordRoutineReaderProjectionReadback, repairRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { trustedLkgImportUrl } from "./trusted-lkg-import.ts";
 import { assertRegisteredRuntimeContract } from "./runtime-authority.ts";
+import { assertMeetingPartitionAuthority } from "./state-calendars.ts";
 import { verifySourceScopedCandidateProjection } from "./candidate-integrity.ts";
 import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
@@ -256,7 +257,7 @@ export async function processRegisteredMeetingPartitionCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
-  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
+  if (store instanceof PostgresRoutineDataStore) assertMeetingPartitionAuthority(partitionId);
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = requiredMeetingPartitionContract(partitionId);
@@ -301,7 +302,7 @@ export async function processRegisteredMeetingHistoryCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
-  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
+  if (store instanceof PostgresRoutineDataStore) assertMeetingPartitionAuthority(partitionId);
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = meetingHistoryContract(requiredMeetingPartitionContract(partitionId));

@@ -69,7 +69,7 @@ test("a second source only for judgment calls: unofficial portraits, a person ma
   assert.equal(checkFact(portrait, NOW, window).ok, true, "a campaign's own portrait publishes alone");
   assert.deepEqual(checkFact({ ...portrait, provenance: "NEWS" }, NOW, window), { ok: false, reason: "SECOND_SOURCE_REQUIRED" });
   assert.deepEqual(checkFact({ ...chair(), fieldKind: "same_person_link" }, NOW, window), { ok: false, reason: "SECOND_SOURCE_REQUIRED" });
-  assert.equal(checkFact({ ...chair(), provenance: "OTHER", second: { copy: boardCopy({ id: 3 }), quote: "Ned Beman" } }, NOW, window).ok, true);
+  assert.equal(checkFact({ ...chair(), provenance: "OTHER", second: { copy: boardCopy({ id: 3, finalUrl: "https://news.example.com/commission", text: `${tucsonBoardPage} Arizona` }), quote: "Ned Beman" } }, NOW, window).ok, true);
 });
 
 test("any .gov site is official", () => {
@@ -128,7 +128,8 @@ test("a failing claim leaves a blank with its stage and reason; the next passing
   const db = await seeded();
   assert.deepEqual(await publishClaim(db, claim({ quote: "Ned Beman Chairperson Ward 9" }), clocks, NOW), { blank: "QUOTE_NOT_ON_SAVED_COPY" });
   const [blank] = await db.query("SELECT stage, reason, detail, attempts FROM blank");
-  assert.deepEqual(blank, { stage: "CHECK", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", detail: "https://clerksboards.tucsonaz.gov/boards/15", attempts: 1 });
+  assert.deepEqual({ ...blank,detail:undefined }, { stage:"CHECK",reason:"CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY",detail:undefined,attempts:1 });
+  assert.deepEqual(JSON.parse(String(blank!.detail)),{sourceUrl:boardCopy().finalUrl,copyId:1,fieldKind:"officeholder",provenance:"OFFICIAL",value:"Ned Beman",valueText:"Ned Beman",quote:"Ned Beman Chairperson Ward 9",producedBy:"reader:clerksboards"});
   await publishClaim(db, claim(), clocks, NOW);
   assert.equal((await db.query("SELECT count(*)::int AS n FROM blank"))[0]!.n, 0);
 });
@@ -142,6 +143,7 @@ test("a losing value is kept with its reason; an official value Sean typed over 
   assert.equal("decision" in lost && lost.decision, "KEEP_CURRENT");
   assert.deepEqual(await db.query("SELECT value, status, held_reason FROM fact ORDER BY id"), [
     { value: "Ned Beman", status: "live", held_reason: null }, { value: "Jose Jimenez", status: "held", held_reason: "LOSES_TO_CURRENT" }]);
+  assert.deepEqual(await publishClaim(db, claim(), clocks, NOW), { decision: "CONFIRM", factId: 1 });
 
   await db.query("UPDATE fact SET status = 'superseded' WHERE status = 'live'");
   await db.query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, quote, checked_at, live_at, produced_by)

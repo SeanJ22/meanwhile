@@ -94,6 +94,8 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
   readonly captures: readonly WorkerPublicationCapture[];
   readonly attempts: readonly TranslationAttempt[];
   readonly saveAttempt: (attempt: TranslationAttempt) => Promise<void>;
+  /** Pages found on the election office's own site for measures whose cited pages never name them, by contest. */
+  readonly foundSources?: ReadonlyMap<string, readonly string[]>;
 }) {
   const nowMs = Date.parse(input.now);
   if (!Number.isFinite(nowMs)) throw new Error("Translation admission requires a clock.");
@@ -119,7 +121,8 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       if (duplicates.some(record => JSON.stringify(record) !== JSON.stringify(measure))) {
         deferred.push({ subjectId: contest.id, reason: "Held measure records disagree." }); continue;
       }
-      const sourceUrls = new Set([measure?.sourceUrl, official?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance?.sourceUrl].filter(Boolean));
+      const sourceUrls = new Set([measure?.sourceUrl, official?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance?.sourceUrl,
+        ...(input.foundSources?.get(contest.id) ?? [])].filter(Boolean));
       const designation = official?.officialNumber;
       const namedDesignation = designation && /[a-z]/i.test(designation) && /\d/.test(designation) ? designation : null;
       const candidates = pages.filter(capture => sourceUrls.has(capture.evidence.canonicalUrl) &&

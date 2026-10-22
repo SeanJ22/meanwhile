@@ -75,7 +75,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
       expected.set(id, fields);
     } catch (error) { if (!(error instanceof RecordEvidenceRefusal)) throw error; coverage.push(finding(error.code, error.message)); }
   }
-  if (global) {
+  if (global && !quoted) {
     const extractedIds = new Set(extraction.records.map(record => record.id));
     for (const record of extraction.records) if (!expected.has(record.id)) coverage.push(finding("AUDIT_RECORD_NOT_IN_SOURCE", "No independently inventoried source row has this identity.", "BLOCKING", record.id));
     const notYet = [...expected.keys()].filter(id => !extractedIds.has(id));
@@ -99,7 +99,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
   for (const entry of independent) if (entry.error) operational.push(finding("AUDIT_EVIDENCE_UNINTERPRETABLE", `${entry.evidence.artifactId}: ${entry.error.message}`, "WARNING"));
   add("OPERATIONAL", "Challenge independent execution and interpretability; source text never grants capabilities.", operational, true, complete);
   add("REPRODUCIBILITY", "Reproduce mapped source values from immutable evidence without invoking the producer.", sourceComparisons, true, complete);
-  add("READER_TRUTH", "Only a supplied machine-observed rendered count is challenged; this never proves the reader or Ask gate.", candidate.renderedRecordCount !== null && candidate.renderedRecordCount !== expected.size ? [finding("AUDIT_RENDERED_COUNT_MISMATCH", "Observed rendered record count differs from independently inventoried source identities.")] : [], candidate.renderedRecordCount !== null);
+  add("READER_TRUTH", "Compare a rendered count only when the source has an independent row inventory.", !quoted && candidate.renderedRecordCount !== null && candidate.renderedRecordCount !== expected.size ? [finding("AUDIT_RENDERED_COUNT_MISMATCH", "Observed rendered record count differs from independently inventoried source identities.")] : [], !quoted && candidate.renderedRecordCount !== null);
   add("PROCEDURAL_STAGE", "No procedural-stage interpretation is authorized by this source scalar extraction contract.", [], false);
   add("POLITICAL_NEUTRALITY", "This extraction performs no candidate ranking, recommendation, or differential filtering.", [], false);
   add("CAMPAIGN_FINANCE_COVERAGE", "Scalar record extraction does not establish contribution, committee, or expenditure chain completeness.", [], false);
@@ -113,7 +113,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
   const recordIds = extraction.records.map(record => record.id);
   const { brokenRecordIds, survivingRecordIds: intact } = recordOutcome(recordIds, findings, unsafeIds);
   const survivingRecordIds = unresolved ? [] : intact;
-  const sourceRecords = global ? expected.size : captured?.inventory ? captured.inventory.rows.length : quoted ? extraction.records.length : null;
+  const sourceRecords = quoted ? null : global ? expected.size : captured?.inventory ? captured.inventory.rows.length : null;
   return { role: "ADVERSARIAL_AUDITOR", attemptId: input.attemptId, producerAttemptId: candidate.producerAttemptId, validatorAttemptId: candidate.validatorAttemptId,
     verdict, startedFrom: context.startedFrom, attacks: ordered, findings, artifactIds: [...new Set(allArtifacts.map(e => e.artifactId))], survivingRecordIds, survivingRecordCount: survivingRecordIds.length,
     brokenRecordIds, coverage: auditCoverage({ routesApplicable: applicableRoutes.length, routesChecked, sourceRecords, extractedRecords: extraction.records.length }), reopenRequired: verdict === "BROKE" };

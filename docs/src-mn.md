@@ -18,82 +18,192 @@ Each place has a constant-size pointer to immutable index pages of at most 64 en
 
 Fixture provenance is in `tests/fixtures/federal-money/provenance.json`. Generated scale inputs never seed production.
 
-## Campaign load retirement
+## Campaign money
 
-The native state campaign load is retired. Its 56 scheduled contracts and its acquisition/publishing entry point are deleted. No job from this load can repopulate the reader stores after the cleanup. Source acquisition/parsing fixtures and the existing Arizona, New Hampshire, New Jersey and Pima publications remain held. The people-driven replacement is the next SRC-MN READY.
+The `campaign-money` coordinator checks each state's hourly clock on the standing five-minute routine pass and starts one state process at a time. Each process reads that state's published officeholders at every held level and the candidates on its November 3, 2026 ballot. The hourly clock starts when the state begins, so processing time does not postpone the next scan. New people and people with no usable money are checked on the next pass; existing money is checked daily. A saved completion flag does not hide a missing cycle fact. A failed daily source check stays due on the next hour while the last verified totals remain available. Current officeholders run first, and source publications run newest cycle first. Other years from 2020 follow. A source without a verified committee, candidate, office and cycle binding stays open work without loading unrelated money into the reader store.
 
-Government cards and Ask read the same cycle summaries, with filing links only in the bottom Sources list. Individual transactions are no longer a reader response. Rulings §9 keeps individual donors who gave $200 or less in the cycle anonymous; donors above $200 may appear as filed, and home addresses never appear. Organizations and committees keep their filed names. Person-driven hourly acquisition and cycle donor aggregates belong to the second READY.
+Bulk files stream to the evidence vault by content hash. The state's cached file is shared by subsequent people; its directory uses the database identity so a software checkout change does not discard the cache. Provider release versions, ETags and Last-Modified checks detect updates. The parser filters against the run's people before filling one publication batch of at most 500 matched rows and two MiB. Native input counts remain separate from selected rows, so filtering cannot disguise truncated API responses. Source-native transaction IDs are retained. Where no filer ID is published, committee identity includes the filed committee name, candidate, office and election year. Kentucky's native Location column supplies ordinal districts; a broad government ID cannot override a different filed district. Unmatched source evidence stays vaulted and the person's blank remains open. A native filing correction rebuilds its former and current owners; a committee's filed name stays attached to its cycle. Missing amounts are retained only within the same committee identity.
 
-The journaled contract migration `0045_src_mn_retire_campaign_load` deletes every fact version from the retired producer, its native publication pointers, candidate copies/events, old checkpoints and now-empty committee identities and links. Source copies and raw evidence-vault files are preserved. Other funding producers, valid legacy source publications and corrected future money are untouched. No database column is added.
+Facts are filed in the shared state-then-place `entity`, `entity_place` and `fact` store. The campaign artifact and pointer path is gone. Database reads select the run's people, committees and record IDs; no query returns the state's complete money collection. Old amounts are fetched only for missing source amounts. Cycle rebuilding runs in the database for the touched people, and readers fetch one person's cycle totals with at most 100 named contributors per page. The hourly coordinator retains counts and reasons, not state financial rows. Source-door status uses the configured control-plane database; money facts use the reader database. No shared database client or runner-admission code is changed.
 
-The migration processes one committee in one state at a time, deleting at most 500 fact IDs per statement. It never fetches financial payloads into the runner. PostgreSQL applies the deletion server-side; the runner holds the fixed migration text. Fact watermarks change for each affected state. Trigger permissions are restored in the same transaction. A real PostgreSQL regression checks 1,001 facts across multiple batches, live and superseded facts, flags, candidate self/history foreign keys, preserved money/source evidence and restoration of immutable-store protection. No full production-sized deletion was performed in the workspace.
+Government, official and candidate cards and Ask read those same person-bound cycle facts. Readers get totals by cycle, each filed committee and its office, named organizations, and individual donors whose filed cycle total exceeds $200. Individuals at $200 or less and home addresses never reach either reader response. The small-donor percentage is shown only when the source supplies its own small and large individual lines at the $200 threshold; otherwise that field remains open work. Sources link the financial capture and the filing at the bottom of the card, with publication and check dates. The obsolete Pima body-to-committee transaction reader is deleted; its held evidence remains available for a future verified person binding.
 
-The release runner quiesces its source lanes before following the deployed commit, applies contract migrations for that exact serving commit, and only then admits source work. Rulings §5 therefore puts this cleanup after deployment. Sean approved releasing the cleanup first and requiring production zeros before the people-refresh READY. The pre-release counts below are reported as still present, not as already removed.
+Production verification uses only the `readonly` role and rows or counts needed by the check. Publisher writes use full reader and control-plane production copies. The harness checks both declared Neon branch IDs before writes. No production facts are hand edited. Wire payload bytes, storage growth, worker peaks and reader timings are measured separately.
 
-| Place | Old facts live | Old publication pointers | Old candidate copies |
-|---|---:|---:|---:|
-| AL | 444,469 | 894 | 5,352 |
-| AK | 0 | 0 | 23 |
-| AZ | 0 | 0 | 23 |
-| AR | 0 | 0 | 23 |
-| CA | 3,000 | 6 | 8 |
-| CO | 351,781 | 705 | 3,434 |
-| CT | 182,214 | 371 | 2,038 |
-| DE | 0 | 0 | 21 |
-| DC | 154,500 | 310 | 2,082 |
-| FL | 127,348 | 343 | 2,599 |
-| GA | 0 | 0 | 16 |
-| HI | 156,903 | 315 | 1,953 |
-| ID | 89,000 | 179 | 857 |
-| IL | 0 | 0 | 11 |
-| IN | 0 | 0 | 10 |
-| IA | 0 | 0 | 10 |
-| KS | 0 | 0 | 9 |
-| KY | 92,399 | 662 | 1,056 |
-| LA | 49,000 | 99 | 553 |
-| ME | 0 | 0 | 4 |
-| MD | 28,740 | 72 | 145 |
-| MA | 14,188 | 192 | 678 |
-| MI | 0 | 0 | 3 |
-| MN | 14,081 | 74 | 77 |
-| MS | 0 | 0 | 2 |
-| MO | 0 | 0 | 1 |
-| MT | 0 | 0 | 1 |
-| NE | 0 | 0 | 0 |
-| NV | 0 | 0 | 0 |
-| NH | 0 | 0 | 1 |
-| NJ | 0 | 0 | 0 |
-| NM | 0 | 0 | 0 |
-| NY | 0 | 0 | 0 |
-| NC | 0 | 0 | 0 |
-| ND | 0 | 0 | 0 |
-| OH | 0 | 0 | 0 |
-| OK | 0 | 0 | 0 |
-| OR | 0 | 0 | 0 |
-| PA | 0 | 0 | 0 |
-| RI | 0 | 0 | 0 |
-| SC | 0 | 0 | 0 |
-| SD | 0 | 0 | 0 |
-| TN | 0 | 0 | 0 |
-| TX | 0 | 0 | 0 |
-| UT | 0 | 0 | 0 |
-| VT | 0 | 0 | 0 |
-| VA | 0 | 0 | 0 |
-| WA | 0 | 0 | 0 |
-| WV | 0 | 0 | 1 |
-| WI | 0 | 0 | 0 |
-| WY | 0 | 0 | 0 |
-| AS | 0 | 0 | 0 |
-| GU | 0 | 0 | 0 |
-| MP | 0 | 0 | 1 |
-| PR | 0 | 0 | 1 |
-| VI | 0 | 0 | 0 |
+## Campaign publication checks
 
-Across all 56 places: 1,707,623 facts, all live; 4,222 publication pointers; 20,993 candidate copies. After River releases, `scripts/src-money-check.mts` repeats the same state-scoped, count-only read-only queries, persists measured response bytes and refuses success unless every fact, publication and candidate-copy count is zero. Immutable payload fragments have no independent live status: publication and candidate roots are removed; raw source evidence remains saved.
+All 56 places ran serially against the verified read-only production people projection and separate reader/control-plane production copies built by the real migrations. The first pass read 18,221 published people, found money for 689, and processed 270,161 matched rows or held summaries. It left 1,406,876 observed unmatched rows in saved source evidence. The next-hour pass preserved the money and processed 83,106 matched confirmations, including retries after partial source failures. Processed rows include unchanged confirmations; they are not counts of new database inserts. These are copy checks; the person publisher is not yet deployed.
 
-The pre-release all-place count check read 39,251 bytes. The earlier targeted 13-state check read 10,944 bytes; a retained-source hash check read 583 bytes. These cleanup checks total 50,778 production response bytes and zero production bytes written. Completed production-backed checks, including preparation for the people-based publisher and the first gate invocation, read 42,697,118 measured response bytes; the final gate traffic is added in READY. Production counts return no financial payload. The isolated migration test is a correctness test, not a production WAL or storage measurement. Actual migration write traffic and run time will be recorded after release; no daily cleanup replay is scheduled. Retired source workers run zero copies and consume no acquisition reservation. The fixed migration’s production runner peak has not been measured; RH-01’s existing admission and 0.75 GiB margin are unchanged.
+| State | Official source | Access | Published people | People with money | Matched rows | Unmatched rows observed | Peak MiB |
+|---|---|---|---:|---:|---:|---|---:|
+| AL | [Alabama Secretary of State](https://www.sos.alabama.gov/alabama-votes/media/campaign-finance-reports) | BULK | 295 | 0 | 0 | Not read | 138.1 |
+| AK | [Alaska Public Offices Commission](https://aws.state.ak.us/ApocReports/CampaignDisclosure/CDIncome.aspx) | UNCONFIRMED | 197 | 0 | 0 | Not read | 133.0 |
+| AZ | [Arizona Secretary of State](https://azsos.gov/elections/campaign-finance-reporting) | API | 386 | 26 | 26 | 0 | 146.9 |
+| AR | [Arkansas Secretary of State](https://financial-disclosures.sos.arkansas.gov/) | UNCONFIRMED | 173 | 0 | 0 | Not read | 137.9 |
+| CA | [California Secretary of State](https://www.sos.ca.gov/campaign-lobbying/cal-access-resources/raw-data-campaign-finance-and-lobbying-activity) | BULK | 484 | 0 | 0 | Not read | 133.5 |
+| CO | [Colorado Secretary of State](https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx) | BULK | 331 | 0 | 0 | Not read | 160.5 |
+| CT | [Connecticut State Elections Enforcement Commission](https://seec.ct.gov/Portal/eCRIS/eCrisSearch) | BULK | 457 | 175 | 83,060 | 240,037 | 184.2 |
+| DE | [Delaware Department of Elections](https://cfrs.elections.delaware.gov/) | UNCONFIRMED | 151 | 0 | 0 | Not read | 137.9 |
+| DC | [District of Columbia Office of Campaign Finance](https://efiling.ocf.dc.gov/DataDownload) | BULK_API | 64 | 0 | 0 | Not read | 160.6 |
+| FL | [Florida Division of Elections](https://dos.elections.myflorida.com/campaign-finance/contributions/) | BULK | 504 | 0 | 0 | Not read | 166.5 |
+| GA | [Georgia State Ethics Commission](https://ethics.ga.gov/) | UNCONFIRMED | 567 | 0 | 0 | Not read | 140.5 |
+| HI | [Hawaii Campaign Spending Commission](https://hicscdata.hawaii.gov/) | API | 179 | 24 | 27,813 | 143,916 | 182.4 |
+| ID | [Idaho Secretary of State](https://sunshine.sos.idaho.gov/) | API | 324 | 0 | 0 | Unknown | 137.8 |
+| IL | [Illinois State Board of Elections](https://www.elections.il.gov/CampaignDisclosure/DownloadData.aspx) | BULK | 436 | 0 | 0 | Not read | 138.9 |
+| IN | [Indiana Election Division](https://cfa.in.gov/) | UNCONFIRMED | 369 | 0 | 0 | Not read | 137.9 |
+| IA | [Iowa Ethics and Campaign Disclosure Board](https://data.iowa.gov/catalog/dataset/917) | API | 333 | 0 | 0 | Not read | 134.5 |
+| KS | [Kansas Public Disclosure Commission](https://kpdc.kansas.gov/campaign-finance/campaign-contributor-data/) | UNCONFIRMED | 430 | 0 | 0 | Not read | 133.4 |
+| KY | [Kentucky Registry of Election Finance](https://secure.kentucky.gov/kref/publicsearch/CandidateSearch/) | BULK_API | 296 | 117 | 74,771 | 343,500 | 206.8 |
+| LA | [Louisiana Board of Ethics](https://ethics.la.gov/CampaignFinanceSearch/) | BULK | 198 | 0 | 0 | Not read | 136.5 |
+| ME | [Maine Commission on Governmental Ethics and Election Practices](https://www.mainecampaignfinance.com/) | UNCONFIRMED | 541 | 0 | 0 | Not read | 138.2 |
+| MD | [Maryland State Board of Elections](https://campaignfinance.maryland.gov/) | BULK | 440 | 0 | 0 | Not read | 135.5 |
+| MA | [Massachusetts Office of Campaign and Political Finance](https://ocpf.us/Data/Downloads) | BULK_API | 509 | 0 | 0 | Not read | 140.0 |
+| MI | [Michigan Department of State](https://www.michigan.gov/sos/elections/Disclosure/cfr/committee-search/intro/welcome-to-the-michigan-campaign-finance-searchable-database) | BULK | 619 | 0 | 0 | Not read | 138.3 |
+| MN | [Minnesota Campaign Finance and Public Disclosure Board](https://cfb.mn.gov/reports-and-data/self-help/data-downloads/) | BULK | 526 | 0 | 0 | Not read | 135.6 |
+| MS | [Mississippi Secretary of State](https://cfportal.sos.ms.gov/) | API | 203 | 0 | 0 | Not read | 138.5 |
+| MO | [Missouri Ethics Commission](https://www.mec.mo.gov/MEC/Campaign_Finance/CF_ContrCSV.aspx) | BULK | 480 | 0 | 0 | Not read | 136.2 |
+| MT | [Montana Commissioner of Political Practices](https://cers-ext.mt.gov/CampaignTracker/dashboard) | UNCONFIRMED | 352 | 0 | 0 | Not read | 139.2 |
+| NE | [Nebraska Accountability and Disclosure Commission](https://nadc-e.nebraska.gov/) | BULK | 152 | 0 | 0 | Not read | 135.5 |
+| NV | [Nevada Secretary of State](https://www.nvsos.gov/SOSCandidateServices/AnonymousAccess/CEFDSearchUU.aspx) | UNCONFIRMED | 184 | 0 | 0 | Not read | 136.1 |
+| NH | [New Hampshire Secretary of State](https://cfs.sos.nh.gov/) | API | 465 | 4 | 4 | Unknown | 139.8 |
+| NJ | [New Jersey Election Law Enforcement Commission](https://www.elec.nj.gov/) | API | 561 | 14 | 16 | 0 | 141.7 |
+| NM | [New Mexico Secretary of State](https://cfis.sos.nm.gov/) | BULK_API | 241 | 0 | 0 | Not read | 138.9 |
+| NY | [New York State Board of Elections](https://data.ny.gov/Government-Finance/Campaign-Finance-Disclosure-Reports-Data-Beginning/e9ss-239a) | BULK_API | 638 | 0 | 0 | Not read | 139.0 |
+| NC | [North Carolina State Board of Elections](https://www.ncsbe.gov/campaign-finance/search-campaign-funding-and-spending-reports-and-penalties) | UNCONFIRMED | 561 | 0 | 0 | Not read | 140.1 |
+| ND | [North Dakota Secretary of State](https://www.sos.nd.gov/elections/campaign-finance-statement-interests/search-reports) | UNCONFIRMED | 255 | 0 | 0 | Not read | 137.8 |
+| OH | [Ohio Secretary of State](https://www.ohiosos.gov/elections/campaign-finance) | BULK | 187 | 0 | 0 | Not read | 137.5 |
+| OK | [Oklahoma Ethics Commission](https://guardian.ok.gov/PublicSite/) | BULK | 300 | 0 | 0 | Not read | 139.4 |
+| OR | [Oregon Secretary of State](https://sos.oregon.gov/elections/campaign-finance/pages/search-campaign-finance.aspx) | UNCONFIRMED | 233 | 0 | 0 | Not read | 133.0 |
+| PA | [Pennsylvania Department of State](https://www.campaignfinanceonline.pa.gov/Pages/CampaignFinanceHome.aspx) | BULK | 361 | 0 | 0 | Not read | 138.7 |
+| RI | [Rhode Island Board of Elections](https://www.ricampaignfinance.com/) | UNCONFIRMED | 280 | 0 | 0 | Not read | 132.8 |
+| SC | [South Carolina State Ethics Commission](https://ethicsfiling.sc.gov/filing/home) | API | 378 | 175 | 84,050 | 654,051 | 170.4 |
+| SD | [South Dakota Secretary of State](https://sdcfr.sdsos.gov/) | UNCONFIRMED | 237 | 0 | 0 | Not read | 133.6 |
+| TN | [Tennessee Registry of Election Finance](https://apps.tn.gov/tncamp/) | UNCONFIRMED | 413 | 0 | 0 | Not read | 137.3 |
+| TX | [Texas Ethics Commission](https://www.ethics.state.tx.us/search/cf/) | BULK | 611 | 0 | 0 | Not read | 140.2 |
+| UT | [Utah Lieutenant Governor](https://disclosures.utah.gov/) | BULK | 352 | 0 | 0 | Not read | 138.9 |
+| VT | [Vermont Secretary of State](https://campaignfinance.vermont.gov/) | BULK_API | 504 | 0 | 0 | Unknown | 149.8 |
+| VA | [Virginia Department of Elections](https://www.elections.virginia.gov/candidatepac-info/reporting/) | BULK | 203 | 0 | 0 | Not read | 139.0 |
+| WA | [Washington Public Disclosure Commission](https://www.pdc.wa.gov/) | API | 441 | 154 | 421 | 25,372 | 151.4 |
+| WV | [West Virginia Secretary of State](https://cfrs.wvsos.gov/) | UNCONFIRMED | 383 | 0 | 0 | Not read | 139.2 |
+| WI | [Wisconsin Ethics Commission](https://campaignfinance.wi.gov/browse-data) | API | 155 | 0 | 0 | Not read | 132.8 |
+| WY | [Wyoming Secretary of State](https://www.wycampaignfinance.gov/) | UNCONFIRMED | 199 | 0 | 0 | Not read | 137.1 |
+| AS | [American Samoa Election Office](https://aselectionoffice.gov/) | UNCONFIRMED | 0 | 0 | 0 | Not read | 132.6 |
+| GU | [Guam Election Commission](https://gec.guam.gov/) | UNCONFIRMED | 0 | 0 | 0 | Not read | 136.2 |
+| MP | [Commonwealth Election Commission](https://www.votecnmi.gov.mp/) | UNCONFIRMED | 0 | 0 | 0 | Not read | 136.0 |
+| PR | [Puerto Rico Office of the Electoral Comptroller](https://oce.pr.gov/) | API | 83 | 0 | 0 | Not read | 135.9 |
+| VI | [Elections System of the Virgin Islands](https://vivote.gov/) | UNCONFIRMED | 0 | 0 | 0 | Not read | 134.2 |
 
-The retained payload hashes are AZ `5f7a45347e88a9963164cb2fdd62689d`, NH `3358afe7d4705486ed1078adbc2c5b2f`, NJ `f37575a744720b6c2d504256ff9d0341` and Pima `8b73fab45eecff781d96607afbec3af8`, identical to the prior held values. Earlier interrupted development probes were not all metered; 50,778 bytes is the exact measured cleanup-check total, not a claimed total for every historical probe.
+Access describes the official source, not a completed binding. Live native person/committee/office/cycle publication is connected for CT, HI, KY, SC and WA; verified held AZ, NH and NJ summaries also publish. Remaining bindings and local coverage are later SRC-MN pieces. “Not read” and “Unknown” are not claims that a source has no unmatched rows. Places with no published people acquire no money. The held Pima source remains unchanged; a verified person binding is still open.
+
+Observed unmatched rows and source failures:
+
+- CT: 197,152 — The filed person, office or district does not uniquely match a person we publish; 39,980 — The source does not bind a filed committee, candidate and office; 4 — SourceAcquisitionFailure(PUBLISHER_DOCUMENT_INVALID): Campaign export columns are missing or repeated.; 2,905 — The filing predates January 1, 2020.
+- HI: 143,916 — The filed person, office or district does not uniquely match a person we publish.
+- ID: 4 — SourceAcquisitionFailure(PUBLISHER_UNAVAILABLE): The campaign-finance publisher returned HTTP 404..
+- KY: 339,636 — The filed person, office or district does not uniquely match a person we publish; 3,864 — The filing predates January 1, 2020.
+- NH: 2 — SourceAcquisitionFailure(PUBLISHER_UNAVAILABLE): The campaign-finance publisher returned HTTP 403..
+- SC: 427,668 — The filed person, office or district does not uniquely match a person we publish; 25 — The source does not bind a filed committee, candidate and office; 226,358 — The source has no mapped election cycle.
+- VT: 4 — SourceAcquisitionFailure(PUBLISHER_DOCUMENT_INVALID): The campaign API response is truncated or exceeds its denominator..
+- WA: 4,917 — The source does not bind a filed committee, candidate and office; 5,343 — The filed person, office or district does not uniquely match a person we publish; 15,112 — The source has not established a filed financial report.
+
+The largest real source response was South Carolina contributions, 197,906,018 bytes. All inputs stream, with one matched batch of at most 500 rows/two MiB, one metadata page, and SQLite identity indexes with a one MiB page cache. Each worker holds only its state's people and current batch. No disconnected source was tested at full volume and no generated campaign money was substituted.
+
+The first pass took 1290.8 worker-seconds; the next-hour pass took 554.2. State children use 112 MiB old-generation and four MiB semi-spaces. Their observed peak was 216,842,240 bytes. The unchanged runtime coordinator's measured active footprint is 81,842,176 bytes, giving 298,684,416 bytes (284.8 MiB) combined. Its separate publication phase, after state workers exit, peaked at 264,347,648 bytes. After the runner's 0.75 GiB margin, 26 observed copies fit on eight GiB, or 15 alongside the 2,928 MiB research-parent reservation. The existing 384 MiB reservation permits 19 / 11 copies; actual money work runs one state at a time. Shared admission and database clients are unchanged.
+
+Bytes are SQL response/request payloads, not physical page IO or WAL. Reader reads include the production people/source projection and copy publisher/reader responses. The first pass includes initial fact creation. The day model is one measured first pass plus 23 measured next-hour passes, with unchanged source data and no new people, plus 288 clock scans and coordinator reports. It is a modeled first-fill day, not an observed steady 24-hour run; a later full daily recheck can return more predecessor fingerprints than the initial empty store. Storage growth is reported separately.
+
+| State | First reader read bytes | First reader sent bytes | Next-hour read bytes | Next-hour sent bytes | Modeled day read bytes | Modeled day sent bytes |
+|---|---:|---:|---:|---:|---:|---:|
+| AL | 378,214 | 360,089 | 424,817 | 360,089 | 10,149,005 | 8,642,136 |
+| AK | 175,338 | 233,471 | 206,459 | 233,471 | 4,923,895 | 5,603,304 |
+| AZ | 759,730 | 531,254 | 759,730 | 531,254 | 18,233,520 | 12,750,096 |
+| AR | 220,189 | 240,497 | 247,517 | 240,497 | 5,913,080 | 5,771,928 |
+| CA | 524,360 | 610,329 | 600,825 | 610,329 | 14,343,335 | 14,647,896 |
+| CO | 345,613 | 414,417 | 397,905 | 414,417 | 9,497,428 | 9,946,008 |
+| CT | 18,079,552 | 272,786,253 | 47,864,781 | 15,518,637 | 1,118,969,515 | 629,714,904 |
+| DE | 425,692 | 232,069 | 449,545 | 232,069 | 10,765,227 | 5,569,656 |
+| DC | 71,284 | 100,519 | 81,392 | 100,519 | 1,943,300 | 2,412,456 |
+| FL | 949,069 | 575,597 | 1,029,798 | 575,597 | 24,634,423 | 13,814,328 |
+| GA | 671,800 | 668,813 | 761,376 | 668,813 | 18,183,448 | 16,051,512 |
+| HI | 5,241,896 | 88,692,132 | 591,410 | 232,863 | 18,844,326 | 94,047,981 |
+| ID | 486,016 | 413,922 | 536,739 | 413,831 | 12,831,013 | 9,932,035 |
+| IL | 449,278 | 481,512 | 518,159 | 481,512 | 12,366,935 | 11,556,288 |
+| IN | 420,850 | 453,472 | 479,145 | 453,472 | 11,441,185 | 10,883,328 |
+| IA | 429,781 | 441,221 | 482,389 | 441,221 | 11,524,728 | 10,589,304 |
+| KS | 426,642 | 511,164 | 494,575 | 511,164 | 11,801,867 | 12,267,936 |
+| KY | 19,048,524 | 242,996,104 | 380,311 | 417,794 | 27,795,677 | 252,605,366 |
+| LA | 237,575 | 240,545 | 268,853 | 240,545 | 6,421,194 | 5,773,080 |
+| ME | 470,373 | 482,108 | 555,842 | 482,108 | 13,254,739 | 11,570,592 |
+| MD | 494,556 | 519,322 | 564,069 | 519,322 | 13,468,143 | 12,463,728 |
+| MA | 527,367 | 590,280 | 607,781 | 590,280 | 14,506,330 | 14,166,720 |
+| MI | 578,812 | 663,907 | 676,603 | 663,907 | 16,140,681 | 15,933,768 |
+| MN | 515,437 | 497,427 | 598,536 | 497,427 | 14,281,765 | 11,938,248 |
+| MS | 251,823 | 261,015 | 283,891 | 261,015 | 6,781,316 | 6,264,360 |
+| MO | 466,272 | 454,796 | 542,105 | 454,796 | 12,934,687 | 10,915,104 |
+| MT | 395,239 | 432,856 | 450,849 | 432,856 | 10,764,766 | 10,388,544 |
+| NE | 164,294 | 204,116 | 188,305 | 204,116 | 4,495,309 | 4,898,784 |
+| NV | 210,000 | 227,497 | 239,067 | 227,497 | 5,708,541 | 5,459,928 |
+| NH | 592,170 | 587,367 | 666,050 | 587,367 | 15,911,320 | 14,096,808 |
+| NJ | 1,255,616 | 858,165 | 1,346,706 | 858,165 | 32,229,854 | 20,595,960 |
+| NM | 267,993 | 323,429 | 306,065 | 323,429 | 7,307,488 | 7,762,296 |
+| NY | 620,648 | 684,989 | 721,441 | 684,989 | 17,213,791 | 16,439,736 |
+| NC | 567,406 | 683,868 | 656,034 | 683,868 | 15,656,188 | 16,412,832 |
+| ND | 300,612 | 332,209 | 340,897 | 332,209 | 8,141,243 | 7,973,016 |
+| OH | 226,793 | 238,309 | 256,333 | 238,309 | 6,122,452 | 5,719,416 |
+| OK | 336,157 | 372,776 | 383,551 | 372,776 | 9,157,830 | 8,946,624 |
+| OR | 266,326 | 269,736 | 303,135 | 269,736 | 7,238,431 | 6,473,664 |
+| PA | 458,800 | 452,134 | 515,831 | 452,134 | 12,322,913 | 10,851,216 |
+| RI | 298,233 | 377,827 | 342,467 | 377,827 | 8,174,974 | 9,067,848 |
+| SC | 14,464,234 | 231,143,491 | 667,442 | 288,708 | 29,815,400 | 237,783,775 |
+| SD | 265,676 | 296,169 | 303,117 | 296,169 | 7,237,367 | 7,108,056 |
+| TN | 415,447 | 543,984 | 480,695 | 543,984 | 11,471,432 | 13,055,616 |
+| TX | 632,390 | 728,291 | 728,917 | 728,291 | 17,397,481 | 17,478,984 |
+| UT | 309,255 | 359,215 | 364,865 | 359,215 | 8,701,150 | 8,621,160 |
+| VT | 527,546 | 718,667 | 607,171 | 718,667 | 14,492,479 | 17,248,008 |
+| VA | 239,667 | 254,423 | 271,735 | 254,423 | 6,489,572 | 6,106,152 |
+| WA | 524,712 | 2,009,508 | 497,636 | 365,891 | 11,970,340 | 10,425,001 |
+| WV | 367,705 | 425,243 | 428,213 | 425,243 | 10,216,604 | 10,205,832 |
+| WI | 200,687 | 212,278 | 225,171 | 212,278 | 5,379,620 | 5,094,672 |
+| WY | 229,730 | 256,448 | 261,167 | 256,448 | 6,236,571 | 6,154,752 |
+| AS | 3,493 | 12,339 | 3,493 | 12,339 | 83,832 | 296,136 |
+| GU | 3,493 | 12,339 | 3,493 | 12,339 | 83,832 | 296,136 |
+| MP | 3,493 | 12,339 | 3,493 | 12,339 | 83,832 | 296,136 |
+| PR | 114,323 | 118,848 | 127,432 | 118,848 | 3,045,259 | 2,852,352 |
+| VI | 3,493 | 12,339 | 3,493 | 12,339 | 83,832 | 296,136 |
+
+Complete first-pass reader response/request bytes: 76,986,692 / 857,648,745. Complete next-hour bytes: 72,185,198 / 36,845,898. Modeled day: 1,759,812,702 / 1,714,593,087. The 56 actual sequential clock reads use 31,156 / 6,231 bytes. Coordinator publication uses 42,797 / 28,915 for the first report, 54,160 / 29,754 for the hourly report and 54,323 / 29,711 for a clock-only report.
+
+Control-plane response/request bytes are 322,097 / 267,535 for the first pass and 316,987 / 224,467 for the next hour; modeled day 7,612,798 / 5,430,276. Copy database growth was 1,015,554,048 bytes initially and 12,132,352 next hour. Production writes were zero.
+
+| State | Campaign API ms | Government money reader ms | Person funding API ms | Reader sees |
+|---|---:|---:|---:|---|
+| DC | 106.4 | 120.0 | 102.4 | We're working on getting this info. |
+| FL | 86.8 | 131.7 | 80.0 | We're working on getting this info. |
+| CO | 62.7 | 77.0 | 56.9 | We're working on getting this info. |
+| AZ | 130.6 | 140.2 | 134.3 | Clara Pratte's 2026 totals, filed committee and Sources; donor details remain open. |
+
+These handler timings use actual production-copy facts and source people; they exclude the CDN and browser shell. The browser's real Clara Pratte Battlecard money section was usable in 1,046 ms, and Ask returned the same official filing in 513 ms.
+
+A fresh database on the production-copy branch applied the complete real migration journal, then published one real Washington officeholder and a second on the next controlled hour. The second run worked exactly one person, increased people with money from one to two, loaded two source rows, and made zero bulk downloads. It used the saved official source body and its saved release metadata to hold the publisher version unchanged. An earlier live version of this test found the new person but its zero-request assertion failed while the publisher release version changed; that failure is preserved, not reported as a cache success.
+
+Changed money reader tests use the full real migrations. Fixture checks cover a stale completion flag with missing money, committee renames, filing ownership corrections, undated held reports, refund threshold changes, partial updates retaining older filing citations, per-state clocks and failed daily source checks. Older failed measurements remain in local logs; the tables above replace the obsolete private-schema measurements.
+
+## Replaced campaign load retirement
+
+The committed contract migration `0045_src_mn_retire_campaign_load`, shipped through River's normal release, has now applied in production. The October 20 1:17 PM Eastern expanded count-only audit read 63,214 bytes and found zero old-load facts of any entity kind or status, zero old publications, zero candidate copies, zero associated events, zero flags and zero old checkpoints in every one of the 56 places. The initial post-apply audit read 39,078 bytes and the retained-source hash check read 909 bytes. AZ, NH, NJ and Pima held source payloads are byte-for-byte unchanged. Source files and source-copy evidence remain; the migration deletes neither.
+
+| Store | Old-load rows remaining in production |
+|---|---:|
+| Facts, all versions and live | 0 |
+| Published source records | 0 |
+| Candidate copies | 0 |
+| Candidate events | 0 |
+| Owner flags attached to those facts | 0 |
+| Old source checkpoints | 0 |
+
+Before retirement, the scoped all-56 inventory held 1,707,787 old facts, 4,322 publications and 21,109 candidate copies. The corrected producer uses `campaign-person-money:<state>:<resource>` and the retired producer used `campaign-finance:<state>:<resource>`. No database columns are added. No production SQL was hand applied and no production write credential was used by this session. Production removal ran after deployment, as Sean approved.
+
+Retained earlier checks metered 178,666,596 production response bytes through 11:37 AM Eastern. The current real-copy runs add 21,319,168 read-only production bytes each for first and next-hour passes, plus their 468-byte controller guards. Including subsequent count audits, retention hashes and marker checks, the known measured total before final gates is 221,413,217 bytes. Final gate bytes are added in the READY commit. Earlier interrupted probes did not all retain byte counters, so an exact entire-session total is unknown; this is reported as a known measured total, not an invented complete total.
 
 ## Federal source scale measurements
 
@@ -177,3 +287,17 @@ The 2026-10-15 live USAspending, FAC and OpenFEMA probes succeeded. SAM's entity
 The live-site and production checks under DONE run after River releases, by Sean's oversight session.
 
 DONE: report rows loaded per state, rows joined and unjoined, and three live examples on meanwhileusa.com in three different states.
+
+## Production-copy preservation checks
+
+The money reader and retirement tests apply every committed journal migration in order in a fresh PostgreSQL database. Fixtures publish candidates, validation receipts, events and source pointers under the real production constraints. The acceptance script uses separate full reader and control-plane production copies and checks their declared branch IDs before writes. It creates no authority tables, views or private-schema substitutes. The production handle remains read-only.
+
+The preservation baseline is shipped main 65 (`55ec164bd`). Live `/api/build` then reported shipped main 66 (`ed0ac299c`); the only code change between those releases is in `scripts/freshness-shadow.mts`, so their reader and Admin implementations are identical. Main 66 is merged into SRC-MN. No unshipped lane commit was merged.
+
+On the real copies, baseline and candidate return the same 236 meeting identities, titles, times and sources; all 14 statewide holder identities, names, offices and sources; all 22 ballot contests; every official polling-place link; and the same sourced Katie Hobbs governor answer, contacts and gaps. Admin's pulse keeps the same sections, actions, counts and unavailable readings. Its Now response keeps the same jobs, running counts, waiting work, next work and gaps. Candidate response times were 909 ms for meetings, 467 ms for officials, 512 ms for ballot scope, 464 ms for voting links, 146 ms for Ask and 785 ms for Now's workers response.
+
+A browser opened Clara Pratte's actual ballot Battlecard against the copy. Her 2026 cycle shows receipts of $165,197.31 and expenditures of $164,805.83, with the filed committee name. Opening the usable money section took 1,046 ms. Ask returned the same official filing in 513 ms. The filing URL appears in the containing ballot card's single Sources footer.
+
+Existing behavior outside SRC-MN was left unchanged: nested Battlecards inherit the containing card's Sources instead of displaying a footer inside the modal (`components/ui/card-source-context.tsx` and `components/ui/card.tsx`). Full Now-page browser checks took 9.23 seconds for the baseline and 8.82 seconds for the candidate, and each accumulated about 195 MB of control-plane responses. Both showed existing unavailable results and link-health reads. These are not claimed as passing a three-second page test. The shared `tests/helpers/fact-db.ts` also contains fabricated authority tables in its edge helper; SRC-MN's changed tests no longer use it.
+
+The normal migration applier failed on the reader production copy with HTTP 503 connection termination and no committed receipt, first at a 0.25 CU cap and again with production's 0.25–8 CU range. Increasing capacity did not resolve the failure. Both failed measurements are preserved. The production runner subsequently applied the released migration through the normal path; the expanded audit above proves its zero result. The copy HTTP failures remain failed measurements, not deletion successes.

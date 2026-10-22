@@ -2349,3 +2349,25 @@ test("a pause never deactivates paid hunts; they stay as they were and the paid 
   assert.match(shadow, /if\(!dry && !filteredCycle && !huntsPaused\)await deactivateUnfundedHunts\(repos,fundedRefs,NOW\);/);
   assert.doesNotMatch(shadow, /fundedRefs=huntsPaused\?\[\]/);
 });
+
+test("every routine task's real child command runs a scripts/ script right after the flags the runner adds", async () => {
+  const { OUTCOME_PARTITION_CONTRACTS } = await import("../lib/civic-data/outcome-partitions.ts");
+  const { STATE_BINDING_REFRESH_TASKS } = await import("../lib/civic-data/state-binding-refresh-contracts.ts");
+  const { legistarMemberTasks } = await import("../lib/sources/legistar/members-tasks.ts");
+  const source = readFileSync(new URL("../scripts/routine-civic-data-runner.mts", import.meta.url), "utf8");
+  const start = source.indexOf("function sourceChildCommand(");
+  const end = source.indexOf("function recordSourceSettlementFailures", start);
+  const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", `
+    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane);
+  const tasks = [...ROUTINE_SOURCE_TASKS, ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract), ...AUTOMATIC_REFRESH_TASKS,
+    ...STATE_BINDING_REFRESH_TASKS, ...legistarMemberTasks(["pima", "seattle", "fortworth"])];
+  assert.ok(tasks.length > 100);
+  const offenders = tasks.filter(task => {
+    const child = commandFor({ id: task.id, kind: "SOURCE", task, command: task.command });
+    return child.args[0] !== "--experimental-strip-types" || !/^scripts\/[A-Za-z0-9._-]+\.m?ts$/.test(String(child.args[1]));
+  }).map(task => `${task.id}: ${task.command.slice(0, 2).join(" ")}`);
+  assert.deepEqual(offenders, [], "the runner already supplies node and --experimental-strip-types");
+  const legistar = commandFor({ id: "legistar-members:pima", kind: "SOURCE", task: legistarMemberTasks(["pima"])[0], command: legistarMemberTasks(["pima"])[0].command });
+  assert.deepEqual(legistar.args, ["--experimental-strip-types", "scripts/legistar-members-refresh.mts", "--legistar-client=pima"]);
+});

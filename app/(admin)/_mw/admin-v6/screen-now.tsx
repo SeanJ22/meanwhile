@@ -40,11 +40,41 @@ export function NowScreen() {
       </header>
       {nationalDepth(v.scopeKey) !== null && <National />}
       <DirectWork />
+      <OfficialsChecks />
       <IsItWorking />
       <OrdersInMotion />
       <NeedsMe />
     </>
   );
+}
+
+function officialSeatLabel(title: string, division: string): string {
+  const district = /\/(?:cd|sldl|sldu):([^/]+)$/.exec(division)?.[1];
+  const office = title || "Seat";
+  return district ? `${office} · District ${district === "at-large" ? "at large" : district.toUpperCase()}` : office;
+}
+
+const FEED_WORDS = { waiting: "Waiting for the runner", checked: "Checked", changed: "Changes found", failed: "Could not read source", paused: "Paused or closed" } as const;
+
+function OfficialsChecks() {
+  const v = useV6();
+  if (v.scopeKey === COUNTRY_KEY) return null;
+  const result = v.data.officials?.data;
+  return <Card title="Officials" aside={<Actions actions={[{ kind: "officials-check", target: v.scopeKey }]} />}>
+    {result?.requestedAt && <p className={s.meta}>Requested {mst(result.requestedAt)}</p>}
+    {!result && <Empty>—</Empty>}
+    {result?.requestedAt && result.status === "done" && result.changes.length === 0 && <p className={s.small}>No seat changes found.</p>}
+    {!!result?.changes.length && <div className={s.stack}>{result.changes.map((change, n) => <div className={s.row} key={`${change.divisionId}:${change.officeTitle}:${n}`}>
+      <strong className={s.small}>{officialSeatLabel(change.officeTitle, change.divisionId)}</strong>
+      <span className={s.small}>{change.kind === "vacant" ? `Vacant${change.since ? ` since ${change.since}` : ""}` : change.kind === "departed" ? `${change.name ?? "Previous holder"} left office` : change.name ?? "Holder changed"}</span>
+      {change.sourceUrl && <a className={s.btnLink} href={change.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a>}
+    </div>)}</div>}
+    {!!result?.feeds.length && <div className={s.stack}>{result.feeds.map(feed => <div className={s.row} key={feed.id}>
+      <span className={s.spread}><strong className={s.small}>{feed.name}</strong><Pill tone={feed.state === "failed" ? "warn" : feed.state === "checked" || feed.state === "changed" ? "good" : "slate"}>{FEED_WORDS[feed.state]}</Pill></span>
+      <span className={s.meta}>{feed.checkedAt ? `Checked ${mst(feed.checkedAt)}` : "—"}{feed.sourceUrl && <> · <a className={s.btnLink} href={feed.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a></>}</span>
+    </div>)}</div>}
+    {result?.lead && <p className={s.small}>What I heard: {result.lead.state === "checked" ? "Scout checked the official sources" : result.lead.state === "working" ? "Scout is checking official sources" : "Waiting for a Scout within the current paid-work controls"}.</p>}
+  </Card>;
 }
 
 const MOTION_KINDS = new Set(["order", "scheduled", "send", "hunt"]);

@@ -144,8 +144,25 @@ export interface OfficeholderDivision {
   bodyId: string | null;
 }
 
+/** A seat the office's own source explicitly states is empty. A missing holder is never a vacancy. */
+export interface SeatVacancy {
+  readonly ocdId: OcdId;
+  readonly sourceUrl: string;
+  readonly sourceOrg: string;
+  readonly collectedAt: string;
+  /** The publisher's own words stating the vacancy. */
+  readonly reason: string;
+  /** The departure date the publisher states with the vacancy, or null when it states none. */
+  readonly since?: string | null;
+  readonly officeTitle?: string;
+  /** Identity keys of the current holders the same source lists in this division; others there are stale. */
+  readonly heldBy?: readonly string[];
+}
+
 /** What a generated officeholder file holds. */
 export interface OfficeholderSet {
+  /** Explicit empty seats published by the office's own source. */
+  vacancies?: readonly SeatVacancy[];
   readonly disagreements?: readonly PersonFieldDisagreement[];
   /** Complete enumerated current source memberships; permits retiring omitted memberships, never required for adding facts. */
   currentMembershipComplete?: boolean;

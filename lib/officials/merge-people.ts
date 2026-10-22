@@ -151,12 +151,19 @@ export function mergePeopleSets(sets: readonly OfficeholderSet[]): OfficeholderS
     register(merged, first);
   }
   const canonical = (id: string): string => {const seen = new Set<string>(); while (aliases.has(id) && !seen.has(id)) {seen.add(id); id = aliases.get(id)!;} return id;};
-  const divisions = sets.flatMap(set=>set.divisions).map(row=>({...row,officeholderId:canonical(row.officeholderId)}));
+  // A later read of the same page replaces its earlier statement about that seat.
+  const vacancies = [...new Map(sets.flatMap(set=>set.vacancies ?? []).map(row=>[`${row.ocdId}|${row.sourceUrl}`,row])).values()];
+  const keysById = new Map(people.map(person=>[person.id, personIdentityKeys(person)]));
+  // The page that states a seat empty lists everyone still sitting in that division; any other holder there is stale.
+  const stale = (link: OfficeholderSet["divisions"][number]) => vacancies.some(vacancy => vacancy.ocdId === link.ocdId && vacancy.heldBy !== undefined &&
+    ![...keysById.get(canonical(link.officeholderId)) ?? []].some(key => vacancy.heldBy!.includes(key)));
+  const divisions = sets.flatMap(set=>set.divisions).filter(row=>!stale(row)).map(row=>({...row,officeholderId:canonical(row.officeholderId)}));
   const unmatched = sets.flatMap(set=>set.unmatched).map(row=>({...row,officeholderId:canonical(row.officeholderId)}));
   return JSON.parse(JSON.stringify({scope: sets[0].scope, generatedAt: sets.map(set=>set.generatedAt).sort().at(-1)!,
     currentMembershipComplete: sets.every(set=>set.currentMembershipComplete === true), officeholders: people,
     divisions: [...new Map(divisions.map(row=>[`${row.officeholderId}|${row.ocdId}|${row.bodyId}|${row.membershipId ?? ""}`,row])).values()],
     unmatched: [...new Map(unmatched.map(row=>[`${row.officeholderId}|${row.reason}`,row])).values()],
     endedMemberships: [...new Map(sets.flatMap(set=>set.endedMemberships ?? []).map(row=>[row.id,row])).values()],
-    disagreements: [...disagreements.values()].map(row=>({...row,personId:canonical(row.personId)}))}));
+    disagreements: [...disagreements.values()].map(row=>({...row,personId:canonical(row.personId)})),
+    ...(vacancies.length ? { vacancies } : {})}));
 }

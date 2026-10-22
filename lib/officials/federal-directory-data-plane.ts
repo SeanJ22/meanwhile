@@ -6,9 +6,10 @@ import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/t
 import { holdRawCapture, type RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
 import { REGISTRY_STATES, requireRegistryState } from "../civic-data/state-scopes.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import type { OfficeholderSet } from "./types.ts";
+import type { OfficeholderSet, SeatVacancy } from "./types.ts";
 import type { DirectoryFile } from "./directory.ts";
 import { CHAMBER_DIRECTORY_URLS } from "./chamber-directory.ts";
+import type { RosterChange } from "./roster-changes.ts";
 
 export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
 export type FederalDirectoryState = typeof REGISTRY_STATES[number];
@@ -34,18 +35,33 @@ export interface FederalDirectoryAcquisition {
 /** An acquisition as the candidate holds it: the bytes stay in the raw-capture vault. */
 export type FederalDirectoryCapture = Omit<FederalDirectoryAcquisition, "body"> & { readonly raw: RawCaptureRef };
 
-/** An explicit vacancy statement from the chamber, retained with its source. */
-export interface FederalVacancy {
+/** A current member as the chamber's own list names them. */
+export interface OfficialChamberMember {
+  readonly bioguide: string;
+  readonly name: string;
   readonly ocdId: string;
+  readonly party: string | null;
+  readonly phone: string | null;
+  readonly termStart: string | null;
+  readonly websiteUrl: string | null;
+  readonly contactFormUrl: string | null;
+}
+
+/** One state's seats as the House Clerk or the Senate last published them. */
+export interface OfficialChamberRoster {
+  readonly chamber: "house" | "senate";
   readonly sourceUrl: string;
   readonly sourceOrg: string;
   readonly collectedAt: string;
-  readonly reason: string;
+  readonly members: readonly OfficialChamberMember[];
+  readonly vacantSeats: readonly string[];
 }
 
 export interface FederalDirectoryReadModel {
   readonly formatVersion: 1;
-  readonly vacancies?: readonly FederalVacancy[];
+  readonly vacancies?: readonly SeatVacancy[];
+  /** The chambers' own current lists, kept so every later publication checks seats against them. */
+  readonly chambers?: { readonly house?: OfficialChamberRoster; readonly senate?: OfficialChamberRoster };
   readonly currentMembershipComplete?: boolean;
   readonly sourceSha: string;
   readonly roster: OfficeholderSet;
@@ -121,6 +137,7 @@ export async function federalDirectoryCandidate(input: {
   readonly retrievedAt: string;
   readonly projection: FederalDirectoryReadModel;
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
+  readonly changes?: readonly RosterChange[];
 }): Promise<RoutineCandidate> {
   const captures = await Promise.all(input.acquisitions.map(async ({ body, ...row }): Promise<FederalDirectoryCapture> => {
     const raw = await holdRawCapture(input.vault, FEDERAL_DIRECTORY_SOURCE_ID, body, "text/plain");
@@ -136,6 +153,8 @@ export function heldDirectoryCandidate(input: {
   readonly retrievedAt: string;
   readonly projection: FederalDirectoryReadModel;
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
+  /** Seats this read changed against the last published one, for Admin's officials check. */
+  readonly changes?: readonly RosterChange[];
 }): RoutineCandidate {
   const scope = federalDirectoryScope(input.state), place = requireRegistryState(input.state);
   const issues = federalDirectoryProjectionIssues(input.projection);
@@ -159,6 +178,7 @@ export function heldDirectoryCandidate(input: {
   const normalizedPayload = {
     sourceSha: input.projection.sourceSha,
     ...(input.excludedFacts?.length ? { excludedFacts: input.excludedFacts } : {}),
+    ...(input.changes?.length ? { changes: input.changes } : {}),
     acquisitions: input.acquisitions.map(({ requestedUrl, finalUrl, httpStatus, raw, retrievedAt, sourceCheck }) => ({ requestedUrl, finalUrl, httpStatus, raw, ...(retrievedAt ? {retrievedAt} : {}),...(sourceCheck ? {sourceCheck} : {}) })),
   };
   const normalizedHash = sha256(canonicalCivicDataJson(input.projection));

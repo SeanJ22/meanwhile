@@ -88,8 +88,8 @@ test("the actual reader panel visibly labels both Clerk-confirmed vacancies with
     await page.goto(`http://127.0.0.1:${address.port}/`);
     await page.getByText("Seat vacant", { exact: false }).first().waitFor({ timeout: 5000 });
     assert.equal(await page.getByText("Seat vacant", { exact: false }).count(), 2);
-    assert.equal(await page.getByRole("link", { name: "House Clerk", exact: true }).count(), 2);
-    assert.equal(await page.getByRole("link", { name: "House Clerk", exact: true }).first().getAttribute("href"), CHAMBER_DIRECTORY_URLS.house);
+    assert.equal(await page.getByRole("link", { name: "Office of the Clerk, U.S. House of Representatives", exact: true }).count(), 2);
+    assert.equal(await page.getByRole("link", { name: "Office of the Clerk, U.S. House of Representatives", exact: true }).first().getAttribute("href"), CHAMBER_DIRECTORY_URLS.house);
     assert.deepEqual(errors, []);
     await mkdir(".scratch/ci", { recursive: true });
     await page.screenshot({ path: ".scratch/ci/sh-01-vacancies.png", fullPage: true });

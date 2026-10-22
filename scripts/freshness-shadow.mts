@@ -1,3 +1,4 @@
+import { refreshOfficialsLeads, officialsLeadProvider } from "../lib/control-plane/officials-leads.ts";
 import { plannerStateReads } from "../lib/civic-data/planner-state-read.ts";
 import { readPlannerMeetingBodies } from "../lib/civic-data/planner-meeting-state-read.ts";
 import { plannerMeetingOwnership } from "../lib/civic-data/planner-ownership-state-read.ts";
@@ -622,8 +623,10 @@ await meetingPartitions.readStates([
   ...("ids" in materialized ? [...materialized.ids].flatMap(id => planningStateOf(id) ?? []) : []),
 ]);
 
+// Owner-reported official changes are standing Scout instructions in their state's own round.
+const officialsLeads = PLANNING_STATE === "system" ? [] : await pending.step("officials-leads:refresh", () => refreshOfficialsLeads(repos, NOW, { apply: !filteredCycle }));
 const registryProviders = [
-  ...(PLANNING_STATE === "system" ? [campaignFinanceProvider()] : [campaignFinanceProvider(), huntPacketsProvider({ materialized: () => materialized }),
+  ...(PLANNING_STATE === "system" ? [campaignFinanceProvider()] : [campaignFinanceProvider(), officialsLeadProvider(officialsLeads), huntPacketsProvider({ materialized: () => materialized }),
   localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
   await loadCandidateEnrichmentProvider(trackedStates, { root: ROOT, nowIso: NOW }),
   meetingsDiscoveryProvider({ materialized: () => materialized, registered: promotedRegistries }),

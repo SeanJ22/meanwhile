@@ -8,7 +8,6 @@ import { asksOnlyMoney, financeQuestionAsked, financeQuestionAskedFor, financeRe
 import { composeMoneyAnswer, moneyQuestionShape, periodPhrase, raceWordsFitOffice, type MoneyAsk } from "../lib/ask/money-answer.ts";
 import { gateRecordsToSubject } from "../lib/ask/relevance.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
-import type { CampaignMoney } from "../lib/funding/campaign-money.ts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
 
@@ -26,15 +25,13 @@ const MONEY_RECORDS = [
   {"dataClass": "STATE_COMMITTEE", "jurisdiction": "NJ", "agency": "New Jersey Election Law Enforcement Commission", "filingsUrl": "https://www.njelecefilesearch.com/SearchEntityByLocation?entity=506518", "committeeId": "506518", "registeredName": "MENARD, RAYMOND", "candidateNameAsFiled": "MENARD, RAYMOND", "officeSought": "MUNICIPAL OFFICE", "electionYear": 2026, "filingState": "FILED", "totals": {"receipts": 0, "expenditures": 0, "cashOnHand": null, "reportCount": 1, "coveringPeriod": "A-1 through 2026-08-27"}, "targetKeys": ["ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:menard-raymond"], "match": {"registeredName": "MENARD, RAYMOND", "officeAsFiled": "MUNICIPAL OFFICE", "officeOnBallot": "Member of the Township Committee", "electionYearAsFiled": 2026, "electionYearOnBallot": 2026, "allThreeAgree": true, "note": "name, office and election year all agree with the certified-ballot row"}, "checkedAt": "2026-09-01", "provenance": {"sourceUrl": "https://www.njelecefilesearch.com/SearchEntityByLocation", "sourceOrg": "New Jersey Election Law Enforcement Commission", "collectedAt": "2026-09-01", "verifiedAt": "2026-09-01"}},
 ] as StateMoneyRecord[];
 
-/** The records the route would retrieve for one target, through the route's own selector. */
+
 function heldEvidence(target: string, name: string): { subject: EvidenceSubject; records: EvidenceRecord[]; gaps: ReturnType<typeof campaignMoneyEvidenceFor>["gaps"] } {
   const shown = stateMoneyRecordsForDisplay(MONEY_RECORDS.filter((record) => record.targetKeys.includes(target)));
   const subject: EvidenceSubject = { kind: "PERSON", id: target, name };
-  const select = (): CampaignMoney => ({
-    requestedTargetKey: target, federal: { kind: "none" }, officialIdentity: "NOT_OFFICIAL",
-    state: { records: shown, resolution: "DIRECT_CANDIDACY_KEY", resolvedTargetKey: target },
-  });
-  const evidence = campaignMoneyEvidenceFor(subject, target, undefined, select);
+  const evidence = {records: shown.map((record,index):EvidenceRecord=>({kind:"FINANCE_SUMMARY",id:`state-money:${target}:${index}`,subjectId:target,
+    text:"Filed campaign totals",sourceUrl:record.filingsUrl,sourceOrg:record.agency,retrievedAt:record.checkedAt,
+    finance:{jurisdiction:record.jurisdiction,filingState:record.filingState,totals:record.totals,registeredName:record.registeredName,agency:record.agency,electionYear:record.electionYear,checkedAt:record.checkedAt,...(record.funding?{funding:record.funding}:{})}})),gaps:[],denominators:{stateFinanceRecordsReturned:shown.length}};
   const regime = financeRegimeNotesFor(subject, { state: evidence.denominators.stateFinanceRecordsReturned > 0, federal: false, county: false });
   return { subject, records: evidence.records, gaps: [...evidence.gaps, ...regime.map((note) => note.gap)] };
 }

@@ -2,8 +2,6 @@ export type BallotAuxiliaryFamily =
   | "candidate-profiles"
   | "candidate-publications"
   | "federal-funding"
-  | "state-money"
-  | "campaign-finance"
   | "federal-directory"
   | "registry-runtime"
   | "nh-members"

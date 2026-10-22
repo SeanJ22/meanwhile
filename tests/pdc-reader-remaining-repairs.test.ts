@@ -81,19 +81,3 @@ test("ballot leaves empty funding fields out and contributes partial holdings to
   assert.equal(gap.props.id, "funding-holdings:congress:test");
   assert.equal(renderToStaticMarkup(gap), "", "the card frame displays the gap once");
 });
-
-test("state ballot funding preserves held records and leaves empty fields out", () => {
-  const fn = nodes("app/ballot/page.tsx").find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "stateCandidateFunding");
-  assert.ok(fn);
-  const make = new Function("React", "StateMoneySection", compile(`${fn.getText()}; return stateCandidateFunding;`));
-  const records = [{ held: "exact candidate filing" }];
-  const context = { zip: "85701", lat: 32.22, lng: -110.97 };
-  const render = make(React, (props: { records: typeof records; context: typeof context }) => {
-    assert.equal(props.records, records, "the display never rematches held records");
-    assert.equal(props.context, context);
-    return React.createElement("span", null, props.records[0].held);
-  });
-  assert.equal(renderToStaticMarkup(render(records, context)), "<span>exact candidate filing</span>");
-  assert.equal(render([], context), null);
-  assert.ok(nodes("app/ballot/page.tsx").some((node) => ts.isCallExpression(node) && node.expression.getText() === "stateCandidateFunding" && node.arguments[0]?.getText() === "stateMoney"), "the actual battlecard money slot uses the held records");
-});

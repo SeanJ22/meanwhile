@@ -1,11 +1,18 @@
 # River status
 
-build_state: RELEASES 72 TO 81 SHIPPED AND LIVE (main be812bacc); RELEASE 82 (AG-01) IN GATES; VICE PRESIDENT NOT LIVE YET (returned to DS-01); MEETINGS READBACK FAILURES RETURNED TO PM-01
+build_state: RELEASES 72 TO 81 LIVE (main be812bacc); RELEASE 82 (AG-01) IS PR #792 IN CI; VICE PRESIDENT STILL NOT LIVE (ds-01); MEETINGS READBACK NOW CAL-01'S
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
-heartbeat: 2026-10-22T19:20:32Z
+heartbeat: 2026-10-22T22:12:00Z
+
+## Where things stand (Oct 22, 3:12 PM Phoenix / 6:12 PM EDT)
+
+- Release 82 (AG-01 alone) is PR #792, head 5864c4599, label run-full-ci, CI running. River's `promote` could not move river to this tip (its recorded fold base had moved after the first promote; the later no-op fold also cleared fold.json), so the tested SHA was pushed to release/82 by hand on Sean's instruction. Gates passed 8 of 8 on that exact SHA (9,233 pass). River needs a restart-from-main step after this release; there is no command for it.
+- Four hours on release 81 (be812ba), live state data for AZ, TX, OH and CA still has 0 Vice President. Not done. Returned to ds-01 (returns/ds-01.md, updated).
+- Meetings readback: the child reader-readback:meetings-aggregate failed for 0 doors at 20:09, 20:35 and 21:01 UTC (10, 2 and 20 total task failures) and for 157 to 161 doors on either side of that. Moved to cal-01 as Sean asked (returns/cal-01.md has the pass-by-pass numbers; returns/pm-01.md now says PM-01 still owes Legistar board names on the page).
+- Calendar doors with a new lastSuccessAt since release 81 deployed: NH 29, NJ 2, AZ 0, none elsewhere. Netlify Blobs error: 0 in 105 digests. Box built: 6,217 (+184 since 18:10 UTC). publish-now-supervisor still ends exit 2 (88 times).
 
 ## Where things stand (Oct 22, 2:58 PM EDT)
 

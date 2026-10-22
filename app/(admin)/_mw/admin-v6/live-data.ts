@@ -90,6 +90,7 @@ export function buildLiveBundle(snapshot: Readonly<Record<SectionId, SectionStat
     hunts: src("hunts", SECTION_DEP.hunts),
     national: src("national", SECTION_DEP.national, referenceNational(ref)),
     results: src("results", SECTION_DEP.results),
+    officials: src("officials", SECTION_DEP.officials),
     stuck: src("stuck", SECTION_DEP.stuck),
     sameCause: src("sameCause", SECTION_DEP.stuck),
     workRows: src("workRows", SECTION_DEP.work),

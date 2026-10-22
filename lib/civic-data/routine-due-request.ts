@@ -130,8 +130,10 @@ export function routineDueRequestFor(
   requests: readonly RoutineDueRequest[],
 ): RoutineDueRequest | null {
   const doorDerive = (DOOR_DERIVE_CONTRACT_IDS as readonly string[]).includes(task.id);
-  if (parseStateBallotContractId(task.id)?.family !== "ballot-contests" && !doorDerive && (task.recordClass !== "MEETING" || task.contract.schedule?.kind !== "SITTING_WINDOW")) return null;
-  return requests.find((request) => request.contractId === task.id && routineDueRequestState(request, clock, nowMs) === "DUE") ?? null;
+  const anyRequest = parseStateBallotContractId(task.id)?.family === "ballot-contests" || doorDerive || (task.recordClass === "MEETING" && task.contract.schedule?.kind === "SITTING_WINDOW");
+  // A feed door marked to be read now asks for its own registered contract.
+  return requests.find((request) => request.contractId === task.id && (anyRequest || request.id === `door-read-now:feed:${task.id}:${task.id}`) &&
+    routineDueRequestState(request, clock, nowMs) === "DUE") ?? null;
 }
 
 export function routineDueRequestDeadlineMs(deadlineMs: number | undefined, request: RoutineDueRequest | null): number | undefined {

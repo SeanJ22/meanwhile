@@ -32,6 +32,8 @@ export const MAX_DERIVED_CADENCE_HOURS = 24 * 30;
 
 /** One thing this project owes a fresh reading of. A standing obligation, deliberately not a WorkItem. */
 export interface FreshnessObligation {
+  /** An owner's reported official change, held as work instructions until independently checked. */
+  readonly officialsLead?: { readonly kind: "officials-change"; readonly placeKey: string; readonly receiptId: string };
   /** Owner-dispatched instructions, not evidence. Copied to each occurrence and retained across scheduler restarts. */
   readonly autonomousPlan?: import("../workers/autonomous-plan.ts").AutonomousWorkPlan;
   /** Durable scheduling hint: retain the first owed time until this obligation is actually worked. */

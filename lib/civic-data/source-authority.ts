@@ -53,8 +53,9 @@ function peopleSourceAuthority(input: {
     routePrefixes: input.routePrefixes,
     jurisdictions: ["US", ...Object.values(FIPS_TO_STATE).map(state => `US-${state.postal}`)],
     recordClasses: [input.federal ? "FEDERAL_DIRECTORY" : "STATE_LEGISLATOR"],
-    competentFacts: input.official ? ["source-verified current holder", "office", "official contact", "term"] : ["attributed identity and current-office leads"],
-    expectedIdentifierKeys: ["person_id", "people_id", "bioguide_id", "wikidata_id"],
+    competentFacts: input.official ? ["source-verified current holder", "office", "official contact", "term", "publisher-stated vacancy"] : ["attributed identity and current-office leads"],
+    // An official page's stated empty seat is keyed by its office's division.
+    expectedIdentifierKeys: ["person_id", "people_id", "bioguide_id", "wikidata_id", ...(input.official ? ["office_id"] : [])],
     expectedTemporalFields: ["term", "source_through"],
     horizonSemantics: input.official
       ? "Each person must be named in the office on their captured own official page. Statewide election and appointment labels come from explicit state-page evidence. A failed page preserves prior verified facts."

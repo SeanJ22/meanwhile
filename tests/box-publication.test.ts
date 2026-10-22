@@ -11,7 +11,7 @@ import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { projectCampaignSiteChains, type CampaignSiteSubject } from "../lib/control-plane/promotion/campaign-site-chain.ts";
-import { officeNameOn, publishBoxFindings } from "../lib/facts/box-publication.ts";
+import { officeNameOn, publishBoxFindings, seatIn } from "../lib/facts/box-publication.ts";
 import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { ensureEntity, ensureFactEntities, ensureGoverningBody } from "../lib/facts/entities.ts";
@@ -561,4 +561,16 @@ test("a committee's name on a #body: subject makes the committee under its own g
     assert.deepEqual((await facts.query("SELECT field, value_text FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [id])).map(row => [row.field, row.value_text]),
       [["name", one.name], ["office_phone", one.phone]]);
   }
+});
+
+test("a supervisor of a kind of work is staff and never seated; a supervisor who sits on the board is", () => {
+  const governing = "al:county:county-of-madison#governing", board = "az:school:example-school-district#board";
+  for (const words of ["Maintenance Supervisor Dan Fox", "Road Supervisor Pat Lee, (256) 555-0100", "County Road Supervisor", "Supervisor of Roads Pat Lee", "Public Works Supervisor Ann Hill", "Water Supervisor", "Transportation Supervisor, Example Schools"]) {
+    assert.equal(seatIn(words, governing), null, words);
+    assert.equal(seatIn(words, board), null, words);
+  }
+  assert.deepEqual(seatIn("Supervisor Rex Scott, District 1", governing), { ward: "1" });
+  assert.deepEqual(seatIn("Town Supervisor", "az:city:town-of-example#governing"), { ward: null });
+  assert.deepEqual(seatIn("Supervisor Rex Scott\nChair, Board of Supervisors", governing), { ward: null });
+  assert.notEqual(seatIn("Supervisor Dana Cruz, District 4", governing), null);
 });

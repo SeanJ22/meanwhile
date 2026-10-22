@@ -92,13 +92,15 @@ async function targetOf(query: Query, subjectId: string): Promise<Target | null>
 const PACKET = "hunt:packet:";
 const placeOf = (row: BoxFinding) => row.origins.find(origin => origin.resultKey?.startsWith(PACKET))?.resultKey!.slice(PACKET.length) ?? row.subjectId;
 
-const STAFF_TITLE = /\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff)\b/i;
+// A supervisor of a kind of work is staff ("Maintenance Supervisor", "Road Supervisor"); a bare "Supervisor", "Town Supervisor" or "Supervisor Rex Scott, District 1" is a seat.
+const JOB_SUPERVISOR = "(?:maintenance|road|roads|highway|street|streets|bridge|public works|works|water|sewer|wastewater|sanitation|solid waste|landfill|utilit(?:y|ies)|park|parks|recreation|facilit(?:y|ies)|building|grounds|cemetery|fleet|equipment|shop|garage|transportation|bus|custodial|food service|nutrition|cafeteria|library|operations|field|crew|shift|plant|program|department|dept|office|it|technology|payroll|billing|collections|records|dispatch|animal control|code enforcement|inspection|election|elections|youth|school|district office)\\s+supervisors?";
+const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff|${JOB_SUPERVISOR}|supervisors? of (?:maintenance|roads?|highways?|streets?|public works|operations|parks))\\b`, "i");
 const COUNCIL_SEAT = /\b((vice|deputy)[- ]?)?mayor\b|\bcouncil[- ]?(m[ae]n|member|woman|person|or|lor|president)s?\b|\balder(m[ae]n|woman|person)\b|\bselect(m[ae]n|woman|board)\b|\b(trustee|supervisor|freeholder|legislator|commissioner)s?\b/i;
 const BOARD_SEAT = /\b(vice[- ]?)?(chair(person|man|woman)?|president)\b|\bboard members?\b|\bmember of the board\b/i;
 const WARD = /\b(?:ward|district)\s*(?:no\.?\s*)?(\d+)\b/i;
 
 /** The seat a person's own words show on this body, or null: a staff title never seats anyone, and a council seats only by its own titles. */
-function seatIn(words: string, bodyId: string): { readonly ward: string | null } | null {
+export function seatIn(words: string, bodyId: string): { readonly ward: string | null } | null {
   const council = bodyId.endsWith("#governing"), board = bodyId.endsWith("#board");
   if (STAFF_TITLE.test(words)) return null;
   if (!COUNCIL_SEAT.test(words) && (council || !BOARD_SEAT.test(words)) && (council || board || !/\bmembers?\b/i.test(words))) return null;

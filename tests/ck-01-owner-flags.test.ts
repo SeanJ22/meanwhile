@@ -108,3 +108,24 @@ test("a flagged board member is gone from the next live roster, the reader cache
  assert.deepEqual(await members(),after,"the source repeating the removed value does not restore it");
  }finally{await db.pg.close();}
 });
+
+test("Sean finds a published fact by name, flags it himself, and Remove takes it down",async()=>{
+ const {searchPublishedFacts,raiseOwnerFlag}=await import("../lib/facts/owner-flags.ts");
+ const db=await factDb();
+ try{
+ await db.query("INSERT INTO entity(id,kind,name,state) VALUES('body','body','Maple City Council','AZ'),('person','person','Jordan Reyes','AZ')");
+ await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,'https://maple.example.gov/council','https://maple.example.gov/council',$1,$2,'saved')",[NOW,"b".repeat(64)]);
+ await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by) VALUES
+  ('body','member:person','{"name":"Jordan Reyes","office":"Council Member"}','Jordan Reyes','live','OFFICIAL',1,'Jordan Reyes',$1,$1,'t'),
+  ('person','email','"j@maple.example.gov"','j@maple.example.gov','live','OFFICIAL',1,'j@maple.example.gov',$1,$1,'t')`,[NOW]);
+ assert.deepEqual((await searchPublishedFacts(db.query,"jo")).matches,[]);
+ const {matches}=await searchPublishedFacts(db.query,"jordan reyes");
+ assert.deepEqual(matches.map(row=>[row.title,row.what,row.value,row.flagged]),[["Jordan Reyes","Email","j@maple.example.gov",false],["Maple City Council","Seat on Maple City Council","Jordan Reyes, Council Member",false]]);
+ assert.deepEqual(await raiseOwnerFlag(db.query,matches[1].factId),{created:true});
+ assert.deepEqual(await raiseOwnerFlag(db.query,matches[1].factId),{created:false},"a fact is flagged once");
+ assert.equal((await searchPublishedFacts(db.query,"%")).matches.length,0);
+ const [flag]=await readOwnerFlags(db.query);assert.equal(flag.factId,matches[1].factId);
+ await resolveOwnerFlag(db,{id:Number(flag.id),choice:"REMOVE"},NOW,async()=>({purged:true}));
+ assert.deepEqual((await searchPublishedFacts(db.query,"jordan reyes")).matches.map(row=>row.what),["Email"]);
+ }finally{await db.pg.close();}
+});

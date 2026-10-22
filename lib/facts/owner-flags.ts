@@ -47,6 +47,58 @@ export async function readOwnerFlags(query: Query, after: number = 0, limit: num
     sourceUrl: (row.source_url ?? row.url ?? null) as string | null }));
 }
 
+export interface PublishedFactMatch {
+  readonly factId: number;
+  readonly title: string;
+  readonly what: string;
+  readonly value: string;
+  readonly sourceUrl: string | null;
+  readonly flagged: boolean;
+}
+
+const WHAT = new Map([["name", "Name"], ["email", "Email"], ["phone", "Phone"], ["website", "Website"], ["office_phone", "Office phone"],
+  ["office_email", "Office email"], ["office_address", "Office address"], ["agenda_url", "Agenda link"], ["meeting_cadence", "Meeting schedule"]]);
+
+/** The words Sean sees for a published field. */
+export function publishedFactWhat(field: string, bodyName: string | null): string {
+  if (field.startsWith("member:")) return bodyName ? `Seat on ${bodyName}` : "Seat on a board";
+  const [head, ...rest] = field.split(":");
+  const label = WHAT.get(head) ?? (head.replace(/_/g, " ").replace(/^./, c => c.toUpperCase()));
+  return head === "office" && rest.length ? "Title" : label;
+}
+
+/** Live facts about the people, boards and places whose names contain the words typed, for Sean to flag. */
+export async function searchPublishedFacts(query: Query, words: string, limit: number = 25): Promise<{ readonly matches: PublishedFactMatch[]; readonly more: boolean }> {
+  const text = words.trim().replace(/\s+/g, " ");
+  if (text.length < 3 || text.length > 100) return { matches: [], more: false };
+  const take = Math.min(50, Math.max(1, limit));
+  const rows = await query(`WITH hits AS MATERIALIZED (SELECT id FROM entity WHERE name ILIKE $1 ESCAPE '\\' LIMIT 40)
+    SELECT f.id, f.field, f.value, f.value_text, e.name AS title, s.url,
+      EXISTS(SELECT 1 FROM owner_flag o WHERE o.fact_id = f.id AND o.resolved IS NULL) AS flagged
+    FROM fact f JOIN entity e ON e.id = f.entity_id LEFT JOIN source_copy s ON s.id = f.source_copy_id
+    WHERE f.status = 'live' AND (f.entity_id IN (SELECT id FROM hits)
+      OR f.field LIKE 'member:%' AND f.field IN (SELECT 'member:' || id FROM hits))
+    ORDER BY e.name, f.field, f.id LIMIT $2`, [`%${text.replace(/[\\%_]/g, c => `\\${c}`)}%`, take + 1]);
+  const shown = rows.slice(0, take);
+  const people = new Map((await query("SELECT id, name FROM entity WHERE id = ANY($1::text[])",
+    [shown.filter(row => String(row.field).startsWith("member:")).map(row => String(row.field).slice(7))])).map(row => [String(row.id), String(row.name)]));
+  return { more: rows.length > take, matches: shown.map(row => {
+    const member = String(row.field).startsWith("member:");
+    const shownValue = member ? `${people.get(String(row.field).slice(7)) ?? "A person"}${(row.value as { office?: string | null } | null)?.office ? `, ${(row.value as { office: string }).office}` : ""}`
+      : String(row.value_text ?? (typeof row.value === "string" ? row.value : JSON.stringify(row.value)));
+    return { factId: Number(row.id), title: String(row.title), what: publishedFactWhat(String(row.field), member ? String(row.title) : null),
+      value: shownValue, sourceUrl: (row.url ?? null) as string | null, flagged: Boolean(row.flagged) };
+  }) };
+}
+
+/** Sean flags a published fact himself; it joins the same open flags the audits raise. */
+export async function raiseOwnerFlag(query: Query, factId: number): Promise<{ readonly created: boolean }> {
+  const rows = await query(`INSERT INTO owner_flag(fact_id,kind,reason,source_url) SELECT f.id,'AUDIT_LOOKS_WRONG','Sean flagged this published value as wrong.',s.url
+    FROM fact f LEFT JOIN source_copy s ON s.id=f.source_copy_id WHERE f.id=$1 AND f.status='live'
+    AND NOT EXISTS(SELECT 1 FROM owner_flag o WHERE o.fact_id=f.id AND o.resolved IS NULL) RETURNING id`, [factId]);
+  return { created: rows.length > 0 };
+}
+
 /** Patch only existing scalar fields; neither paths nor values can change record identity. */
 export function withOwnerValues(record: Readonly<Record<string, unknown>>, values: Readonly<Record<string, unknown>>): Record<string, unknown> {
   const out = structuredClone(record) as Record<string, unknown>;

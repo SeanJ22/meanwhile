@@ -1,5 +1,5 @@
 import { readerFactDb } from "../../facts/db.ts";
-import { FLAG_CHOICES, resolveOwnerFlag, type FlagChoice } from "../../facts/owner-flags.ts";
+import { FLAG_CHOICES, raiseOwnerFlag, resolveOwnerFlag, type FlagChoice } from "../../facts/owner-flags.ts";
 import { prepareProductionCivicDataWrite } from "../../civic-data/production-write.ts";
 import { appendResearchIntent, buildResearchIntent } from "../research-view.ts";
 import type { RegisteredAction } from "./registry.ts";
@@ -43,6 +43,25 @@ export const auditFlagAction: RegisteredAction = {
         openedWork: [],readBackAt: "/admin?view=queue",undo: null };
     } catch {
       return { ok: false,refusal: "DOWNSTREAM_REFUSED",says: "The answer could not be applied. Refresh the flag before trying again." };
+    }
+  },
+};
+
+export const auditFlagRaiseAction: RegisteredAction = {
+  definition: { type: "fact.flag.raise", label: "Flag a published fact", does: "Puts the published fact in your flags to answer.",
+    doesNot: "Removes nothing until you choose Remove it.", authority: "OWNER_DECISION_REQUIRED", subjectKind: "a published fact", requiresStateVersion: false,
+    refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"] },
+  validate(input) {
+    const factId = Number(input.factId);
+    return Number.isSafeInteger(factId) && factId > 0 ? { ok: true, value: { factId } } : { ok: false, why: "Choose a published fact to flag." };
+  },
+  async execute(_deps, _context, input) {
+    try {
+      const { created } = await raiseOwnerFlag(readerFactDb(prepareProductionCivicDataWrite().connection).query, Number(input.factId));
+      return { ok: true, outcome: "DONE", subject: String(input.factId),
+        says: created ? "Flagged. It is in your flags below." : "That fact is already flagged, or is no longer published.", openedWork: [], readBackAt: "/admin?view=queue", undo: null };
+    } catch {
+      return { ok: false, refusal: "DOWNSTREAM_REFUSED", says: "The flag could not be saved. Try again." };
     }
   },
 };

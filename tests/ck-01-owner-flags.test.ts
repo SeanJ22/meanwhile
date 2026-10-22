@@ -129,3 +129,24 @@ test("Sean finds a published fact by name, flags it himself, and Remove takes it
  assert.deepEqual((await searchPublishedFacts(db.query,"jordan reyes")).matches.map(row=>row.what),["Email"]);
  }finally{await db.pg.close();}
 });
+
+test("with NETLIFY_SITE_ID set and no Netlify runtime, records come back with the database's owner choices and nothing throws",async()=>{
+ const keys=["NETLIFY","NETLIFY_BLOBS_CONTEXT","NETLIFY_SITE_ID","NETLIFY_BLOBS_SITE_ID","NETLIFY_BLOBS_TOKEN","NETLIFY_API_TOKEN","WTP_READER_EDGE_DIR"] as const;
+ const prior=Object.fromEntries(keys.map(key=>[key,process.env[key]]));
+ const db=await factDb();
+ try{
+ for(const key of keys)delete process.env[key];
+ const other={...record,id:"office-2"};
+ await flagReaderRecord(db.query,fact,{reason:"The source's office phone differs."});
+ const [flag]=await readOwnerFlags(db.query);
+ await resolveOwnerFlag(db,{id:Number(flag.id),choice:"TYPED_VALUE",values:{"office.phone":"555-987-6543"}},NOW);
+ process.env.NETLIFY_SITE_ID="runner-site-without-credentials";
+ const rows=await readerRecordsWithOwnerChoices(db.query,"member-offices",[record,other]);
+ assert.equal(rows.length,2);
+ assert.equal(rows[0].office.phone,"555-987-6543","the database's typed value is applied");
+ assert.equal(rows[1].office.phone,record.office.phone);
+ }finally{
+  for(const key of keys){if(prior[key]===undefined)delete process.env[key];else process.env[key]=prior[key];}
+  await db.pg.close();
+ }
+});

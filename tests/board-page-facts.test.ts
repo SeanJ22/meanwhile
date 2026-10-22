@@ -73,3 +73,39 @@ test("a long page about taking part with no rule sentence in it goes to the plai
   assert.deepEqual(ruled.filter(finding => finding.field === "publicComment.page"), []);
   assert.deepEqual(ruled.filter(finding => finding.field === "PAR-02").map(finding => finding.value), ["Residents may address the Council during public comment at each regular meeting."]);
 });
+
+test("a name written with its title is the name, with the title as the seat; honorifics, suffixes and nicknames stay", async () => {
+  const { splitPersonTitle } = await import("../lib/hunt/roster-page.ts");
+  const cases: readonly (readonly [string, string, string | null])[] = [
+    ["Priscilla Alderete - President", "Priscilla Alderete", "President"],
+    ["Mr. Mario Ramos, Sr - Board Member", "Mr. Mario Ramos, Sr", "Board Member"],
+    ["Cornelius \"CC\" Calhoun, President", "Cornelius \"CC\" Calhoun", "President"],
+    ["Robert Olivar, Jr., Member", "Robert Olivar, Jr.", "Member"],
+    ["DEANNA M. DAY, M.Ed., Vice President", "DEANNA M. DAY, M.Ed.", "Vice President"],
+    ["Dr. Ann Lee, Ph.D. - Superintendent", "Dr. Ann Lee, Ph.D.", "Superintendent"],
+    ["Jane Doe (Ward 2)", "Jane Doe", "Ward 2"],
+    ["Sam Roe, Trustee, District 3", "Sam Roe", "Trustee, District 3"],
+    ["John Smith – Vice-Chair", "John Smith", "Vice-Chair"],
+    ["Jo Park - Mayor Pro Tem", "Jo Park", "Mayor Pro Tem"],
+    ["Mr. Mario Ramos, Sr", "Mr. Mario Ramos, Sr", null],
+    ["Robert Olivar, Jr.", "Robert Olivar, Jr.", null],
+    ["Michael Mikey Flores, II", "Michael Mikey Flores, II", null],
+    ["MICHAEL GEMMA, Ed.D.", "MICHAEL GEMMA, Ed.D.", null],
+    ["Anicleto (Nick) Maldonado", "Anicleto (Nick) Maldonado", null],
+    ["Joyce Jones-Ivey", "Joyce Jones-Ivey", null],
+  ];
+  for (const [written, name, title] of cases) assert.deepEqual(splitPersonTitle(written), { name, title }, written);
+});
+
+test("rosters in every layout save the name alone and the title as the seat", () => {
+  const url = "https://www.example-isd.org/board";
+  const table = `<table><tr><th>Name</th><th>Email</th></tr>
+    <tr><td>Priscilla Alderete - President</td><td><a href="mailto:p@example.org">p@example.org</a></td></tr>
+    <tr><td>Mr. Mario Ramos, Sr - Board Member</td><td><a href="mailto:m@example.org">m@example.org</a></td></tr></table>`;
+  const blocks = `<div class="m"><p>Tom Logue, President</p><a href="mailto:t@example.org">t@example.org</a></div><div class="m"><p>Dr. Ann Lee, Ph.D. - Vice President</p><a href="mailto:a@example.org">a@example.org</a></div>`;
+  const cards = `<div class="card"><p>Jane Roe – Council President</p><p>(205) 555-0101</p></div><div class="card"><p>Sam Poe, Trustee, District 3</p><p>(205) 555-0102</p></div>`;
+  const read = (html: string) => extractRoster(url, html).members.map(member => `${member.name} = ${member.officeTitle}`).sort();
+  assert.deepEqual(read(table), ["Mr. Mario Ramos, Sr = Board Member", "Priscilla Alderete = President"]);
+  assert.deepEqual(read(blocks), ["Dr. Ann Lee, Ph.D. = Vice President", "Tom Logue = President"]);
+  assert.deepEqual(read(cards), ["Jane Roe = Council President", "Sam Poe = Trustee, District 3"]);
+});

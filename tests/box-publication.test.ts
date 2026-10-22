@@ -169,7 +169,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
 
   const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 }, labels: { pulled: 0, moved: 0, cut: 0 },
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 }, labels: { pulled: 0, moved: 0, cut: 0, renamed: 0 },
     publishedByRoute: { "office contacts": 1, rosters: 3, bodies: 1 },
     waitingByClass: { rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
   assert.deepEqual(report.byPlace[TCCC], { published: 4, refused: 0, waiting: 1 });
@@ -614,7 +614,7 @@ test("a label, a notice or a bare link the Box published comes down; a real sche
   await put(PRICHARD, "member:ocd-person/annie", "Annie Williams", "Annie Williams\nDistrict 1", { name: "Annie Williams" });
   const fetch: ProbeFetch = async () => { throw new Error("nothing to read"); };
   const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
-  assert.deepEqual(report.labels, { pulled: 5, moved: 1, cut: 1 }, JSON.stringify(report));
+  assert.deepEqual(report.labels, { pulled: 5, moved: 1, cut: 1, renamed: 0 }, JSON.stringify(report));
   const state = async (entity: string) => (await facts.query("SELECT field, status, held_reason FROM fact WHERE entity_id = $1 ORDER BY field", [entity])).map(row => `${row.field}=${row.status}${row.held_reason ? `:${row.held_reason}` : ""}`);
   assert.deepEqual(await state(BREWTON), ["agenda_url=pulled:BARE_LINK", "meeting_cadence=live"]);
   assert.deepEqual(await facts.query("SELECT value_text FROM fact WHERE entity_id = $1 AND field = 'meeting_cadence'", [BREWTON]), [{ value_text: "each 2nd and 4th Monday of each month at 6:00 p.m." }], "a paragraph is cut to the schedule it states");
@@ -751,4 +751,54 @@ test("a governing board by any common name is the government's council: its fact
     assert.deepEqual(bodies, [{ id: `${government}${board}` }], `${name}: one board, the government's own`);
     assert.equal((await facts.query("SELECT 1 FROM fact WHERE entity_id = $1 AND field = 'office_phone' AND status = 'live'", [`${government}${board}`])).length, 1, `${name}: its phone is on it`);
   }
+});
+
+test("a member's name is just the name: the title written after it is the seat, and honorifics and suffixes stay, in any kind of government", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  const cases = [
+    { subject: "government:US-AL:nces:0101800#board", body: "al:school:huntsville-city-school-district#board", page: "https://www.hsv.k12.al.gov/board", name: "Huntsville City School District, AL",
+      written: ["Priscilla Alderete - President", "Mr. Mario Ramos, Sr - Board Member"], names: ["Priscilla Alderete", "Mr. Mario Ramos, Sr"], offices: ["President", "Board Member"] },
+    { subject: "al:city:city-of-brewton#governing", body: "al:city:city-of-brewton#governing", page: "https://www.cityofbrewton.org/council", name: "City of Brewton, AL",
+      written: ["Jane Roe – Council President", "Cornelius \"CC\" Calhoun, Councilmember"], names: ["Jane Roe", "Cornelius \"CC\" Calhoun"], offices: ["Council President", "Councilmember"] },
+    { subject: "al:county:county-of-autauga#governing", body: "al:county:county-of-autauga#governing", page: "https://www.autaugaal.gov/commission", name: "Autauga County, AL",
+      written: ["Rusty Jacksland, Jr., Commissioner District 1", "Dr. Ann Lee, Ph.D. (Commissioner, District 2)"], names: ["Rusty Jacksland, Jr.", "Dr. Ann Lee, Ph.D."], offices: ["Commissioner District 1", "Commissioner, District 2"] },
+  ];
+  let index = 0;
+  for (const one of cases) {
+    const page = await hold(one.page, `<html><body><h1>${one.name}</h1><ul>${one.written.map(line => `<li>${line}</li>`).join("")}</ul></body></html>`, "2026-09-01T15:00:00.000Z");
+    for (const line of one.written) await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: `at-${index}`, missionPart: null, finding: { subjectId: one.subject, field: "OFF-04",
+      value: line, exactQuote: line, sourceUrl: one.page, artifactIds: [page], subjectHint: null, index: index++ } }, NOW);
+  }
+  const fetch: ProbeFetch = async () => { throw new Error("every page is held inside its clock"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 });
+  for (const one of cases) {
+    const live = await facts.query("SELECT value->>'name' AS name, value->>'office' AS office FROM fact WHERE entity_id = $1 AND field LIKE 'member:%' AND status = 'live' ORDER BY id", [one.body]);
+    const seats = (rows: readonly Record<string, unknown>[]) => rows.map(row => `${row.name} = ${row.office}`).sort();
+    assert.deepEqual(seats(live), one.names.map((name, at) => `${name} = ${one.offices[at]}`).sort(), `${one.body}: ${JSON.stringify(report)}`);
+    const people = await facts.query("SELECT e.name FROM entity e JOIN fact f ON f.field = 'member:' || e.id WHERE f.entity_id = $1 AND f.status = 'live' ORDER BY f.id", [one.body]);
+    assert.deepEqual(people.map(row => row.name).sort(), [...one.names].sort(), "the person is named by the name alone");
+  }
+});
+
+test("a member already live with a title inside the name is renamed to the name, and the title becomes the seat, once", async () => {
+  const { facts, repos, vault } = await setup();
+  await ensureFactEntities(facts, ROOT, ["az"]);
+  const BOARD = "ocd-division/country:us/state:az/school_district:picacho_elementary_district#board";
+  await ensureEntity(facts.query, { id: BOARD, kind: "body", name: "Board", state: "AZ", parentId: null });
+  const PERSON = "ocd-person/cc5b7aaf-f54c-49a0-957c-8f566872bbca";
+  await ensureEntity(facts.query, { id: PERSON, kind: "person", name: "Priscilla Alderete - President", state: "AZ", parentId: null });
+  const [copy] = await facts.query(`INSERT INTO source_copy (url, final_url, fetched_at, sha256, blob_key) VALUES ('http://x', 'http://x', now(), $1, 'k') RETURNING id`, ["0".repeat(64)]);
+  const put = (entity: string, field: string, value: unknown, valueText: string) => facts.query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, checked_at, live_at, produced_by)
+    VALUES ($1, $2, $3::jsonb, $4, 'live', 'OFFICIAL', $5, 'Priscilla Alderete - President', now(), now(), 'box')`, [entity, field, JSON.stringify(value), valueText, copy!.id]);
+  await put(BOARD, `member:${PERSON}`, { name: "Priscilla Alderete - President", office: null }, "Priscilla Alderete - President");
+  await put(PERSON, "name", "Priscilla Alderete - President", "Priscilla Alderete - President");
+  const fetch: ProbeFetch = async () => { throw new Error("nothing to read"); };
+  const run = () => publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  assert.equal((await run()).labels.renamed, 1);
+  assert.deepEqual(await facts.query("SELECT value, value_text FROM fact WHERE entity_id = $1 AND field LIKE 'member:%' AND status = 'live'", [BOARD]), [{ value: { name: "Priscilla Alderete", office: "President" }, value_text: "Priscilla Alderete" }]);
+  assert.deepEqual(await facts.query("SELECT name FROM entity WHERE id = $1", [PERSON]), [{ name: "Priscilla Alderete" }]);
+  assert.deepEqual(await facts.query("SELECT field, value_text FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [PERSON]),
+    [{ field: "name", value_text: "Priscilla Alderete" }, { field: `office:${BOARD}`, value_text: "President" }]);
+  assert.equal((await run()).labels.renamed, 0, "a member is read once");
 });

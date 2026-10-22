@@ -10,7 +10,7 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import type { ProbeFetch } from "../doors/probe.ts";
 import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
-import { looksLikeNameCell } from "../hunt/roster-page.ts";
+import { looksLikeNameCell, splitPersonTitle } from "../hunt/roster-page.ts";
 import { isPlainSentence, OTHER_NOTICE, schedulePhrase } from "../hunt/page-rules.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
 import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, officeNamed, splitSubject } from "./entities.ts";
@@ -41,7 +41,7 @@ interface BoxPublicationReport {
   /** Box seats taken down for never showing the seat, and those flagged for naming a ward another member holds. */
   readonly seats: { readonly pulled: number; readonly flagged: number };
   /** Box facts taken down for being a label, a heading, a notice or a bare link rather than the thing itself. */
-  readonly labels: { readonly pulled: number; readonly moved: number; readonly cut: number };
+  readonly labels: { readonly pulled: number; readonly moved: number; readonly cut: number; readonly renamed: number };
 }
 
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
@@ -169,7 +169,7 @@ const SCHEDULE_WORDS = /\b(?:mon|tues|wednes|thurs|fri|satur|sun)day|\bmonthly\b
 /** What a Box fact that is a label, a heading, a notice, a bare link or a paragraph should become: come down, move to the field it belongs to, or be cut to the part that states the thing. */
 export type Remedy = { readonly pull: string } | { readonly move: "comment:detail" } | { readonly value: string } | null;
 export function remedyFor(field: string, kind: string, value: string, quote: string, name: string | null): Remedy {
-  if (field.startsWith("member:")) return name !== null && !looksLikeNameCell(name.replace(/\s+[-–—]\s+.*$/, "")) ? { pull: "NOT_A_PERSON" } : null;
+  if (field.startsWith("member:")) return name !== null && !looksLikeNameCell(name) ? { pull: "NOT_A_PERSON" } : null;
   if (field === "agenda_url") return kind === "body" && normalizeText(quote) === normalizeText(value) ? { pull: "BARE_LINK" } : null;
   if (field === "meeting_cadence") {
     const phrase = schedulePhrase(value);
@@ -182,15 +182,45 @@ export function remedyFor(field: string, kind: string, value: string, quote: str
   return null;
 }
 
+/**
+ * A member saved with the title written after the name ("Priscilla Alderete - President") is the name alone, and the
+ * title is the seat. The person's own record, their name fact and the body's member fact all take the clean name;
+ * honorifics and suffixes stay. Every live member is read once, then each new one as it arrives.
+ */
+async function retitleMembers(query: Query, purge?: ReaderCachePurger): Promise<number> {
+  const since = Number(await readPassCursor(query, "box-names") ?? 0);
+  const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
+  const rows = await query(`SELECT id, entity_id, field, value->>'name' AS name, value->>'office' AS office FROM fact
+    WHERE id > $1 AND id <= $2 AND status = 'live' AND field LIKE 'member:%' AND value->>'name' ~ '[-–—,(]'`, [since, newest]);
+  let renamed = 0;
+  for (const row of rows) {
+    const old = String(row.name), { name, title } = splitPersonTitle(old);
+    if (title === null || !name) continue;
+    const person = String(row.field).slice("member:".length);
+    await query(`UPDATE fact SET value = value || jsonb_build_object('name', $2::text, 'office', coalesce(value->>'office', $3::text)), value_text = $2 WHERE id = $1 AND status = 'live'`, [row.id, name, title]);
+    await query("UPDATE entity SET name = $2 WHERE id = $1 AND name = $3", [person, name, old]);
+    await query("UPDATE fact SET value = to_jsonb($2::text), value_text = $2 WHERE entity_id = $1 AND field = 'name' AND status = 'live' AND value_text = $3", [person, name, old]);
+    if (row.office === null) {
+      await query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, cost_usd)
+        SELECT $2, $3, to_jsonb($4::text), $4, 'live', provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, 0 FROM fact WHERE id = $1 AND quote ILIKE '%' || $4 || '%'
+        AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = $2 AND d.field = $3 AND d.status = 'live')`, [row.id, person, `office:${row.entity_id}`, title]);
+    }
+    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge);
+    renamed++;
+  }
+  await writePassCursor(query, "box-names", String(newest));
+  return renamed;
+}
+
 /** Box facts that are a label, a heading, a notice, a bare link or a paragraph get their remedy, and the walk's better reading of the same page takes their place; the pass reads only facts added since its last. */
-async function reviewBoxFacts(query: Query, purge?: ReaderCachePurger): Promise<{ readonly pulled: number; readonly moved: number; readonly cut: number }> {
+async function reviewBoxFacts(query: Query, purge?: ReaderCachePurger): Promise<{ readonly pulled: number; readonly moved: number; readonly cut: number; readonly renamed: number }> {
   const since = Number(await readPassCursor(query, "box-labels") ?? 0);
   const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
   const rows = await query(`SELECT f.id, f.entity_id, f.field, e.kind, coalesce(f.value_text, '') AS value_text, coalesce(f.quote, '') AS quote, f.value->>'name' AS name
     FROM fact f JOIN entity e ON e.id = f.entity_id
     WHERE f.id > $1 AND f.id <= $2 AND f.produced_by = 'box' AND f.status = 'live'
       AND (f.field IN ('agenda_url', 'meeting_cadence', 'comment:period', 'comment:detail') OR f.field LIKE 'member:%')`, [since, newest]);
-  const tally = { pulled: 0, moved: 0, cut: 0 };
+  const tally = { pulled: 0, moved: 0, cut: 0, renamed: await retitleMembers(query, purge) };
   for (const row of rows) {
     const remedy = remedyFor(String(row.field), String(row.kind), String(row.value_text), String(row.quote), row.name === null ? null : String(row.name));
     if (!remedy) continue;
@@ -384,15 +414,18 @@ export async function publishBoxFindings(input: {
     const forOffice: typeof ready = [];
     if (people.length) {
       const seated = (await liveMembers(facts.query, [body.id])).map(row => row.name);
-      const known = [...people.filter(e => e.slot.slot === "member_name").map(e => String(e.finding.value)), ...seated];
+      const known = [...people.filter(e => e.slot.slot === "member_name").map(e => splitPersonTitle(String(e.finding.value)).name), ...seated];
+      const titled = new Map<string, { title: string; quote: string }>();
       const members = new Map<string, RosterMember & { fields: Record<string, unknown>; fieldSources: Record<string, { quote: string; sourceUrl: string; sourceOrg: string; collectedAt: string; verifiedAt: null }> }>();
       const sourceFieldOf = new Map<Finding, { recordId: string; field: string }>();
       const quoteOf = (quote: string) => ({ quote, sourceUrl: read.capture.evidence.canonicalUrl, sourceOrg: "", collectedAt: read.capture.observedAt, verifiedAt: null });
       for (const entry of people) {
         const { finding, slot: own, holder } = entry;
-        const name = own.slot === "member_name" ? String(finding.value) : holder ?? known.find(candidate => named(finding.exactQuote, candidate));
+        // A name is just the name: the title a page writes after it ("Priscilla Alderete - President") is the seat, and honorifics and suffixes stay.
+        const written = own.slot === "member_name" ? splitPersonTitle(String(finding.value)) : null;
+        const name = written ? written.name : holder ?? known.find(candidate => named(finding.exactQuote, candidate));
         // A cell that is a menu item, a heading or a place ("Date Elected", "BID PACKAGE", "Board of Education Home") is not a person, however the page laid it out.
-        if (own.slot === "member_name" && !looksLikeNameCell(String(finding.value).replace(/\s+[-–—]\s+.*$/, ""))) { await settle(finding.row, { blank: "NOT_A_PERSON" }, own.class); continue; }
+        if (written && !looksLikeNameCell(written.name)) { await settle(finding.row, { blank: "NOT_A_PERSON" }, own.class); continue; }
         if (!name) {
           if (own.class === "contacts" && (own.slot === "phone" || own.slot === "email")) {
             const field = own.slot === "phone" ? "office_phone" : "office_email", elsewhere = otherOffice(finding.field, String(finding.value), finding.exactQuote, finding.sourceUrl);
@@ -402,13 +435,20 @@ export async function publishBoxFindings(input: {
           continue;
         }
         const recordId = `box:${nameKey(name)}`;
+        if (written?.title && named(finding.exactQuote, written.title)) titled.set(recordId, { title: written.title, quote: finding.exactQuote });
         const member = members.get(recordId) ?? { recordId, fields: {}, fieldSources: {} };
         const field = MEMBER_FIELD[own.slot as keyof typeof MEMBER_FIELD];
+        const value = written && field === "name" ? written.name : finding.value;
         if (field !== "name" && !member.fields.name) { member.fields.name = name; member.fieldSources.name = quoteOf(finding.exactQuote); }
         if (field !== "name" && member.fields[field] !== undefined && member.fields[field] !== finding.value) { await settle(finding.row, { blank: "OTHER_VALUE_ON_THE_SAME_PAGE" }, own.class); continue; }
-        member.fields[field] = finding.value; member.fieldSources[field] = quoteOf(linkQuote(String(finding.value), finding.exactQuote));
+        member.fields[field] = value; member.fieldSources[field] = quoteOf(linkQuote(String(value), finding.exactQuote));
         members.set(recordId, member);
         sourceFieldOf.set(finding, { recordId, field });
+      }
+      // The title that came with a name is the seat when no finding gave one.
+      for (const [recordId, { title, quote }] of titled) {
+        const member = members.get(recordId);
+        if (member && member.fields.office === undefined) { member.fields.office = title; member.fieldSources.office = quoteOf(quote); }
       }
       const unseated = new Set([...members.values()].filter(member => !seated.some(name => nameKey(name) === nameKey(String(member.fields.name))) &&
         !seatIn([member.fieldSources.name?.quote, member.fields.office, member.fieldSources.office?.quote].filter(Boolean).join("\n"), body.id)).map(member => member.recordId));

@@ -31,12 +31,14 @@ export async function publishOwnerChoice(family:string,record:Readonly<Record<st
   throw new Error("The reader copy changed during this answer. Try again.");
 }
 
-/** Only the states of the selected records are read; an edge request makes no database call. */
+/** Only the states of the selected records are read; an edge request makes no database call. A store that cannot be read returns null so the caller reads the database. */
 export async function readOwnerChoicesFromEdge(family:string,records:readonly {readonly id:string}[],
   store:ReaderArtifactStore|null=resolveReaderArtifactStore()):Promise<ReadonlyMap<string,ReaderOwnerChoice>|null>{
   if(!store)return null;
-  const states=[...new Set(records.map(record=>ownerChoiceState(record as Record<string,unknown>)))];
-  const snapshots=await Promise.all(states.map(state=>store.readJsonPointer<Snapshot>(keyOf(family,state))));
-  const wanted=new Set(records.map(record=>record.id));
-  return new Map(snapshots.flatMap(snapshot=>Object.entries(snapshot?.value.choices ?? {}).filter(([id])=>wanted.has(id))));
+  try{
+    const states=[...new Set(records.map(record=>ownerChoiceState(record as Record<string,unknown>)))];
+    const snapshots=await Promise.all(states.map(state=>store.readJsonPointer<Snapshot>(keyOf(family,state))));
+    const wanted=new Set(records.map(record=>record.id));
+    return new Map(snapshots.flatMap(snapshot=>Object.entries(snapshot?.value.choices ?? {}).filter(([id])=>wanted.has(id))));
+  }catch{return null;}
 }

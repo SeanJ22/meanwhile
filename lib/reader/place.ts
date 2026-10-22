@@ -415,6 +415,8 @@ export interface PlacePackage {
   readonly registrationHeld: boolean;
   readonly meetings: readonly Meeting[];
   readonly snapshot: MeetingsSnapshot;
+  /** When a held calendar was last gathered; null when this place holds none, so no reader surface shows a date. */
+  readonly snapshotHeldAt: string | null;
   /** URL ownership for unopened agendas, used only within this request's publication reading. */
   readonly agendaDocumentLinks: readonly AgendaDocumentLink[];
   readonly bodySnapshots: Readonly<Record<string, MeetingsSnapshot>>;
@@ -559,7 +561,9 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   }
   const overlaid = withSittingFacts(meetings,[...sittings.values()].flat()).sort((a,b) => Date.parse(a.startsAt)-Date.parse(b.startsAt) || a.id.localeCompare(b.id));
   const accounting = accountCarriedCollapses(snapshots,snapshots.flatMap(s => s.sources),[...exact.dropped,...merged.dropped]);
-  const snapshot: MeetingsSnapshot = { formatVersion: 1,generatedAt: snapshots.map(s => s.generatedAt).sort().at(-1) ?? new Date(0).toISOString(),
+  const snapshotHeldAt = snapshots.map(s => s.generatedAt).sort().at(-1) ?? null;
+  // The placeholder only satisfies the snapshot shape for the search; readers get `snapshotHeldAt`.
+  const snapshot: MeetingsSnapshot = { formatVersion: 1,generatedAt: snapshotHeldAt ?? new Date(0).toISOString(),
     counts: snapshotCounts(overlaid,accounting.freshCollapsed),sources: [...accounting.sources],meetings: overlaid,agendaDocuments: snapshots.flatMap(s => s.agendaDocuments).map(d => ({...d,meetingId:merged.aliases.get(d.meetingId) ?? d.meetingId})) };
   // A published calendar names its body independently of the reviewed registry.
   // Use that source only where an independently published body-name fact is absent.
@@ -580,7 +584,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   return { registry:row.registry as RegistryRuntimeReadModel | null ?? null,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
     publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])
       .map(({contractId,...attempt}) => ({...attempt,family:attemptFamilyOf(contractId)})),
-    bodies,meetings: overlaid,snapshot,bodySnapshots,
+    bodies,meetings: overlaid,snapshot,snapshotHeldAt,bodySnapshots,
     agendaDocumentLinks:agendaDocumentLinks.map(link => ({...link,meetingId:merged.aliases.get(link.meetingId) ?? link.meetingId})),
     governments:row.governments as RegistrationGovernmentListing[],
     divisions:row.divisions as Division[],registrationHeld:row.registration_held === true };

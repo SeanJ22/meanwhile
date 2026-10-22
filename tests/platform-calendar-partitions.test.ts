@@ -55,3 +55,38 @@ test("rediscovery reuses an existing calendar's pointer and output slug without 
   assert.equal(reused.config!.partitionRoute, undefined); assert.equal(reused.status, "SUSPENDED");
   assert.notEqual(reusePlatformDoor(platformWiringDoors({ ...row, config: { ...row.config, feedUrl: row.route + "&other=1" } })[0], held).doorId, held.doorId);
 });
+
+test("a census calendar for a board a hand-wired door already reads on the same agenda system is set aside, and findClient stays exact", async () => {
+  const { handWiredDoorFor, handWiredMeetingDoor, retireCensusDuplicates } = await import("../lib/doors/platform-census.ts");
+  const { LEGISTAR_CLIENTS, findClient, legistarClientsFromWiring } = await import("../lib/sources/legistar/client-registry.ts");
+  const legistar: DerivedWiringRow = { ...row, kind: "LEGISTAR", route: "https://webapi.legistar.com/v1/fixture/events",
+    config: { slug: "fixture", eventBodyId: "138", bodyName: "Board of Supervisors", sourceRoutes: "legistar" }, bodyName: "Board of Supervisors" };
+  const repos = createMemoryRepositories();
+  const opened = platformWiringDoors(legistar)[0];
+  const census = { ...opened, config: { ...opened.config, crosswalkRowId: "fixture|LEGISTAR|1" } };
+  const handConfig: Record<string, DoorConfigValue> = { ...census.config, insiteBodyName: "Board of Supervisors" };
+  delete handConfig.partitionRoute; delete handConfig.crosswalkRowId; delete handConfig.bodyName;
+  await upsertDerivedDoor(repos.doors, { ...census, doorId: legacyPlatformDoorId(census), config: handConfig }, row.verifiedAt, row.verifiedAt);
+  await upsertDerivedDoor(repos.doors, census, row.verifiedAt, row.verifiedAt);
+  const insite = { ...census, kind: "legistar-insite", bodyIds: ["government:US-ID:cog:other#board"], doorId: "meetings:legistar-insite:other:route:0000000000000000",
+    hosts: ["fixture.legistar.com"], config: { ...census.config, insiteHost: "fixture.legistar.com", slug: "derived-other" } };
+  const otherBoard = { ...census, doorId: `${census.doorId}x`, bodyIds: ["government:US-ID:cog:fixture#planning"], config: { ...census.config, bodyName: "Planning Commission" } };
+  const handWired = (await repos.doors.list()).map(record => record.value).filter(handWiredMeetingDoor);
+  assert.equal(handWired.length, 1);
+  assert.equal(handWiredDoorFor(census, handWired)?.doorId, legacyPlatformDoorId(census), "same body, same system");
+  assert.equal(handWiredDoorFor({ ...census, bodyIds: ["government:US-ID:cog:renamed#governing"] }, handWired)?.doorId, legacyPlatformDoorId(census), "same tenant and board name");
+  assert.equal(handWiredDoorFor({ ...insite, config: { ...insite.config, insiteHost: "elsewhere.legistar.com" } }, handWired), null, "another tenant's board");
+  assert.equal(handWiredDoorFor(otherBoard, handWired), null, "another board on the same tenant");
+  assert.equal(handWiredDoorFor({ ...census, kind: "ical" }, handWired), null, "another agenda system");
+
+  const { wiringRowsFromDoors } = await import("../lib/doors/rows.ts");
+  const clients = legistarClientsFromWiring(wiringRowsFromDoors((await repos.doors.list()).map(record => record.value)));
+  assert.equal(clients.length, 2);
+  LEGISTAR_CLIENTS.splice(0, LEGISTAR_CLIENTS.length, ...clients);
+  assert.equal(findClient("fixture", row.bodyId)?.censusRoute, undefined, "the hand-wired client answers while its census copy is still held");
+
+  assert.deepEqual(await retireCensusDuplicates(repos.doors, "2026-10-22T00:00:00Z"), [census.doorId]);
+  const retired = (await repos.doors.mustRead(census.doorId)).value;
+  assert.equal(retired.status, "SUSPENDED"); assert.match(retired.notes, /read through/);
+  assert.deepEqual(await retireCensusDuplicates(repos.doors, "2026-10-22T00:00:00Z"), [], "already set aside");
+});

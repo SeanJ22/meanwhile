@@ -1239,6 +1239,7 @@ export default readerRoute("/ballot", async function BallotPage({
                     className="mt-2.5 rounded-md bg-[var(--surface,rgba(255,255,255,0.04))] p-3"
                     data-measure-summary="PRESENT"
                   >
+                    <CardSourcesContribution id={`measure-summary:${contest.id}`} sources={[{ what: "Plain-language summary", provenance: { sourceUrl: summary.summarizesUrl, sourceOrg: new URL(summary.summarizesUrl).hostname.replace(/^www\./, ""), collectedAt: summary.writtenAt, verifiedAt: null } }]} />
                     <p className="t-eyebrow text-muted">
                       Plain-language summary — read the official text below
                     </p>

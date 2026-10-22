@@ -1,0 +1,53 @@
+Check	Direct database response bytes	Basis
+copy-app-bytes-122102.json	297958594	Recorded direct Neon response bytes; production or isolated production-copy check
+copy-app-bytes-130635.json	0	Recorded direct Neon response bytes; production or isolated production-copy check
+copy-app-bytes-130880.json	293613863	Recorded direct Neon response bytes; production or isolated production-copy check
+copy-app-dev-bytes.json	0	Recorded direct Neon response bytes; production or isolated production-copy check
+copy-operation.json	59606535	Recorded direct Neon response bytes; production or isolated production-copy check
+preview-current.json	2670970	Recorded direct Neon response bytes; production or isolated production-copy check
+preview-expanded.json	5999796	Recorded direct Neon response bytes; production or isolated production-copy check
+preview-final-inputs.json	5655893	Recorded direct Neon response bytes; production or isolated production-copy check
+preview-pages.json	2905452	Recorded direct Neon response bytes; production or isolated production-copy check
+preview-record-inputs.json	7371970	Recorded direct Neon response bytes; production or isolated production-copy check
+preview-resolved-records.json	8385400	Recorded direct Neon response bytes; production or isolated production-copy check
+production-final.json	35392510	Recorded direct Neon response bytes; production or isolated production-copy check
+production-latest.json	19211081	Recorded direct Neon response bytes; production or isolated production-copy check
+production-preview.json	955406	Recorded direct Neon response bytes; production or isolated production-copy check
+production-proven.json	24162144	Recorded direct Neon response bytes; production or isolated production-copy check
+production-reader-final.json	10917649	Recorded direct Neon response bytes; production or isolated production-copy check
+production-ready-earlier.json	22268609	Recorded direct Neon response bytes; production or isolated production-copy check
+production-ready.json	2381961	Recorded direct Neon response bytes; production or isolated production-copy check
+production-river-browser.json	27545	Recorded direct Neon response bytes; production or isolated production-copy check
+production-river.json	18126625	Recorded direct Neon response bytes; production or isolated production-copy check
+production-shipping.json	2381961	Recorded direct Neon response bytes; production or isolated production-copy check
+production-today.json	161899	Recorded direct Neon response bytes; production or isolated production-copy check
+production-verified.json	10750047	Recorded direct Neon response bytes; production or isolated production-copy check
+approved-counts.json	753	Recorded direct Neon response bytes; production or isolated production-copy check
+connections.json	7403	Recorded direct Neon response bytes; production or isolated production-copy check
+country-all.json	33322064	Recorded direct Neon response bytes; production or isolated production-copy check
+country-all-memo-seed.json	33316655	Recorded direct Neon response bytes; production or isolated production-copy check
+country-replay.json	6139	Recorded direct Neon response bytes; production or isolated production-copy check
+country-replay-before-river.json	39139	Recorded direct Neon response bytes; production or isolated production-copy check
+country.json	711	Recorded direct Neon response bytes; production or isolated production-copy check
+destinations.json	7506662	Recorded direct Neon response bytes; production or isolated production-copy check
+generic-shape.json	2997	Recorded direct Neon response bytes; production or isolated production-copy check
+held-state.json	7831670	Recorded direct Neon response bytes; production or isolated production-copy check
+indices.json	2933	Recorded direct Neon response bytes; production or isolated production-copy check
+inspect.json	18908	Recorded direct Neon response bytes; production or isolated production-copy check
+inspect2.json	5059	Recorded direct Neon response bytes; production or isolated production-copy check
+inspect3.json	3847	Recorded direct Neon response bytes; production or isolated production-copy check
+posting-current.json	366741	Recorded direct Neon response bytes; production or isolated production-copy check
+results-check.json	3612	Recorded direct Neon response bytes; production or isolated production-copy check
+transfer-baseline.json	10381	Recorded direct Neon response bytes; production or isolated production-copy check
+copy-metadata.json	1432	Recorded direct Neon response bytes; production or isolated production-copy check
+record-query-plan.json	23494	Recorded direct Neon response bytes; production or isolated production-copy check
+handoff-assembly-bytes.json	1230	Recorded direct Neon response bytes; production or isolated production-copy check
+Failed River-era initialization, retained responses	13792257	Earlier recorded measurement; later output file superseded
+Earlier copy development-server received bytes, retained log	11698185	Earlier recorded measurement; later output file superseded
+Earlier configuration-growth preview SELECT	1230	Earlier recorded measurement; later output file superseded
+Earlier Results projection before final refresh	3612	Earlier recorded measurement; later output file superseded
+Earlier country initialization	33302830	Earlier recorded measurement; later output file superseded
+Earlier connection metadata check	2827	Earlier recorded measurement; later output file superseded
+Earlier Results reader check	3150	Earlier recorded measurement; later output file superseded
+Second Results reader check	3500	Earlier recorded measurement; later output file superseded
+Configuration growth SELECT review	188273	Earlier recorded measurement; later output file superseded

@@ -22,6 +22,9 @@ import type { ScoreboardVitalHour } from "../../../app/(admin)/_mw/admin-v6/mode
 import type { V6HistoryReceipt } from "./admin-v6-history.ts";
 import type { PipelineRead } from "./v6-results-read.ts";
 import type { AuditAccuracyReading } from "./v6-audit-read.ts";
+import { keeperRows } from "../line-keeper/admin.ts";
+import { keeperStatus } from "../line-keeper/model.ts";
+import type { LineState } from "../line-keeper/model.ts";
 import { formatEastern } from "../eastern-time.ts";
 import type { SpeedPass } from "../../health/worst-case-speed.ts";
 import { deadLinkSurfaces, DEAD_LINKS_SURFACE_DEFAULT, slowSurfaces, surfaceName, surfaceSpeeds, type DeadLinkReading } from "../../health/surface-speed.ts";
@@ -181,6 +184,7 @@ export interface PublicationCounts {
   readonly unread: number;
   readonly contractsReadBack: number | null;
   readonly contracts: number | null;
+  readonly unknownPublications?:number;
 }
 
 export interface ScoreboardPlace {
@@ -195,6 +199,8 @@ export interface ScoreboardPlace {
 }
 
 export interface ScoreboardReadings {
+  readonly lineKeeper?: LineState | null;
+  readonly observedAt?: string;
   /** The sent places the Scorecard measured; an empty list is "no place has been sent", null is "could not be read". */
   readonly places: readonly ScoreboardPlace[] | null;
   readonly placesUnread: number;
@@ -228,7 +234,8 @@ export function publicationCountsOf(read: PipelineRead, contracts: { readonly re
     else if (a.witness === "NOT_OBSERVED") t.notFound += a.n;
     else t.unread += a.n;
   }
-  return { ...t, contractsReadBack: contracts?.readBack ?? null, contracts: contracts?.total ?? null };
+  const unknownPublications=read.approved.reduce((n,a)=>n+(a.unknownPublications??0),0);
+  return { ...t,...(unknownPublications?{unknownPublications}:{}), contractsReadBack: contracts?.readBack ?? null, contracts: contracts?.total ?? null };
 }
 
 const n = (k: number): string => k.toLocaleString("en-US");
@@ -359,7 +366,7 @@ function coreRow(r: ScoreboardReadings): ScoreboardRow {
   });
 }
 
-const pipelineDelivery = (p: PublicationCounts): string => `${n(p.seen)} of ${n(p.seen + p.stale + p.notFound + p.unread)} accepted records seen on the public page${p.notFound > 0 ? ` · ${n(p.notFound)} not found there` : ""}${p.unread > 0 ? ` · ${n(p.unread)} not checked` : ""}`;
+const pipelineDelivery = (p: PublicationCounts): string => `${n(p.seen)} of ${n(p.seen + p.stale + p.notFound + p.unread)} ${p.unknownPublications?'known ':''}accepted records seen on the public page${p.notFound > 0 ? ` · ${n(p.notFound)} not found there` : ""}${p.unread > 0 ? ` · ${n(p.unread)} not checked` : ""}${p.unknownPublications?` · ${n(p.unknownPublications)} published jobs have no accepted record count`:''}`;
 
 function deliveryRow(p: PublicationCounts | null, places: readonly ScoreboardPlace[]): ScoreboardRow {
   const id = "Public delivery", name = "Public delivery";
@@ -548,9 +555,6 @@ export function lookRow(l: LookReading | null | undefined): ScoreboardRow {
   };
 }
 
-const GATE_ROWS: readonly { id: string; name: string; why: string }[] = [
-];
-
 export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
   const byId = new Map<string, ScoreboardRow>([
     ["Orders", ordersRow(r.orders)],
@@ -572,8 +576,17 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     ...factStoreRows(r.factStore ?? null),
     ["Proven fixes", provenFixesRow(r.provenFixes)],
     ["Report accuracy", reportAccuracyRow(r.reportAccuracy)],
-    ...GATE_ROWS.map((g): [string, ScoreboardRow] => [g.id, unmeasured(g.id, g.name, g.why)]),
   ]);
+  for (const [id, measurement] of keeperRows(r.lineKeeper ?? null,r.observedAt ?? new Date().toISOString())) {
+    const existing=byId.get(id);
+    if ((id === "Public delivery" || id === "Freshness") && existing?.value != null) {
+      byId.set(id,{...existing,items:[...existing.items??[],...(measurement.counts?[`Hourly observation: ${measurement.counts}`]:[])],
+        technical:[...existing.technical??[],...measurement.items??[],...measurement.technical??[]]});
+      continue;
+    }
+    byId.set(id,measurement);
+  }
+  if (!byId.has("Facts live per hour (fact store)")) byId.set("Facts live per hour (fact store)",unmeasured("Facts live per hour (fact store)","Facts live per hour (fact store)","The line keeper has not reported yet."));
   const ORDER = ["Orders", "Mission progress", "Checklist completeness", "Coverage", "Public delivery", "People coverage", "Facts live per hour", "Facts live per hour (fact store)", "Stuck facts by reason", "Cost per fact", "Audit accuracy",
     "Freshness", "Shut doors", "Posted to live", "Overdue doors", "Time to core information live", "Look and feel", "Site speed and reliability", "Return visits", "Time to repair", "Repairs without code", "Proven fixes", "Report accuracy", "Head-start hit rate", "Second-time coverage"];
   const rows = ORDER.map((id) => byId.get(id)!);
@@ -594,6 +607,7 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
     byPlace, byFamily, missions,
     flow: flowStages(r.flow),
     vital: r.vital ?? null,
+    lineKeeper: keeperStatus(r.lineKeeper ?? null,r.observedAt ?? new Date().toISOString()),
     gates: gateRows === null || gateSummary === null ? null : { rows: gateRows, pass: gateSummary.pass, attention: gateSummary.attention, notMeasured: gateSummary.notMeasured },
     readiness,
     learning: r.learning,

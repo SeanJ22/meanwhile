@@ -276,31 +276,6 @@ const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   }
 })() : null;
 
-const readCacheHost = ROUTINE_DATA_PROCESS_LEASE ? await startCivicReadCacheHost() : { close: async () => {} };
-if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
-  try {
-    const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
-    if (!PUBLISH_NOW) {
-      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors))}`);
-      const [published] = await runBoundedChildPass([{
-        id: MEETING_DOORS_CONTRACT_ID,
-        failureDomain: "derived:meeting-doors",
-        executable: process.execPath,
-        args: ["--experimental-strip-types", "scripts/publish-meeting-doors.mts", "--promote"],
-        env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_CONTRACT", contract: MEETING_DOORS_CONTRACT_ID, parentPid: process.pid }),
-      }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
-      console.log(`RCD_TASK routine-civic-data-runner: meeting doors ${published?.status === 0 ? "published" : `not published (${safeFailure(published?.errorMessage ?? published?.stderr.trim().split("\n").at(-1) ?? "no answer")}); children read the last good doors`}`);
-    }
-    await refreshDoorsForPass(doorRepos.doors);
-  } catch (error) {
-    console.warn(`RCD_TASK routine-civic-data-runner: door refresh unavailable — ${safeFailure(sanitizedErrorDiagnostic(error))}; existing source work continues`);
-  }
-}
-
-const sharedBrowser = sharedScoutBrowser();
-const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
-  ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
-    RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
 const routineMemorySlots = routineProcessSlots();
 const childMemoryReleases = new Map<string, () => void>();
 const startedSourceChildren = new Set<string>();
@@ -322,6 +297,32 @@ function releaseChildMemory(id: string): void {
   startedSourceChildren.delete(id);
 }
 
+const readCacheHost = ROUTINE_DATA_PROCESS_LEASE ? await startCivicReadCacheHost() : { close: async () => {} };
+if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
+  try {
+    const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
+    if (!PUBLISH_NOW) {
+      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors))}`);
+      const [published] = await runBoundedChildPass([{
+        id: MEETING_DOORS_CONTRACT_ID,
+        failureDomain: "derived:meeting-doors",
+        executable: process.execPath,
+        args: ["--experimental-strip-types", "scripts/publish-meeting-doors.mts", "--promote"],
+        env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_CONTRACT", contract: MEETING_DOORS_CONTRACT_ID, parentPid: process.pid }),
+      }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
+        onStarting: command => acquireChildMemory(command), onSettled: run => releaseChildMemory(run.id) });
+      console.log(`RCD_TASK routine-civic-data-runner: meeting doors ${published?.status === 0 ? "published" : `not published (${safeFailure(published?.errorMessage ?? published?.stderr.trim().split("\n").at(-1) ?? "no answer")}); children read the last good doors`}`);
+    }
+    await refreshDoorsForPass(doorRepos.doors);
+  } catch (error) {
+    console.warn(`RCD_TASK routine-civic-data-runner: door refresh unavailable — ${safeFailure(sanitizedErrorDiagnostic(error))}; existing source work continues`);
+  }
+}
+
+const sharedBrowser = sharedScoutBrowser();
+const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
+  ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
+    RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
 async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) return new Map();
@@ -702,7 +703,8 @@ if (!PUBLISH_NOW) {
         const [run] = await runBoundedChildPass([{ id: FEDERAL_PEOPLE_SPLIT_LOG_KEY, failureDomain: "derived:federal-people-split",
           executable: process.execPath, args: ["--experimental-strip-types", "scripts/split-federal-people.mts"],
           env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "FEDERAL_PEOPLE_SPLIT", parentPid: process.pid }),
-        }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
+        }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
+          onStarting: command => acquireChildMemory(command), onSettled: run => releaseChildMemory(run.id) });
         const at = new Date().toISOString(), record = run ? federalPeopleSplitRecord(run, at, RUNNING_CODE_SHA) : null;
         if (record) {
           await splitRepos.ownerDigests.append(FEDERAL_PEOPLE_SPLIT_LOG_KEY, record.digestId, record, at);

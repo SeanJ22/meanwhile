@@ -47,6 +47,24 @@ export const CALENDAR_READ_PEAK_MIB = WORKER_ENTRY_PEAK_MIB.national!;
 export const CALENDAR_READ_JOB = "calendar-read";
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
+/** Only clean inactive disk pages are available without freeing a job's memory. */
+function reclaimableInactiveFileBytes(source: string, version: 1 | 2, hierarchical: boolean): number {
+  const values = new Map<string, number>();
+  for (const line of source.trim().split("\n")) {
+    const match = /^(\S+)\s+(\d+)$/.exec(line);
+    if (!match || values.has(match[1]!)) return 0;
+    values.set(match[1]!, Number(match[2]));
+  }
+  const prefix = hierarchical ? "total_" : "";
+  const fields = [version === 2 ? "file" : "cache", "shmem", "inactive_file",
+    version === 2 ? "file_dirty" : "dirty", version === 2 ? "file_writeback" : "writeback", "unevictable"];
+  const bytes = fields.map(field => values.get(prefix + field));
+  if (bytes.some(value => value === undefined || !Number.isSafeInteger(value) || value < 0)) return 0;
+  const [file, shmem, inactive, dirty, writeback, unevictable] = bytes as number[];
+  // Dirty, writeback and unevictable pages may overlap other file counters; subtracting them whole is conservative.
+  return Math.max(0, Math.min(inactive!, Math.max(0, file! - shmem!)) - dirty! - writeback! - unevictable!);
+}
+
 export function availableWorkerMemoryBytes(): number {
   let available = freemem();
   if (platform() === "linux") {
@@ -54,6 +72,26 @@ export function availableWorkerMemoryBytes(): number {
       const match = /^MemAvailable:\s+(\d+)\s+kB$/m.exec(readFileSync("/proc/meminfo", "utf8"));
       if (match) available = Number(match[1]) * 1024;
     } catch { /* os.freemem remains conservative. */ }
+    // MemAvailable describes the machine, which may be larger than this runner's cgroup.
+    for (const [version, directory, limitName, usedName] of [
+      [2, "/sys/fs/cgroup", "memory.max", "memory.current"],
+      [1, "/sys/fs/cgroup/memory", "memory.limit_in_bytes", "memory.usage_in_bytes"],
+    ] as const) {
+      try {
+        const limit = Number(readFileSync(join(directory, limitName), "utf8").trim());
+        const used = Number(readFileSync(join(directory, usedName), "utf8").trim());
+        if (Number.isFinite(limit) && limit > 0 && Number.isFinite(used) && used >= 0) {
+          let reclaimable = 0;
+          try {
+            // v1 usage follows use_hierarchy; never mix local and descendant counters.
+            const hierarchy = version === 1 ? readFileSync(join(directory, "memory.use_hierarchy"), "utf8").trim() : "0";
+            if (hierarchy === "0" || hierarchy === "1") reclaimable = reclaimableInactiveFileBytes(
+              readFileSync(join(directory, "memory.stat"), "utf8"), version, hierarchy === "1");
+          } catch { /* Missing cache evidence keeps the complete usage charged. */ }
+          available = Math.min(available, Math.max(0, limit - used + Math.min(used, reclaimable)));
+        }
+      } catch { /* This cgroup interface is not mounted, or has no limit ("max"). */ }
+    }
   }
   const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
   return Number.isFinite(hostMiB) && hostMiB > 0
@@ -101,6 +139,12 @@ function descendants(root: number, rows: readonly WorkerProcessMemory[]): Set<nu
   return ids;
 }
 function alive(pid: number): boolean {
+  if (platform() === "linux") try {
+    const stat = readFileSync(`/proc/${pid}/stat`, "utf8");
+    // A zombie still answers kill(pid,0), but has no process memory left to reserve.
+    const state = stat.slice(stat.lastIndexOf(")") + 2, stat.lastIndexOf(")") + 3);
+    if (state === "Z" || state === "X") return false;
+  } catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return false; }
   try { process.kill(pid, 0); return true; }
   catch (error) { return (error as NodeJS.ErrnoException).code !== "ESRCH"; }
 }

@@ -96,3 +96,9 @@ test("a state's calendar program is reserved from measured calendar reads, not t
   host.transact(state => assert.equal(state.reservations[0].peak, 420 * mib, "the measured calendar read, 5% over"), false);
   release();
 });
+
+test("the runner admits its door-publication and federal-split children through host memory like every source child", () => {
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.ok(runner.indexOf("const routineMemorySlots = routineProcessSlots();") < runner.indexOf('"scripts/publish-meeting-doors.mts"'));
+  assert.equal((runner.match(/onStarting: command => acquireChildMemory\(command\), onSettled: run => releaseChildMemory\(run\.id\)/g) ?? []).length, 2);
+});

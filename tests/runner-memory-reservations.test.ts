@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { memoryReading, RESEARCH_PARENT_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, routineProcessSlots,
-  WORKER_ENTRY_PEAK_MIB, workerMemoryHost, workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { CALENDAR_READ_PEAK_MIB, memoryReading, RESEARCH_PARENT_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, routineProcessSlots,
+  WORKER_ENTRY_PEAK_MIB, workerJobType, workerMemoryHost, workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 
 const mib = 1024 ** 2;
 
@@ -70,4 +70,29 @@ test("small-state observations cannot lower complete native vote or ACS reservat
     host.transact(state => assert.equal(state.reservations[0].peak, expected * mib), false);
     release();
   }
+});
+
+test("measured memory is filed by job: every calendar read is one job, a statewide job is its family, never the script it runs", () => {
+  assert.equal(workerJobType("meetings-state:CA/ingest.ts"), "calendar-read");
+  assert.equal(workerJobType("meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing/ingest.ts"), "calendar-read");
+  assert.equal(workerJobType("meetings:derived:US-TX/ingest.ts"), "calendar-read");
+  assert.equal(workerJobType("openstates-votes-ca/openstates-votes-refresh.mts"), workerJobType("openstates-votes-wy/openstates-votes-refresh.mts"));
+  assert.equal(workerJobType("openstates-votes-ca/openstates-votes-refresh.mts"), "openstates-votes-*/openstates-votes-refresh.mts");
+  assert.equal(workerJobType("az-state-legislators/state-legislators.mts"), "*-state-legislators/state-legislators.mts");
+  assert.equal(workerJobType("registry-runtime:AZ/promote-registry-runtime.mts"), "registry-runtime:*/promote-registry-runtime.mts");
+  assert.equal(workerJobType("fec-funding/fetch-fec.mts"), "fec-funding/fetch-fec.mts");
+  assert.equal(workerJobType("lease-worker.ts"), "lease-worker.ts");
+  assert.equal(workerJobType("national-place:ocd-division/country:us"), null);
+});
+
+test("a state's calendar program is reserved from measured calendar reads, not the statewide bound once measured", async () => {
+  const host = workerMemoryHost({ processes: () => [] });
+  const slots = routineProcessSlots({ host, availableBytes: () => 10000 * mib });
+  let release = await slots.acquire("meetings-state:CA/ingest.ts");
+  host.transact(state => assert.equal(state.reservations[0].peak, CALENDAR_READ_PEAK_MIB * mib), false);
+  release();
+  host.transact(state => { state.peaks = { "calendar-read": [400 * mib], "ingest.ts": [3000 * mib] }; }, false);
+  release = await slots.acquire("meetings-state:WY/ingest.ts");
+  host.transact(state => assert.equal(state.reservations[0].peak, 420 * mib, "the measured calendar read, 5% over"), false);
+  release();
 });

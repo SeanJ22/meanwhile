@@ -23,7 +23,6 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
-  "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
   // RH-01 measured complete native ACS peak: 3,922,288,640 bytes.
@@ -39,6 +38,13 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "promote-registry-runtime.mts": STATE_PUBLICATION_PEAK_MIB,
   "retire-state-authorities.mts": STATE_PUBLICATION_PEAK_MIB,
 };
+/**
+ * One state's calendar program before its own runs are measured on this host: the retained data-worker bound. Every
+ * finished program records its measured peak under the calendar-read job, and the largest of its last five runs
+ * (5% over) replaces this number, so a single board read and a state's whole list are reserved the same way.
+ */
+export const CALENDAR_READ_PEAK_MIB = WORKER_ENTRY_PEAK_MIB.national!;
+export const CALENDAR_READ_JOB = "calendar-read";
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
 export function availableWorkerMemoryBytes(): number {
@@ -108,13 +114,23 @@ function parentMemoryEntry(): string {
   return script === "freshness-shadow.mts" ? `${script}:${state?.slice(8).toLowerCase() ?? "round"}` : script;
 }
 
-/** How often a running reserved child's peak is read, and how many recent run peaks set its script's reservation. */
+/** How often a running reserved child's peak is read, and how many recent run peaks set its job's reservation. */
 const PEAK_SAMPLE_MS = 2000;
 const MEASURED_PEAK_RUNS = 5;
-/** The script an entry runs ("…/national-people-refresh.mts"); entries that name no script keep their table peak. */
-function measuredPeakKey(entry: string): string | null {
-  const script = entry.split(/[\\/]/).at(-1)!;
-  return /[.](?:mts|ts|mjs|js)$/.test(script) ? script : null;
+/**
+ * The job an entry ("<task id>/<script>") runs, which its measured memory is filed under: every calendar read is one
+ * job, whatever script reads it; a statewide job is its family, the task id with its two-letter state segment set
+ * aside; a job with no task id is its script. Entries that name no script keep their table peak.
+ */
+export function workerJobType(entry: string): string | null {
+  const parts = entry.split(/[\\/]/);
+  const script = parts.at(-1)!;
+  if (!/[.](?:mts|ts|mjs|js)$/.test(script)) return null;
+  const task = parts.slice(0, -1).join("/");
+  if (/^meetings(?:-state)?:/.test(task)) return CALENDAR_READ_JOB;
+  if (!task) return script;
+  const family = task.split(/([-:/])/).map(part => /^[a-z]{2}$/i.test(part) ? "*" : part).join("");
+  return `${family}/${script}`;
 }
 /** The largest recent measured peak, 5% over and rounded up to a whole MiB. */
 function measuredReservationBytes(peaks: readonly number[]): number {
@@ -216,7 +232,7 @@ export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProce
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     // Recent small-state runs cannot lower the full-state publication reservation.
     minimumPeakBytes: memory.minimumPeakBytes ?? routineMinimumPeakBytes,
-    peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
+    peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : workerJobType(entry) === CALENDAR_READ_JOB ? CALENDAR_READ_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
           ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB)) });
 }
 
@@ -292,7 +308,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         // A child past its reserved peak has shown it can reach that size again.
         for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
         const reserve = (entry: string): number => {
-          const measured = state.peaks?.[measuredPeakKey(entry) ?? ""];
+          const measured = state.peaks?.[workerJobType(entry) ?? ""];
           return Math.max(measured?.length ? measuredReservationBytes(measured) : peakFor(entry), memory.minimumPeakBytes?.(entry) ?? 0);
         };
         while (active < maximum && waiting.length) {
@@ -315,7 +331,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           let released = false;
           let measured = 0;
           let sampler: ReturnType<typeof setInterval> | undefined;
-          const key = measuredPeakKey(item!.entry);
+          const key = workerJobType(item!.entry);
           const release: WorkerMemoryRelease = Object.assign(() => {
             if (released) return;
             released = true; active--;

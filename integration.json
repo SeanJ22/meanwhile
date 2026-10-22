@@ -3820,5 +3820,18 @@
     "tested_sha": "cbe5ee1481879e9af0372bb611754e92c3c23a52",
     "gates": "pass",
     "at": "2026-10-22T18:49:59Z"
+  },
+  {
+    "lane": "ds-01",
+    "steps": [
+      "SL-02",
+      "NE-01"
+    ],
+    "ready_sha": "512e65e038b87393fbce4392e44b83eaef99bc44",
+    "merge_sha": "ee37dd61ef80d3e94546c646ec044ef4348258d2",
+    "river_sha": "dd3b0ace2af423cd261c8df8ea26e021ab7d0847",
+    "tested_sha": "dd3b0ace2af423cd261c8df8ea26e021ab7d0847",
+    "gates": "pass",
+    "at": "2026-10-22T23:51:06Z"
   }
 ]

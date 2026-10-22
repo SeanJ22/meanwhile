@@ -22,7 +22,7 @@ import { officialFilingIssue, type OfficialFiling } from "./official-filings.ts"
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import type { HeldPlaceCapture } from "./held-place-capture.ts";
 import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
-import { heldPlaceValue as value, readPlacePointerSlice } from "./held-place-slices.ts";
+import { heldPlaceValue as value, readPlacePointerSlice,type PlaceInputMemo } from "./held-place-slices.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 import type { CandidateProfilesProjection } from "./manual-projections.ts";
 import { currentExtraction, type CandidateDocument, type CandidateCorpus } from "../candidates/corpus.ts";
@@ -80,16 +80,17 @@ function placeBallot(ballot: BallotSet, divisions: ReadonlySet<string>): BallotS
   };
 }
 
-export async function readHeldPlaceFamilies(divisionIds: readonly string[], options: PromotedCivicDataReadOptions, registry?: RegistryRuntimeReadModel | null): Promise<HeldPlaceFamilies> {
+export async function readHeldPlaceFamilies(divisionIds: readonly string[], options: PromotedCivicDataReadOptions, registry?: RegistryRuntimeReadModel | null,memo?:PlaceInputMemo): Promise<HeldPlaceFamilies> {
+  const remember:PlaceInputMemo=memo??((_class,_scope,load)=>load());
   const sliced = registry !== undefined, divisions = new Set(divisionIds);
   const targets = [...new Set([...(registry?.bodyRosters.flatMap(roster => roster.members.map(member => member.id)) ?? []),
     ...(registry?.officialCandidacies.rows.flatMap(row => row.status === "RESOLVED" && row.candidacy ? [row.candidacy.candidacyId] : []) ?? [])])];
-  const read = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => sliced
+  const read = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => remember(recordClass,scope,()=>sliced
     ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], targets)
-    : readPromotedCivicData<T>(recordClass, scope, options);
+    : readPromotedCivicData<T>(recordClass, scope, options));
   const stateRead = async <T>(family: Exclude<StateAuthorityFamily, "registry-runtime" | "federal-directory">, recordClass: Parameters<typeof readPlacePointerSlice>[0], state: string) =>
-    options.store ? readPromotedCivicData<T>(recordClass, stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state), options)
-      : (await readStateAuthorityProjection<T>(family, state)).result;
+    remember(recordClass,stateBallotScope(family === 'candidate-publications' ? 'candidate-corpus' : family,state),async()=>options.store ? readPromotedCivicData<T>(recordClass, stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state), options)
+      : (await readStateAuthorityProjection<T>(family, state)).result);
   const states = new Set(statesForRegistryDivisions(divisionIds));
   const stateTargets = OFFICIAL_STATE_LEGISLATOR_TARGETS.filter(target => states.has(target.state));
   const moneyScopes = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[])
@@ -98,7 +99,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const fec = requiredRoutineContract("fec-funding");
   const [federal, legislators] = await Promise.all([
     Promise.all([...states].filter(state => (REGISTRY_STATES as readonly string[]).includes(state)).map(state => read<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state)))),
-    Promise.all(stateTargets.map(target => readOfficialStateLegislatorsProjection(target.jurisdiction, options))),
+    Promise.all(stateTargets.map(target => remember("STATE_LEGISLATOR",target.jurisdiction,()=>readOfficialStateLegislatorsProjection(target.jurisdiction, options)))),
   ]);
   const rosters = [...federal.map(read => value(read)?.roster), ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
   targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisions.has(row.ocdId)).map(row => row.officeholderId)));

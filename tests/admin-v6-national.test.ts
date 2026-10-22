@@ -69,7 +69,7 @@ test("the country lists every state with its hunts, ZIPs worked of total, score 
   assert.equal(rows.length, 56);
   const az = rows.find((r) => r.placeKey === "st:az")!;
   assert.deepEqual([az.kind, az.parentKey, az.hunts, az.zipsWorked, az.zipsTotal, az.score, az.stuck, az.checklistItems],
-    ["State", "us", 2, 1, 420, 12.3, 2, null], "a rolling-limit scope is not a hunt; the same stuck row listed twice counts once");
+    ["State", "us", 3, null, 420, 12.3, 2, null], "a selected rolling-limit scope is waiting work even before paid research starts; the same stuck row listed twice counts once");
   const nj = rows.find((r) => r.placeKey === "st:nj")!;
   assert.deepEqual([nj.hunts, nj.zipsWorked, nj.zipsTotal, nj.score, nj.stuck], [1, 0, 600, null, 1]);
   const ak = rows.find((r) => r.placeKey === "st:ak")!;

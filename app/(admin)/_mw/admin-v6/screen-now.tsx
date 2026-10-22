@@ -4,6 +4,7 @@ import { Fragment, useMemo, useState } from "react";
 
 import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
 
+import { useKeeperScoreboard } from "./use-keeper-scoreboard.ts";
 import { useV6 } from "./context.tsx";
 import { count, mst, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
 import { TILE_LAYOUT } from "./national-layout.ts";
@@ -112,12 +113,13 @@ const orDash = (n: number | null, f: (n: number) => string): string => (n === nu
 
 function IsItWorking() {
   const v = useV6();
-  const hours = v.data.scoreboard.data?.vital ?? null;
+  const board=useKeeperScoreboard();
+  const hours = board?.vital ?? null;
   const last = hours?.[0] ?? null, before = hours?.[1] ?? null;
   const rows: readonly { readonly name: string; readonly says: string; readonly of: (h: NonNullable<typeof last>) => { readonly text: string; readonly bad?: boolean } }[] = [
-    { name: "Facts live", says: "New or changed reader records that went live. Higher is better.", of: (h) => ({ text: orDash(h.factsLive, count) }) },
+    { name: "Facts live", says: "New or changed facts that reach reader views. Higher is better.", of: (h) => ({ text: orDash(h.factsLive, n=>`${count(n)}${h.factsLiveConfirmed?" confirmed":""}`) }) },
     { name: "Cost per fact", says: "Money spent divided by facts live. Lower is better.", of: (h) => ({ text: orDash(h.costPerFactUsd, (n) => (n >= 1 ? usd(n) : `$${n.toFixed(4)}`)) }) },
-    { name: "Data read from the database", says: "Target: under 0.7 GB an hour.", of: (h) => ({ text: gb(h.neonGb), bad: h.overNeonTarget === true }) },
+    { name: "Data read from the database", says: "Target: under 0.7 GB an hour.", of: (h) => ({ text: `${h.neonAtLeast&&h.neonGb!==null?"at least ":""}${gb(h.neonGb)}`, bad: h.overNeonTarget === true }) },
     { name: "Research rounds", says: "Finished, against killed by the watchdog.", of: (h) => ({ text: h.roundsFinished === null || h.roundsKilled === null ? "—" : `${count(h.roundsFinished)} finished · ${count(h.roundsKilled)} killed` }) },
     { name: "Paid jobs that ended with nothing", says: "Must be none.", of: (h) => ({ text: orDash(h.paidJobsEndedEmpty, (n) => (h.paidJobsEnded === null ? count(n) : `${count(n)} of ${count(h.paidJobsEnded)}`)), bad: (h.paidJobsEndedEmpty ?? 0) > 0 }) },
   ];
@@ -125,6 +127,7 @@ function IsItWorking() {
     <Card title="Is it working" aside={<button type="button" className={s.btnLink} onClick={() => v.go("scoreboard")}>Open the scoreboard →</button>}>
       <div className={s.stack}>
         <p className={s.small}>{last !== null ? `${mst(last.hour)}${before !== null ? ` · the hour before: ${mst(before.hour)}` : ""}` : hours === null ? "Not measured yet." : "The hour has not been recorded yet."}</p>
+        <p className={s.small}>{board?.lineKeeper ?? "The line keeper has not reported yet."}</p>
         {rows.map((r) => {
           const now = last === null ? { text: "—" } : r.of(last), earlier = before === null ? null : r.of(before);
           return (

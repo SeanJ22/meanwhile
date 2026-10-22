@@ -76,7 +76,7 @@ test("plan step ids from R, platform and source lanes count as steps", () => {
   assert.deepEqual(stepIds("READY: R2"), ["R2"]);
   assert.deepEqual(stepIds("READY: R2B"), ["R2B"]);
   assert.deepEqual(stepIds("READY: R0"), ["R0"]);
-  assert.deepEqual(stepIds("READY: 0048_r3_legistar_members"), ["0048_r3_legistar_members"]);
+  assert.deepEqual(stepIds("READY: R3-LEGISTAR-MEMBERS"), ["R3-LEGISTAR-MEMBERS"]);
   assert.deepEqual(stepIds("READY: R3-CIVICCLERK"), ["R3-CIVICCLERK"]);
   assert.deepEqual(stepIds("READY: SRC-LS"), ["SRC-LS"]);
   assert.deepEqual(stepIds("READY: SRC-AC"), ["SRC-AC"]);

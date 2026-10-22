@@ -371,7 +371,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   },
   "0034_reader_events": { phase: "expand", why: "New aggregate and anonymous membership tables; existing capture stores are unaffected." },
   "0035_r1_fact_store": { phase: "expand", why: "Creates the fact store tables. Nothing reads or writes them before the build that ships with it." },
-  "0048_r3_legistar_members_retire_index": { phase: "contract", why: "Drops the live-only member index after the covering member lookup replaces it." },
+  "0049_r3_legistar_members_retire_index": { phase: "contract", why: "Drops the live-only member index after the covering member lookup replaces it." },
   "0048_r3_legistar_members": { phase: "expand", why: "Adds the exact member lookup index; no reader or writer depends on it before it exists." },
   "0037_r1_fact_scale": { phase: "expand", why: "Adds the fact watermark, the pass cursors and the trigger that queues changed places; existing writers keep working." },
   "0036_ne01": { phase: "expand", why: "Adds defaulted read counters and reader selection functions; existing readers and writers keep working." },

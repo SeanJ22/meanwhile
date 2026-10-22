@@ -71,7 +71,7 @@ if (process.argv.includes("--worker")) {
   } });
   const pg = { query: async <T extends Record<string, unknown> = Record<string, unknown>>(text: string, params: readonly unknown[] = []) =>
     ({ rows: await sql.unsafe(text, params as never[]) as unknown as T[] }), exec: (text: string) => sql.unsafe(text), close: () => sql.end() };
-  for (const migration of ["0035_r1_fact_store.sql", "0037_r1_fact_scale.sql", "0048_r3_legistar_members.sql", "0048_r3_legistar_members_retire_index.sql"]) {
+  for (const migration of ["0035_r1_fact_store.sql", "0037_r1_fact_scale.sql", "0048_r3_legistar_members.sql", "0049_r3_legistar_members_retire_index.sql"]) {
     for (const statement of readFileSync(join(root, "lib/db/migrations", migration), "utf8").split("--> statement-breakpoint")) await pg.exec(statement);
   }
   await pg.exec(`CREATE TABLE cp_doors (id text PRIMARY KEY, value jsonb NOT NULL);

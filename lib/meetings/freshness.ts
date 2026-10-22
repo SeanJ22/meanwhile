@@ -23,12 +23,35 @@ export interface SnapshotStatus {
   carried?: SnapshotCarriedNote;
 }
 
+/**
+ * The snapshot when it names a real day, else null. A place with no held calendar
+ * has no "Checked" date to show, and a zero or unreadable date is never one.
+ */
+export function heldSnapshot<T extends { generatedAt: string }>(snapshot: T | null | undefined): T | null {
+  if (!snapshot) return null;
+  return Date.parse(snapshot.generatedAt) > 0 ? snapshot : null;
+}
+
+/** The snapshot as the meetings API sends it; null when the place holds no calendar. */
+export function wireSnapshot(
+  heldAt: string | null,
+  sources: ReadonlyArray<{ source: string; ok: boolean; unreachableOcdIds?: string[] }>,
+): (SnapshotStatus & { version: 2 }) | null {
+  if (!heldAt) return null;
+  return {
+    version: 2,
+    generatedAt: heldAt,
+    failed: sources.filter((source) => !source.ok)
+      .map((source) => ({ source: source.source, ocdIds: source.unreachableOcdIds ?? [] })),
+  };
+}
+
 /** The snapshot as it bears on the listings in view: carried rows among `meetings`, not across the corpus. */
 export function snapshotInView(
   snapshot: SnapshotStatus | null | undefined,
   meetings: ReadonlyArray<{ carried?: { lastFreshAt: string } }>,
 ): SnapshotStatus | null {
-  if (!snapshot) return null;
+  if (!snapshot || !heldSnapshot(snapshot)) return null;
   if (!snapshot.carried) return snapshot;
   const carried = meetings.flatMap((m) => (m.carried ? [m.carried.lastFreshAt] : []));
   if (carried.length === 0) {

@@ -57,7 +57,7 @@ import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
 import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
-import { lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
+import { heldSnapshot, lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
 import { isPlaceUnrecorded, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
 import type { Meeting } from "@/lib/sources/types";
@@ -1415,7 +1415,7 @@ function MapEntryInner() {
             failedSourceOcdIds={
               shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
             }
-            lastCheckedAt={shown.snapshot?.generatedAt ?? null}
+            lastCheckedAt={heldSnapshot(shown.snapshot)?.generatedAt ?? null}
             lastReadByOcdId={lastReadByDivision(shown.meetings ?? [])}
             ocdIdsWithMeetings={[
               ...new Set(

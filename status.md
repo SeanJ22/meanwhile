@@ -1,11 +1,18 @@
 # River status
 
-build_state: RELEASES 72 TO 81 LIVE (main be812bacc); RELEASE 82 (AG-01) IS PR #792 IN CI; VICE PRESIDENT STILL NOT LIVE (ds-01); MEETINGS READBACK NOW CAL-01'S
+build_state: RELEASES 72 TO 82 LIVE (main f44f9a18f); VICE PRESIDENT STILL NOT LIVE (ds-01); MEETINGS READBACK WITH CAL-01; WAITING ON NEW READYS
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
-heartbeat: 2026-10-22T22:12:00Z
+heartbeat: 2026-10-22T22:55:00Z
+
+## Release 82 (AG-01) shipped (Oct 22, 3:55 PM Phoenix / 6:55 PM EDT)
+
+- PR #792 merged f44f9a18f at 6:42 PM EDT (head 5864c4599, CI green, label run-full-ci); post-deploy observer green at 6:43 PM EDT. No migrations.
+- What a reader sees now, checked on the live site: a place with no held calendar shows no "Checked ... ago" line. Seattle (98101) and El Paso (79901) pages have no Checked line (they said "Checked 20747 days ago" before). Flagstaff (86001) and Phoenix (85016) still show a real "Checked 20 days ago". The meetings API sends `snapshot: null` for those places: 38 of 40 sampled ZIPs across the country (none still carry a 1970 date). That also means 38 of 40 sampled places have no held calendar snapshot at all ("0 Meetings"), which is a data question for cal-01, not a display one.
+- Runner after release 82: the runner follows the deploy in about 15 to 20 minutes; checks come next.
+- Open: Vice President not on the live page (ds-01 return), meetings readback and calendar doors (cal-01 return), Legistar board names on the page (pm-01). No new READY on any lane at 6:55 PM EDT.
 
 ## Where things stand (Oct 22, 3:12 PM Phoenix / 6:12 PM EDT)
 

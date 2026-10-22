@@ -12,6 +12,7 @@ import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGE
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 import { FEDERAL_MONEY_SOURCES, FEDERAL_MONEY_PARSER } from "../federal-money/model.ts";
 import { FEDERAL_MONEY_CONFIG } from "../federal-money/sources.ts";
+import { CAMPAIGN_FINANCE_PARSER, CAMPAIGN_MONEY_SOURCE_ID, CAMPAIGN_MONEY_SCOPE } from "../funding/state-sources.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
@@ -568,6 +569,20 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   } as const)),
+  {
+    id: CAMPAIGN_MONEY_SOURCE_ID, sourceId: CAMPAIGN_MONEY_SOURCE_ID,
+    recordClass: "CAMPAIGN_FINANCE", scope: CAMPAIGN_MONEY_SCOPE,
+    acquisitionFailureDomain: "routine-source:campaign-money",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/state-campaign-finance.mts", "--promote"] },
+    parserNormalizerVersion: CAMPAIGN_FINANCE_PARSER,
+    cadence: { description: "Each routine pass checks the states' hourly clocks; one state worker at a time", defaultEveryMs: ROUTINE_DATA_ADMISSION_MS },
+    retry: { afterMs: HOUR, description: "Keep each missing person's money open for the next hourly scan" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: CAMPAIGN_MONEY_SOURCE_ID },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: "person-campaign-money", consumers: ["government, official and candidate cards", "Ask", "Admin"] },
+    lkgBehavior: "Source failures retain each person's verified cycle totals and record the missing work.",
+    autoPromotable: true, childTimeoutMs: 0, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: ["tests/fixtures/campaign-finance/"],
+  },
   ...FEDERAL_MONEY_SOURCES.map((source): RoutineSourceContract => ({
     id: source, sourceId: source, recordClass: "FEDERAL_MONEY", scope: `${source}:US`, fanOut: true,
     acquisitionFailureDomain: `routine-source:${source}`,

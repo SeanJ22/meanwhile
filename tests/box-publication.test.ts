@@ -169,7 +169,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
 
   const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { pulled: 0, flagged: 0 }, labels: { pulled: 0, moved: 0, cut: 0, renamed: 0 },
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { flagged: 0 }, labels: { flagged: 0, moved: 0, cut: 0, renamed: 0 },
     publishedByRoute: { "office contacts": 1, rosters: 3, bodies: 1 },
     waitingByClass: { rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
   assert.deepEqual(report.byPlace[TCCC], { published: 4, refused: 0, waiting: 1 });
@@ -306,7 +306,7 @@ test("the campaign-site check holds a hunter's lead to the freshness clock Admin
   assert.deepEqual([lead.state, lead.refusal], ["refused", "COPY_OUTSIDE_FRESHNESS_WINDOW"], "a week-old page is past Admin's one-hour clock");
 });
 
-test("a name joins a council only when its own words name the seat: staff and bare names wait, two holders of one ward go to Sean, an older seat with no title comes down", async () => {
+test("a name joins a council only when its own words name the seat: staff and bare names wait, two holders of one ward go to Sean, an older seat with no title is flagged", async () => {
   const { facts, repos, vault, hold } = await setup();
   const COUNCIL = "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager";
   const html = "<html><head><title>Mayor and Council | City of Tucson</title></head><body><h1>Mayor and Council</h1><p>Ward 5 Council Member Selina Barajas</p>" +
@@ -332,11 +332,21 @@ test("a name joins a council only when its own words name the seat: staff and ba
   const input = { repos, facts, vault, fetch: async () => { throw new Error("held"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const first = await publishBoxFindings(input);
   assert.deepEqual({ seats: first.seats, published: first.published, failuresByReason: first.failuresByReason },
-    { seats: { pulled: 1, flagged: 0 }, published: 3, failuresByReason: { SEAT_NOT_IN_QUOTE: 2 } }, JSON.stringify(first));
+    { seats: { flagged: 1 }, published: 3, failuresByReason: { SEAT_NOT_IN_QUOTE: 2 } }, JSON.stringify(first));
   const members = (await readFactRosters(facts.query, [body.id])).rosters[0]!.members.map(member => member.name).sort();
-  assert.deepEqual(members, ["Lane Santa Cruz", "Richard Fimbres", "Selina Barajas"]);
-  assert.deepEqual((await publishBoxFindings(input)).seats, { pulled: 0, flagged: 2 }, "both members named for Ward 5 go to Sean");
-  assert.deepEqual((await publishBoxFindings(input)).seats, { pulled: 0, flagged: 0 }, "an open flag is raised once");
+  assert.deepEqual(members, ["Lane Santa Cruz", "Richard Fimbres", "Selina Barajas", "Steve Kozachik"]);
+  assert.deepEqual((await publishBoxFindings(input)).seats, { flagged: 2 }, "both members named for Ward 5 go to Sean");
+  assert.deepEqual((await publishBoxFindings(input)).seats, { flagged: 0 }, "an open flag is raised once");
+});
+
+test("a finding's first artifact may be another page: select the cited page before checking its quote",async()=>{
+ const {facts,repos,vault,hold}=await setup();
+ const wrong=await hold(AGENDA_URL,'<h1>Agenda Committee</h1><p>A different board</p>',NOW);
+ const right=await hold(TCCC_URL,B15,NOW);
+ await indexReportedFinding(repos.boxFindings,{workItemId:'wi-hunt',attemptId:'at-hunt',missionPart:null,
+ finding:{subjectId:TCCC,field:'officeholder.name',value:'Ned Beman',exactQuote:'Ned Beman Chairperson Ward 2',sourceUrl:TCCC_URL,artifactIds:[wrong,right],subjectHint:null,index:0}},NOW);
+ const report=await publishBoxFindings({repos,facts,vault,fetch:async()=>{throw Error('The saved cited page is held.');},store:new MemoryRoutineDataStore(),clocks:factClocks(null),now:NOW,limit:10});
+ assert.equal(report.published,1);assert.equal(report.refused,0);
 });
 
 test("a government with no governing board gets one; a phone or email with no person named goes on the office; a refused finding is looked at again when the slot map moves, however old", async () => {
@@ -588,7 +598,7 @@ test("a supervisor of a kind of work is staff and never seated; a supervisor who
   assert.notEqual(seatIn("Supervisor Dana Cruz, District 4", governing), null);
 });
 
-test("a label, a notice or a bare link the Box published comes down; a real schedule, comment rule and member stay", async () => {
+test("a label, a notice or a bare link the Box published is flagged for Sean, never taken down by the system; a paragraph is cut to its schedule; a real schedule, comment rule and member stay unflagged", async () => {
   const { facts, repos, vault } = await setup();
   await ensureFactEntities(facts, ROOT, ["al"]);
   const body = async (id: string, government: string) => { await ensureEntity(facts.query, { id, kind: "body", name: "City Council", state: "AL", parentId: government }); return id; };
@@ -605,7 +615,7 @@ test("a label, a notice or a bare link the Box published comes down; a real sche
   await put(CHATOM, "comment:detail", "There are three primary purposes for this notice.  First, people who may be affected by activities in a 100 Year Floodplain and those who have an interest in the floodplain are given a chance to comment.");
   await put(CHATOM, "comment:period", "There are three primary purposes for this notice.  First, people who may be affected by activities in a 100 Year Floodplain");
   await put(PRICHARD, "agenda_url", "http://thecityofprichard.org/request-a-business-meeting-with-the-mayor/");
-  await put(PRICHARD, "member:ocd-person/junk", "AJ Cooper Municipal Complex", "AJ Cooper Municipal Complex\nCouncilor District 1", { name: "AJ Cooper Municipal Complex" });
+  await put(PRICHARD, "member:ocd-person/junk", "AJ Cooper Municipal Complex", "AJ Cooper Municipal Complex", { name: "AJ Cooper Municipal Complex" });
   await put(SAFFORD, "comment:period", "Each speaker is given three minutes to speak.");
   // What should stay.
   await put(PRICHARD, "meeting_cadence", "first and third Tuesdays at 6 p.m.");
@@ -614,15 +624,18 @@ test("a label, a notice or a bare link the Box published comes down; a real sche
   await put(PRICHARD, "member:ocd-person/annie", "Annie Williams", "Annie Williams\nDistrict 1", { name: "Annie Williams" });
   const fetch: ProbeFetch = async () => { throw new Error("nothing to read"); };
   const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
-  assert.deepEqual(report.labels, { pulled: 5, moved: 1, cut: 1, renamed: 0 }, JSON.stringify(report));
-  const state = async (entity: string) => (await facts.query("SELECT field, status, held_reason FROM fact WHERE entity_id = $1 ORDER BY field", [entity])).map(row => `${row.field}=${row.status}${row.held_reason ? `:${row.held_reason}` : ""}`);
-  assert.deepEqual(await state(BREWTON), ["agenda_url=pulled:BARE_LINK", "meeting_cadence=live"]);
+  // Four labels are flagged by the label pass; the member who is a place is flagged by the seat pass, which got to it first: five facts for Sean, none taken down.
+  assert.deepEqual({ seats: report.seats, labels: report.labels }, { seats: { flagged: 1 }, labels: { flagged: 4, moved: 1, cut: 1, renamed: 0 } }, JSON.stringify(report));
+  assert.deepEqual((await facts.query("SELECT f.field, f.status FROM owner_flag o JOIN fact f ON f.id = o.fact_id WHERE o.resolved IS NULL ORDER BY f.entity_id, f.field")).map(row => `${row.field}=${row.status}`),
+    ["agenda_url=live", "comment:detail=live", "comment:period=live", "agenda_url=live", "member:ocd-person/junk=live"]);
+  const state = async (entity: string) => (await facts.query("SELECT f.field, f.status, (SELECT o.reason FROM owner_flag o WHERE o.fact_id = f.id AND o.resolved IS NULL) AS flag FROM fact f WHERE f.entity_id = $1 ORDER BY f.field", [entity])).map(row => `${row.field}=${row.status}${row.flag ? `:flagged ${row.flag}` : ""}`);
+  assert.deepEqual(await state(BREWTON), ["agenda_url=live:flagged BARE_LINK", "meeting_cadence=live"]);
   assert.deepEqual(await facts.query("SELECT value_text FROM fact WHERE entity_id = $1 AND field = 'meeting_cadence'", [BREWTON]), [{ value_text: "each 2nd and 4th Monday of each month at 6:00 p.m." }], "a paragraph is cut to the schedule it states");
   assert.deepEqual(await facts.query("SELECT field, value_text FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [SAFFORD]),
     [{ field: "comment:detail", value_text: "Each speaker is given three minutes to speak." }, { field: "comment:period", value_text: "YES" }], "a rule filed as the period moves to the rule, and the period reads yes");
-  assert.deepEqual(await state(CHATOM), ["comment:detail=pulled:NOT_A_COMMENT_RULE", "comment:period=pulled:NOT_YES_OR_NO"]);
-  assert.deepEqual(await state(PRICHARD), ["agenda_url=pulled:BARE_LINK", "comment:detail=live", "comment:period=live", "meeting_cadence=live", "member:ocd-person/annie=live", "member:ocd-person/junk=pulled:NOT_A_PERSON"]);
-  assert.equal((await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 })).labels.pulled, 0, "a fact is read once");
+  assert.deepEqual(await state(CHATOM), ["comment:detail=live:flagged NOT_A_COMMENT_RULE", "comment:period=live:flagged NOT_YES_OR_NO"]);
+  assert.deepEqual(await state(PRICHARD), ["agenda_url=live:flagged BARE_LINK", "comment:detail=live", "comment:period=live", "meeting_cadence=live", "member:ocd-person/annie=live", "member:ocd-person/junk=live"]);
+  assert.equal((await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 })).labels.flagged, 0, "a fact is read once, and a flag is raised once");
 });
 
 test("a school district the registration never paired with a government gets its board on its place, named by the NCES id the hunter used", async () => {

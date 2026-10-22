@@ -777,9 +777,10 @@ export async function applyDispatchWork(
       const next = withAssignment(held.value.assignments, reordered);
       const autonomousPlan = inheritPublicationConnection(held.value.autonomousPlan, plan.targets.find(target => target.target.key === mark.target.key)?.instances
         .find(instance => instance.instance.obligation.id === mark.obligationId)?.instance.obligation.autonomousPlan);
-      if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan) {
+      const stopped = held.value.materializedBy === OWNER_DISPATCH && !held.value.active && mark.obligationId.startsWith("hunt:packet:");
+      if (next !== held.value.assignments || autonomousPlan !== held.value.autonomousPlan || stopped) {
         heldMarks.set(mark.obligationId, await repos.obligations.compareAndSet(mark.obligationId, held.revision, { ...held.value, assignments: next,
-          ...(autonomousPlan ? { autonomousPlan } : {}), updatedAt: input.now }, input.now));
+          ...(autonomousPlan ? { autonomousPlan } : {}), ...(stopped ? { active: true, nextDueAt: null } : {}), updatedAt: input.now }, input.now));
       }
       marked.push(key);
       recorded.push({ obligationId: mark.obligationId, subjectId: held.value.subjectId, entry: reordered });

@@ -173,3 +173,19 @@ test("demand rank comes from the reader-demand lists by area, ZIP, division, bod
   assert.equal(rank(fact(rule("q", { ocdId: "ocd-division/country:us/state:az" }), { area: "elsewhere" })), 0);
   assert.equal(rank(fact(rule("n"), { area: "nobody" })), null);
 });
+
+test('real Open States office rows ignore local IDs and keep every value bound to the named member',async()=>{
+ const {readFile}=await import('node:fs/promises');const text=await readFile('tests/fixtures/ck-01/openstates-nj.csv','utf8');
+ const member={id:'member-office:nj-legislature:283:district',kind:'MEMBER_OFFICE',officeholderId:'nj-legislature:283',officeKind:'DISTRICT',
+ office:{zip:'07054',city:'Parsippany',phone:'973-917-3420',state:'NJ',address:'160 Littleton Road Suite 204'},sourceUrl:'https://data.openstates.org/people/current/nj.csv'};
+ const current={id:'member-offices:'+member.id,family:'member-offices',area:'NJ',sourceUrl:member.sourceUrl,record:member,verifiedAt:NOW};
+ assert.equal(auditLiveFact(current,{...page(text),url:member.sourceUrl},NOW).verdict,'GREEN');
+ const other={...current,record:{...member,officeholderId:'nj-legislature:155'}};
+ assert.equal(auditLiveFact(other,{...page(text),url:member.sourceUrl},NOW).verdict,'RED','another member’s phone somewhere in the CSV cannot prove this member’s phone');
+ assert.equal(auditLiveFact(current,page('%PDF-1.7 compressed binary'),NOW).verdict,'INCONCLUSIVE');
+});
+
+test('an owner correction with its own source is not attributed to the old nested office source',()=>{
+ const record={...rule('a'),office:{phone:'555-987-6543'},fieldSources:{'office.phone':{sourceUrl:'',sourceOrg:'Sean'}}};
+ assert.equal(auditableFields(record,record.sourceUrl).some(field=>field.field==='office.phone'),false);
+});

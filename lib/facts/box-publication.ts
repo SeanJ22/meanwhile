@@ -38,10 +38,10 @@ interface BoxPublicationReport {
   readonly waitingByClass: Readonly<Record<string, number>>;
   readonly failuresByReason: Readonly<Record<string, number>>;
   readonly byPlace: Readonly<Record<string, { published: number; refused: number; waiting: number }>>;
-  /** Box seats taken down for never showing the seat, and those flagged for naming a ward another member holds. */
-  readonly seats: { readonly pulled: number; readonly flagged: number };
-  /** Box facts taken down for being a label, a heading, a notice or a bare link rather than the thing itself. */
-  readonly labels: { readonly pulled: number; readonly moved: number; readonly cut: number; readonly renamed: number };
+  /** Published seats needing Sean's decision. */
+  readonly seats: { readonly flagged: number };
+  /** Box facts that read as a label, a heading, a notice or a bare link (flagged for Sean), cut to the part that states the thing, re-filed, or renamed to the name alone. */
+  readonly labels: { readonly flagged: number; readonly moved: number; readonly cut: number; readonly renamed: number };
 }
 
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
@@ -141,27 +141,23 @@ async function liveMembers(query: Query, bodyIds: readonly string[]): Promise<re
     .map(row => ({ factId: Number(row.id), bodyId: String(row.entity_id), name: String(row.name), words: String(row.words), producedBy: String(row.produced_by) }));
 }
 
-/** Box seats whose words never showed the seat come down; one naming a ward another member holds is flagged for Sean. */
-async function reviewBoxSeats(query: Query, purge?: ReaderCachePurger): Promise<{ readonly pulled: number; readonly flagged: number }> {
+/** A suspect published seat goes to Sean, including one whose quote never showed the seat. */
+async function reviewBoxSeats(query: Query): Promise<{ readonly flagged: number }> {
   const since = Number(await readPassCursor(query, "box-seats") ?? 0);
   const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
   // Only bodies whose members changed since the last pass; the pass starts where this one read up to.
   const bodies = (await query("SELECT DISTINCT entity_id FROM fact WHERE id > $1 AND id <= $2 AND field LIKE 'member:%'", [since, newest])).map(row => String(row.entity_id));
   const members = bodies.length ? await liveMembers(query, bodies) : [];
-  let pulled = 0, flagged = 0;
+  let flagged = 0;
   for (const member of members.filter(row => row.producedBy === "box")) {
     const seat = seatIn(member.words, member.bodyId);
-    if (!seat) {
-      await query("UPDATE fact SET status = 'pulled', held_reason = 'SEAT_NOT_IN_QUOTE' WHERE id = $1", [member.factId]);
-      await invalidateReaderCache(await readerCacheScopeForEntity(query, member.bodyId), purge);
-      pulled++;
-    } else if (seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
+    if (!seat || seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
       flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'
         WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
     }
   }
   await writePassCursor(query, "box-seats", String(newest));
-  return { pulled, flagged };
+  return { flagged };
 }
 
 const SCHEDULE_WORDS = /\b(?:mon|tues|wednes|thurs|fri|satur|sun)day|\bmonthly\b|\bweekly\b|\bbi-?weekly\b|\bquarterly\b|\bannual(?:ly)?\b/i;
@@ -212,15 +208,21 @@ async function retitleMembers(query: Query, purge?: ReaderCachePurger): Promise<
   return renamed;
 }
 
+/** A fact that looks wrong is flagged for Sean (remove, keep, send the fleet, or type the value), never taken down by the system (rulings §2 step 6). */
+async function flagLooksWrong(query: Query, factId: number, reason: string): Promise<number> {
+  return (await query(`INSERT INTO owner_flag (fact_id, kind, reason) SELECT $1, 'AUDIT_LOOKS_WRONG', $2
+    WHERE EXISTS (SELECT 1 FROM fact WHERE id = $1 AND status = 'live') AND NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [factId, reason])).length;
+}
+
 /** Box facts that are a label, a heading, a notice, a bare link or a paragraph get their remedy, and the walk's better reading of the same page takes their place; the pass reads only facts added since its last. */
-async function reviewBoxFacts(query: Query, purge?: ReaderCachePurger): Promise<{ readonly pulled: number; readonly moved: number; readonly cut: number; readonly renamed: number }> {
+async function reviewBoxFacts(query: Query, purge?: ReaderCachePurger): Promise<{ readonly flagged: number; readonly moved: number; readonly cut: number; readonly renamed: number }> {
   const since = Number(await readPassCursor(query, "box-labels") ?? 0);
   const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
   const rows = await query(`SELECT f.id, f.entity_id, f.field, e.kind, coalesce(f.value_text, '') AS value_text, coalesce(f.quote, '') AS quote, f.value->>'name' AS name
     FROM fact f JOIN entity e ON e.id = f.entity_id
     WHERE f.id > $1 AND f.id <= $2 AND f.produced_by = 'box' AND f.status = 'live'
       AND (f.field IN ('agenda_url', 'meeting_cadence', 'comment:period', 'comment:detail') OR f.field LIKE 'member:%')`, [since, newest]);
-  const tally = { pulled: 0, moved: 0, cut: 0, renamed: await retitleMembers(query, purge) };
+  const tally = { flagged: 0, moved: 0, cut: 0, renamed: await retitleMembers(query, purge) };
   for (const row of rows) {
     const remedy = remedyFor(String(row.field), String(row.kind), String(row.value_text), String(row.quote), row.name === null ? null : String(row.name));
     if (!remedy) continue;
@@ -234,15 +236,13 @@ async function reviewBoxFacts(query: Query, purge?: ReaderCachePurger): Promise<
           AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = $2 AND d.field = 'comment:period' AND d.status = 'live')`, [row.id, row.entity_id]);
         tally.moved++;
       } else {
-        await query("UPDATE fact SET status = 'pulled', held_reason = 'NOT_YES_OR_NO' WHERE id = $1 AND status = 'live'", [row.id]);
-        tally.pulled++;
+        tally.flagged += await flagLooksWrong(query, Number(row.id), "NOT_YES_OR_NO");
       }
     } else if ("value" in remedy) {
       await query("UPDATE fact SET value = to_jsonb($2::text), value_text = $2 WHERE id = $1 AND status = 'live'", [row.id, remedy.value]);
       tally.cut++;
     } else {
-      await query("UPDATE fact SET status = 'pulled', held_reason = $2 WHERE id = $1 AND status = 'live'", [row.id, remedy.pull]);
-      tally.pulled++;
+      tally.flagged += await flagLooksWrong(query, Number(row.id), remedy.pull);
     }
     await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge);
   }
@@ -279,7 +279,7 @@ export async function publishBoxFindings(input: {
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
   const now = new Date(input.now);
-  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.purge), labels: await reviewBoxFacts(facts.query, input.purge),
+  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query), labels: await reviewBoxFacts(facts.query, input.purge),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   // A packet's findings count toward its government; any other finding toward its own subject.
@@ -382,7 +382,7 @@ export async function publishBoxFindings(input: {
   const captureFor = (finding: Finding, kind: FieldKind) => {
     const key = `${finding.origin.artifactIds[0] ?? ""}|${finding.sourceUrl}|${kind}`;
     if (!captures.has(key)) captures.set(key, (async () => {
-      const records = (await repos.artifacts.read(finding.origin.workItemId)).filter(record => finding.origin.artifactIds.includes(record.artifactId));
+      const records = (await repos.artifacts.read(finding.origin.workItemId)).filter(record => finding.origin.artifactIds.includes(record.artifactId) && record.canonicalUrl === finding.sourceUrl);
       for (const record of records) {
         const held = await readHeld(record);
         if (held && (now.getTime() - Date.parse(held.observedAt)) / 3_600_000 <= clocks.windowHours(kind)) return { capture: held };

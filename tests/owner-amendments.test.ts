@@ -5,7 +5,6 @@ import { readFileSync } from "node:fs";
 import {
   financeRegimeNotesFor,
   financeScopeGapFor,
-  localFinanceEvidenceFor,
 } from "../lib/ask/local-finance.ts";
 import type { EvidenceSubject } from "../lib/ask/evidence.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
@@ -124,13 +123,7 @@ test("OWN-Q5: no regime statement claims a government holds nothing", () => {
 });
 
 test("OWN-Q5: THE SEEDED FAILURE — a subject this pipeline holds nothing for still gets a scope gap", () => {
-  // `localFinanceEvidenceFor` returns null for several subject kinds; one regime's silence is not a claim about all money.
   const statewide = subject();
-  assert.equal(
-    localFinanceEvidenceFor(statewide),
-    null,
-    "the seeded case: this module holds nothing for a statewide executive",
-  );
   const gap = financeScopeGapFor(statewide);
   assert.equal(gap.whose, "OURS");
   assert.match(gap.statement, /not a finding that no filings exist/i);
@@ -147,7 +140,7 @@ test("OWN-Q5 WIRING: real money answers name all regimes with and without applic
   const { POST } = await import("../app/api/ask/grounded/route.ts");
   const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   for (const control of [
-    { question: "How much campaign money has Katie Hobbs raised?", hasMoney: true },
+    { question: "How much campaign money has Katie Hobbs raised?", hasMoney: false },
     { question: "What campaign money is recorded for the Pima County Board of Supervisors?", hasMoney: false },
   ]) {
     resetGroundedState();

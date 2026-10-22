@@ -1,5 +1,4 @@
-import { directFundingTargetPlan, FEDERAL_CONTEST } from "../funding/target-authorities.ts";
-import type { BallotState } from "../civic-data/state-scopes.ts";
+import { directFundingTargetPlan } from "../funding/target-authorities.ts";
 import type { ReactionTargetType } from "../signal/reactions.ts";
 
 export interface ReactionAuthorityReaders {
@@ -7,8 +6,7 @@ export interface ReactionAuthorityReaders {
   readonly provisionTargets: (targetId: string) => Set<string> | Promise<Set<string>>;
   readonly refreshFunding: () => Promise<unknown>;
   readonly fundingTargets: () => Set<string>;
-  readonly refreshStateMoney: (state: BallotState) => Promise<unknown>;
-  readonly stateMoneyTargets: (targetId: string) => Set<string>;
+  readonly stateMoneyTargets: (targetId: string) => Set<string> | Promise<Set<string>>;
   readonly contributorTargets: () => Set<string>;
   readonly refreshVotes: () => Promise<unknown>;
   readonly voteTargets: () => Set<string>;
@@ -25,9 +23,7 @@ export async function validReactionTargetsFor(
     case "MEASURE_PROVISION":
       return readers.provisionTargets(targetId);
     case "FUNDING_TOTAL_REACTION": {
-      const state = directFundingTargetPlan(targetId).state;
-      if (state !== null && !FEDERAL_CONTEST.test(targetId)) {
-        await readers.refreshStateMoney(state);
+      if (!directFundingTargetPlan(targetId).federal) {
         return readers.stateMoneyTargets(targetId);
       }
       await readers.refreshFunding();

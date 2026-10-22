@@ -11,7 +11,8 @@ import {
   FundingAbsence,
   FundingDisplay,
 } from "./funding-section";
-import { StateMoneySection } from "./state-money-section";
+import { StateCampaignSection } from "./state-campaign-section";
+import { officeIdentity } from "@/lib/officials/office-identity";
 
 export function FundingBlock(props: {
   holder: SeatHolder;
@@ -19,7 +20,8 @@ export function FundingBlock(props: {
   /** Inside a CardSection that already names the block. */
   bare?: boolean;
 }) {
-  // Keyed on the holder so a new holder never shows the previous one's answer.
+  const office=officeIdentity(props.holder.officeTitle),division=props.holder.officeJurisdictionOcdId;
+  if(division && office!=="us_senator" && office!=="us_representative" && office!=="president")return <StateCampaignSection divisionId={division} personId={props.holder.personId??props.holder.id} bare={props.bare} context={props.reactionContext}/>;
   return <FundingBlockInner key={props.holder.id} {...props} />;
 }
 
@@ -61,13 +63,7 @@ function FundingBlockInner({
   if (loadFailed) return <CardGapContribution id={`funding:${holder.id}`} label="campaign money" subject={{ type: "CANDIDATE", id: holder.id }} />;
   if (!answer) return <p className="mw-loading-inline" role="status">Loading campaign money…</p>;
   let content: React.ReactNode = null;
-  if (answer.kind === "combined") content = <>
-    {answer.federal.kind === "funding"
-      ? <FundingDisplay data={answer.federal.data} context={reactionContext} bare={bare} />
-      : <FundingAbsence data={answer.federal.data} />}
-    <StateMoneySection records={answer.state.records} bare={bare} context={reactionContext} />
-  </>;
-  else if (answer.kind === "state") content = <StateMoneySection records={answer.data.records} bare={bare} context={reactionContext} />;
+  if(answer.kind==="state-cycle")content=<StateCampaignSection divisionId={answer.data.division} personId={holder.personId??holder.id} data={answer.data} bare={bare} context={reactionContext}/>;
   else if (answer.kind === "identity-unresolved") content = <CardGapContribution id={`funding:${holder.id}`} label="campaign money" subject={{ type: "CANDIDATE", id: holder.id }} />;
   else if (answer.kind === "none") content = <CardGapContribution id={`funding:${holder.id}`} label="campaign money" subject={{ type: "CANDIDATE", id: holder.id }} />;
   else if (answer.kind === "absence") content = <FundingAbsence data={answer.data} />;

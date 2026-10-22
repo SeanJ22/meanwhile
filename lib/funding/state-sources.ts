@@ -1,5 +1,4 @@
 import type { SourceAuthorityContract } from "../civic-data/types.ts";
-import type { CampaignSourceRecord } from "./state-source-records.ts";
 import inventory from "../../data/campaign-finance/sources.json" with { type: "json" };
 import { jurisdictionFromOcdId, US_JURISDICTIONS } from "../coverage/states.ts";
 
@@ -10,10 +9,14 @@ interface CampaignFinanceIndex {
   readonly postback?: string;
   readonly method?: "POST";
   readonly body?: Readonly<Record<string, unknown>>;
+  readonly headers?:Readonly<Record<string,string>>;
   readonly rowPath?: string;
+  readonly singleUrlField?:string;
+  readonly throughDateArray?:string;
   readonly idField?: string;
   readonly urlTemplate?: string;
   readonly filter?: { readonly field: string; readonly value: string };
+  readonly yearField?:string;
   readonly split?: { readonly field: string; readonly delimiter: string };
   readonly parameters?: readonly { readonly parameter: string; readonly field: string }[];
   readonly selectParameter?: { readonly name: string; readonly parameter: string; readonly valuePattern?: string };
@@ -24,6 +27,13 @@ interface CampaignFinanceIndex {
 
 export interface CampaignFinanceResource {
   readonly id: string;
+  readonly aggregation?: "TRANSACTION" | "CYCLE_TOTAL";
+  readonly individual?: {readonly typeField:string;readonly types:readonly string[];readonly nameFields:readonly string[];readonly nameParts?:readonly string[];readonly identityFields:readonly string[]};
+  readonly individualLines?: {readonly threshold:200;readonly small:string;readonly large:string};
+  readonly receipts?: boolean;
+  readonly since?: {readonly field:string;readonly kind:"YEAR"|"DATE"};
+  readonly releaseVersionUrl?:string;
+  readonly releaseVersionPath?:string;
   readonly kind: "SOCRATA" | "JSON" | "CSV" | "ZIP";
   readonly url: string;
   readonly landingUrl?: string;
@@ -62,6 +72,7 @@ export interface CampaignFinanceResource {
   readonly filerIdentity?: readonly string[];
   readonly filerName: readonly string[];
   readonly filerNameParts?: readonly string[];
+  readonly filerFallbackParts?: readonly string[];
   readonly filedCondition?: { readonly field: string; readonly values: readonly string[] };
   readonly registrationTotals?: readonly string[];
   readonly financialReportCondition?: { readonly field: string; readonly values: readonly string[] };
@@ -70,7 +81,10 @@ export interface CampaignFinanceResource {
   readonly candidateParts?: readonly string[];
   readonly candidateCondition?: { readonly field: string; readonly values: readonly string[] };
   readonly office: readonly string[];
+  readonly district?:readonly string[];
+  readonly jurisdiction?:readonly string[];
   readonly period: readonly string[];
+  readonly cycle?:readonly string[];
   readonly periodParts?: readonly string[];
   readonly periodQueryParameter?: string;
   readonly transactionDate: readonly string[];
@@ -101,14 +115,20 @@ interface CampaignFinanceSource {
 }
 
 export const CAMPAIGN_FINANCE_SOURCES = inventory as readonly CampaignFinanceSource[];
-export const CAMPAIGN_FINANCE_PARSER = "campaign-finance-source/1";
-export const campaignFinanceSourceId = (state: string): `US-${string}:campaign-finance-source` => `US-${campaignFinanceSource(state).state}:campaign-finance-source`;
-export const campaignFinanceNativeScope = (state: string): string => `${campaignFinanceSourceId(state)}:state`;
+export const CAMPAIGN_FINANCE_PARSER = "campaign-finance-source/2";
+export const CAMPAIGN_MONEY_SOURCE_ID = "campaign-money";
+export const CAMPAIGN_MONEY_SCOPE = "campaign-money:hourly";
+const campaignFinanceSourceId = (state: string): `US-${string}:campaign-finance-source` => `US-${campaignFinanceSource(state).state}:campaign-finance-source`;
+export const campaignFinanceNativeScope = (state: string): string => `${CAMPAIGN_MONEY_SOURCE_ID}:US-${campaignFinanceSource(state).state}`;
 
 export function campaignFinanceSource(state: string): CampaignFinanceSource {
   const source = CAMPAIGN_FINANCE_SOURCES.find(row => row.state === state);
   if (!source || !US_JURISDICTIONS.some(row => row.usps === state)) throw new Error("Campaign finance requires a supported state or territory.");
   return source;
+}
+export function campaignMoneySourceResources(state:string):readonly CampaignFinanceResource[]{
+  return campaignFinanceSource(state).resources.filter(resource=>resource.cycle?.length && resource.office.length &&
+    (resource.candidate.length || resource.candidateParts?.length) && resource.aggregation);
 }
 
 export function campaignFinanceStateScope(ocdId: string): string {
@@ -122,7 +142,7 @@ export function campaignFinanceScopeForState(state: string): string {
   return `US-${state}:campaign-finance`;
 }
 
-export function campaignFinanceStateFromScope(scope: string): string | null {
+function campaignFinanceStateFromScope(scope: string): string | null {
   const state = /^US-([A-Z]{2}):campaign-finance$/.exec(scope)?.[1];
   return US_JURISDICTIONS.some(row => row.usps === state) ? state! : null;
 }
@@ -131,7 +151,7 @@ export function isCampaignFinanceStateScope(scope: string): boolean {
   return campaignFinanceStateFromScope(scope) !== null;
 }
 
-export const CAMPAIGN_FINANCE_AUTHORITIES = Object.fromEntries(CAMPAIGN_FINANCE_SOURCES.map(source => {
+const stateAuthorities = Object.fromEntries(CAMPAIGN_FINANCE_SOURCES.map(source => {
   const id = campaignFinanceSourceId(source.state);
   return [id, {
     id, publisher: source.publisher, trust: "T1_AUTHORITATIVE_STRUCTURED", sourceClass: "OFFICIAL_PLATFORM",
@@ -145,35 +165,39 @@ export const CAMPAIGN_FINANCE_AUTHORITIES = Object.fromEntries(CAMPAIGN_FINANCE_
   }];
 })) as Readonly<Record<`US-${string}:campaign-finance-source`, SourceAuthorityContract>>;
 
-interface CampaignFinanceRows {
-  readonly kind: "campaign-finance-source-rows";
-  readonly state: string;
-  readonly resource: string;
-  readonly records: readonly CampaignSourceRecord[];
-}
+export const CAMPAIGN_FINANCE_AUTHORITIES = { ...stateAuthorities,
+  [CAMPAIGN_MONEY_SOURCE_ID]: {
+    id: CAMPAIGN_MONEY_SOURCE_ID, publisher: "Meanwhile campaign refresh reports",
+    trust: "T2_AUTHORITATIVE_DOCUMENT", sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    jurisdictions: ["US", ...CAMPAIGN_FINANCE_SOURCES.map(source => `US-${source.state}`)],
+    recordClasses: ["CAMPAIGN_FINANCE"], competentFacts: ["published-person refresh counts", "campaign money work and remaining gaps"],
+    expectedIdentifierKeys: ["source_record_id"], expectedTemporalFields: ["checked_at", "retrieved_at"],
+    horizonSemantics: "One state worker at a time checks published officeholders and November 3, 2026 candidates. Missing and unmatched money stays open.",
+    parserVersion: CAMPAIGN_FINANCE_PARSER, freshnessExpectation: "Hourly people scans; each person's daily check and each publisher's release clock are independent.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+    derivedPromotion: { inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE"], authorization: "SRC-MN: standing hourly person-bound money work" },
+  },
+} as const satisfies Readonly<Record<string, SourceAuthorityContract>>;
 
-interface CampaignFinanceCheck {
-  readonly kind: "campaign-finance-source-check";
+export interface CampaignFinanceWorkCheck {
+  readonly kind: "campaign-finance-work-check";
   readonly state: string;
-  readonly resource: string;
-  readonly records: readonly { readonly id: string; readonly state: string; readonly checkedAt: string; readonly rawHash: string; readonly loaded: number; readonly unjoined: number }[];
+  readonly resource: "people";
+  readonly records: readonly { readonly id:string;readonly state:string;readonly checkedAt:string;readonly startedAt?:string;readonly publishedPeople:number;readonly peopleWorked:number;readonly peopleWithMoney:number;readonly loaded:number;readonly unmatched:number;readonly reasons:Readonly<Record<string,number>>;readonly peakMemoryBytes:number }[];
 }
-export type CampaignFinancePublication = CampaignFinanceRows | CampaignFinanceCheck;
+export type CampaignFinancePublication = CampaignFinanceWorkCheck;
 
 export function campaignFinancePublicationIssue(value: CampaignFinancePublication, state: string): string | null {
-  if (value?.kind === "campaign-finance-source-check") {
-    const row = value.records[0];
-    return value.state !== state || value.records.length !== 1 || !row || row.state !== state || row.id !== value.resource ||
-      !Number.isFinite(Date.parse(row.checkedAt)) || !/^[a-f0-9]{64}$/.test(row.rawHash) || !Number.isSafeInteger(row.loaded) || row.loaded < 0 ||
-      !Number.isSafeInteger(row.unjoined) || row.unjoined < 0 || row.unjoined > row.loaded ? "Campaign source check is invalid." : null;
+  if(value?.kind === "campaign-finance-work-check"){
+    const row=value.records?.[0];
+    return value.state===state && value.resource==="people" && value.records.length===1 && row?.state===state && !!row.id &&
+      Number.isFinite(Date.parse(row.checkedAt)) && [row.publishedPeople,row.peopleWorked,row.peopleWithMoney,row.loaded,row.unmatched,row.peakMemoryBytes].every(n=>Number.isSafeInteger(n)&&n>=0)
+      ? null : "Campaign work check is incomplete";
   }
-  if (value?.kind !== "campaign-finance-source-rows" || value.state !== state || !value.resource ||
-      !Array.isArray(value.records) || value.records.length > 500) return "Campaign publication requires one bounded batch from its own state.";
-  for (const row of value.records as readonly CampaignSourceRecord[]) {
-    if (row.state !== state || row.resource !== value.resource || typeof row.id !== "string" || !row.id.startsWith(`${state}:`) ||
-        row.governmentOcdId !== null && campaignFinanceStateScope(row.governmentOcdId) !== `US-${state}:campaign-finance` ||
-        !row.provenance?.official || !/^[a-f0-9]{64}$/.test(row.provenance.rawHash) || !row.provenance.vaultKey ||
-        !Number.isFinite(Date.parse(row.provenance.retrievedAt)) || row.amounts.some(amount => !Number.isFinite(amount.amount))) return "Campaign fact crosses its source, state or saved evidence.";
-  }
-  return null;
+  return "Campaign work check is not recognized";
+}
+
+export async function runCampaignMoneyStates(visit:(state:string)=>Promise<void>){
+  for(const source of CAMPAIGN_FINANCE_SOURCES)await visit(source.state);
 }

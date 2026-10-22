@@ -61,7 +61,7 @@ export function weeklyAuditAccuracy(input: {
   for (const result of [...input.results].filter((r) => inWeek(r.checkedAt)).sort((a, b) => a.checkedAt.localeCompare(b.checkedAt))) {
     latest.set(result.factId, result);
   }
-  const week = [...latest.values()];
+  const week = [...latest.values()].filter(result=>result.published !== false);
   const stillRight = week.filter((r) => r.verdict === "GREEN").length;
   const wrong = week.filter((r) => r.verdict === "RED").length;
   const couldNotJudge = week.filter((r) => r.verdict === "INCONCLUSIVE").length;

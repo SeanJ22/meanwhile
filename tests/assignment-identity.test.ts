@@ -573,3 +573,30 @@ test("MW-015: a Send is complete only when every member is settled, and the inst
   assert.equal(many.kind === "NOT_COMPLETE" ? many.exceptions.length : -1, COMPLETION_EXCEPTION_CAP);
   assert.equal(many.kind === "NOT_COMPLETE" ? many.unsettledCount : -1, COMPLETION_EXCEPTION_CAP + 5);
 });
+
+test("funding a place again turns its stopped hunt back on, and a stopped hunt with no new Send stays stopped", async () => {
+  const { deactivateUnfundedHunts } = await import("@/lib/control-plane/repository/pg-store.ts");
+  const repos = createMemoryRepositories();
+  const pima = ["ocd-division/country:us/state:az/county:pima"];
+  const worldAt = async (at: string) => ({ ...(await cycleWorld(repos, at)), packetDivisions: new Map([["dispatch:i-1", pima], ["dispatch:i-3", pima]]) });
+  const first = dispatchWorkTarget({ intentId: "i-1", note: "Pima Arizona", requestedAt: T0 });
+  const created = await applyDispatchWork(repos, planDispatchWork({ targets: [first], world: await worldAt(T0) }), { now: T0 });
+  const hunts = created.written.filter(id => id.startsWith("hunt:packet:"));
+  assert.ok(hunts.length > 0, "the Send creates hunts for the place");
+  const state = { ...repos, planningState: "az" };
+  assert.equal(await deactivateUnfundedHunts(state, [], T1), hunts.length);
+  for (const id of hunts) assert.equal((await repos.obligations.mustRead(id)).value.active, false);
+
+  const unchanged = await applyDispatchWork(repos, planDispatchWork({ targets: [first], world: await worldAt(T1) }), { now: T1 });
+  assert.equal(unchanged.marked?.length ?? 0, 0);
+  for (const id of hunts) assert.equal((await repos.obligations.mustRead(id)).value.active, false, "the same Send does not restart what was stopped");
+
+  const again = dispatchWorkTarget({ intentId: "i-3", note: "Pima Arizona", requestedAt: T2 });
+  await applyDispatchWork(repos, planDispatchWork({ targets: [again], world: await worldAt(T2) }), { now: T2 });
+  for (const id of hunts) {
+    const row = (await repos.obligations.mustRead(id)).value;
+    assert.equal(row.active, true, `${id} runs again`);
+    assert.equal(row.nextDueAt, null);
+    assert.ok(row.assignments?.some(mark => mark.ref === "i-3"), "the new funding is recorded on the hunt");
+  }
+});

@@ -1,19 +1,20 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { saveWorkerPublicationOutcome } from "../lib/civic-data/publication-flow.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories, memoryAggregateRepository } from "../lib/control-plane/repository/memory.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { publishBoxFindings } from "../lib/facts/box-publication.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { publishClaim, type FactDb, type PublishInput } from "../lib/facts/publish.ts";
 import { publishRosterFacts } from "../lib/facts/roster-facts.ts";
-import { campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
-import { primeReaderCanonicalStore } from "../lib/reader/canonical-context.ts";
+import { fileCampaignMoneyFacts } from "../lib/funding/state-facts.ts";
+import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
+import { campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { invalidateReaderCache, purgeReaderCacheTags, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
-import { factDb } from "./helpers/fact-db.ts";
+import { campaignDb as factDb } from "./helpers/campaign-money-db.ts";
 
 const PLACE = "ocd-division/country:us/state:az/place:tucson";
 const BODY = `${PLACE}#example-council`;
@@ -122,19 +123,6 @@ test("a changed retained publication outcome, including HELD, clears the body's 
   assert.deepEqual(purges, [["reader-state:AZ"], ["reader-state:AZ"]], "the exact body's state takes precedence over another job state");
 });
 
-test("campaign holdings reuse the ballot's canonical state entry without another data read", async () => {
-  await withReaderSelection({ states: ["AZ"], keys: new Set([PLACE]) }, async () => {
-    await primeReaderCanonicalStore([{ recordClass: "CURATED_READER_RECORD", scope: "US-AZ:campaign-finance" }], {
-      async readPromotion() { throw new Error("Unexpected second read"); },
-      async readCandidate() { throw new Error("Unexpected second read"); },
-      async readPromotedEntry(recordClass, scope) { return { kind: "NOT_RECORDED", recordClass, scope }; },
-    });
-    assert.deepEqual(await settleCampaignFinanceReads([PLACE]), []);
-    assert.deepEqual(await settleCampaignFinanceReads(), []);
-    assert.deepEqual(campaignFinanceForTarget("unrecorded-candidate"), []);
-  });
-});
-
 async function seeded() {
   const db = await factDb();
   await db.query("INSERT INTO entity (id, kind, name, state) VALUES ($1, 'place', 'Tucson', 'AZ')", [PLACE]);
@@ -180,7 +168,7 @@ test("a live fact and unchanged confirmation clear their state's answers only af
   assert.equal(purges.length, 2);
 });
 
-test("a departed roster member and a pulled Box seat clear answers after their live fact comes down", async t => {
+test("a departed roster member clears answers; an audited Box seat stays live for Sean", async t => {
   const db = await seeded();
   t.after(() => db.pg.close());
   const snapshot = { evidence: { artifactId: "test:roster", contentHash: `sha256-${"c".repeat(64)}`,
@@ -204,12 +192,33 @@ test("a departed roster member and a pulled Box seat clear answers after their l
   assert.equal(removed.departed, 1);
   assert.equal(removedPurges, 1);
   assert.equal(totalPurges, 2, "confirmations and departure share one tag purge");
-  // A bare Box name lacks the words establishing a council seat and must disappear from the cached roster.
+  // A bare Box name raises a flag; only Sean can decide to remove the live seat.
   await db.query(`UPDATE fact SET produced_by='box', quote='Alice Example', value=jsonb_build_object('name', 'Alice Example')
     WHERE entity_id=$1 AND status='live' AND field LIKE 'member:%'`, [BODY]);
   await db.query("DELETE FROM fact WHERE field LIKE 'office:%'");
   const report = await publishBoxFindings({ repos: createMemoryRepositories(), facts: db, vault: new MemoryEvidenceStore(),
     fetch: async () => { throw new Error("unexpected fetch"); }, store: new MemoryRoutineDataStore(), clocks, now: NOW.toISOString(), limit: 10, purge });
-  assert.equal(report.seats.pulled, 1);
-  assert.equal(pulledPurges, 1);
+  assert.equal(report.seats.flagged, 1);
+  assert.equal(pulledPurges, 0);
+});
+
+test("native campaign-money writes, replacements and confirmations clear their state after commit", async t => {
+  const db = await factDb();
+  t.after(() => db.pg.close());
+  const resource = campaignFinanceSource("MN").resources[0];
+  const [raw] = JSON.parse(readFileSync(new URL("./fixtures/campaign-finance/mn-native-excerpt.json", import.meta.url), "utf8"));
+  const record = { ...campaignSourceRecord("MN", resource, raw, { url: resource.url, rawHash: "b".repeat(64), vaultKey: "test:mn",
+    byteLength: 100, retrievedAt: NOW.toISOString(), publicationDate: null }),
+    person: { id: "test-laurie-pryor", name: "Laurie Pryor", seat: "test-house-seat", sourceUrl: "https://www.house.mn.gov/" } };
+  let purges = 0;
+  const purge = async (tags: readonly string[]) => {
+    assert.deepEqual(tags, ["reader-state:MN"]);
+    assert.equal(Number((await db.query("SELECT count(*) AS n FROM fact WHERE status='live'"))[0]!.n), 1);
+    purges++;
+    return { purged: true };
+  };
+  assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [record], NOW.toISOString(), { purge }), { written: 1, confirmed: 0 });
+  assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [record], NOW.toISOString(), { purge }), { written: 0, confirmed: 1 });
+  assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [{ ...record, title: "Updated report" }], NOW.toISOString(), { purge }), { written: 1, confirmed: 0 });
+  assert.equal(purges, 3);
 });

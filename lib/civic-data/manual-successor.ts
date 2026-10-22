@@ -4,7 +4,6 @@ import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { manualProjectionCandidate, readManualProjectionPrior, type CuratedReaderProjection, type ManualProjectionPackage } from "./manual-projections.ts";
 import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts";
-import type { AuditPullRemovalEvidence } from "./types.ts";
 import { manualPriorAuthorityIssue, type ManualSuccessorCandidate } from "./manual-prior-authority.ts";
 import { everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 
@@ -20,18 +19,10 @@ function exactMembers(payload: CuratedReaderProjection): Map<string, CuratedRead
   return members;
 }
 
-function auditPullEvidence(baseModel: CuratedReaderProjection, memberIds: readonly string[]): AuditPullRemovalEvidence[] {
-  const wanted = new Set(memberIds);
-  return civicRecordsFor("CURATED_READER_RECORD", baseModel)
-    .filter((row) => wanted.has((row.record as { id: string }).id))
-    .map((row) => ({ key: row.key, code: "REMOVED_BY_AUDIT_PULL" as const, memberId: (row.record as { id: string }).id }));
-}
-
 export async function prepareManualProjectionSuccessor(
   input: ManualProjectionPackage,
   store: CivicDataReadStore,
   now: string,
-  pulledMemberIds: ReadonlySet<string> = new Set(),
 ): Promise<{ readonly candidate: ManualSuccessorCandidate; readonly expectedBaseVersionId: string | null }> {
   const contract = requiredManualProductionContract(input.contractId);
   if (contract.recordClass !== "CURATED_READER_RECORD") {
@@ -69,23 +60,15 @@ export async function prepareManualProjectionSuccessor(
   const currentContactCells = new Set([...current.values()].filter((row) => row.kind === "CONTACT")
     .map((row) => `${row.topicId}|${row.zip}`));
   const resolvedOwed = new Set<string>();
-  const pulled = [...prior].filter(([id]) => pulledMemberIds.has(id) && !current.has(id));
   const inherited = [...prior].filter(([id, row]) => {
     if (current.has(id)) return false;
-    if (pulledMemberIds.has(id)) return false;
     if (input.contractId === "everyday-routing" && row.kind === "CONTACT_OWED" && currentContactCells.has(`${row.topicId}|${row.zip}`)) {
       resolvedOwed.add(id);
       return false;
     }
     return true;
   });
-  if (inherited.length === 0) {
-    const pulledFacts = pulled.map(([key, record]) => ({ key, code: "AUDIT_PULLED_FROM_VERSION",
-      detail: "An auditor broke this published member; it is not carried into the next version.", record }));
-    return { candidate: pulledFacts.length ? { ...fresh, excludedFacts: [...(fresh.excludedFacts ?? []), ...pulledFacts],
-      removalEvidence: auditPullEvidence(read.value, pulled.map(([id]) => id)) } : fresh,
-      expectedBaseVersionId: base.candidate.id };
-  }
+  if (inherited.length === 0) return { candidate:fresh,expectedBaseVersionId:base.candidate.id };
   const inheritedIds = new Set(inherited.map(([id]) => id));
   const priorIdentities = base.candidate.identities.filter((identity) => inheritedIds.has(identity.identifiers.record_id));
   if (new Set(priorIdentities.map((identity) => identity.identifiers.record_id)).size !== inheritedIds.size) {
@@ -107,11 +90,8 @@ export async function prepareManualProjectionSuccessor(
     normalizedPayload: payload, readModel: payload, civicRecords,
     manualPriorAuthority: { kind: "VALIDATED_PRIOR_PROJECTION", versionId: base.candidate.id,
       readModelSha256: hash(base.candidate.readModel), retainedMembers: inherited.map(([key, row]) => ({ key, sha256: hash(row) })) },
-    ...(pulled.length ? { removalEvidence: auditPullEvidence(read.value, pulled.map(([id]) => id)) } : {}),
     excludedFacts: [ ...(fresh.excludedFacts ?? []), ...inherited.map(([key, record]) => ({ key,
       code: "MANUAL_MEMBER_HELD_LKG", detail: "Exact prior GOOD member retained; this review supplies no independently proven replacement or removal.", record })),
-      ...pulled.map(([key, record]) => ({ key, code: "AUDIT_PULLED_FROM_VERSION",
-        detail: "An auditor broke this published member; it is not carried into the next version.", record })),
       ...[...resolvedOwed].map((key) => ({ key, code: "CONTACT_OWED_RESOLVED_BY_SUPPORTED_CONTACT",
         detail: "The current source-reviewed contact covers this exact topic/ZIP cell.", record: prior.get(key) })),
     ],

@@ -1,6 +1,6 @@
-import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceSourceId } from "../lib/funding/state-sources.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { REGISTRY_STATES, parseStateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import { CAMPAIGN_MONEY_SOURCE_ID,CAMPAIGN_FINANCE_SOURCES } from "../lib/funding/state-sources.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -522,6 +522,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-doors",
     "meeting-source-wiring",
     ...REGISTRY_STATES.map(state => `candidate-campaign-sites-derived:${state}`),
+    CAMPAIGN_MONEY_SOURCE_ID,
     "usaspending",
     "federal-audit-clearinghouse",
     "sam-gov-entities",
@@ -574,7 +575,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
 test("one canonical registry owns every supported authority and refuses arbitrary gov hosts", () => {
   const supportingResearchAuthorities = [
     "census-bulk-products",
-    ...CAMPAIGN_FINANCE_SOURCES.map(source=>campaignFinanceSourceId(source.state)),
+    ...CAMPAIGN_FINANCE_SOURCES.map(source=>`US-${source.state}:campaign-finance-source`),
     "az-legislature",
     "nj-legislature",
     "legiscan",
@@ -2328,6 +2329,24 @@ test("state publishers retain the measured state reservation across small runs",
   second();
 });
 
-test("the retired native campaign load has no scheduled source jobs", () => {
-  assert.deepEqual(ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "CAMPAIGN_FINANCE"), []);
+test("campaign money checks hourly state clocks from one serial coordinator", () => {
+  const money=ROUTINE_SOURCE_TASKS.filter(task=>task.recordClass==="CAMPAIGN_FINANCE");
+  assert.equal(money.length,1);assert.equal(money[0].id,CAMPAIGN_MONEY_SOURCE_ID);
+  assert.equal(money[0].cadenceMs,ROUTINE_DATA_ADMISSION_MS);
+});
+
+test("a paused runner still publishes Box findings; only the paid hunt-source reads wait for the resume", () => {
+  const runner = readFileSync(new URL("../scripts/routine-civic-data-runner.mts", import.meta.url), "utf8");
+  const read = runner.slice(runner.indexOf("async function readHuntSourceTasks"), runner.indexOf("function newestConsideredAt"));
+  const pause = read.indexOf("intents.runnerPause.paused");
+  assert.ok(pause > read.indexOf("publishBoxFindings("), "the Box publishing pass runs before any pause is consulted");
+  assert.ok(pause > read.indexOf("return publication"), "owed facts, door probes and publication tasks run under a pause");
+  assert.ok(pause < read.indexOf("huntSourceTasks(admitted"), "paid hunt-source reads still wait for the resume");
+  assert.equal(read.match(/runnerPause\.paused/g)?.length, 1);
+});
+
+test("a pause never deactivates paid hunts; they stay as they were and the paid lane stays closed", () => {
+  const shadow = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  assert.match(shadow, /if\(!dry && !filteredCycle && !huntsPaused\)await deactivateUnfundedHunts\(repos,fundedRefs,NOW\);/);
+  assert.doesNotMatch(shadow, /fundedRefs=huntsPaused\?\[\]/);
 });

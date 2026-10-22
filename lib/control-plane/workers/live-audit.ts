@@ -7,6 +7,7 @@
 import { createHash } from "node:crypto";
 import { pageWords, valueOnPage, FRESHNESS_WINDOW_HOURS, SECTION3_LABEL_FIELDS } from "../promotion/section3.ts";
 import { boostReason, type SampleBoosts } from "./audit-sampling.ts";
+import { parseCsv } from "../../reference/csv.ts";
 
 /** One published fact as the audit needs it: a record from a live read model. */
 export interface LiveFact {
@@ -54,6 +55,8 @@ export interface LiveAuditCheck {
 export type PickReason = "PAST_REFRESH" | "DEMAND" | "SINGLE_SOURCE" | "ROUTINE";
 
 export interface LiveAuditResult {
+  /** A later lookup found the audited record is no longer served. Kept in history, outside current accuracy. */
+  readonly published?: boolean;
   /** Why this fact was in the sample. */
   readonly pickedBecause: PickReason;
   readonly factId: string;
@@ -90,7 +93,7 @@ export interface RoutineRefresh {
 const NOT_PAGE_STATEMENTS = new Set([
   "id", "kind", "bodyId", "ocdId", "sourceUrl", "sourceOrg", "collectedAt", "verifiedAt", "verification", "fieldSources",
   "formatVersion", "carried", "provenance", "sourceReceipt", "retainedFromVersion", "topicId", "serviceAreaEvidence", "coverageEvidence",
-  "label", "match", "lat", "lng", "timeZone",
+  "label", "match", "lat", "lng", "timeZone", "officeholderId", "officeKind",
 ]);
 
 /**
@@ -112,6 +115,7 @@ export function auditableFields(record: Readonly<Record<string, unknown>>, sourc
     if (value !== null && typeof value === "object" && !Array.isArray(value)) {
       for (const [inner, innerValue] of Object.entries(value as Record<string, unknown>)) {
         if (NOT_PAGE_STATEMENTS.has(inner) || SECTION3_LABEL_FIELDS.includes(inner)) continue;
+        if (sourced?.[`${field}.${inner}`] && sourced[`${field}.${inner}`].sourceUrl !== sourceUrl) continue;
         take(`${field}.${inner}`, innerValue);
       }
     } else take(field, value);
@@ -169,17 +173,29 @@ export function auditLiveFact(fact: LiveFact, page: PageRead, now: string, picke
   const fields = auditableFields(fact.record, fact.sourceUrl);
   const reread = { url: page.url, retrievedAt: page.retrievedAt, contentHash: page.contentHash, artifactId: page.artifactId ?? null };
   const base = { pickedBecause, factId: fact.id, family: fact.family, area: fact.area, checkedAt: now, sourceUrl: fact.sourceUrl, reread, basis: "REREAD" as const };
-  if (!page.text.trim()) {
-    return { ...base, verdict: "INCONCLUSIVE", checks: [], reason: "The page came back empty, so nothing could be checked." };
+  if (!page.text.trim() || /^%PDF-/.test(page.text) || page.text.includes("\u0000")) {
+    return { ...base, verdict: "INCONCLUSIVE", checks: [], reason: "The source has no readable text. Its document needs to be extracted before checking values." };
   }
   if (!fields.length) {
     return { ...base, verdict: "INCONCLUSIVE", checks: [], reason: "This fact has no value the page should show, so there was nothing to look for." };
   }
-  const words = pageWords(page.text);
+  let text = page.text;
+  // Local member IDs are bookkeeping. The CSV's own official roster links bind
+  // the office to its person; another member's matching address proves nothing.
+  if (fact.family === "member-offices" && /\bcsv(?:[?#]|$)/i.test(fact.sourceUrl)) {
+    const rows = parseCsv(text);
+    const id = fact.record.officeholderId;
+    const local = typeof id === "string" ? /^nj-legislature:(\d+)$/.exec(id)?.[1] : null;
+    const matches = rows.slice(1).filter(row => typeof id === "string" && (row[0] === id || local && row.some(value =>
+      new RegExp(`(?:legislative-roster/|legislatorBio/|[?&]Leg=)${local}(?:[/;?&#]|$)`, "i").test(value))));
+    if (matches.length !== 1) return { ...base, verdict: "INCONCLUSIVE", checks: [], reason: "The source row could not be tied to this person's office." };
+    text = matches[0].join("\n");
+  }
+  const words = pageWords(text);
   const checks: LiveAuditCheck[] = fields.map(({ field, value }) => {
     const date = isoDateParts(value);
     if (date) return { field, kind: "DATE_ON_PAGE" as const, ok: dateOnPage(date, words), value: trimmed(value) };
-    return { field, kind: "VALUE_ON_PAGE" as const, ok: valueOnPage(value, page.text, words), value: trimmed(value) };
+    return { field, kind: "VALUE_ON_PAGE" as const, ok: valueOnPage(value, text, words), value: trimmed(value) };
   });
   const failed = checks.filter((c) => !c.ok);
   if (!failed.length) {

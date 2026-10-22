@@ -16,8 +16,7 @@ function readers(opts: { stateKnown: boolean }) {
       provisionTargets: () => new Set<string>(),
       refreshFunding: async () => { calls.push("fec"); },
       fundingTargets: () => new Set(["H0AZ01234"]),
-      refreshStateMoney: async (state: string) => { calls.push(`state:${state}`); },
-      stateMoneyTargets: (id: string) => (opts.stateKnown ? new Set([id]) : new Set<string>()),
+      stateMoneyTargets: async (id: string) => { calls.push(`person:${id}`); return opts.stateKnown ? new Set([id]) : new Set<string>(); },
       contributorTargets: () => new Set<string>(),
       refreshVotes: async () => {},
       voteTargets: () => new Set<string>(),
@@ -29,7 +28,7 @@ test("state and local money reactions: a candidacy key with a held committee is 
   const held = readers({ stateKnown: true });
   const valid = await validReactionTargetsFor("FUNDING_TOTAL_REACTION", KEY, held.value);
   assert.ok(valid.has(KEY), "the state candidacy key was refused");
-  assert.deepEqual(held.calls, ["state:AZ"], "it opened the FEC authority, or no state authority");
+  assert.deepEqual(held.calls, [`person:${KEY}`], "it opened the FEC authority, or no state authority");
 
   // A key the state's money does not hold is refused, not accepted by default.
   const unknown = readers({ stateKnown: false });
@@ -42,9 +41,9 @@ test("state and local money reactions: a candidacy key with a held committee is 
 });
 
 test("state and local money reactions: the section carries the same control as the federal money cards", () => {
-  const section = readFileSync(join(process.cwd(), "components", "funding", "state-money-section.tsx"), "utf8");
+  const section = readFileSync(join(process.cwd(), "components", "funding", "state-campaign-section.tsx"), "utf8");
   assert.match(section, /targetType="FUNDING_TOTAL_REACTION"/);
   assert.match(section, /How do you feel about how this campaign is funded\?/);
   // Only where there is money to feel something about.
-  assert.match(section, /filingState === "FILED" \|\| r\.filingState === "REGISTERED_NO_ACTIVITY_REPORTED"/);
+  assert.match(section, /if\(!value\?\.records.length\)/);
 });

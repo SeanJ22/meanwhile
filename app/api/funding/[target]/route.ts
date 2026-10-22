@@ -2,6 +2,7 @@ import { readerRoute } from "@/lib/api/reader-route";
 import { directFundingTargetPlan } from "@/lib/funding/target-authorities";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { settleFundingHoldingAnswer, startDirectFundingReads, fundingHoldingReaders } from "@/lib/funding/holding-answer";
+import { readCampaignMoneyForTarget } from "@/lib/funding/state-reader";
 
 export const runtime = "nodejs";
 
@@ -20,6 +21,11 @@ export const GET = readerRoute("/api/funding/[target]", async function GET(
   const startedAt = Date.now();
   const divisions = await ballotPlaceFromRequest(request);
   const direct = directFundingTargetPlan(target);
+  if(!direct.federal){
+    const money=await readCampaignMoneyForTarget(target,divisions);
+    return money?Response.json({kind:"state-cycle",data:money,dataState:"PROMOTED",dataMetadata:null,holdingStatus:money.status==="UNAVAILABLE"?"PARTIAL":"HELD"},
+      {headers:{"cache-control":"private, no-store","server-timing":`total;dur=${Date.now()-startedAt}`}}):Response.json({kind:"none",dataState:"PROMOTED",dataMetadata:null,holdingStatus:"HELD"},{headers:{"cache-control":"private, no-store"}});
+  }
   const readers = fundingHoldingReaders(divisions, timings);
   const pending = startDirectFundingReads(direct, readers);
   const settled = await settleFundingHoldingAnswer(target, readers, pending);

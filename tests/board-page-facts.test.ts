@@ -26,8 +26,8 @@ test("a council page that lists its members as cards gives every member, their s
 test("a list of meetings is not a roster, and a place, notice or menu item is not a person", () => {
   assert.deepEqual(extractRoster("https://prichardcitycouncil.org/meetings", page("prichard-meetings.html")).members, []);
   for (const junk of ["AJ Cooper Municipal Complex", "Pay Ticket Online", "Election Announcement", "Meeting Notice", "Department Quick Links", "Agenda Portal", "Calendar of Events",
-    "Public Works Department", "Boards And Committees", "Brewton Councilors", "Minutes And Agendas"]) assert.equal(looksLikeNameCell(junk), false, junk);
-  for (const person of ["Frank M. Nalty JR.", "Traci D. Hale", "Roy Smith, II", "Stephani Johnson-Norwood", "Sam Hall", "Jane Park", "Maria De La Cruz", "Pat O'Brien", "Cheryl Barton"]) assert.equal(looksLikeNameCell(person), true, person);
+    "Public Works Department", "Boards And Committees", "Brewton Councilors", "Minutes And Agendas", "Date Elected", "BID PACKAGE", "License Inspector", "Driver's Licenses", "TOWN OF AVOCA", "Board of Education Home"]) assert.equal(looksLikeNameCell(junk), false, junk);
+  for (const person of ["Frank M. Nalty JR.", "Traci D. Hale", "Roy Smith, II", "Stephani Johnson-Norwood", "Sam Hall", "Jane Park", "Larry Devasier", "Sadie Carter-Blackwell", "Akos Kovach", "Ron S. Campbell", "Valerie Smith", "Nathan Bridgman", "Maria De La Cruz", "Pat O'Brien", "Cheryl Barton"]) assert.equal(looksLikeNameCell(person), true, person);
 });
 
 test("a body's schedule is the phrase the page states, and a comment rule is a sentence about its meetings", () => {

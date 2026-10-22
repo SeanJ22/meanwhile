@@ -15,7 +15,7 @@ import { isPlainSentence, OTHER_NOTICE, schedulePhrase } from "../hunt/page-rule
 import { readPassCursor, writePassCursor } from "./db.ts";
 import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, officeNamed, splitSubject } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, isGoverningName, otherOffice, COMMENT_SUMMARY_LEAD, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, isGoverningName, otherOffice, plainBoardName, COMMENT_SUMMARY_LEAD, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
@@ -110,15 +110,20 @@ const JOB_SUPERVISOR = "(?:maintenance|road|roads|highway|street|streets|bridge|
 const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff|${JOB_SUPERVISOR}|supervisors? of (?:maintenance|roads?|highways?|streets?|public works|operations|parks))\\b`, "i");
 const COUNCIL_SEAT = /\b((vice|deputy)[- ]?)?mayor\b|\bcouncil[- ]?(m[ae]n|member|woman|person|or|lor|president)s?\b|\balder(m[ae]n|woman|person)\b|\bselect(m[ae]n|woman|board)\b|\b(trustee|supervisor|freeholder|legislator|commissioner)s?\b/i;
 const BOARD_SEAT = /\b(vice[- ]?)?(chair(person|man|woman)?|president)\b|\bboard members?\b|\bmember of the board\b/i;
-const SEAT_NUMBER = /\b(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?\d+|at[- ]large)\b/i;
+const SEAT_NUMBER = /\b(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?\d+|seat\s+[a-f]|at[- ]large)\b/i;
+const SEAT_MARKER = /\b(?:(?:seat|position|place|zone|ward)\s*(?:no\.?\s*)?\d+|seat\s+[a-f])\b/i;
 const WARD = /\b(?:ward|district)\s*(?:no\.?\s*)?(\d+)\b/i;
 
 /** The seat a person's own words show on this body, or null: a staff title never seats anyone, and a council seats only by its own titles. */
 export function seatIn(words: string, bodyId: string): { readonly ward: string | null } | null {
   const council = bodyId.endsWith("#governing"), board = bodyId.endsWith("#board");
-  if (STAFF_TITLE.test(words)) return null;
-  // On a council or a board, the district, ward or seat a person holds is a seat on its own ("Annie Williams, District 1").
-  const numbered = (council || board) && SEAT_NUMBER.test(words);
+  // A lettered or numbered seat is a seat held, whatever office the holder also fills ("Seat E - Secretary/Treasurer" is a school board member).
+  const seated = (council || board) && SEAT_MARKER.test(words);
+  if (STAFF_TITLE.test(words) && !seated) return null;
+  // On a council or a board, the district, ward or seat a person holds is a seat on its own ("Annie Williams, District 1"), and a school board's plain "Member" is a member.
+  // A county board's "Chairman" is a seat on it, unless the words put that chair on a committee, department or authority.
+  const chairs = council && /\b(?:vice[- ]?)?chair(?:man|woman|person)?\b/i.test(words) && !/\b(?:committee|department|commission|authority|library|hospital|district board)\b/i.test(words);
+  const numbered = (council || board) && SEAT_NUMBER.test(words) || board && /\bmember\b/i.test(words) || chairs;
   if (!numbered && !COUNCIL_SEAT.test(words) && (council || !BOARD_SEAT.test(words)) && (council || board || !/\bmembers?\b/i.test(words))) return null;
   return { ward: council || board ? WARD.exec(words)?.[1] ?? null : null };
 }
@@ -384,6 +389,8 @@ export async function publishBoxFindings(input: {
       for (const entry of people) {
         const { finding, slot: own, holder } = entry;
         const name = own.slot === "member_name" ? String(finding.value) : holder ?? known.find(candidate => named(finding.exactQuote, candidate));
+        // A cell that is a menu item, a heading or a place ("Date Elected", "BID PACKAGE", "Board of Education Home") is not a person, however the page laid it out.
+        if (own.slot === "member_name" && !looksLikeNameCell(String(finding.value).replace(/\s+[-–—]\s+.*$/, ""))) { await settle(finding.row, { blank: "NOT_A_PERSON" }, own.class); continue; }
         if (!name) {
           if (own.class === "contacts" && (own.slot === "phone" || own.slot === "email")) {
             const field = own.slot === "phone" ? "office_phone" : "office_email", elsewhere = otherOffice(finding.field, String(finding.value), finding.exactQuote, finding.sourceUrl);
@@ -440,7 +447,9 @@ export async function publishBoxFindings(input: {
         const named = await claim("name", name.name, name.name, name.quote);
         if ("blank" in named) { await settle(finding.row, named, slot.class); continue; }
       }
-      const outcome = slot.class === "bodies" ? await claim("name", value, value, quote)
+      // The board is named as the page names it, without what the page hangs on it ("Board of Education Home" names the Board of Education).
+      const shown = slot.class === "bodies" && isGoverningName(value) ? plainBoardName(value) : value;
+      const outcome = slot.class === "bodies" ? await claim("name", shown, shown, quote)
         : slot.slot === "comment:period" ? await claim(slot.slot, value.toUpperCase(), finding.exactQuote, finding.exactQuote) : await claim(slot.slot, value, value, quote);
       // A page's own words on how to comment show the body takes it.
       if (slot.class === "comment rules" && slot.slot !== "comment:period" && !("blank" in outcome)) await claim("comment:period", "YES", finding.exactQuote, finding.exactQuote);

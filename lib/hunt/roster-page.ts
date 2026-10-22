@@ -111,7 +111,7 @@ const OFFICE_WORD =
 
 /** Words a page puts in a heading, a notice, a menu or a place's name, never in a person's: a cell holding one is not a name. */
 const NOT_A_NAME =
-  /\b(?:announcements?|notices?|elections?|portal|calendar|events?|news|agenda|minutes|meetings?|departments?|services?|online|links?|ticket|tickets|permits?|forms?|applications?|apply|resources?|information|contact|directory|archives?|documents?|reports?|budget|ordinances?|resolutions?|hearings?|public|works|safety|municipal|complex|center|centre|building|courthouse|library|home|about|welcome|search|login|subscribe|facebook|twitter|instagram|youtube|webcam|police|utilities|airport|inspections?|licenses?|zoning|planning|recycling|trash|sewer|taxes|careers|employment|volunteer|history|visit|visiting|living|working|business|businesses)\b/i;
+  /\b(?:announcements?|notices?|elections?|portal|calendar|events?|news|agenda|minutes|meetings?|departments?|services?|online|links?|ticket|tickets|permits?|forms?|applications?|apply|resources?|information|contact|directory|archives?|documents?|reports?|budget|ordinances?|resolutions?|hearings?|public|works|safety|municipal|complex|center|centre|building|courthouse|library|home|about|welcome|search|login|subscribe|facebook|twitter|instagram|youtube|webcam|police|utilities|airport|inspections?|licenses?|zoning|planning|recycling|trash|sewer|taxes|careers|employment|volunteer|history|visit|visiting|living|working|business|businesses|date|dates|elected|expires|expiration|term|terms|seat|title|position|bid|bids|package|packages|name|town|village|of|the|and|for|at|in|on|to|by|from|with)\b/i;
 
 export function looksLikeNameCell(text: string): boolean {
   const first = text.split("\n")[0]?.trim() ?? "";

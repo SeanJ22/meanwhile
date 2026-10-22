@@ -15,7 +15,7 @@ import { officeNameOn, publishBoxFindings, remedyFor, seatIn } from "../lib/fact
 import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { ensureEntity, ensureFactEntities, ensureGoverningBody } from "../lib/facts/entities.ts";
-import { FINDING_SLOTS_VERSION, slotFor, slotsVersionOf } from "../lib/facts/finding-slots.ts";
+import { FINDING_SLOTS_VERSION, isGoverningName, slotFor, slotsVersionOf } from "../lib/facts/finding-slots.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
 import type { RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
 import { fetchCapture } from "../lib/facts/capture.ts";
@@ -573,6 +573,13 @@ test("a supervisor of a kind of work is staff and never seated; a supervisor who
     assert.equal(seatIn(words, board), null, words);
   }
   assert.deepEqual(seatIn("Supervisor Rex Scott, District 1", governing), { ward: "1" });
+  // A seat held outranks the other office its holder fills; staff in a district are still staff.
+  assert.notEqual(seatIn("Chrissie Greene\nSeat E - Secretary/Treasurer\nTerm Expires: 10/3/2027", board), null);
+  assert.notEqual(seatIn("Sarah Berry\nMember\nsarah.berry@foukepanthers.org", board), null, "a school board's plain Member is a member");
+  assert.equal(seatIn("Superintendent, District 5 Schools", board), null);
+  assert.equal(seatIn("Pat Lee\nCity Clerk", governing), null);
+  assert.notEqual(seatIn("David Gomez\nChairman\ndgomez@greenlee.az.gov", governing), null, "a county board's chairman");
+  assert.equal(seatIn("Pat Lee, Chair, Parks Committee", governing), null, "a committee's chair is not a seat on the council");
   assert.deepEqual(seatIn("Town Supervisor", "az:city:town-of-example#governing"), { ward: null });
   assert.deepEqual(seatIn("Supervisor Rex Scott\nChair, Board of Supervisors", governing), { ward: null });
   assert.notEqual(seatIn("Supervisor Dana Cruz, District 4", governing), null);
@@ -676,4 +683,27 @@ test("a name a page gives its own governing board, with the place in front, is t
   assert.deepEqual(await facts.query("SELECT e.id, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.kind = 'body' AND f.field = 'name' AND f.status = 'live' ORDER BY e.id"), [
     { id: `${CHATOM}#governing`, value_text: "Chatom Town Council" }, { id: `${PRICHARD}#body:finance-committee`, value_text: "Finance Committee" },
     { id: `${PRICHARD}#governing`, value_text: "Prichard City Council" }].sort((a, b) => a.id.localeCompare(b.id)));
+});
+
+test("a name a page dresses the board in, or a menu item taken for a person, never makes a second board or a member", async () => {
+  assert.deepEqual(["Our Governing Board", "Board of Education Home", "Board of Education Policy", "Council Members", "The City Council"].map(isGoverningName), [true, true, true, true, true]);
+  assert.deepEqual(["Planning Commission", "Parent Committee", "Library Board", "Finance Committee"].map(isGoverningName), [false, false, false, false]);
+  const { facts, repos, vault, hold } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  const SCHOOLS = "al:school:huntsville-city-school-district", URL = "https://www.hsv.k12.al.gov/board";
+  const page = await hold(URL, `<html><body><h1>Huntsville City School District, Alabama</h1><h2>Our Governing Board</h2><p>Brian Brooks, Board Member, District 3</p><p>Date Elected</p><p>Board Member</p></body></html>`, "2026-09-01T15:00:00.000Z");
+  let index = 0;
+  const drop = (subjectId: string, field: string, value: string, quote: string) => indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: `at-${index}`, missionPart: null,
+    finding: { subjectId, field, value, exactQuote: quote, sourceUrl: URL, artifactIds: [page], subjectHint: null, index: index++ } }, NOW);
+  await drop("government:US-AL:nces:0101800#body:our-governing-board", "OFF-04", "Brian Brooks", "Brian Brooks, Board Member, District 3");
+  await drop("government:US-AL:nces:0101800#body:our-governing-board", "GOV-02", "Our Governing Board", "Our Governing Board");
+  await drop(`${SCHOOLS}#board`, "OFF-04", "Date Elected", "Date Elected");
+  const fetch: ProbeFetch = async () => { throw new Error("held"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  assert.equal(report.published, 2, JSON.stringify(report));
+  assert.deepEqual(report.failuresByReason, { NOT_A_PERSON: 1 });
+  assert.deepEqual(await facts.query("SELECT value_text FROM fact WHERE entity_id = $1 AND field = 'name' AND status = 'live'", [`${SCHOOLS}#board`]), [{ value_text: "Governing Board" }], "named as the page names it, without what the page hangs on it");
+  assert.deepEqual(await facts.query("SELECT id FROM entity WHERE kind = 'body' AND parent_id = $1", [SCHOOLS]), [{ id: `${SCHOOLS}#board` }], "one board for the district");
+  assert.deepEqual((await facts.query("SELECT f.field, f.value->>'name' AS name, f.value_text FROM fact f WHERE f.entity_id = $1 AND f.status = 'live' ORDER BY f.field", [`${SCHOOLS}#board`])).map(row => [row.field, row.name ?? row.value_text]),
+    [["member:" + (await facts.query("SELECT substr(field, 8) AS id FROM fact WHERE entity_id = $1 AND field LIKE 'member:%'", [`${SCHOOLS}#board`]))[0]!.id, "Brian Brooks"], ["name", "Governing Board"]]);
 });

@@ -76,9 +76,10 @@ const navigation = (value: string, quote: string): FindingSlot => {
 };
 
 /** A State Run Checklist item a packet hunter reports, routed where that record publishes; some take their route from the value's shape. */
-const CHECKLIST: Readonly<Record<string, (value: string, quote: string) => FindingSlot>> = {
+const CHECKLIST: Readonly<Record<string, (value: string, quote: string, subjectId: string) => FindingSlot>> = {
   "GOV-01": () => ({ class: "body links", slot: "name" }),
-  "GOV-02": () => ({ class: "body links", slot: "name" }),
+  // A committee's name names the committee: it goes where bodies are made, under its own government.
+  "GOV-02": (_value, _quote, subjectId) => subjectId.includes("#body:") ? { class: "bodies", slot: "body_name" } : { class: "body links", slot: "name" },
   "GOV-08": value => PHONE.test(value) ? { class: "office contacts", slot: "office_phone" } : URL_VALUE.test(value) ? { class: "body links", slot: "homepage" }
     : EMAIL.test(value) ? { class: "office contacts", slot: "office_email" } : { class: "office contacts", slot: "office_address" },
   "REF-07": () => ({ class: "official hosts", slot: "host" }),
@@ -161,16 +162,16 @@ export function candidateChecklistId(field: string, value: unknown): string | nu
 }
 
 /** A checklist id, or a hunter's own field name matched to a slot by its words; candidate findings belong to the ballot classes. */
-export function slotFor(field: string, value: unknown, recordClass: string | null, quote = "", sourceUrl = ""): FindingSlot {
+export function slotFor(field: string, value: unknown, recordClass: string | null, quote = "", sourceUrl = "", subjectId = ""): FindingSlot {
   const item = /^([A-Z]{3})-\d{2}$/.exec(field.trim());
-  if (item) return CHECKLIST[item[0]]?.(String(value).trim(), quote)
+  if (item) return CHECKLIST[item[0]]?.(String(value).trim(), quote, subjectId)
     ?? { class: CHECKLIST_FAMILIES[item[1]!]?.name.toLowerCase() ?? "other", waiting: checklistWait(item[0]) };
   // Hunters annotate names, as in `officeholder.name (Board Member)` or `officeholder.name/office`.
   const key = field.replace(/\(.*?\)/g, "").split("/")[0]!.toLowerCase().replace(/[^a-z0-9.]/g, "");
   const dot = key.lastIndexOf("."), head = dot < 0 ? "" : key.slice(0, dot), last = key.slice(dot + 1);
   if (key.startsWith("candidate") || recordClass === "candidate-enrichment") {
     const id = candidateChecklistId(field, value);
-    return id === null ? { class: "candidates", waiting: "NO_FACT_SLOT" } : CHECKLIST[id]?.(String(value).trim(), quote) ?? { class: "candidates", waiting: checklistWait(id) };
+    return id === null ? { class: "candidates", waiting: "NO_FACT_SLOT" } : CHECKLIST[id]?.(String(value).trim(), quote, subjectId) ?? { class: "candidates", waiting: checklistWait(id) };
   }
   if (key === "commentperiod") return /^(yes|no)$/i.test(String(value)) ? { class: "comment rules", slot: "comment:period" } : { class: "comment rules", slot: "comment:detail" };
   if (COMMENT[key]) return { class: "comment rules", slot: COMMENT[key] };

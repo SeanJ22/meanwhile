@@ -5,6 +5,7 @@ import { parseCsv } from "../reference/csv.ts";
 import { readCensusGovernmentFacts, type CensusGovernmentFacts } from "../registration/jurisdictions.ts";
 import type { FactDb, Query } from "./publish.ts";
 import { hostOf, isOfficialUrl } from "./check.ts";
+import { subBodyId } from "../civic-data/meeting-body-crosswalk.ts";
 
 type EntityKind = "place" | "government" | "body" | "seat" | "person" | "meeting" | "agenda_item" | "bill" | "vote_event"
   | "election" | "contest" | "candidacy" | "measure" | "committee" | "statement" | "law_question" | "news_item";
@@ -276,11 +277,11 @@ async function bodyUnder(query: Query, government: GovernmentRef, find: { readon
   return { id, name, state: government.state, parentId: government.id };
 }
 
-/** The body a name on a government's page stands for: its governing board, a body of that name it already holds, or a new body of that name. */
+/** The body a name on a government's page stands for: its governing board, a body of that name it already holds, or a new body named `<government id>#body:<slug>`. */
 export async function bodyNamed(query: Query, subjectId: string, governing: BodyRef | null, name: string, governingName: boolean): Promise<BodyRef | null> {
   if (governingName && governing) return governing;
   const government = await governmentAt(query, [governing?.parentId ?? null, governing?.id ?? null, subjectId]);
-  return government ? bodyUnder(query, government, { sql: "lower(name) = lower($3)", param: name }, `${government.id}#${slug(name)}`, name) : null;
+  return government ? bodyUnder(query, government, { sql: "lower(name) = lower($3)", param: name }, subBodyId(government.id, name), name) : null;
 }
 
 /** The office of a government that a phone, email or address belongs to (a recorder, an elections office): the body already held, or a new one named as the page names it. */

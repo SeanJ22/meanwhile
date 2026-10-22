@@ -388,11 +388,11 @@ test("a board name with no board is added and named; a recorder's phone goes on 
   assert.equal(report.published, 3, JSON.stringify(report));
   assert.deepEqual(await facts.query(`SELECT e.id, e.name, f.field, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id
     WHERE e.parent_id = $1 AND f.status = 'live' ORDER BY e.id, f.field`, [CLIFTON]), [
-    { id: `${CLIFTON}#board-of-adjustment`, name: "Board of Adjustment", field: "name", value_text: "Board of Adjustment" },
+    { id: `${CLIFTON}#body:board-of-adjustment`, name: "Board of Adjustment", field: "name", value_text: "Board of Adjustment" },
     { id: `${CLIFTON}#governing`, name: "Clifton town governing", field: "office_phone", value_text: "(928) 865-4146" },
     { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "name", value_text: "Greenlee County Recorder" },
     { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "office_phone", value_text: "(928) 865-2632" }]);
-  assert.equal((await facts.query("SELECT 1 FROM entity_place WHERE entity_id = $1", [`${CLIFTON}#board-of-adjustment`])).length, 1);
+  assert.equal((await facts.query("SELECT 1 FROM entity_place WHERE entity_id = $1", [`${CLIFTON}#body:board-of-adjustment`])).length, 1);
 });
 
 test("a dependent school system the fact store lacks is added on its district's place, with its board", async () => {
@@ -416,7 +416,7 @@ test("a state's boards are added under the state even though the state has no go
   const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
   assert.equal(report.published, 1, JSON.stringify(report));
   assert.deepEqual(await facts.query("SELECT e.id, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1 AND f.field = 'name' AND f.status = 'live'", [STATE]),
-    [{ id: `${STATE}#accountancy-state-board-of`, value_text: "Accountancy, State Board of" }]);
+    [{ id: `${STATE}#body:accountancy-state-board-of`, value_text: "Accountancy, State Board of" }]);
 });
 
 test("an office is named from the saved page when the finding's own sentence is only its number", async () => {
@@ -531,4 +531,34 @@ test("a subject is looked up once in a pass, however many findings are about it"
   const report = await publishBoxFindings({ repos, facts: counted as typeof facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 });
   assert.equal(report.published, 2, JSON.stringify(report));
   assert.equal(boardLookups, 1, "one lookup for the subject, then the board is remembered");
+});
+
+test("a committee's name on a #body: subject makes the committee under its own government, in any kind of government, before the findings about it are read", async () => {
+  assert.deepEqual(slotFor("GOV-02", "Planning Commission", null, "Planning Commission", "", "al:city:city-of-huntsville#body:planning-commission"), { class: "bodies", slot: "body_name" });
+  assert.deepEqual(slotFor("GOV-02", "City Council", null, "City Council", "", "al:city:city-of-huntsville#governing"), { class: "body links", slot: "name" });
+  const { facts, repos, vault, hold } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  const cases = [
+    { government: "al:city:city-of-huntsville", subject: "al:city:city-of-huntsville#body:planning-commission", name: "Planning Commission", page: "https://www.huntsvilleal.gov/planning", place: "City of Huntsville, AL", phone: "(256) 427-5100" },
+    { government: "al:county:county-of-madison", subject: "al:county:county-of-madison#body:board-of-equalization", name: "Board of Equalization", page: "https://www.madisoncountyal.gov/boe", place: "Madison County, AL", phone: "(256) 532-3300" },
+    { government: "al:school:huntsville-city-school-district", subject: "government:US-AL:nces:0101800#body:policy-committee", name: "Policy Committee", page: "https://www.hsv.k12.al.gov/policy", place: "Huntsville City School District, AL", phone: "(256) 428-6810" },
+  ];
+  let index = 0;
+  for (const one of cases) {
+    const page = await hold(one.page, `<html><body><h1>${one.place}</h1><h2>${one.name}</h2><p>Office: ${one.phone}.</p></body></html>`, "2026-09-01T15:00:00.000Z");
+    const drop = (field: string, value: string, quote: string) => indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: `at-${index}`, missionPart: null,
+      finding: { subjectId: one.subject, field, value, exactQuote: quote, sourceUrl: one.page, artifactIds: [page], subjectHint: null, index: index++ } }, NOW);
+    // The committee's phone is read first on purpose: it waits for the committee, which its name makes in the same pass.
+    await drop("officeholder.phone", one.phone, `Office: ${one.phone}`);
+    await drop("GOV-02", one.name, one.name);
+  }
+  const fetch: ProbeFetch = async () => { throw new Error("held"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 });
+  assert.equal(report.published, 6, JSON.stringify(report));
+  for (const one of cases) {
+    const id = `${one.government}${one.subject.slice(one.subject.indexOf("#"))}`;
+    assert.deepEqual(await facts.query("SELECT id, name, parent_id FROM entity WHERE kind = 'body' AND parent_id = $1", [one.government]), [{ id, name: one.name, parent_id: one.government }], "one committee, hung on its own government");
+    assert.deepEqual((await facts.query("SELECT field, value_text FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [id])).map(row => [row.field, row.value_text]),
+      [["name", one.name], ["office_phone", one.phone]]);
+  }
 });

@@ -215,16 +215,22 @@ export async function publishBoxFindings(input: {
     const made = await ensureGoverningBody(facts.query, subject);
     return made ? { body: made, holder: null, entityId: made.id } : null;
   })()).get(subject)!;
+  const slotOfRow = (row: BoxFinding) => {
+    const fact = findingFact(row);
+    return fact && row.exactQuote && row.sourceUrl ? slotFor(fact.field, fact.value, fact.recordClass, row.exactQuote, row.sourceUrl, row.subjectId) : null;
+  };
+  // A committee is made by the finding that names it, so those are read first and the findings about the committee find it.
+  const naming = new Set(rows.filter(row => slotOfRow(row)?.class === "bodies").map(row => row.id));
 
   const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string; name?: string }[] = [];
   const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
-  for (const row of rows) {
+  for (const row of [...rows.filter(row => naming.has(row.id)), ...rows.filter(row => !naming.has(row.id))]) {
     report.looked++;
     if (row.state === "refused") await reopenBoxFinding(repos.boxFindings, row.id, FINDING_SLOTS_VERSION, input.now);
     if (!row.origins.some(o => o.kind === "SCOUT")) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
     const raw = findingFact(row);
     if (!raw || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
-    const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote, row.sourceUrl);
+    const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote, row.sourceUrl, row.subjectId);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
     if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
     const subject = await subjectOf(row.subjectId);
@@ -246,6 +252,7 @@ export async function publishBoxFindings(input: {
     if (slot.class === "bodies") {
       const named = await bodyNamed(facts.query, subject, target?.body ?? null, String(finding.value), isGoverningName(String(finding.value)));
       if (named) {
+        targets.delete(subject); targets.delete(named.id);
         queue(ready, each => ({ finding: each, slot, body: named, holder: null, entityId: named.id }));
       }
       else await hold(row, slot.class, "NAME_IS_NOT_ON_A_GOVERNMENT");

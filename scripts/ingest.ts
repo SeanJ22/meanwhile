@@ -12,7 +12,7 @@ import {
   MEETING_HELD_LOOKBACK_DAYS,
   meetingHeldWindowAt,
 } from "../lib/meetings/constants.ts";
-import { meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
+import { meetingFetchedWindowFor, STANDING_MEETING_GEOGRAPHY } from "../lib/meetings/fetch-window.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { recordFamilyReads } from "../lib/doors/outcome.ts";
 import { evidenceFromFamilyRead } from "../lib/doors/ingest-evidence.ts";
@@ -25,6 +25,7 @@ import { agendaItems } from "../lib/routing/agenda-search.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { ROUTINE_SAME_DOMAIN_CHILD_GAP_MS } from "../lib/civic-data/bounded-child-pass.ts";
 import { calendarReadOrder } from "../lib/civic-data/state-calendars.ts";
+import { readContractHandoff } from "../lib/civic-data/contract-handoff.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { meetingCarriesRecords } from "../lib/meetings/carries-records.ts";
@@ -142,10 +143,13 @@ export function selectedMeetingPartitions(args: readonly string[]): readonly Mee
   if (args.some((arg) => arg.startsWith("--partitions="))) {
     throw new Error("MEETING_PARTITION_BATCH_ARGUMENT_RETIRED");
   }
-  const requested = args
+  const flags = args
     .filter((arg) => arg.startsWith("--only-partition="))
     .map((arg) => arg.slice("--only-partition=".length));
-  if (requested.length === 0 || requested.some((id) => !id)) throw new Error("MEETING_PARTITION_REQUIRED");
+  const handed = args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg));
+  if (handed && flags.length > 0) throw new Error("MEETING_PARTITION_SELECTION_AMBIGUOUS");
+  const requested = handed ? readContractHandoff<string>(args) : flags;
+  if (requested.length === 0 || requested.some((id) => typeof id !== "string" || !id)) throw new Error("MEETING_PARTITION_REQUIRED");
   if (new Set(requested).size !== requested.length) throw new Error("MEETING_PARTITION_NAMED_TWICE");
   return requested.map((id) => {
     const partition = meetingPartitionContract(id);
@@ -762,13 +766,11 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
     ? await readPreviousMeetingPartition(promotionStore, partitions[0]!)
     : null;
 
-  // Continental US, wide enough to sweep everything the adapter has. The window
-  // is always stated: some upstreams default to upcoming-only when it is omitted.
+  // Registered bodies select the work. Geography covers every state and territory; the date window is stated
+  // because some upstreams default to upcoming-only when it is omitted.
   const now = Date.now();
   const retained = await retainMeetingFetchBytes(() => source.fetch({
-    lat: 39.5,
-    lng: -98.35,
-    radiusKm: 5000,
+    ...STANDING_MEETING_GEOGRAPHY,
     startsAfter: new Date(
       now - MEETING_HELD_LOOKBACK_DAYS * 86_400_000,
     ).toISOString(),

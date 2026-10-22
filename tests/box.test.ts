@@ -128,7 +128,7 @@ test("a Box row keeps its finding's field and value; a row from before that gain
   assert.deepEqual(await repos.boxFindings.waitingFor("ANY_REASON", 10), []);
 });
 
-test("the due queue hands back findings parked under another slot map before ones never looked at", async () => {
+test("the due queue shares a pass between findings parked under another slot map and ones never looked at", async () => {
   const repos = createMemoryRepositories();
   const never = await indexBoxFinding(repos.boxFindings, { ...input, subjectId: "al:city:city-of-aaa#governing" }, NOW);
   const parked = await indexBoxFinding(repos.boxFindings, { ...input, subjectId: "al:city:city-of-zzz#governing" }, NOW);
@@ -136,6 +136,44 @@ test("the due queue hands back findings parked under another slot map before one
   const due = await repos.boxFindings.due({ slots: "new", now: LATER, limit: 10 });
   assert.deepEqual(due.map(row => row.id), [parked.id, never.id], "the parked one comes first even though the other sorts first");
   assert.deepEqual((await repos.boxFindings.due({ slots: "new", now: LATER, limit: 1 })).map(row => row.id), [parked.id], "a short pass spends its limit on the parked one");
+  for (let n = 0; n < 8; n++) {
+    const row = await indexBoxFinding(repos.boxFindings, { ...input, subjectId: `place:old-${n}` }, NOW);
+    await holdBoxFinding(repos.boxFindings, row.id, { class: "other", reason: "NO_FACT_SLOT", slots: "old" }, NOW);
+  }
+  const shared = await repos.boxFindings.due({ slots: "new", now: LATER, limit: 4 });
+  assert.equal(shared.length, 4);
+  assert.equal(shared[1]!.id, never.id, "a large old backlog cannot take the new finding's turn");
+  for (const row of shared.filter(row => row.waitingFor)) await holdBoxFinding(repos.boxFindings, row.id, { class: "other", reason: "NO_FACT_SLOT", slots: "new" }, LATER);
+  assert.ok(!(await repos.boxFindings.due({ slots: "new", now: END, limit: 4 })).some(row => shared.some(old => old.waitingFor && old.id === row.id)), "completed retry rows leave the due page");
+});
+
+test("a publisher exception has its own retry clock and records why, without reopening other held findings", async () => {
+  const repo = createMemoryRepositories().boxFindings;
+  const row = await indexBoxFinding(repo, input, NOW);
+  const claim = (await takeBoxFinding(repo, row.id, "fact-publisher", NOW, END))!;
+  await finishBoxFinding(repo, row.id, claim.token, { state: "failed", reason: "SORT: source lookup failed", slots: "new", retryAt: END }, NOW);
+  assert.deepEqual(await repo.due({ slots: "new", now: LATER, limit: 10 }), []);
+  assert.deepEqual((await repo.due({ slots: "new", now: END, limit: 10 })).map(row => row.id), [row.id]);
+  assert.equal((await repo.mustRead(row.id)).value.attempts.at(-1)!.detail, "SORT: source lookup failed");
+});
+
+test("a newly saved source reopens a held or publisher-refused fact while a replay and already built fact stay settled", async () => {
+  const repo = createMemoryRepositories().boxFindings;
+  const row = await indexBoxFinding(repo, input, NOW);
+  await holdBoxFinding(repo, row.id, { class: "other", reason: "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE", slots: "current" }, NOW);
+  await indexBoxFinding(repo, input, LATER);
+  assert.deepEqual(await repo.due({ slots: "current", now: LATER, limit: 10 }), [], "replaying the same origin does not retry");
+  const next = { ...input, origin: { ...input.origin, resultId: "new-source", recordedAt: LATER } };
+  await indexBoxFinding(repo, next, LATER);
+  assert.deepEqual((await repo.due({ slots: "current", now: LATER, limit: 10 })).map(row => row.id), [row.id]);
+  const claim = (await takeBoxFinding(repo, row.id, "fact-publisher", LATER, END))!;
+  await finishBoxFinding(repo, row.id, claim.token, { state: "refused", reason: "PAGE_NOT_ABOUT_ENTITY", slots: "current" }, LATER);
+  await indexBoxFinding(repo, { ...next, origin: { ...next.origin, resultId: "better-source" } }, LATER);
+  assert.equal((await repo.mustRead(row.id)).value.state, "waiting");
+  const built = (await takeBoxFinding(repo, row.id, "fact-publisher", LATER, END))!;
+  await finishBoxFinding(repo, row.id, built.token, { state: "built", publicationId: "live-fact" }, LATER);
+  await indexBoxFinding(repo, { ...next, origin: { ...next.origin, resultId: "another-source" } }, LATER);
+  assert.equal((await repo.mustRead(row.id)).value.state, "built");
 });
 
 test("one row per subject, field and value: a repeat from another page adds a source, and a row made before keeps its id", async () => {

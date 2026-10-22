@@ -58,7 +58,7 @@ export interface BoxFinding {
   readonly buildResultId?: string;
   readonly refusal: string | null;
   /** Why a waiting finding has no slot yet, under the slot map it was read with; a newer map looks at it again. */
-  readonly waitingFor?: { readonly class: string; readonly reason: string; readonly slots: string };
+  readonly waitingFor?: { readonly class: string; readonly reason: string; readonly slots: string; readonly retryAt?: string };
 }
 
 /** The builder that publishes hunters' findings into the fact store; its refusals are looked at again when its slot map moves. */
@@ -66,7 +66,7 @@ export const PUBLISHER = "fact-publisher";
 
 /** The Box's reads for builders, filtered and limited by the store rather than read whole. */
 interface BoxQueue {
-  /** Rows a pass must look at, at most `limit`: parked ones first (waiting or refused by the fact publisher under another slot map, or taken past their lease), then ones never looked at. */
+  /** At most `limit` rows, sharing each pass between retries and findings never looked at. */
   due(input: { readonly slots: string; readonly now: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them. */
   waitingFor(reason: string, limit: number, subjectIds?: readonly string[]): Promise<readonly BoxFinding[]>;
@@ -82,9 +82,12 @@ export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxR
     due: async ({ slots, now, limit }) => {
       const parked = (row: BoxFinding) => row.state !== "waiting" || row.waitingFor !== undefined;
       const due = (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.slots !== slots ||
-        row.state === "refused" && row.attempts.at(-1)?.builder === PUBLISHER && row.waitingFor?.slots !== slots ||
+        row.state === "waiting" && row.waitingFor?.retryAt !== undefined && row.waitingFor.retryAt <= now ||
+        row.state === "refused" && row.attempts.at(-1)?.builder === PUBLISHER && (row.waitingFor?.slots !== slots || row.waitingFor?.retryAt !== undefined && row.waitingFor.retryAt <= now) ||
         row.state === "taken" && row.claim !== null && row.claim.expiresAt <= now);
-      return [...due.filter(parked), ...due.filter(row => !parked(row))].slice(0, limit);
+      const retries = due.filter(parked), fresh = due.filter(row => !parked(row));
+      return Array.from({ length: Math.max(retries.length, fresh.length) }, (_, index) => [retries[index], fresh[index]])
+        .flat().filter((row): row is BoxFinding => row !== undefined).slice(0, limit);
     },
     waitingFor: async (reason, limit, subjectIds) => {
       const subjects = subjectIds ? new Set(subjectIds) : null;
@@ -142,7 +145,9 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
     const origins = prior ? held.value.origins.map(known => known === prior ? { ...known, resultKey: origin.resultKey ?? known.resultKey } : known)
       : [...held.value.origins, origin];
     const fact = held.value.fact ?? input.fact;
-    const next = { ...held.value, origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
+    const newEvidence = !prior || gains;
+    const reopen = newEvidence && (held.value.state === "waiting" || held.value.state === "refused" && held.value.attempts.at(-1)?.builder === PUBLISHER);
+    const next: BoxFinding = { ...held.value, ...(reopen ? { state: "waiting", refusal: null, waitingFor: undefined } : {}), origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
       lastRecordedAt: origins.map(known => known.recordedAt).sort().at(-1)! };
     try { return (await repo.compareAndSet(at, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
@@ -168,7 +173,8 @@ export async function takeBoxFinding(repo: AggregateRepository<BoxFinding>, id: 
 
 export type BoxOutcome = { readonly state: "built"; readonly publicationId: string } |
   { readonly state: "built"; readonly buildResultId: string } |
-  { readonly state: "refused"; readonly reason: string; readonly slots?: string } | { readonly state: "failed"; readonly reason: string };
+  { readonly state: "refused"; readonly reason: string; readonly slots?: string; readonly retryAt?: string } |
+  { readonly state: "failed"; readonly reason: string; readonly slots?: string; readonly retryAt?: string };
 
 /** A finding with nowhere to go yet stays in the Box, saying what it waits for. */
 export async function holdBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, waitingFor: NonNullable<BoxFinding["waitingFor"]>, now: string): Promise<void> {
@@ -204,7 +210,8 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
       publicationId: outcome.state === "built" && "publicationId" in outcome ? outcome.publicationId : null,
       ...(outcome.state === "built" && "buildResultId" in outcome ? { buildResultId: outcome.buildResultId } : {}),
       refusal: outcome.state === "refused" ? outcome.reason : null,
-      ...(outcome.state === "refused" && outcome.slots ? { waitingFor: { class: value.waitingFor?.class ?? "other", reason: outcome.reason, slots: outcome.slots } } : {}),
+      ...(outcome.state === "refused" && outcome.slots ? { waitingFor: { class: value.waitingFor?.class ?? "other", reason: outcome.reason, slots: outcome.slots, ...(outcome.retryAt ? { retryAt: outcome.retryAt } : {}) } } : {}),
+      ...(outcome.state === "failed" && outcome.slots ? { waitingFor: { class: value.waitingFor?.class ?? "other", reason: outcome.reason, slots: outcome.slots, ...(outcome.retryAt ? { retryAt: outcome.retryAt } : {}) } } : {}),
       attempts: [...value.attempts, { ...value.claim, outcome: outcome.state, endedAt: now, detail }] };
     try { await repo.compareAndSet(id, held.revision, next, now); return true; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }

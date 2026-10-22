@@ -212,7 +212,8 @@ export function routineFailureDomainFrontier(
 
 /** First build missing/current-parser baselines; steady refreshes retain their existing order. */
 export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number; readonly baselineOwed?: boolean; readonly task?: Pick<RoutineSourceTask, "sourceId"> }>(admitted: readonly T[], nowMs?: number): T[] {
-  const group = (candidate: T) => nowMs !== undefined && candidate.deadlineMs !== undefined && Number.isFinite(candidate.deadlineMs) && candidate.deadlineMs <= nowMs ? 0
+  // A meeting without its first read has deadline -Infinity: it is already owed, ahead of baseline work.
+  const group = (candidate: T) => nowMs !== undefined && candidate.deadlineMs !== undefined && candidate.deadlineMs <= nowMs ? 0
     : candidate.baselineOwed ? 1 : candidate.deadlineMs === undefined || Number.isNaN(candidate.deadlineMs) ? 2 : 3;
   // National sources have many independent state projections of the same held release.
   // Offer one from each source before the next state so one portfolio cannot occupy the whole pool.

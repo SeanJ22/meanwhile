@@ -21,6 +21,9 @@ import {
   parseIntakeRuntimeObservation,
   type IntakeRuntimeObservation,
 } from "../ops/intake-runtime.ts";
+import { boundedRoutineSupervisorDigest, writeRoutineSupervisorFailureSummary } from "./routine-outcome-summary.ts";
+import { markRoutineOutcomeSaved, saveRoutineOutcomeLocal } from "./routine-outcome-local.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 export interface FreshnessCycleDigestInput {
   readonly outcome: FreshnessCycleOutcome;
@@ -134,7 +137,17 @@ export async function appendRoutineCivicDataSupervisorDigest(
   repos: ControlPlaneRepositories,
   input: RoutineCivicDataSupervisorDigestInput,
 ): Promise<OwnerDigestRecord> {
-  return appendRuntimeDigest(repos, input);
+  const bounded = boundedRoutineSupervisorDigest(input);
+  if (input.outcome.lane === "publish-now") {
+    writeRoutineSupervisorFailureSummary(bounded);
+    if (repos.durable) {
+      try { console.log(`RCD_OUTCOME_LOCAL=${saveRoutineOutcomeLocal(bounded)}`); }
+      catch (error) { console.error(`RCD_OUTCOME_LOCAL_FAILED ${sanitizedErrorDiagnostic(error)}; saving the canonical outcome`); }
+    }
+  }
+  const record = await appendRuntimeDigest(repos, bounded);
+  if (input.outcome.lane === "publish-now") markRoutineOutcomeSaved();
+  return record;
 }
 
 export async function appendIntakeRuntimeObservationDigest(

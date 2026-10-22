@@ -23,8 +23,9 @@ sewer, park, hospital, tribal and the rest.
 - **Districts named for their county** ("Morris County Soil Conservation District") serve that county (`COUNTY_NAMED`).
 - **Tribal areas.** Every Census AIANNH area with residents in a state is a division `ocd-division/country:us/aiannh:<code>`
   and a listed government (`AIANNH_CODE`, class `TRIBAL AREA`), named as the Census names the area.
-- **Point geometry.** Simplified polygons for the map and address lookups: `data/states/<st>/geo/district-NN.geojson`
-  and `aiannh-NN.geojson`, listed in `data/derived/resolver-geometry.json` by `pnpm resolver:manifest`.
+- **Point geometry.** Simplified polygons for the map and address lookups, one file per state holding its special
+  districts and tribal areas: `data/states/<st>/geo/territory-NN.geojson`, listed in `data/derived/resolver-geometry.json`
+  by `pnpm resolver:manifest`.
 
 A special district no layer draws is not placed anywhere: the fact store keeps it on the state, never on its office's
 county, so its boards never show to the whole county.

@@ -5,7 +5,7 @@
  *
  *   data/derived/zip-divisions/NN.json        each ZIP's divisions with the 2020 residents living in each
  *   data/derived/registration/<st>.json       special districts on their own territory; tribal areas
- *   data/states/<st>/geo/district-NN.geojson  special-district polygons for map and address lookups
+ *   data/states/<st>/geo/territory-NN.geojson special-district and tribal-area polygons for map and address lookups
  *
  * Sources, all read here: the 2020 Census redistricting (PL 94-171) block records (population, internal point and
  * every Census code a block carries), the Census 2020 ZCTA-to-block relationship file, the Census 2020 AIANNH code
@@ -380,20 +380,18 @@ async function buildState(st: string, sources: readonly DistrictBoundarySource[]
   if (!Object.keys(boundarySources).length) delete (next as { boundarySources?: unknown }).boundarySources;
   writeFileSync(refPath, `${JSON.stringify(next)}\n`);
 
-  // Display geometry for the point resolver: special districts, and the tribal areas the state's residents live in.
+  // Display geometry for the point resolver, one file per state: special districts, and the tribal areas the state's residents live in.
   const geoDir = join(ROOT, "data", "states", st, "geo");
-  const writeGeometry = (name: string, byId: Map<string, Ring[][]>) => {
-    if (!byId.size) return;
+  const shapes = new Map<string, Ring[][]>();
+  for (const f of features) shapes.set(f.ocdId, [...shapes.get(f.ocdId) ?? [], ...f.polygons]);
+  for (const code of aiannhSeen.keys()) if (aiannhShapes.has(code)) shapes.set(`ocd-division/country:us/aiannh:${code}`, aiannhShapes.get(code)!);
+  if (shapes.size) {
     mkdirSync(geoDir, { recursive: true });
-    writeFileSync(join(geoDir, `${name}-${fips}.geojson`), `${JSON.stringify({ type: "FeatureCollection", features: [...byId].map(([ocdId, polygons]) => ({
+    writeFileSync(join(geoDir, `territory-${fips}.geojson`), `${JSON.stringify({ type: "FeatureCollection", features: [...shapes].map(([ocdId, polygons]) => ({
       type: "Feature", properties: { ocdId },
       geometry: { type: "MultiPolygon", coordinates: polygons.map(poly => poly.map(ring => simplify(ring, 0.0005))) },
     })) })}\n`);
-  };
-  const districtShapes = new Map<string, Ring[][]>();
-  for (const f of features) districtShapes.set(f.ocdId, [...districtShapes.get(f.ocdId) ?? [], ...f.polygons]);
-  writeGeometry("district", districtShapes);
-  writeGeometry("aiannh", new Map([...aiannhSeen.keys()].flatMap(code => aiannhShapes.has(code) ? [[`ocd-division/country:us/aiannh:${code}`, aiannhShapes.get(code)!] as const] : [])));
+  }
   console.error(`${st}: ${zipResidents.size} ZIPs, ${features.length} district territories, ${aiannhSeen.size} tribal areas`);
   return { residents, zipResidents, measured };
 }

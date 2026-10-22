@@ -22,12 +22,18 @@ test("every Arizona government, division, registry body and legislator becomes o
   assert.deepEqual(await place("az:special:rincon-valley-fire-district"), { parent_id: rincon, place_id: rincon }, "a district an official layer draws sits on that territory");
   assert.deepEqual(await place("az:special:alpine-sanitary-district"), { parent_id: "ocd-division/country:us/state:az", place_id: "ocd-division/country:us/state:az" },
     "a district no layer draws yet waits on the state, never spread over its office's county");
+  const board = "curated:az/rincon-valley-fire-district#governing";
+  assert.deepEqual(await db.query("SELECT parent_id FROM entity WHERE id = $1", [board]), [{ parent_id: "az:special:rincon-valley-fire-district" }],
+    "a registry board naming its Census government hangs on it, whatever website each lists");
+  await db.query("UPDATE entity SET parent_id = 'ocd-division/country:us/state:az' WHERE id = $1", [board]);
   await db.query("UPDATE entity SET parent_id = 'ocd-division/country:us/state:az/county:pima' WHERE id = 'az:special:rincon-valley-fire-district'");
   await db.query("INSERT INTO entity_place (entity_id, place_id) VALUES ('az:special:rincon-valley-fire-district', 'ocd-division/country:us/state:az/county:pima')");
   await db.query("DELETE FROM fact_store_load");
   await ensureFactEntities(db, ROOT, ["az"]);
   assert.deepEqual(await db.query("SELECT parent_id FROM entity WHERE id = 'az:special:rincon-valley-fire-district'"), [{ parent_id: rincon }], "a reload moves a government its reference moved");
   assert.deepEqual(await db.query("SELECT place_id FROM entity_place WHERE entity_id = 'az:special:rincon-valley-fire-district'"), [{ place_id: rincon }]);
+  assert.deepEqual(await db.query("SELECT parent_id FROM entity WHERE id = $1", [board]), [{ parent_id: "az:special:rincon-valley-fire-district" }],
+    "a reload moves a board filed on the state to its government");
   assert.deepEqual(await db.query("SELECT scheme, value FROM entity_external_id WHERE entity_id = 'az:special:alpine-sanitary-district'"),
     [{ scheme: "census-pid6", value: "122758" }]);
   assert.ok(Number((await db.query("SELECT count(*)::int AS n FROM entity_host"))[0]!.n) > 100);

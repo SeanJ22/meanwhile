@@ -48399,6 +48399,27 @@
     "collectedAt": "2026-08-27T19:47:10.198Z",
     "verifiedAt": null
    }
+  },
+  {
+   "ocdId": "ocd-division/country:us/state:ak/school_district:lower_kuskokwim_school_district",
+   "divisionType": "school_district",
+   "tier": "local",
+   "state": "AK",
+   "label": "Lower Kuskokwim School District",
+   "parentOcdId": "ocd-division/country:us/state:ak",
+   "lsad": null,
+   "funcstat": null,
+   "classfp": null,
+   "geoid": "0200001",
+   "canonicalOcdId": "ocd-division/country:us/state:ak/school_district:lower_kuskokwim_school_district",
+   "canonicalMatch": "geoid",
+   "sourceDataset": "TIGER_GENZ2025",
+   "provenance": {
+    "sourceUrl": "https://www2.census.gov/geo/tiger/GENZ2025/shp/",
+    "sourceOrg": "U.S. Census Bureau",
+    "collectedAt": "2026-10-22T00:00:00.000Z",
+    "verifiedAt": null
+   }
   }
  ],
  "bodies": [
@@ -88484,6 +88505,26 @@
     "sourceOrg": "www.pima.gov",
     "collectedAt": "2026-08-27T00:00:00.000Z",
     "verifiedAt": "2026-08-27T00:00:00.000Z"
+   }
+  },
+  {
+   "id": "ocd-division/country:us/state:ak/school_district:lower_kuskokwim_school_district#school-board",
+   "ocdId": "ocd-division/country:us/state:ak/school_district:lower_kuskokwim_school_district",
+   "name": "Lower Kuskokwim School District Board",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "KNOWN_UNCOVERED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": null,
+   "meetingCadence": null,
+   "homepageUrl": "https://www.lksd.org/board",
+   "demandCount": 0,
+   "sourceDataset": "COG_2022",
+   "provenance": {
+    "sourceUrl": "https://www.lksd.org/board",
+    "sourceOrg": "Lower Kuskokwim School District, whose site the NCES Common Core of Data directory lists",
+    "collectedAt": "2026-10-22",
+    "verifiedAt": "2026-10-22"
    }
   }
  ]

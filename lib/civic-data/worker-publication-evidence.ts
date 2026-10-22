@@ -182,6 +182,6 @@ export function auditPull(results: readonly WorkerResultRecord[], parser: Worker
     r.result.verdict === "BROKE" && r.result.producerAttemptId === attemptId);
   if (!broke.length) return null;
   const named = broke.map(r => (r.result as { brokenRecordIds?: readonly string[] }).brokenRecordIds ?? null);
-  return { all: named.some(ids => ids === null || ids.length === 0), recordIds: new Set(named.flatMap(ids => ids ?? [])),
+  return { all: named.some(ids => ids === null), recordIds: new Set(named.flatMap(ids => ids ?? [])),
     at: broke.map(r => r.endedAt).sort().at(-1)! };
 }

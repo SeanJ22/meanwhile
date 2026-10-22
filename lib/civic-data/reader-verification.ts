@@ -69,7 +69,7 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
-  if (/^US-[A-Z]{2}:campaign-finance-source$/.test(contract.id)) return "lib/funding/campaign-finance-reader.ts#readCampaignFinancePublication";
+  if (contract.id === "campaign-money") return "lib/funding/campaign-finance-reader.ts#readCampaignMoneyWork";
   if (parseStateBallotContractId(contract.id)) return "lib/civic-data/read-model.ts#readPromotedCivicData";
   if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/civic-data/read-model.ts#readStateRegistryRuntimeProjection";
   if (federalDirectoryStateOf(contract.id)) return "lib/officials/federal-directory-read-model.ts#readStateFederalDirectory";
@@ -140,11 +140,10 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
-    if (/^US-[A-Z]{2}:campaign-finance-source$/.test(contract.id)) {
-      const { readCampaignFinancePublication } = await import("../funding/campaign-finance-reader.ts");
-      const state = contract.id.slice(3, 5);
-      return verifyExactVersion(verifierId, await readCampaignFinancePublication(state, options.scope ?? contract.scope,
-        { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} source-native campaign finance`);
+    if (contract.id === "campaign-money") {
+      const { readCampaignMoneyWork } = await import("../funding/campaign-finance-reader.ts");
+      return verifyExactVersion(verifierId, await readCampaignMoneyWork(
+        { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Campaign money hourly work report");
     }
     const state = parseStateBallotContractId(contract.id);
     if (state) {

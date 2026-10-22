@@ -8,7 +8,7 @@ import { manualPayloadScope, scopedManualContractScope } from "../lib/civic-data
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { acquireCampaignFinanceResource } from "../lib/funding/state-acquisition.ts";
-import { factDb } from "./helpers/fact-db.ts";
+import { campaignDb as factDb } from "./helpers/campaign-money-db.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { campaignFinanceResources } from "../lib/funding/state-resource-index.ts";
@@ -41,7 +41,7 @@ test("all 56 jurisdictions have one official source and curated filings split ex
 test("native source mapping keeps unmatched rows, zero amounts and source dates without donor/contact data", () => {
   const row = campaignSourceRecord("WA", resource, { ...fixture[0], contributions_amount: "0", donor_name: "Private donor", treasurer_address: "Private home" }, capture);
   assert.equal(row.amounts.find(value => value.label === "Contributions")?.amount, 0);
-  assert.equal(row.provenance.publicationDate, fixture[0].updated_at);
+  assert.equal(row.provenance.publicationDate, null);
   assert.equal(row.provenance.sourcePublicationDate, null);
   assert.equal(row.unjoinedReason !== null, true);
   assert.doesNotMatch(JSON.stringify(row), /Private donor|Private home/);
@@ -260,7 +260,7 @@ test("bulk indexes follow the publisher's public form pagination and reject an e
     for await (const entry of campaignFinanceResources("CO", { ...options, fetch: sourceFetch })) { count++; assert.match(entry.url, /202[56]_/); }
     assert.equal(count, 6);
     assert.equal(calls, 6);
-    const missing = { ...resource, kind: "ZIP" as const, filePattern: "^absent.csv$" };
+    const missing = { ...resource, kind: "ZIP" as const, since:undefined, filePattern: "^absent.csv$" };
     const archive = zip([{ name: "other.csv", data: Buffer.from("id\n1\n") }], "2026-10-16");
     await assert.rejects(async () => { for await (const _page of acquireCampaignFinanceResource("WA", missing, { ...options, fetch: async () => new Response(archive) })) { /* Consume through the archive's source table check. */ } }, /no declared native filing table/);
   } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
@@ -337,7 +337,8 @@ test("Maryland bulk publications expand primitive year lists and stream past the
     } })) resources.push(entry);
     assert.equal(resources.length, 4);
     assert.equal(resources[0].body?.filingYear, "2026");
-    assert.equal(resources[1].body?.filingYear, "2025");
+    assert.equal(resources[1].body?.filingYear, "2026");
+    assert.equal(resources[2].body?.filingYear, "2025");
     const bytes = await readFile(new URL("./fixtures/campaign-finance/md-native-contributions.csv", import.meta.url));
     let count = 0;
     for await (const page of acquireCampaignFinanceResource("MD", resources[0], { ...options, fetch: async (_input, init) => {
@@ -348,7 +349,7 @@ test("Maryland bulk publications expand primitive year lists and stream past the
       count += page.records.length;
       for (const row of page.records) {
         assert.ok(row.filerId && row.filerName && row.period && row.amounts.length);
-        assert.equal(row.provenance.publicationDate, null);
+        assert.equal(row.provenance.publicationDate, "10/16/2026 01:34 AM");
         assert.equal(row.filingUrl, "https://campaignfinance.maryland.gov/");
         assert.equal(row.candidateName, null);
         assert.equal(row.nativeId, null);
@@ -428,9 +429,8 @@ test("Kentucky bulk exports follow its native election-date list and preserve or
   try {
     const resources = [];
     for await (const entry of campaignFinanceResources("KY", { ...options, fetch: async () => new Response(JSON.stringify(["11/3/2026", "5/21/1983"])) })) resources.push(entry);
-    assert.equal(resources.length, 2);
+    assert.equal(resources.length, 1);
     assert.equal(new URL(resources[0].url).searchParams.get("ElectionDate"), "11/3/2026");
-    assert.equal(new URL(resources[1].url).searchParams.get("ElectionDate"), "5/21/1983");
     for (const raw of rows) {
       const row = campaignSourceRecord("KY", source, raw, { ...capture, url: resources[0].url });
       assert.equal(row.nativeId, null);
@@ -439,6 +439,10 @@ test("Kentucky bulk exports follow its native election-date list and preserve or
       assert.equal(row.period, raw["Election Date"]);
       assert.equal(row.amounts.length, 1);
     }
+    const individual=campaignSourceRecord("KY",source,{...rows[0],"Contributor First Name":"EXAMPLE","Contributor Last Name":"DONOR","Address 1":"10 Private Fixture Lane","City":"Frankfort","State":"KY","Zip":"40601"},capture);
+    assert.equal(individual.donor?.filedName,"EXAMPLE DONOR");
+    assert.equal(individual.donor?.kind,"INDIVIDUAL");
+    assert.doesNotMatch(JSON.stringify(individual),/Private Fixture Lane/);
     const expenses = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/sc-native-expenditures.json", import.meta.url), "utf8"));
     const expenseSource = campaignFinanceSource("SC").resources.find(row => row.id === "ethics-candidate-expenditures")!;
     for (const raw of expenses) {
@@ -511,7 +515,7 @@ test("Virginia discovers monthly file links and records one failed index without
 
 
 test("every connected state source has saved native fields for its declared identifiers and amounts", async () => {
-  for (const state of ["AL", "CO", "HI", "ID", "LA", "MN", "NE", "NH", "NY", "TX"]) {
+  for (const state of ["AL", "CO", "HI", "LA", "MN", "NE", "NH", "NY", "TX"]) {
     const source = campaignFinanceSource(state).resources[0];
     const rows = JSON.parse(await readFile(new URL(`./fixtures/campaign-finance/${state.toLowerCase()}-native-excerpt.json`, import.meta.url), "utf8"));
     assert.equal(rows.length, 2, state);
@@ -606,4 +610,23 @@ test("Massachusetts streams the complete filer index and expands each native rep
     const [raw] = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/ma-native-excerpt.json", import.meta.url), "utf8"));
     assert.throws(() => campaignSourceRecord("MA", { ...source, expectedFields: { cpfId: "different-native-id" } }, raw, capture), /indexed native identity/);
   } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
+});
+
+test("Idaho follows its official bulk link and streams native CSV identities", async () => {
+  const options=await context(),source=campaignFinanceSource("ID").resources[0];
+  const route="https://id.electionstats.com/eng/finances/download/campaign_finance_dl__fixture.csv";
+  const bytes=await readFile(new URL("./fixtures/campaign-finance/id-native-excerpt.csv",import.meta.url));
+  try {
+    const resources=[];
+    for await(const resource of campaignFinanceResources("ID",{...options,profiles:[source],fetch:async(_input,init)=>{
+      const body=JSON.parse(String(init?.body));assert.equal(body.get_link_to_result,1);assert.equal(body.dates[0].slice(0,4),"2020");
+      return new Response(JSON.stringify({output:route}));
+    }}))resources.push(resource);
+    assert.equal(resources.length,1);
+    let count=0;
+    for await(const page of acquireCampaignFinanceResource("ID",resources[0],{...options,fetch:async()=>new Response(bytes)}))for(const row of page.records){
+      count++;assert.ok(row.nativeId && row.filerName && row.candidateName && row.office && row.cycle);assert.equal(row.filerId,null);assert.match(row.filingUrl,/elections.sos.idaho.gov/);
+    }
+    assert.equal(count,2);
+  }finally{await options.facts.pg.close();await rm(options.directory,{recursive:true,force:true});}
 });

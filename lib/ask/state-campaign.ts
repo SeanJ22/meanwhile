@@ -1,4 +1,4 @@
-import { readCampaignFinanceForPlace } from "../funding/state-reader.ts";
+import { readCampaignFinanceForPlace,readCampaignMoneyForTarget } from "../funding/state-reader.ts";
 import { campaignFinanceRecordText } from "../funding/state-view.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import { normalizeName } from "../routing/exact-name.ts";
@@ -52,7 +52,7 @@ export async function resolveStateCampaignRecordsAsk(question: string, divisions
   const query = factReader();
   if (!query) return [];
   const rows = await query(`SELECT DISTINCT p.place_id FROM entity_place p JOIN entity e ON e.id=p.entity_id
-    WHERE e.state=ANY($1::text[]) AND e.kind='committee' AND e.id LIKE 'campaign-committee:%'
+    WHERE e.state=ANY($1::text[]) AND e.kind='person' AND EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=e.id AND f.field LIKE 'campaign-cycle:%' AND f.status='live')
       AND p.place_id ~ ('^ocd-division/country:us/(state|district|territory):' || lower(e.state) || '/')
       AND p.place_id ~ '/(place|county):[^/]+$'
       AND (replace(regexp_replace(p.place_id, '^.*/(place|county):', ''), '_', ' ')=$2
@@ -61,19 +61,21 @@ export async function resolveStateCampaignRecordsAsk(question: string, divisions
   return rows.map(row => String(row.place_id));
 }
 
-export async function stateCampaignEvidence(divisions: readonly string[], subjectId?: string, options: Parameters<typeof readCampaignFinanceForPlace>[1] = {}) {
+export async function stateCampaignEvidence(divisions: readonly string[], subjectId?: string, options: Parameters<typeof readCampaignFinanceForPlace>[1]&{readonly aboutSubjectId?:string} = {}) {
   const records = new Map<string, EvidenceRecord>(), gaps: EvidenceGap[] = [];
   const filers = new Set<string>();
   let more = 0, unavailable = 0;
-  for (const division of new Set(divisions)) {
+  const places=subjectId ? [""] : divisions.length ? [...new Set(divisions)] : [""];
+  for (const division of places) {
     try {
-      const read = await readCampaignFinanceForPlace(division, options);
+      const read = division ? await readCampaignFinanceForPlace(division, options) : subjectId ? await readCampaignMoneyForTarget(subjectId,divisions,options) : null;
+      if(!read){unavailable++;continue;}
       if (read.nextCursor) more++;
       if (read.status !== "HELD") { unavailable++; continue; }
       for (const row of read.records) {
         if (row.sources.length) filers.add(row.committee);
         for (const [index, source] of row.sources.entries()) records.set(`${row.id}:${index}`, {
-          id: `${row.id}:${index}`, kind: "FINANCE_COMMITTEE", subjectId: row.person.id,
+          id: `${row.id}:${index}`, kind: "FINANCE_COMMITTEE", subjectId: subjectId??options.aboutSubjectId??row.person.id,canonicalSubjectId:row.person.id,
           text: campaignFinanceRecordText(row), sourceUrl: source.filingUrl, sourceOrg: source.publisher,
           retrievedAt: source.retrievedAt, publicationDate: source.publicationDate, official: true,
         });

@@ -1,5 +1,6 @@
 import { checkFact, type Claim, type FieldKind } from "./check.ts";
 import { decide, type Decision } from "./decide.ts";
+import { canonicalJson } from "../control-plane/repository/types.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
@@ -42,16 +43,29 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
   const outcome = await db.transaction<PublishOutcome>(async (query) => {
     if (!verdict.ok) {
       await openBlank(query, { entityId: c.entity.id, field: c.field, stage: "CHECK", reason: `CHECK_FAILED:${verdict.reason}`,
-        detail: c.copy.finalUrl, retryMinutes: clocks.retryMinutes(c.fieldKind) });
+        detail: JSON.stringify({ sourceUrl: c.copy.finalUrl, copyId: c.copy.id, fieldKind: c.fieldKind, provenance: c.provenance,
+          value: c.value, valueText: c.valueText, quote: c.quote, producedBy: c.producedBy }), retryMinutes: clocks.retryMinutes(c.fieldKind) });
       return { blank: verdict.reason };
     }
-    const [row] = await query(`SELECT f.id, f.value, f.provenance_kind, coalesce(s.fetched_at, f.checked_at) AS fetched_at
-      FROM fact f LEFT JOIN source_copy s ON s.id = f.source_copy_id
-      WHERE f.entity_id = $1 AND f.field = $2 AND f.status = 'live' FOR UPDATE OF f`, [c.entity.id, c.field]);
+    // Scope first: a sparse live-status index can otherwise scan every published fact for one claim.
+    const [head] = await query(`WITH head AS MATERIALIZED (
+      SELECT id FROM fact WHERE entity_id = $1 AND field = $2
+      ORDER BY (status = 'live') DESC, id DESC LIMIT 1 FOR UPDATE
+    ), own AS MATERIALIZED (
+      SELECT id, value, provenance_kind, source_copy_id, checked_at, status, held_reason FROM fact WHERE id = (SELECT id FROM head)
+    ) SELECT f.id, f.value, f.provenance_kind, f.status, f.held_reason,
+      coalesce((SELECT fetched_at FROM source_copy WHERE id = f.source_copy_id), f.checked_at) AS fetched_at
+      FROM own f`, [c.entity.id, c.field]);
+    const row = head?.status === "live" ? head : undefined;
+    // Sean removed this value; the same words from a source do not put it back, a different value does.
+    if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
     const decision = decide(row ? { value: row.value, provenance: row.provenance_kind as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string) } : null,
       { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt });
     if (decision === "CONFIRM") {
-      await query("UPDATE fact SET checked_at = $2 WHERE id = $1", [row!.id, now.toISOString()]);
+      if (row!.provenance_kind !== "OWNER" && (row!.provenance_kind === c.provenance || c.provenance === "OFFICIAL" || c.provenance === "FILING")) {
+        await query(`UPDATE fact SET checked_at=$2,source_copy_id=$3,quote=$4,quote_start=$5,second_copy_id=$6,provenance_kind=$7,value_text=$8 WHERE id=$1`,
+        [row!.id,now.toISOString(),c.copy.id,c.quote,verdict.quoteStart,c.second?.copy.id ?? null,c.provenance,c.valueText]);
+      }
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
       changed = await readerCacheScopeForEntity(query, c.entity.id);
       return { decision, factId: Number(row!.id) };
@@ -66,7 +80,9 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
       verdict.quoteStart, c.second?.copy.id ?? null, now.toISOString(),
       live ? null : decision === "FLAG_OWNER" ? "OWNER_VALUE_CONTESTED" : "LOSES_TO_CURRENT", c.producedBy, c.costUsd]);
     const factId = Number(inserted!.id);
-    if (decision === "FLAG_OWNER") await query("INSERT INTO owner_flag (fact_id, kind) VALUES ($1, 'OWNER_VALUE_CONTESTED')", [factId]);
+    if (decision === "FLAG_OWNER") await query(`INSERT INTO owner_flag (fact_id,kind,reason,source_url)
+      SELECT $1,'OWNER_VALUE_CONTESTED',$2,$3 WHERE NOT EXISTS(SELECT 1 FROM owner_flag WHERE fact_id=$1 AND resolved IS NULL)`,
+    [row!.id,`An official source states a different value: ${c.valueText}`,c.copy.finalUrl]);
     if (live) {
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
       changed = await readerCacheScopeForEntity(query, c.entity.id);

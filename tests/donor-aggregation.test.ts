@@ -20,7 +20,7 @@ test("API/card DTO and Ask strip donor identities and all extra address fields a
   candidate.topContributions = [org, individual, { ...individual, kind: "COMMITTEE_OR_ORGANIZATION", entityType: "CAN" }];
   snapshot.secondHop = [{ dataClass: "FEC_CONTRIBUTOR", committeeId: "C00000001", name: "Filed PAC", committeeType: "N",
     organizationType: null, designation: null, receipts: 500, topContributions: [org, individual], provenance: candidate.provenance }];
-  const answer = campaignMoneyApiAnswer(candidate.targetKeys[0], undefined, { federal: true, state: false, identity: false });
+  const answer = campaignMoneyApiAnswer(candidate.targetKeys[0], undefined, { federal: true, identity: false });
   assert.equal(answer.kind, "funding");
   const serialized = await Response.json(answer).text();
   assert.doesNotMatch(serialized, /PRIVATE DONOR CANARY|PRIVATE HOME CANARY|streetAddress/);

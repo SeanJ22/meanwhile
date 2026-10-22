@@ -323,6 +323,34 @@
       "when": 1792454400000,
       "tag": "0045_src_mn_retire_campaign_load",
       "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1792454400001,
+      "tag": "R3-LEGISTAR-MEMBERS",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1792454400002,
+      "tag": "R3-LEGISTAR-MEMBERS_retire_index",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1792454400003,
+      "tag": "CK-01_audit_flags",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "7",
+      "when": 1792454400004,
+      "tag": "CK-01_flag_target",
+      "breakpoints": true
     }
   ]
 }

@@ -15,7 +15,7 @@ import {
   type ManualProductionSourceContract,
 } from "./manual-contracts.ts";
 import type { ReaderProjectionReadbackReceipt } from "./reader-readback.ts";
-import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
+import { recordRoutineReaderProjectionReadback, repairRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { trustedLkgImportUrl } from "./trusted-lkg-import.ts";
 import { assertRegisteredRuntimeContract } from "./runtime-authority.ts";
 import { verifySourceScopedCandidateProjection } from "./candidate-integrity.ts";
@@ -246,7 +246,8 @@ export async function processRegisteredFanOutCandidate(
   );
 }
 
-/** No readback here: `repairMeetingReaderProjectionReadbacks` records each partition's from one aggregate read per pass. */
+/** A meeting's delivery observation belongs to its publication, including an unchanged recheck.
+ * The later fleet repair can be deferred or die before running; it cannot be the only stamp writer. */
 export async function processRegisteredMeetingPartitionCandidate(
   store: RoutineDataStore,
   partitionId: string,
@@ -272,7 +273,7 @@ export async function processRegisteredMeetingPartitionCandidate(
       ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
   );
-  return processRoutineCandidate(
+  const outcome = await processRoutineCandidate(
     store,
     derivedChecked,
     now,
@@ -281,6 +282,15 @@ export async function processRegisteredMeetingPartitionCandidate(
     sourceProjectionVerification,
     options,
   );
+  if (outcome.promoted === null) return outcome;
+  try {
+    const readback = await repairRoutineReaderProjectionReadback(store, contract, now);
+    return { ...outcome, readerReadback: readback.receipt };
+  } catch {
+    // The pointer is already live. Observation failure must not undo or hold publication.
+    // The hourly keeper sees the missing stamp and queues its repair after 90 minutes.
+    return outcome;
+  }
 }
 
 export async function processRegisteredMeetingHistoryCandidate(

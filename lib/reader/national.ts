@@ -11,9 +11,9 @@ import { federalDirectoryScope, federalDirectoryProjectionIssues, type FederalDi
 import type { OfficeholderSet } from "../officials/types.ts";
 import type { ZipDivisionEntry } from "../geo/zip-division-index.ts";
 import { postalArea, postalTable } from "../geo/postal.ts";
-import { isTownOrCountyDivision } from "../geo/postal-core.ts";
+import { isTownOrCountyDivision, postalAreaNeedsAddress } from "../geo/postal-core.ts";
 import { readerMemory, serverReaderValue } from "./memory.ts";
-import { indexedZipDivisionEntry } from "../geo/zip-division-index.ts";
+import { indexedZipDivisionEntry, shardEntry, type ZipDivisionShard } from "../geo/zip-division-index.ts";
 export { readerMemory } from "./memory.ts";
 
 export interface NationalShelf {
@@ -24,20 +24,19 @@ export interface NationalShelf {
   readonly version: string;
 }
 
-type ZipShard = { divisions: string[]; zips: Record<string, number[]>; partial: Record<string, number[]>; zipSamples: Record<string, number> };
 const stateZipPlaces = serverReaderValue("state-zip-places", () => ({ value: new Map<string, ReadonlyMap<string, ZipDivisionEntry>>() }));
 
 /** A place lookup reads its ZIP shard and postal alias, without opening the national index. */
 export async function readZipPlace(zip: string): Promise<ZipDivisionEntry | null> {
   const own = await indexedZipDivisionEntry(zip), area = postalArea(zip);
-  if (own && (!area || area.type === "standard")) return own;
+  if (own && !postalAreaNeedsAddress(zip, area)) return own;
   const baseZip = area?.zcta ?? zip;
   // Match the national reader's postal pass: an earlier alias already has its postal restrictions.
   const order = serverReaderValue("postal-order", () => new Map(Object.keys(postalTable()).map((value, index) => [value, index])));
   const earlier = (order.get(baseZip) ?? Infinity) < (order.get(zip) ?? Infinity);
   const entry = baseZip === zip ? own : earlier ? await readZipPlace(baseZip) : await indexedZipDivisionEntry(baseZip);
   if (!entry) return own;
-  if (area && area.type !== "standard") {
+  if (postalAreaNeedsAddress(zip, area)) {
     const ids = entry.ids.filter(isTownOrCountyDivision);
     return { ids, partial: ids.filter(id => id.split("/").length > 3), samples: 0 };
   }
@@ -49,7 +48,7 @@ export const readZipPlaces = serverReaderValue("zip-places", () => readerMemory(
   const names = [...new Set(Object.values(manifest.statesToShards).flat())].sort();
   const shards = await Promise.all(names.map(async name => {
     if (!/^\d{2}$/.test(name)) throw new Error("ZIP_PLACE_SHARD_INVALID");
-    return JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${name}.json`), "utf8")) as ZipShard;
+    return JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${name}.json`), "utf8")) as ZipDivisionShard;
   }));
   const out = new Map<string, ZipDivisionEntry>();
   const byState = new Map<string, Map<string, ZipDivisionEntry>>();
@@ -66,19 +65,9 @@ export const readZipPlaces = serverReaderValue("zip-places", () => readerMemory(
     }
   };
   for (const shard of shards) {
-    const partialDivision = shard.divisions.map(id => !/^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(id));
-    const divisionStates = shard.divisions.map(divisionState);
     for (const zip in shard.zips) {
-      const refs = shard.zips[zip];
-      const ids: string[] = [], partial: string[] = [], states: string[] = [];
-      for (const index of refs) {
-        const id = shard.divisions[index];
-        ids.push(id);
-        if (partialDivision[index]) partial.push(id);
-        const state = divisionStates[index];
-        if (state && !states.includes(state)) states.push(state);
-      }
-      put(zip, { ids, partial, samples: shard.zipSamples[zip] ?? 0 }, states);
+      const entry = shardEntry(shard, zip)!;
+      put(zip, entry, touchedStates(entry.ids));
     }
     // Build the resident table without blocking HTML and place requests behind the whole country.
     await yieldToReaders();
@@ -90,7 +79,7 @@ export const readZipPlaces = serverReaderValue("zip-places", () => readerMemory(
     const row = postal[zip];
     const base = out.get(row[3] ?? zip);
     if (!base) continue;
-    if (row[2] !== "standard") {
+    if (postalAreaNeedsAddress(zip, { type: row[2], zcta: row[3] })) {
       const ids = base.ids.filter(isTownOrCountyDivision);
       put(zip, { ids, partial: ids.filter(id => id.split("/").length > 3), samples: 0 }, touchedStates(ids));
     } else if (!out.has(zip)) put(zip, base, touchedStates(base.ids));

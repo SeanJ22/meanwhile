@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { zipDivisionEntry } from "../lib/geo/zip-division-index.ts";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -31,33 +32,32 @@ const current = { purpose: "representation" as const, asOf: "2026-10-09" };
 const withDistricts = <T>(read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { slice: async (zip: string) => censusDistrictEdgeSlice(districtEdge, districtEdge.versionId, zip) } }, read);
 const sampledZipCertainty = (zip: string | null) => withReaderAuthorityEdge({}, () => zipCertainty(zip));
 
-test("3.2: sampled county and school overlap cannot establish whole-ZIP certainty", async () => {
+test("3.2: a county and school district every 2020 resident lives in govern the whole ZIP", async () => {
   const c = await sampledZipCertainty("07866");
   assert.ok(c, "07866 is inside this repo's committed geometry");
-  assert.equal(c.certaintyOf("ocd-division/country:us/state:nj/county:morris"), "AMBIGUOUS");
+  assert.equal(c.certaintyOf("ocd-division/country:us/state:nj/county:morris"), "CERTAIN");
   assert.equal(
     c.certaintyOf(
       "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
     ),
-    "AMBIGUOUS",
-    "the held sample does not establish whole-ZIP school service",
+    "CERTAIN",
+    "all 22,965 residents of 07866 live in the Morris Hills district",
   );
 });
 
-test("3.2: at 07866 the two Rockaways and Denville each govern PART — pill", async () => {
+test("3.2: at 07866 the two Rockaways each govern PART — pill; Denville, home to 1% of it, is named instead", async () => {
   const c = await sampledZipCertainty("07866");
   assert.ok(c);
   for (const id of [
     "ocd-division/country:us/state:nj/county:morris/place:rockaway_borough",
     "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
-    "ocd-division/country:us/state:nj/county:morris/place:denville_township",
     "ocd-division/country:us/state:nj/school_district:rockaway_borough_school_district",
     "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
-    "ocd-division/country:us/state:nj/school_district:denville_township_school_district",
   ]) {
     assert.equal(c.certaintyOf(id), "AMBIGUOUS", `${id} covers only part of 07866`);
     assert.equal(needsPill(c.certaintyOf(id)), true);
   }
+  assert.ok((await zipDivisionEntry("07866"))?.fringe?.includes("ocd-division/country:us/state:nj/county:morris/place:denville_township"));
 });
 
 test("3.7: a qualified whole-area district needs no pill while sampled local divisions stay uncertain", async () => {
@@ -68,12 +68,16 @@ test("3.7: a qualified whole-area district needs no pill while sampled local div
   assert.equal(c.certaintyOf("ocd-division/country:us/state:az/place:sierra_vista"), "AMBIGUOUS");
 });
 
-test("3.8: a sample with no observed crossing still leaves local boundaries uncertain", async () => {
+test("3.8: a division every 2020 resident of the ZIP lives in governs it whole; one holding part of them keeps the pill", async () => {
   const c = await sampledZipCertainty("85701");
   assert.ok(c);
-  assert.ok(c.partial.length > 0, "a finite sample cannot certify every address in 85701");
-  assert.ok(c.partial.every(id => needsPill(c.certaintyOf(id))));
-  assert.equal(c.certaintyOf("ocd-division/country:us/state:az"), "CERTAIN");
+  assert.deepEqual(c.partial, [], "the Census counts every 85701 resident inside Tucson and Tucson Unified");
+  assert.equal(c.certaintyOf("ocd-division/country:us/state:az/place:tucson"), "CERTAIN");
+  assert.equal(needsPill(c.certaintyOf("ocd-division/country:us/state:az/place:tucson")), false);
+  const vail = await sampledZipCertainty("85641");
+  assert.ok(vail);
+  assert.equal(vail.certaintyOf("ocd-division/country:us/state:az/special_district:rincon_valley_fire_district"), "AMBIGUOUS");
+  assert.equal(vail.certaintyOf("ocd-division/country:us/state:az/place:tucson"), "UNKNOWN", "124 of 29,538 residents: Tucson is named for 85641, not listed as governing it");
 });
 
 test("3.2: an UNMEASURED division gets the pill, never a certainty it never earned", async () => {
@@ -318,10 +322,12 @@ test("3.1: both zip-resolving surfaces use the whole ZIP area", async () => {
   assert.match(codeOf("app", "api", "meetings", "route.ts"), /readerLocation\(lat, lng, zipRead\.value\)/,
     "the meetings route passes the typed ZIP to the area index");
   const location = await readerLocation(40.91, -74.51, "07866");
-  for (const place of ["rockaway_borough", "rockaway_township", "denville_township"]) {
+  for (const place of ["rockaway_borough", "rockaway_township"]) {
     assert.ok(location.divisionIds.includes(`ocd-division/country:us/state:nj/county:morris/place:${place}`),
       `${place} touching 07866 must survive even when the centroid is elsewhere`);
   }
+  assert.ok(location.fringe.includes("ocd-division/country:us/state:nj/county:morris/place:denville_township"),
+    "Denville, home to 246 of its 22,965 residents, stays named for 07866");
 });
 
 test("3.1: the held election plans widen 85641 to both legislative districts and preserve independent local facts", async () => {

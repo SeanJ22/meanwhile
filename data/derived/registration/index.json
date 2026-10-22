@@ -5,34 +5,38 @@
  "note": "Each state's divisions ([ocdId, layer, GEOID, Census name], and for a territory's county, county-subdivision and place divisions also [LSAD, FUNCSTAT, CLASSFP]) and governments ([Census id, jurisdiction id, name, type, division index or -1, how it paired or why it did not]). A government pairs by Census code where the Census gives one and by normalized name for school districts; a territory's governments are its divisions whose TIGER/Line status governs (A, B, C, G), with `<layer>:<GEOID>` as their Census id. Nothing unpaired is guessed. No body is minted here. Each state's generatedAt is the date its file last changed.",
  "counts": {
   "states": 56,
-  "governments": 92382,
+  "governments": 94451,
   "placedByStateFipsForABlankPostalCode": 13,
   "byTypeAndPairing": {
-   "STATE:STATE": 56,
-   "COUNTY:COUNTY_FIPS": 3031,
-   "MUNICIPAL:PLACE_FIPS": 16228,
-   "SPECIAL DISTRICT:NO_CENSUS_GEOGRAPHY": 39555,
-   "DEPENDENT SCHOOL SYSTEM:SCHOOL_NAME_NOT_FOUND": 683,
-   "DEPENDENT SCHOOL SYSTEM:SCHOOL_NAME": 471,
-   "DEPENDENT SCHOOL SYSTEM:NO_CENSUS_SCHOOL_GEOGRAPHY": 142,
-   "TOWNSHIP:STATE_CODES_DISAGREE": 34,
-   "SCHOOL DISTRICT:SCHOOL_NAME": 6842,
-   "SCHOOL DISTRICT:SCHOOL_NAME_NOT_FOUND": 1985,
-   "MUNICIPAL:STATE_CODES_DISAGREE": 5,
-   "SCHOOL DISTRICT:SCHOOL_NAME_LOOSE": 3125,
-   "COUNTY-EQUIVALENT GOVERNMENT:TIGER_FUNCSTAT": 85,
    "COUNTY SUBDIVISION GOVERNMENT:TIGER_FUNCSTAT": 14,
+   "COUNTY-EQUIVALENT GOVERNMENT:TIGER_FUNCSTAT": 85,
+   "COUNTY:COUNTY_FIPS": 3031,
+   "DEPENDENT SCHOOL SYSTEM:NO_CENSUS_SCHOOL_GEOGRAPHY": 142,
+   "DEPENDENT SCHOOL SYSTEM:SCHOOL_NAME": 471,
+   "DEPENDENT SCHOOL SYSTEM:SCHOOL_NAME_AMBIGUOUS": 1,
+   "DEPENDENT SCHOOL SYSTEM:SCHOOL_NAME_LOOSE": 16,
+   "DEPENDENT SCHOOL SYSTEM:SCHOOL_NAME_NOT_FOUND": 683,
+   "MUNICIPAL:CONSOLIDATED_COUNTY_FIPS": 6,
+   "MUNICIPAL:COUSUB_FIPS": 3238,
+   "MUNICIPAL:NO_DIVISION_FOR_FIPS": 14,
+   "MUNICIPAL:PLACE_FIPS": 16228,
+   "MUNICIPAL:STATE_CODES_DISAGREE": 5,
    "PLACE GOVERNMENT:TIGER_FUNCSTAT": 77,
    "SCHOOL DISTRICT:NO_CENSUS_SCHOOL_GEOGRAPHY": 455,
+   "SCHOOL DISTRICT:SCHOOL_NAME": 6842,
    "SCHOOL DISTRICT:SCHOOL_NAME_AMBIGUOUS": 135,
+   "SCHOOL DISTRICT:SCHOOL_NAME_LOOSE": 3125,
+   "SCHOOL DISTRICT:SCHOOL_NAME_NOT_FOUND": 1985,
+   "SCHOOL DISTRICT:STATE_CODES_DISAGREE": 4,
+   "SPECIAL DISTRICT:BOUNDARY_SOURCE": 8444,
+   "SPECIAL DISTRICT:BOUNDARY_SOURCE_ONLY": 1395,
+   "SPECIAL DISTRICT:COUNTY_NAMED": 6721,
+   "SPECIAL DISTRICT:NO_CENSUS_GEOGRAPHY": 24390,
+   "STATE:STATE": 56,
    "TOWNSHIP:COUSUB_FIPS": 16171,
    "TOWNSHIP:NO_DIVISION_FOR_FIPS": 9,
-   "DEPENDENT SCHOOL SYSTEM:SCHOOL_NAME_LOOSE": 16,
-   "MUNICIPAL:NO_DIVISION_FOR_FIPS": 14,
-   "MUNICIPAL:CONSOLIDATED_COUNTY_FIPS": 6,
-   "SCHOOL DISTRICT:STATE_CODES_DISAGREE": 4,
-   "MUNICIPAL:COUSUB_FIPS": 3238,
-   "DEPENDENT SCHOOL SYSTEM:SCHOOL_NAME_AMBIGUOUS": 1
+   "TOWNSHIP:STATE_CODES_DISAGREE": 34,
+   "TRIBAL AREA:AIANNH_CODE": 674
   },
   "functionalStatusByTerritory": {
    "AS": {
@@ -98,25 +102,25 @@
  },
  "states": {
   "ak": {
-   "sha256": "4c54986e517e7c4e1d78e72c17b08318db8f2e686f62b5118a13c6c8240a2071",
-   "divisions": 476,
-   "governments": 238,
-   "paired": 198,
-   "generatedAt": "2026-09-23"
+   "sha256": "25f3ac98d9956fd6c0509a31f17ba84ea3fd0648360d41638ce6138a11dcbbab",
+   "divisions": 686,
+   "governments": 448,
+   "paired": 408,
+   "generatedAt": "2026-10-22"
   },
   "al": {
-   "sha256": "b8f18daec64179c231a6d19f32be7e4a7830634105a7694c9e5168233302e36b",
-   "divisions": 1192,
-   "governments": 1208,
-   "paired": 659,
-   "generatedAt": "2026-09-23"
+   "sha256": "53e398837b0be1a3e9d1e1571c976bb7b551183403e0877f3dda672b9c03d54b",
+   "divisions": 1282,
+   "governments": 1216,
+   "paired": 899,
+   "generatedAt": "2026-10-22"
   },
   "ar": {
-   "sha256": "a9a0f4ead2341e21b83cf52f27665845055a9eb09a3a617addc7157176a951f0",
-   "divisions": 2030,
+   "sha256": "c56effda5d398662aeaff420b2d538c50c431235a54c62468308d9cc42bbabee",
+   "divisions": 2095,
    "governments": 1556,
-   "paired": 797,
-   "generatedAt": "2026-09-23"
+   "paired": 1043,
+   "generatedAt": "2026-10-22"
   },
   "as": {
    "sha256": "be288d61ddd0a261cc95e5da1f030fa2aa278c06954de1e12ce849ee72ab0f31",
@@ -126,60 +130,60 @@
    "generatedAt": "2026-09-25"
   },
   "az": {
-   "sha256": "5144990a2e5ba9355bdbcb39e35fdb40bf3eb4b62812c20c92e8b7ffe93f5a3d",
-   "divisions": 779,
-   "governments": 688,
-   "paired": 311,
-   "generatedAt": "2026-09-23"
+   "sha256": "25bf1f1bf3ffa32be7fd52329d956280c3143613f4704a4a6495d324258e7f22",
+   "divisions": 964,
+   "governments": 711,
+   "paired": 509,
+   "generatedAt": "2026-10-22"
   },
   "ca": {
-   "sha256": "93a2e73818a69c1951ee23d6d54600c219a2d83a6c63716ba81a431206fd2f53",
-   "divisions": 3060,
-   "governments": 4550,
-   "paired": 1403,
-   "generatedAt": "2026-09-23"
+   "sha256": "3c2510bdc1de01a634d73228c77398eb1a72e82084a87a89b73f09c1b02c333f",
+   "divisions": 3640,
+   "governments": 4649,
+   "paired": 2164,
+   "generatedAt": "2026-10-22"
   },
   "co": {
-   "sha256": "15961d8a2eeb89fc04f58655b230809a5573f6718a2720f27f2a3947251b89d6",
-   "divisions": 934,
-   "governments": 3717,
-   "paired": 458,
-   "generatedAt": "2026-09-23"
+   "sha256": "55a8a9fe83f39961ea861829f4e4edc54ede224662a6448ecba19685c101ad18",
+   "divisions": 3423,
+   "governments": 3719,
+   "paired": 3012,
+   "generatedAt": "2026-10-22"
   },
   "ct": {
-   "sha256": "ce132d83f9e1faf6d622545aa65ff2387d29e82f2b83d246b4b99064f5a6f1ca",
-   "divisions": 560,
-   "governments": 777,
-   "paired": 228,
-   "generatedAt": "2026-09-23"
+   "sha256": "2be68ad44a36a16087fc852998d20438d917defb8e12f64406325bc692ed28c8",
+   "divisions": 600,
+   "governments": 781,
+   "paired": 268,
+   "generatedAt": "2026-10-22"
   },
   "dc": {
-   "sha256": "057d979adfb05b54d8d952cffd1c90235f766856d947bd49ca0ffa2e261f8d87",
-   "divisions": 5,
-   "governments": 6,
-   "paired": 3,
-   "generatedAt": "2026-09-23"
+   "sha256": "c866e0cd789d3801ee196b42b50a538074f505cd47b25923766776e59fda0d62",
+   "divisions": 51,
+   "governments": 52,
+   "paired": 49,
+   "generatedAt": "2026-10-22"
   },
   "de": {
-   "sha256": "eb0c66bc5f1abf649f30280b8c8d21bb535084849e5fa8271b773279bed5352f",
-   "divisions": 126,
-   "governments": 335,
-   "paired": 75,
-   "generatedAt": "2026-09-23"
+   "sha256": "c5a45aa10e0ef9ced06a43429988e654d7c5e0a5766d6e807fd5127c4a852367",
+   "divisions": 129,
+   "governments": 337,
+   "paired": 79,
+   "generatedAt": "2026-10-22"
   },
   "fl": {
-   "sha256": "7e9b6428e4652efdf4f11aa9484b584e4a778f1f0e44f0216f9f5b6c9e23c206",
-   "divisions": 1406,
-   "governments": 1948,
-   "paired": 542,
-   "generatedAt": "2026-09-23"
+   "sha256": "82857bc4cd631ec4a47189faa09edb6bab4f05ee71c351c30cbed89696d73b54",
+   "divisions": 1670,
+   "governments": 2190,
+   "paired": 910,
+   "generatedAt": "2026-10-22"
   },
   "ga": {
-   "sha256": "94f4ec66850932e1ae3dcd7000acf1b19c34f8c85e9f231f57720c2b6b112422",
-   "divisions": 1605,
-   "governments": 1380,
-   "paired": 847,
-   "generatedAt": "2026-09-25"
+   "sha256": "1b81cc53ea7422be565ae52192420c8cf5c21d8f7bf348bc62d1a02b2b103c4c",
+   "divisions": 1624,
+   "governments": 1382,
+   "paired": 1027,
+   "generatedAt": "2026-10-22"
   },
   "gu": {
    "sha256": "5dc85e2fe44c194596176ba2c51acfeddd634301891d049a2e8c58aa76abe870",
@@ -189,102 +193,102 @@
    "generatedAt": "2026-09-25"
   },
   "hi": {
-   "sha256": "40ef047c72f22704f616f69bd013a9e8387b6374e13cd0fec6051012f01f8656",
-   "divisions": 214,
-   "governments": 23,
-   "paired": 5,
-   "generatedAt": "2026-09-25"
+   "sha256": "a54bc378e250133b88f251824ab9431c14cdd1803216aab5f20fe71a88ea17cb",
+   "divisions": 274,
+   "governments": 83,
+   "paired": 65,
+   "generatedAt": "2026-10-22"
   },
   "ia": {
-   "sha256": "c95f95f19cc30b00daa49195596c856ec32dd2c72242da8c2ed76f3c2e45cb3f",
-   "divisions": 3115,
-   "governments": 1838,
-   "paired": 1355,
-   "generatedAt": "2026-09-23"
+   "sha256": "82069d94704189b48ad395997fcbcafb5ca27cf580318531088ab29c91a1c2ca",
+   "divisions": 3121,
+   "governments": 1839,
+   "paired": 1592,
+   "generatedAt": "2026-10-22"
   },
   "id": {
-   "sha256": "22a090be082768fa4be05db44cf5ea8c47043d6221f84d6ee70dfb6bc0491b3b",
-   "divisions": 566,
-   "governments": 1162,
-   "paired": 352,
-   "generatedAt": "2026-09-23"
+   "sha256": "2110f31c54507f1316cd53b1cb62531590e1522c80391cd9bfab2b5514d37c26",
+   "divisions": 1078,
+   "governments": 1167,
+   "paired": 914,
+   "generatedAt": "2026-10-22"
   },
   "il": {
-   "sha256": "15b3c654fa4c6fe8197d8f48e5f5cc8fb120822d7be03ab3cddc95c8c3703587",
-   "divisions": 4121,
-   "governments": 6935,
-   "paired": 3570,
-   "generatedAt": "2026-09-23"
+   "sha256": "187b71c444e22abbbff192de91fe5527c350c9525d4fea7c1f0debb0722d6bf4",
+   "divisions": 4565,
+   "governments": 7023,
+   "paired": 4299,
+   "generatedAt": "2026-10-22"
   },
   "in": {
-   "sha256": "b39d51c8f184f8e5dbf8dbdee4b7772890dd987fa171305fb0378fc8b83fb33d",
-   "divisions": 2370,
-   "governments": 2651,
-   "paired": 1914,
-   "generatedAt": "2026-09-23"
+   "sha256": "75e6b9d4e32f2bc286aaadc525e919984cfc9f416c31d4ff23454bd7dbf3660b",
+   "divisions": 2620,
+   "governments": 2699,
+   "paired": 2358,
+   "generatedAt": "2026-10-22"
   },
   "ks": {
-   "sha256": "b11f853129f4a9389caded66673ec19106400940ceadfe202e2515cf17f029a4",
-   "divisions": 2662,
-   "governments": 3759,
-   "paired": 2246,
-   "generatedAt": "2026-09-25"
+   "sha256": "d62ec2aa83e18b41cea68e7eb55c94bb1f299595696149795875d7bb012b615a",
+   "divisions": 2682,
+   "governments": 3763,
+   "paired": 2423,
+   "generatedAt": "2026-10-22"
   },
   "ky": {
-   "sha256": "af609aaade73d77be61f376c14426d6816b73c0a90f7db981359d762a4b25f9e",
-   "divisions": 1347,
+   "sha256": "6f1146019d493915e658dc599b30a703327a2c72edb37e2e2304eb9993e06f8b",
+   "divisions": 1514,
    "governments": 1306,
-   "paired": 698,
-   "generatedAt": "2026-09-25"
+   "paired": 1192,
+   "generatedAt": "2026-10-22"
   },
   "la": {
-   "sha256": "7f64797891785ed9ecf4bd79012b08222491f72f323dbaf543a03fef6b0a2313",
-   "divisions": 1199,
-   "governments": 536,
-   "paired": 428,
-   "generatedAt": "2026-09-23"
+   "sha256": "2b84fcdf19a40f9e875498a3d788c15e7882c3da8c26de11d04ab5d8ceba8100",
+   "divisions": 1213,
+   "governments": 550,
+   "paired": 454,
+   "generatedAt": "2026-10-22"
   },
   "ma": {
-   "sha256": "a3b964c505d306ea18d42d13948cfbb45c76e64b37b1d4cb33ff784ccad7db95",
-   "divisions": 917,
-   "governments": 1092,
-   "paired": 452,
-   "generatedAt": "2026-09-23"
+   "sha256": "6195a88fc4b78db055f691479223c9255988550484afd9a66a91387bc2411a16",
+   "divisions": 994,
+   "governments": 1095,
+   "paired": 535,
+   "generatedAt": "2026-10-22"
   },
   "md": {
-   "sha256": "3aaa700be81d0bbad995925a22a77eab90e7231b8f5befa745f07a5747333a4d",
-   "divisions": 875,
+   "sha256": "c0feb4f69ce55e870842c4936b7c6ae71b4cd77728750882ac1d510cb42d4299",
+   "divisions": 876,
    "governments": 382,
-   "paired": 193,
-   "generatedAt": "2026-09-23"
+   "paired": 202,
+   "generatedAt": "2026-10-22"
   },
   "me": {
-   "sha256": "e9dc660dcb27e9215eba5cbf7f1c257f968a2fbb24b6c42ba7f535067a348b23",
-   "divisions": 968,
-   "governments": 990,
-   "paired": 584,
-   "generatedAt": "2026-09-23"
+   "sha256": "d2293452f3673a9516f76ef49b1eb0acdd4e8cc54440af018b1cfe47698c0cf8",
+   "divisions": 1056,
+   "governments": 996,
+   "paired": 684,
+   "generatedAt": "2026-10-22"
   },
   "mi": {
-   "sha256": "9032267599bee76b52023d64401020a250c25b6762e7ab6055f1de240c8d79ff",
-   "divisions": 2909,
-   "governments": 2862,
-   "paired": 2316,
-   "generatedAt": "2026-09-23"
+   "sha256": "4f70c2dc723302f9d2b01162a56e5335426a8af800d5547a3800eb5de29fcf4d",
+   "divisions": 2933,
+   "governments": 2874,
+   "paired": 2440,
+   "generatedAt": "2026-10-22"
   },
   "mn": {
-   "sha256": "f808e7581247185c6ea477f1fef5d6020f73817793603de3cecf3d5bb56976d6",
-   "divisions": 4090,
-   "governments": 3647,
-   "paired": 3019,
-   "generatedAt": "2026-09-23"
+   "sha256": "15b486dcc80d23794485fcd6ea09c88858ef736f1c604f2bae3aaef4faa712c8",
+   "divisions": 4110,
+   "governments": 3659,
+   "paired": 3177,
+   "generatedAt": "2026-10-22"
   },
   "mo": {
-   "sha256": "df9a53f64bb769b04a4f75a68f6566eef0463eb7024590cd4e6641f79ba53995",
-   "divisions": 3108,
+   "sha256": "3a5660e4cd566729cb2e3e14f49743fa038d37bb3bd76e6b70a33347e98f1e0a",
+   "divisions": 3146,
    "governments": 3796,
-   "paired": 1432,
-   "generatedAt": "2026-09-23"
+   "paired": 2058,
+   "generatedAt": "2026-10-22"
   },
   "mp": {
    "sha256": "9c45a65f3a44fe2291ba0d8560c8e74eceb9684cc6efbd8b371bf680132f078e",
@@ -294,158 +298,158 @@
    "generatedAt": "2026-09-25"
   },
   "ms": {
-   "sha256": "0c8c48bd91223824da99e3682f985f132b8791b6df73457f8aaf9f79b7a29da4",
-   "divisions": 1057,
-   "governments": 970,
-   "paired": 483,
-   "generatedAt": "2026-09-23"
+   "sha256": "98b39aa312149d4e6681d749e77dea580df767c10e74a7b11549f73f96896995",
+   "divisions": 1073,
+   "governments": 971,
+   "paired": 618,
+   "generatedAt": "2026-10-22"
   },
   "mt": {
-   "sha256": "063da54ea373f6b1472c4ed6777eca158ea23accbdc6ab5019a027d7433f13a4",
-   "divisions": 1147,
-   "governments": 1233,
-   "paired": 381,
-   "generatedAt": "2026-09-25"
+   "sha256": "98df9424e7120eeb999a4165c41b76b57a8fbf76357d78f550a74785f27b5f25",
+   "divisions": 1445,
+   "governments": 1257,
+   "paired": 777,
+   "generatedAt": "2026-10-22"
   },
   "nc": {
-   "sha256": "cdb1cd0a12ff377ab1f9367e02cbb64f5fc539627f03721fb611dbf88e7507d5",
-   "divisions": 2037,
-   "governments": 1140,
-   "paired": 755,
-   "generatedAt": "2026-09-23"
+   "sha256": "166d234f40ebbeced213f3efcd6ee210e4358c8bea42106505a4f075d80d885e",
+   "divisions": 2059,
+   "governments": 1148,
+   "paired": 833,
+   "generatedAt": "2026-10-22"
   },
   "nd": {
-   "sha256": "664690b78458f30328a74b070ff8ad62637160efbfd0f82172974b3973ce3b90",
-   "divisions": 2394,
-   "governments": 2568,
-   "paired": 1832,
-   "generatedAt": "2026-09-23"
+   "sha256": "078ab120ed77d919675169d66856d0b96f5740231ca4330ca5119203e9b96889",
+   "divisions": 2697,
+   "governments": 2573,
+   "paired": 2160,
+   "generatedAt": "2026-10-22"
   },
   "ne": {
-   "sha256": "2db34014bbece294c2b7d948c857677f4915f7efadf1bb9fb43326e7344062d6",
-   "divisions": 2120,
-   "governments": 2547,
-   "paired": 1149,
-   "generatedAt": "2026-09-23"
+   "sha256": "5ab2bf12f0ce81360c03bb83274053ce5a07f97992951df92a63b4fa4712fb46",
+   "divisions": 2563,
+   "governments": 2554,
+   "paired": 1910,
+   "generatedAt": "2026-10-22"
   },
   "nh": {
-   "sha256": "05e450d5d56449b453b0d48fff9eb2d548fa43354066a16a2756833715e6f583",
-   "divisions": 550,
+   "sha256": "ff4bffeef3f6e0f594fc9667ad291c5df859cd697c39d39fb51b26d8b0cb6802",
+   "divisions": 559,
    "governments": 552,
-   "paired": 319,
-   "generatedAt": "2026-09-23"
+   "paired": 337,
+   "generatedAt": "2026-10-22"
   },
   "nj": {
-   "sha256": "523724fe2e2a7c84d4507b08cfd80b8308b06a4e4a0558b610176d0319b22b47",
-   "divisions": 1843,
-   "governments": 1401,
-   "paired": 1017,
-   "generatedAt": "2026-09-23"
+   "sha256": "87bc6cb09925021290b0b957624d8c534dcf40a933da7c6b72b0d73df5ba84a0",
+   "divisions": 1850,
+   "governments": 1403,
+   "paired": 1040,
+   "generatedAt": "2026-10-22"
   },
   "nm": {
-   "sha256": "2ab339928868762ee5ecf46d740eda614351245662385161ab9ce818561bb6f0",
-   "divisions": 780,
-   "governments": 1001,
-   "paired": 189,
-   "generatedAt": "2026-09-23"
+   "sha256": "56ce1b275baca184ac2cde940b34ae5168baad2a4c4a27e48cbbae5085cb688a",
+   "divisions": 835,
+   "governments": 1023,
+   "paired": 248,
+   "generatedAt": "2026-10-22"
   },
   "nv": {
-   "sha256": "9f2e7e525668eb64e6b62ed2a52a89268e3a55a94d21e00713629a723bfddf98",
-   "divisions": 239,
-   "governments": 188,
-   "paired": 53,
-   "generatedAt": "2026-09-23"
+   "sha256": "53e976c2653b240ff6afd9aa939f723cda168a3987af5668a4e4bddb0f7d1786",
+   "divisions": 316,
+   "governments": 244,
+   "paired": 145,
+   "generatedAt": "2026-10-22"
   },
   "ny": {
-   "sha256": "4b368c4b692f530182337a66b34496fa3b506a7c959ec1732b8100e0d9561378",
-   "divisions": 3050,
-   "governments": 3489,
-   "paired": 2135,
-   "generatedAt": "2026-09-23"
+   "sha256": "e15558a983a015e54a5696c65abaf2f8033e8d65b5f6dbf70f7334a2c0de9ab7",
+   "divisions": 3277,
+   "governments": 3502,
+   "paired": 2365,
+   "generatedAt": "2026-10-22"
   },
   "oh": {
-   "sha256": "9cf8e92151f5f6d6ec2e292a3ba198dae77dcfc6cc166c0060982d30dd0eba8a",
-   "divisions": 3567,
+   "sha256": "6720d8790feb05fba844a246cf4d993988368ba270e1003e4a13e9ad56a58008",
+   "divisions": 3586,
    "governments": 3937,
-   "paired": 2889,
-   "generatedAt": "2026-09-23"
+   "paired": 3207,
+   "generatedAt": "2026-10-22"
   },
   "ok": {
-   "sha256": "4c0f0efcddc499a42d86e8f4d5450ad4a995f593155ade4ef0269c89f0304e7a",
-   "divisions": 1738,
-   "governments": 1843,
-   "paired": 1170,
-   "generatedAt": "2026-09-23"
+   "sha256": "f5080dff15c75e6df9ec0530e0873e494c2571dc19fdd1309368ed6db3fd9344",
+   "divisions": 1801,
+   "governments": 1894,
+   "paired": 1580,
+   "generatedAt": "2026-10-22"
   },
   "or": {
-   "sha256": "f4c028cbaef1f1a0c8fd8735472e40e6d9613f5a94045c85a33ecbf809c273f1",
-   "divisions": 873,
-   "governments": 1531,
-   "paired": 438,
-   "generatedAt": "2026-09-23"
+   "sha256": "0c1262aa3f98d3a5cc4a8ad4e84cc6e8beccdcad9b33184deac5ae98e2c61e8b",
+   "divisions": 1028,
+   "governments": 1541,
+   "paired": 698,
+   "generatedAt": "2026-10-22"
   },
   "pa": {
-   "sha256": "a9a6c89f00ceb6acbf58d4a5b3414bce64836fafff8a49c7bdf1da4355c067ae",
-   "divisions": 5143,
+   "sha256": "19053eb82b4e1977b1a8bcd76aeb82c34444ce97a571c2a00e2dcd9a2480caa9",
+   "divisions": 5250,
    "governments": 4851,
-   "paired": 3096,
-   "generatedAt": "2026-09-23"
+   "paired": 3511,
+   "generatedAt": "2026-10-22"
   },
   "pr": {
-   "sha256": "83eff6ceb18acdf32010b73153dd3a480cad963edacad16684ccf8e65f93637f",
+   "sha256": "e7834466b9ea5fe01c699f70954a1c61913145ce5fb0edc6ae77c1a3be343fbc",
    "divisions": 1273,
    "governments": 79,
    "paired": 79,
-   "generatedAt": "2026-09-25"
+   "generatedAt": "2026-10-22"
   },
   "ri": {
-   "sha256": "a3e2b03ddcf02b70bbfc37a7dee4fbbe4cf0855e063b06327c8842ea05742159",
-   "divisions": 117,
+   "sha256": "41a6706b6048d28454970a10bba0f5d3574d50772d7703369377f849814a2424",
+   "divisions": 145,
    "governments": 159,
-   "paired": 51,
-   "generatedAt": "2026-09-23"
+   "paired": 80,
+   "generatedAt": "2026-10-22"
   },
   "sc": {
-   "sha256": "13ffc86a41122cfe4f31bb0e4b870ed7f14aabe62c5d15660218d0f2d1646dce",
-   "divisions": 899,
-   "governments": 668,
-   "paired": 348,
-   "generatedAt": "2026-09-23"
+   "sha256": "bb487677e2930c1e60e92f136739c190cd49c8a8bb73c39ad5d4940ddb02aef9",
+   "divisions": 915,
+   "governments": 676,
+   "paired": 444,
+   "generatedAt": "2026-10-22"
   },
   "sd": {
-   "sha256": "c6fb9ac8e116e158cf2ed568a529e1b5284e5022e065e28d70737358def0e0a7",
-   "divisions": 2029,
-   "governments": 1893,
-   "paired": 1402,
-   "generatedAt": "2026-09-23"
+   "sha256": "7165c57ce83b6d9e2155dce659193ed4205677a7fe8f749840e358250d1cd5e6",
+   "divisions": 2107,
+   "governments": 1902,
+   "paired": 1504,
+   "generatedAt": "2026-10-22"
   },
   "tn": {
-   "sha256": "a442271e5ab6be1d7212340e1a5f2ac8c550e818b2ea61d3175d946cae76d0e4",
-   "divisions": 1602,
-   "governments": 1031,
-   "paired": 554,
-   "generatedAt": "2026-09-25"
+   "sha256": "42a6828d97bc2dcd5e9e7f0ef69fd0e138886198bd6dda548bc9cb33962fd6d0",
+   "divisions": 1690,
+   "governments": 1032,
+   "paired": 793,
+   "generatedAt": "2026-10-22"
   },
   "tx": {
-   "sha256": "4b0e27da236526bff5f2ae928b64c9c0e32e9b637c9c00d123193e5d6c5d3077",
-   "divisions": 3999,
-   "governments": 5551,
-   "paired": 2434,
-   "generatedAt": "2026-09-23"
+   "sha256": "ed7c7ff801fc150a8b3c0488fce37f6e53e79d97a9097f0f22b8fb1c7a9380fb",
+   "divisions": 5447,
+   "governments": 5702,
+   "paired": 4599,
+   "generatedAt": "2026-10-22"
   },
   "ut": {
-   "sha256": "2b9cb036bb067f1f7ac8368ad1e43c76e41b96a9c7370c13a43403ecc9fe0d5c",
-   "divisions": 498,
-   "governments": 633,
-   "paired": 295,
-   "generatedAt": "2026-09-23"
+   "sha256": "b9c0312e9a2025f520c5fe8347976fdbe686aa82fc53cce30981c606392bc276",
+   "divisions": 571,
+   "governments": 639,
+   "paired": 424,
+   "generatedAt": "2026-10-22"
   },
   "va": {
-   "sha256": "a249a743dd47db50361df0520117ce7712eb207768c30facf1b6b3f1bd636c4a",
-   "divisions": 1510,
-   "governments": 655,
-   "paired": 378,
-   "generatedAt": "2026-09-23"
+   "sha256": "b9435e8eee91bae34fddea06fdc1e2ddf1dade4cd56806fbdd4254a80c958a28",
+   "divisions": 1519,
+   "governments": 660,
+   "paired": 403,
+   "generatedAt": "2026-10-22"
   },
   "vi": {
    "sha256": "65635a38ee6bef459d225e62a60dd71eff6ccfbecae5fa60b6e135c74fe47b3c",
@@ -455,39 +459,39 @@
    "generatedAt": "2026-09-25"
   },
   "vt": {
-   "sha256": "2031a3748e53d8f7a112e9d2749179ddc58fde22ce59fac6837de4d9bbee3bff",
-   "divisions": 579,
+   "sha256": "7b64d52a35dfa68f6d1f5c6b6992ebf0f8e869d45528a2918c1c715939e05052",
+   "divisions": 584,
    "governments": 571,
-   "paired": 349,
-   "generatedAt": "2026-09-23"
+   "paired": 370,
+   "generatedAt": "2026-10-22"
   },
   "wa": {
-   "sha256": "ec8eef4010b6d634d076e3d9340b26cc22c2d1dfea5b11ce9c264d0e48d210c9",
-   "divisions": 1216,
-   "governments": 1897,
-   "paired": 597,
-   "generatedAt": "2026-09-23"
+   "sha256": "7a7e8af47da78a1ca9a65870bcac2cf32e9fb0fcf567f5ff19081c7dbc9e5fea",
+   "divisions": 2140,
+   "governments": 2653,
+   "paired": 2220,
+   "generatedAt": "2026-10-22"
   },
   "wi": {
-   "sha256": "050ce7c3073651e7d8cfdd4e751faba4830977ba8a441aa324ec48ea8efd0df3",
-   "divisions": 3215,
-   "governments": 3049,
-   "paired": 2272,
-   "generatedAt": "2026-09-23"
+   "sha256": "3bbdad28d14d7077fcd23e8a2cd5ac376065b41ffa99d55e750c60a7758bc0eb",
+   "divisions": 3234,
+   "governments": 3061,
+   "paired": 2367,
+   "generatedAt": "2026-10-22"
   },
   "wv": {
-   "sha256": "1d7fd17df69378aa5ea6e5ce4ddf957b2408af0027fc6b8b1de0c22f8e489b53",
-   "divisions": 776,
+   "sha256": "5ff3e213882831753ca3ee3bc4cb3b8c51ba6c10e70071bc4cbaad0485994c9c",
+   "divisions": 781,
    "governments": 642,
-   "paired": 339,
-   "generatedAt": "2026-09-23"
+   "paired": 443,
+   "generatedAt": "2026-10-22"
   },
   "wy": {
-   "sha256": "3498ff15a5617871d0431b68ef5a6e87c1428f8fe8e88440cd591ca048d76d9e",
-   "divisions": 349,
-   "governments": 819,
-   "paired": 169,
-   "generatedAt": "2026-09-23"
+   "sha256": "aaf58293e4e1ced159d878372ac86aed608fd49d85a89d8e0b4237baefa1a961",
+   "divisions": 656,
+   "governments": 850,
+   "paired": 576,
+   "generatedAt": "2026-10-22"
   }
  }
 }

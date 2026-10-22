@@ -926,12 +926,19 @@ const BOX_DUE_SQL = `SELECT id, value FROM (
   ) due ORDER BY rank, id LIMIT $3`;
 const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 AND ($3::text[] IS NULL OR value->>'subjectId'=ANY($3::text[])) ORDER BY id LIMIT $2`;
 
+// A government's boards are every subject from `<government>` up to `<government>#...`; the store collates in C, so `#` then `$` bounds them in the subject index.
+const BOX_UNDER_SQL = `WITH under AS MATERIALIZED (SELECT id, value FROM cp_box_findings
+    WHERE value #>> '{subjectId}' = $3 OR (value #>> '{subjectId}' > $3 || '#' AND value #>> '{subjectId}' < $3 || '$'))
+  SELECT id, value FROM under WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 ORDER BY id LIMIT $2`;
+
 function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxRepository {
   const run = boundedRunner(sql, "cp_box_findings", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = (found: readonly Record<string, unknown>[]) => found.map(row => parseValue<BoxFinding>(row.value, `cp_box_findings id ${String(row.id)}`));
   return { ...pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", options),
     due: async ({ slots, now, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [slots, now, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
     waitingFor: async (reason, limit, subjectIds) => rows(await run("boxWaitingFor", "PAGE", BOX_WAITING_SQL, [reason, Math.max(0, Math.trunc(limit)), subjectIds ?? null]) as Record<string, unknown>[]),
+    waitingUnder: async (reason, limit, governmentIds) => (await Promise.all([...new Set(governmentIds)].map(async id =>
+      rows(await run("boxWaitingUnder", "PAGE", BOX_UNDER_SQL, [reason, Math.max(0, Math.trunc(limit)), id]) as Record<string, unknown>[])))).flat(),
   };
 }
 

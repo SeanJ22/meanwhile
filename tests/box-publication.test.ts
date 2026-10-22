@@ -109,7 +109,10 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("OFF-06", "January 2027", null, "Term expires January 2027"), { class: "rosters", slot: "term_end" });
   assert.deepEqual(slot("OFF-06", "2023", null, "Appointed in 2023"), { class: "rosters", slot: "term_start" });
   assert.deepEqual(slot("OFF-08", "https://tucsonaz.gov/ward2"), { class: "contacts", slot: "website" });
-  assert.deepEqual(slot("MTG-01", "https://tucsonaz.hylandcloud.com/221agendaonline"), { class: "meeting routes", slot: "agenda_url" });
+  // A link a hunter found is a page to go read: the next walk of the government's own site reads it first.
+  for (const id of ["MTG-01", "DOC-02", "GOV-03", "FIN-01", "ELE-01"]) assert.deepEqual(slot(id, "https://tucsonaz.hylandcloud.com/221agendaonline"), { class: "site walk", handoff: "site-walk" }, id);
+  assert.deepEqual(slot("MTG-01", "tenant 221"), { class: "meeting routes", waiting: "ROUTE_IS_NOT_AN_ADDRESS" });
+  assert.deepEqual(slot("DOC-02", "June 2026 minutes"), { class: "agendas and documents", waiting: "TAKES_WHOLE_RECORDS_ONLY" });
   assert.deepEqual(slot("MTG-02", "tenant 221"), { class: "meeting routes", waiting: "ROUTE_IS_NOT_AN_ADDRESS" });
   assert.deepEqual(slot("DOC-07", "https://youtube.com/watch?v=x"), { class: "sittings", slot: "video_url" });
   assert.deepEqual(slot("ELE-20", "https://my.arizona.vote", null, "Check your voter registration status"), { class: "ballot navigation", election: "registration_lookup" });
@@ -252,23 +255,23 @@ test("each checklist id goes where its record publishes: body links, the agenda 
   const store = new MemoryRoutineDataStore();
   const first = await publishBoxFindings({ repos, facts, vault, fetch, store, clocks: factClocks(null), now: NOW, limit: 100 });
   assert.deepEqual({ published: first.publishedByRoute, handed: first.handed, waiting: first.waitingByClass, failures: first.failuresByReason },
-    { published: { "body links": 2, "meeting routes": 1, "official hosts": 1, sittings: 1, "ballot navigation": 1 }, handed: 1,
+    { published: { "body links": 2, "official hosts": 1, sittings: 1, "ballot navigation": 1 }, handed: 2,
       waiting: { "ballot navigation": 1, governments: 1 }, failures: {} }, JSON.stringify(first));
   const live = async (entityId: string, field: string) => (await facts.query("SELECT value FROM fact WHERE entity_id = $1 AND field = $2 AND status = 'live'", [entityId, field]))
     .map(row => row.value);
   assert.deepEqual(await live(TCCC, "name"), ["Tucson Convention Center Commission"]);
   assert.deepEqual(await live(TCCC, "homepage"), ["https://www.tucsonaz.gov/"]);
-  assert.deepEqual(await live(TCCC, "agenda_url"), [agenda]);
+  assert.deepEqual(await live(TCCC, "agenda_url"), [], "an agenda link is a page to read, not a record to publish");
   const carton = { formatVersion: 1, registry: { bodies: [{ id: TCCC, name: null, homepageUrl: null, agendaSourceRef: null, fieldSources: {} }] } } as unknown as RegistryRuntimeCarton;
   const [seen] = (await withFactRegistry(carton, facts.query)).registry.bodies;
-  assert.deepEqual([seen!.name, seen!.homepageUrl, seen!.agendaSourceRef, seen!.fieldSources?.homepageUrl?.sourceUrl],
-    ["Tucson Convention Center Commission", "https://www.tucsonaz.gov/", agenda, TCCC_URL], "readers see the body's sourced name, home page and agenda route");
+  assert.deepEqual([seen!.name, seen!.homepageUrl, seen!.fieldSources?.homepageUrl?.sourceUrl],
+    ["Tucson Convention Center Commission", "https://www.tucsonaz.gov/", TCCC_URL], "readers see the body's sourced name and home page");
   assert.deepEqual(await live("meeting:tccc-2026-10-01", "video_url"), ["https://www.youtube.com/user/CityofTucson"]);
   assert.ok((await facts.query("SELECT host FROM entity_host WHERE host LIKE 'clerksboards.tucsonaz.gov%'")).length > 0, "the government's official host is learned");
   const navigation = await readElectionFieldsForDivisions([TUCSON], { store, now: NOW, bypassCache: true });
   assert.deepEqual(navigation.fields.map(field => [field.value.fieldKind, field.value.navigationUrl]), [["registration_lookup", "https://my.arizona.vote/"]]);
   const reasons = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
-  assert.deepEqual(reasons, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "LOOKUP_KIND_NOT_STATED", "TAKES_WHOLE_RECORDS_ONLY"]);
+  assert.deepEqual(reasons, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "LOOKUP_KIND_NOT_STATED", "SITE_WALK_TAKES_IT", "TAKES_WHOLE_RECORDS_ONLY"]);
 
   const hobbs: CampaignSiteSubject = { candidacyId: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs", officeTitle: "Governor",
     ocdId: "ocd-division/country:us/state:az", stateCode: "AZ", cycle: 2026, readerKeys: [], filingDomains: [] };

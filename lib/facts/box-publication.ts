@@ -13,7 +13,7 @@ import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } f
 import { readPassCursor, writePassCursor } from "./db.ts";
 import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, officeNamed, splitSubject } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, isGoverningName, otherOffice, slotFor, type FindingSlot } from "./finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, isGoverningName, otherOffice, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
@@ -30,7 +30,7 @@ interface BoxPublicationReport {
   readonly published: number;
   /** Published by where each went: the fact store's classes and ballot navigation. */
   readonly publishedByRoute: Readonly<Record<string, number>>;
-  /** Handed to the campaign-site chain or the candidate-profile writer, which check each on their own passes. */
+  /** Handed to the campaign-site chain, the candidate-profile writer or the site walk, which check or read each on their own passes. */
   readonly handed: number;
   readonly refused: number;
   readonly waitingByClass: Readonly<Record<string, number>>;
@@ -42,7 +42,7 @@ interface BoxPublicationReport {
 
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
 
-type Routed = Exclude<FindingSlot, { waiting: string } | { lead: string } | { election: string }>;
+type Routed = Exclude<FindingSlot, { waiting: string } | { lead: string } | { handoff: string } | { election: string }>;
 const kindOf = (slot: Routed): FieldKind => slot.class === "rosters" || slot.class === "bodies" || slot.class === "body links" && slot.slot === "name" ? "officeholder"
   : slot.class === "schedules" || slot.class === "sittings" && slot.slot === "video_url" ? "meeting"
   : slot.class === "meeting routes" || slot.class === "sittings" ? "agenda" : slot.class === "comment rules" ? "comment_rule" : "contact";
@@ -234,6 +234,8 @@ export async function publishBoxFindings(input: {
     if (!raw || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
     const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote, row.sourceUrl, row.subjectId);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
+    // A link is a page to go read: the next walk of the government's own site reads it first and turns what it holds into facts.
+    if ("handoff" in slot) { await wait(row, slot.class, SITE_WALK_LEAD); report.handed++; continue; }
     if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
     const subject = await subjectOf(row.subjectId);
     const finding: Finding = { row, subject, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };

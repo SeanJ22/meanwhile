@@ -70,6 +70,8 @@ interface BoxQueue {
   due(input: { readonly slots: string; readonly now: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them. */
   waitingFor(reason: string, limit: number, subjectIds?: readonly string[]): Promise<readonly BoxFinding[]>;
+  /** Waiting rows handed to one builder, by the reason it gave them, about any board of the given governments (`<government>`, `<government>#governing`, `#board`, `#body:<slug>`); at most `limit` per government. */
+  waitingUnder(reason: string, limit: number, governmentIds: readonly string[]): Promise<readonly BoxFinding[]>;
 }
 export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue;
 
@@ -87,6 +89,10 @@ export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxR
     waitingFor: async (reason, limit, subjectIds) => {
       const subjects = subjectIds ? new Set(subjectIds) : null;
       return (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason && (!subjects || subjects.has(row.subjectId))).slice(0, limit);
+    },
+    waitingUnder: async (reason, limit, governmentIds) => {
+      const all = (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason);
+      return governmentIds.flatMap(id => all.filter(row => row.subjectId === id || row.subjectId.startsWith(`${id}#`)).slice(0, limit));
     },
   };
 }

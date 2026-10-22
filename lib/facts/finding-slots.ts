@@ -18,6 +18,7 @@ export type FindingSlot =
   | { readonly class: "official hosts"; readonly slot: "host" }
   | { readonly class: "ballot navigation"; readonly election: ElectionFieldKind }
   | { readonly class: "campaign sites" | "candidates"; readonly lead: "campaign-site" | "candidate-profile" }
+  | { readonly class: "site walk"; readonly handoff: "site-walk" }
   | { readonly class: string; readonly waiting: string };
 
 /** The code that sorts a finding and publishes it; a change to any of it can change what a parked finding does. */
@@ -28,6 +29,9 @@ export const slotsVersionOf = (sources: readonly string[]): string => createHash
 
 /** The hash of the sorting and publishing code, so any change to it makes findings parked under the old code look again, in every state. */
 export const FINDING_SLOTS_VERSION = slotsVersionOf(SORTING_AND_PUBLISHING_CODE.map(file => readFileSync(new URL(file, import.meta.url), "utf8")));
+
+/** The reason a link finding waits in the Box: a page the government linked is a page to go read, and the next walk of that government's own site reads it first. */
+export const SITE_WALK_LEAD = "SITE_WALK_TAKES_IT";
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";
@@ -75,6 +79,9 @@ const navigation = (value: string, quote: string): FindingSlot => {
   return kind ? { class: "ballot navigation", election: kind } : { class: "ballot navigation", waiting: URL_VALUE.test(value) ? "LOOKUP_KIND_NOT_STATED" : "LOOKUP_IS_NOT_AN_ADDRESS" };
 };
 
+/** Ids whose finding is a link to a page: meeting calendars and agendas, meeting documents, boards and departments, budgets, candidate and election pages. The link is not the record; the page it leads to is read. */
+const LINKS = new Set("MTG-01 DOC-02 GOV-03 FIN-01 ELE-01".split(" "));
+
 /** A State Run Checklist item a packet hunter reports, routed where that record publishes; some take their route from the value's shape. */
 const CHECKLIST: Readonly<Record<string, (value: string, quote: string, subjectId: string) => FindingSlot>> = {
   "GOV-01": () => ({ class: "body links", slot: "name" }),
@@ -90,7 +97,7 @@ const CHECKLIST: Readonly<Record<string, (value: string, quote: string, subjectI
   "OFF-08": value => URL_VALUE.test(value) ? { class: "contacts", slot: "website" } : { class: "contacts", waiting: "PAGE_IS_NOT_AN_ADDRESS" },
   "OFF-09": value => EMAIL.test(value) ? { class: "contacts", slot: "email" } : PHONE.test(value) ? { class: "contacts", slot: "phone" }
     : { class: "contacts", waiting: "CONTACT_IS_NEITHER_EMAIL_NOR_PHONE" },
-  "MTG-01": value => URL_VALUE.test(value) ? { class: "meeting routes", slot: "agenda_url" } : { class: "meeting routes", waiting: "ROUTE_IS_NOT_AN_ADDRESS" },
+  "MTG-01": () => ({ class: "meeting routes", waiting: "ROUTE_IS_NOT_AN_ADDRESS" }),
   "MTG-02": value => URL_VALUE.test(value) ? { class: "meeting routes", slot: "agenda_url" } : { class: "meeting routes", waiting: "ROUTE_IS_NOT_AN_ADDRESS" },
   "MTG-04": () => ({ class: "schedules", slot: "meeting_cadence" }),
   "DOC-01": value => URL_VALUE.test(value) ? { class: "sittings", slot: "agenda_url" } : { class: "sittings", waiting: "LINK_IS_NOT_AN_ADDRESS" },
@@ -164,6 +171,7 @@ export function candidateChecklistId(field: string, value: unknown): string | nu
 /** A checklist id, or a hunter's own field name matched to a slot by its words; candidate findings belong to the ballot classes. */
 export function slotFor(field: string, value: unknown, recordClass: string | null, quote = "", sourceUrl = "", subjectId = ""): FindingSlot {
   const item = /^([A-Z]{3})-\d{2}$/.exec(field.trim());
+  if (item && LINKS.has(item[0]) && URL_VALUE.test(String(value).trim())) return { class: "site walk", handoff: "site-walk" };
   if (item) return CHECKLIST[item[0]]?.(String(value).trim(), quote, subjectId)
     ?? { class: CHECKLIST_FAMILIES[item[1]!]?.name.toLowerCase() ?? "other", waiting: checklistWait(item[0]) };
   // Hunters annotate names, as in `officeholder.name (Board Member)` or `officeholder.name/office`.

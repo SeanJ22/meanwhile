@@ -1,18 +1,26 @@
 # River status
 
-build_state: IDLE; RELEASES 72 TO 77 SHIPPED AND LIVE (main 41ef7e9ce); NEXT RELEASE IS 78
+build_state: RELEASE 78 SHIPPED AND LIVE (main a84c70057); RELEASE 79 TESTING (PM-01, CAL-01 items 4 to 6, DS-01, EX-02, PG-01); DG-01 HELD
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
 heartbeat: 2026-10-22T05:56:48Z
 
-## Where things stand (Oct 21, 10:40 PM EDT)
+## Where things stand (Oct 22, 2:15 AM EDT)
 
-- Shipped and live: release 72 (193846b52): OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, RS-03, VS-04. 73 (2753ca92b): VS-05, DT-01. 74 (0ed86e72a): SL-01. 75 (ba5263fbe): BP-01. 76 (a46269dfb): SL-01 second READY cecee0bde. 77 (41ef7e9ce, live 10:30 PM EDT): Sean's one-line fix to SL-01 in lib/facts/box-publication.ts (line 213 in the merged tree; line 198 in his note) plus its test. Each: gates 8 of 8 on the exact tested tree, CI green on the PR, observer run succeeded. None sent back.
-- Correction: the note at 8:15 PM EDT that no stream was READY was wrong; SL-01 had a second READY (cecee0bde, 7:38 PM EDT) that I had not rescanned for. Folded as release 76.
-- Release 77: when Sean's message arrived PR 786 (release 76) had already merged. The same fix shipped as release 77. After SL-01 makes a missing council (id under the city's place), the second lookup used the subject with its #governing or #board ending and found nothing; now it drops the ending. Test: al:city:city-of-huntsville#governing makes one council and is built; a #body: committee finding does not land on it. It failed before the fix and passes after.
-- River fixes under Sean's rule: HN-01 closure limit 512 to 1024; RS-03 one President read with OF-01's Vice President match; VS-03 map test server; BP-01 two tests. Sandbox note: after the 12:20 AM UTC restart tsc and next build run out of memory at the default 2.2 GB Node heap on any tree (including the live one); River runs the gates with NODE_OPTIONS=--max-old-space-size=6144. CI runners are not affected.
+- Standing order from Sean (15-minute scan, all night): fold every READY, gates on the combination, release PR, merge by hand, live check, status.md. Branch deletion only for a lane's final READY with its tip in main (TX-01 and LK-01 confirmed final).
+- Release 78 SHIPPED: PR #788 merged a84c70057, live 2:07 AM EDT, observer run 39731763611 succeeded. TX-01 and LK-01. Gates 8 of 8 (9,123 pass), CI green. River fix: tests/admin-narrow-reads.test.ts pulse section list now includes "national" (LK-01 makes the country section readable from the snapshot alone and changed the same list in admin-capability-pulse; the duplicate assertion was stale).
+- Branch deletion: stream/tx-01 and stream/lk-01 are in main and final but could not be deleted from this session: the GitHub API and git push --delete are refused by the session proxy ("Write access to this GitHub API path is not permitted through this proxy"). Needs Sean or a session with that access.
+- Release 79 in gates: PM-01 (R3-LEGISTAR-MEMBERS, CK-01, SRC-MN, PM-01), CAL-01 (items 4 to 6 plus RH-01), DS-01, EX-02 (06761fca1), PG-01 (77afd872a, now merges PM-01). River fixes so far: CAL-01 vs PM-01 clash in lib/control-plane/expansion/dispatch-work.ts (both reopen conditions kept) and lib/facts/publish.ts (PM-01's confirm behaviour kept, CAL-01's restamp kept for its page-refresh path, unused no-receipt branch removed); PM-01's second migration numbered 0049 and the three references PG-01 still had as 0048 corrected; River's rename had rewritten the READY subject in tests/river.test.ts (restored); pnpm install after PM-01's postgres dependency. The earlier PG-01 hold (returns/pg-01.md) is cleared by the lane's new READY.
+- DG-01: held until CAL-01's items 1 and 2 are in main.
+
+## Live check after release 78 (2:07 to 2:15 AM EDT)
+
+- Voting at street addresses: Los Angeles 1,077 places and pins; Houston 697; Atlanta 41; Milwaukee 1; New York 1; Lansing 14. None: Columbus, San Francisco, Lansing at 2500 S Washington Ave. 0.7 to 1.8 s.
+- Ballot pages 94110 and 43215: 2.5 s and 1.7 s; 28 and 16 contests.
+- Vice President in AZ, TX, NJ, OH, CA: still missing. AZ's first read after the deploy 3.6 s (over three seconds).
+- Runner: 17 state cycles since midnight UTC, all SUCCEEDED, none FAILED, on releases 72 to 77.
 
 ## Live check after release 77 (10:30 to 10:40 PM EDT)
 

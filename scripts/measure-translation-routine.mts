@@ -65,8 +65,9 @@ if (!process.argv.includes("--manual-child")) {
       loadBallotsForState: async () => ballots, loadCapturesForState: async () => sources.captures,
       readAttemptsForState: async () => attempts.read(), saveAttempt: attempts.save });
     console.log("MEASURE_TRANSLATION_RESULT=" + JSON.stringify({ state, ...result, sourceFailures: sources.failures }));
-    holdReason = result.persistenceError ?? result.unreadable[0]?.reason ?? result.held[0]?.reason ??
-      (result.checkedAfter < result.totalMeasures ? "Some measure explainers still need source checking." : null);
+    // A failed save or an unreadable state ballot holds the run. A measure without saved official text
+    // stays an open blank (listed in the result line above); every other measure and state continues.
+    holdReason = result.persistenceError ?? result.unreadable[0]?.reason ?? null;
   } catch (error) { holdReason = error instanceof Error ? error.message : String(error); }
   const receipt = await measureTranslationRoutineReceipt({ store, state, now: now(), holdReason });
   console.log(receipt.line);

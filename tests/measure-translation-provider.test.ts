@@ -74,6 +74,18 @@ test("standing provider fills both a hand-written summary and a measure without 
   assert.deepEqual(f.reads(), { captureReads: 1, attemptReads: 1 });
 });
 
+test("a measure with no saved official text stays an open blank while every other measure publishes and the pass reports no save failure", async () => {
+  const f = fixture();
+  const blank = { id: "measure:14", title: "Proposition 14", type: "MEASURE", ocdId: division, provenance: { sourceUrl: "https://elections.example.gov/prop-14" } };
+  const ballot = { ...f.ballot, contests: [...f.ballot.contests, blank] } as unknown as BallotSet;
+  const result = await runMeasureTranslationPass({ ...f.input, loadBallotsForState: async () => [ballot] });
+  assert.equal(result.totalMeasures, 3);
+  assert.equal(result.checkedAfter, 2, JSON.stringify(result));
+  assert.deepEqual(result.held, [{ state: "OH", subjectId: "measure:14", reason: "No complete current source capture is held." }]);
+  assert.equal(result.persistenceError, null, "only a failed save may hold the run");
+  assert.deepEqual(result.unreadable, []);
+});
+
 test("closed or unknown paid lane keeps every missing explainer open without loading paid work", async () => {
   for (const modelLaneEnabled of [false, null]) {
     const f = fixture();

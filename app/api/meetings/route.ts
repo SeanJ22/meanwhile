@@ -55,8 +55,9 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     // ZIP entry already starts its independent state endpoint before this read.
     const stateRead = zipRead.value ? Promise.resolve(null) : timing.time("state", () => readStatePackage(location.state));
     const territoryRead = readerTerritory(location.state);
+    const fringe = zipRead.value ? location.fringe : [];
     const placeRead = timing.time("place", async () => readPlacePackage({ state: location.state, divisionIds: location.divisionIds,
-      bodyIds: territoryBodies(lat, lng, await territoryRead) }));
+      bodyIds: territoryBodies(lat, lng, await territoryRead), namedDivisionIds: fringe }));
     const [state, place, territory, settings] = await Promise.all([
       stateRead, placeRead, territoryRead, readReaderMeetingSettings(),
     ]);
@@ -74,6 +75,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       localIds, lat, lng, place.meetings, place.bodies, place.divisions, territory, result.meetings.length);
     coverage.governments = bindGovernmentBodies(place.governments, bodies);
     coverage.governmentInventoryUnavailableStates = place.registrationHeld ? [] : [location.state];
+    coverage.fringeDivisions = fringe.flatMap(ocdId => place.divisions.filter(division => division.ocdId === ocdId).map(division => ({ ocdId, label: division.label })));
     coverage.bodies = coverage.bodies.map(body => ({ ...body,
       publicationAttempts: attemptsByFamily(place.publicationAttempts.filter(attempt => attempt.bodyId === body.bodyId)) }));
     const partial = new Set(location.partial);

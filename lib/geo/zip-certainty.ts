@@ -5,7 +5,8 @@ import { zipDivisionEntry, type ZipDivisionEntry } from "./zip-division-index.ts
 import type { GeographySelection } from "../census-geography/selection.ts";
 
 /**
- * - `CERTAIN`: an official selected relationship establishes whole-ZCTA membership.
+ * - `CERTAIN`: an official selected relationship, or the 2020 Census count of where the ZIP's residents live,
+ *   establishes whole-ZCTA membership.
  * - `AMBIGUOUS`: it covers part of the zip. The pill renders.
  * - `UNKNOWN`: we could not measure it (zip not indexed, shard unreadable,
  *   or the division not in the zip's list). The pill renders.

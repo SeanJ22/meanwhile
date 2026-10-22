@@ -49,7 +49,7 @@ function hostOfAddress(address: string): string | null {
 
 const titleCase = (s: string) => s.toLowerCase().replace(/\b\p{L}/gu, c => c.toUpperCase());
 
-/** One state's places, governments and registry bodies; special districts sit on their county. */
+/** One state's places, governments and registry bodies; a special district sits on its own territory, or on the state until a boundary draws it. */
 export interface Legislator { readonly ocdPersonId: string; readonly name: string }
 
 function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGovernmentFacts>, bodies: readonly RegistryBody[],
@@ -67,12 +67,13 @@ function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGove
   const stateDivision = reg.divisions.find(d => d[1] === "state")?.[0] ?? null;
   for (const [ocdId, layer, geoid, name] of [...reg.divisions].sort((a, b) => a[0].length - b[0].length)) {
     out.entities.push({ id: ocdId, kind: "place", name, state, parentId: parentOf(ocdId) });
-    if (geoid) out.externalIds.push([ocdId, `census-geoid:${layer}`, geoid]);
+    if (geoid) out.externalIds.push([ocdId, layer === "district" ? "boundary-feature" : `census-geoid:${layer}`, geoid]);
   }
-  for (const [pid6, jurisdictionId, name, , divisionIndex] of reg.governments) {
+  for (const [pid6, jurisdictionId, name, govType, divisionIndex] of reg.governments) {
     const facts = census.get(pid6);
     const county = facts?.countyFips ? countyByFips.get(facts.countyFips.slice(-3)) : undefined;
-    const place = divisionIndex >= 0 ? reg.divisions[divisionIndex]?.[0] : county ?? stateDivision;
+    // A special district's office county is not its territory: placed there, it would govern every ZIP in the county.
+    const place = divisionIndex >= 0 ? reg.divisions[divisionIndex]?.[0] : govType === "SPECIAL DISTRICT" ? stateDivision : county ?? stateDivision;
     out.entities.push({ id: jurisdictionId, kind: "government", name: titleCase(name), state, parentId: place ?? null });
     if (pid6 && /^\d+$/.test(pid6)) out.externalIds.push([jurisdictionId, "census-pid6", pid6]);
     if (place) out.places.push([jurisdictionId, place]);
@@ -103,9 +104,18 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
   const size = 2000;
   for (let i = 0; i < batch.entities.length; i += size) {
     const rows = batch.entities.slice(i, i + size);
+    // A government moves when its reference territory moves, and a registry body when its government does; every other held row keeps what it has.
     await query(`INSERT INTO entity (id, kind, name, state, parent_id)
-      SELECT * FROM unnest($1::text[], $2::text[], $3::text[], $4::char(2)[], $5::text[]) ON CONFLICT (id) DO NOTHING`,
+      SELECT * FROM unnest($1::text[], $2::text[], $3::text[], $4::char(2)[], $5::text[])
+      ON CONFLICT (id) DO UPDATE SET parent_id = EXCLUDED.parent_id
+        WHERE entity.kind IN ('government', 'body') AND EXCLUDED.kind = entity.kind AND entity.parent_id IS DISTINCT FROM EXCLUDED.parent_id`,
     [rows.map(r => r.id), rows.map(r => r.kind), rows.map(r => r.name), rows.map(r => r.state), rows.map(r => r.parentId)]);
+  }
+  const governments = batch.entities.filter(row => row.kind === "government");
+  for (let i = 0; i < governments.length; i += size) {
+    const rows = governments.slice(i, i + size);
+    await query(`DELETE FROM entity_place ep USING unnest($1::text[], $2::text[]) AS g(id, place)
+      WHERE ep.entity_id = g.id AND ep.place_id IS DISTINCT FROM g.place`, [rows.map(r => r.id), rows.map(r => r.parentId)]);
   }
   for (let i = 0; i < batch.externalIds.length; i += size) {
     const rows = batch.externalIds.slice(i, i + size);

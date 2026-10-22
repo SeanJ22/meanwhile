@@ -10,7 +10,7 @@ import {
   type AddressResolution,
   type Sample,
 } from "@/lib/geo/address-resolution";
-import { divisionsForCensusGeographies } from "@/lib/registry/server";
+import { divisionsForCensusGeographies, territoryDivisionsAt } from "@/lib/registry/server";
 import { censusVintageFor } from "@/lib/geo/census-geographies";
 import { currentRepresentationSelection, type GeographySelection } from "@/lib/census-geography/selection";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
@@ -102,7 +102,9 @@ export const POST = readerRoute("/api/address/resolve", async function POST(requ
 
   const samples: Sample[] = [];
   for (const p of points) {
-    const divisions = await divisionsForCensusGeographies(p.geographies ?? {}, selection, vintage, p.geographyVintages ?? {});
+    const [census, territories] = await Promise.all([divisionsForCensusGeographies(p.geographies ?? {}, selection, vintage, p.geographyVintages ?? {}),
+      territoryDivisionsAt(p.lat, p.lng)]);
+    const divisions = [...census, ...territories];
     samples.push(
       divisions.map((d) => ({ ocdId: d.ocdId, divisionType: d.divisionType, label: d.label })),
     );

@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, holdBoxFinding, indexBoxFinding, indexScoutFindings, takeBoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
+import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, findingFact, holdBoxFinding, indexBoxFinding, otherSources, indexScoutFindings, takeBoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
 import type { Attempt } from "../lib/control-plane/attempt.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -115,7 +115,7 @@ test("a Box row keeps its finding's field and value; a row from before that gain
   const repos = createMemoryRepositories();
   const scout = scoutResult([{ subjectId: "person:alice", field: "officeholder.name", value: "Alice Adams", kind: "RECORD", summary: "Clerk",
     exactQuote: input.exactQuote!, sourceUrl: input.sourceUrl!, artifactIds: ["artifact-1"] }], "roster");
-  const id = boxFindingId(input);
+  const id = boxFindingId({ ...input, fact: { field: "officeholder.name", value: "Alice Adams", recordClass: "roster" } });
   await indexScoutFindings(repos.boxFindings, scout, NOW);
   const held = await repos.boxFindings.mustRead(id);
   const { fact: _fact, lastRecordedAt: _at, ...older } = held.value;
@@ -136,4 +136,28 @@ test("the due queue hands back findings parked under another slot map before one
   const due = await repos.boxFindings.due({ slots: "new", now: LATER, limit: 10 });
   assert.deepEqual(due.map(row => row.id), [parked.id, never.id], "the parked one comes first even though the other sorts first");
   assert.deepEqual((await repos.boxFindings.due({ slots: "new", now: LATER, limit: 1 })).map(row => row.id), [parked.id], "a short pass spends its limit on the parked one");
+});
+
+test("one row per subject, field and value: a repeat from another page adds a source, and a row made before keeps its id", async () => {
+  const repos = createMemoryRepositories();
+  const fact = { field: "officeholder.phone", value: "(256) 427-5000", recordClass: null };
+  const at = (n: number, sourceUrl: string, exactQuote: string, withFact = true, subjectId = "al:city:city-of-huntsville#governing"): BoxInput => ({ subjectId, exactQuote, sourceUrl,
+    origin: { kind: "SCOUT", resultId: `attempt-${n}`, workItemId: "send-1", findingIndex: 0, artifactIds: [`artifact-${n}`], recordedAt: NOW }, ...(withFact ? { fact } : {}) });
+  // A row made before this rule sits under its quote-page-subject id and has no fact yet; the same page saying the fact finds it.
+  const old = await indexBoxFinding(repos.boxFindings, at(0, "https://www.huntsvilleal.gov/contact", "City offices: (256) 427-5000", false), NOW);
+  const merged = await indexBoxFinding(repos.boxFindings, at(1, "https://www.huntsvilleal.gov/contact", "City offices: (256) 427-5000"), NOW);
+  assert.equal(merged.id, old.id, "the row made before keeps its id and gains the fact");
+  assert.equal((await repos.boxFindings.list()).length, 1);
+
+  const madison = (n: number, sourceUrl: string, exactQuote: string, value = fact.value) => ({ ...at(n, sourceUrl, exactQuote, true, "al:city:city-of-madison#governing"), fact: { ...fact, value } });
+  const first = await indexBoxFinding(repos.boxFindings, madison(2, "https://www.madisonal.gov/contact", "City offices: (256) 427-5000"), NOW);
+  const second = await indexBoxFinding(repos.boxFindings, madison(3, "https://www.madisonal.gov/departments", "Main line (256) 427-5000", "(256)  427-5000 "), NOW);
+  assert.equal(second.id, first.id, "the same fact in other spacing, from another page, is the same row");
+  assert.equal((await repos.boxFindings.list()).length, 2);
+  assert.deepEqual(otherSources(second).map(source => [source.sourceUrl, source.exactQuote, source.origin.artifactIds]),
+    [["https://www.madisonal.gov/departments", "Main line (256) 427-5000", ["artifact-3"]]]);
+  assert.equal(findingFact(second)!.origin.artifactIds[0], "artifact-2", "the row's own page stays its own source");
+  const other = await indexBoxFinding(repos.boxFindings, madison(4, "https://www.madisonal.gov/contact", "City offices: (256) 555-0100", "(256) 555-0100"), NOW);
+  assert.notEqual(other.id, first.id, "a different value is a different row");
+  assert.notEqual(boxFindingId(madison(2, "x", "y")), boxFindingId({ ...madison(2, "x", "y"), subjectId: "al:city:city-of-athens#governing" }), "and so is a different subject");
 });

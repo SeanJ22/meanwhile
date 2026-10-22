@@ -468,3 +468,25 @@ test("the slot version is a hash of the sorting and publishing code, so any edit
   assert.notEqual(slotsVersionOf(["a", "b"]), slotsVersionOf(["a", "b "]));
   assert.notEqual(slotsVersionOf(["a", "b"]), slotsVersionOf(["b", "a"]));
 });
+
+test("a fact two pages said is one row that builds from whichever page holds it, in any state", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  const HUNTSVILLE = "al:city:city-of-huntsville", GOOD = "https://www.huntsvilleal.gov/contact", MOVED = "https://www.huntsvilleal.gov/old-contact";
+  const good = await hold(GOOD, "<html><body><h1>Huntsville, AL</h1><p>City offices: (256) 427-5000.</p></body></html>", "2026-09-01T15:00:00.000Z");
+  const moved = await hold(MOVED, "<html><body><h1>Huntsville, AL</h1><p>This page has moved.</p></body></html>", "2026-09-01T15:00:00.000Z");
+  const drop = (attemptId: string, sourceUrl: string, artifactId: string, exactQuote: string) => indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId,
+    missionPart: null, finding: { subjectId: `${HUNTSVILLE}#governing`, field: "officeholder.phone", value: "(256) 427-5000", exactQuote, sourceUrl, artifactIds: [artifactId], subjectHint: null, index: 0 } }, NOW);
+  await drop("at-moved", MOVED, moved, "City offices: (256) 427-5000");
+  await drop("at-good", GOOD, good, "City offices: (256) 427-5000");
+  const rows = await repos.boxFindings.list();
+  assert.equal(rows.length, 1, "one row for the subject, field and value");
+  assert.equal(rows[0]!.value.origins.length, 2, "and both pages are on it");
+  const fetch: ProbeFetch = async () => { throw new Error("both pages are held inside their clock"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 });
+  assert.equal(report.published, 1, JSON.stringify(report));
+  assert.equal(report.refused, 0, "the page that moved does not refuse a fact the other page holds");
+  assert.deepEqual((await repos.boxFindings.list()).map(row => row.value.state), ["built"]);
+  assert.deepEqual(await facts.query("SELECT f.field, f.value FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1 AND f.status = 'live'", [HUNTSVILLE]),
+    [{ field: "office_phone", value: "(256) 427-5000" }]);
+});

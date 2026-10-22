@@ -21,6 +21,8 @@ export interface BoxOrigin {
   readonly recordedAt: string;
   /** A mid-walk drop has no Scout result row yet, so its origin carries the fact itself. */
   readonly reported?: { readonly field: string; readonly value: string | number | boolean; readonly subjectHint: string | null };
+  /** The page and quote this origin saw, set only where they differ from the row's own: a repeat of the same fact from another page adds a source, not a row. */
+  readonly source?: { readonly exactQuote: string | null; readonly sourceUrl: string };
 }
 /** What a finding claims, held on its row so a builder never reads the whole result it came from. */
 interface BoxFact { readonly field: string; readonly value: string | number | boolean; readonly recordClass: string | null }
@@ -89,12 +91,19 @@ export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxR
   };
 }
 
-/** Missing old evidence is retained by origin; it must not collapse into one empty finding. */
-export function boxFindingId(input: BoxInput): string {
+const factValue = (value: string | number | boolean): string => String(value).replace(/\s+/g, " ").trim().toLowerCase();
+
+/** The identity rows had before one row per fact: the quote, page and subject, or the origin where the old evidence is missing. */
+function legacyBoxFindingId(input: BoxInput): string {
   const identity = input.exactQuote && input.sourceUrl
     ? [input.exactQuote, input.sourceUrl, input.subjectId]
     : [input.subjectId, input.origin.kind, input.origin.resultId, input.origin.collection ?? "findings", input.origin.findingIndex];
   return `box-${contentHash(canonicalJson(identity))}`;
+}
+
+/** One row per subject, field and value, whatever page said it; a finding that names no field keeps its quote, page and subject, and missing old evidence is retained by origin. */
+export function boxFindingId(input: BoxInput): string {
+  return input.fact ? `box-${contentHash(canonicalJson([input.subjectId, input.fact.field, factValue(input.fact.value)]))}` : legacyBoxFindingId(input);
 }
 const originId = (origin: BoxOrigin) => canonicalJson([origin.kind, origin.resultId, origin.collection ?? "findings", origin.findingIndex]);
 function instant(value: string): number {
@@ -107,9 +116,11 @@ function instant(value: string): number {
 export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, input: BoxInput, now: string): Promise<BoxFinding> {
   instant(now);
   if (!input.subjectId || !input.origin.resultId || !input.origin.workItemId || !Number.isSafeInteger(input.origin.findingIndex) || input.origin.findingIndex < 0) throw new Error("BOX_INVALID_ORIGIN");
-  const id = boxFindingId(input);
+  const id = boxFindingId(input), legacyId = legacyBoxFindingId(input);
   for (;;) {
-    const held = await repo.read(id);
+    // A row made before one row per fact is still the row for its fact; it keeps its id.
+    const held = await repo.read(id) ?? (input.fact && legacyId !== id ? await repo.read(legacyId) : null);
+    const at = held?.value.id ?? id;
     if (!held) {
       const next: BoxFinding = { id, subjectId: input.subjectId, exactQuote: input.exactQuote, sourceUrl: input.sourceUrl,
         origins: [input.origin], ...(input.fact ? { fact: input.fact } : {}), lastRecordedAt: input.origin.recordedAt,
@@ -117,15 +128,17 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
       try { return (await repo.put(id, next, now)).persisted.value; }
       catch (error) { if (error instanceof IdentityCollision) continue; throw error; }
     }
-    const prior = held.value.origins.find(origin => originId(origin) === originId(input.origin));
+    const elsewhere = input.sourceUrl !== null && input.sourceUrl !== held.value.sourceUrl;
+    const origin: BoxOrigin = elsewhere && !input.origin.source ? { ...input.origin, source: { exactQuote: input.exactQuote, sourceUrl: input.sourceUrl! } } : input.origin;
+    const prior = held.value.origins.find(held => originId(held) === originId(origin));
     const gains = !held.value.fact && input.fact !== undefined || held.value.lastRecordedAt === undefined;
-    if (prior && (!input.origin.resultKey || prior.resultKey === input.origin.resultKey) && !gains) return held.value;
-    const origins = prior ? held.value.origins.map(origin => origin === prior ? { ...origin, resultKey: input.origin.resultKey ?? origin.resultKey } : origin)
-      : [...held.value.origins, input.origin];
+    if (prior && (!origin.resultKey || prior.resultKey === origin.resultKey) && !gains) return held.value;
+    const origins = prior ? held.value.origins.map(known => known === prior ? { ...known, resultKey: origin.resultKey ?? known.resultKey } : known)
+      : [...held.value.origins, origin];
     const fact = held.value.fact ?? input.fact;
     const next = { ...held.value, origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
-      lastRecordedAt: origins.map(origin => origin.recordedAt).sort().at(-1)! };
-    try { return (await repo.compareAndSet(id, held.revision, next, now)).value; }
+      lastRecordedAt: origins.map(known => known.recordedAt).sort().at(-1)! };
+    try { return (await repo.compareAndSet(at, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
   }
 }
@@ -194,8 +207,16 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
 
 /** A finding's field, value and the Scout origin that carried them; null when it names no field. */
 export function findingFact(row: BoxFinding): (BoxFact & { readonly origin: BoxOrigin }) | null {
-  const origin = row.origins.find(o => o.reported) ?? row.origins.find(o => o.kind === "SCOUT");
+  const own = row.origins.filter(o => !o.source);
+  const origin = own.find(o => o.reported) ?? own.find(o => o.kind === "SCOUT");
   return origin && row.fact ? { origin, ...row.fact } : null;
+}
+
+/** The other pages that said the same fact: each with the quote and address it saw and the origin that carries its saved copy. */
+export function otherSources(row: BoxFinding): readonly { readonly origin: BoxOrigin; readonly exactQuote: string; readonly sourceUrl: string }[] {
+  const seen = new Set<string>(row.sourceUrl ? [row.sourceUrl] : []);
+  return row.origins.flatMap(origin => origin.kind === "SCOUT" && origin.source?.exactQuote && !seen.has(origin.source.sourceUrl) && seen.add(origin.source.sourceUrl)
+    ? [{ origin, exactQuote: origin.source.exactQuote, sourceUrl: origin.source.sourceUrl }] : []);
 }
 
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */

@@ -1,4 +1,4 @@
-import { findingFact, finishBoxFinding, holdBoxFinding, PUBLISHER, reopenBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
+import { findingFact, finishBoxFinding, holdBoxFinding, otherSources, PUBLISHER, reopenBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { datesInQuote, electionFieldId, publishElectionFields } from "../civic-data/election-field-publication.ts";
@@ -177,7 +177,17 @@ export async function publishBoxFindings(input: {
     report.waitingByClass[slotClass] = (report.waitingByClass[slotClass] ?? 0) + 1;
     place(row).waiting++;
   };
-  const settle = async (row: BoxFinding, outcome: PublishOutcome, route: string) => {
+  // A fact several pages said is one row; it settles once every page's copy has been checked, built if any of them published.
+  const sources = new Map<string, { left: number; best: PublishOutcome | null }>();
+  const settle = async (row: BoxFinding, said: PublishOutcome, route: string) => {
+    const pending = sources.get(row.id);
+    let outcome = said;
+    if (pending) {
+      pending.left--;
+      if (!pending.best || "blank" in pending.best) pending.best = said;
+      if (pending.left > 0) return;
+      outcome = pending.best;
+    }
     const claim = await takeBoxFinding(repos.boxFindings, row.id, PUBLISHER, input.now, new Date(now.getTime() + 120_000).toISOString());
     if (!claim) return;
     if ("blank" in outcome) {
@@ -203,9 +213,15 @@ export async function publishBoxFindings(input: {
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
     if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
     const finding: Finding = { row, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };
+    // Each page that said the fact is checked on its own saved copy.
+    const findings: readonly Finding[] = [finding, ...otherSources(row).map(other => ({ ...finding, origin: other.origin, exactQuote: other.exactQuote, sourceUrl: other.sourceUrl }))];
+    const queue = <T extends { finding: Finding }>(into: T[], make: (finding: Finding) => T) => {
+      sources.set(row.id, { left: findings.length, best: null });
+      into.push(...findings.map(make));
+    };
     if ("election" in slot) {
       const divisionId = [row.subjectId, placeOf(row)].find(id => id.startsWith("ocd-division/"));
-      if (divisionId) elections.push({ finding, kind: slot.election, divisionId });
+      if (divisionId) queue(elections, each => ({ finding: each, kind: slot.election, divisionId }));
       else await hold(row, slot.class, "SUBJECT_HAS_NO_DIVISION");
       continue;
     }
@@ -214,18 +230,18 @@ export async function publishBoxFindings(input: {
     // A body or an office is added under its government even where the government has no governing board of its own, as a state has none.
     if (slot.class === "bodies") {
       const named = await bodyNamed(facts.query, row.subjectId, target?.body ?? null, String(finding.value), isGoverningName(String(finding.value)));
-      if (named) ready.push({ finding, slot, body: named, holder: null, entityId: named.id });
+      if (named) queue(ready, each => ({ finding: each, slot, body: named, holder: null, entityId: named.id }));
       else await hold(row, slot.class, "NAME_IS_NOT_ON_A_GOVERNMENT");
       continue;
     }
     if (slot.class === "other offices") {
       // The office is found or added once the saved page is read, because the page is what names it.
-      ready.push({ finding, slot, body: target?.body ?? { id: row.subjectId, name: "", state: null, parentId: null }, holder: null, entityId: target?.entityId ?? row.subjectId });
+      queue(ready, each => ({ finding: each, slot, body: target?.body ?? { id: row.subjectId, name: "", state: null, parentId: null }, holder: null, entityId: target?.entityId ?? row.subjectId }));
       continue;
     }
     if (!target) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
     if ((slot.class === "sittings") !== target.entityId.startsWith("meeting:")) { await hold(row, slot.class, slot.class === "sittings" ? "SUBJECT_IS_NOT_A_SITTING" : "SUBJECT_IS_A_SITTING"); continue; }
-    ready.push({ finding, slot, body: target.body, holder: target.holder, entityId: target.entityId });
+    queue(ready, each => ({ finding: each, slot, body: target.body, holder: target.holder, entityId: target.entityId }));
   }
 
   const captures = new Map<string, Promise<{ capture: WorkerPublicationCapture } | { error: string }>>();
@@ -266,7 +282,7 @@ export async function publishBoxFindings(input: {
       const seated = (await liveMembers(facts.query, [body.id])).map(row => row.name);
       const known = [...people.filter(e => e.slot.slot === "member_name").map(e => String(e.finding.value)), ...seated];
       const members = new Map<string, RosterMember & { fields: Record<string, unknown>; fieldSources: Record<string, { quote: string; sourceUrl: string; sourceOrg: string; collectedAt: string; verifiedAt: null }> }>();
-      const sourceFieldOf = new Map<BoxFinding, { recordId: string; field: string }>();
+      const sourceFieldOf = new Map<Finding, { recordId: string; field: string }>();
       const quoteOf = (quote: string) => ({ quote, sourceUrl: read.capture.evidence.canonicalUrl, sourceOrg: "", collectedAt: read.capture.observedAt, verifiedAt: null });
       for (const entry of people) {
         const { finding, slot: own, holder } = entry;
@@ -286,14 +302,14 @@ export async function publishBoxFindings(input: {
         if (field !== "name" && member.fields[field] !== undefined && member.fields[field] !== finding.value) { await settle(finding.row, { blank: "OTHER_VALUE_ON_THE_SAME_PAGE" }, own.class); continue; }
         member.fields[field] = finding.value; member.fieldSources[field] = quoteOf(linkQuote(String(finding.value), finding.exactQuote));
         members.set(recordId, member);
-        sourceFieldOf.set(finding.row, { recordId, field });
+        sourceFieldOf.set(finding, { recordId, field });
       }
       const unseated = new Set([...members.values()].filter(member => !seated.some(name => nameKey(name) === nameKey(String(member.fields.name))) &&
         !seatIn([member.fieldSources.name?.quote, member.fields.office, member.fieldSources.office?.quote].filter(Boolean).join("\n"), body.id)).map(member => member.recordId));
       const tally = await publishRosterFacts(facts, { body, capture: read.capture, members: [...members.values()].filter(member => !unseated.has(member.recordId)),
         complete: false, producedBy: "box", purge: input.purge }, clocks, now);
       for (const { finding, slot } of people) {
-        const at = sourceFieldOf.get(finding.row);
+        const at = sourceFieldOf.get(finding);
         if (at) await settle(finding.row, unseated.has(at.recordId) ? { blank: "SEAT_NOT_IN_QUOTE" } : tally.outcomes.get(at.recordId)?.get(at.field) ?? { blank: "NOT_CLAIMED" }, slot.class);
       }
     }

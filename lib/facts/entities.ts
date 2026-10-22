@@ -191,51 +191,86 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<void> 
   [row.id, row.kind, row.name, row.state, row.parentId]);
 }
 
-interface GovernmentRef { readonly id: string; readonly state: string | null; readonly placeId: string; readonly placeName: string }
+interface GovernmentRef { readonly id: string; readonly state: string | null; readonly placeId: string; readonly placeName: string; readonly name: string }
 export interface BodyRef { readonly id: string; readonly name: string; readonly state: string | null; readonly parentId: string | null }
 
 /** The government a finding is about, with the place it sits on; the first of the given ids that is one. A dependent school system the fact store lacks is added on its district's place when that place is held. */
 async function governmentAt(query: Query, ids: readonly (string | null)[]): Promise<GovernmentRef | null> {
   for (const id of ids.flatMap(row => row ? [row.split("#")[0]!] : [])) {
-    const [government] = await query(`SELECT g.id, g.state, g.parent_id, p.name AS place_name FROM entity g JOIN entity p ON p.id = g.parent_id
+    const [government] = await query(`SELECT g.id, g.name, g.state, g.parent_id, p.name AS place_name FROM entity g JOIN entity p ON p.id = g.parent_id
       WHERE g.id = $1 AND g.kind = 'government' AND p.kind = 'place'`, [id]);
-    if (government) return { id, state: government.state as string | null, placeId: String(government.parent_id), placeName: String(government.place_name) };
+    if (government) return { id, state: government.state as string | null, placeId: String(government.parent_id), placeName: String(government.place_name), name: String(government.name) };
     const dependent = /^([a-z]{2}):depschool:([a-z0-9-]+)$/.exec(id);
     const [place] = dependent ? await query("SELECT id, name, state FROM entity WHERE id = $1 AND kind = 'place'",
       [`ocd-division/country:us/state:${dependent[1]}/school_district:${dependent[2]!.replace(/-/g, "_")}`]) : [];
     if (place) {
       await ensureEntity(query, { id, kind: "government", name: String(place.name), state: place.state as string | null, parentId: String(place.id) });
       await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, place.id]);
-      return { id, state: place.state as string | null, placeId: String(place.id), placeName: String(place.name) };
+      return { id, state: place.state as string | null, placeId: String(place.id), placeName: String(place.name), name: String(place.name) };
     }
   }
   // A body hung straight on its place, with no government between: the place stands for the government.
   for (const id of ids.flatMap(row => row ? [row.split("#")[0]!] : [])) {
     const [place] = await query("SELECT id, name, state FROM entity WHERE id = $1 AND kind = 'place'", [id]);
-    if (place) return { id, state: place.state as string | null, placeId: id, placeName: String(place.name) };
+    if (place) return { id, state: place.state as string | null, placeId: id, placeName: String(place.name), name: String(place.name) };
   }
   return null;
 }
 
 const slug = (words: string) => words.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-/** A city's, county's or school district's governing board when the fact store holds none: a board on its own place, where readers look for it. */
-export async function ensureGoverningBody(query: Query, governmentId: string): Promise<void> {
-  const kind = /^[a-z]{2}:(city|county|school|depschool):/.exec(governmentId)?.[1];
-  const government = kind ? await governmentAt(query, [governmentId]) : null;
-  if (!kind || !government) return;
-  const school = kind === "school" || kind === "depschool", id = `${government.placeId}${school ? "#board" : "#governing"}`;
-  await ensureEntity(query, { id, kind: "body", name: `${government.placeName} ${school ? "school board" : "governing"}`,
-    state: government.state, parentId: government.id });
+/** A board's name is its government's id and one tail: `#governing`, `#board` or `#body:<slug>`. */
+export function splitSubject(subjectId: string): { readonly root: string; readonly tail: string } {
+  const cut = subjectId.indexOf("#");
+  return cut < 0 ? { root: subjectId, tail: "" } : { root: subjectId.slice(0, cut), tail: subjectId.slice(cut) };
+}
+
+const SCHOOL_DISTRICT_LAYERS = ["census-geoid:unsd", "census-geoid:elsd", "census-geoid:scsd"];
+
+/** The registered government a native id stands for: an NCES agency id through the school district it was registered on, a Census of Governments id through its census id. Any other id is its own. */
+async function registeredGovernment(query: Query, id: string): Promise<string> {
+  const school = /^government:US-([A-Z]{2}):nces:(\d{7})$/.exec(id);
+  if (school) {
+    const [found] = await query(`SELECT g.id FROM entity_external_id x JOIN entity g ON g.parent_id = x.entity_id AND g.kind = 'government'
+      WHERE x.scheme = ANY($1::text[]) AND x.value = $2 AND g.state = $3 ORDER BY g.id LIKE '%:school:%' DESC, g.id LIMIT 1`, [SCHOOL_DISTRICT_LAYERS, school[2], school[1]]);
+    return found ? String(found.id) : id;
+  }
+  const census = /^government:US-([A-Z]{2}):cog:(\d+)$/.exec(id);
+  if (census) {
+    const [found] = await query(`SELECT x.entity_id AS id FROM entity_external_id x JOIN entity g ON g.id = x.entity_id AND g.kind = 'government'
+      WHERE x.scheme = 'census-pid6' AND x.value = $1 AND g.state = $2 LIMIT 1`, [census[2], census[1]]);
+    return found ? String(found.id) : id;
+  }
+  return id;
+}
+
+/** The subject under the one board name: its government's registered id, then its tail. */
+export async function canonicalSubject(query: Query, subjectId: string): Promise<string> {
+  const { root, tail } = splitSubject(subjectId);
+  return `${await registeredGovernment(query, root)}${tail}`;
+}
+
+/** A city's, county's, special district's or school district's governing board when the fact store holds none: a board named `<government id>#governing` (`#board` for schools) on the government, and on its place, where readers look for it. */
+export async function ensureGoverningBody(query: Query, subjectId: string): Promise<BodyRef | null> {
+  const { root } = splitSubject(subjectId);
+  const kind = /^[a-z]{2}:(city|county|special|school|depschool):/.exec(root)?.[1];
+  const government = kind ? await governmentAt(query, [root]) : null;
+  if (!kind || !government) return null;
+  const school = kind === "school" || kind === "depschool";
+  const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND parent_id = $1 AND (id LIKE '%#governing' OR id LIKE '%#board') ORDER BY id LIMIT 1", [government.id]);
+  if (held) return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
+  const id = `${government.id}${school ? "#board" : "#governing"}`;
+  const name = kind === "special" ? `${government.name} governing board` : `${government.placeName} ${school ? "school board" : "governing"}`;
+  await ensureEntity(query, { id, kind: "body", name, state: government.state, parentId: government.id });
   await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, government.placeId]);
+  return { id, name, state: government.state, parentId: government.id };
 }
 
 /** A body of a government held by name, or added under it: bodies hang on the government and sit on its place. */
-async function bodyUnder(query: Query, government: GovernmentRef, find: { readonly sql: string; readonly param: string }, key: string, name: string): Promise<BodyRef> {
+async function bodyUnder(query: Query, government: GovernmentRef, find: { readonly sql: string; readonly param: string }, id: string, name: string): Promise<BodyRef> {
   const [held] = await query(`SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND (parent_id = $1 OR id LIKE $2) AND ${find.sql} LIMIT 1`,
     [government.id, `${government.placeId}#%`, find.param]);
   if (held) return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
-  const id = `${government.id}#${key}`;
   await ensureEntity(query, { id, kind: "body", name, state: government.state, parentId: government.id });
   await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, government.placeId]);
   return { id, name, state: government.state, parentId: government.id };
@@ -245,13 +280,13 @@ async function bodyUnder(query: Query, government: GovernmentRef, find: { readon
 export async function bodyNamed(query: Query, subjectId: string, governing: BodyRef | null, name: string, governingName: boolean): Promise<BodyRef | null> {
   if (governingName && governing) return governing;
   const government = await governmentAt(query, [governing?.parentId ?? null, governing?.id ?? null, subjectId]);
-  return government ? bodyUnder(query, government, { sql: "lower(name) = lower($3)", param: name }, slug(name), name) : null;
+  return government ? bodyUnder(query, government, { sql: "lower(name) = lower($3)", param: name }, `${government.id}#${slug(name)}`, name) : null;
 }
 
 /** The office of a government that a phone, email or address belongs to (a recorder, an elections office): the body already held, or a new one named as the page names it. */
 export async function officeNamed(query: Query, subjectId: string, governing: BodyRef | null, kind: string, name: string): Promise<BodyRef | null> {
   const government = await governmentAt(query, [governing?.parentId ?? null, governing?.id ?? null, subjectId]);
-  return government ? bodyUnder(query, government, { sql: "name ILIKE '%' || $3 || '%'", param: kind }, `office-${slug(kind)}`, name) : null;
+  return government ? bodyUnder(query, government, { sql: "name ILIKE '%' || $3 || '%'", param: kind }, `${government.id}#office-${slug(kind)}`, name) : null;
 }
 
 /** A .gov page code has already matched to this entity is one of its own sites. */

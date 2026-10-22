@@ -352,7 +352,7 @@ test("a government with no governing board gets one; a phone or email with no pe
   const first = await publishBoxFindings(input);
   assert.equal(first.published, 2, JSON.stringify(first));
   const [board] = await facts.query("SELECT id FROM entity WHERE kind = 'body' AND parent_id = $1", [CLIFTON]);
-  assert.equal(board!.id, "ocd-division/country:us/state:az/place:clifton#governing");
+  assert.equal(board!.id, `${CLIFTON}#governing`, "the board is named by its government");
   assert.deepEqual(await facts.query("SELECT field, value FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [board!.id]),
     [{ field: "office_email", value: "clerk@cliftonaz.gov" }, { field: "office_phone", value: "(928) 865-4146" }]);
 
@@ -389,9 +389,9 @@ test("a board name with no board is added and named; a recorder's phone goes on 
   assert.deepEqual(await facts.query(`SELECT e.id, e.name, f.field, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id
     WHERE e.parent_id = $1 AND f.status = 'live' ORDER BY e.id, f.field`, [CLIFTON]), [
     { id: `${CLIFTON}#board-of-adjustment`, name: "Board of Adjustment", field: "name", value_text: "Board of Adjustment" },
+    { id: `${CLIFTON}#governing`, name: "Clifton town governing", field: "office_phone", value_text: "(928) 865-4146" },
     { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "name", value_text: "Greenlee County Recorder" },
-    { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "office_phone", value_text: "(928) 865-2632" },
-    { id: "ocd-division/country:us/state:az/place:clifton#governing", name: "Clifton town governing", field: "office_phone", value_text: "(928) 865-4146" }]);
+    { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "office_phone", value_text: "(928) 865-2632" }]);
   assert.equal((await facts.query("SELECT 1 FROM entity_place WHERE entity_id = $1", [`${CLIFTON}#board-of-adjustment`])).length, 1);
 });
 
@@ -401,7 +401,7 @@ test("a dependent school system the fact store lacks is added on its district's 
   await ensureEntity(facts.query, { id: place, kind: "place", name: "Fort Example School District", state: "AZ", parentId: "ocd-division/country:us/state:az" });
   await ensureGoverningBody(facts.query, "az:depschool:fort-example-school-district#board");
   assert.deepEqual(await facts.query("SELECT id, kind, parent_id FROM entity WHERE id = 'az:depschool:fort-example-school-district'"), [{ id: "az:depschool:fort-example-school-district", kind: "government", parent_id: place }]);
-  assert.deepEqual(await facts.query("SELECT id, parent_id FROM entity WHERE kind = 'body' AND parent_id = 'az:depschool:fort-example-school-district'"), [{ id: `${place}#board`, parent_id: "az:depschool:fort-example-school-district" }]);
+  assert.deepEqual(await facts.query("SELECT id, parent_id FROM entity WHERE kind = 'body' AND parent_id = 'az:depschool:fort-example-school-district'"), [{ id: "az:depschool:fort-example-school-district#board", parent_id: "az:depschool:fort-example-school-district" }]);
   await ensureGoverningBody(facts.query, "az:depschool:not-a-held-district#board");
   assert.deepEqual(await facts.query("SELECT id FROM entity WHERE id = 'az:depschool:not-a-held-district'"), [], "no place, no government");
 });
@@ -456,10 +456,10 @@ test("a finding about a city's #governing council makes one council and is built
   await drop(`${HUNTSVILLE}#governing`, 1);
   const governing = await publishBoxFindings(input);
   assert.equal(governing.published, 1, JSON.stringify(governing));
-  assert.deepEqual(await councils(), [{ id: `${PLACE}#governing` }], "one council, filed under the city's place");
+  assert.deepEqual(await councils(), [{ id: `${HUNTSVILLE}#governing` }], "one council, named by its government");
   assert.deepEqual((await states()).sort(), ["built", "waiting"]);
   assert.deepEqual(await facts.query("SELECT e.id, f.field, f.value FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1 AND f.status = 'live'", [HUNTSVILLE]),
-    [{ id: `${PLACE}#governing`, field: "office_phone", value: "(256) 427-5000" }]);
+    [{ id: `${HUNTSVILLE}#governing`, field: "office_phone", value: "(256) 427-5000" }]);
 });
 
 test("the slot version is a hash of the sorting and publishing code, so any edit to that code makes parked findings look again", () => {
@@ -489,4 +489,46 @@ test("a fact two pages said is one row that builds from whichever page holds it,
   assert.deepEqual((await repos.boxFindings.list()).map(row => row.value.state), ["built"]);
   assert.deepEqual(await facts.query("SELECT f.field, f.value FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1 AND f.status = 'live'", [HUNTSVILLE]),
     [{ field: "office_phone", value: "(256) 427-5000" }]);
+});
+
+test("every kind of government gets one board named by its government id: a city, a county, a special district, and a school district named by its NCES id", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  const cases = [
+    { subject: "al:city:city-of-huntsville#governing", government: "al:city:city-of-huntsville", page: "https://www.huntsvilleal.gov/contact", phone: "(256) 427-5000", name: "City of Huntsville, AL" },
+    { subject: "al:county:county-of-madison#governing", government: "al:county:county-of-madison", page: "https://www.madisoncountyal.gov/contact", phone: "(256) 222-1000", name: "Madison County, AL" },
+    { subject: "al:special:community-west-fire-and-rescue-district#governing", government: "al:special:community-west-fire-and-rescue-district", page: "https://www.communitywestfire.gov/contact", phone: "(205) 555-0142", name: "Community West Fire and Rescue District, AL" },
+    { subject: "government:US-AL:nces:0101800#board", government: "al:school:huntsville-city-school-district", page: "https://www.hsv.k12.al.gov/contact", phone: "(256) 428-6800", name: "Huntsville City School District, AL" },
+  ];
+  let index = 0;
+  for (const one of cases) {
+    const page = await hold(one.page, `<html><body><h1>${one.name}</h1><p>Main office: ${one.phone}.</p></body></html>`, "2026-09-01T15:00:00.000Z");
+    await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: `at-${index}`, missionPart: null, finding: { subjectId: one.subject, field: "officeholder.phone",
+      value: one.phone, exactQuote: `Main office: ${one.phone}`, sourceUrl: one.page, artifactIds: [page], subjectHint: null, index: index++ } }, NOW);
+  }
+  const fetch: ProbeFetch = async () => { throw new Error("every page is held inside its clock"); };
+  const report = await publishBoxFindings({ repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 });
+  assert.equal(report.published, 4, JSON.stringify(report));
+  for (const one of cases) {
+    const tail = one.subject.slice(one.subject.indexOf("#"));
+    assert.deepEqual(await facts.query(`SELECT e.id, f.field, f.value FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.parent_id = $1 AND f.status = 'live'`, [one.government]),
+      [{ id: `${one.government}${tail}`, field: "office_phone", value: one.phone }], one.subject);
+  }
+});
+
+test("a subject is looked up once in a pass, however many findings are about it", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  await ensureFactEntities(facts, ROOT, ["al"]);
+  const HUNTSVILLE = "al:city:city-of-huntsville", URL = "https://www.huntsvilleal.gov/contact";
+  const page = await hold(URL, "<html><body><h1>Huntsville, AL</h1><p>City offices: (256) 427-5000. Clerk: clerk@huntsvilleal.gov</p></body></html>", "2026-09-01T15:00:00.000Z");
+  const drop = (field: string, value: string, index: number) => indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-huntsville", missionPart: null,
+    finding: { subjectId: `${HUNTSVILLE}#governing`, field, value, exactQuote: `City offices: (256) 427-5000. Clerk: clerk@huntsvilleal.gov`, sourceUrl: URL, artifactIds: [page], subjectHint: null, index } }, NOW);
+  await drop("officeholder.phone", "(256) 427-5000", 0);
+  await drop("office.email", "clerk@huntsvilleal.gov", 1);
+  let boardLookups = 0;
+  const counted = { ...facts, query: (text: string, params?: unknown[]) => { if (text.includes("ORDER BY parent_id = $1 DESC")) boardLookups++; return facts.query(text, params); } };
+  const fetch: ProbeFetch = async () => { throw new Error("held"); };
+  const report = await publishBoxFindings({ repos, facts: counted as typeof facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 });
+  assert.equal(report.published, 2, JSON.stringify(report));
+  assert.equal(boardLookups, 1, "one lookup for the subject, then the board is remembered");
 });

@@ -11,7 +11,7 @@ import type { ProbeFetch } from "../doors/probe.ts";
 import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
-import { bodyNamed, ensureGoverningBody, learnOfficialHost, officeNamed } from "./entities.ts";
+import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, officeNamed, splitSubject } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
 import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, isGoverningName, otherOffice, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
@@ -21,7 +21,7 @@ import { saveCaptureCopy } from "./source-copy.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
 
 interface Finding {
-  readonly row: BoxFinding; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
+  readonly row: BoxFinding; /** The subject under the one board name: its government's registered id, then its tail. */ readonly subject: string; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
   readonly exactQuote: string; readonly sourceUrl: string; readonly recordClass: string | null;
 }
 
@@ -51,8 +51,9 @@ interface Target { readonly body: { id: string; name: string; state: string | nu
 
 const BODY_SQL = "SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND id = $1";
 const SITTING_SQL = "SELECT m.id AS meeting_id, m.parent_id AS body_id FROM entity m WHERE m.kind = 'meeting' AND m.id = $1";
-const GOVERNS = "b.kind = 'body' AND (b.id LIKE '%#governing' OR b.id LIKE '%#board')";
-// Each branch is one index lookup: by parent, by the government's parent, and by id prefix (`#` then `$` in C collation).
+// $2 is the board the subject names (`governing` or `board`), or null where it names none.
+const GOVERNS = "b.kind = 'body' AND (b.id LIKE '%#governing' OR b.id LIKE '%#board') AND ($2::text IS NULL OR b.id LIKE '%#' || $2::text)";
+// Each branch is one index lookup: by parent government, by the place's government, and by id prefix (`#` then `$` in C collation) for a board filed on its place.
 const GOVERNING_SQL = `SELECT id, name, state, parent_id FROM (
     SELECT b.id, b.name, b.state, b.parent_id FROM entity b WHERE b.parent_id = $1 AND ${GOVERNS}
     UNION SELECT b.id, b.name, b.state, b.parent_id FROM entity g JOIN entity b ON b.parent_id = g.id WHERE g.parent_id = $1 AND g.kind = 'government' AND ${GOVERNS}
@@ -65,7 +66,7 @@ const SEAT_SQL = `SELECT f.entity_id AS body_id, f.value->>'name' AS holder FROM
 const bodyRow = (row: Record<string, unknown> | undefined) =>
   row ? { id: String(row.id), name: String(row.name), state: row.state as string | null, parentId: row.parent_id as string | null } : null;
 
-/** What a finding's subject stands for: a body, a body's calendar, a sitting, a seat's body and holder, or a place's or government's governing board. */
+/** What a finding's subject stands for: a body, a body's calendar, a sitting, a seat's body and holder, or a place's or government's board, found by its parent government. */
 async function targetOf(query: Query, subjectId: string): Promise<Target | null> {
   if (subjectId.includes("#inventory:")) return null;
   const own = bodyRow((await query(BODY_SQL, [subjectId.replace(/#calendar$/, "")]))[0]);
@@ -81,7 +82,10 @@ async function targetOf(query: Query, subjectId: string): Promise<Target | null>
     const body = bodyRow((await query(BODY_SQL, [String(seat.body_id)]))[0]);
     return body ? { body, holder: seat.holder === null ? null : String(seat.holder), entityId: body.id } : null;
   }
-  const governing = bodyRow((await query(GOVERNING_SQL, [subjectId]))[0]);
+  // A committee is found by its own name or not at all; the council is never its stand-in.
+  const { root, tail } = splitSubject(subjectId);
+  if (tail.startsWith("#body:")) return null;
+  const governing = bodyRow((await query(GOVERNING_SQL, [root, tail === "#governing" || tail === "#board" ? tail.slice(1) : null]))[0]);
   return governing ? { body: governing, holder: null, entityId: governing.id } : null;
 }
 
@@ -201,6 +205,17 @@ export async function publishBoxFindings(input: {
     }
   };
 
+  // Each subject is named, and looked up, once in a pass.
+  const names = new Map<string, Promise<string>>();
+  const subjectOf = (id: string) => names.get(id) ?? names.set(id, canonicalSubject(facts.query, id)).get(id)!;
+  const targets = new Map<string, Promise<Target | null>>();
+  const targetFor = (subject: string) => targets.get(subject) ?? targets.set(subject, (async () => {
+    const found = await targetOf(facts.query, subject);
+    if (found || splitSubject(subject).tail.startsWith("#body:")) return found;
+    const made = await ensureGoverningBody(facts.query, subject);
+    return made ? { body: made, holder: null, entityId: made.id } : null;
+  })()).get(subject)!;
+
   const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string; name?: string }[] = [];
   const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
   for (const row of rows) {
@@ -212,7 +227,8 @@ export async function publishBoxFindings(input: {
     const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote, row.sourceUrl);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
     if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
-    const finding: Finding = { row, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };
+    const subject = await subjectOf(row.subjectId);
+    const finding: Finding = { row, subject, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };
     // Each page that said the fact is checked on its own saved copy.
     const findings: readonly Finding[] = [finding, ...otherSources(row).map(other => ({ ...finding, origin: other.origin, exactQuote: other.exactQuote, sourceUrl: other.sourceUrl }))];
     const queue = <T extends { finding: Finding }>(into: T[], make: (finding: Finding) => T) => {
@@ -225,18 +241,19 @@ export async function publishBoxFindings(input: {
       else await hold(row, slot.class, "SUBJECT_HAS_NO_DIVISION");
       continue;
     }
-    let target = await targetOf(facts.query, row.subjectId);
-    if (!target) { await ensureGoverningBody(facts.query, row.subjectId); const made = /^(.+)#(governing|board)$/.exec(row.subjectId); target = await targetOf(facts.query, made ? made[1]! : row.subjectId); }
+    const target = await targetFor(subject);
     // A body or an office is added under its government even where the government has no governing board of its own, as a state has none.
     if (slot.class === "bodies") {
-      const named = await bodyNamed(facts.query, row.subjectId, target?.body ?? null, String(finding.value), isGoverningName(String(finding.value)));
-      if (named) queue(ready, each => ({ finding: each, slot, body: named, holder: null, entityId: named.id }));
+      const named = await bodyNamed(facts.query, subject, target?.body ?? null, String(finding.value), isGoverningName(String(finding.value)));
+      if (named) {
+        queue(ready, each => ({ finding: each, slot, body: named, holder: null, entityId: named.id }));
+      }
       else await hold(row, slot.class, "NAME_IS_NOT_ON_A_GOVERNMENT");
       continue;
     }
     if (slot.class === "other offices") {
       // The office is found or added once the saved page is read, because the page is what names it.
-      queue(ready, each => ({ finding: each, slot, body: target?.body ?? { id: row.subjectId, name: "", state: null, parentId: null }, holder: null, entityId: target?.entityId ?? row.subjectId }));
+      queue(ready, each => ({ finding: each, slot, body: target?.body ?? { id: subject, name: "", state: null, parentId: null }, holder: null, entityId: target?.entityId ?? subject }));
       continue;
     }
     if (!target) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
@@ -323,7 +340,7 @@ export async function publishBoxFindings(input: {
       let at = held, name: { readonly name: string; readonly quote: string } | undefined;
       if (slot.class === "other offices") {
         name = officeNameOn(pageText, finding.exactQuote, String(finding.value));
-        const office = name && await officeNamed(facts.query, finding.row.subjectId, governing, slot.office, name.name);
+        const office = name && await officeNamed(facts.query, finding.subject, governing, slot.office, name.name);
         if (!office) { await settle(finding.row, { blank: "OFFICE_NAME_NOT_ON_THE_PAGE" }, slot.class); continue; }
         at = office.id;
       }

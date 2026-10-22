@@ -5,7 +5,7 @@
     "Every canonical state geometry and national geometry file appears on exactly one list."
   ],
   "schemaVersion": 2,
-  "generatedAt": "2026-10-21",
+  "generatedAt": "2026-10-22",
   "coveredStateFips": [
     "10",
     "11",
@@ -65,8 +65,8 @@
     "09"
   ],
   "totals": {
-    "features": 12780,
-    "coordinates": 1493575
+    "features": 12348,
+    "coordinates": 1440400
   },
   "files": [
     "data/states/ak/geo/aiannh-02.geojson",
@@ -253,8 +253,8 @@
     },
     {
       "file": "data/states/ca/geo/district-06.geojson",
-      "features": 482,
-      "coordinates": 85464
+      "features": 483,
+      "coordinates": 85537
     },
     {
       "file": "data/states/co/geo/aiannh-08.geojson",
@@ -338,8 +338,8 @@
     },
     {
       "file": "data/states/il/geo/district-17.geojson",
-      "features": 444,
-      "coordinates": 47597
+      "features": 443,
+      "coordinates": 47589
     },
     {
       "file": "data/states/in/geo/aiannh-18.geojson",
@@ -363,8 +363,8 @@
     },
     {
       "file": "data/states/ky/geo/district-21.geojson",
-      "features": 167,
-      "coordinates": 137137
+      "features": 168,
+      "coordinates": 137324
     },
     {
       "file": "data/states/la/geo/aiannh-22.geojson",
@@ -573,8 +573,8 @@
     },
     {
       "file": "data/states/nv/geo/district-32.geojson",
-      "features": 51,
-      "coordinates": 14313
+      "features": 50,
+      "coordinates": 13070
     },
     {
       "file": "data/states/ny/geo/aiannh-36.geojson",
@@ -648,8 +648,8 @@
     },
     {
       "file": "data/states/tn/geo/district-47.geojson",
-      "features": 87,
-      "coordinates": 13761
+      "features": 86,
+      "coordinates": 13251
     },
     {
       "file": "data/states/tx/geo/aiannh-48.geojson",
@@ -693,8 +693,8 @@
     },
     {
       "file": "data/states/wa/geo/district-53.geojson",
-      "features": 897,
-      "coordinates": 115142
+      "features": 466,
+      "coordinates": 63468
     },
     {
       "file": "data/states/wi/geo/aiannh-55.geojson",

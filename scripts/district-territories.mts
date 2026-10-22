@@ -9,7 +9,7 @@
  *
  * Sources, all read here: the 2020 Census redistricting (PL 94-171) block records (population, internal point and
  * every Census code a block carries), the Census 2020 ZCTA-to-block relationship file, the Census 2020 AIANNH code
- * list, and every boundary layer in data/reference/geography/district-boundary-sources.json.
+ * list, and every boundary layer in data/reference/district-boundary-sources.json.
  *
  *   node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/district-territories.mts [--states az,ak] [--cache DIR]
  */
@@ -402,7 +402,7 @@ const COUNTY_WIDE = /\b(SOIL|CONSERVATION|LIBRARY|HOUSING|TRANSIT|TRANSPORTATION
 /** A layer's placeholder for land no district covers. */
 const PLACEHOLDER = /^(?:unprotected|no (?:fire )?district|none|not in (?:a )?district|outside|out|unassigned|n\/?a|null|\W*)$|\bunprotected\b|\bno (?:fire )?district\b/i;
 const KIND_OF_NAME: Record<string, RegExp> = {
-  fire: /\bFIRE\b|\bEMERGENCY SERVICES?\b|\bESD\b|\bRESCUE\b/, water: /\bWATER\b|\bMUNICIPAL UTILITY\b|\bMUD\b|\bUTILITY\b|\bAQUEDUCT\b/,
+  fire: /\bFIRE\b|\bEMERGENCY SERVICES?\b|\bESD\b|\bRESCUE\b|\bF\.?P\.?D\b/, water: /\bWATER\b|\bMUNICIPAL UTILITY\b|\bMUD\b|\bUTILITY\b|\bAQUEDUCT\b/,
   sewer: /\bSEWER|\bSANITA|\bWASTEWATER\b|\bRECLAMATION\b/, library: /\bLIBRARY\b/, park: /\bPARK|\bRECREATION\b/,
   hospital: /\bHOSPITAL\b|\bHEALTH\b/, cemetery: /\bCEMETERY\b/, irrigation: /\bIRRIGATION\b|\bDITCH\b|\bCANAL\b/,
   drainage: /\bDRAINAGE\b|\bLEVEE\b|\bFLOOD\b/, transit: /\bTRANSIT\b|\bTRANSPORTATION\b/, conservation: /\bCONSERVATION\b|\bNATURAL RESOURCES?\b|\bWATERSHED\b/,
@@ -476,7 +476,10 @@ function writeShards(results: Map<string, StateResult>, newDivisionsByZip: Map<s
     const out = { formatVersion: 2, divisions: divisions.filter((_, i) => keep[i]),
       zips: Object.fromEntries(Object.entries(shard.zips).map(([z, refs]) => [z, refs.map(i => renumber.get(i)!)])),
       partial: {}, zipSamples: shard.zipSamples, residents, zipResidents };
-    writeFileSync(join(dir, file), `${JSON.stringify(out)}\n`);
+    const text = `${JSON.stringify(out)}\n`;
+    writeFileSync(join(dir, file), text);
+    const name = file.replace(/\.json$/, "");
+    index.shards[name] = { ...index.shards[name], sha256: createHash("sha256").update(text).digest("hex"), zips: Object.keys(out.zips).length };
   }
   index.formatVersion = 2;
   index.residents = "2020 Census redistricting (PL 94-171) block populations, joined to ZCTAs by the Census 2020 ZCTA-to-block relationship file; -1 marks a division the blocks do not measure";

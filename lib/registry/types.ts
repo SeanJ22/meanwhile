@@ -104,7 +104,11 @@ export type SourceDataset =
   /** Full TIGER/Line 2023, read for its attribute table only: the territories' functional status. */
   | "TIGER_LINE2023"
   /** Census TIGERweb current map services, queried live by place (S9 place-first hunts); the saved query response is the source. */
-  | "TIGERWEB_CURRENT";
+  | "TIGERWEB_CURRENT"
+  /** The 2020 Census AIANNH code list: a tribal area's division. */
+  | "CENSUS_AIANNH2020"
+  /** A special district's own official boundary layer (data/reference/district-boundary-sources.json). */
+  | "DISTRICT_BOUNDARY";
 
 export type CanonicalMatch =
   /** The identifiers are the same string. */

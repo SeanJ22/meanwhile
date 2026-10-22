@@ -1,10 +1,10 @@
 /**
  * The boundary layers that give special districts their own territory. Each row is data: adding a state's or a
- * county's layer to data/reference/geography/district-boundary-sources.json needs no code, and
+ * county's layer to data/reference/district-boundary-sources.json needs no code, and
  * scripts/district-territories.mts reads every row.
  */
 
-export const DISTRICT_SOURCES_FILE = "data/reference/geography/district-boundary-sources.json";
+export const DISTRICT_SOURCES_FILE = "data/reference/district-boundary-sources.json";
 
 export type DistrictKind =
   | "fire" | "water" | "sewer" | "library" | "park" | "hospital" | "cemetery" | "irrigation" | "drainage"
@@ -69,6 +69,6 @@ const SPELLED: Readonly<Record<string, string>> = { MT: "MOUNT", FT: "FORT", PT:
 /** The words of a district name that tell districts of one kind apart, run together: the kind and the generic words removed. */
 export function districtNameKey(name: string, kind: DistrictKind | string): string {
   const drop = new Set([...GENERIC, ...(KIND_WORDS[kind as DistrictKind] ?? [])]);
-  return name.normalize("NFKD").replace(/[̀-ͯ]/g, "").toUpperCase().replace(/&/g, " AND ").replace(/[^A-Z0-9]+/g, " ").trim()
+  return name.normalize("NFKD").replace(/[̀-ͯ]/g, "").toUpperCase().replace(/\./g, "").replace(/&/g, " AND ").replace(/[^A-Z0-9]+/g, " ").trim()
     .split(" ").map(word => SPELLED[word] ?? word).map(word => word.replace(/^0+(?=\d)/, "")).filter(word => word && !drop.has(word)).join("");
 }

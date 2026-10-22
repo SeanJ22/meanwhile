@@ -101,7 +101,7 @@
    "kindField": null,
    "kindValues": null,
    "where": null,
-   "unmatched": "list"
+   "unmatched": "skip"
   },
   {
    "id": "wa-washington-drinking-water-service-areas-doh-23b2e9",

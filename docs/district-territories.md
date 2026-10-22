@@ -12,7 +12,7 @@ sewer, park, hospital, tribal and the rest.
   ZCTA-to-block relationship file. Each ZIP shard in `data/derived/zip-divisions/` then carries, beside every division,
   the residents living in that part of the ZIP (`residents`, index-aligned with `zips`; `-1` where the blocks do not
   measure the division) and the ZIP's total (`zipResidents`).
-- **Special districts on their own territory.** Every layer in `data/reference/geography/district-boundary-sources.json`
+- **Special districts on their own territory.** Every layer in `data/reference/district-boundary-sources.json`
   is read (ArcGIS layer or GeoJSON). Each feature is tied to the one Census of Governments special district of its kind
   whose name matches (`districtNameKey`, `lib/registration/district-sources.ts`), preferring the layer's county. A
   matched district gets a division `ocd-division/country:us/state:xx/special_district:<name>` and its government row

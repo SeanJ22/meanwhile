@@ -47,12 +47,12 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   const places = packages.map(async ({ state, read }, index) => {
     const territory = territories[index];
     if (territory.status === "rejected") throw territory.reason;
-    const local = readPlacePackage({ state, divisionIds: rawEntry?.ids ?? selection.divisions ?? [], bodyFactsOnly: true,
+    const local = readPlacePackage({ state, divisionIds: rawEntry ? [...rawEntry.ids, ...rawEntry.fringe ?? []] : selection.divisions ?? [], bodyFactsOnly: true,
       bodyIds: territoryBodies(point.lat, point.lng, territory.value) });
     const [held, facts] = await Promise.all([read, local]);
     return withStateRegistryFacts(held.registry, facts.bodies);
   });
-  const divisions = [...new Set([...rawEntry?.ids ?? [], ...selection.divisions ?? [],
+  const divisions = [...new Set([...rawEntry?.ids ?? [], ...rawEntry?.fringe ?? [], ...selection.divisions ?? [],
     ...states.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`)])];
   const entries: { recordClass: RoutineRecordClass; scope: string }[] = states.flatMap(state => [
     ...(["ballot-contests"] as const).flatMap(family =>

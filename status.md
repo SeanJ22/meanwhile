@@ -1,37 +1,35 @@
 # River status
 
-build_state: IDLE; RELEASES 72 AND 73 SHIPPED AND LIVE (main 2753ca92b); WAITING ON BP-01 AND SL-01 READY
+build_state: IDLE; RELEASES 72, 73, 74, 75 SHIPPED AND LIVE (main ba5263fbe); ALL 12 REQUESTED LANES SHIPPED, NONE SENT BACK; NEXT RELEASE IS 76
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
 heartbeat: 2026-10-21T23:23:59Z
 
-## Where things stand (Oct 21, 6:05 PM EDT)
+## Where things stand (Oct 21, 8:15 PM EDT)
 
-- Release 72 SHIPPED: PR #782 merged 193846b52 (5:32 PM EDT), live 5:34 PM, observer run 39679558965 succeeded. OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, RS-03, VS-04. Gates 8 of 8 (9,076 pass, 0 fail), CI all green.
-- Release 73 SHIPPED: PR #783 merged 2753ca92b (5:59 PM EDT), live 6:01 PM, observer run 39682997384 succeeded. VS-05, DT-01. Gates 8 of 8 on 54c0327b9; merging main into river-next added no content (same tree 37216b93d), so the result was recorded on the new head instead of rerunning identical gates. CI all green on the second run (the first is cancelled each time the run-full-ci label is added).
-- River fixes in release 72, under Sean's rule that small problems are fixed and shipped: HN-01 closure limit 512 to 1024 (firewall.ts line 529, bound test moved with it); RS-03 one President read with OF-01's Vice President match; VS-03 map test server serves RS-03's ZIP shard and combined meetings answer.
-- 8 of 12 asked for in 72, then VS-05 and DT-01 in 73: 10 shipped, 0 sent back. BP-01 and SL-01 are not READY.
+- All 12 lanes shipped, none sent back. Release 72 (193846b52, live 5:34 PM): OF-01, AQ-03, BA-01, EX-01, HN-01, RN-02, RS-03, VS-04. Release 73 (2753ca92b, live 6:01 PM): VS-05, DT-01. Release 74 (0ed86e72a, live 7:04 PM): SL-01. Release 75 (ba5263fbe, live 8:07 PM): BP-01. Each: gates 8 of 8 on the exact tested tree, CI green on the PR, observer run succeeded.
+- River fixes, under Sean's rule (small problems are fixed and shipped): HN-01 closure limit 512 to 1024 (firewall.ts line 529) with its bound test; RS-03 one President read with OF-01's Vice President match; VS-03 map test server serves RS-03's ZIP shard and combined meetings answer; BP-01 two tests (tests/routine-due-request.test.ts pins the launch-order line BP-01 wrapped in ballotPublicationLaunchOrder; tests/ballot-publication.test.ts passed runBoundedChildPass options without the required env).
+- Methods: a release's gates run while the previous PR is in CI; when merging main in changes no content (same tree hash) the gate result is recorded on the new head instead of rerunning. The run-full-ci label added after the PR opens cancels the first CI run; the second run counts.
 
-## Live check after release 73 (6:00 to 6:05 PM EDT)
+## Live check after release 75 (8:07 to 8:15 PM EDT)
 
-- Voting at street addresses, with pins: Los Angeles 1,077 places, 1,077 pins in the browser; Houston 697 and 697; Atlanta 41 and 41 on the map; Lansing 14 places, 13 pins; Milwaukee and New York 1 and 1. Pins were 0 at every address on release 71 and 72; the places now arrive with coordinates (VS-05). Still no places: Columbus, San Francisco, and Lansing at 2500 S Washington Ave (no Google data).
-- First Los Angeles lookup right after the deploy returned no places (GOOGLE_UNAVAILABLE, 3.1 s); the next three took 0.9 to 1.3 s with 1,077 places. A first-use failure after a deploy; open under the three-second rule.
-- Ballot pages 94110 and 43215: 0.9 to 2.1 s, same contests (18 and 16 "Vote for" in the page source).
-- Vice President in AZ, TX, NJ, OH, CA: still missing (President only). Open (see release 72 note: the held record is likely from before OF-01's White House parser change).
-- Reader copy: "Checked 20747 days ago" still shows for places with no held meetings (1970 fallback in lib/reader/place.ts; same in 71). A suggested task is queued.
+- Voting at street addresses: Los Angeles 1,077 places and 1,077 pins; Houston 697 and 697; Atlanta 41 and 41; Milwaukee 1 and 1; New York 1 and 1; Lansing 14 and 13 (the browser map shows the pins, checked by screenshot at Atlanta). No places: Columbus, San Francisco, and Lansing at 2500 S Washington Ave (no Google data, no held source). Responses 0.7 to 2.1 s. Before release 72: no pins anywhere.
+- Ballot pages 94110 and 43215: 2.0 s and 0.9 s, 18 and 16 contests, same as before.
+- Vice President in AZ, TX, NJ, OH, CA: still missing in all five; President only. OF-01's code is live and OF-01's production-copy check showed the Vice President; the live held data does not. Likely cause: the held White House record predates OF-01's parser change and the runner has not re-read it. Not confirmed (production database reads are blocked for River). Open.
+- First read after a deploy over three seconds: /api/reader/state 3.3 s (AZ, TX) after release 72, 3.0 s (AZ) and 3.5 s (CA) after 74, 5.0 s (AZ) after 75; repeats are 0.4 to 2 s. The first Los Angeles lookup after release 73 returned no places in 3.1 s. Cold first reads fail the three-second rule; open, owner not assigned.
+- "Checked 20747 days ago" shows for places with no held meetings (1970 fallback in lib/reader/place.ts, same in release 71). A suggested task is queued.
 
-## Runner (cp_log_owner_digests)
+## Runner (cp_log_owner_digests, per state)
 
-- DT-01_expand applied to the control plane at 5:58 PM EDT: "4404 debt(s) given their state" (digest db-migration:expand, 2753ca9). Release 72's contract migration applied at 5:49 PM EDT.
-- Per-state freshness cycles: the last ones ran on release 71 (fc3b4a0): 9 SUCCEEDED, 48 FAILED with IdentityCollision. No state cycle has run since the runner moved to release 72 at 5:49 PM EDT; the first after DT-01 is the test of the fix. Result written here when it lands.
-- The routine civic data and publish-now supervisors still end with "A five-digit ZIP is required" every five minutes (on release 71 and 72).
+- Release 71: 9 states SUCCEEDED, 48 FAILED (IdentityCollision on a FreshnessDebt).
+- DT-01_expand applied to the control plane at 5:58 PM EDT: "4404 debt(s) given their state". Since then (10:15 PM UTC on) the per-state records are 5 SUCCEEDED and 0 FAILED, on releases 72 to 74. No IdentityCollision since.
+- Not healthy yet: each round still reports "Planning round: 3 states completed, 54 failed" (STATE_PLANNING_FAILED, release 73, 7:15 PM EDT) with no reason in the digest, and only about five states have a cycle in two hours. The runner moves to release 75 after this deploy; the next round is the test of BP-01 and SL-01 (both change the routine runner). The routine civic data and publish-now supervisors still end with "A five-digit ZIP is required" on release 72 and 73. Open.
 
 ## Waiting on a new READY
 
-- BP-01 (stream/bp-01, tip 3f4f8023e): no READY commit yet. SL-01: no stream/sl-01 branch yet.
-- Sent back: none. Superseded returns: hn-01, rs-03 (fixed by River in 72).
+- Nothing. No stream is READY and unintegrated among the 12; none sent back.
 
 ## How River works
 

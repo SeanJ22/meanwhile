@@ -16,6 +16,7 @@ import type { Body, Division } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { BodyTerritoryFile } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
+import { whiteHouseOfficeRank } from "../officials/white-house-offices.ts";
 
 type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
   "people" | "legislativePeople" | "federal" | "president" | "stateLegislatorAuthority">>;
@@ -31,6 +32,8 @@ function stateOfficials(state: CoverageState): Officials {
   if (prior && prior.photos === photos && prior.federal === state.federal && prior.people === people && prior.president === state.president && prior.version === state.version) return prior;
   const photoIndex = new Map(photos.photos.map(photo => [photo.officeholderId, photo.url]));
   const presidents = indexByDivision(state.president ? [state.president] : [], photoIndex);
+  // The President leads, then the Vice President, then the Cabinet by name.
+  presidents.get("ocd-division/country:us")?.sort((a, b) => whiteHouseOfficeRank(a.officeTitle) - whiteHouseOfficeRank(b.officeTitle));
   const officials = indexByDivision([...(state.federal ? [state.federal.roster] : []), ...(people ? [people] : [])], photoIndex);
   const federalIds = new Map<string, Set<string>>();
   for (const person of state.federal?.roster.officeholders ?? []) for (const identity of personIdentityKeys(person)) {
@@ -81,7 +84,8 @@ export function stateCoverage(
   return withReaderSelection(undefined, () => withReaderAuthorityEdge(null, () => withRegistryRuntimeProjection(runtime, [state.state], () => {
     const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings);
     const stateSeats = coverage.seats.map(seat => {
-      const vacancy = !seat.representatives.length && state.federal?.vacancies?.find(row => row.ocdId === seat.ocdId);
+      const vacancy = !seat.representatives.length && [...state.federal?.vacancies ?? [], ...(state.legislativePeople ?? state.people)?.vacancies ?? []]
+        .find(row => row.ocdId === seat.ocdId);
       return vacancy ? { ...seat, vacancy } : seat;
     });
     const seats = president.length ? [...stateSeats, { ocdId: "ocd-division/country:us", label: "United States", divisionType: "country", tier: "national" as const, representatives: president }] : stateSeats;

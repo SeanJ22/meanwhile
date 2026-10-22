@@ -82,6 +82,7 @@ const RUNTIME_OWNED = [
 
   "materializedFrom",
   "autonomousPlan",
+  "officialsLead",
 ] as const;
 
 export async function syncObligations(
@@ -147,6 +148,7 @@ export async function syncObligations(
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       ...(held.assignments !== undefined ? { assignments: held.assignments } : {}),
       ...(held.materializedFrom !== undefined ? { materializedFrom: held.materializedFrom } : {}),
+      ...(held.officialsLead !== undefined ? { officialsLead: held.officialsLead } : {}),
       ...(plan !== undefined ? { autonomousPlan: plan } : {}),
       updatedAt: now,
     };

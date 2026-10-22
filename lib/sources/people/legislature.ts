@@ -1,6 +1,7 @@
 import { officeIdentity } from "../../officials/office-identity.ts";
-import type { Officeholder, OfficeholderSet } from "../../officials/types.ts";
-import { nativePersonIdFromUrl } from "../../officials/people-identity.ts";
+import { officialLegislatureRosterRoutes } from "./roster-routes.ts";
+import type { Officeholder, OfficeholderSet, SeatVacancy } from "../../officials/types.ts";
+import { nativePersonIdFromUrl, personIdentityKeys } from "../../officials/people-identity.ts";
 import { imagesIn, pickPortraits } from "../../hunt/portrait-pick.ts";
 import { decodeEntities } from "../http.ts";
 import { htmlEvidenceBlocks } from "../html-evidence.ts";
@@ -74,6 +75,56 @@ function personOnPage(holder:Officeholder,html:string,sourceUrl:string,options:P
   if(!district&&known)result.fieldSources={...result.fieldSources,memberships:holder.fieldSources?.memberships??holder.provenance};
   return result;
 }
+const VACANT=/^(?:vacant|vacancy|seat vacant|vacant seat)\b/i;
+const MONTHS=["january","february","march","april","may","june","july","august","september","october","november","december"];
+/** The departure date the page states beside the vacancy; any other date on the row is not one. */
+function statedDeparture(text:string):string|null {
+  const after=/\b(?:resigned|deceased|died|vacated|vacant since|vacancy since|effective)\b[^0-9A-Za-z]{0,3}(?:on\s+)?((\d{1,2})\/(\d{1,2})\/(\d{4}|\d{2})|([A-Za-z]+)\.?\s+(\d{1,2}),?\s+(\d{4}))/i.exec(text);
+  if(!after)return null;
+  const [year,month,day]=after[2]?[after[4].length===2?`20${after[4]}`:after[4],Number(after[2]),Number(after[3])]
+    :[after[7],MONTHS.findIndex(name=>name.startsWith(after[5].toLowerCase().slice(0,3)))+1,Number(after[6])];
+  const iso=`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+  return month>0&&!Number.isNaN(Date.parse(`${iso}T00:00:00Z`))&&new Date(`${iso}T00:00:00Z`).toISOString().startsWith(iso)?iso:null;
+}
+/** A table row's district, read from the column its own header names District. */
+function districtColumn(content:string,row:string):string|undefined {
+  if(!row.startsWith("<tr"))return undefined;
+  const at=content.indexOf(row),table=at<0?-1:content.lastIndexOf("<table",at);
+  if(table<0)return undefined;
+  const header=/<tr\b[^>]*>((?:(?!<\/tr>)[\s\S])*?<th\b[\s\S]*?)<\/tr>/i.exec(content.slice(table,at))?.[1];
+  const labels=header?[...header.matchAll(/<th\b[^>]*>([\s\S]*?)<\/th>/gi)].map(match=>textOf(match[1])):[];
+  const column=labels.findIndex(label=>/^district(?:\s*(?:no\.?|number|#))?$/i.test(label));
+  if(column<0)return undefined;
+  const cell=[...row.matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)].map(match=>textOf(match[1]))[column];
+  return cell&&/^(?:district\s*)?\d{1,3}[a-z]?$/i.test(cell)?cell.replace(/^district\s*/i,"").toLowerCase():undefined;
+}
+/** A bounded roster row or card that names one district and says, in a cell or label of its own, that its seat is vacant. Absence from a roster is never read as a vacancy. */
+export function statedVacancies(content:string,headers:string,pageUrl:string,options:PeopleAcquisitionOptions,collectedAt:string,holders:readonly Officeholder[]):SeatVacancy[] {
+  const found=new Map<string,SeatVacancy>(),address=new URL(pageUrl);
+  const upperPattern=/\b(?:Senators?|Senate)\b/i,lowerPattern=/\b(?:Representatives?|Reps?|Assembly(?:man|woman| Members?)?|Delegates?|House)\b/i;
+  for(const block of htmlEvidenceBlocks(content)) {
+    const card=block.html,text=textOf(card);
+    if(!/^<(?:tr|article|li|p|div)\b/i.test(card)||text.length>400)continue;
+    const labels=[...card.matchAll(/<(td|th|a|span|strong|b|em|h[2-6]|div|p|li)\b[^>]*>([\s\S]*?)<\/\1>/gi)].map(match=>textOf(match[2]));
+    if(!VACANT.test(text)&&!labels.some(label=>VACANT.test(label)&&label.length<=60))continue;
+    // A container naming a member is not a statement about an empty seat.
+    if([...card.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)].some(anchor=>{const label=textOf(anchor[2]);return !VACANT.test(label)&&/^[\p{Lu}][\p{L}\p{M}.'’\-]+(?:\s+[\p{L}\p{M}.'’"“”\-]+){1,5}$/u.test(label)&&!/\b(?:district|vacant|vacancy|senate|house|assembly|map|email|contact)\b/i.test(label);}))continue;
+    const named=new Set([...text.matchAll(/\bDistrict\s*(?:No\.?\s*)?[:#-]?\s*(\d+[a-z]?)\b/gi)].map(match=>match[1].toLowerCase()));
+    const district=named.size===1?[...named][0]:named.size===0?districtColumn(content,card):undefined;
+    if(!district)continue;
+    // The page's own chamber (its address, table and headings) first; a combined roster names it on the row.
+    const page=`${address.hostname.replace(/[.-]/g," ")} ${address.pathname.replace(/[-_/]/g," ")} ${block.ancestors.join(" ").replace(/([a-z])([A-Z])/g,"$1 $2")}`;
+    const chamberOf=(value:string)=>upperPattern.test(value)===lowerPattern.test(value)?null:upperPattern.test(value)?"upper":"lower";
+    const chamber=chamberOf(page)??chamberOf(headers)??chamberOf(text);
+    if(!chamber)continue;
+    const ocdId=legislativeDivision(options,chamber,district);
+    if(!ocdId||found.has(ocdId))continue;
+    const heldBy=[...new Set(holders.filter(holder=>holder.memberships?.some(row=>row.current!==false&&row.divisionId===ocdId)).flatMap(holder=>[...personIdentityKeys(holder)]))];
+    found.set(ocdId,{ocdId,sourceUrl:pageUrl,sourceOrg:"State legislature — official member roster",collectedAt,reason:text,since:statedDeparture(text),
+      officeTitle:chamber==="upper"?"State Senator":"State Representative",heldBy});
+  }
+  return [...found.values()];
+}
 export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,options:PeopleAcquisitionOptions,collectedAt:string):OfficeholderSet {
   const roster=emptyRoster(options.state,options.asOf);
   const held=(options.roster?.officeholders??[]).filter(holder=>holder.level==="STATE"&&["upper","lower","legislature"].includes(holder.chamber??"")&&holder.state?.toLowerCase()===options.state.toLowerCase());
@@ -146,6 +197,8 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
       for(const [field,child]of Object.entries(row))if(field!=="@context"&&child&&typeof child==="object")visit(child);
     };visit(payload);
   }
+  const vacancies=statedVacancies(content,headers,pageUrl,options,collectedAt,roster.officeholders);
+  if(vacancies.length)roster.vacancies=vacancies;
   for(const holder of roster.officeholders) {
     for(const membership of holder.memberships??[])if(membership.divisionId)roster.divisions.push({officeholderId:holder.id,membershipId:membership.id,ocdId:membership.divisionId,bodyId:null});
     if(!roster.divisions.some(row=>row.officeholderId===holder.id))roster.unmatched.push({officeholderId:holder.id,reason:"OFFICIAL_LEGISLATURE_DISTRICT_UNRESOLVED"});
@@ -156,8 +209,10 @@ export async function acquireLegislatureRosters(input:PeopleAcquisitionOptions):
   const options={...input,acquire:input.acquire??pacedPortraitAcquire},acquisitions=[],gaps:{sourceUrl:string;detail:string}[]=[],roster=emptyRoster(options.state,options.asOf);
   const held=(options.roster?.officeholders??[]).filter(holder=>holder.level==="STATE"&&["upper","lower","legislature"].includes(holder.chamber??"")&&holder.state?.toLowerCase()===options.state.toLowerCase());
   const profiles=[...new Set(held.flatMap(holder=>[holder.websiteUrl,...(holder.profileUrls??[])]).filter(governmentRoute).map(value=>url(value)!))];
-  if(!profiles.length)gaps.push({sourceUrl:"https://v3.openstates.org/jurisdictions",detail:"OFFICIAL_LEGISLATURE_ROSTER_ROUTE_OWED:No observed official member or roster route is held for this state; source discovery remains standing work."});
-  const queue=[...profiles],seen=new Set<string>(),linkingPages=[...(options.linkingPages??[])];
+  // Each legislature's own roster pages, kept as data, are read with the member pages already held.
+  const rosters=officialLegislatureRosterRoutes(stateIdentity(options.state).state).flatMap(value=>url(value)??[]);
+  if(!profiles.length&&!rosters.length)gaps.push({sourceUrl:"https://v3.openstates.org/jurisdictions",detail:"OFFICIAL_LEGISLATURE_ROSTER_ROUTE_OWED:No observed official member or roster route is held for this state; source discovery remains standing work."});
+  const queue=[...new Set([...rosters,...profiles])],seen=new Set<string>(),linkingPages=[...(options.linkingPages??[])];
   // Official state pages already held for other officers can establish their legislature's vendor or .us route.
   const stateLinks=[...new Set((options.roster?.officeholders??[]).filter(holder=>holder.state?.toLowerCase()===options.state.toLowerCase()&&holder.level==="STATE")
     .flatMap(holder=>[holder.websiteUrl,...(holder.profileUrls??[])]).filter((value):value is string=>Boolean(value&&isOfficialSource(value))))];

@@ -50,8 +50,9 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
   sections.national = { contract: "admin-v6/national@1", href: "/api/admin/v6/national", revision: `national:${input.configRevision ?? "unread"}:${input.snapshotRevision ?? "unread"}:${input.researchRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
   sections.results = { contract: "admin-v6/results@1", href: "/api/admin/v6/results", revision: `results:${input.snapshotRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
   sections.publication = { contract: "admin-v6/publication@1", href: "/api/admin/v6/publication", revision: `publication:${input.workerAgeBucket ?? "clock-unread"}` };
+  sections.officials = { contract: "admin-v6/officials@1", href: "/api/admin/v6/officials", revision: `officials:${input.historyRevision ?? "unread"}:${input.heartbeatRevision ?? "unread"}:${input.sourceProgressId ?? "none"}` };
   sections.scoreboard = { contract: "admin-v6/scoreboard@1", href: "/api/admin/v6/scoreboard", revision: `scoreboard:${input.workerAgeBucket ?? "clock-unread"}` };
   return { ...ADMIN_V6_CAPABILITIES, sections };
 }
 
-export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:scoreboard/1:fixes/1:checklist/place1:stuck/1:agents/1:spend/1:sends/1:reliability/1:publication/1:results/1:national/1";
+export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:scoreboard/1:fixes/1:checklist/place1:stuck/1:agents/1:spend/1:sends/1:reliability/1:publication/1:results/1:national/1:officials/1";

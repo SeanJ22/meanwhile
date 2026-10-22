@@ -5,7 +5,7 @@ export const V6_CAPABILITY_VERSION = 1;
 
 export type SectionId = keyof AdminV6Data;
 export const SECTION_IDS: readonly SectionId[] = [
-  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes",
+  "places", "hunts", "national", "results", "officials", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes",
 ];
 
 export function sectionContract(id: SectionId): string {
@@ -101,6 +101,8 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
   switch (kind) {
     case "ballot-publish":
       return {};
+    case "officials-check":
+      return { placeKey: s.target || s.scopeKey, note: s.words.trim() || null };
     case "decide":
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {

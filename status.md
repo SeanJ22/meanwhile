@@ -1,11 +1,20 @@
 # River status
 
-build_state: PRODUCTION STILL SERVES RELEASE 82; RELEASES 83 AND 84 FAILED TO DEPLOY ON NETLIFY (function over 250 MB); HOLDING EVERYTHING FOR DS-01 STEP-1 READY
+build_state: RELEASES 72 TO 87 LIVE (/api/build 767eeba); VICE PRESIDENT STILL NOT LIVE (ds-01); CALENDAR DOORS AND ROUTINE-PASS TIME BUDGET RETURNED TO CAL-01; RELEASE 88 (pm-01 NX-PLACE-3) IN GATES
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
-heartbeat: 2026-10-23T05:18:35Z
+heartbeat: 2026-10-23T05:58:00Z
+
+## Releases 85, 86 and 87 shipped and live (Oct 22, 10:58 PM Phoenix / 1:58 AM EDT Oct 23)
+
+- Release 85 = DS-01 step 1 alone (PR #795, merged 107c99a3b): keeps the territory geojson and 8.4 MB of browser-only ZIP start files out of the reader functions. Netlify deployed it (and 83 and 84 with it): /api/build served 107c99a at 03:39 UTC. Release 86 = cal-01 CAL-02 (PR #796, merged 9f84aec62): served 04:50 UTC. Release 87 = DS-01-S2 (PR #797, merged 767eeba4b): geometry moved to the reader edge store; served 05:45 UTC. Each gate run 8 of 8 (9,248; 9,293; 9,297 pass), CI green, no migrations. A release is called live only when /api/build reports its merge commit.
+- Site (checked after each deploy): voting pins unchanged (Los Angeles 1,076, Houston 697, Atlanta 40, Milwaukee 1, New York 1); ballots 94110 and 43215 0.8 to 2.5 s; state pages 0.8 to 2.9 s; point lookups at Tucson, Fairbanks, the Kuskokwim, Flagstaff and Houston all 200 (0.4 to 2.8 s, the Tucson one is the first read after the deploy). No errors.
+- Vice President: still 0 in AZ, TX, OH, CA state data (checked 04:30 and 05:00 UTC; runner on release 85 from 03:56 UTC, one full routine pass later). Returned to ds-01 (returns/ds-01.md, vp-live-r85).
+- Runner on release 86 (from 05:13 UTC), first pass: the Box is building again (cp_box_findings built 6,217 to 6,911, +287). No Netlify Blobs error. But the routine pass ran out its 30-minute budget (ROUTINE_CHILD_TIMED_OUT, a code no earlier release had), no calendar door has a new lastSuccessAt in any state since 05:13 UTC (NH and NJ were recording before), and publish-now ends every pass on HUNT_SCOPE_UNREAD (a 30-second cp_work_items_history read). Returned to cal-01 (returns/cal-01.md, runner-r86).
+- Still to check once the runner follows 87: the geometry publish (the runner now files the 73 state geometry files in the edge store; first pass sends them all).
+- Queue: release 88 = pm-01 NX-PLACE-3 (official card shows only the sections its office has; the President and Vice President classified separately), gates running.
 
 ## Cause found: releases 83 and 84 did not deploy (Oct 22, 7:03 PM Phoenix / 10:03 PM EDT)
 

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { subBodyId } from "../../civic-data/meeting-body-crosswalk.ts";
 import { ensureEntity, learnDoorChannel } from "../../facts/entities.ts";
-import { nameKey, publishRosterFacts } from "../../facts/roster-facts.ts";
+import { nameKey, publishBodyFacts, publishRosterFacts } from "../../facts/roster-facts.ts";
 import { jsonValues } from "../../facts/source-copy.ts";
 import type { Clocks, FactDb, Query } from "../../facts/publish.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
@@ -45,6 +45,7 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
   const hash = createHash("sha256");
   for (const row of bound) hash.update(JSON.stringify([row.bodyId, row.ocdId, row.timeZone]));
   hash.update(JSON.stringify(unbound));
+  hash.update("body-names/1");
   let members = 0;
   for (const roster of legistarMemberRosters(raw, bound, now)) {
     hash.update(JSON.stringify([roster.bodyId, roster.bodyName]));
@@ -73,6 +74,19 @@ export async function publishLegistarMembers(input: {
       const body = bodyFor(owner);
       await ensureEntity(input.facts.query, { ...body, kind: "body" });
       await learnDoorChannel(input.facts.query, body.id, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords`);
+    }
+    for (const reading of input.raw.readings) {
+      const url = new URL(reading.artifact.canonicalUrl);
+      if (!url.pathname.endsWith("/bodies") || memberProbe(url)) continue;
+      const capture = await legistarMemberCapture(input.vault, reading.artifact);
+      for (const owner of prepared.bound) {
+        const row = reading.ids.includes(Number(owner.config.eventBodyId)) ? input.raw.bodies.find(body => body.BodyId === Number(owner.config.eventBodyId)) : undefined;
+        if (!row) continue;
+        const [outcome] = await publishBodyFacts(input.facts, { bodyId: owner.bodyId, capture, producedBy: source, purge: input.purge,
+          facts: [{ field: "name", value: row.BodyName.trim(), quote: jsonValues(row).join("\n") }] }, input.clocks, new Date(input.now));
+        if (outcome && "blank" in outcome) throw new Error(`LEGISTAR_MEMBERS_FACTS_BLANK:body name ${owner.bodyId}:${outcome.blank}`);
+        if (outcome && "decision" in outcome) { if (outcome.decision === "PUBLISH") records++; else if (outcome.decision !== "CONFIRM") held++; }
+      }
     }
     for (const reading of input.raw.readings) {
       const url = new URL(reading.artifact.canonicalUrl);

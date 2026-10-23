@@ -153,10 +153,10 @@ export async function publishBodyRoster(facts: FactDb & { readonly query: Query 
     throw new Error("ROSTER_PAGE_NOT_THIS_BODY");
   }
   await learnOfficialHost(facts.query, body.id, reading.capture.evidence.canonicalUrl);
-  const tally = await publishRosterFacts(facts, { body: { id: body.id, name: body.name, state: input.state, parentId: body.ocdId },
-    capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id }, input.clocks, input.now);
   const named = body.name === null && division ? bodyNameFromPage(text, division.label) : null;
   const own = named && division ? named.split(new RegExp(division.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")).join(" ").replace(/\s+/g, " ").trim() : "";
+  const tally = await publishRosterFacts(facts, { body: { id: body.id, name: body.name, state: input.state, parentId: body.ocdId },
+    capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id, nameFromPage: !(named && own) }, input.clocks, input.now);
   if (named && own) await publishBodyFacts(facts, { bodyId: body.id, capture: reading.capture, producedBy: reading.id,
     facts: [{ field: "name", value: named, quote: own }] }, input.clocks, input.now);
   const schedule = input.schedule;

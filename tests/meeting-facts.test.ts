@@ -102,3 +102,16 @@ test("platform meeting bodies and sittings retain their registered district or t
     } finally { await db.pg.close(); }
   }
 });
+
+test("sittings read after the pass began publish on the first pass", async () => {
+  const { publishReadMeetingFacts } = await import("../lib/civic-data/meeting-fact-publication.ts");
+  const db = await factDb();
+  await ensureFactEntities(db, ROOT, ["az"]);
+  const events = JSON.parse(bytes) as LegistarEvent[];
+  const { meetings } = normalizeWithDrops(events.map(event => ({ event, slug: "pima", collectedAt: NOW.toISOString(), items: null })), NOW);
+  const body = new TextEncoder().encode(bytes);
+  const response = { source: "legistar", requestedUrl: FEED, finalUrl: FEED, httpStatus: 200, rawHash: createHash("sha256").update(body).digest("hex"), byteCount: body.byteLength,
+    bytes: body, retrievedAt: "2026-08-12T22:30:00.000Z", contentType: "application/json" };
+  const report = await publishReadMeetingFacts({ facts: db, vault: new MemoryEvidenceStore(), meetings, responses: [response], producedBy: "door:legistar:pima", clocks: factClocks(null), now: NOW });
+  assert.ok(report.live > 0, "the bytes were read after the pass's start time and still publish");
+});

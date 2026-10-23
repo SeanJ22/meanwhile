@@ -51,7 +51,7 @@ export interface Officeholder {
   /** Exact publisher identifiers. Names are never identity aliases. */
   nativeIds?: Readonly<Record<string, readonly string[]>>;
   fecCandidateIds?: readonly string[];
-  offices?: readonly { id?: string; name?: string; address?: string; phone?: string; email?: string; sourceUrl: string; collectedAt: string }[];
+  offices?: readonly { id?: string; name?: string; address?: string; phone?: string; email?: string; sourceUrl: string; collectedAt: string; geocodedPoint?: import("./office-points-publication.ts").PublishedOfficePoint }[];
   memberships?: readonly PersonMembership[];
   fieldSources?: Readonly<Record<string, Provenance>>;
   selectionMethod?: OfficeSelectionMethod;

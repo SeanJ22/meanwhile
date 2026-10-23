@@ -1,7 +1,6 @@
 "use client";
 
 import { useOfficePins } from "@/hooks/use-office-pins";
-import { primeOfficePoints } from "@/lib/map/office-geocode";
 import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
 import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
@@ -315,7 +314,6 @@ function MapEntryInner() {
       },
       signal: controller.signal,
       onState: state => {
-        if (state.officePoints) primeOfficePoints(state.officePoints);
         primeStateMemberDirectories(state.memberDirectories, state.state);
         primeMemberDirectories(state.directory, state.state);
         const coverage = zip ? stateCoverageForZip(state, zip) : null;

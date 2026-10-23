@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { drizzle } from "drizzle-orm/neon-http";
+import { buildUnchangedConfirmation, serializeUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import { saveWorkerPublicationOutcome } from "../lib/civic-data/publication-flow.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories, memoryAggregateRepository } from "../lib/control-plane/repository/memory.ts";
@@ -57,25 +59,87 @@ test("purge credentials accept the deployed WTP and runner token names without a
   assert.equal(calls.length, sent, "missing credentials do not send a request");
 });
 
-test("reader answers carry state, place and national tags with a strict one-minute edge lifetime", () => {
+test("reader answers keep national people, state and place tags with a fifteen-minute stale-while-revalidate lifetime", () => {
   const headers = readerCacheHeaders({ states: ["az", "US-AZ", "AZ"], places: [PLACE, `${PLACE}#board`] });
   const tags = headers["Netlify-Cache-Tag"]!.split(",");
   assert.equal(tags.length, 4);
-  assert.ok(tags.includes("reader-national"));
+  assert.ok(tags.includes("reader-national-people"));
+  assert.ok(!tags.includes("reader-national"));
   assert.ok(tags.includes("reader-state:AZ"));
   assert.ok(tags.includes("reader-settings"));
   assert.match(tags.find(tag => tag.startsWith("reader-place:"))!, /^reader-place:[a-f0-9]{64}$/);
   assert.equal(headers["Cache-Control"], "public, max-age=0, must-revalidate");
-  assert.equal(headers["Netlify-CDN-Cache-Control"], "public, durable, max-age=60, must-revalidate");
+  assert.equal(headers["Netlify-CDN-Cache-Control"], "public, durable, max-age=900, stale-while-revalidate=900");
   assert.deepEqual(readerCacheTags({ states: ["TX", "CA", "TX"] }), ["reader-state:CA", "reader-state:TX"]);
 });
 
-test("publication tags follow state scopes and encoded body partitions; national sources clear every answer", () => {
+test("publication tags follow state scopes and encoded body partitions", () => {
   for (const scope of ["US-AZ:reader-registry-runtime", "source:derived:family:AZ", `source:ical:body:${encodeURIComponent(BODY)}`]) {
     assert.deepEqual(readerCacheScopeForPublication(scope), { states: ["AZ"] }, scope);
   }
-  assert.deepEqual(readerCacheScopeForPublication("US:state-legislator-member-offices"), { national: true });
-  assert.deepEqual(readerCacheScopeForPublication("federal-supported"), { national: true });
+  assert.deepEqual(readerCacheScopeForPublication("US:state-legislator-member-offices"), { nationalPeople: true });
+  assert.deepEqual(readerCacheScopeForPublication("federal-supported"), { nationalPeople: true });
+});
+
+test("a President-scope publication purges the tag carried by place pages in every state", async () => {
+  const cleared: string[] = [];
+  await invalidateReaderCache(readerCacheScopeForPublication("US:people:statewide-executive-sources:v1"), async tags => {
+    cleared.push(...tags); return { purged: true };
+  });
+  assert.deepEqual(cleared, ["reader-national-people"]);
+  for (const state of ["AZ", "NH", "NJ", "CA", "NY"]) {
+    assert.ok(readerCacheHeaders({ states: [state] })["Netlify-Cache-Tag"]!.split(",").some(tag => cleared.includes(tag)), state);
+  }
+});
+
+test("explicit global owner changes still invalidate place answers after removing the blanket national tag", async () => {
+  await invalidateReaderCache({ national: true }, async tags => {
+    assert.deepEqual(tags, ["reader-national", "reader-national-people"]);
+    assert.ok(tags.some(tag => readerCacheHeaders({ states: ["NJ"] })["Netlify-Cache-Tag"]!.split(",").includes(tag)));
+    return { purged: true };
+  });
+});
+
+test("a plus scope purges only its states; FEMA maps to its own state", async () => {
+  const purges: string[][] = [];
+  const purge = async (tags: readonly string[]) => { purges.push([...tags]); return { purged: true }; };
+  for (const scope of ["US-AZ+US-NH+US-NJ:meeting-body-crosswalk", "US-AZ%2BUS-NH%2BUS-NJ:reviewed-venue-resolutions"])
+    await invalidateReaderCache(readerCacheScopeForPublication(scope), purge);
+  await invalidateReaderCache(readerCacheScopeForPublication("openfema:NJ:disasters"), purge);
+  assert.deepEqual(purges, [["reader-state:AZ", "reader-state:NH", "reader-state:NJ"], ["reader-state:AZ", "reader-state:NH", "reader-state:NJ"], ["reader-state:NJ"]]);
+  const other = readerCacheHeaders({ states: ["CA"] })["Netlify-Cache-Tag"]!.split(",");
+  assert.ok(!purges[0]!.some(tag => other.includes(tag)));
+});
+
+test("federal feed and roll-call publications send no reader purge", async () => {
+  for (const scope of ["govinfo:national", "congress-api:national", "regulations-gov:national", "US:recent-federal-rollcalls", "US-AZ:people:govinfo:v1"]) {
+    assert.deepEqual(readerCacheScopeForPublication(scope), {});
+    await invalidateReaderCache(readerCacheScopeForPublication(scope), async () => { assert.fail(scope); });
+  }
+});
+
+test("both Postgres nothing-changed paths purge nothing today and on tomorrow's scheduled check", async () => {
+  const input = { sourceId: "fec-open-api", recordClass: "FEC_FUNDING" as const, scope: "federal-supported", parserVersion: "fec/1",
+    pointerVersionId: "cv-saved", readModelHash: "a".repeat(64), basis: "READ_MODEL_RECOMPUTED" as const,
+    retrieval: { requestedUrl: "https://api.open.fec.gov/v1/", finalUrl: "https://api.open.fec.gov/v1/", httpStatus: 200,
+      rawHash: "b".repeat(64), retrievedAt: "2026-10-23T12:00:00.000Z" } };
+  for (const day of ["2026-10-23", "2026-10-24"]) for (const alreadyConfirmed of [false, true]) {
+    const at = `${day}T12:00:01.000Z`, newerAt = `${day}T13:00:01.000Z`;
+    const check = { ...input, retrieval: { ...input.retrieval, retrievedAt: `${day}T12:00:00.000Z` } };
+    const newer = buildUnchangedConfirmation({ ...check, retrieval: { ...check.retrieval, retrievedAt: `${day}T13:00:00.000Z` } }, "FEC_FUNDING:federal-supported", newerAt);
+    assert.ok(newer.ok);
+    const store = Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore;
+    let calls = 0;
+    Object.assign(store, { assertCandidateMutationAuthority: () => {}, cacheOptions: { purge: async () => { assert.fail("unchanged checks must not purge"); } },
+      db: Object.assign(drizzle.mock(), { batch: async () => {
+        if (calls++ === 0) return [[], alreadyConfirmed ? [] : [{ sequence: 5 }]];
+        return [[{ sourceId: input.sourceId, currentVersionId: input.pointerVersionId, lastKnownGoodVersionId: input.pointerVersionId,
+          latestConfirmation: serializeUnchangedConfirmation(newer.confirmation) }], [{ state: "PROMOTED", normalizedHash: input.readModelHash, imported: false }]];
+      } }),
+    });
+    assert.deepEqual(await store.confirmUnchanged(check, at), { kind: "CONFIRMED", versionId: input.pointerVersionId, at: alreadyConfirmed ? newerAt : at });
+    assert.equal(calls, alreadyConfirmed ? 2 : 1);
+  }
 });
 
 test("purge refusal and transport failure stay visible without reversing publication", async t => {

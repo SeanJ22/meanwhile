@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { registryJurisdictions } from "../civic-data/state-scopes.ts";
+import { REGISTRY_STATES, registryJurisdictions } from "../civic-data/state-scopes.ts";
 export interface ReaderCachePurgeResult {
   readonly purged: boolean;
   readonly detail?: string;
@@ -30,43 +30,55 @@ export interface ReaderCacheScope {
   readonly states?: readonly string[];
   readonly places?: readonly string[];
   readonly national?: boolean;
+  readonly nationalPeople?: boolean;
 }
 
 export const READER_NATIONAL_CACHE_TAG = "reader-national";
-export const READER_CACHE_SECONDS = 60;
+export const READER_NATIONAL_PEOPLE_CACHE_TAG = "reader-national-people";
+export const READER_CACHE_SECONDS = 15 * 60;
 
 export function readerCacheTags(scope: ReaderCacheScope): string[] {
   const states = [...new Set((scope.states ?? []).flatMap(state => registryJurisdictions(state)))].sort();
   const places = [...new Set((scope.places ?? []).map(place => place.split("#")[0]!.trim().toLowerCase()).filter(Boolean))].sort();
   return [
     ...(scope.national ? [READER_NATIONAL_CACHE_TAG] : []),
+    ...(scope.nationalPeople ? [READER_NATIONAL_PEOPLE_CACHE_TAG] : []),
     ...states.map(state => `reader-state:${state}`),
     ...places.map(place => `reader-place:${createHash("sha256").update(place).digest("hex")}`),
   ];
 }
 
-/** Browser revalidation stays on; a failed purge can leave an edge answer old for at most one minute. */
+/** Published changes purge their tags; unchanged checks keep the saved answer. */
 export function readerCacheHeaders(scope: ReaderCacheScope): Record<string, string> {
   return {
     "Cache-Control": "public, max-age=0, must-revalidate",
-    "Netlify-CDN-Cache-Control": `public, durable, max-age=${READER_CACHE_SECONDS}, must-revalidate`,
-    "Netlify-Cache-Tag": [...readerCacheTags({ ...scope, national: true }), "reader-settings"].join(","),
+    "Netlify-CDN-Cache-Control": `public, durable, max-age=${READER_CACHE_SECONDS}, stale-while-revalidate=${READER_CACHE_SECONDS}`,
+    "Netlify-Cache-Tag": [...readerCacheTags({ ...scope, nationalPeople: true }), "reader-settings"].join(","),
   };
 }
 
 /** Canonical source scopes name a state directly or contain an encoded body division. */
 export function readerCacheScopeForPublication(scope: string): ReaderCacheScope {
   let decoded = scope;
-  try { decoded = decodeURIComponent(scope); } catch { /* An unrecognized scope invalidates national data. */ }
-  const states = registryJurisdictions(decoded);
+  try { decoded = decodeURIComponent(scope); } catch { /* Retain the literal scope. */ }
+  // These feed and vote publications have no reader response cache.
+  if (/(?:^|:)(?:govinfo|congress-api|regulations-gov)(?=:|$)/i.test(decoded)
+      || /roll-?calls?(?=:|$)/i.test(decoded)) return {};
+  if (decoded === "federal-supported" || /^US:people:/i.test(decoded)
+      || /^US:(?:current-congress-directory|state-legislator-member-offices)$/i.test(decoded)) return { nationalPeople: true };
+  const states = [...new Set(decoded.split("+").flatMap(part => registryJurisdictions(part)))];
+  const fema = /^openfema:([a-z]{2})(?=:|$)/i.exec(decoded)?.[1];
+  if (!states.length && fema) states.push(...registryJurisdictions(fema));
   const family = /^source:derived:family:([a-z]{2})(?=:|$)/i.exec(decoded)?.[1];
   if (!states.length && family) states.push(...registryJurisdictions(family));
-  return states.length ? { states } : { national: true };
+  // Shared curated facts can affect every state without sharing the raw-feed tag.
+  return states.length ? { states } : { states: [...REGISTRY_STATES] };
 }
 
 /** Run after the database commit. Purge failure is visible without hiding the newly published fact. */
 export async function invalidateReaderCache(scope: ReaderCacheScope, purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {
-  return invalidateReaderCacheTags(readerCacheTags(scope), purge);
+  // Explicit global owner actions and outcomes without a known place still clear place answers.
+  return invalidateReaderCacheTags(readerCacheTags(scope.national ? { ...scope, nationalPeople: true } : scope), purge);
 }
 
 async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {

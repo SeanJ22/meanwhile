@@ -2152,7 +2152,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw error;
     }
     if (eventRows[0]) {
-      await invalidateReaderCache(readerCacheScopeForPublication(input.scope), this.cacheOptions.purge);
       return { kind: "CONFIRMED", versionId: id, at };
     }
     const [pointerRows, candidateRows] = await this.db.batch([
@@ -2182,7 +2181,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
     const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
     if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
-      await invalidateReaderCache(readerCacheScopeForPublication(input.scope), this.cacheOptions.purge);
       return { kind: "CONFIRMED", versionId: id, at: priorConfirmation.observedAt };
     }
     throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);

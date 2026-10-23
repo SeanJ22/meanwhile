@@ -19,6 +19,7 @@ import { readOpenStatesPeopleProjection, readOfficialStateLegislatorsProjection 
 import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
 import { sameNativePerson } from "./people-identity.ts";
 import { officeRecordsForHolder, OPEN_STATES_ORG, type MemberOfficeRecord } from "./member-offices.ts";
+import { publishDirectoryOfficePoints, type OfficePointResolver } from "./office-points-publication.ts";
 
 export const MEMBER_OFFICES_CONTRACT_ID = "member-offices" as const;
 
@@ -60,6 +61,7 @@ export async function publishMemberOffices(input: {
   readonly store: RoutineDataStore;
   readonly now: string;
   readonly jurisdictions?: readonly `US-${string}`[];
+  readonly resolveOfficePoint?: OfficePointResolver;
 }): Promise<MemberOfficePublication> {
   const prior = await priorOffices(input.store, input.now);
   const records: MemberOfficeRecord[] = [];
@@ -74,10 +76,12 @@ export async function publishMemberOffices(input: {
         .catch(error => { gaps.push({key:jurisdiction,detail:`OFFICIAL_ALIASES_UNREADABLE: ${message(error)}`}); return null; }) : null;
       // The reference receipt supports its own office facts. Official contact overrides are applied
       // by the scoped people reader from that separately promoted source, never claimed by this archive.
-      const rows = reference.value.roster.officeholders.flatMap(holder => {
+      const native = reference.value.roster.officeholders.flatMap(holder => {
         const matches = read?.kind === "PROMOTED" || read?.kind === "BOOTSTRAP" ? read.value.roster.officeholders.filter(row => sameNativePerson(holder,row)) : [];
         return officeRecordsForHolder(matches.length === 1 ? {...holder,id:matches[0].id} : holder);
-      }).map(row=>{
+      });
+      const points = await publishDirectoryOfficePoints(native.map(row=>row.office), [...prior.values()].map(row=>row.office), input.resolveOfficePoint);
+      const rows = native.map((record, index)=>({ ...record, office: points[index] })).map(row=>{
         const held = prior.get(row.id);
         return held && withoutCollectedAt(held) === withoutCollectedAt(row) ? {...row,collectedAt:held.collectedAt} : row;
       });

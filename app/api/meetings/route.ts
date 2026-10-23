@@ -19,7 +19,6 @@ import { readerCacheHeaders } from "@/lib/reader/cache";
 import { attemptsByFamily } from "@/lib/registry/attempt-families";
 import {readerStateResponse} from "@/lib/reader/state-response";
 import { lookupZcta } from "@/lib/geo/zcta";
-import { publicOfficePoints } from "@/lib/reader/office-points";
 import type { ReaderStateResponse } from "@/lib/reader/client";
 
 export const runtime = "nodejs";
@@ -46,8 +45,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   const lat = latRead.value, lng = lngRead.value, radiusKm = Math.min(radiusRead.value, MAX_RADIUS_KM);
   const stateAnswerRead = params.get("include")==="state" && zipRead.value ? readerStateResponse(request).then(async response=>{
     const value=await response.json() as ReaderStateResponse;
-    const officePoints=response.ok ? await timing.time("offices",()=>publicOfficePoints(value)) : {};
-    return {status:response.status,headers:[...response.headers],value:Object.keys(officePoints).length ? {...value,officePoints} : value};
+    return {status:response.status,headers:[...response.headers],value};
   }).catch(()=>
     ({status:503,headers:[["cache-control","no-store"]],value:{error:"The state's information could not be loaded"}})) : Promise.resolve(null);
   try {

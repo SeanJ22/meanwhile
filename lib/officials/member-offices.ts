@@ -49,7 +49,8 @@ export function officeRecordsForHolder(holder: Officeholder): readonly MemberOff
     const federal = holder.level === "FEDERAL";
     const officialPhone = !federal && kind === "CAPITOL" && holder.provenance.sourceOrg !== OPEN_STATES_ORG && !/plural|open states/i.test(holder.provenance.sourceOrg) ? holder.phone : null;
     return [{id:`member-office:${holder.id}:${officeKey}`,kind:"MEMBER_OFFICE" as const,officeholderId:holder.id,officeKind:kind,
-      office:{...parseOfficeAddress(office.address ?? ""),phone:officialPhone || office.phone || null,...(office.email ? {email:office.email} : {}),lat:null,lng:null},
+      office:{...parseOfficeAddress(office.address ?? ""),phone:officialPhone || office.phone || null,...(office.email ? {email:office.email} : {}),lat:null,lng:null,
+        ...(office.geocodedPoint ? {geocodedPoint:office.geocodedPoint} : {})},
       sourceUrl:office.sourceUrl,sourceOrg:federal ? holder.fieldSources?.offices?.sourceOrg ?? holder.provenance.sourceOrg : OPEN_STATES_ORG,
       official:federal && /^https:\/\/(?:[^/]+\.)?(?:house|senate|congress)\.gov\//.test(office.sourceUrl),collectedAt:office.collectedAt,
       ...(officialPhone ? {fieldSources:{phone:holder.fieldSources?.phone ?? holder.provenance}} : {})}];

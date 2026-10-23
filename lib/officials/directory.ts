@@ -14,6 +14,7 @@ export interface DirectoryOffice {
   email?: string | null;
   lat: number | null;
   lng: number | null;
+  geocodedPoint?: import("./office-points-publication.ts").PublishedOfficePoint;
 }
 
 export interface DirectoryCommittee {

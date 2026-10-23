@@ -105,7 +105,13 @@ export function mergePeopleSets(sets: readonly OfficeholderSet[]): OfficeholderS
       }
     }
     merged.profileUrls = [...new Set([...(left.profileUrls ?? []), ...(right.profileUrls ?? []), left.websiteUrl, right.websiteUrl].filter((url): url is string => Boolean(url)))];
-    merged.offices = [...new Map([...(left.offices ?? []), ...(right.offices ?? [])].map(row => [canonicalCivicDataJson(row), row])).values()];
+    const offices = new Map<string, NonNullable<Officeholder["offices"]>[number]>();
+    for (const row of [...(left.offices ?? []), ...(right.offices ?? [])]) {
+      const { geocodedPoint, ...sourceOffice } = row;
+      const key = canonicalCivicDataJson(sourceOffice), saved = geocodedPoint ?? offices.get(key)?.geocodedPoint;
+      offices.set(key, { ...sourceOffice, ...(saved ? { geocodedPoint: saved } : {}) });
+    }
+    merged.offices = [...offices.values()];
     const memberships = new Map<string, NonNullable<Officeholder["memberships"]>[number]>();
     for (const row of [...(left.memberships ?? []), ...(right.memberships ?? [])]) {
       const held = memberships.get(row.id);

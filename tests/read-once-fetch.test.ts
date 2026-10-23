@@ -43,15 +43,20 @@ test("a board's 128 MiB of distinct downloaded agendas does not stay in the cale
     import {readOncePerRun} from ${JSON.stringify(new URL("../lib/meetings/read-once-fetch.ts", import.meta.url).href)};
     const read=readOncePerRun(async()=>new Response(new Uint8Array(2*1024*1024).fill(17)));
     try {
+      await (await read('https://agenda.example/0')).arrayBuffer();
+      for(let cycle=0;cycle<3;cycle++){await new Promise(resolve=>setImmediate(resolve));globalThis.gc();}
+      const before=process.memoryUsage().rss;
       for(let i=0;i<64;i++) await (await read('https://agenda.example/'+i)).arrayBuffer();
-      await new Promise(resolve=>setImmediate(resolve)); globalThis.gc();
+      for(let cycle=0;cycle<3;cycle++){await new Promise(resolve=>setImmediate(resolve));globalThis.gc();}
       const retained=process.memoryUsage().arrayBuffers;
+      const rssGrowth=process.memoryUsage().rss-before;
       const again=new Uint8Array(await (await read('https://agenda.example/0')).arrayBuffer());
-      console.log(JSON.stringify({retained,requests:read.distinctReads(),byte:again[0],length:again.length}));
+      console.log(JSON.stringify({retained,rssGrowth,requests:read.distinctReads(),byte:again[0],length:again.length}));
     } finally {read.close();}
-  `], { encoding: "utf8" });
+  `], { encoding: "utf8", env: { ...process.env, MALLOC_MMAP_THRESHOLD_: "131072", MALLOC_TRIM_THRESHOLD_: "131072" } });
   const result = JSON.parse(output);
   assert.ok(result.retained < 64 * 1024 * 1024, `${result.retained} bytes retained after 128 MiB of distinct agendas`);
+  assert.ok(result.rssGrowth < 64 * 1024 * 1024, `${result.rssGrowth} bytes of resident growth after 128 MiB of distinct agendas`);
   assert.equal(result.requests, 64);
   assert.equal(result.byte, 17);
   assert.equal(result.length, 2 * 1024 * 1024);

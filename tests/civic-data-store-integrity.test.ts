@@ -9,6 +9,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { getTableColumns } from "drizzle-orm";
 
 import * as schema from "../lib/db/schema.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { STATE_BALLOT_FAMILIES, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
@@ -1212,13 +1213,13 @@ test("terminal store exposes no one-time import or aggregate retirement door", (
 });
 
 
-test("every jurisdiction roll-call candidate uses bounded immutable parts before insertion", async () => {
-  const contract = ROUTINE_SOURCE_CONTRACTS.find(row => row.recordClass === "STATE_ROLL_CALL")!;
+for (const recordClass of ["STATE_ROLL_CALL", "MEETING"] as const) test(`${recordClass} candidates use bounded immutable parts before insertion`, async () => {
+  const contract = recordClass === "MEETING" ? MEETING_PARTITION_CONTRACTS[0]! : ROUTINE_SOURCE_CONTRACTS.find(row => row.recordClass === recordClass)!;
   const base = candidate("bounded-roll-call", "2026-09-08T12:00:00.000Z", contract.sourceId);
   const evidence = { positions: Array.from({ length: 160 }, (_, index) => ({ id: String(index), text: "published ".repeat(1000) })) };
   const value: RoutineCandidate = { ...base, recordClass: contract.recordClass, scope: contract.scope,
-    normalizedPayload: evidence, readModel: { rollCalls: evidence.positions },
-    normalization: { ...base.normalization, normalizedHash: normalizedHash({ rollCalls: evidence.positions }), normalizedPayloadHash: normalizedHash(evidence) },
+    normalizedPayload: evidence, readModel: { records: evidence.positions },
+    normalization: { ...base.normalization, normalizedHash: normalizedHash({ records: evidence.positions }), normalizedPayloadHash: normalizedHash(evidence) },
   };
   await withCannedNeon(() => ({ columns: [], rows: [] }), async (store, sent) => {
     Object.assign(store as unknown as Record<string, unknown>, { writeAuthority: {

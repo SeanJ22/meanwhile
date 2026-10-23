@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import { canonicalCivicDataHash, durableCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 
 test("incremental hashing preserves canonical ballot hashes including optional and numeric JSON values", () => {
@@ -27,6 +28,7 @@ test("durable canonical hashes match JSON persistence without copying nested evi
   ]) {
     const durable = JSON.parse(JSON.stringify(value));
     assert.equal(canonicalCivicDataHash(value, { durable: true }), createHash("sha256").update(canonicalCivicDataJson(durable)).digest("hex"));
+    assert.equal(normalizedHash(value), createHash("sha256").update(canonicalCivicDataJson(durable)).digest("hex"));
   }
   for (const value of [undefined, () => 1, Symbol("omitted"), BigInt(1), Object(BigInt(1))]) assert.throws(() => canonicalCivicDataHash(value, { durable: true }), TypeError);
   const cyclic: { self?: unknown } = {}; cyclic.self = cyclic;

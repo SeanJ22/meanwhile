@@ -16,14 +16,16 @@ export type ReadOnceFetch = typeof fetch & { readonly distinctReads: () => numbe
 export function readOncePerRun(base: typeof fetch): ReadOnceFetch {
   type Held = { readonly status: number; readonly statusText: string; readonly headers: [string, string][] };
   const reads = new Map<string, Promise<Held>>();
-  let spool: ByteSpool | null = null, closed = false;
+  let spool: { db: ByteSpool; insert: ReturnType<ByteSpool["prepare"]>; read: ReturnType<ByteSpool["prepare"]> } | null = null;
+  let closed = false;
   let count = 0;
   const bytes = () => {
     if (closed) throw new Error("AGENDA_READ_CACHE_CLOSED");
     if (spool === null) {
       const { DatabaseSync } = createRequire(import.meta.url)("node:sqlite") as { DatabaseSync: new (path: string) => ByteSpool };
-      spool = new DatabaseSync(":memory:");
-      spool.exec("PRAGMA temp_store=FILE; PRAGMA temp.cache_size=-8192; CREATE TEMP TABLE agenda_bytes(url TEXT PRIMARY KEY, bytes BLOB NOT NULL)");
+      const db = new DatabaseSync(":memory:");
+      db.exec("PRAGMA temp_store=FILE; PRAGMA temp.cache_size=-8192; CREATE TEMP TABLE agenda_bytes(url TEXT PRIMARY KEY, bytes BLOB NOT NULL)");
+      spool = { db, insert: db.prepare("INSERT INTO agenda_bytes(url,bytes) VALUES(?,?)"), read: db.prepare("SELECT bytes FROM agenda_bytes WHERE url=?") };
     }
     return spool;
   };
@@ -35,21 +37,20 @@ export function readOncePerRun(base: typeof fetch): ReadOnceFetch {
       count++;
       read = (async () => {
         const response = await base(input, init);
-        bytes().prepare("INSERT INTO agenda_bytes(url,bytes) VALUES(?,?)")
-          .run(url, new Uint8Array(await response.arrayBuffer()));
+        bytes().insert.run(url, new Uint8Array(await response.arrayBuffer()));
         return { status: response.status, statusText: response.statusText, headers: [...response.headers.entries()] as [string, string][] };
       })();
       reads.set(url, read);
     }
     const held = await read;
     const nullBody = held.status === 204 || held.status === 205 || held.status === 304;
-    const body = nullBody ? null : bytes().prepare("SELECT bytes FROM agenda_bytes WHERE url=?").get(url)?.bytes;
+    const body = nullBody ? null : bytes().read.get(url)?.bytes;
     if (!nullBody && body === undefined) throw new Error("AGENDA_READ_CACHE_MISSING");
     return new Response(body?.slice() ?? null, { status: held.status, statusText: held.statusText, headers: held.headers });
   }) as ReadOnceFetch;
   Object.defineProperties(wrapped, {
     distinctReads: { value: () => count },
-    close: { value: () => { closed = true; spool?.close(); spool = null; reads.clear(); } },
+    close: { value: () => { closed = true; spool?.db.close(); spool = null; reads.clear(); } },
   });
   return wrapped;
 }

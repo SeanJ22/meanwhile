@@ -3,7 +3,6 @@ import { readRetirementProgress, retirementProofTarget } from "./state-retiremen
 import type { Division } from "../registry/types.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
-import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
@@ -29,7 +28,7 @@ import {
   type ValidationReceipt,
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
-import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { canonicalCivicDataHash, durableCivicDataHash } from "./canonical-hash.ts";
 import {
   UNCHANGED_CONFIRMATION_PREFIX,
   buildUnchangedConfirmation,
@@ -405,9 +404,7 @@ export function pdcV2CanonicalMeetingFactEvidence(
     new Set(agendaDocuments.map(({ id }) => id)).size !== agendaDocuments.length
   ) throw new Error("PDC_V2_MEETING_FACT_IDENTITY_DUPLICATED");
   return {
-    sha256: createHash("sha256")
-      .update(canonicalCivicDataJson({ meetings, agendaDocuments }))
-      .digest("hex"),
+    sha256: canonicalCivicDataHash({ meetings, agendaDocuments }),
     meetingRowCount: meetings.length,
     agendaDocumentRowCount: agendaDocuments.length,
   };
@@ -1822,15 +1819,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     assertInitialRecord(record, firstEvent);
     const stateAuthority = statePublicationScope(record.candidate.scope);
     const meetingDoors = record.candidate.sourceId === "meeting-doors";
-    const candidate = stateAuthority || meetingDoors ? { ...(stateAuthority ? encodeStateCandidate(record.candidate) : record.candidate),
+    const meeting = record.candidate.recordClass === "MEETING";
+    const candidate = stateAuthority || meetingDoors || meeting ? { ...(stateAuthority ? encodeStateCandidate(record.candidate) : record.candidate),
       retrieval: await this.payloadParts.store(record.candidate.retrieval,
         ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "sourceCheck", "failureDetail"]),
     } : record.candidate;
     const navigationIndex = navigationCandidateIndex(record.candidate);
-    const stored = stateAuthority || meetingDoors || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
+    const stored = stateAuthority || meetingDoors || meeting || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(candidate,
         ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"],
-        meetingDoors ? ["readModel", "normalizedPayload", "changeSet", "identities"] : stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
+        meetingDoors || meeting ? ["readModel", "normalizedPayload", "changeSet", "identities"] : stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
       : navigationIndex ? await this.storeNavigationCandidate(record.candidate, navigationIndex) : record.candidate;
     await this.db.batch([
       this.db.insert(civicDataCandidates).values({
@@ -2301,13 +2299,14 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const held = options.candidate;
     const navigation = held !== undefined && isNavigationCandidate(held);
     let record: CandidateVersionRecord | null;
-    if (held && (navigation || statePublicationScope(held.scope))) {
+    if (held && (navigation || statePublicationScope(held.scope) || held.recordClass === "MEETING")) {
+      const hash = navigation || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
       const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
         normalizedPayloadHash: sql<string | null>`${civicDataCandidates.candidate}#>>'{normalization,normalizedPayloadHash}'`,
       }).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
-      if (!row || !heldEnvelopeMatches(row, held) || durableStateHash(held.readModel) !== row.normalizedHash ||
-          held.normalization.normalizedPayloadHash !== row.normalizedPayloadHash || durableStateHash(held.normalizedPayload) !== row.normalizedPayloadHash) throw new Error(`CANDIDATE_PROMOTION_ENVELOPE_MISMATCH:${candidateId}`);
+      if (!row || !heldEnvelopeMatches(row, held) || hash(held.readModel) !== row.normalizedHash ||
+          held.normalization.normalizedPayloadHash !== row.normalizedPayloadHash || hash(held.normalizedPayload) !== row.normalizedPayloadHash) throw new Error(`CANDIDATE_PROMOTION_ENVELOPE_MISMATCH:${candidateId}`);
       record = { ...postgresCandidateSummary(row), ...(navigation ? { receipt } : {}), candidate: held } as CandidateVersionRecord;
     } else {
       const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);

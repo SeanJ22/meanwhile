@@ -1,0 +1,116 @@
+{
+  "description": "Original public official responses, read with TLS verification. OPM sparse ranges preserve the original Parquet metadata and only department, agency, count columns; they contain no personal identifiers. The headcount is a sum of OPM count, not a total including contractors or military personnel.",
+  "sources": [
+    {
+      "file": "usa-agencies.json",
+      "url": "https://api.usaspending.gov/api/v2/references/toptier_agencies/",
+      "retrievedAt": "2026-10-23T02:42:43.954789Z",
+      "sha256": "e425662ed2f7a43a66df0d154efe71010d79be5da0d12fa8672cd91f531f7a1b"
+    },
+    {
+      "file": "usa-state-budget.json",
+      "url": "https://api.usaspending.gov/api/v2/agency/019/budgetary_resources/?fiscal_year=2026",
+      "retrievedAt": "2026-10-23T02:42:49.483353Z",
+      "sha256": "24a3f83fe4ab7407931e9a9e13018a97609eab60138a85a7d05e0ee3118b7cbe"
+    },
+    {
+      "file": "fr-state.json",
+      "url": "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bagencies%5D%5B%5D=state-department&per_page=3&order=newest",
+      "retrievedAt": "2026-10-23T02:42:49.656345Z",
+      "sha256": "fdf25e5976b01a88527398472b73116844824042a710f769b80c9546566ebeda"
+    },
+    {
+      "file": "opm-employment-files.json",
+      "url": "https://data.opm.gov/api/v1/files/employment?current=true",
+      "retrievedAt": "2026-10-23T02:44:02.659294Z",
+      "sha256": "536d6fbec4629921b7a2153e3e1da1c00595999ba35f96016ab5dc5d1f734803"
+    },
+    {
+      "file": "congress-bessent.json",
+      "url": "https://api.congress.gov/v3/nomination/119/11-1?format=json",
+      "retrievedAt": "2026-10-23T02:53:18.872018Z",
+      "sha256": "4d036079d298ef50bef43bc2883b9d457394b78c30895a6391879e1857b388aa"
+    },
+    {
+      "file": "congress-bessent-actions.json",
+      "url": "https://api.congress.gov/v3/nomination/119/11-1/actions?format=json",
+      "retrievedAt": "2026-10-23T02:53:18.868487Z",
+      "sha256": "568e56635552c1c9e0a9f34a12325be4a340cdb8ff972fa7b0723a93c05248e4"
+    },
+    {
+      "file": "opm-data-sources.html",
+      "url": "https://data.opm.gov/resources/data-sources",
+      "retrievedAt": "2026-10-23T03:23:01.793886Z",
+      "sha256": "0ebf56e961d8a34bb4963584879408b545cb8b7c96b1ba0192c002a95f5c5187"
+    },
+    {
+      "file": "usa-eop-accounts.json",
+      "url": "https://api.usaspending.gov/api/v2/federal_accounts/",
+      "retrievedAt": "2026-10-23T03:23:02.129214Z",
+      "sha256": "8af432bc2ac7d5e90a9c55672d9e7e7ae7c291969577aecfd93e3a0289265923",
+      "request": {
+        "method": "POST",
+        "body": {
+          "filters": {
+            "agency_identifier": "1100",
+            "fy": "2026"
+          },
+          "limit": 100,
+          "page": 1,
+          "sort": {
+            "direction": "asc",
+            "field": "account_name"
+          }
+        }
+      }
+    },
+    {
+      "file": "congress-blanche-ag.json",
+      "url": "https://api.congress.gov/v3/nomination/119/1078?format=json",
+      "retrievedAt": "2026-10-23T03:56:26.055917Z",
+      "sha256": "d8ba4f2dc3dc663ae04d8deab8e887c56f1d1410170c9504790d9940eb90d4aa"
+    },
+    {
+      "file": "congress-blanche-deputy-ag.json",
+      "url": "https://api.congress.gov/v3/nomination/119/12-5?format=json",
+      "retrievedAt": "2026-10-23T03:56:27.209971Z",
+      "sha256": "cae257e0d5c8d1b56b99dcd0603953f23228ccf6eddb8d41b8e99b444c211981"
+    },
+    {
+      "file": "congress-sonderling-labor.json",
+      "url": "https://api.congress.gov/v3/nomination/119/1129?format=json",
+      "retrievedAt": "2026-10-23T03:56:28.361962Z",
+      "sha256": "b754822da9743ac2205381dcc1316af03ffcb6cb82a9a475fbb777560f4cac94"
+    },
+    {
+      "file": "congress-sonderling-deputy-labor.json",
+      "url": "https://api.congress.gov/v3/nomination/119/12-42?format=json",
+      "retrievedAt": "2026-10-23T03:56:29.484720Z",
+      "sha256": "579c7475083014968af443ab5e9e5337d4528ffcc0ed7961be19046d4c02e63e"
+    },
+    {
+      "file": "cia-faqs.html",
+      "url": "https://www.cia.gov/faqs/",
+      "retrievedAt": "2026-10-23T03:59:48.444751Z",
+      "sha256": "e585f3ac350f216eddfbbbab7340df019a401a2d14061977d73b77d4ba4a190a"
+    },
+    {
+      "file": "senate-clayton-hearing.html",
+      "url": "https://www.intelligence.senate.gov/2026/06/10/closed-briefing-intelligence-matters-74/",
+      "retrievedAt": "2026-10-23T04:01:22.311939Z",
+      "sha256": "8399a290279d1c5a41def48b201fdcc035eb5c64b9815b3c72851cae2793d31e"
+    },
+    {
+      "file": "congress-clayton-dni.json",
+      "url": "https://api.congress.gov/v3/nomination/119/1092?format=json",
+      "retrievedAt": "2026-10-23T04:01:23.651332Z",
+      "sha256": "0931d0a993a8890388acf3e8135ef989560a80b71815187d3e492ea639495a21"
+    },
+    {
+      "file": "congress-clayton-dni-actions.json",
+      "url": "https://api.congress.gov/v3/nomination/119/1092/actions?format=json",
+      "retrievedAt": "2026-10-23T04:04:23.137081Z",
+      "sha256": "5f7c4b8563b488843475c87a659629594c3e27063b571b19c8a73af5479e44c9"
+    }
+  ]
+}

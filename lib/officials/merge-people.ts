@@ -5,6 +5,7 @@ import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { officeIdentity } from "./office-identity.ts";
 import { personIdentityKeys } from "./people-identity.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
+import { mergeExecutiveFacts } from "./national-executive.ts";
 import type { Officeholder, OfficeholderSet, PersonFieldDisagreement } from "./types.ts";
 
 const normalized = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -116,6 +117,12 @@ export function mergePeopleSets(sets: readonly OfficeholderSet[]): OfficeholderS
     merged.memberships = [...memberships.values()];
     merged.fecCandidateIds = [...new Set([...(left.fecCandidateIds ?? []), ...(right.fecCandidateIds ?? [])])];
     merged.social = right.social ?? left.social;
+    for (const [field, source] of Object.entries(right.fieldSources ?? {})) {
+      if (!(fields as readonly string[]).includes(field) && (!merged.fieldSources?.[field] || source.collectedAt >= merged.fieldSources[field].collectedAt)) {
+        merged.fieldSources = { ...merged.fieldSources, [field]: source };
+      }
+    }
+    if (left.executive || right.executive) merged.executive = mergeExecutiveFacts(left.executive, right.executive);
     if (prefers(right, left, "name")) merged.provenance = right.provenance;
     return merged;
   };

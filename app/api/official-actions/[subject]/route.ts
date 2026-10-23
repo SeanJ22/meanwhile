@@ -1,3 +1,4 @@
+import { readNationalExecutiveActions } from "@/lib/officials/national-executive-records";
 import { directOfficialActionTargetPlan, settleOfficialActionHoldingAnswer, type OfficialActionHoldingReaders, type OfficialActionTargetPlan } from "@/lib/officials/action-holding";
 import { readerRoute } from "@/lib/api/reader-route";
 import { officialActionsForTarget } from "@/lib/officials/reader-actions";
@@ -34,6 +35,7 @@ function defaultReadersFor(divisions: readonly string[]): OfficialActionHoldingR
 export const GET = readerRoute("/api/official-actions/[subject]", async function GET(request: Request, context: { params: Promise<{ subject: string }> }) {
   const { subject } = await context.params;
   if (!subject || subject.length > 512) return Response.json({ error: "subject required" }, { status: 400 });
+  if (subject.startsWith("white-house:")) return readNationalExecutiveActions(subject);
   const divisions = await ballotPlaceFromRequest(request);
   const settled = await settleOfficialActionHoldingAnswer(subject, defaultReadersFor(divisions));
   if (settled.kind === "HOLDING_UNAVAILABLE") {

@@ -62,7 +62,7 @@ test("a drain cannot checkpoint past an unfinished earlier catalogue government"
     vault: async () => ({ stored: true, where: "fixture", why: "saved" }), budget: { spent: () => draining } };
   const input = { repos, concurrency: 3, states: [], ownerSubjects: async () => [], now: () => NOW, reviewer: "auto-crosswalk-reviewer@0123456789ab",
     query: async (_sql: string, params: readonly unknown[]) => {
-      const page = pages.find(page => page.government.name === params[2]); return page ? [page as unknown as Record<string, unknown>] : [];
+      const page = pages.find(page => page.government.name === params.at(-1)); return page ? [page as unknown as Record<string, unknown>] : [];
     }, catalog: { version: "directory-version", runtime, tenants: async function* (after: number) {
       for (const page of pages.slice(after)) yield { platform: "fixture", url: `https://example.gov/${page.government.id}`, name: page.government.name, state: page.government.state, source: "public directory" };
     } },
@@ -77,4 +77,35 @@ test("a drain cannot checkpoint past an unfinished earlier catalogue government"
   draining = false;
   await runPlatformCensusPass({ ...input, runtimeFor: async () => runtime, stopped: () => false });
   assert.ok(seen.filter(id => id === pages[0].government.jurisdictionId).length >= 2, "the unfinished first government is retried on the next child pass");
+});
+
+test("the scheduled next-day pass checks the government's own site again and cannot revive a directory-only portal", async () => {
+  const repos = createMemoryRepositories(), base = government("OR", 1), requests: string[] = [];
+  const website = "https://oregonmetro.gov/", portal = "https://metro.legistar.com/";
+  const page = { ...base, government: { ...base.government, website, name: "Metro" } };
+  let instant = NOW;
+  const runtime = { open: async (request: { url: string }) => {
+    requests.push(request.url);
+    const body = request.url === website ? '<title>Metro</title>' : request.url === portal
+      ? `<title>Metro - Calendar</title><a href="${website}">Official site</a>` : "";
+    return { status: body ? 200 : 404, body, bytes: body.length, contentType: "text/html", location: null,
+      transportError: null, retrievedAt: instant };
+  }, spaceOut: async () => {}, now: () => instant, budget: { spent: () => false },
+    vault: async () => ({ stored: true, where: "fixture", why: "saved" }) };
+  const input = { repos, concurrency: 1, states: [], ownerSubjects: async () => [], now: () => instant,
+    reviewer: "auto-crosswalk-reviewer@0123456789ab", stopped: () => false,
+    query: async () => [page as unknown as Record<string, unknown>], runtimeFor: () => runtime,
+    catalog: { version: "directory", runtime, tenants: async function* (after: number) {
+      if (after === 0) yield { platform: "legistar", url: portal, name: "Metro", state: "OR", source: "directory" };
+    } },
+  };
+  await runPlatformCensusPass(input);
+  const today = requests.filter(url => url === website).length;
+  assert.ok(today > 0);
+  assert.deepEqual(await repos.doors.list(), []);
+  instant = new Date(Date.parse(NOW) + 86_400_000).toISOString();
+  await runPlatformCensusPass(input);
+  assert.ok(requests.filter(url => url === website).length > today, "the twelve-hour marker expires before tomorrow's automatic pass");
+  assert.deepEqual(await repos.doors.list(), []);
+  assert.ok(requests.every(url => !url.includes("webapi.legistar.com")));
 });

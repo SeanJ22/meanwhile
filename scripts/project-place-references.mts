@@ -34,7 +34,7 @@ for (const file of ["census_govt_units_2022.csv", "census_govt_units_2022_depend
   if ([pid, web, county, state].some(index => index < 0)) throw new Error(`REGISTRATION_CENSUS_FILE_SHAPE:${file}`);
   const value = (row: string[], name: string) => (row[header.indexOf(name)] ?? "").trim();
   for (const row of rows) {
-    const postal = row[state]?.toUpperCase() || FIPS_TO_STATE[value(row, "fips_state")]?.postal;
+    const postal = FIPS_TO_STATE[value(row, "fips_state")]?.postal || row[state]?.toUpperCase();
     if (!row[pid] || !postal || !shards.has(postal)) continue;
     const shard = shardFor(postal);
     shard.facts[row[pid]] = { city: value(row, "city"), web: (row[web] ?? "").trim(), county: (row[county] ?? "").trim(),

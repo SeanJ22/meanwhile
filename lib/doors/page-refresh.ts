@@ -155,7 +155,7 @@ export async function refreshDuePageDoors(input: {
       await recordDoorOutcome(input.repos.doors, door.doorId, "SUCCESS", readAt, verdict.kind === "CHANGED");
       if (verdict.kind === "CONFIRMED") {
         report.confirmed++;
-        report.restamped += await restampFacts(input.facts, facts, copy, { purge: input.purge });
+        report.restamped += await restampFacts(input.facts, facts, copy);
         continue;
       }
       report.changed++;

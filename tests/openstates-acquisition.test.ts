@@ -23,6 +23,7 @@ import { candidateChangeSet, canonicalCivicDataJson } from "../lib/civic-data/ch
 import type { CandidateVersionRecord, RoutineCandidate } from "../lib/civic-data/types.ts";
 import { statePeopleRetirementSourceCheck } from "../lib/sources/plural/retirement.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import {censusGeocodeUrl} from "../lib/geo/census-geocoder.ts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -164,7 +165,9 @@ test("Open States offices publish outside the official pilot rosters with their 
     signal: AbortSignal.timeout(10_000), divisions: [],
     fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha }]) : new Response(archive)) as typeof fetch });
   const store = new MemoryRoutineDataStore();
-  assert.ok((await publishStatePeople({ vault, store, ...acquired, now: at })).outcome.promoted);
+  const body=JSON.stringify({result:{addressMatches:[{coordinates:{x:-121.49,y:38.58}}]}});
+  const resolveOfficePoint=async(address:string)=>({lat:38.58,lng:-121.49,census:{body,rawHash:createHash("sha256").update(body).digest("hex"),retrievedAt:at,url:censusGeocodeUrl(address)}});
+  assert.ok((await publishStatePeople({ vault, store, ...acquired, now: at,resolveOfficePoint })).outcome.promoted);
   const publication = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA"] });
   assert.ok(publication.outcome?.promoted, JSON.stringify(publication));
   assert.equal(publication.records, 2);
@@ -172,6 +175,10 @@ test("Open States offices publish outside the official pilot rosters with their 
   const offices = currentMemberOffices("plural:ca:one");
   assert.deepEqual(offices.map(row => row.office.phone), ["555-1000", "555-2000"]);
   assert.ok(offices.every(row => row.official === false && row.sourceOrg === "Open States (Plural, CC-0)"));
+  assert.ok(offices.every(row=>row.office.geocodedPoint?.lat===38.58));
+  assert.ok(publication.outcome?.candidate.candidate.retrieval.manualSourceReceipt?.sources.some(source=>source.publisher==="U.S. Census Bureau"));
+  const next=await publishMemberOffices({store,now:"2026-10-02T00:00:00.000Z",jurisdictions:["US-CA"],resolveOfficePoint:async()=>{assert.fail("The next daily office publication reuses the saved point and its Census evidence");}});
+  assert.ok(next.outcome?.confirmed,JSON.stringify(next));
 });
 test("one malformed native record leaves verified people publishable without claiming a complete replacement", async () => {
   const archive = zip([

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { POST } from "../app/api/geocode/route.ts";
-import { publishDirectoryOfficePoints, publishRosterOfficePoints } from "../lib/officials/office-points-publication.ts";
+import { publishDirectoryOfficePoints, publishRosterOfficePoints, resolvePublishedOfficePoint } from "../lib/officials/office-points-publication.ts";
 import { stateMemberDirectories } from "../lib/reader/member-directories.ts";
 import { directoryOffices } from "../lib/map/office-pins.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
@@ -32,6 +32,7 @@ test("published office points reach the reader directory and map; tomorrow reuse
   const offices = directoryOffices({ holder: { ...holder, social: undefined, sourceUrl: holder.provenance.sourceUrl, photoUrl: null }, tier: "state", role: "State office", seatLabel: null }, entry.directory);
   assert.deepEqual(offices[0].point, { lat: 32, lng: -110 });
   assert.equal(offices[1].point, undefined, "postal boxes remain contacts without a guessed map pin");
+  assert.equal(tomorrow.officeholders[0].offices![1].pointUnavailable?.reason,"MAILING_ADDRESS");
   assert.match(tomorrow.officeholders[0].offices![0].geocodedPoint!.sourceUrl, /census.gov/);
   const moved = await publishRosterOfficePoints({ ...roster, officeholders: [{ ...holder, offices: [{ ...holder.offices![0], address: "200 Main Street, Tucson, AZ 85701" }] }] }, saved,
     async address => { calls.push(address); return { lat: 33, lng: -111 }; });
@@ -53,7 +54,41 @@ test("directory publication keeps publisher coordinates, saves missing points on
   assert.equal(saved[0].geocodedPoint!.lat, 31);
   assert.equal(saved[1].lat, 32);
   assert.equal(saved[1].geocodedPoint, undefined);
+  assert.equal(saved[2].pointUnavailable?.reason,"MAILING_ADDRESS");
+  assert.equal(saved[3].pointUnavailable?.reason,"NO_STREET_ADDRESS");
   assert.deepEqual(await publishDirectoryOfficePoints(offices, saved, async () => { assert.fail("saved points survive another publication"); }), saved);
+});
+
+test("public office publication retains a specific Census miss reason and retries it on the next run", async t=>{
+  t.mock.method(globalThis,"fetch",async()=>Response.json({result:{addressMatches:[{coordinates:{x:-110,y:32},addressComponents:{zip:"85702"}}]}}));
+  assert.deepEqual(await resolvePublishedOfficePoint("100 Main Street, Tucson, AZ 85701"),{reason:"ZIP_MISMATCH"});
+  const saved=await publishRosterOfficePoints(roster,null,async()=>({reason:"UPSTREAM_TIMEOUT"}));
+  assert.equal(saved.officeholders[0].offices![0].pointUnavailable?.reason,"UPSTREAM_TIMEOUT");
+  let attempts=0;
+  const next=await publishRosterOfficePoints(roster,saved,async()=>{attempts++;return{lat:32,lng:-110};});
+  assert.equal(attempts,1);assert.ok(next.officeholders[0].offices![0].geocodedPoint);
+  assert.equal(next.officeholders[0].offices![0].pointUnavailable,undefined);
+  assert.equal(mergePeopleSets([saved,roster])!.officeholders[0].offices!.length,2,"failure metadata is not another office");
+});
+
+test("a publication bounds geocoding work and shares one request per exact address",async()=>{
+  let active=0,maximum=0,calls=0;
+  const many={...roster,officeholders:[{...holder,offices:Array.from({length:40},(_,i)=>({...holder.offices![0],address:`${100+i%20} Main Street, Tucson, AZ 85701`}))}]};
+  const result=await publishRosterOfficePoints(many,null,async()=>{
+    calls++;active++;maximum=Math.max(maximum,active);
+    await new Promise<void>(resolve=>setImmediate(resolve));active--;return{lat:32,lng:-110};
+  });
+  assert.equal(calls,20);assert.equal(maximum,8);
+  assert.equal(result.officeholders[0].offices!.filter(o=>o.geocodedPoint).length,40);
+});
+
+test("an office mailing ZIP may differ only when Census matches the exact numbered street, city and state",async t=>{
+  t.mock.method(globalThis,"fetch",async()=>Response.json({result:{addressMatches:[{coordinates:{x:-121.4955,y:38.5747},
+    matchedAddress:"1021 O ST, SACRAMENTO, CA, 95814",addressComponents:{zip:"95814",city:"SACRAMENTO",state:"CA"}}]}}));
+  const source="Room 5310, 1021 O St. P.O. Box 942849, Sacramento, CA 94249";
+  const point=await resolvePublishedOfficePoint(source);
+  assert.ok(point&&"lat"in point);assert.equal(point.lat,38.5747);assert.ok("census"in point&&point.census?.body);
+  assert.deepEqual(await resolvePublishedOfficePoint("1021 O St., Fresno, CA 94249"),{reason:"ZIP_MISMATCH"});
 });
 
 test("the meetings route and representative pins do not geocode reader visits", () => {

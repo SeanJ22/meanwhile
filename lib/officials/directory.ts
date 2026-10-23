@@ -15,6 +15,7 @@ export interface DirectoryOffice {
   lat: number | null;
   lng: number | null;
   geocodedPoint?: import("./office-points-publication.ts").PublishedOfficePoint;
+  pointUnavailable?: import("./office-points-publication.ts").OfficePointUnavailable;
 }
 
 export interface DirectoryCommittee {

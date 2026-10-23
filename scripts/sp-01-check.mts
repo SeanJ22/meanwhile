@@ -3,7 +3,7 @@
  *   --import ./scripts/register-test-loader.mjs scripts/sp-01-check.mts
  */
 import assert from "node:assert/strict";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { neon } from "@neondatabase/serverless";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -25,10 +25,11 @@ import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts"
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { federalDirectoryScope, federalDirectoryContractId, heldDirectoryCandidate, type FederalDirectoryCapture } from "../lib/officials/federal-directory-data-plane.ts";
 import { readStateFederalDirectory } from "../lib/officials/federal-directory-read-model.ts";
-import { publishDirectoryOfficePoints, publishRosterOfficePoints } from "../lib/officials/office-points-publication.ts";
+import { publishFederalDirectoryOfficePoints, publishRosterOfficePoints, resolvePublishedOfficePoint, type OfficePointResolution, type OfficePointResolver } from "../lib/officials/office-points-publication.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
-import type { MemberDirectoryEntry } from "../lib/officials/directory.ts";
+import {installFactReader} from "../lib/facts/db.ts";
+import {publishMemberOffices} from "../lib/officials/member-offices-publication.ts";
 
 const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
 if (!connection) throw Error("WTP_PRODUCTION_DATABASE_URL_READONLY is required");
@@ -48,6 +49,7 @@ assert.equal(identity.current_user, "readonly"); assert.equal(identity.read_only
 delete process.env.DATABASE_URL;
 delete process.env.WTP_ASSET_STORE;
 installReaderDatabaseQuery(query);
+installFactReader((text,params=[])=>rows(text,params));
 const parts = new CivicPayloadParts({ existing: async () => [], write: async () => { throw Error("Replay cannot write payloads"); },
   read: async hashes => await rows("SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])",[hashes]) as {hash:string;payload:unknown}[] });
 const output = ".scratch/sp-01";
@@ -56,6 +58,12 @@ const today = new Date().toISOString(), tomorrow = new Date(Date.parse(today)+86
 const results: object[] = [];
 
 for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
+  let points:Record<string,OfficePointResolution>={};
+  try {points=JSON.parse(await readFile(`.scratch/sp-01/audit/geocodes-${state}.json`,"utf8"));}catch{/* Resolve if the broader audit has not run. */}
+  const resolve:OfficePointResolver=async address=>{
+    if(!Object.hasOwn(points,address))points[address]=await resolvePublishedOfficePoint(address);
+    return points[address];
+  };
   const response = await readerStateResponse(new Request(`https://meanwhileusa.com/api/reader/state?state=${state}&zip=${zip}`));
   assert.equal(response.status,200);
   const page = await response.json() as ReaderStateResponse;
@@ -66,10 +74,7 @@ for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
   const [stored] = await rows("SELECT candidate FROM civic_data_candidates WHERE id=$1",[original.metadata.versionId]);
   const source = await parts.loadOwned(stored.candidate) as RoutineCandidate;
   const acquisitions = (source.normalizedPayload as {acquisitions:FederalDirectoryCapture[]}).acquisitions;
-  const roster = await publishRosterOfficePoints(original.value.roster,null);
-  const byMember: Record<string,MemberDirectoryEntry> = Object.fromEntries(await Promise.all(Object.entries(original.value.directory.byMember).map(async ([id,entry])=>
-    [id,{...entry,districtOffices:await publishDirectoryOfficePoints(entry.districtOffices)}])));
-  const projection = {...original.value,roster,directory:{...original.value.directory,byMember}};
+  const projection = await publishFederalDirectoryOfficePoints(original.value,null,resolve);
   const candidate = heldDirectoryCandidate({state,projection,acquisitions,retrievedAt:source.retrieval.retrievedAt});
   const memory = new MemoryRoutineDataStore();
   const outcome = await processRegisteredManualCandidate(memory,federalDirectoryContractId(state),candidate,today);
@@ -78,6 +83,7 @@ for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
   assert.equal(read.kind,"PROMOTED");
   let nativePeople: Awaited<ReturnType<typeof readOpenStatesPeopleProjection>> | null = null;
   let savedNativePoints=0;
+  let nativeOfficePublicationVersion:string|null=null,nativeOfficeNextConfirmed=false;
   if(state==="NJ") {
     const nativeScope=`US-${state}:openstates-people:v1`;
     const nativeShelf=await readCanonicalShelf([{recordClass:"STATE_LEGISLATOR",scope:nativeScope}],query);
@@ -86,7 +92,7 @@ for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
     const [row]=await rows("SELECT candidate FROM civic_data_candidates WHERE id=$1",[native.metadata.versionId]);
     const old=await parts.loadOwned(row.candidate)as RoutineCandidate;
     const captures=(old.normalizedPayload as {captures:StatePeopleCapture[]}).captures;
-    const located=await publishRosterOfficePoints(native.value.roster,null);
+    const located=await publishRosterOfficePoints(native.value.roster,null,resolve);
     savedNativePoints=new Set(located.officeholders.flatMap(holder=>holder.offices??[]).flatMap(office=>office.geocodedPoint?.address??[])).size;
     assert.ok(savedNativePoints,"Real state offices must save computed points before readers use them");
     const built=statePeopleCandidate({state,roster:located,captures,releaseId:native.value.term,now:today});
@@ -94,8 +100,15 @@ for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
     assert.ok(published.promoted,published.candidate.failureDetail??"State-office replay publication failed");
     nativePeople=await readOpenStatesPeopleProjection("US-NJ",{store:memory,now:today});
     assert.equal(nativePeople.kind,"PROMOTED");
-    const next=await publishRosterOfficePoints(native.value.roster,located,async()=>null);
+    const next=await publishRosterOfficePoints(native.value.roster,located,resolve);
     assert.deepEqual(next,located,"The next source refresh reuses the state offices' published points");
+    const now=new Date().toISOString();
+    const offices=await publishMemberOffices({store:memory,now,jurisdictions:["US-NJ"],resolveOfficePoint:resolve});
+    assert.ok(offices.outcome?.promoted,JSON.stringify(offices));
+    nativeOfficePublicationVersion=offices.promotedVersionId;
+    const nextOffices=await publishMemberOffices({store:memory,now:new Date(Date.parse(now)+86_400_000).toISOString(),jurisdictions:["US-NJ"],resolveOfficePoint:resolve});
+    assert.ok(nextOffices.outcome?.confirmed,JSON.stringify(nextOffices));
+    nativeOfficeNextConfirmed=true;
   }
   const owners = officeOwners(page.coverage);
   const directories = zipMemberDirectories(nativePeople?.kind==="PROMOTED"?nativePeople.value.roster:null,[],read.value,owners.map(owner=>owner.holder));
@@ -115,13 +128,8 @@ for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
   assert.equal(routineTaskDue(task,clock,Date.parse(tomorrow)),true);
   let freshLookups=0;
   // A source reread without computed fields must recover every saved point from the prior publication.
-  const nextByMember: Record<string,MemberDirectoryEntry> = Object.fromEntries(await Promise.all(Object.entries(original.value.directory.byMember).map(async([id,entry])=>[id,{
-    ...entry,districtOffices:await publishDirectoryOfficePoints(entry.districtOffices,read.value.directory.byMember[id]?.districtOffices,
-      async()=>{freshLookups++;return null;})}])));
-  for(const [id,entry]of Object.entries(read.value.directory.byMember))for(const office of entry.districtOffices)if(office.geocodedPoint)
-    assert.deepEqual(nextByMember[id].districtOffices.find(row=>row.geocodedPoint?.address===office.geocodedPoint!.address)?.geocodedPoint,office.geocodedPoint);
-  const nextRoster=await publishRosterOfficePoints(original.value.roster,read.value.roster,async()=>{freshLookups++;return null;});
-  const nextCandidate=heldDirectoryCandidate({state,projection:{...read.value,roster:nextRoster,directory:{...read.value.directory,byMember:nextByMember}},
+  const nextProjection=await publishFederalDirectoryOfficePoints(original.value,read.value,async address=>{freshLookups++;return resolve(address);});
+  const nextCandidate=heldDirectoryCandidate({state,projection:nextProjection,
     acquisitions,retrievedAt:tomorrow});
   const nextOutcome=await processRegisteredManualCandidate(memory,task.id as ReturnType<typeof federalDirectoryContractId>,nextCandidate,tomorrow,read.metadata.versionId);
   assert.ok(nextOutcome.confirmed || nextOutcome.promoted,nextOutcome.candidate.failureDetail ?? "Tomorrow's replay publication failed");
@@ -135,7 +143,7 @@ for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
   assert.ok(presidentTags.some(tag=>response.headers.get("Netlify-Cache-Tag")!.split(",").includes(tag)));
   for(const day of [today,tomorrow])assert.ok(ballotCacheHeaders(new Request(`https://meanwhileusa.com/ballot?zip=${zip}`),Date.parse(day))["Netlify-Cache-Tag"].includes(`reader-state:${state}`));
   results.push({state,zip,productionVersion:original.metadata.versionId,replayedVersion:read.metadata.versionId,
-    directoryCards:cards.length,rendered,savedNativePoints,scheduledNow:today,scheduledNext:tomorrow,nextRunDue:true,nextPublicationConfirmed:!!nextOutcome.confirmed,
+    directoryCards:cards.length,rendered,savedNativePoints,nativeOfficePublicationVersion,nativeOfficeNextConfirmed,scheduledNow:today,scheduledNext:tomorrow,nextRunDue:true,nextPublicationConfirmed:!!nextOutcome.confirmed,
     nextReaderVersion:nextRead.metadata.versionId,freshLookupsForPreviouslyMissingPoints:freshLookups,
     presidentInvalidatesPage:true,statePurge:purges[0]});
 }

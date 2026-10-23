@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { REGISTRY_STATES, registryJurisdictions } from "../civic-data/state-scopes.ts";
+import {FIPS_TO_STATE} from "../ocd/fips.ts";
 export interface ReaderCachePurgeResult {
   readonly purged: boolean;
   readonly detail?: string;
@@ -57,22 +58,63 @@ export function readerCacheHeaders(scope: ReaderCacheScope): Record<string, stri
   };
 }
 
-/** Canonical source scopes name a state directly or contain an encoded body division. */
-export function readerCacheScopeForPublication(scope: string): ReaderCacheScope {
+/** Geography is read from typed fields, never from an incidental two-letter word in source text. */
+function publicationStates(models: readonly unknown[]): string[] {
+  const states = new Set<string>();
+  const visit = (value: unknown, key = "") => {
+    if (Array.isArray(value)) { for (const item of value) visit(item, key); }
+    else if (value && typeof value === "object") { for (const [name, item] of Object.entries(value)) visit(item, name); }
+    else if (typeof value === "string" && /^(?:officeholderId|personId)$/.test(key)) {
+      const state = /^(?:plural:([a-z]{2}):|([a-z]{2})-(?:legislature|general-court):)/i.exec(value);
+      for (const found of registryJurisdictions(state?.[1] ?? state?.[2])) states.add(found);
+    }
+    else if (typeof value === "string" && /^(?:states?|stateFips|state_fips|statefp|jurisdiction|ocdId|bodyId|divisionId|ocdDivisionId|placeId|scope)$/.test(key)) {
+      if (value === "ocd-division/country:us") for (const state of REGISTRY_STATES) states.add(state);
+      else if (/^(?:state|stateFips|state_fips|statefp)$/.test(key)&&/^\d{2}$/.test(value)&&FIPS_TO_STATE[value]) states.add(FIPS_TO_STATE[value].postal);
+      else for (const part of value.split("+")) for (const state of registryJurisdictions(part)) states.add(state);
+    }
+  };
+  for (const model of models) visit(model);
+  return [...states].sort();
+}
+
+function namedPublicationScope(scope: string, recordClass?: string): ReaderCacheScope | null {
   let decoded = scope;
   try { decoded = decodeURIComponent(scope); } catch { /* Retain the literal scope. */ }
   // These feed and vote publications have no reader response cache.
-  if (/(?:^|:)(?:govinfo|congress-api|regulations-gov)(?=:|$)/i.test(decoded)
-      || /roll-?calls?(?=:|$)/i.test(decoded)) return {};
-  if (decoded === "federal-supported" || /^US:people:/i.test(decoded)
-      || /^US:(?:current-congress-directory|state-legislator-member-offices)$/i.test(decoded)) return { nationalPeople: true };
-  const states = [...new Set(decoded.split("+").flatMap(part => registryJurisdictions(part)))];
-  const fema = /^openfema:([a-z]{2})(?=:|$)/i.exec(decoded)?.[1];
-  if (!states.length && fema) states.push(...registryJurisdictions(fema));
-  const family = /^source:derived:family:([a-z]{2})(?=:|$)/i.exec(decoded)?.[1];
-  if (!states.length && family) states.push(...registryJurisdictions(family));
-  // Shared curated facts can affect every state without sharing the raw-feed tag.
-  return states.length ? { states } : { states: [...REGISTRY_STATES] };
+  if (/(?:^|:)(?:govinfo|congress-api|regulations-gov|federal-register|senate-lda)(?=:|$)/i.test(decoded)
+      || /roll-?calls?(?=:|$)/i.test(decoded)
+      || /^(?:STATE_ROLL_CALL|STATE_LEGISLATOR_VOTES|FEDERAL_ROLL_CALL|FEDERAL_KEY_VOTE|DOTGOV_REFERENCE|OPERATIONAL_REFERENCE)$/.test(recordClass ?? "")
+      || /:(?:legiscan|openstates)-votes(?=:|$)/i.test(decoded)
+      || /^(?:federal-supported|campaign-money:hourly|US:reviewed-key-vote-selection:v1|US:reader-registry-runtime-bindings)$/.test(decoded)) return {};
+  if (/^US:people:/i.test(decoded)
+      || /^US:current-congress-directory$/i.test(decoded)) return { nationalPeople: true };
+  const states = [...new Set(decoded.split("+").flatMap(part => {
+    const direct = registryJurisdictions(part);
+    if (direct.length) return direct;
+    const money = /^(?:openfema|usaspending|federal-audit-clearinghouse|sam-gov-entities):([a-z]{2})(?=:|$)/i.exec(part)?.[1];
+    const family = /^source:derived:family:(?:US-)?([a-z]{2})(?=:|$)/i.exec(part)?.[1];
+    return registryJurisdictions(money ?? family);
+  }))];
+  if (states.length) return { states };
+  return null;
+}
+
+export function readerPublicationNeedsGeography(scope: string, recordClass?: string): boolean {
+  return namedPublicationScope(scope, recordClass) === null;
+}
+
+/** Only publications consumed by a saved reader answer invalidate that answer. */
+export function readerCacheScopeForPublication(scope: string, context: {
+  readonly recordClass?: string;
+  readonly readModels?: readonly unknown[];
+} = {}): ReaderCacheScope {
+  const named = namedPublicationScope(scope, context.recordClass);
+  if (named !== null) return named;
+  // A shared curated shelf may contain only a few states. Include its previous payload
+  // as well, so removing its last record for a state still invalidates that state's copy.
+  const footprint = publicationStates(context.readModels ?? []);
+  return footprint.length ? { states: footprint } : {};
 }
 
 /** Run after the database commit. Purge failure is visible without hiding the newly published fact. */
@@ -111,5 +153,5 @@ export async function readerCacheScopeForEntity(
   const states = registryJurisdictions(entityId);
   if (states.length) return { states };
   const [entity] = await query("SELECT state FROM entity WHERE id = $1", [entityId]);
-  return readerCacheScopeForPublication(String(entity?.state ?? "US"));
+  return entity?.state === "US" ? { nationalPeople: true } : readerCacheScopeForPublication(String(entity?.state ?? ""));
 }

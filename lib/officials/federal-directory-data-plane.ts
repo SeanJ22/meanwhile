@@ -10,7 +10,7 @@ import type { OfficeholderSet, SeatVacancy } from "./types.ts";
 import type { DirectoryFile } from "./directory.ts";
 import { CHAMBER_DIRECTORY_URLS } from "./chamber-directory.ts";
 import type { RosterChange } from "./roster-changes.ts";
-import { publishDirectoryOfficePoints, publishRosterOfficePoints, type OfficePointResolver } from "./office-points-publication.ts";
+import { publishFederalDirectoryOfficePoints, type OfficePointResolver } from "./office-points-publication.ts";
 
 export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
 export type FederalDirectoryState = typeof REGISTRY_STATES[number];
@@ -146,11 +146,8 @@ export async function federalDirectoryCandidate(input: {
     const raw = await holdRawCapture(input.vault, FEDERAL_DIRECTORY_SOURCE_ID, body, "text/plain");
     return { ...row, raw };
   }));
-  const roster = await publishRosterOfficePoints(input.projection.roster, input.prior?.roster ?? null, input.resolveOfficePoint);
-  const byMember = Object.fromEntries(await Promise.all(Object.entries(input.projection.directory.byMember).map(async ([id, entry]) => [id, {
-    ...entry, districtOffices: await publishDirectoryOfficePoints(entry.districtOffices, input.prior?.directory.byMember[id]?.districtOffices, input.resolveOfficePoint),
-  }])));
-  return heldDirectoryCandidate({ ...input, acquisitions: captures, projection: { ...input.projection, roster, directory: { ...input.projection.directory, byMember } } });
+  const projection = await publishFederalDirectoryOfficePoints(input.projection, input.prior, input.resolveOfficePoint);
+  return heldDirectoryCandidate({ ...input, acquisitions: captures, projection });
 }
 
 /** A place's candidate over captures already held in the vault. */

@@ -77,8 +77,25 @@ test("publication tags follow state scopes and encoded body partitions", () => {
   for (const scope of ["US-AZ:reader-registry-runtime", "source:derived:family:AZ", `source:ical:body:${encodeURIComponent(BODY)}`]) {
     assert.deepEqual(readerCacheScopeForPublication(scope), { states: ["AZ"] }, scope);
   }
-  assert.deepEqual(readerCacheScopeForPublication("US:state-legislator-member-offices"), { nationalPeople: true });
-  assert.deepEqual(readerCacheScopeForPublication("federal-supported"), { nationalPeople: true });
+  assert.deepEqual(readerCacheScopeForPublication("US:current-congress-directory"), { nationalPeople: true });
+  assert.deepEqual(readerCacheScopeForPublication("US:state-legislator-member-offices", {readModels:[{records:[{office:{state:"NJ"}}]}]}), {states:["NJ"]});
+  assert.deepEqual(readerCacheScopeForPublication("US:state-legislator-member-offices", {readModels:[{records:[{officeholderId:"plural:ca:one",office:{state:null,address:"State Capitol"}}]}]}), {states:["CA"]});
+  assert.deepEqual(readerCacheScopeForPublication("federal-supported"), {});
+});
+
+test("shared shelves purge only their actual current and removed geography; unknown scopes never mean every state", () => {
+  assert.deepEqual(readerCacheScopeForPublication("unrecognized:publication"), {});
+  assert.deepEqual(readerCacheScopeForPublication("US:meeting-source-wiring", {readModels:[
+    {records:[{bodyId:BODY}]}, {records:[{ocdId:"ocd-division/country:us/state:nh"}]},
+  ]}), {states:["AZ","NH"]});
+  assert.deepEqual(readerCacheScopeForPublication("US:zcta-geography-overlaps", {readModels:[{scopes:[{groupings:[{stateFips:"33"},{stateFips:"34"}]}]}]}), {states:["NH","NJ"]});
+  assert.deepEqual(readerCacheScopeForPublication("US:public-records", {readModels:[{records:[{ocdId:"ocd-division/country:us"}]}]}).states?.length, 56);
+  assert.deepEqual(readerCacheScopeForPublication("US-ID:legiscan-votes:v1", {recordClass:"STATE_ROLL_CALL"}), {});
+  assert.deepEqual(readerCacheScopeForPublication("source:derived:family:US-NH"), {states:["NH"]});
+  assert.deepEqual(readerCacheScopeForPublication("usaspending:DE"), {states:["DE"]});
+  assert.deepEqual(readerCacheScopeForPublication("openfema:NJ+US-NH:disasters"), {states:["NJ","NH"]});
+  for (const scope of ["federal-register:rules", "senate-lda:filing:abc", "campaign-money:hourly"])
+    assert.deepEqual(readerCacheScopeForPublication(scope), {});
 });
 
 test("a President-scope publication purges the tag carried by place pages in every state", async () => {
@@ -206,7 +223,7 @@ const claim = (): PublishInput => ({
   copy: { id: 1, finalUrl: "https://example.gov/council", text: "Alice Example 520-555-0100", fetchedAt: NOW, isArchive: false },
 });
 
-test("a live fact and unchanged confirmation clear their state's answers only after commit; refused and rolled-back claims do not", async t => {
+test("only a changed live fact clears its state's answers after commit; confirmations and rolled-back claims do not", async t => {
   const db = await seeded();
   t.after(() => db.pg.close());
   let committed = false;
@@ -225,11 +242,11 @@ test("a live fact and unchanged confirmation clear their state's answers only af
   };
   assert.equal((await publishClaim(tracked, claim(), clocks, NOW, { purge }) as { decision: string }).decision, "PUBLISH");
   assert.equal((await publishClaim(tracked, claim(), clocks, NOW, { purge }) as { decision: string }).decision, "CONFIRM");
-  assert.deepEqual(purges, [["reader-state:AZ"], ["reader-state:AZ"]]);
+  assert.deepEqual(purges, [["reader-state:AZ"]]);
   assert.ok("blank" in await publishClaim(tracked, { ...claim(), quote: "not on the page" }, clocks, NOW, { purge }));
   const failing: FactDb = { transaction: work => db.transaction(async query => { await work(query); throw new Error("commit failed"); }) };
   await assert.rejects(publishClaim(failing, claim(), clocks, NOW, { purge }), /commit failed/);
-  assert.equal(purges.length, 2);
+  assert.equal(purges.length, 1);
 });
 
 test("a departed roster member clears answers; an audited Box seat stays live for Sean", async t => {
@@ -266,7 +283,7 @@ test("a departed roster member clears answers; an audited Box seat stays live fo
   assert.equal(pulledPurges, 0);
 });
 
-test("native campaign-money writes, replacements and confirmations clear their state after commit", async t => {
+test("native campaign-money changes clear their state after commit; unchanged confirmations do not", async t => {
   const db = await factDb();
   t.after(() => db.pg.close());
   const resource = campaignFinanceSource("MN").resources[0];
@@ -284,5 +301,5 @@ test("native campaign-money writes, replacements and confirmations clear their s
   assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [record], NOW.toISOString(), { purge }), { written: 1, confirmed: 0 });
   assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [record], NOW.toISOString(), { purge }), { written: 0, confirmed: 1 });
   assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [{ ...record, title: "Updated report" }], NOW.toISOString(), { purge }), { written: 1, confirmed: 0 });
-  assert.equal(purges, 3);
+  assert.equal(purges, 2);
 });

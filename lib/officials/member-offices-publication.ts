@@ -19,7 +19,7 @@ import { readOpenStatesPeopleProjection, readOfficialStateLegislatorsProjection 
 import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
 import { sameNativePerson } from "./people-identity.ts";
 import { officeRecordsForHolder, OPEN_STATES_ORG, type MemberOfficeRecord } from "./member-offices.ts";
-import { publishDirectoryOfficePoints, type OfficePointResolver } from "./office-points-publication.ts";
+import { publishDirectoryOfficePoints, officePointSourceReview, type OfficePointResolver } from "./office-points-publication.ts";
 
 export const MEMBER_OFFICES_CONTRACT_ID = "member-offices" as const;
 
@@ -78,9 +78,13 @@ export async function publishMemberOffices(input: {
       // by the scoped people reader from that separately promoted source, never claimed by this archive.
       const native = reference.value.roster.officeholders.flatMap(holder => {
         const matches = read?.kind === "PROMOTED" || read?.kind === "BOOTSTRAP" ? read.value.roster.officeholders.filter(row => sameNativePerson(holder,row)) : [];
-        return officeRecordsForHolder(matches.length === 1 ? {...holder,id:matches[0].id} : holder);
+        return officeRecordsForHolder(matches.length === 1 ? {...holder,id:matches[0].id} : holder,{includePointEvidence:true});
       });
       const points = await publishDirectoryOfficePoints(native.map(row=>row.office), [...prior.values()].map(row=>row.office), input.resolveOfficePoint);
+      for(const office of points)if(office.geocodedPoint){
+        const review=officePointSourceReview(office.geocodedPoint);
+        if(review)sources.push(review);
+      }
       const rows = native.map((record, index)=>({ ...record, office: points[index] })).map(row=>{
         const held = prior.get(row.id);
         return held && withoutCollectedAt(held) === withoutCollectedAt(row) ? {...row,collectedAt:held.collectedAt} : row;
@@ -103,12 +107,13 @@ export async function publishMemberOffices(input: {
     const key = `${source.finalUrl}\n${source.rawHash}`;
     uniqueSources.set(key,mergeManualSourceCopies(uniqueSources.get(key),source));
   }
+  const publicationAt = [input.now,...sources.map(row=>row.retrievedAt)].sort().at(-1)!;
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor({
-    contractId: MEMBER_OFFICES_CONTRACT_ID, version: input.now, sourceThrough: sources.map(row=>row.retrievedAt).sort().at(-1) ?? input.now,
-    sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "code:member-offices-publication", sources: [...uniqueSources.values()] },
+    contractId: MEMBER_OFFICES_CONTRACT_ID, version: publicationAt, sourceThrough: sources.map(row=>row.retrievedAt).sort().at(-1) ?? input.now,
+    sourceReceipt: { contractVersion: 1, reviewedAt: publicationAt, reviewedBy: "code:member-offices-publication", sources: [...uniqueSources.values()] },
     payload: { kind: MEMBER_OFFICES_CONTRACT_ID, records: records as unknown as readonly (Record<string, unknown> & { id: string })[] },
   }, input.store, input.now);
-  const outcome = await processRegisteredManualCandidate(input.store, MEMBER_OFFICES_CONTRACT_ID, candidate, input.now, expectedBaseVersionId);
+  const outcome = await processRegisteredManualCandidate(input.store, MEMBER_OFFICES_CONTRACT_ID, candidate, publicationAt, expectedBaseVersionId);
   return {
     candidateId: outcome.confirmed ? outcome.candidate.candidate.id : candidate.id,
     promotedVersionId: outcome.promoted?.versionId ?? null,

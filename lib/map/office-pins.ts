@@ -79,7 +79,8 @@ export function directoryOffices(owner: OfficeOwner, directory: MemberDirectory)
       officeKind: "DISTRICT", office, official: detail?.official ?? false,
       sourceUrl: detail?.sourceUrl ?? directory.source?.repoUrl ?? "", sourceOrg: source.sourceOrg, collectedAt: source.collectedAt });
     if (!location || WASHINGTON.test(location.address)) return [];
-    const coordinate = office.lat !== null && office.lng !== null ? { lat: office.lat, lng: office.lng }
+    const coordinate = office.lat !== null && office.lng !== null && Number.isFinite(office.lat) && Number.isFinite(office.lng)
+      && Math.abs(office.lat) <= 90 && Math.abs(office.lng) <= 180 ? { lat: office.lat, lng: office.lng }
       : office.geocodedPoint?.address === location.address ? office.geocodedPoint : null;
     const point = coordinate && Number.isFinite(coordinate.lat) && Number.isFinite(coordinate.lng)
       && Math.abs(coordinate.lat) <= 90 && Math.abs(coordinate.lng) <= 180 ? { point: { lat: coordinate.lat, lng: coordinate.lng } } : {};

@@ -1,11 +1,19 @@
 # River status
 
-build_state: RELEASES 72 TO 82 LIVE (main f44f9a18f); VICE PRESIDENT STILL NOT LIVE (ds-01); MEETINGS READBACK WITH CAL-01; WAITING ON NEW READYS
+build_state: RELEASES 72 TO 84 LIVE (main c88037bb9); RUNNER STILL ON RELEASE 82; VICE PRESIDENT AND LEGISTAR NAMES NOT YET VERIFIED LIVE; CAL-01 RETURNED TO MERGE MAIN
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
-heartbeat: 2026-10-23T00:43:12Z
+heartbeat: 2026-10-23T01:22:00Z
+
+## Releases 83 and 84 shipped (Oct 22, 9:25 PM Phoenix / 12:25 AM EDT Oct 23)
+
+- Release 83 (ds-01 NE-01, with SL-02 underneath it): PR #793, merged 035a48044 at 8:13 PM Phoenix; gates 8 of 8 (9,241 pass); observer green 8:23 PM. NE-01 is ds-01's answer to my Vice President return: the White House read never started because the people lane queued behind the meeting reads for memory; the fix starts it first in the next ordinary pass after a deploy.
+- Release 84 (pm-01 R3-LEGISTAR-MEMBERS, board names): PR #794, merged c88037bb9 at 9:08 PM Phoenix; gates 8 of 8 (9,247 pass); observer green 9:18 PM. Boards outside the registry now get a verified, sourced name (Colorado Springs' council had 9 verified members and no name, so ZIP 80903 showed 0 bodies). 130 of 182 readable nameless production bodies get names on replay.
+- Neither is verified on the live page yet: the runner (the part that reads White House and Legistar sources) was still on release 82 (f44f9a1) at 6:16 PM Phoenix, over an hour after release 83 deployed (earlier follows took 10 to 29 minutes). Vice President in AZ, TX, OH, CA state data: still 0 at 6:15 PM Phoenix. Checks run as soon as the runner is on release 83 or 84.
+- cal-01: its first READY (6f7403b1b) failed the civic-data firewall (contract-handoff.ts writes a temp file); its second READY (1ac756930, clear release gates and unblock fresh fact delivery) clears the firewall but branched before releases 83 and 84 and conflicts with them in three files. I resolved it and passed 124 focused tests, but River cannot ship a hand-resolved merge for a lone lane, so cal-01 is asked to merge main and post a new READY (returns/cal-01.md has the five-point resolution).
+- Runner at 5:56 PM Phoenix (routine pass on f44f9a1): 206 task failures, no Netlify Blobs error. Box built 6,217, not growing since release 82.
 
 ## Release 82 (AG-01) shipped (Oct 22, 3:55 PM Phoenix / 6:55 PM EDT)
 

@@ -4053,5 +4053,17 @@
     "tested_sha": "cd82fdc4a96ea9f417b1c990658850c3687373b5",
     "gates": "pass",
     "at": "2026-10-23T17:19:27Z"
+  },
+  {
+    "lane": "ballot-parity-fx",
+    "steps": [
+      "BL-21-FX"
+    ],
+    "ready_sha": "41f20be9a620e22b911b6ce9546655a492de4b25",
+    "merge_sha": "5ddf41bb803664bcbadabab00ec61c682228ce42",
+    "river_sha": "5ddf41bb803664bcbadabab00ec61c682228ce42",
+    "tested_sha": "5ddf41bb803664bcbadabab00ec61c682228ce42",
+    "gates": "pass",
+    "at": "2026-10-23T19:14:26Z"
   }
 ]

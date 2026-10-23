@@ -367,3 +367,4 @@ One line per batch folded into river.
 - 2026-10-23T16:09:15Z · rn-01-fx · RN-01 · ready ecfc8636fb3b · river 171c09b52f07 · pnpm gates pass on 171c09b52f07
 - 2026-10-23T17:19:27Z · vs-07-fx · VS-07 · ready f48331d9dc91 · river cd82fdc4a96e · pnpm gates pass on cd82fdc4a96e
 - 2026-10-23T17:19:27Z · pb-03-fx · PB-03 · ready e6514658370f · river cd82fdc4a96e · pnpm gates pass on cd82fdc4a96e
+- 2026-10-23T19:14:26Z · ballot-parity-fx · BL-21-FX · ready 41f20be9a620 · river 5ddf41bb8036 · pnpm gates pass on 5ddf41bb8036

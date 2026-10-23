@@ -83,6 +83,21 @@ test("federal directory, optional portraits and registration hydrate by their ex
     await assert.rejects(readStateReaderPromotion(query, "FEDERAL_DIRECTORY", scope), /STATE_READER_SCOPE_INVALID/);
 });
 
+test("local election offices hydrate their exact state pointer without place slicing", async () => {
+  const recordClass = "CURATED_READER_RECORD", scope = "local-election-offices:US-WI";
+  const payload = { state: "WI", offices: [{ id: "town-clerk", divisionId: "ocd-division/country:us/state:wi/county:adams/place:adams_town" }] }, source = row(payload);
+  Object.assign(source.roots.projection, { recordClass, scope, key: `${recordClass}:${scope}` });
+  const read = await readStateReaderPromotion(async (sql, params) => {
+    assert.deepEqual(params, [`${recordClass}:${scope}`]);
+    assert.doesNotMatch(sql, /reader_(?:place|inventory)_payload/);
+    return [source];
+  }, recordClass, scope);
+  assert.equal(read?.projection.payload, payload);
+  const query = async () => { throw new Error("SQL must not run"); };
+  await assert.rejects(readStateReaderPromotion(query, recordClass, "local-election-offices:US"), /STATE_READER_SCOPE_INVALID/);
+  await assert.rejects(readStateReaderPromotion(query, recordClass, "local-election-offices:US-XX"), /STATE_READER_SCOPE_INVALID/);
+});
+
 test("changed proof, missing parts, cycles and changed part contents cannot serve", async () => {
   const proof = row({id:"held"}); proof.proof_valid=false;
   await assert.rejects(readStateReaderPromotion(async()=>[proof],recordClass,scope),/STATE_READER_PUBLISHED_PROOF_INVALID/);

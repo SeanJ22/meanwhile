@@ -479,6 +479,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
       ].sort((a, b) => a.key.localeCompare(b.key));
     case "CURATED_READER_RECORD":
       return [
+        ...(root.formatVersion === 1 && typeof root.state === "string" && Array.isArray(root.offices) ? keyed("local-election-office", root.offices, ["id"]) : []),
         ...keyed("curated-reader", [...array(root.records), ...(root.kind === "open-data" ? [...array(root.reports),...array(root.partitions)] : [])], ["id"]),
         ...(root.kind === "meeting-doors" ? keyed("meeting-door", array(root.doors), ["doorId"]) : []),
       ].sort((left, right) => left.key.localeCompare(right.key));

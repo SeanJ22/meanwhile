@@ -70,6 +70,7 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (contract.sourceId === "local-election-offices") return "lib/reference/local-election-offices.ts#readLocalElectionOffices";
   if (contract.id === "campaign-money") return "lib/funding/campaign-finance-reader.ts#readCampaignMoneyWork";
   if (parseStateBallotContractId(contract.id)) return "lib/civic-data/read-model.ts#readPromotedCivicData";
   if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/civic-data/read-model.ts#readStateRegistryRuntimeProjection";
@@ -141,6 +142,12 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (contract.sourceId === "local-election-offices") {
+      const { readLocalElectionOffices } = await import("../reference/local-election-offices.ts");
+      const state = /^local-election-offices:US-([A-Z]{2})$/.exec(contract.scope)?.[1];
+      if (!state || options.scope !== undefined && options.scope !== contract.scope) return fail(verifierId, "Local election-office readback requires its exact state scope.");
+      return verifyExactVersion(verifierId, await readLocalElectionOffices(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "local election offices");
+    }
     if (contract.id === "campaign-money") {
       const { readCampaignMoneyWork } = await import("../funding/campaign-finance-reader.ts");
       return verifyExactVersion(verifierId, await readCampaignMoneyWork(

@@ -16,6 +16,7 @@ import { CAMPAIGN_FINANCE_PARSER, CAMPAIGN_MONEY_SOURCE_ID, CAMPAIGN_MONEY_SCOPE
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
+import { LOCAL_ELECTION_OFFICES_SOURCE_ID, LOCAL_ELECTION_OFFICES_RECORD_CLASS, LOCAL_ELECTION_OFFICES_PARSER_VERSION, LOCAL_ELECTION_OFFICES_STATES, LOCAL_ELECTION_OFFICES_CADENCE, localElectionOfficesScope, localElectionOfficesContractId } from "../sources/local-election-offices/targets.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -626,6 +627,20 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     autoPromotable: true, fanOut: true, classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: ["tests/fixtures/google-civic/elections.json", "tests/fixtures/google-civic/az-voterinfo.json", "tests/fixtures/google-civic/mi-voterinfo.json", "tests/fixtures/google-civic/va-voterinfo.json"],
   },
+  ...LOCAL_ELECTION_OFFICES_STATES.map((state): RoutineSourceContract => ({
+    id: localElectionOfficesContractId(state), sourceId: LOCAL_ELECTION_OFFICES_SOURCE_ID,
+    recordClass: LOCAL_ELECTION_OFFICES_RECORD_CLASS, scope: localElectionOfficesScope(state),
+    acquisitionFailureDomain: `routine-source:local-election-offices:${state.toLowerCase()}`,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/local-election-offices-refresh.mts", "--promote", `--state=${state.toLowerCase()}`] },
+    parserNormalizerVersion: LOCAL_ELECTION_OFFICES_PARSER_VERSION,
+    cadence: LOCAL_ELECTION_OFFICES_CADENCE,
+    retry: { afterMs: HOUR, description: "Retry a failed directory or local office page in one hour; retain independently verified contact fields" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: LOCAL_ELECTION_OFFICES_SOURCE_ID },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: "local-election-offices", consumers: ["Where can I vote?", "Admin"] },
+    lkgBehavior: "A failed directory or office page preserves the last verified offices and contact fields. Missing fields remain standing acquisition work; omitted rows never imply an office closed.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  })),
   ...PEOPLE_SOURCE_CONTRACTS,
   ...OPEN_DATA_SOURCES.map((sourceId): RoutineSourceContract => ({
     id: sourceId, sourceId, recordClass: "CURATED_READER_RECORD", scope: `${sourceId}:national`,

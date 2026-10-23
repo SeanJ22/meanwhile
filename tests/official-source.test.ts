@@ -30,3 +30,17 @@ test("the linking page must itself be official, directly or through its own link
   const portal = { url: "https://sierravista.legistar.com/Calendar.aspx", html: `<a href="https://sierravista.granicus.com/player/clip/9">video</a>`, linkingPage: cityPage };
   assert.equal(isOfficialSource("https://sierravista.granicus.com/player/clip/9", portal), true);
 });
+
+test("a native government JSON directory's explicit website link establishes its publisher", () => {
+  const directory = { url: "https://www.sos.mo.gov/elections/authority-directory", html: JSON.stringify([
+    { COUNTY_NAME: "Kansas City", WEBSITE: "https://www.kceb.org" },
+    { COUNTY_NAME: "Example", website: { Url: "https://elections.example.us/" } },
+    { description: "https://unrelated.example.org", email: "person@example.com" },
+  ]) };
+  assert.equal(isOfficialSource("https://kceb.org/elections/poll-locations/", directory), true);
+  assert.equal(isOfficialSource("https://elections.example.us/", directory), true);
+  assert.equal(isOfficialSource("https://unrelated.example.org/", directory), false);
+  assert.equal(isOfficialSource("https://kceb.org.example.com/", directory), false);
+  assert.equal(isOfficialSource("https://kceb.org/", { ...directory, url: "https://unverified.example.com/" }), false);
+  assert.equal(isOfficialSource("https://kceb.org/", { ...directory, html: 'Text mentioning {"WEBSITE":"https://www.kceb.org"}' }), false);
+});

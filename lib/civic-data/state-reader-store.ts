@@ -84,10 +84,12 @@ export async function readStateReaderPromotion<T>(query: Query, recordClass: Rou
   const federalState = /^US-([A-Z]{2}):current-congress-directory$/.exec(scope)?.[1];
   const portraitState = /^US-([A-Z]{2}):people:portraits:v1$/.exec(scope)?.[1];
   const registrationState = /^US-([A-Z]{2}):registration:v1$/.exec(scope)?.[1];
+  const electionOfficesState = /^local-election-offices:US-([A-Z]{2})$/.exec(scope)?.[1];
   const state = recordClass === "REGISTRY_RUNTIME_BINDING" ? stateFromRegistryRuntimeScope(scope)
     : recordClass === "FEDERAL_DIRECTORY" && federalState ? REGISTRY_STATES.some(state => state === federalState)
     : recordClass === "STATE_LEGISLATOR" && portraitState ? REGISTRY_STATES.some(state => state === portraitState)
     : recordClass === "REGISTRATION" && registrationState ? REGISTRY_STATES.some(state => state === registrationState)
+    : recordClass === "CURATED_READER_RECORD" && electionOfficesState ? REGISTRY_STATES.some(state => state === electionOfficesState)
     : STATE_BALLOT_FAMILIES.some(family => classes[family] === recordClass && stateFromBallotScope(scope, family));
   if (!state) throw new Error(`STATE_READER_SCOPE_INVALID:${recordClass}:${scope}`);
   const rows = await query(READ_STATE, [`${recordClass}:${scope}`]);

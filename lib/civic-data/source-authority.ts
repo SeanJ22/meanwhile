@@ -14,6 +14,7 @@ import {
 
 export interface OfficialLinkingPage {
   readonly url: string;
+  /** Saved publisher response: HTML or a native JSON directory with explicit link fields. */
   readonly html: string;
   readonly linkingPage?: OfficialLinkingPage | null;
 }
@@ -30,6 +31,31 @@ const hostOf = (url: string, base?: string): string | null => {
   return base === undefined ? null : hostOf(base);
 };
 
+const jsonLinkHosts = new WeakMap<OfficialLinkingPage, ReadonlySet<string>>();
+function publishedJsonLinkHosts(page: OfficialLinkingPage): ReadonlySet<string> {
+  const cached = jsonLinkHosts.get(page);
+  if (cached) return cached;
+  const hosts = new Set<string>();
+  if (/^\s*[\[{]/.test(page.html)) {
+    try {
+      const pending: unknown[] = [JSON.parse(page.html)];
+      while (pending.length) {
+        const value = pending.pop();
+        if (!value || typeof value !== "object") continue;
+        for (const [key, child] of Object.entries(value)) {
+          if (/^(?:website|website_?url|web_?url|href|url)$/i.test(key) && typeof child === "string") {
+            const host = hostOf(child);
+            if (host) hosts.add(host);
+          }
+          if (child && typeof child === "object") pending.push(child);
+        }
+      }
+    } catch { /* Text mentioning a JSON-looking URL does not establish a published directory link. */ }
+  }
+  jsonLinkHosts.set(page, hosts);
+  return hosts;
+}
+
 /** Any `.gov` site is official; any other site is official once an official government page links to it. No host list. */
 export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null): boolean {
   const host = hostOf(url);
@@ -39,7 +65,7 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
   for (const match of linkingPage.html.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
     if (hostOf((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), linkingPage.url) === host) return true;
   }
-  return false;
+  return publishedJsonLinkHosts(linkingPage).has(host);
 }
 
 function peopleSourceAuthority(input: {
@@ -87,6 +113,18 @@ function sharedAuthority(people: SourceAuthorityContract, federal: SourceAuthori
 }
 
 const AUTHORITIES = {
+  "local-election-offices": {
+    id: "local-election-offices", publisher: "State election authorities' local-office directories and each local office's own election pages",
+    trust: "T2_AUTHORITATIVE_DOCUMENT", sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: ["https://", "http://"],
+    jurisdictions: Object.values(FIPS_TO_STATE).filter(state => state.prefix === "state" || state.postal === "DC").map(state => `US-${state.postal}`),
+    recordClasses: ["CURATED_READER_RECORD"],
+    competentFacts: ["directory-listed local election office", "office address", "phone", "email", "office hours", "official website", "polling-place lookup link"],
+    expectedIdentifierKeys: ["office_id"], expectedTemporalFields: ["checked_at"],
+    horizonSemantics: "Each office belongs to the jurisdiction in its state's published directory. Each field is checked against its saved page. Office hours are distinct from polling hours. Missing fields and jurisdictions stay open; zero rows never establish absence.",
+    parserVersion: "local-election-offices/1", freshnessExpectation: "Weekly through November 3, 2026; monthly afterward. Failed pages retain independently verified fields.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
+  },
   ...CAMPAIGN_FINANCE_AUTHORITIES,
   ...FEDERAL_MONEY_AUTHORITIES,
   "google-civic-voterinfo": {

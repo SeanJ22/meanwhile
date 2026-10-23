@@ -66,6 +66,8 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   SELECT unnest($2::text[]) AS id
   UNION SELECT split_part(id,'#',1) FROM unnest($3::text[]) body(id) WHERE $9::boolean AND id LIKE 'ocd-division/%'
   UNION SELECT place_id FROM entity_place WHERE $9::boolean AND entity_id=ANY($3::text[])
+), named_places AS MATERIALIZED (
+  SELECT unnest($10::text[]) AS id
 ), registration AS MATERIALIZED (
   SELECT payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), government_inventory AS MATERIALIZED (
@@ -384,8 +386,9 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     'domain',d->>'domain','website','https://'||(d->>'domain'),'sourceUrl',source->>'url','checkedAt',source->>'readAt'))
     FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) ELSE '[]'::jsonb END AS governments,
   CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
-    WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places))),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
-  coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('linked',b.id IN (SELECT id FROM linked_bodies),'division',coalesce(
+    WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR d->>'ocdId' IN (SELECT id FROM named_places)),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
+  coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('placed',b.id IN (SELECT id FROM linked_bodies)
+    OR EXISTS (SELECT 1 FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),'division',coalesce(
     (SELECT l.division FROM linked_bodies l WHERE l.id=b.id),
     (SELECT ep.place_id FROM entity_place ep WHERE ep.entity_id=b.id ORDER BY ep.place_id LIMIT 1),
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
@@ -427,7 +430,9 @@ type PlaceInput = { readonly state: string; readonly divisionIds: readonly strin
   readonly bodyFactsOnly?: boolean;
   /** Load these sittings and their merge/identity/URL context; ordinary body reads retain the complete calendar. */
   readonly meetingIds?: readonly string[];
-  readonly neighbors?: boolean };
+  readonly neighbors?: boolean;
+  /** Divisions read only for their names: the ones reaching into a ZIP where few of its residents live. */
+  readonly namedDivisionIds?: readonly string[] };
 const places = serverReaderValue("place-inflight", () => new Map<string, Promise<PlacePackage>>());
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
 
@@ -453,7 +458,8 @@ export function readPlacePackageHttp(input: PlaceInput): Promise<PlacePackage> {
 function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<PlacePackage> {
   const selected = { state: input.state.toUpperCase(), divisionIds: [...new Set(input.divisionIds)].sort(), bodyIds: [...new Set(input.bodyIds ?? [])].sort(),
     allBodies: input.allBodies ?? false, includeHistory: input.includeHistory ?? false, includeAgenda: input.includeAgenda ?? false, bodyFactsOnly: input.bodyFactsOnly ?? false,
-    meetingIds: input.meetingIds ? [...new Set(input.meetingIds)].sort() : undefined,neighbors:input.neighbors ?? false };
+    meetingIds: input.meetingIds ? [...new Set(input.meetingIds)].sort() : undefined,neighbors:input.neighbors ?? false,
+    namedDivisionIds: [...new Set(input.namedDivisionIds ?? [])].sort() };
   const key = JSON.stringify(selected), selection = currentReaderSelection();
   let request = selection ? requests.get(selection) : undefined;
   if (selection && !request) { request = new Map(); requests.set(selection, request); }
@@ -473,7 +479,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   const state = input.state.toUpperCase();
   const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
   const [row] = await query(input.bodyFactsOnly ? BODY_FACTS_PACKAGE_SQL : PLACE_PACKAGE_SQL, [state, input.divisionIds, input.bodyIds ?? [], stateRoot,
-    input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? false,input.meetingIds ?? null,input.neighbors ?? false]);
+    input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? false,input.meetingIds ?? null,input.neighbors ?? false,input.namedDivisionIds ?? []]);
   if (!row) throw new Error("PLACE_PACKAGE_READ_FAILED");
   const divisionIds = row.division_ids as string[] | undefined ?? input.divisionIds;
   const entities = row.entities as Row[], rawSittings = row.sittings as Row[];
@@ -482,7 +488,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   const sittings = sittingFactsFromRows(rawSittings), disposition = new Map(dispositions.map(d => [d.sourceId,d]));
   const bodies: BodyFacts[] = entities.map(e => {
     const id = String(e.id), own = roster.get(id) ?? null;
-    return { id, division: String(e.division), fields: fields[id] || e.linked === true ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
+    return { id, division: String(e.division), fields: fields[id] || (e.placed === true && e.division !== stateRoot) ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [] };
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });

@@ -56,6 +56,8 @@ test("every ZIP the national lattice sampled is in exactly its prefix's shard, a
       assert.ok(refs.length > 0 && refs.every((i) => Number.isInteger(i) && i >= 0 && i < shard.divisions.length), `${zip}'s references are in range`);
       for (const i of shard.partial[zip] ?? []) assert.ok(refs.includes(i), `${zip}: a partial division is one of its divisions`);
       assert.ok((shard.zipSamples[zip] ?? 0) > 0, `${zip} carries its sample total`);
+      const residents = (shard as Shard & { residents?: Record<string, number[]> }).residents?.[zip];
+      if (residents) assert.equal(residents.length, refs.length, `${zip}: one resident count per division`);
     }
   }
   assert.equal(seen.size, expected.length);

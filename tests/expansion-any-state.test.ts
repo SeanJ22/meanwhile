@@ -272,7 +272,9 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(slice.kind, "HELD");
   if (slice.kind !== "HELD") return;
   const preview = registrationGovernmentsPlaced(codes, slice.value);
-  assert.deepEqual(preview.certain, [COLUMBUS, "oh:county:county-of-franklin"], "only governments with qualified native associations enter this held geometry");
+  assert.deepEqual(preview.certain, [COLUMBUS, "oh:county:county-of-franklin", "oh:special:columbus-and-franklin-county-metropolitan-park-district",
+    "oh:special:columbus-franklin-county-finance-authority", "oh:special:franklin-county-transportation-improvement-district"],
+    "only governments with qualified associations enter this held geometry, the districts named for the county among them");
   assert.ok(slice.value.every(g => g.bodyId === null), "registration does not manufacture governing bodies");
   for (const id of ["oh:county:county-of-franklin", COLUMBUS]) assert.ok(preview.certain.includes(id), `${id} is in the preview`);
   const sentence = stateSendPreviewSentence({ kind: "REGISTRATION", state: "OH", versionId, governments: preview.certain, edge: preview.edge });

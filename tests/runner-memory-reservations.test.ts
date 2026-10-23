@@ -1,10 +1,44 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import ts from "typescript";
 import { CALENDAR_READ_PEAK_MIB, memoryReading, RESEARCH_PARENT_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, routineProcessSlots,
   WORKER_ENTRY_PEAK_MIB, workerJobType, workerMemoryHost, workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 
 const mib = 1024 ** 2;
+
+test("the runner forwards ordered memory reservations without losing a catch-up read's earlier deadline", async () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const start = source.indexOf("async function acquireChildMemory(");
+  const end = source.indexOf("\nfunction releaseChildMemory(", start);
+  assert.ok(start >= 0 && end > start);
+  const requests: { deadline: number; order: unknown }[] = [];
+  const observed: number[] = [];
+  const slots = { acquire: async (_entry: string, deadline: number, order: unknown) => {
+    requests.push({ deadline, order });
+    return Object.assign(() => {}, { observe: (pid: number) => observed.push(pid) });
+  } };
+  const repairDeadline = Date.now() + 300_000, launchDeadline = Date.now() + 600_000;
+  const started = new Set<string>(), ran = new Set<string>();
+  const acquire = new Function("routineMemorySlots", "PASS_REPAIR_DEADLINE_MS", "PASS_LAUNCH_DEADLINE_MS", "ROUTINE_CHILD_TIMEOUT_MS",
+    "childMemoryReleases", "startedSourceChildren", "ranThisPass",
+    ts.transpileModule(source.slice(start, end), { compilerOptions: { target: ts.ScriptTarget.ESNext, module: ts.ModuleKind.ESNext } }).outputText + "\nreturn acquireChildMemory;")(
+    slots, repairDeadline, launchDeadline, 900_000, new Map(), started, ran) as (...args: unknown[]) => Promise<void>;
+  const order = { priority: 2, hold: true };
+  const ordinary = { id: "state", args: ["scripts/ingest.ts"] };
+  await acquire(ordinary, ["board"], undefined, order);
+  const catchup = { id: "catchup", args: ["scripts/ingest.ts"], onStarted: undefined as ((pid: number) => void) | undefined };
+  const earlierDeadline = Date.now() + 5_000;
+  await acquire(catchup, ["catchup-board"], earlierDeadline, order);
+  await acquire({ id: "repair", args: ["scripts/routine-civic-data-reader-repair.mts"] });
+  assert.deepEqual(requests, [
+    { deadline: launchDeadline, order }, { deadline: earlierDeadline, order }, { deadline: repairDeadline, order: undefined },
+  ]);
+  catchup.onStarted?.(123);
+  assert.deepEqual([...ran], ["catchup-board"]);
+  assert.deepEqual([...started], ["catchup", "catchup-board"]);
+  assert.deepEqual(observed, [123]);
+});
 
 test("the round supervisor cannot reserve the state planner's old full research peak a second time", () => {
   const source = readFileSync("scripts/freshness-shadow.mts", "utf8");

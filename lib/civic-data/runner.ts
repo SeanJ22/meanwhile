@@ -233,6 +233,27 @@ export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number;
     .map(({ candidate }) => candidate);
 }
 
+/**
+ * A serial lane runs one child at a time, so it can hold only one memory slot: its reads start ahead of the rest of
+ * the pass instead of waiting behind it. Inside a lane, work its current parser has never tried goes first, then the
+ * longest owed, so a lane whose earlier reads keep failing still reaches a read its daily cadence owes.
+ */
+export function routineSerialLanesFirst<T extends {
+  readonly task: Pick<RoutineSourceTask, "command">; readonly baselineOwed?: boolean; readonly lastConsideredAt?: string | null;
+}>(ordered: readonly T[]): T[] {
+  const lane = ordered.filter(candidate => routineSerialLane(candidate.task.command) !== undefined);
+  if (!lane.length) return [...ordered];
+  const fresh = (candidate: T) => candidate.baselineOwed === true && !candidate.lastConsideredAt ? 0 : 1;
+  const considered = (candidate: T) => {
+    const at = Date.parse(candidate.lastConsideredAt ?? "");
+    return Number.isFinite(at) ? at : Number.NEGATIVE_INFINITY;
+  };
+  const position = new Map(lane.map((candidate, index) => [candidate, index]));
+  const older = (left: T, right: T) => fresh(left) === 0 ? 0 : Math.sign(considered(left) - considered(right)) || 0;
+  const sorted = [...lane].sort((left, right) => fresh(left) - fresh(right) || older(left, right) || position.get(left)! - position.get(right)!);
+  return [...sorted, ...ordered.filter(candidate => routineSerialLane(candidate.task.command) === undefined)];
+}
+
 export function routineFailureDomainRotationSeed(startedAt: string): number {
   const parsed = Date.parse(startedAt);
   if (!Number.isFinite(parsed) || new Date(parsed).toISOString() !== startedAt) {

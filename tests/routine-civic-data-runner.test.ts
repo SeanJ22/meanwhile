@@ -90,7 +90,7 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
   const lines: string[] = [];
   const context = {
     laneLastEndedMs: new Map(), unsettledSourceRuns: new Set<string>(),
-    startedSourceChildren: new Set(), attempted: 1,
+    startedSourceChildren: new Set(), attempted: 1, notStarted: [] as string[],
     supervisorFailures: failures,
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
     safeFailure: (message: string) => message,
@@ -121,6 +121,7 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     t.diagnostic(JSON.stringify({ supervisorFailures: failures.length, progress, lines, attempted: context.attempted }));
     assert.equal(failures.length, 0);
     assert.deepEqual(progress, ["QUEUED"]);
+    assert.ok(context.notStarted.includes(id), "the digest names the read that did not start");
     assert.equal(context.attempted, 0);
     assert.equal(lines.some(line => line.includes("RECEIPT_COUNT_INVALID")), false);
     assert.ok(lines.some(line => line.startsWith(`RCD_DEFER ${id}: WORKER_MEMORY_DEADLINE`)));
@@ -133,6 +134,7 @@ test("a single calendar child explicitly deferred before acquisition stays owed 
   const failures: unknown[] = [], lines: string[] = [];
   const context = {
     laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([id]), startedSourceChildren: new Set([id]),
+    notStarted: [] as string[],
     routineDeferral, stateCalendarMemberResults, attempted: 1, supervisorFailures: failures,
     safeFailure: String, console: { log: (line: string) => lines.push(line) },
     parseMeetingPartitionRunnerReceipts: () => { throw Error("deferred work must not need a receipt"); },
@@ -146,6 +148,7 @@ test("a single calendar child explicitly deferred before acquisition stays owed 
   });
   assert.equal(context.attempted, 0);
   assert.equal(context.unsettledSourceRuns.size, 0);
+  assert.deepEqual(context.notStarted, [id]);
   assert.equal(failures.length, 0);
   assert.match(lines[0], /RCD_DEFER .*not started before the pass deadline.*source work remains owed/);
 });
@@ -1557,7 +1560,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
 
-  assert.match(runner, /for \(const \{ task \} of ballotPublicationLaunchOrder\(placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of routineSerialLanesFirst\(ballotPublicationLaunchOrder\(placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);

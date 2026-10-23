@@ -477,6 +477,12 @@ export async function readerDivisionIdsAt(lat: number, lng: number): Promise<str
   return divisionIdsAt([lng, lat], await resolverGeometry(state ? [state] : selectedRegistryStates()));
 }
 
+/** Special districts and tribal areas at a point: territories the Census geocoder does not report. */
+export async function territoryDivisionsAt(lat: number, lng: number): Promise<Division[]> {
+  const ids = (await readerDivisionIdsAt(lat, lng)).filter(id => /\/(?:special_district|aiannh):/.test(id));
+  return ids.length ? divisionsByOcdIds(ids) : [];
+}
+
 export async function divisionsForCensusGeographies(geographies: CensusGeographies, selection: GeographySelection, vintage: string,
   geographyVintages: Readonly<Record<string, string>>): Promise<Division[]> {
   const rows = divisionsFromCensusGeographies(geographies, selection,

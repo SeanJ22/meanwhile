@@ -19,7 +19,7 @@ test("place reads preserve the migrated state type, use the existing one-shot cl
   try{
     await pg.exec("SET enable_seqscan=off");
     const plan=await pg.query<Record<string,unknown>>(`EXPLAIN (FORMAT JSON) ${PLACE_PACKAGE_SQL}`,
-      ["AZ",input.divisionIds,[],"ocd-division/country:us/state:az",false,false,false,null,false]);
+      ["AZ",input.divisionIds,[],"ocd-division/country:us/state:az",false,false,false,null,false,[]]);
     assert.ok(!JSON.stringify(plan.rows).includes("(state)::text"),"a text comparison prevents the real char(2) state index from qualifying the read");
     await pg.exec("RESET enable_seqscan");
     installFactReader(async(text,params=[])=>{reads++;await held;return(await pg.query<Record<string,unknown>>(text,[...params])).rows;});

@@ -58,6 +58,7 @@ import {
   routineTaskSelection,
   routineDeferral,
   routineSerialLane,
+  routineSerialLanesFirst,
   ROUTINE_PASS_BUDGET_MS,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
@@ -176,7 +177,7 @@ import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { sharedScoutBrowser } from "./scout-browse.mts";
-import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { routineProcessSlots, type WorkerMemoryOrder } from "../lib/control-plane/workers/worker-slots.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { childCrash, childFatalLine, installFatalLine } from "../lib/ops/fatal-line.ts";
 import {
@@ -291,10 +292,10 @@ const childMemoryReleases = new Map<string, () => void>();
 const startedSourceChildren = new Set<string>();
 /** Every child this pass started: what it ran is what its edge publish carries. */
 const ranThisPass = new Set<string>();
-async function acquireChildMemory(command: BoundedChildCommand, ran: readonly string[] = [command.id], deadlineOverrideMs?: number): Promise<void> {
+async function acquireChildMemory(command: BoundedChildCommand, ran: readonly string[] = [command.id], deadlineOverrideMs?: number, order?: WorkerMemoryOrder): Promise<void> {
   const script = command.args.find(arg => /[.](?:mts|ts)$/.test(arg))?.split(/[\\/]/).at(-1) ?? "";
   const deadline = deadlineOverrideMs ?? (script === "routine-civic-data-reader-repair.mts" ? PASS_REPAIR_DEADLINE_MS : PASS_LAUNCH_DEADLINE_MS);
-  const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, deadline));
+  const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, deadline), order);
   childMemoryReleases.set(command.id, release);
   (command as { onStarted?: (pid: number) => void }).onStarted = pid => {
     startedSourceChildren.add(command.id);
@@ -1058,7 +1059,7 @@ for (const candidate of dueCandidates) {
 }
 
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
-for (const { task } of ballotPublicationLaunchOrder(placeSourceLaunchOrder(routinePassLaunchOrder(admitted, admissionNowMs)))) pendingRuns.push(pendingByTaskId.get(task.id)!);
+for (const { task } of routineSerialLanesFirst(ballotPublicationLaunchOrder(placeSourceLaunchOrder(routinePassLaunchOrder(admitted, admissionNowMs))))) pendingRuns.push(pendingByTaskId.get(task.id)!);
 for (const pending of pendingRuns) await recordHuntSourceProgress(pending.task, "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
@@ -1103,6 +1104,8 @@ function recordSourceSettlementFailures(runs: readonly BoundedChildResult[]): vo
   }
 }
 
+/** Due reads the pass did not finish starting (memory or pass time): the digest names them, so a stalled lane is visible. */
+const notStarted: string[] = [];
 step = "running the source pass";
 for (const { id } of pendingRuns) unsettledSourceRuns.add(id);
 
@@ -1143,7 +1146,8 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
-      await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id));
+      // Memory goes in launch order; the next read of a serial lane is not overtaken by work queued behind it.
+      await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), undefined, { priority: index, hold: command.serialLane !== undefined });
       for (const member of unitMembers(units[index]!)) {
         await recordHuntSourceProgress(member.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
       }
@@ -1173,6 +1177,7 @@ async function settleStateCalendars(group: StateCalendarGroup<PendingRun>, run: 
       unsettledSourceRuns.delete(member.id);
       attempted -= 1;
       console.log(`RCD_DEFER ${member.id}: ${safeFailure(result.owed)}; source work remains owed`);
+      notStarted.push(member.id);
     }
   } finally {
     for (const member of group.members) startedSourceChildren.delete(member.id);
@@ -1204,6 +1209,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
 
     const detail = safeFailure(deferral);
     console.log(`RCD_DEFER ${pending.task.id}: ${detail}; source work remains owed`);
+    notStarted.push(pending.task.id);
     return;
   }
   const crash = childCrash(run);
@@ -1635,7 +1641,7 @@ try {
     verifiedSourceFailures,
     finishedAt: new Date().toISOString(),
     taskReceipts: [...verifiedTaskReceipts].sort((left, right) => left.taskId.localeCompare(right.taskId)),
-    dueRequestLines,
+    dueRequestLines: notStarted.length ? [...dueRequestLines, `${notStarted.length} due source read(s) did not start this pass (host memory or pass time) and stay owed: ${notStarted.slice(0, 25).join(", ")}${notStarted.length > 25 ? ", …" : ""}.`] : dueRequestLines,
     crashedTasks,
     readerReadback: {
       denominator: readerContracts.length,

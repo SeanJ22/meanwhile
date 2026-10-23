@@ -2,6 +2,9 @@
 
 import { captureEvent } from "@/lib/events/client";
 import { storeSafeId } from "@/lib/events/wire";
+import { queuePicksSync } from "./picks-sync";
+import { emptyPicks, type PicksFile, type StoredPick } from "./picks-file";
+export type { StoredPick } from "./picks-file";
 import {
   commitStorageWrite,
   publishStorageEvent,
@@ -10,35 +13,27 @@ import {
 
 export const PICKS_STORAGE_KEY = "wtp.ballot_picks";
 
-export interface StoredPick {
-  contestId: string;
-  contestTitle: string;
-  /** Selected choice ids, in tap order. Length ≤ voteFor. */
-  choiceIds: string[];
-  labels: Record<string, string>;
-}
-
-interface PicksFile {
-  version: 2;
-  picks: Record<string, StoredPick>;
-  suppressedDerived: Record<string, string[]>;
-  unsure?: Record<string, true>;
-}
-
-const EMPTY: PicksFile = { version: 2, picks: {}, suppressedDerived: {} };
-
 const PICKS_EVENT = "wtp:ballot-picks-changed";
+let pickDistricts = new Map<string, string>();
+export function setPickDistricts(contests: readonly { contestId: string; contestOcdId?: string }[]) {
+  pickDistricts = new Map(contests.flatMap(contest => contest.contestOcdId ? [[contest.contestId, contest.contestOcdId]] : []));
+}
+function pickPlace(contestId: string) {
+  const zip = new URLSearchParams(window.location.search).get("zip");
+  const district = pickDistricts.get(contestId);
+  return { ...(zip && /^\d{5}$/.test(zip) ? { zip } : {}), ...(district ? { district } : {}) };
+}
 
-function read(): PicksFile {
+export function readPicksFile(): PicksFile {
   try {
     const raw = window.localStorage.getItem(PICKS_STORAGE_KEY);
-    if (!raw) return EMPTY;
+    if (!raw) return emptyPicks();
     const parsed = JSON.parse(raw) as Omit<Partial<PicksFile>, "version"> & {
       version?: number;
     };
-    if (typeof parsed?.picks !== "object" || parsed.picks === null) return EMPTY;
+    if (typeof parsed?.picks !== "object" || parsed.picks === null) return emptyPicks();
     // A v1 file reads as v2 with nothing suppressed.
-    if (parsed.version !== 1 && parsed.version !== 2) return EMPTY;
+    if (parsed.version !== 1 && parsed.version !== 2) return emptyPicks();
     return {
       version: 2,
       picks: parsed.picks,
@@ -49,35 +44,40 @@ function read(): PicksFile {
       ...(typeof parsed.unsure === "object" && parsed.unsure !== null ? { unsure: parsed.unsure } : {}),
     };
   } catch {
-    return EMPTY;
+    return emptyPicks();
   }
 }
 
-function write(file: PicksFile) {
+export function replacePicksFile(file: PicksFile) {
   commitStorageWrite(
     () => window.localStorage.setItem(PICKS_STORAGE_KEY, JSON.stringify(file)),
     () => publishStorageEvent(PICKS_EVENT),
   );
 }
 
+function write(file: PicksFile) {
+  queuePicksSync(readPicksFile(), file);
+  replacePicksFile(file);
+}
+
 export function getPick(contestId: string): StoredPick | null {
   if (typeof window === "undefined") return null;
-  return read().picks[contestId] ?? null;
+  return readPicksFile().picks[contestId] ?? null;
 }
 
 export function getAllPicks(): StoredPick[] {
   if (typeof window === "undefined") return [];
-  return Object.values(read().picks);
+  return Object.values(readPicksFile().picks);
 }
 
 export function getUnsure(): Record<string, true> {
   if (typeof window === "undefined") return {};
-  return read().unsure ?? {};
+  return readPicksFile().unsure ?? {};
 }
 
 export function getSuppressedDerived(): Record<string, string[]> {
   if (typeof window === "undefined") return {};
-  return read().suppressedDerived;
+  return readPicksFile().suppressedDerived;
 }
 
 export function togglePick(
@@ -87,7 +87,7 @@ export function togglePick(
   choiceLabel: string,
   voteFor: number,
 ) {
-  const file = read();
+  const file = readPicksFile();
   const existing = file.picks[contestId] ?? {
     contestId,
     contestTitle,
@@ -117,30 +117,31 @@ export function togglePick(
   write(file);
   captureEvent({
     type: "BALLOT_PICK",
+    ...pickPlace(contestId),
     ballotPick: { contestId: storeSafeId(contestId), candidateIds: next.map(storeSafeId), choice: next.length === 0 ? "BLANK" : "PICKED" },
   });
 }
 
 export function clearPick(contestId: string) {
-  const file = read();
+  const file = readPicksFile();
   delete file.picks[contestId];
   write(file);
-  captureEvent({ type: "BALLOT_PICK", ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "BLANK" } });
+  captureEvent({ type: "BALLOT_PICK", ...pickPlace(contestId), ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "BLANK" } });
 }
 
 export function markUnsure(contestId: string) {
-  const file = read();
+  const file = readPicksFile();
   delete file.picks[contestId];
   file.unsure = { ...(file.unsure ?? {}), [contestId]: true };
   write(file);
-  captureEvent({ type: "BALLOT_PICK", ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "UNSURE" } });
+  captureEvent({ type: "BALLOT_PICK", ...pickPlace(contestId), ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "UNSURE" } });
 }
 
 export function clearAllPicks(derivedNow: Record<string, string[]> = {}) {
-  const before = read();
+  const before = readPicksFile();
   write({ version: 2, picks: {}, suppressedDerived: derivedNow });
   for (const contestId of Object.keys(before.picks)) {
-    captureEvent({ type: "BALLOT_PICK", ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "BLANK" } });
+    captureEvent({ type: "BALLOT_PICK", ...pickPlace(contestId), ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "BLANK" } });
   }
 }
 

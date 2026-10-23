@@ -7,7 +7,7 @@
  *
  *  - `CapturedEvent` / `TotalsRow` / `CohortRow` go IN to a recipe. They may carry the anonymous reader hash (`reader`)
  *    because a recipe needs it to count distinct people. They carry the day, never the exact time.
- *  - `ResultBody` comes OUT. Its three shapes have no field for the anonymous id, an exact time, or one person's trail, and
+ *  - `ResultBody` comes OUT. Its shapes have no field for the anonymous id, an exact time, or one person's trail, and
  *    `leavable()` (in `read.ts`) rebuilds every result from those fields only, so a recipe that tried to return more would
  *    have the extra thrown away, not passed on.
  */
@@ -136,8 +136,18 @@ export interface VerbatimEntry {
 
 export type ResultBody =
   | { readonly shape: "totals"; readonly rows: readonly TotalsEntry[] }
+  | { readonly shape: "picks"; readonly rows: readonly CandidatePickTotal[] }
   | { readonly shape: "words"; readonly rows: readonly WordEntry[] }
   | { readonly shape: "verbatim"; readonly rows: readonly VerbatimEntry[] };
+export interface CandidatePickTotal {
+  readonly period: string;
+  readonly race: string;
+  readonly candidate: string;
+  readonly zip: string | null;
+  readonly district: string | null;
+  readonly value: number;
+  readonly readers: number;
+}
 export type Shape = ResultBody["shape"];
 
 /** What the recipe is asked to run over, by where its numbers come from. */

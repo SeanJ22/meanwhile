@@ -4,6 +4,7 @@ import type { StoredPick } from "./picks.ts";
 export interface PickableContest {
   contestId: string;
   contestTitle: string;
+  contestOcdId?: string;
   voteFor: number;
   options: { id: string; label: string; reactionTargetId?: string }[];
 }

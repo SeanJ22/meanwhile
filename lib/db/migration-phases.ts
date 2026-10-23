@@ -163,6 +163,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "PK-01_saved_picks": { phase: "expand", why: "Adds private ballot storage before the new save endpoint serves readers." },
   "0045_src_mn_retire_campaign_load": { phase: "contract", why: "After the native writer is retired, deletes its state campaign load and publications while preserving captured source files." },
   "0046_ck01_audit_flags": { phase: "expand", why: "Adds nullable owner flag metadata and indexes and permits null fact_id for a named legacy reader record. Every old writer still supplies fact_id and keeps working; apply before code that uses the new columns." },
   "0047_ck01_flag_target": { phase: "contract", why: "After the flag writers serving scalar or named reader targets deploy, require every flag to name one of those targets. The ADD CONSTRAINT is narrowing, so it is separate from the columns required before deploy." },

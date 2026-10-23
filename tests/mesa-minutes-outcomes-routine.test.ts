@@ -453,7 +453,9 @@ test("minutes whose extraction fails are held as a failed extraction and not dow
   const secondProof = await verdict(store, second.result.receiptLine, second.result.exitCode);
   // The failed extraction is preserved on the same version, without another payload.
   assert.equal(secondProof.candidateId, pointer?.versionId);
-  assert.equal(latestUnchangedConfirmation(await store.events(secondProof.candidateId!), secondProof.candidateId!)?.retrieval.retrievedAt, "2026-09-25T18:50:03.000Z");
+  const confirmedAt = latestUnchangedConfirmation(await store.events(secondProof.candidateId!), secondProof.candidateId!)?.retrieval.retrievedAt;
+  assert.ok(confirmedAt && Date.parse(confirmedAt) >= Date.parse("2026-09-25T18:50:00.000Z") &&
+    Date.parse(confirmedAt) < Date.parse("2026-09-25T18:51:00.000Z"), "the unchanged check uses this pass's observation clock");
   assert.deepEqual((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.payload, pointer?.payload);
 
   // The portal does not answer the check: still no download; the failure stays held.

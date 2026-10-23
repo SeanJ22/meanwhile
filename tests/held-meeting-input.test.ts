@@ -175,3 +175,33 @@ test("a body without a Census division only receives its own configured venue te
     assert.deepEqual((await readHeldMeetingInput(f.query, f.selectedPartition)).venues, [selected]);
   } finally { await f.pg.close(); }
 });
+
+test("a verified registered calendar names its body when the directory projection has not caught up", async () => {
+  const row = { ...wiring(), config: { ...wiring().config, bodyName: "Example Select Board" } };
+  const selected = partition(row);
+  const query: Query = async sql => sql === HELD_MEETING_INPUT_SQL ? [{
+    registry_version_id: "held-directory", registry_generated_at: AT, bodies: [],
+    previous_pointer: null, previous: null, foreign_meetings: 0, foreign_documents: 0,
+  }] : [];
+  const input = await readHeldMeetingInput(query, selected);
+  assert.equal(input.registry.bodies[0]!.id, row.bodyId);
+  assert.equal(input.registry.bodies[0]!.name, row.config.bodyName);
+  assert.equal(input.registry.bodies[0]!.provenance?.verifiedAt, AT);
+  assert.equal(input.previous, null);
+  await assert.rejects(readHeldMeetingInput(query, partition(wiring())), /REGISTRY_NOT_ONE_BODY/,
+    "an unverified or unnamed body is not inferred from a missing directory row");
+  await assert.rejects(readHeldMeetingInput(query, partition({ ...row, verifiedAt: "invalid" })), /REGISTRY_NOT_ONE_BODY/);
+  await assert.rejects(readHeldMeetingInput(async () => [{ registry_version_id: null, registry_generated_at: AT, bodies: [] }], selected), /BODY_NOT_HELD/);
+});
+
+test("a registered government body keeps its state through scoped input loading", async () => {
+  const row = { ...wiring("government:US-NH:cog:123#body:select-board"),
+    config: { ...wiring().config, bodyName: "Example Select Board" } };
+  const query: Query = async (sql, params) => {
+    if (sql !== HELD_MEETING_INPUT_SQL) return [];
+    assert.equal(params![0], "NH");
+    return [{ registry_version_id: "held-directory", registry_generated_at: AT, bodies: [],
+      previous_pointer: null, previous: null, foreign_meetings: 0, foreign_documents: 0 }];
+  };
+  assert.equal((await readHeldMeetingInput(query, partition(row))).registry.bodies[0]!.id, row.bodyId);
+});

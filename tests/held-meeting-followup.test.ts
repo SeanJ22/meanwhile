@@ -195,7 +195,7 @@ test("Pima's held InSite gap invokes its registered API outcome reader with that
     const result = await dispatchWorkerTask(runtime, task);
     assert.equal(result.outcome, "FAILED", "a zero-sitting response remains owed; reaching the source does not invent outcomes");
     assert.match(result.detail, /ZERO_SITTINGS/);
-    assert.ok(requests.some(url => new URL(url).pathname === "/v1/pima/events"));
+    assert.ok(requests.some(url => { const parsed = new URL(url); return parsed.pathname === "/v1/pima/events"; }));
     assert.equal(result.cost?.requestCount, requests.length);
     assert.equal(f.released(), 1);
   } finally { await f.facts.pg.close(); }

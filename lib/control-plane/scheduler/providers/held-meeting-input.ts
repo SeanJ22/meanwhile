@@ -5,6 +5,7 @@ import type { MeetingsSnapshot } from "../../../meetings/snapshot.ts";
 import type { VenueEntry } from "../../../meetings/venue-cache.ts";
 import { meetingSourceNamesForWiring } from "../../../registry/source-wiring.ts";
 import type { Body, Registry } from "../../../registry/types.ts";
+import { statesForRegistryDivisions } from "../../../civic-data/state-scopes.ts";
 
 const VENUE_CONTRACT = requiredManualProductionContract("venue-resolutions");
 
@@ -72,8 +73,23 @@ export interface HeldMeetingInput {
 const object = (value: unknown): Record<string, unknown> | null =>
   value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
 const stateOf = (id: string): string | null =>
-  /^(?:ocd-division\/country:us\/(?:state|district|territory):|curated:)([a-z]{2})(?:[/#]|$)/i.exec(id)?.[1]?.toUpperCase() ?? null;
+  statesForRegistryDivisions([id])[0] ?? null;
 const instant = (value: unknown): value is string => typeof value === "string" && Number.isFinite(Date.parse(value));
+
+/** A registered calendar already names its body; a later directory projection must not hold its verified meetings. */
+function registeredBody(partition: MeetingPartitionContract): Body | null {
+  const wiring = partition.wiring!;
+  const name = wiring.config.bodyName?.trim();
+  const sourceUrl = wiring.config.route ?? wiring.noticeUrl ?? wiring.config.governmentWebsite ?? wiring.config.feedUrl;
+  if (!name || !sourceUrl || !instant(wiring.verifiedAt)) return null;
+  try { const url = new URL(sourceUrl); if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) return null; }
+  catch { return null; }
+  return { id: partition.bodyId, ocdId: partition.ocdId, name, bodyClass: "body", bodyOrigin: "SOURCED",
+    coverageStatus: "LIVE", agendaSourceType: wiring.agendaSourceType, agendaSourceRef: sourceUrl,
+    meetingCadence: null, homepageUrl: wiring.config.governmentWebsite ?? null, demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY", provenance: { sourceUrl, sourceOrg: wiring.publishingOrg,
+      collectedAt: wiring.verifiedAt, verifiedAt: wiring.verifiedAt } };
+}
 
 function scopeOf(partition: MeetingPartitionContract): string {
   const wiring = partition.wiring, state = stateOf(partition.bodyId);
@@ -117,10 +133,10 @@ export async function readHeldMeetingInput(query: Query, partition: MeetingParti
   const rows = await query(HELD_MEETING_INPUT_SQL, [state, partition.bodyId, partition.scope]);
   if (rows.length !== 1) throw new Error("HELD_MEETING_INPUT_READ_FAILED");
   const row = rows[0]!, bodies = row.bodies;
-  if (typeof row.registry_version_id !== "string" || !instant(row.registry_generated_at) || !Array.isArray(bodies) || bodies.length !== 1) {
+  if (typeof row.registry_version_id !== "string" || !instant(row.registry_generated_at) || !Array.isArray(bodies) || bodies.length > 1) {
     throw new Error(`HELD_MEETING_INPUT_BODY_NOT_HELD:${partition.bodyId}`);
   }
-  const body = object(bodies[0]);
+  const body = bodies.length ? object(bodies[0]) : registeredBody(partition);
   if (!body || body.id !== partition.bodyId || body.ocdId !== partition.ocdId || stateOf(String(body.id)) !== state) {
     throw new Error("HELD_MEETING_INPUT_REGISTRY_NOT_ONE_BODY");
   }

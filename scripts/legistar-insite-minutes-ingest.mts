@@ -266,7 +266,7 @@ async function executeInSiteMinutesOutcomeIngest(input: MinutesIngestInput): Pro
   try {
     const retained = await measurement.read(() => retainMeetingFetchBytes(() => captureSourceAcquisitions((runForSource) =>
       runForSource(outcomeTenant.sourceId, () => readCalendar(session, calendarUrl, rangesForWindow(window), tenant.bodyNames)),
-    )));
+    ), now));
     const captured = retained.value;
     calendar = captured.value;
     calendarEvidence = captured.evidence;

@@ -15,6 +15,7 @@ import {
 import { sittingWindowSourceIds, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { authorityFor, installDoorHosts } from "../lib/civic-data/source-authority.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { applyManualEdit, checkDoorDraft, type DoorDraft, type DoorRecord } from "../lib/doors/registry.ts";
 import { legistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
 import { DOOR_OUTCOME_POINTERS, setDoorOutcomePointers } from "../lib/outcomes/door-outcome-pointers.ts";
@@ -152,6 +153,9 @@ describe("DB-22: outcome contracts are built from doors", () => {
     assert.equal(contracts[0].tenant.portalHost, "portal.legistar.com");
     assert.equal(contracts[0].tenant.requestedUrl, "https://portal.legistar.com/Calendar.aspx");
     assert.equal(contracts[0].acquisitionAdapter.command[0], "scripts/legistar-insite-minutes-ingest.mts");
+    installDoorHosts(insite.hosts);
+    assert.equal(routineTaskFromContract(contracts[0]).parserVersion, "legistar-minutes-outcomes/1",
+      "the scheduled PDF reader is admitted under its own registered parser");
   });
 
   it("a refresh installs the list for the runner, the contract lookup, the sitting window and the Reader, and an empty read clears it", () => {

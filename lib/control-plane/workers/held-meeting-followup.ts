@@ -2,9 +2,10 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { performance } from "node:perf_hooks";
-import { MEETING_PARTITION_CONTRACTS, meetingPartitionId, type MeetingPartitionContract } from "../../civic-data/meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../../civic-data/meeting-partitions.ts";
 import { ROUTINE_SOURCE_CONTRACTS, currentMeetingClock, type RoutineSourceContract } from "../../civic-data/contracts.ts";
 import { outcomePartitionForDoor } from "../../civic-data/outcome-partitions.ts";
+import { statesForRegistryDivisions } from "../../civic-data/state-scopes.ts";
 import { admittedRuntimeChildEnvironment } from "../../civic-data/runtime-authority.ts";
 import { runBoundedChildPass, type BoundedChildLauncher } from "../../civic-data/bounded-child-pass.ts";
 import { durableRoutineRunnerReceiptIssue, parseMeetingPartitionRunnerReceipts, parseRoutineRunnerReceipt, type DurableReceiptStore } from "../../civic-data/runner-receipt.ts";
@@ -68,7 +69,7 @@ async function sourceReceipt(repos: ControlPlaneRepositories, workItemId: string
 export async function enqueueHeldMeetingTask(repos: ControlPlaneRepositories, input: {
   readonly item: WorkItem; readonly artifact: ArtifactRecord; readonly route: RouteTask; readonly now: string;
 }): Promise<RouteTask | null> {
-  const state = /^(?:ocd-division\/country:us\/(?:state|territory|district):|curated:)([a-z]{2})(?:[/#]|$)/i.exec(input.item.subject)?.[1]?.toUpperCase();
+  const state = statesForRegistryDivisions([input.item.subject])[0];
   if (!state) return null;
   const held = await sourceReceipt(repos, input.item.id, input.route.id, input.artifact.artifactId);
   if (!held || held.item.subject !== input.item.subject || held.record.contentHash !== input.artifact.contentHash) return null;

@@ -11,6 +11,7 @@
  *   subject  the body id
  */
 
+import { statesForRegistryDivisions } from "../../../civic-data/state-scopes.ts";
 import {
   ASK_GAP_RECORD_CLASS,
   meetingsNotHeldGap,
@@ -77,8 +78,8 @@ export const UNREAD_ASK_GAP_HOLDINGS: AskGapHoldingsReading = {
 
 /** `US-XX` from `ocd-division/country:us/state:xx/...`; null when the id names no state. */
 function stateOfBody(bodyId: string): string | null {
-  const m = /(?:\/(?:state|district|territory):|^curated:)([a-z]{2})(?=[/#]|$)/.exec(bodyId);
-  return m ? `US-${m[1]!.toUpperCase()}` : null;
+  const state = statesForRegistryDivisions([bodyId])[0];
+  return state ? `US-${state}` : null;
 }
 
 function divisionsOfBody(bodyId: string): readonly string[] {

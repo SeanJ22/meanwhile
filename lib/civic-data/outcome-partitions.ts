@@ -13,6 +13,7 @@ const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
 
 export const DOOR_OUTCOMES_SOURCE_ID = "door-outcomes" as const;
+export const DOOR_MINUTES_OUTCOMES_SOURCE_ID = "door-minutes-outcomes" as const;
 
 export const OUTCOMES_HOLD = "outcomes";
 
@@ -58,7 +59,7 @@ function tenantFor(row: BodySourceWiring, kind: OutcomeDoorKind, id: string, sco
   if (kind === "legistar-insite" && portalHost === null) throw new Error(`OUTCOME_DOOR_PORTAL_HOST_MISSING:${row.bodyId}`);
   return {
     contractId: id,
-    sourceId: DOOR_OUTCOMES_SOURCE_ID,
+    sourceId: kind === "legistar" ? DOOR_OUTCOMES_SOURCE_ID : DOOR_MINUTES_OUTCOMES_SOURCE_ID,
     recordClass: "MEETING_OUTCOME",
     scope,
     parserVersion: kind === "legistar" ? "legistar-outcomes/2" : "legistar-minutes-outcomes/1",
@@ -108,6 +109,7 @@ export function buildOutcomePartitions(doors: readonly DoorRecord[]): OutcomePar
 
 function buildOne(door: DoorRecord): OutcomePartitionContract | null {
   const kind = outcomeDoorKind(door)!;
+  const sourceId = kind === "legistar" ? DOOR_OUTCOMES_SOURCE_ID : DOOR_MINUTES_OUTCOMES_SOURCE_ID;
   const [row] = wiringRowsFromDoors([door]);
   if (row === undefined) return null;
   const slug = row.config.slug?.trim() ?? "";
@@ -126,7 +128,7 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
   }
   return {
     id,
-    sourceId: DOOR_OUTCOMES_SOURCE_ID,
+    sourceId,
     recordClass: "MEETING_OUTCOME",
     scope,
     acquisitionFailureDomain: meetingAcquisitionFailureDomain(kind, row),
@@ -147,7 +149,7 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
     },
     schedule: meetingSittingWindow([{ meetingSource: kind, bodyId: door.bodyIds[0] }]),
     retry: { afterMs: HOUR, description: "one hour after a failed events, items, votes or minutes attempt" },
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: DOOR_OUTCOMES_SOURCE_ID },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: "civic_data_candidates+civic_data_candidate_events+civic_data_promotions",
     readerProjection: { id: `door-outcomes:${doorId}`, consumers: ["agenda", "Ask", "meeting Reader records", "map"] },

@@ -769,7 +769,7 @@ function measureMeetingFields(measurement: ReturnType<typeof diggerMeasurement>,
   }
 }
 
-/** One body per invocation; a saved acquisition is consumed once with its original evidence clock. */
+/** Process each body on its own; a saved acquisition is consumed once with its original evidence clock. */
 export async function runMeetingIngest(args: readonly string[], options: MeetingIngestOptions = {}): Promise<MeetingIngestResult> {
   const priorWiring = activeWiring();
   const priorClock = currentMeetingClock();
@@ -1842,6 +1842,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const args = process.argv.slice(2);
   const argument = (flag: string) => args.find(arg => arg.startsWith(`${flag}=`))?.slice(flag.length + 1);
   const execute = async () => {
+    if (args[0] === "composite" && !args.includes("--promote") && !args.includes("--dry-run")) {
+      throw new Error("composite requires --promote or --dry-run");
+    }
     const preparedFile = argument("--prepared-file");
     const prepared: Omit<MeetingIngestOptions, "store" | "initialResponse"> & {
       initialResponse?: Omit<RetainedSourceResponse, "bytes"> & { readonly base64: string };

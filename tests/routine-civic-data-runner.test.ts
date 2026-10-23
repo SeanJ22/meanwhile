@@ -647,6 +647,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
     "meetings-history",
     "meetings-public-bodies",
     "door-outcomes",
+    "door-minutes-outcomes",
   ];
   const expectedAuthorities = new Set([
     ...observableRoutineContracts().map((contract) => contract.sourceId),

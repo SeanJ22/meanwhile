@@ -1,0 +1,19 @@
+{
+  "n": 87,
+  "branch": "release/87",
+  "river_sha": "2bd4e5e18eb86c078c76b43e412ce04ce481f19c",
+  "tested_sha": "2bd4e5e18eb86c078c76b43e412ce04ce481f19c",
+  "steps": [
+    "DS-01"
+  ],
+  "lanes": [
+    "ds-01"
+  ],
+  "integration_from": 294,
+  "integration_count": 295,
+  "pr": {
+    "number": 797,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/797"
+  },
+  "at": "2026-10-23T05:20:52Z"
+}

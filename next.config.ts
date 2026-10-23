@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 // Static geography is file-backed; mutable civic facts resolve production pointers.
 const staticGeographyTrace = [
-  // Every state geometry file but the special-district and tribal territories, which no function packs.
-  "./data/states/*/geo/**/!(territory-*).geojson",
+  // State geometry is read from the reader edge store; only its manifest is packed (lib/geo/state-geometry.ts).
+  "./data/derived/state-geometry.json",
   // The resolver manifest is read by a literal path and traces itself.
   "./public/geo/*.geojson",
 ];
@@ -39,8 +39,8 @@ const nextConfig: NextConfig = {
   // Computed paths need explicit traces for static geography and schema inputs.
   // Mutable civic facts resolve the canonical store instead of bundled first seeds.
   // ZIP startup projections are browser assets, never server lookup inputs.
-  // Special-district and tribal territories are too large to pack into a function; the resolver manifest leaves them out.
-  outputFileTracingExcludes: { "/*": ["./public/geo/reader-zips/**", "./data/states/*/geo/territory-*.geojson"] },
+  // No function packs state geometry: the reader edge store serves each file (lib/geo/state-geometry.ts).
+  outputFileTracingExcludes: { "/*": ["./public/geo/reader-zips/**", "./data/states/*/geo/**"] },
   outputFileTracingIncludes: {
     "/api/reader/state": ["./data/derived/zip-divisions/*.json", ...stateOfficeTrace],
     "/api/reader/places": ["./data/derived/zip-divisions/*.json"],

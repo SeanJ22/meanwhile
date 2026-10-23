@@ -10,6 +10,7 @@ import {
 import type { ReaderReadbackRepairOutcome } from "./reader-verification.ts";
 import type { RoutineCivicDataReaderReadbackReference } from "../control-plane/owner-surface.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";
+import { OUTCOME_PARTITION_CONTRACTS } from "./outcome-partitions.ts";
 
 export const ROUTINE_READER_REPAIR_PREFIX = "RCD_READER_REPAIR=";
 export const ROUTINE_READER_CHILD_CONCURRENCY = 4;
@@ -91,9 +92,13 @@ export function routineReaderRepairDomains(
   const applicable = contracts.filter((contract) => contract.readerProjection !== null);
   const singles = applicable.filter((contract) => !meetingIds.has(contract.id));
   const domains: RoutineReaderRepairDomain[] = [];
+  const outcomes = new Map(OUTCOME_PARTITION_CONTRACTS.map(contract => [contract.id, contract]));
   const singlesByState = new Map<string, ReaderRepairContract[]>();
   for (const contract of singles) {
-    const states = statesForRegistryDivisions([contract.scope]);
+    const outcome = outcomes.get(contract.id);
+    const states = outcome?.recordClass === contract.recordClass && outcome.scope === contract.scope
+      ? statesForRegistryDivisions([outcome.tenant.jurisdiction, outcome.wiring.ocdId ?? "", outcome.bodyId])
+      : statesForRegistryDivisions([contract.scope]);
     const national = states.length === 0 &&
       (/^US(?::|$)/.test(contract.scope) || /^[a-z0-9-]+:national$/.test(contract.scope)) &&
       !/(?:^|:)\d{5}(?::|$)/.test(contract.scope) && !/^national-place:\d{5}/.test(contract.id);

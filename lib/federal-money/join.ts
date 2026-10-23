@@ -1,6 +1,7 @@
 import type { FederalMoneyFact } from "./model.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
 import type { Division, Body } from "../registry/types.ts";
+import { federalMoneyStateDivision } from "./view.ts";
 
 export interface FederalMoneyHeldRecipient {
   readonly uei: string | null;
@@ -28,6 +29,11 @@ export function federalMoneyRecipientIds(ids: Readonly<Record<string, string>>):
   });
 }
 const key = (namespace: string, value: string) => JSON.stringify([namespace, value]);
+function auditStateLocation(fact: FederalMoneyFact): string[] {
+  const state = fact.source === "federal-audit-clearinghouse" && fact.details.reportedState === fact.state
+    ? federalMoneyStateDivision(fact.state) : null;
+  return state ? [state] : [];
+}
 function append<T>(index: Map<string, Set<T>>, name: string, value: T) {
   const values = index.get(name) ?? new Set<T>();
   values.add(value); index.set(name, values);
@@ -62,7 +68,7 @@ export function joinFederalMoneyFacts(facts: readonly FederalMoneyFact[], input:
   }
   const reports = new Map<string, FederalMoneyHeldAudit[]>();
   for (const report of [...(input.auditReports ?? []), ...facts.flatMap(fact => fact.source === "federal-audit-clearinghouse" && fact.identifiers.reportId && fact.details.table === "general"
-    ? [{ reportId: fact.identifiers.reportId, uei: fact.uei, identifiers: fact.identifiers, bodyIds: fact.bodyIds, divisionIds: fact.divisionIds }] : [])]) {
+    ? [{ reportId: fact.identifiers.reportId, uei: fact.uei, identifiers: fact.identifiers, bodyIds: fact.bodyIds, divisionIds: unique([...fact.divisionIds, ...auditStateLocation(fact)]) }] : [])]) {
     const held = reports.get(report.reportId) ?? [];
     held.push(report); reports.set(report.reportId, held);
   }
@@ -85,11 +91,12 @@ export function joinFederalMoneyFacts(facts: readonly FederalMoneyFact[], input:
       ...(!ambiguous ? auditReports.flatMap(report => report.divisionIds) : [])]);
     const geographicDivisions = ["GRANT", "CONTRACT", "LOAN", "DISASTER"].includes(fact.kind)
       ? fact.geography.flatMap(geo => [...(geography.get(key(geo.type, geo.geoid)) ?? [])]) : [];
-    const divisionIds = unique([...recipientDivisions, ...geographicDivisions]);
+    const divisionIds = unique([...recipientDivisions, ...geographicDivisions, ...auditStateLocation(fact)]);
     const joined = bodyIds.length > 0 || divisionIds.length > 0;
     return { ...fact, bodyIds, divisionIds, joinStatus: joined ? "JOINED" : "UNJOINED",
       joinReason: ambiguous ? "Recipient native ids match more than one held government; recipient binding remains open."
         : joined ? bodyIds.length ? "Recipient matched by source-native government id or UEI crosswalk. Geographic reach is separate."
+          : fact.source === "federal-audit-clearinghouse" ? "Auditee location matched the state named by its official audit report; recipient government remains unjoined."
           : "Geographic reach matched an exact Census GEOID; recipient government remains unjoined."
         : "No exact source-native government id, UEI crosswalk, or covered Census GEOID is held; row retained." };
   });

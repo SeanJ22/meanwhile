@@ -15,7 +15,7 @@
  * Recipes see the day an event happened, never the time, and may use the anonymous reader hash to count distinct people. None
  * of them can return it: no result shape has a field for it.
  */
-import type { CapturedEvent, CohortRow, ResultBody, Slice, TotalsEntry, TotalsRow, VerbatimEntry, WordEntry } from "./types.ts";
+import type { CandidatePickTotal, CapturedEvent, CohortRow, ResultBody, Slice, TotalsEntry, TotalsRow, VerbatimEntry, WordEntry } from "./types.ts";
 import { districtLabel, periodOf, topicLabel } from "./slice.ts";
 
 interface RecipeBase {
@@ -100,6 +100,30 @@ export const VERBATIM_LIMIT = 200;
 /* ------------------------------------------------------------------------------------------------------ the menu */
 
 export const RECIPES: readonly Recipe[] = [
+  {
+    id: "candidate-pick-totals",
+    label: "Candidate pick totals",
+    says: "Recorded candidate selections by race, ZIP and district in each day or week. These count selection events, including later changes.",
+    shape: "picks",
+    source: "events",
+    run(events, slice) {
+      const groups = new Map<string, { row: CandidatePickTotal; readers: Set<string> }>();
+      for (const e of events) {
+        if (e.tester || e.type !== "BALLOT_PICK" || e.ballotPick?.choice !== "PICKED") continue;
+        for (const candidate of new Set(e.ballotPick.candidateIds)) {
+          if (candidate === "YES" || candidate === "NO") continue;
+          const period = periodOf(e.day, slice.grain);
+          const race = e.ballotPick.contestId;
+          const key = JSON.stringify([period, race, candidate, e.zip, e.district]);
+          const group = groups.get(key) ?? { row: { period, race, candidate, zip: e.zip, district: e.district, value: 0, readers: 0 }, readers: new Set<string>() };
+          group.readers.add(e.reader);
+          group.row = { ...group.row, value: group.row.value + 1, readers: group.readers.size };
+          groups.set(key, group);
+        }
+      }
+      return { shape: "picks", rows: [...groups].sort(([a], [b]) => a.localeCompare(b)).map(([, group]) => group.row) };
+    },
+  },
   {
     id: "topic-share",
     label: "Share of questions by topic",

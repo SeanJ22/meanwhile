@@ -43,8 +43,8 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
   const governmentId=(row?.kind==='government' || row?.kind==='place'?String(row.id):typeof row?.parent_id==='string' && row.parent_id.startsWith('ocd-division/')?row.parent_id:reference.governmentId??reference.jurisdictionId);
   const scope:SiteScope={governmentId,govClass:reference.govClass,bodyId:row?.body_id?String(row.body_id):reference.bodyId??`${reference.jurisdictionId}#${/SCHOOL/.test(reference.govClass??'')?'board':'governing'}`,bodyName:row?.body_name?String(row.body_name):null,name:reference.name,state:reference.state,website:reference.website};
   const key=fieldManualEntryId('place-hunt',reference.jurisdictionId);
-  const prior=await input.repos.fieldManual.read(key);
-  const payload=prior?.value.payload as {website?:string;siteFrontier?:string[];frontier?:{url:string;checkedAt?:string}[];read?:{url:string;checkedAt?:string}[]}|undefined;
+  const prior=await input.repos.fieldManual.readNarrowed(key,{payload:["website","siteFrontier","frontier","read"]});
+  const payload=(prior?.value as {payload?:{website?:string;siteFrontier?:string[];frontier?:{url:string;checkedAt?:string}[];read?:{url:string;checkedAt?:string}[]}}|undefined)?.payload;
   if(payload?.website)scope.website=payload.website;
   let checked=0,findings=0;
   const readUrls=new Set<string>();

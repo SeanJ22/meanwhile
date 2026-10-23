@@ -5,6 +5,7 @@ import type { Provenance } from "../sources/types.ts";
 import { campaignSiteFor } from "./campaign-sites.ts";
 import { socialAccountsOf } from "./social-platforms.ts";
 import { personIdentityKeys } from "./people-identity.ts";
+import { executiveCardProfile } from "./national-executive.ts";
 import type {
   Officeholder,
   OfficeholderSet,
@@ -50,6 +51,7 @@ export interface SeatHolder {
   campaignUrl: string | null;
 
   social?: readonly SocialAccount[];
+  executive?: Officeholder["executive"];
 
   state?: string;
   chamber?: string;
@@ -96,6 +98,7 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     partyLabel: person.partyLabel,
     termEnd: person.termEnd || null,
     termStart: person.termStart || null,
+    termNote: person.executive?.termEndDescription?.text ?? null,
     birthDate: person.birthDate ?? null,
     websiteUrl: person.websiteUrl,
     sourceUrl: person.provenance.sourceUrl,
@@ -106,6 +109,7 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     photoUrl: person.photo?.url ?? photos?.get(person.personId ?? person.id) ?? photos?.get(person.id) ?? null,
     campaignUrl: person.campaignUrl ?? campaignSiteFor(person.id)?.url ?? null,
     social: person.social === undefined ? undefined : socialAccountsOf(person.social),
+    executive: executiveCardProfile(person.executive),
     state: person.state,
     chamber: person.chamber,
   };

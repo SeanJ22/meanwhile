@@ -475,13 +475,14 @@ export interface MoneyView {
 
 export interface SourceReliabilityRow {
   readonly source: string;
-  readonly state: "failing" | "recovering" | "healthy";
-  readonly successes: number;
-  readonly failures: number;
-  readonly consecutiveFailures: number;
+  readonly state: "failing" | "recovering" | "healthy" | "waiting" | "due";
+  readonly successes: number | null;
+  readonly failures: number | null;
+  readonly consecutiveFailures: number | null;
   readonly lastAttemptAt: string;
   readonly retryAt: string | null;
   readonly detail: string;
+  readonly quota?: { readonly checkedAt: string; readonly retryAt: string; readonly active: boolean };
 }
 
 export interface PublicationRow {

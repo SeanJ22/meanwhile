@@ -114,10 +114,15 @@ try {
   const discovery = await discoverFecCandidates({ cycle, read, observedAt: () => observation, bulk,
     onApiFailure: detail => gaps.push({ code: "FEC_API_BULK_FALLBACK", detail }) });
   const candidates = new Map(projectFecDiscovery(discovery, cycle, roster ?? undefined, prior.candidates).map(row => [row.fecCandidateId, row]));
-  const secondHop = new Map<string, SecondHopCommittee>((prior.secondHop ?? []).filter(row => (row.cycle ?? prior.cycle) === cycle).map(row => [row.committeeId, row]));
+  const registrations = new Set(discovery.registrations.map(row => row.candidateId));
+  for (const row of prior.candidates) if (!registrations.has(row.fecCandidateId)) gaps.push({
+    code: "FEC_PRIOR_FILING_RETAINED",
+    detail: `${row.fecCandidateId}: the ${cycle} election-registration query does not withdraw this verified filing; its original period and source dates remain.`,
+  });
+  const secondHop = new Map<string, SecondHopCommittee>((prior.secondHop ?? []).map(row => [row.committeeId, { ...row, cycle: row.cycle ?? prior.cycle }]));
   const countsByState: Record<string, number> = {};
   for (const row of candidates.values()) countsByState[row.state] = (countsByState[row.state] ?? 0) + 1;
-  console.log(`FEC ${cycle}: ${candidates.size} registrations across ${Object.keys(countsByState).length} state/territory codes (${discovery.route}).`);
+  console.log(`FEC ${cycle}: ${candidates.size} candidate records across ${Object.keys(countsByState).length} state/territory codes (${discovery.route}).`);
   console.log(JSON.stringify(Object.fromEntries(Object.entries(countsByState).sort())));
   async function publish() {
     const originalRetrievedAt = sourceReceipts.map(row => row.retrievedAt).sort()[0];
@@ -138,7 +143,8 @@ try {
   }
   // National registration and money cards reach readers before optional receipt work.
   await publish();
-  const work = [...candidates.keys()].sort((a, b) => (attempts[a] ?? "").localeCompare(attempts[b] ?? "") || a.localeCompare(b));
+  const work = [...candidates.values()].filter(row => row.cycle === cycle).map(row => row.fecCandidateId)
+    .sort((a, b) => (attempts[a] ?? "").localeCompare(attempts[b] ?? "") || a.localeCompare(b));
   async function enrich(ids: string[], collect: (id: string) => Promise<void>) {
     let index = 0;
     const workers = await Promise.allSettled(Array.from({ length: 3 }, async () => {
@@ -163,7 +169,11 @@ try {
     await publish();
     await enrich(work, async id => {
       const row = candidates.get(id)!;
-      const targets = fecRegistrationTargets(discovery.registrations.find(registration => registration.candidateId === id)!, roster ?? undefined);
+      const registration = discovery.registrations.find(registration => registration.candidateId === id);
+      const targets = registration ? fecRegistrationTargets(registration, roster ?? undefined) : row.targetKeys.map(targetKey => ({
+        targetKey, displayName: row.name, state: row.state, office: row.office, district: row.district,
+        route: targetKey.startsWith("fec:") ? "fec" as const : "roster" as const, knownFecCandidateId: id,
+      }));
       const totals = { candidate_id: id, cycle, receipts: row.totals.receipts, disbursements: row.totals.disbursements,
         last_cash_on_hand_end_period: row.totals.cashOnHand, coverage_end_date: row.totals.coverageEndDate,
         individual_itemized_contributions: row.totals.individualItemized, individual_unitemized_contributions: row.totals.individualUnitemized };

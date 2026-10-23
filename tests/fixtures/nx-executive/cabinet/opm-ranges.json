@@ -1,0 +1,31 @@
+{
+  "url": "https://data.opm.gov/api/v1/files/employment/2026/08/1/download",
+  "retrievedAt": "2026-10-23T02:47:53.878735Z",
+  "byteLength": 57303307,
+  "ranges": [
+    {
+      "start": 57286923,
+      "end": 57303307,
+      "file": "opm-202608-footer.bin",
+      "sha256": "b6f9603d0d5460dea99a73a7b3492fd2db112a1a637fff6b3623118ed8759fa5"
+    },
+    {
+      "start": 816510,
+      "end": 1503015,
+      "file": "opm-202608-agency.bin",
+      "sha256": "93e8b98bd32f14cfeed2f89cec2c6821dea2b4c9c5381aae2419c4afb7eaa378"
+    },
+    {
+      "start": 15627162,
+      "end": 15627581,
+      "file": "opm-202608-count.bin",
+      "sha256": "d42b53bb5a93875a01db559b33dc334c91cc1538ae8f7b9fb110de46f161a2d5"
+    },
+    {
+      "start": 15627581,
+      "end": 16237571,
+      "file": "opm-202608-department.bin",
+      "sha256": "07ac7badbdaa2ab09dc35b6881470f8af6ef7023954979de36ca5ad62634c34f"
+    }
+  ]
+}

@@ -14,6 +14,7 @@ import { derivedRequestedUrl } from "./derived-door.ts";
 import { statewidePageText, verifyStatewideOfficialPage } from "../sources/statewide/parse.ts";
 import { verifiedWhiteHouseOfficial, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
+import { withExecutiveCompleteness, executiveEvidenceReferences } from "../officials/national-executive.ts";
 import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 import { rosterChanges, type RosterChange } from "../officials/roster-changes.ts";
 import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
@@ -192,8 +193,10 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const carriedPrior = priorRoster ? { ...priorRoster, vacancies: (priorRoster.vacancies ?? []).filter(row=>!reread.has(row.sourceUrl)) } : null;
   let roster = mergePeopleSets([...(carriedPrior ? [carriedPrior] : []),incoming])!;
   if (national) {
+    roster = { ...roster, officeholders: roster.officeholders.map(withExecutiveCompleteness) };
     const referenced = new Set(roster.officeholders.flatMap(person=>[person.provenance,...Object.values(person.fieldSources ?? {})])
       .map(source=>`${source.sourceUrl}|${source.collectedAt}`));
+    for (const person of roster.officeholders) for (const key of executiveEvidenceReferences(person.executive)) referenced.add(key);
     const fresh = new Set(read.map(row=>`${row.finalUrl}|${row.retrievedAt}`));
     captures = captures.filter(row=>referenced.has(`${row.finalUrl}|${row.retrievedAt}`) || fresh.has(`${row.finalUrl}|${row.retrievedAt}`));
   }

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtempSync, readFileSync } from "node:fs";
+import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -42,40 +42,18 @@ import {
 } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import { advanceHeldWorkerFleet, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
-import {
-  installOperationalReferenceBundle,
-  operationalReferenceBundle,
-} from "../lib/civic-data/operational-references.ts";
-import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import { HELD_DIGGER_CLASSES, HELD_DIGGER_SOURCE_FIELDS, type HeldDiggerReads, type HeldDiggerSourceRow } from "../lib/control-plane/workers/held-digger-sources.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { askGapSourceUrl } from "../lib/control-plane/scheduler/providers/ask-gaps.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 import { methodFixture } from "./method-store-fixture.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
-const REGISTRIES = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<"az" | "nh" | "nj", JurisdictionRegistry>;
-installOperationalReferenceBundle(operationalReferenceBundle({
-  ...REGISTRIES,
-  az: {
-    ...REGISTRIES.az,
-    counts: { ...REGISTRIES.az.counts, CITY_OR_TOWN: (REGISTRIES.az.counts.CITY_OR_TOWN ?? 0) + 1 },
-    jurisdictions: [...REGISTRIES.az.jurisdictions, {
-      id: "az:city:city-of-avondale",
-      stateCode: "AZ",
-      name: "CITY OF AVONDALE",
-      govClass: "CITY_OR_TOWN",
-      countyName: "MARICOPA",
-      enumeratedFrom: "census-govt-units-2022",
-      ownWebAddress: "http://www.avondale.org",
-      sourceIds: ["MEETINGS:THIS_JURISDICTION:this-government-itself"],
-    }],
-  },
-}));
 
 const T0 = "2026-09-01T19:36:07.092Z"; // the cycle that committed its dispositions and died
 const T1 = "2026-09-22T20:00:00.000Z"; // the cycle that resumes them
 const T2 = "2026-09-22T21:00:00.000Z"; // the cycle after that
 const TTL = 120_000;
-const AVONDALE = "az:city:city-of-avondale";
-const AVONDALE_EVENTS = "https://avondaleaz.api.civicclerk.com/v1/Events";
 
 function obligation(id: string, over: Partial<FreshnessObligation> = {}): FreshnessObligation {
   return {
@@ -564,20 +542,17 @@ test("claimRouteTask refuses a RouteTask disposed while the claim raced for its 
   }
 });
 
-test("a recovered INGESTED occurrence keeps its bytes eligible for parsing and verification", async () => {
-  const feed = JSON.stringify({
-    "@odata.context": "https://avondaleaz.api.civicclerk.com/v1/$metadata#Events",
-    value: [{
-      id: 7, eventName: "Council fixture 7", startDateTime: "2026-09-04T18:00:00", eventDate: "2026-09-04T00:00:00",
-      categoryId: 26, eventCategoryName: "City Council", isPublished: true,
-    }],
-  });
+test("a recovered INGESTED calendar occurrence keeps its exact bytes eligible for the native held-meeting worker", async () => {
+  const partition = MEETING_PARTITION_CONTRACTS.find(row => row.bodyId.startsWith("curated:az/") && row.derivedFamily === null && askGapSourceUrl(row.bodyId, [row.id], Date.parse(T0)));
+  assert.ok(partition);
+  const sourceUrl = askGapSourceUrl(partition.bodyId, [partition.id], Date.parse(T0))!;
+  const feed = JSON.stringify([{ id: 7, bodyId: partition.bodyId, name: "Recorded council meeting", date: "2026-09-04" }]);
   for (const [label, repos] of await eachStore("wtp-settled-")) {
     const vaultRoot = mkdtempSync(join(tmpdir(), "wtp-settled-vault-"));
     const held = await interrupted(
       repos,
-      obligation("ob-avondale", { subjectId: AVONDALE, routeId: "avondale-civicclerk-events" }),
-      ingests(vaultRoot, AVONDALE_EVENTS, feed),
+      obligation("ob-held-calendar", { subjectId: partition.bodyId, routeId: "CALENDAR_STALE" }),
+      ingests(vaultRoot, sourceUrl, feed),
     );
     const committed = (await repos.routeTasks.mustRead(held.routeTaskId)).value.disposition!;
     const { cycle, ran } = await cycleAt(repos, T1);
@@ -596,14 +571,36 @@ test("a recovered INGESTED occurrence keeps its bytes eligible for parsing and v
     assert.equal(await later.readHeld(records[0]), feed, `${label}: the recovered bytes are read back`);
     assert.equal(await later.readHeld({ ...records[0], attemptId: "at-someone-else" }), null, `${label}: only under the record's own identity`);
 
-    const runtime = standingFleetRuntime({ root: ROOT, method: methodFixture(), vaultRoot, repos, now: () => T2 });
-    await advanceHeldWorkerFleet(ROOT, runtime, 1);
-    const parser = (await repos.routeTasks.list()).find(
-      (row) => row.value.workerTask?.role === "PARSER" && row.value.workerTask.artifactId === committed.artifactIds[0],
+    const diggerReads: HeldDiggerReads = {
+      async sourceChanges(since, page) {
+        const changed = await repos.routeTasks.listChangedSince!(since, undefined, { projection: HELD_DIGGER_SOURCE_FIELDS,
+          page: rows => page(rows as unknown as readonly HeldDiggerSourceRow[]) });
+        return { through: changed.through! };
+      },
+      async pendingTaskIds() {
+        const ids: string[] = [];
+        for (const kind of HELD_DIGGER_CLASSES) for (const row of await repos.routeTasks.listWhereNarrowed(["workerTask", "contract", "recordClass"], kind, { state: true })) {
+          const state = (row.value as { state: string }).state;
+          if (state === "PENDING" || state === "RECLAIMABLE") ids.push(row.id);
+        }
+        return ids;
+      },
+    };
+    const runtime = Object.assign(standingFleetRuntime({ root: ROOT, method: methodFixture(), vaultRoot, repos, now: () => T2 }), { diggerReads });
+    await advanceHeldWorkerFleet(ROOT, runtime, 1, true);
+    const worker = (await repos.routeTasks.list()).find(
+      (row) => row.value.workerTask?.role === "ACQUIRER" && row.value.workerTask.artifactId === committed.artifactIds[0],
     );
-    assert.ok(parser, `${label}: a PARSER task is queued for the recovered bytes`);
-    assert.equal(parser.value.workItemId, held.workItemId);
-    assert.equal(parser.value.state, "PENDING");
+    assert.ok(worker, `${label}: a native held-meeting task is queued for the recovered bytes`);
+    assert.equal(worker.value.workItemId, held.workItemId); assert.equal(worker.value.state, "PENDING");
+    assert.equal(worker.value.workerTask!.contract.schemaVersion, 2);
+    assert.equal(worker.value.workerTask!.contract.recordClass, "HELD_MEETING_DETAILS");
+    assert.equal(worker.value.workerTask!.contract.subjectId, partition.bodyId);
+    if (worker.value.workerTask!.contract.schemaVersion === 2) {
+      assert.deepEqual(worker.value.workerTask!.contract.sourceScope.canonicalUrls, [sourceUrl]);
+      assert.deepEqual(worker.value.workerTask!.contract.sourceScope.observationArtifactIds, committed.artifactIds);
+    }
+    assert.equal((await repos.routeTasks.mustRead(held.routeTaskId)).value.target, partition.bodyId, "the real subject-target occurrence is preserved");
   }
 });
 

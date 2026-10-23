@@ -61,6 +61,7 @@ function federalMoneyText(fact: FederalMoneyFact, relationship: FederalMoneyRow[
   if (["GRANT", "CONTRACT", "LOAN"].includes(fact.kind)) {
     parts.push(relationship === "GEOGRAPHY" ? "Reaching this place" : relationship === "BOTH" ? "Received by this government and reaching this place" : "Received by this government");
   }
+  if (fact.kind === "AUDIT" && relationship === "GEOGRAPHY") parts.push(`Auditee location: ${fact.state}`);
   if (fact.amount !== null) parts.push(`${fact.amountLabel ?? "Amount"}: ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(fact.amount)}`);
   if (fact.recipient) parts.push(`Recipient: ${fact.recipient}`);
   if (fact.period) parts.push(`Period: ${/^\d{4}-\d{2}-\d{2}T/.test(fact.period) ? fact.period.slice(0, 10) : fact.period}`);

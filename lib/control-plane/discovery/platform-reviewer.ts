@@ -6,7 +6,7 @@ import { autoCrosswalkReviewerId } from "./auto-crosswalk.ts";
 /** A repaired matcher or changed held directory reopens its standing work. */
 export function platformReviewer(root = process.cwd()) {
   const hash = createHash("sha256");
-  for (const file of ["auto-crosswalk.ts", "platform-registration.ts", "platform-catalog.ts", "platform-government.ts", "platform-legistar.ts", "platform-civicplus.ts", "platform-calendar-reading.ts", "derived-wiring.ts", "derived-wiring-reading.ts"])
+  for (const file of ["auto-crosswalk.ts", "platform-enumeration.ts", "platform-registration.ts", "platform-catalog.ts", "platform-government.ts", "platform-legistar.ts", "platform-civicplus.ts", "platform-calendar-reading.ts", "derived-wiring.ts", "derived-wiring-reading.ts"])
     hash.update(readFileSync(join(root, "lib/control-plane/discovery", file)));
   for (const file of ["derived-door-kinds.ts", "meeting-body-crosswalk.ts"])
     hash.update(readFileSync(join(root, "lib/civic-data", file)));

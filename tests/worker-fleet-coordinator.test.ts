@@ -21,6 +21,7 @@ import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { withPromotedFixturesInChildren } from "./helpers/promoted-fixtures.ts";
+import { readHeldDiggerWorkItems, readHeldDiggerPriorities, heldDiggerNamedOrder, compareNamedBeforeBackground } from "../lib/control-plane/workers/held-digger-priority.ts";
 
 test("PDC: the production standing runtime refuses queued or newly due legacy meeting acquisitions without opening the source", async () => {
   const h = await autonomousHarness({
@@ -323,13 +324,15 @@ test("the autonomous wave loop stops at its dispatch slice even while waves keep
   let orderingReads = 0;
   const unreadable = () => { orderingReads++; throw new Error("ordering must reuse the selected metadata"); };
   const selected = await new Function("held", "fleet", "runAutonomousCoordinator", "placeOrder", "paidWorkerCapacity",
-    "placeRankFor", "huntRoundComparator", "repos", "squadReading", ordering)(held, {},
+    "placeRankFor", "huntRoundComparator", "repos", "squadReading", "readHeldDiggerWorkItems", "readHeldDiggerPriorities",
+    "heldDiggerNamedOrder", "compareNamedBeforeBackground", "dispatchTargets", "dispatchPriority", "plannedOrder", ordering)(held, {},
     async (_fleet: unknown, options: { onSelectionSnapshot: (items: readonly WorkItem[]) => void }) => {
       options.onSelectionSnapshot([legacy, current]);
       return { decisions: [{ action: "WORKER", task: plannedTask }] };
     }, placeOrder, () => 1,
     (subject: string) => subject === legacy.subject ? placeOrder.indexOf("hunt:legacy") : null,
-    huntRoundComparator, { routeTasks: { read: unreadable }, workItems: { read: unreadable } });
+    huntRoundComparator, { routeTasks: { read: unreadable }, workItems: { read: unreadable } }, undefined,
+    readHeldDiggerWorkItems, readHeldDiggerPriorities, heldDiggerNamedOrder, compareNamedBeforeBackground, [], new Set(), new Map());
   assert.equal(selected.remainingSnapshotItems, 0, "the whole selection index is released after retaining only queued metadata");
   assert.equal(selected.metadata.get(held[0]!.id), legacy);
   assert.equal(selected.metadata.get(plannedTask.id), current);

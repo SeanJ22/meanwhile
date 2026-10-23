@@ -86,6 +86,25 @@ function sharedAuthority(people: SourceAuthorityContract, federal: SourceAuthori
   };
 }
 
+const DOOR_OUTCOMES_AUTHORITY = {
+  id: "door-outcomes",
+  publisher: "Public bodies on Legistar, each read on the host its own door names",
+  trust: "T1_AUTHORITATIVE_STRUCTURED",
+  sourceClass: "OFFICIAL_PLATFORM",
+  // The vendor's public Web API; a body's own portal host comes from its door (installDoorHosts).
+  routePrefixes: ["https://webapi.legistar.com/v1/"],
+  jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
+  recordClasses: ["MEETING_OUTCOME"],
+  competentFacts: ["agenda item", "recorded body action", "recorded disposition", "exact per-person roll call", "publisher document status", "minutes document standing"],
+  expectedIdentifierKeys: ["meeting_id", "event_id"],
+  expectedTemporalFields: ["event_last_modified_utc", "observed_at", "source_through"],
+  horizonSemantics: "Each door bounds its own date window; each changed sitting is an independent acquisition. A failed item, vote or minutes retrieval produces a refused durable candidate and cannot replace another sitting's, or another door's, LKG facts.",
+  parserVersion: "legistar-outcomes/2",
+  freshnessExpectation: "The standing routine runner's clock under the door's outcome contract, following the body's sittings; each pass re-walks only sittings whose publisher stamp or minutes link moved. No owner or GitHub clock.",
+  absencePolicy: { kind: "NEVER_FROM_ZERO" },
+  routineAutoPromotion: true,
+} as const satisfies SourceAuthorityContract;
+
 const AUTHORITIES = {
   ...CAMPAIGN_FINANCE_AUTHORITIES,
   ...FEDERAL_MONEY_AUTHORITIES,
@@ -784,23 +803,11 @@ const AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
-  "door-outcomes": {
-    id: "door-outcomes",
-    publisher: "Public bodies on Legistar, each read on the host its own door names",
-    trust: "T1_AUTHORITATIVE_STRUCTURED",
-    sourceClass: "OFFICIAL_PLATFORM",
-    // The vendor's public Web API; a body's own portal host comes from its door (installDoorHosts).
-    routePrefixes: ["https://webapi.legistar.com/v1/"],
-    jurisdictions: [...REGISTRATION_TARGETS.map((t) => t.jurisdiction), "SUPPORTED-BODY-WITHOUT-CENSUS-DIVISION"],
-    recordClasses: ["MEETING_OUTCOME"],
-    competentFacts: ["agenda item", "recorded body action", "recorded disposition", "exact per-person roll call", "publisher document status", "minutes document standing"],
-    expectedIdentifierKeys: ["meeting_id", "event_id"],
-    expectedTemporalFields: ["event_last_modified_utc", "observed_at", "source_through"],
-    horizonSemantics: "Each door bounds its own date window; each changed sitting is an independent acquisition. A failed item, vote or minutes retrieval produces a refused durable candidate and cannot replace another sitting's, or another door's, LKG facts.",
-    parserVersion: "legistar-outcomes/2",
-    freshnessExpectation: "The standing routine runner's clock under the door's outcome contract, following the body's sittings; each pass re-walks only sittings whose publisher stamp or minutes link moved. No owner or GitHub clock.",
-    absencePolicy: { kind: "NEVER_FROM_ZERO" },
-    routineAutoPromotion: true,
+  "door-outcomes": DOOR_OUTCOMES_AUTHORITY,
+  "door-minutes-outcomes": {
+    ...DOOR_OUTCOMES_AUTHORITY, id: "door-minutes-outcomes", trust: "T2_AUTHORITATIVE_DOCUMENT",
+    parserVersion: "legistar-minutes-outcomes/1",
+    competentFacts: ["agenda item", "recorded body action", "minutes passage", "publisher document status", "minutes document standing"],
   },
   "az-legislature": {
     id: "az-legislature",
@@ -1050,7 +1057,7 @@ export function authorityForManualReceipt(
 }
 
 let doorHosts: ReadonlySet<string> | null = null;
-const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes"]);
+const DOOR_HOST_SOURCES: ReadonlySet<string> = new Set(["meetings-public-bodies", "door-outcomes", "door-minutes-outcomes"]);
 
 export function installDoorHosts(hosts: Iterable<string> | null): void {
   doorHosts = hosts === null ? null : new Set([...hosts].map((host) => host.trim().toLowerCase()).filter((host) => host !== ""));

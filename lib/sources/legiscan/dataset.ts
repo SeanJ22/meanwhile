@@ -65,12 +65,15 @@ interface LegiscanPersonJoin {
 export interface LegiscanIdentityAuthority {
   scope: string; versionId: string; sourceId: "plural-openstates"; crosswalkSha256: string; joins: LegiscanPersonJoin[];
 }
-export function sourcePersonIds(holder: Officeholder): string[] {
+export type LegiscanIdentityHolder = Pick<Officeholder,"id"|"personId"|"nativeIds"> &
+  Partial<Pick<Officeholder,"level"|"websiteUrl"|"profileUrls">> &
+  { provenance?: Officeholder["provenance"] | null };
+export function sourcePersonIds(holder: Pick<Officeholder,"id"|"personId"|"nativeIds">): string[] {
   return [...new Set([...(holder.nativeIds?.["ocd-person"] ?? []), holder.personId ?? "", holder.id].flatMap(value =>
     nativePersonId(value) ? [value] : /^plural:(?:[a-z]{2}:)?([0-9a-f-]{36})$/.test(value) ? [`ocd-person/${value.split(":").at(-1)}`] : []))];
 }
 /** Names, party, district and office title never participate in this crosswalk. */
-export function legiscanIdentityJoins(holders: readonly Officeholder[], people: readonly Record<string, unknown>[]) {
+export function legiscanIdentityJoins(holders: readonly LegiscanIdentityHolder[], people: readonly Record<string, unknown>[]) {
   const matches = new Map<number, Map<string, LegiscanPersonJoin>>();
   for (const person of people) {
     if (!positiveId(person.people_id)) continue;

@@ -2525,3 +2525,43 @@ test("an unread or contradictory promotion inventory never turns contracts into 
   const duplicate = [...domains, ...domains];
   await assert.rejects(planRoutineReaderRepair(new MemoryRoutineDataStore(), duplicate), /CONTRACT_ID_DUPLICATE/);
 });
+
+test("sparse reader inventories repack exact holdings without crossing states, ZIPs or source phases", async () => {
+  const template = observableRoutineContracts().find(contract => contract.id === "fec-funding")!;
+  const selected = ["AZ", "NH"].flatMap(state => Array.from({ length: 96 }, (_, index) => ({
+    ...template, id: `repair-${state}-${index}`, scope: `US-${state}:repair:${index}`,
+  })));
+  const zip = { ...template, id: "national-place:92101", scope: "ZIP:92101" };
+  const held = new Set(["US-AZ:repair:0", "US-AZ:repair:32", "US-AZ:repair:64",
+    "US-NH:repair:0", "US-NH:repair:32", "US-NH:repair:64", zip.scope]);
+  const domains = routineReaderRepairDomains([...selected, zip]);
+  const store = { readPromotionIdentities: async (recordClass: typeof template.recordClass, scopes: readonly string[]) =>
+    scopes.filter(scope => held.has(scope)).map(scope => ({ recordClass, scope, key: `${recordClass}:${scope}`,
+      sourceId: template.sourceId, versionId: "held", lastKnownGoodVersionId: "held", promotedAt: T0 })) };
+  const plan = await planRoutineReaderRepair(store, domains);
+  assert.equal(plan.domains.length, 3, "six sparse state children become two; the ZIP keeps its own child");
+  assert.equal(plan.noPromotion.length, selected.length - 6);
+  assert.deepEqual(new Set(plan.domains.flatMap(domain => domain.contracts.map(contract => contract.scope))), held);
+  assert.ok(plan.domains.every(domain => new Set(domain.contracts.map(contract => contract.scope.split(":")[0])).size === 1));
+  assert.ok(plan.domains.every(domain => domain.contracts.length <= 32 && domain.timeoutMs <= 120_000));
+  const phases = readerRepairDomainPhases(domains, selected.filter(contract => contract.id.endsWith("-0")));
+  const early = await planRoutineReaderRepair(store, phases.early), late = await planRoutineReaderRepair(store, phases.late);
+  assert.equal(new Set([...early.domains, ...late.domains].map(domain => domain.id)).size, early.domains.length + late.domains.length);
+  assert.ok(late.domains.every(domain => domain.contracts.every(contract => contract.id.endsWith("-0"))));
+  assert.ok(early.domains.every(domain => domain.contracts.every(contract => !contract.id.endsWith("-0"))));
+});
+
+test("inventory compaction retains the parent's exact calendar mode after a registry change", async () => {
+  const original = [...MEETING_PARTITION_CONTRACTS], selected = original.slice(0, 2);
+  const domains = routineReaderRepairDomains(selected);
+  MEETING_PARTITION_CONTRACTS.splice(0, MEETING_PARTITION_CONTRACTS.length);
+  try {
+    const held = selected[0]!;
+    const plan = await planRoutineReaderRepair({ readPromotionIdentities: async () => [{ key: `${held.recordClass}:${held.scope}`,
+      recordClass: held.recordClass, scope: held.scope, sourceId: held.sourceId, versionId: "held", lastKnownGoodVersionId: "held", promotedAt: T0 }] }, domains);
+    assert.equal(plan.domains.length, 1);
+    assert.equal(plan.domains[0]!.mode, "MEETING_AGGREGATE");
+    assert.equal(plan.domains[0]!.contracts[0], held);
+    assert.deepEqual(plan.noPromotion.map(row => row.contractId), [selected[1]!.id]);
+  } finally { MEETING_PARTITION_CONTRACTS.splice(0, MEETING_PARTITION_CONTRACTS.length, ...original); }
+});

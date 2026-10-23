@@ -13,6 +13,7 @@ const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
 
 export const DOOR_OUTCOMES_SOURCE_ID = "door-outcomes" as const;
+export const DOOR_MINUTES_OUTCOMES_SOURCE_ID = "door-minutes-outcomes" as const;
 
 export const OUTCOMES_HOLD = "outcomes";
 
@@ -20,7 +21,7 @@ export const OUTCOME_DOOR_KINDS = ["legistar", "legistar-insite"] as const;
 export type OutcomeDoorKind = (typeof OUTCOME_DOOR_KINDS)[number];
 
 /** A door on one of these routes is served by that contract; building both would write each sitting twice. */
-const STILL_ON_PLACE_CONTRACT: ReadonlySet<string> = new Set(["legistar:pima", "legistar-insite:mesa"]);
+const STILL_ON_PLACE_CONTRACT: ReadonlySet<string> = new Set(["legistar:pima", "legistar-insite:pima", "legistar:mesa", "legistar-insite:mesa"]);
 
 export interface OutcomePartitionContract extends RoutineSourceContract {
   readonly doorId: string;
@@ -54,7 +55,7 @@ function tenantFor(row: BodySourceWiring, kind: OutcomeDoorKind, id: string, sco
   if (kind === "legistar-insite" && portalHost === null) throw new Error(`OUTCOME_DOOR_PORTAL_HOST_MISSING:${row.bodyId}`);
   return {
     contractId: id,
-    sourceId: DOOR_OUTCOMES_SOURCE_ID,
+    sourceId: kind === "legistar" ? DOOR_OUTCOMES_SOURCE_ID : DOOR_MINUTES_OUTCOMES_SOURCE_ID,
     recordClass: "MEETING_OUTCOME",
     scope,
     parserVersion: kind === "legistar" ? "legistar-outcomes/2" : "legistar-minutes-outcomes/1",
@@ -73,7 +74,7 @@ function outcomeDoorKind(door: DoorRecord): OutcomeDoorKind | null {
 export function outcomeDoors(doors: readonly DoorRecord[]): readonly DoorRecord[] {
   return doors.filter((door) =>
     door.status !== "SUSPENDED" && door.meeting != null && door.meeting.family === null && door.bodyIds.length === 1 &&
-    outcomeDoorKind(door) !== null && door.holds.includes(OUTCOMES_HOLD));
+    outcomeDoorKind(door) !== null && (door.holds.includes(OUTCOMES_HOLD) || door.holds.includes("meetings")));
 }
 
 export interface OutcomePartitionBuild {
@@ -104,6 +105,7 @@ export function buildOutcomePartitions(doors: readonly DoorRecord[]): OutcomePar
 
 function buildOne(door: DoorRecord): OutcomePartitionContract | null {
   const kind = outcomeDoorKind(door)!;
+  const sourceId = kind === "legistar" ? DOOR_OUTCOMES_SOURCE_ID : DOOR_MINUTES_OUTCOMES_SOURCE_ID;
   const [row] = wiringRowsFromDoors([door]);
   if (row === undefined) return null;
   const slug = row.config.slug?.trim() ?? "";
@@ -111,7 +113,7 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
   if (kind === "legistar-insite" && (!row.config.insiteBodyNames?.trim() || !row.config.insiteBodyName?.trim())) {
     throw new Error(`OUTCOME_DOOR_INSITE_BODY_NAMES_MISSING:${row.bodyId}`);
   }
-  const doorId = meetingPartitionId(kind, door.bodyIds[0]);
+  const doorId = meetingPartitionId(kind, door.bodyIds[0], row.config.partitionRoute);
   const id = outcomePartitionId(doorId);
   const scope = outcomePartitionScope(doorId);
   const tenant = tenantFor(row, kind, id, scope);
@@ -122,7 +124,7 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
   }
   return {
     id,
-    sourceId: DOOR_OUTCOMES_SOURCE_ID,
+    sourceId,
     recordClass: "MEETING_OUTCOME",
     scope,
     acquisitionFailureDomain: meetingAcquisitionFailureDomain(kind, row),
@@ -143,7 +145,7 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
     },
     schedule: meetingSittingWindow([{ meetingSource: kind, bodyId: door.bodyIds[0] }]),
     retry: { afterMs: HOUR, description: "one hour after a failed events, items, votes or minutes attempt" },
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: DOOR_OUTCOMES_SOURCE_ID },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: "civic_data_candidates+civic_data_candidate_events+civic_data_promotions",
     readerProjection: { id: `door-outcomes:${doorId}`, consumers: ["agenda", "Ask", "meeting Reader records", "map"] },

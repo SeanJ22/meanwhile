@@ -14,7 +14,7 @@ export type RetainedMeetingCandidate = RoutineCandidate & {
 };
 
 /** A fetch that keeps every successful HTTPS response it makes, so the facts a read yields cite the exact bytes. */
-export function retainingFetch(base: typeof fetch) {
+export function retainingFetch(base: typeof fetch, now: () => string = () => new Date().toISOString()) {
   const responses: RetainedSourceResponse[] = [], refusals: string[] = [];
   let retainedBytes = 0;
   const fetch = (async (input, init) => {
@@ -26,7 +26,7 @@ export function retainingFetch(base: typeof fetch) {
       if (retainedBytes + bytes.length <= 16 * 1024 * 1024) {
         responses.push({ source: "", requestedUrl, finalUrl, httpStatus: response.status,
           rawHash: createHash("sha256").update(bytes).digest("hex"), byteCount: bytes.length,
-          bytes, retrievedAt: new Date().toISOString(), contentType: response.headers.get("content-type") ?? "" });
+          bytes, retrievedAt: now(), contentType: response.headers.get("content-type") ?? "" });
         retainedBytes += bytes.length;
       } else refusals.push(`RESEARCH_CAPTURE_BOUND_EXCEEDED:${finalUrl}`);
     }
@@ -35,8 +35,8 @@ export function retainingFetch(base: typeof fetch) {
   return { fetch, responses, refusals };
 }
 
-export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>) {
-  const originalFetch = globalThis.fetch, retaining = retainingFetch(originalFetch);
+export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>, now?: () => string) {
+  const originalFetch = globalThis.fetch, retaining = retainingFetch(originalFetch, now);
   globalThis.fetch = retaining.fetch;
   try { return { value: await operation(), responses: retaining.responses, refusals: retaining.refusals }; }
   finally { globalThis.fetch = originalFetch; }

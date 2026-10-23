@@ -110,6 +110,8 @@ test("one SQL statement selects exact sitting payload parts from state and deriv
   await put({ ...own, sittings: [sitting] }, "US-CA:place:unrelated:outcomes");
   const doorSitting = { ...sitting, meetingId: CALENDAR_ID };
   await put({ ...own, sittings: [doorSitting] }, outcomePartitionScope(meetingPartitionId("legistar-insite", BODY)));
+  const routedId = "legistar:pima:routed";
+  await put({ ...own, sittings: [{ ...sitting, meetingId: routedId }] }, outcomePartitionScope(meetingPartitionId("legistar", BODY, "7ed7e84e8ac9405f")));
   await put({ ...own, sittings: [sitting] }, outcomePartitionScope(meetingPartitionId("legistar", `${BODY}-unrelated`)));
   let reads = 0;
   const query: ReadOnlyQuery = async statements => {
@@ -121,6 +123,8 @@ test("one SQL statement selects exact sitting payload parts from state and deriv
   assert.equal(reads, 1);
   assert.deepEqual(snapshot.sittings.map(row => row.meetingId).sort(), [CALENDAR_ID, sitting.meetingId].sort());
   assert.deepEqual(snapshot.sittings.find(row => row.meetingId === sitting.meetingId), sitting);
+  const routed = await readSelectedMeetingOutcomes(["AZ"], BODY, [routedId], query);
+  assert.deepEqual(routed.sittings.map(row => row.meetingId), [routedId], "a selected meeting reads its body's routed outcome pointer on the first request");
   assert.ok(!JSON.stringify(snapshot).includes("Other sitting."));
   await pg.query("UPDATE civic_data_candidates SET state='VALIDATED' WHERE scope=$1", [SCOPE]);
   await assert.rejects(readSelectedMeetingOutcomes(["AZ"], BODY, [sitting.meetingId], query), /PUBLICATION_INVALID/);

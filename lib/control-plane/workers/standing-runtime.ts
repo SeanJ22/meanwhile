@@ -15,8 +15,6 @@ import { scoutStateHint } from "../scheduler/field-manual-scout.ts";
 import { researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { durableResearchTools } from "./durable-research-tools.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
-import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
-import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 import { evidenceProjection } from "./runtime.ts";
 import { researchVaultResolver } from "./vault-object.ts";
 import { promotedRegistries } from "../scheduler/provider-inputs.ts";
@@ -28,6 +26,7 @@ import { exaAgentExecutor, EXA_AGENT_ROUTE_ID } from "../../hunt/exa-lane.ts";
 import { readGovernmentPackets } from "../../hunt/packet-read.ts";
 import { huntPacketObligationId, reportableSubjects } from "../../hunt/packet.ts";
 import type { HuntSearch, SearchBudget } from "../../hunt/search.ts";
+import { withHeldDiggerRuntime } from "./held-digger-runtime.ts";
 
 /** One runtime over the same stores and bounded worker infrastructure used by the standing runner. */
 export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:string;repos:ControlPlaneRepositories;transport?:ModelTransport;
@@ -49,7 +48,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The transport for one jurisdiction's work, held on the area budget covering it; absent, `transport` serves all. */
   transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null},taskId?:string)=>ModelTransport;
   refusedBeforeSending?:(error:unknown)=>boolean}):Promise<AutonomousCoordinatorRuntime> {
-  if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
   const siblingHeldRootFor: NonNullable<ResearchRuntimeTools["siblingHeldRootFor"]> = async held => {
     const history=await readLineageHistory(input.repos,held.childWorkItemId);
@@ -135,5 +133,5 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
         ...(input.refusedBeforeSending?{refusedBeforeSending:input.refusedBeforeSending}:{}),
         ...(search?{search}:{}),...(input.environment?{environment:input.environment}:{}),readHeldArtifact},item,task);
     }}:{})};
-  return runtime;
+  return withHeldDiggerRuntime(runtime, input);
 }

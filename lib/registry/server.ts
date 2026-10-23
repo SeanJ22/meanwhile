@@ -477,8 +477,14 @@ export async function readerDivisionIdsAt(lat: number, lng: number): Promise<str
 
 /** Special districts and tribal areas at a point: territories the Census geocoder does not report. */
 export async function territoryDivisionsAt(lat: number, lng: number): Promise<Division[]> {
-  const ids = (await readerDivisionIdsAt(lat, lng)).filter(id => /\/(?:special_district|aiannh):/.test(id));
-  return ids.length ? divisionsByOcdIds(ids) : [];
+  // An addition to the Census answer: when it cannot be read, the address still resolves without it.
+  try {
+    const ids = (await readerDivisionIdsAt(lat, lng)).filter(id => /\/(?:special_district|aiannh):/.test(id));
+    return ids.length ? await divisionsByOcdIds(ids) : [];
+  } catch (error) {
+    console.warn(`special districts at ${lat},${lng} could not be read; the address resolves without them: ${error instanceof Error ? error.message : String(error)}`);
+    return [];
+  }
 }
 
 export async function divisionsForCensusGeographies(geographies: CensusGeographies, selection: GeographySelection, vintage: string,

@@ -15,6 +15,8 @@ let local: LocalPicks | undefined;
 let running: Promise<void> | undefined;
 let status = "";
 let openingRead: { secret: string; response: Promise<Response | null> } | undefined;
+let editVersion = 0;
+const visible = () => typeof document !== "undefined" && document.visibilityState === "visible";
 
 function session(): Session | null {
   try {
@@ -49,12 +51,14 @@ export function queuePicksSync(before: PicksFile, after: PicksFile) {
   saved.file = applyPickChanges(saved.file, after, changed);
   try {
     persist(saved);
+    editVersion += 1;
     announce("Syncing your picks…");
     void syncPicks();
   } catch { announce("Picks could not sync. Keep this page open and try again."); }
 }
 
 async function request(saved: Pick<Session, "secret">, method = "GET", body?: unknown) {
+  if (!visible()) throw new Error("sync paused while hidden");
   const response = await fetch("/api/ballot/picks", {
     method, cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer",
     headers: { authorization: `Bearer ${saved.secret}`, "content-type": "application/json" },
@@ -115,8 +119,16 @@ async function exchange() {
 }
 
 export function syncPicks(): Promise<void> {
+  if (!visible()) return Promise.resolve();
   if (running) return running;
-  running = exchange().catch(() => announce("Picks could not sync. Your changes are kept on this device.")).finally(() => { running = undefined; });
+  const startedAtEdit = editVersion;
+  running = exchange().catch(() => {
+    if (visible()) announce("Picks could not sync. Your changes are kept on this device.");
+  }).finally(() => {
+    running = undefined;
+    // A tap made during an existing read/write must not wait for the next poll.
+    if (editVersion !== startedAtEdit) void syncPicks();
+  });
   return running;
 }
 
@@ -155,21 +167,30 @@ export function startPicksSync(io: LocalPicks): () => void {
       announce("Restoring your picks…");
     } else announce("This private picks link is incomplete.");
   }
-  const refresh = () => { void syncPicks(); };
-  refresh();
-  const timer = window.setInterval(refresh, 1500);
+  const refresh = () => { if (visible()) void syncPicks(); };
+  let timer: number | undefined;
+  const visibilityChanged = () => {
+    clearInterval(timer);
+    if (visible()) {
+      refresh();
+      timer = window.setInterval(refresh, 30_000);
+    }
+  };
+  visibilityChanged();
   window.addEventListener("online", refresh);
   window.addEventListener("focus", refresh);
+  document.addEventListener("visibilitychange", visibilityChanged);
   return () => {
     clearInterval(timer);
     window.removeEventListener("online", refresh);
     window.removeEventListener("focus", refresh);
+    document.removeEventListener("visibilitychange", visibilityChanged);
   };
 }
 
 // Start the link read while React hydrates the ballot. Waiting for the My picks
 // effect would put a complete network round trip after hydration on a new phone.
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && visible()) {
   const secret = new URLSearchParams(window.location.hash.slice(1)).get("picks");
   if (secret && PRIVATE_PICK_SECRET.test(secret)) openingRead = { secret, response: request({ secret }).catch(() => null) };
 }

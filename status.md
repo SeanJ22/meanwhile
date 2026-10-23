@@ -1,11 +1,16 @@
 # River status
 
-build_state: RELEASE 90 LIVE (/api/build a462d38); RELEASE 91 CANDIDATE (SP-01-FX ballot cache fix + RN-01-FX + River National label fix) IN GATES from 11:55 AM EDT on river-next 171c09b52 (main merged before gates); RN-02 returned (merge river); NEXT (release 92): VS-07-FX f48331d9d
+build_state: RELEASE 90 LIVE (/api/build a462d38); RELEASE 91 (SP-01-FX, RN-01-FX, National label) PR #801 OPEN, gates 9 of 9 on 171c09b52 (9,559 pass), run-full-ci + auto-merge; RELEASE 92 (VS-07-FX) IN GATES from 12:12 PM EDT
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
 lock: session_012UDbgz3sjA8QN2m7CY78QS
 heartbeat: 2026-10-23T16:01:27Z
+
+## Waiting on Sean (from FX-01's returns/sean.md on stream/fx-01-fx, Oct 23 ~12:10 PM EDT)
+
+Items 1 (Vice President) and 2 (planning round) are answered above and shipped or folding. New:
+3. Official voting pages that carry key-like tokens: the evidence store classes such captures as restricted, there is no encrypted storage for them, so the page is held and its sites do not publish. Readers miss: Wheeling IL (60090 shows 0 voting sites), the Cochise County AZ voter page, El Paso County TX's 39 early-voting and 123 Election Day sites. Choose: (a) turn on encrypted evidence storage for restricted captures (needs a key and storage setting only Sean can give); (b) approve publishing from a cleaned copy (token-like strings removed before saving, sites verified against that copy); (c) keep holding.
 
 ## Open data issue (from RN-02, Oct 23)
 

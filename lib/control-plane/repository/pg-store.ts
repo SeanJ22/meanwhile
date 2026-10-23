@@ -6,11 +6,11 @@ import { pgAdminConfigRepository } from "./admin-config.ts";
 import { archivedAggregateRepository, createPgDispatchState } from "./dispatch-state.ts";
 import { pgSpendRepository } from "./model-charges.ts";
 import { pgControlReadsBackfill } from "./control-reads-backfill.ts";
-import type { BoxFinding, BoxRepository } from "../box.ts";
+import { PUBLISHER, type BoxFinding, type BoxRepository } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
-import { withCallerSite } from "../../db/transfer-by-caller.ts";
+import { installDatabaseClientAccounting, withCallerSite } from "../../db/transfer-by-caller.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import { pageAddress } from "../../doors/page-doors.ts";
@@ -301,6 +301,8 @@ export function pgAggregateRepository<T>(
   const where = `${table} in the control-plane database`;
   const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rowClass = options.rowClass ?? (DOCUMENT_ROW_TABLES.has(table) ? "DOCUMENT" : "POINT");
+  const references = new Map<string, Persisted<unknown>>();
+  const referenceTable = ["cp_admin_config", "cp_research_state", "cp_field_manual_entries"].includes(table);
 
   async function read(id: string): Promise<Persisted<T> | null> {
     const rows = (await run(
@@ -319,7 +321,7 @@ export function pgAggregateRepository<T>(
     };
   }
 
-  async function listChangedSince(since: string | null, held?: HeldSlots, read: ChangedReadOptions<Persisted<T>> = {}): Promise<ChangedRows<T>> {
+  async function listChangedSince(since: string | null, held?: HeldSlots, read: ChangedReadOptions<Persisted<T>> = {}, includeChangedAt = true): Promise<ChangedRows<T>> {
     const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
     const through = new Date(clock[0]?.read_at as string).toISOString();
     const selected = read.projection ? recordProjectionSql(table, read.projection, "value") : "value";
@@ -333,7 +335,7 @@ export function pgAggregateRepository<T>(
       const rows = (await run(
         "listChangedSince",
         "PAGE",
-        `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
+        `SELECT id, revision, updated_at, ${includeChangedAt ? "changed_at, " : ""}${selected} AS value FROM ${table}
          ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
          ORDER BY id ASC
          LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
@@ -353,6 +355,7 @@ export function pgAggregateRepository<T>(
       id: String(row.id),
       revision: Number(row.revision),
       updatedAt: new Date(row.updated_at as string).toISOString(),
+      ...(row.changed_at == null ? {} : { changedAt: new Date(row.changed_at as string).toISOString() }),
       value: parseValue<O>(row.value, `${where} id ${String(row.id)}`),
     };
   }
@@ -374,9 +377,10 @@ export function pgAggregateRepository<T>(
   }
 
   const copies = options.copies ?? null;
+  const listingSource = (since: string | null, held?: HeldSlots) => listChangedSince(since, held, {}, false);
   const held = <O>(out: (row: Persisted<T>) => O): Promise<O[]> => copies === null
-    ? listChangedSince(null).then(changed => changed.rows.map(out))
-    : copies.aggregateList(`${table}:${options.state ?? "all"}:${options.activeOnly ?? false}`, listChangedSince, out);
+    ? listingSource(null).then(changed => changed.rows.map(out))
+    : copies.aggregateList(`${table}:${options.state ?? "all"}:${options.activeOnly ?? false}`, listingSource, out);
 
   async function listWhereAs<O>(path: readonly string[], value: string, selected: string, caller: string): Promise<Persisted<O>[]> {
     const jsonPath = jsonPathLiteral(table, path);
@@ -422,20 +426,28 @@ export function pgAggregateRepository<T>(
     async readNarrowed(id, projection) {
 
       const narrowed = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
+      const key = `${id}\n${JSON.stringify(projection)}`;
+      const prior = references.get(key);
       const rows = (await run(
         "readNarrowed",
         "POINT",
-        `SELECT id, revision, updated_at, ${narrowed} AS value FROM ${table} WHERE id = $1`,
-        [id],
+        `SELECT id, revision, updated_at, ${prior ? `CASE WHEN revision = $2 THEN NULL ELSE ${narrowed} END` : narrowed} AS value FROM ${table} WHERE id = $1`,
+        prior ? [id, prior.revision] : [id],
       )) as Record<string, unknown>[];
-      if (rows.length === 0) return null;
+      if (rows.length === 0) { references.delete(key); return null; }
       const row = rows[0];
-      return {
+      if (prior && Number(row.revision) === prior.revision) return structuredClone(prior);
+      const next = {
         id: String(row.id),
         revision: Number(row.revision),
         updatedAt: new Date(row.updated_at as string).toISOString(),
         value: parseValue<unknown>(row.value, `${where} id ${id}`),
       };
+      if (referenceTable && Buffer.byteLength(JSON.stringify(next)) <= 65_536) {
+        if (references.size >= 16) references.delete(references.keys().next().value!);
+        references.set(key, structuredClone(next));
+      } else references.delete(key);
+      return next;
     },
 
     async mustRead(id) {
@@ -561,6 +573,14 @@ function pgArchivedAggregateRepository<T>(sql: Sql, entity: string, table: strin
     readManyNarrowed: history.readManyNarrowed, listWhereIn: history.listWhereIn,
     listChangedSince: history.listChangedSince };
 }
+
+export interface SnapshotStampedReadOptions {
+  readonly projection?: RecordProjection;
+  readonly timeRange?: { readonly path: readonly string[]; readonly from: string; readonly until: string };
+}
+
+export type SnapshotStampedRead<T> = (from: string, until: string,
+  page: (records: readonly ChangedRecord<T>[]) => Promise<void> | void, options?: SnapshotStampedReadOptions) => Promise<void>;
 
 export function pgAppendOnlyRepository<T>(
   sql: Sql,
@@ -821,8 +841,17 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
-    readStampedBetween: (from, until, page) => pagedRecords("readStampedBetween",
-      at => [recordState, `recorded_at >= ${at(from)}::timestamptz`, `recorded_at < ${at(until)}::timestamptz`], "record", page),
+    readStampedBetween: (from, until, page, options: SnapshotStampedReadOptions = {}) => pagedRecords("readStampedBetween", at => {
+      const filters = [recordState, `recorded_at >= ${at(from)}::timestamptz`, `recorded_at < ${at(until)}::timestamptz`];
+      if (options.timeRange) {
+        const { path, from: lo, until: hi } = options.timeRange;
+        const time = `record #>> '${jsonPathLiteral(table, path)}'`;
+        // Noncanonical stamps still reach the caller's Date.parse handling.
+        filters.push(`(${time} IS NULL OR ${time} !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$' OR ` +
+          `(${time} >= ${at(lo)}::text AND ${time} < ${at(hi)}::text))`);
+      }
+      return filters;
+    }, options.projection ? recordProjectionSql(table, options.projection) : "record", page),
 
     readAll: () => heldAll(record => record),
     readAllNarrowed: projection => heldAll(record => projectRecord(record, projection)),
@@ -861,8 +890,9 @@ export function pgAppendOnlyRepository<T>(
       return out;
     },
 
-    async readKeys(keys) {
-
+    async readKeys(keys: readonly string[], projection?: RecordProjection) {
+      /* Keyset-paged on `(log_key, position)` (the log's unique order index), so a response stays under the 64 MiB cap
+         however many records the keys hold, and the keys cost a few statements, not one each. */
       const unique = [...new Set(keys)];
       const out = new Map<string, T[]>();
       if (unique.length === 0) return out;
@@ -872,7 +902,7 @@ export function pgAppendOnlyRepository<T>(
         const rows = (await run(
           "readKeys",
           "PAGE",
-          `SELECT log_key, position, record FROM ${table}
+          `SELECT log_key, position, ${projection ? recordProjectionSql(table, projection) : "record"} AS record FROM ${table}
            WHERE log_key = ANY($1::text[]) AND (log_key, position) > ($2, $3)
            ORDER BY log_key ASC, position ASC
            LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
@@ -915,19 +945,31 @@ export function pgAppendOnlyRepository<T>(
   });
 }
 
-const BOX_DUE_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL AND value->>'lastRecordedAt' >= $3
-  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') < $1 AND value->>'lastRecordedAt' >= $3
-  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') > $1 AND value->>'lastRecordedAt' >= $3
-  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 AND value->>'lastRecordedAt' >= $3
-  LIMIT $4`;
+// Alternate retries and new findings. Each branch is bounded before ranking, and a poison finding's own retry clock cannot pin a page.
+export const BOX_DUE_SQL = `WITH due AS (
+    (SELECT 0 AS rank, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NOT NULL
+      AND ((value #>> '{waitingFor,slots}') <> $1 OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
+    UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'refused' AND (value #>> '{attempts,-1,builder}') = '${PUBLISHER}'
+      AND (coalesce(value #>> '{waitingFor,slots}', '') <> $1 OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
+    UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 ORDER BY id LIMIT $3)
+    UNION ALL (SELECT 1, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL ORDER BY id LIMIT $3)
+  ) SELECT id, value FROM (SELECT *, row_number() OVER (PARTITION BY rank ORDER BY id) AS turn FROM due) fair
+  ORDER BY turn, rank, id LIMIT $3`;
 const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 AND ($3::text[] IS NULL OR value->>'subjectId'=ANY($3::text[])) ORDER BY id LIMIT $2`;
+
+// A government's boards are every subject from `<government>` up to `<government>#...`; the store collates in C, so `#` then `$` bounds them in the subject index.
+const BOX_UNDER_SQL = `WITH under AS MATERIALIZED (SELECT id, value FROM cp_box_findings
+    WHERE value #>> '{subjectId}' = $3 OR (value #>> '{subjectId}' > $3 || '#' AND value #>> '{subjectId}' < $3 || '$'))
+  SELECT id, value FROM under WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 ORDER BY id LIMIT $2`;
 
 function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxRepository {
   const run = boundedRunner(sql, "cp_box_findings", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = (found: readonly Record<string, unknown>[]) => found.map(row => parseValue<BoxFinding>(row.value, `cp_box_findings id ${String(row.id)}`));
   return { ...pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", options),
-    due: async ({ slots, now, since, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [slots, now, since, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
+    due: async ({ slots, now, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [slots, now, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
     waitingFor: async (reason, limit, subjectIds) => rows(await run("boxWaitingFor", "PAGE", BOX_WAITING_SQL, [reason, Math.max(0, Math.trunc(limit)), subjectIds ?? null]) as Record<string, unknown>[]),
+    waitingUnder: async (reason, limit, governmentIds) => (await Promise.all([...new Set(governmentIds)].map(async id =>
+      rows(await run("boxWaitingUnder", "PAGE", BOX_UNDER_SQL, [reason, Math.max(0, Math.trunc(limit)), id]) as Record<string, unknown>[])))).flat(),
   };
 }
 
@@ -1551,7 +1593,7 @@ export async function createPgRepositories(
         "is kept separate on purpose.",
     );
   }
-  installDatabaseTransferCounter();
+  installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   const bounds: ControlPlaneRequestBounds = { ...CONTROL_PLANE_REQUEST_BOUNDS_MS, ...options.requestBounds };
   for (const [callClass, ms] of Object.entries(bounds)) {
     if (!Number.isSafeInteger(ms) || ms <= 0) {

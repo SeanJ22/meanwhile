@@ -15,6 +15,8 @@ export interface ReaderStateResponse {
   zipPlaces: Record<string, ZipDivisionEntry>;
   directory: DirectoryFile | null;
   memberDirectories?: readonly StateMemberDirectory[];
+  /** Census points for these public offices; directory-supplied coordinates remain distinct. */
+  officePoints?: Readonly<Record<string, import("../map/office-locator.ts").OfficePoint>>;
   boundaryUrl: string;
   /** A ZIP response covers its named divisions; other districts load when opened. */
   zip?: string;
@@ -106,7 +108,7 @@ export function stateCoverageForZip(state: ReaderStateResponse, zip: string, res
     ...state.coverage,
     bodies: state.coverage.bodies.filter(body => body.ocdId && ids.has(body.ocdId.split("#")[0]))
       .map(body => ({ ...body, couldGovern: !!body.ocdId && partial.has(body.ocdId.split("#")[0]) })),
-    seats: state.coverage.seats.filter(seat => seat.ocdId === "ocd-division/country:us" || ids.has(seat.ocdId)),
+    seats: state.coverage.seats.filter(seat => ids.has(seat.ocdId)),
     divisions: state.coverage.divisions.filter(division => ids.has(division.ocdId)),
   }, 0);
 }

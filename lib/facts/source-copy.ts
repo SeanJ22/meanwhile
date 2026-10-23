@@ -19,7 +19,7 @@ function checkText(body: string, contentType: string, base: string): string {
   return body;
 }
 
-const jsonValues = (value: unknown): string[] => typeof value === "string" ? [value] : typeof value === "number" ? [String(value)]
+export const jsonValues = (value: unknown): string[] => typeof value === "string" ? [value] : typeof value === "number" ? [String(value)]
   : value && typeof value === "object" ? Object.values(value).flatMap(jsonValues) : [];
 
 interface CopyRow {

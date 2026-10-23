@@ -4,6 +4,7 @@ import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state
 import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
+import {createRequire} from "node:module";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import { readerCanonicalEntry } from "../reader/canonical-context.ts";
@@ -27,12 +28,12 @@ import {
 } from "./fixture-policy.ts";
 export { mayUseTestFixture } from "./fixture-policy.ts";
 export type { CivicDataFixtureEnvironment } from "./fixture-policy.ts";
-import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import type { CandidateVersionReadback, PublishedCandidateMetadata, RoutineDataStore } from "./store.ts";
 import { projectionKey } from "./projection-key.ts";
 
 const TTL_MS = 30_000;
 const SHA256 = /^[a-f0-9]{64}$/;
+const proofRequire=createRequire(import.meta.url);
 
 function trustedLkgPredecessorVersionId(candidate: CandidateVersionRecord | null): string | null {
   const evidence = candidate?.candidate.bootstrapImport;
@@ -324,7 +325,7 @@ export interface CivicDataBootstrap<T> {
 export interface PromotedOrBootstrapOptions<T> extends PromotedCivicDataReadOptions {
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
-  readonly bootstrap: () => CivicDataBootstrap<T>;
+  readonly bootstrap: () => CivicDataBootstrap<T> | Promise<CivicDataBootstrap<T>>;
   /** Production never consults the fixture: an absent pointer is an authority gap. */
   readonly allowUnconfiguredBootstrap?: boolean;
 }
@@ -1247,6 +1248,8 @@ export function promotionProofIssue<T>(
   if (indexedPrior) {
     if (indexedPrior.versionId !== candidate.id) return "the consumed prior index names a different immutable version";
   } else if (candidate.bootstrapImport) {
+    // Reader pointer proofs do not need the legacy import builders on a cold visit.
+    const {trustedLkgImportEvidenceIssue}=proofRequire("./trusted-lkg-import.ts") as typeof import("./trusted-lkg-import.ts");
     const importIssue = trustedLkgImportEvidenceIssue(candidate, predecessor);
     if (importIssue !== null) return `the trusted-LKG import evidence is invalid: ${importIssue}`;
     const expectedSourceCode = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION"
@@ -1368,7 +1371,7 @@ export async function readPromotedOrBootstrap<T>(
     (result.kind === "NOT_RECORDED" ||
       (result.kind === "STORE_UNREACHABLE" && result.code === "STORE_NOT_CONFIGURED"))
   ) {
-    return bootstrapResult(options.recordClass, options.scope, options.bootstrap(), now, options.maxAgeMs);
+    return bootstrapResult(options.recordClass, options.scope, await options.bootstrap(), now, options.maxAgeMs);
   }
   return result;
 }
@@ -1422,8 +1425,42 @@ export const STATE_MONEY_READER_PAYLOAD = `(SELECT reader_payload_value(header -
         AND regexp_split_to_array(trim(regexp_replace(lower(reader_payload_node(item)->>'candidateNameAsFiled'), '[^a-z0-9]+', ' ', 'g')), ' +')
           @> string_to_array(substring(name FROM 16), ' '))), '[]'::jsonb))
   FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
+
+/** Ballot cards join by reviewed target keys, not by a mention inside a filing. */
+const BALLOT_STATE_MONEY_PAYLOAD = `(SELECT reader_payload_value(header - 'records') || jsonb_build_object('records',
+  coalesce((SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
+    FROM reader_payload_members(header->'records') members
+    WHERE EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(item)->'targetKeys') target
+      WHERE reader_payload_value(target.item)#>>'{}'=ANY($3::text[]))), '[]'::jsonb))
+  FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
+
+/** Keep every field and cycle for selected candidates, and their one-hop committee books. */
+const BALLOT_FEC_MONEY_PAYLOAD = `(WITH root AS MATERIALIZED (SELECT reader_payload_node(p.payload) AS value),
+  chosen AS MATERIALIZED (
+    SELECT members.ordinal_index,reader_payload_value(members.item) AS value FROM root,
+      LATERAL reader_payload_members(root.value->'candidates') members
+    WHERE EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(members.item)->'targetKeys') target
+      WHERE reader_payload_value(target.item)#>>'{}'=ANY($3::text[]))
+      OR reader_payload_node(members.item)->>'fecCandidateId'=ANY($3::text[])
+      OR 'fec:'||(reader_payload_node(members.item)->>'fecCandidateId')=ANY($3::text[])
+  ), committees AS MATERIALIZED (
+    SELECT DISTINCT receipt->>'contributorCommitteeId' AS id FROM chosen,
+      LATERAL jsonb_array_elements(coalesce(chosen.value->'topContributions','[]'::jsonb)) receipt
+    WHERE receipt->>'contributorCommitteeId' IS NOT NULL
+  ) SELECT reader_payload_value(root.value-'candidates'-'absences'-'secondHop')
+    || CASE WHEN root.value ? 'candidates' THEN jsonb_build_object('candidates',coalesce((
+      SELECT jsonb_agg(value ORDER BY ordinal_index) FROM chosen),'[]'::jsonb)) ELSE '{}'::jsonb END
+    || CASE WHEN root.value ? 'absences' THEN jsonb_build_object('absences',coalesce((
+      SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
+      FROM reader_payload_members(root.value->'absences')
+      WHERE reader_payload_value(reader_payload_node(item)->'targetKey')#>>'{}'=ANY($3::text[])), '[]'::jsonb)) ELSE '{}'::jsonb END
+    || CASE WHEN root.value ? 'secondHop' THEN jsonb_build_object('secondHop',coalesce((
+      SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
+      FROM reader_payload_members(root.value->'secondHop')
+      WHERE reader_payload_node(item)->>'committeeId' IN (SELECT id FROM committees)), '[]'::jsonb)) ELSE '{}'::jsonb END
+  FROM root)`;
 /** Keep a place's complete selected slice when later card reads add aliases to its selection. */
-export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<PromotedEdgeEntry> {
+export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[], options: {readonly exactKeys?: true} = {}): Promise<PromotedEdgeEntry> {
   const selection = currentReaderSelection();
   if (!selection) throw new Error("READER_SELECTION_REQUIRED");
   let held = readerProjectionReads.get(selection);
@@ -1431,7 +1468,7 @@ export function primeReaderProjection(recordClass: RoutineRecordClass, scope: st
   const pointer = `${recordClass}:${scope}`;
   const existing = held.get(pointer);
   if (existing) return existing;
-  const read = loadReaderProjection(recordClass, scope, { ...selection, keys: new Set([...selection.keys, ...keys]) });
+  const read = loadReaderProjection(recordClass, scope, { ...selection, keys: new Set(options.exactKeys ? keys : [...selection.keys, ...keys]) },options.exactKeys === true);
   held.set(pointer, read);
   void read.catch(() => undefined);
   return read;
@@ -1455,12 +1492,14 @@ async function readReaderProjection(recordClass: RoutineRecordClass, scope: stri
 }
 
 // On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.
-async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
+async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection, exactKeys=false): Promise<PromotedEdgeEntry> {
   const query = readerDatabaseQuery(1800);
   if (!query) throw new Error("READER_STORE_UNCONFIGURED");
   const window = selection.governmentWindow;
   const money = recordClass === "STATE_CAMPAIGN_FINANCE";
-  const payload = recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD : money ? STATE_MONEY_READER_PAYLOAD
+  const fec = exactKeys && recordClass === "FEC_FUNDING";
+  const payload = fec ? BALLOT_FEC_MONEY_PAYLOAD : recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD
+    : money ? exactKeys ? BALLOT_STATE_MONEY_PAYLOAD : STATE_MONEY_READER_PAYLOAD
     : window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
   const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
     p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
@@ -1468,7 +1507,7 @@ async function loadReaderProjection(recordClass: RoutineRecordClass, scope: stri
     c.retrieved_at, reader_payload_node(c.candidate)->'temporal' temporal FROM civic_data_promotions p
     JOIN civic_data_candidates c ON c.id=p.current_version_id
     WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys],
-      ...(recordClass === "FEDERAL_KEY_VOTE" || money ? [] : window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
+      ...(recordClass === "FEDERAL_KEY_VOTE" || money || fec ? [] : window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
   const row = rows[0];
   if (!row) return { kind: "NOT_RECORDED", recordClass, scope };
   const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;

@@ -1,8 +1,9 @@
 import { readerCacheHeaders } from "../lib/reader/cache.ts";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { test } from "node:test";
+import ts from "typescript";
 
 import { RIPCORDS, RIPCORD_NAMES } from "../lib/ripcords.ts";
 import {
@@ -126,7 +127,22 @@ test("D40: no query-keyed API route marks itself publicly cacheable unless the C
   const keyedOnEveryParameter: string[] = [];
   const sharedCacheIsPublic = /\bpublic\b/i.test(readerCacheHeaders({})["Cache-Control"] ?? "");
   for (const file of walk(join(ROOT, "app", "api"))) {
-    const source = readFileSync(file, "utf8");
+    let source = readFileSync(file, "utf8");
+    const tree = ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true);
+    const forwarded = new Set(tree.statements.flatMap(statement => ts.isVariableStatement(statement)
+      ? statement.declarationList.declarations.flatMap(declaration => ts.isIdentifier(declaration.name) && declaration.name.text === "GET"
+        && declaration.initializer && ts.isIdentifier(declaration.initializer) ? [declaration.initializer.text] : []) : []));
+    for (const statement of tree.statements) {
+      if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) continue;
+      const bindings = statement.importClause?.namedBindings;
+      if (!bindings || !ts.isNamedImports(bindings) || !bindings.elements.some(binding=>forwarded.has(binding.name.text))) continue;
+      const modulePath = statement.moduleSpecifier.text;
+      const path = modulePath.startsWith("@/") ? resolve(ROOT,modulePath.slice(2))
+        : modulePath.startsWith(".") ? resolve(dirname(file),modulePath) : null;
+      if (!path) continue;
+      assert.ok(!relative(ROOT,path).startsWith(".."),"a delegated reader handler stays inside the repository");
+      source += `\n${readFileSync(/\.[cm]?tsx?$/.test(path)?path:`${path}.ts`,"utf8")}`;
+    }
     const sharedCache = /\breaderCacheHeaders\s*\(/.test(source) && sharedCacheIsPublic;
     const literalCache = /cache-control["']?\s*:\s*["'][^"']*public/i.test(source);
     if (/searchParams/.test(source) && (sharedCache || literalCache)) {

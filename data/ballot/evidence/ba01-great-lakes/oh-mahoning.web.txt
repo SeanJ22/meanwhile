@@ -1,0 +1,518 @@
+(https://vote.mahoningcountyoh.gov/DocumentCenter/View/2648/46-Day-Notice---2026-General?bidId=)
+【turn330702view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 18; Source: open({"ref_id":"https://vote.mahoningcountyoh.gov/DocumentCenter/View/2648/46-Day-Notice---2026-General?bidId=","lineno":0}); Total lines: 739
+L0@P0: Form No. 120 Prescribed by Secretary of State (07-22)
+L1@P0: Election Notice for use with the Federal Write-In Absentee Ballot
+L2@P0: (FWAB)
+L3@P0: R.C. 3511.16
+L4@P0: Issued by the Mahoning County Board of Elections
+L5@P0: BOE to check one:  Initial notification (to be posted 100 days prior to date of election)
+L6@P0:  Updated notification (to be posted 46 days prior to date of election)
+L7@P0: NOVEMBER 3, 2026 GENERAL ELECTION
+L8@P0: (month, date, year, primary/general/special)
+L9@P0: State Executive Offices
+L10@P0: (Governor, Attorney General, Auditor of State, Secretary of State, Treasurer of State)
+L11@P0: Name of Candidate Office Party Precincts
+L12@P0: Amy Acton and David
+L13@P0: Pepper
+L14@P0: Governor and
+L15@P0: Lieutenant Governor
+L16@P0: Democratic All Precincts
+L17@P0: Vived Ramaswamy and
+L18@P0: Robert A. McColley
+L19@P0: Governor and
+L20@P0: Lieutenant Governor
+L21@P0: Republican All Precincts
+L22@P0: Don Kissick and James
+L23@P0: Mills
+L24@P0: Governor and
+L25@P0: Lieutenant Governor
+L26@P0: Libertarian All Precincts
+L27@P0: Timothy Grady and
+L28@P0: Andrea Neutzling(Writein)
+L29@P0: Governor and
+L30@P0: Lieutenant Governor
+L31@P0: All Precincts
+L32@P0: Heather Hill and Patrick
+L33@P0: Manley(Write-in)
+L34@P0: Governor and
+L35@P0: Lieutenant Governor
+L36@P0: All Precincts
+L37@P0: Renea Turner and Jalen
+L38@P0: Turner(Write-in)
+L39@P0: Governor and
+L40@P0: Lieutenant Governor
+L41@P0: All Precincts
+L42@P0: Ron Ula and Michael C.
+L43@P0: Lehnerd(Write-in)
+L44@P0: Governor and
+L45@P0: Lieutenant Governor
+L46@P0: All Precincts
+L47@P0: John J. Kulewicz Attorney General Democratic All Precincts
+L48@P0-1: Keith Faber Attorney General Republican All PrecinctsAnnette Blackwell Auditor of State Democratic All Precincts
+L49@P1: Frank LaRose Auditor of State Republican All Precincts
+L50@P1: Allison Russo Secretary of State Democratic All Precincts
+L51@P1: Robert Sprague Secretary of State Republican All Precincts
+L52@P1: Tom Pruss Secretary of State Libertarian All Precincts
+L53@P1: Seth Walsh Treasurer of State Democratic All Precincts
+L54@P1: Jay Edwards Treasurer of State Republican All Precincts
+L55@P1: U.S. Senate and U.S. Congress
+L56@P1: Name of Candidate Office /District/Term Party Precincts
+L57@P1: Sherrod Brown Member of U.S.
+L58@P1: Senate(UTE 1-03-2029)
+L59@P1: Democratic All Precincts
+L60@P1: Jon Husted Member of U.S.
+L61@P1: Senate(UTE 1-03-2029)
+L62@P1: Republican All Precincts
+L63@P1: William B. Redpath Member of U.S.
+L64@P1: Senate(UTE 1-03-2029)
+L65@P1: Libertarian All Precincts
+L66@P1: Greg Levy Member of U.S.
+L67@P1: Senate(UTE 1-03-2029)
+L68@P1: Other-party
+L69@P1: candidate
+L70@P1: All Precincts
+L71@P1: Stephen Faris(Write-in) Member of U.S.
+L72@P1: Senate(UTE 1-03-2029)
+L73@P1: All Precincts
+L74@P1: Anthony Hollman(Writein)Member of U.S.
+L75@P1: Senate(UTE 1-03-2029)
+L76@P1: All Precincts
+L77@P1: Timothy
+L78@P1: Telymonde(Write-in)
+L79@P1: Member of U.S.
+L80@P1: Senate(UTE 1-03-2029)
+L81@P1-2: All PrecinctsElizabeth Kirtley Representative to
+L82@P2: Congress/6th District
+L83@P2: Democratic Youngstown City – All Precincts,
+L84@P2: Campbell City – All Precincts, Struthers
+L85@P2: City – All Precincts, Austintown
+L86@P2: Township, Precincts 1(part), 4, 7, 9(part),
+L87@P2: 13, 14, 18, 20, 21(part), 24, 25, 28,
+L88@P2: 30(part), 31, 32; Boardman Township –
+L89@P2: All Precincts, Beaver Township – All
+L90@P2: Precincts, Coitsville Township – All
+L91@P2: Precincts, Goshen Township – All
+L92@P2: Precincts, Green Township – All
+L93@P2: Precincts, Poland Township – All
+L94@P2: Precincts, Smith Township – All
+L95@P2: Precincts, Springfield Township – All
+L96@P2: Precincts, Beloit Village – All Precincts,
+L97@P2: Lowellville Village – All Precincts, New
+L98@P2: Middletown Village – All Precincts,
+L99@P2: Poland Village – All Precincts,
+L100@P2: Washingtonville Village – All Precincts,
+L101@P2: Sebring Village – All Precincts
+L102@P2: Michael A. Rulli Representative to
+L103@P2: Congress/6th District
+L104@P2: Republican Youngstown City – All Precincts,
+L105@P2: Campbell City – All Precincts, Struthers
+L106@P2: City – All Precincts, Austintown
+L107@P2: Township, Precincts 1(part), 4, 7, 9(part),
+L108@P2: 13, 14, 18, 20, 21(part), 24, 25, 28,
+L109@P2: 30(part), 31, 32; Boardman Township –
+L110@P2: All Precincts, Beaver Township – All
+L111@P2: Precincts, Coitsville Township – All
+L112@P2: Precincts, Goshen Township – All
+L113@P2: Precincts, Green Township – All
+L114@P2: Precincts, Poland Township – All
+L115@P2: Precincts, Smith Township – All
+L116@P2: Precincts, Springfield Township – All
+L117@P2: Precincts, Beloit Village – All Precincts,
+L118@P2: Lowellville Village – All Precincts, New
+L119@P2: Middletown Village – All Precincts,
+L120@P2: Poland Village – All Precincts,
+L121@P2: Washingtonville Village – All Precincts,
+L122@P2: Sebring Village – All Precincts
+L123@P2: Maria Jukic Representative to
+L124@P2: Congress/14th District
+L125@P2: Democratic Canfield City – All Precincts, Austintown
+L126@P2: Township – Precincts 1(part), 2, 3, 5, 6,
+L127@P2: 8, 9(part), 10, 11, 12, 15, 16, 17, 19,
+L128@P2: 21(part), 22, 23, 26, 27, 29, 30(part), and
+L129@P2: 33; Berlin Township – All Precincts,
+L130@P2: Canfield Township – All Precincts,
+L131@P2: Ellsworth Township – All Precincts,
+L132@P2: Jackson Township – All Precincts, Milton
+L133@P2: Township – All Precincts, Craig Beach
+L134@P2-3: Village – All PrecinctsDave P. Joyce Representative to
+L135@P3: Congress/14th District
+L136@P3: Republican Canfield City – All Precincts, Austintown
+L137@P3: Township – Precincts 1(part), 2, 3, 5, 6,
+L138@P3: 8, 9(part), 10, 11, 12, 15, 16, 17, 19,
+L139@P3: 21(part), 22, 23, 26, 27, 29, 30(part), and
+L140@P3: 33; Berlin Township – All Precincts,
+L141@P3: Canfield Township – All Precincts,
+L142@P3: Ellsworth Township – All Precincts,
+L143@P3: Jackson Township – All Precincts, Milton
+L144@P3: Township – All Precincts, Craig Beach
+L145@P3: Village – All Precincts
+L146@P3: Ohio General Assembly (Ohio Senate and Ohio House of Representatives)
+L147@P3: Name of Candidate Office /District/Term Party Precincts
+L148@P3: Michael L Kripchak State Senate/33rd
+L149@P3: District
+L150@P3: Democratic All Precincts
+L151@P3: Al Cutrona State Senate/33rd
+L152@P3: District
+L153@P3: Republican All Precincts
+L154@P3: John A. Boccieri State
+L155@P3: Representative/58th
+L156@P3: District
+L157@P3: Democratic Youngstown City – all Precincts;;
+L158@P3: Austintown Township – all Precincts;
+L159@P3: Coitsville Township (excluding the
+L160@P3: westernmost noncontiguous portion
+L161@P3: along the Southern border of Campbell
+L162@P3: and the Northern border of Struthers) –
+L163@P3: all Precincts; Jackson Township – all
+L164@P3: precincts; Milton Township – all
+L165@P3: precincts; Poland Township – all
+L166@P3: precincts; Craig Beach Village – all
+L167@P3: precincts; Lowellville Village – all
+L168@P3: Precincts; Poland Village – all precincts
+L169@P3: Heather Fronk State
+L170@P3: Representative/58th
+L171@P3: District
+L172@P3: Republican Youngstown City – all Precincts;;
+L173@P3: Austintown Township – all Precincts;
+L174@P3: Coitsville Township (excluding the
+L175@P3: westernmost noncontiguous portion
+L176@P3: along the Southern border of Campbell
+L177@P3: and the Northern border of Struthers) –
+L178@P3: all Precincts; Jackson Township – all
+L179@P3: precincts; Milton Township – all
+L180@P3: precincts; Poland Township – all
+L181@P3: precincts; Craig Beach Village – all
+L182@P3: precincts; Lowellville Village – all
+L183@P3-4: Precincts; Poland Village – all precinctsWayne Penny, Jr. State
+L184@P4: Representative/59th
+L185@P4: District
+L186@P4: Democratic Campbell City – all precincts; Struthers
+L187@P4: City – all precincts; Canfield City – all
+L188@P4: Precincts; Boardman Township – all
+L189@P4: Precincts; Beaver Township – all
+L190@P4: Precincts; Berlin Township – all
+L191@P4: Precincts; Canfield Township – all
+L192@P4: Precincts; Coitsville Township (only the
+L193@P4: westernmost noncontiguous portion
+L194@P4: along the Southern border of Campbell
+L195@P4: and the Northern border of Struthers);
+L196@P4: Ellsworth Township – all Precincts;
+L197@P4: Goshen Township – all Precincts; Green
+L198@P4: Township – all Precincts; Smith
+L199@P4: Township – all Precincts; Springfield
+L200@P4: Township – all Precincts; Beloit Village –
+L201@P4: all Precincts; New Middletown Village –
+L202@P4: All Precincts; Washingtonville Village –
+L203@P4: All Precincts; Sebring Village – All
+L204@P4: Precincts
+L205@P4: Tex Fischer State
+L206@P4: Representative/59th
+L207@P4: District
+L208@P4: Republican Campbell City – all precincts; Struthers
+L209@P4: City – all precincts; Canfield City – all
+L210@P4: Precincts; Boardman Township – all
+L211@P4: Precincts; Beaver Township – all
+L212@P4: Precincts; Berlin Township – all
+L213@P4: Precincts; Canfield Township – all
+L214@P4: Precincts; Coitsville Township (only the
+L215@P4: westernmost noncontiguous portion
+L216@P4: along the Southern border of Campbell
+L217@P4: and the Northern border of Struthers);
+L218@P4: Ellsworth Township – all Precincts;
+L219@P4: Goshen Township – all Precincts; Green
+L220@P4: Township – all Precincts; Smith
+L221@P4: Township – all Precincts; Springfield
+L222@P4: Township – all Precincts; Beloit Village –
+L223@P4: all Precincts; New Middletown Village –
+L224@P4: All Precincts; Washingtonville Village –
+L225@P4: All Precincts; Sebring Village – All
+L226@P4-5: PrecinctsCounty Administrative Offices (County Commissioner or County Council, Prosecuting
+L227@P5: Attorney, Clerk of the Court of Common Pleas, Sheriff, County Recorder, County Treasurer,
+L228@P5: County Engineer, Coroner, County Auditor, and Municipal Court Clerk)
+L229@P5: Name of Candidate Office /District/Term Party Precincts
+L230@P5: Laruen McNally County Commissioner –
+L231@P5: FTC1/1/2027
+L232@P5: Democratic All Precincts
+L233@P5: Christine Oliver County Commissioner –
+L234@P5: FTC1/1/2027
+L235@P5: Republican All Precincts
+L236@P5: Dalton Bosze County Auditor Democratic All Precincts
+L237@P5: Ralph T. Meacham County Auditor Republican All Precincts
+L238@P5: Ohio Supreme Court
+L239@P5: Name of Candidate Office /Term Party Precincts
+L240@P5: Marilyn Zayas Justice of the Supreme
+L241@P5: Court – FTC1/1/27
+L242@P5: Democratic All Precincts
+L243@P5: Daniel R. Hawkins Justice of the Supreme
+L244@P5: Court – FTC1/1/27
+L245@P5: Republican All Precincts
+L246@P5: Jennifer Brunner Justice of the Supreme
+L247@P5: Court – FTC1/2/27
+L248@P5: Democratic All Precincts
+L249@P5: Colleen O’Donnell Justice of the Supreme
+L250@P5: Court – FTC1/2/27
+L251@P5-6: Republican All PrecinctsOhio Court of Appeals (7th District)
+L252@P6: Name of Candidate Office /Term Party Precincts
+L253@P6: Molly K. Johnson Judge of the Court of
+L254@P6: Appeals – FTC
+L255@P6: 2/9/2027
+L256@P6: Republican All Precincts
+L257@P6: Katherine Rudzik Judge of the Court of
+L258@P6: Appeals – FTC
+L259@P6: 2/10/2027
+L260@P6: Democratic All Precincts
+L261@P6: Mark Anthony Hanni Judge of the Court of
+L262@P6: Appeals – FTC
+L263@P6: 2/10/2027
+L264@P6: Republican All Precincts
+L265@P6: County Court of Common Pleas or County Court
+L266@P6: Name of Candidate Office /Division/Term Party Precincts
+L267@P6: Maureen A. Sweeney Judge/General/FTC 1-
+L268@P6: 2-2027
+L269@P6: All Precincts
+L270@P6: Mark P. D’Apolito Judge/General/FTC 2-
+L271@P6: 9-2027
+L272@P6: All Precincts
+L273@P6: Ross T. Smith Judge/General/FTC 2-
+L274@P6: 9-2027
+L275@P6: All Precincts
+L276@P6: J. Michael Thompson Judge/General/FTC 7-
+L277@P6: 1-2027
+L278@P6: All Precincts
+L279@P6: Ralph Rivera Judge/General/FTC 7-
+L280@P6: 1-2027
+L281@P6: All Precincts
+L282@P6: Robert J. Andrews Judge/General/FTC 7-
+L283@P6: 1-2027
+L284@P6: All Precincts
+L285@P6: Jeff Limbian Judge/General/FTC 7-
+L286@P6: 1-2027
+L287@P6: All Precincts
+L288@P6: Terry A. Grenga Judge/Domestic
+L289@P6: Relations/FTC 1-1-2027
+L290@P6: All Precincts
+L291@P6: Mark A. Devicchio Judge/Domestic
+L292@P6: Relations/FTC 1-1-2027
+L293@P6: All Precincts
+L294@P6: Robert N. Rusu, Jr. Judge/Probate/FTC 2-
+L295@P6: 9-2027
+L296@P6-7: All PrecinctsState Issues
+L297@P7: Number Title Precincts
+L298@P7: 3 This proposed amendment would
+L299@P7:  Require voters to present an approved form of
+L300@P7: government-issued photo identification in order to
+L301@P7: vote
+L302@P7:  Allow state law to provide for an alternative
+L303@P7: method of verifying a voter's identity for a voter who
+L304@P7: has a sincere religious objection to being
+L305@P7: photographed and, therefore, does not possess an
+L306@P7: approved form of government-issued photo
+L307@P7: identification
+L308@P7:  Require that voters who do not vote in person
+L309@P7: provide an approved form of government-issued
+L310@P7: photo identification, unless the law authorized those
+L311@P7: persons to vote by providing a signature and at
+L312@P7: least one other specified unique identifier
+L313@P7:  Define approved forms of government-issued
+L314@P7: photo identification as an unexpired Ohio driver
+L315@P7: license or state identification card; a United States
+L316@P7: passport or passport card; or a United States
+L317@P7: military identification card, Ohio National Guard
+L318@P7: identification card, or United States Department of
+L319@P7: Veterans Affairs Identification card
+L320@P7: If approved, the amendment shall take effect
+L321@P7: immediately
+L322@P7: A "YES" vote means approval of the amendment
+L323@P7: A "NO" vote means disapproval of the amendment.
+L324@P7: SHALL THE AMENDMENT BE APPROVED?
+L325@P7-8: All PrecinctsLocal Questions and Issues
+L326@P8: Number Title Precincts
+L327@P8: Shall a fixed-sum levy renewing an existing levy be
+L328@P8: imposed by the Boardman Local School District for
+L329@P8: the purpose of paying the current operating
+L330@P8: expenses of the district in the sum of $4,646,975
+L331@P8: and a levy of taxes to be made outside of the tenmill limitation estimated by the county auditor to
+L332@P8: average 3.72 mills for each $1 of taxable value,
+L333@P8: which amounts to $130 for each $100,000 of the
+L334@P8: county auditor's market value, for a period of 5
+L335@P8: years, commencing in 2027, first due in calendar
+L336@P8: year 2028?
+L337@P8: The county auditor has certified that the amount by
+L338@P8: which the carry-over balance in the district's general
+L339@P8: operating budget from the preceding fiscal year
+L340@P8: exceeds the district's general fund expenditures
+L341@P8: made in the preceding fiscal year is $0, which is 0%
+L342@P8: of those expenditures.
+L343@P8: Boardman Township – all except precincts
+L344@P8: 8, 10, 12, 27, and 31; Beaver Township
+L345@P8: precinct 5; and Canfield Township precinct
+L346@P8: 3(part)
+L347@P8: An additional tax for the benefit of Canfield Local
+L348@P8: School District for the purpose of current expenses
+L349@P8: that the county auditor estimates will collect
+L350@P8: $5,715,791 annually, at a rate not exceeding 5.9
+L351@P8: mills for each $1 of taxable value, which amounts to
+L352@P8: $207 for each $100,000 of the county auditor's
+L353@P8: market value, for 5 years, commencing in 2026, first
+L354@P8: due in calendar year 2027.
+L355@P8: Canfield City – all precincts; Boardman
+L356@P8: Township precincts 8 and 12, Beaver
+L357@P8: Township precinct 6; Canfield Township –
+L358@P8: all precincts except part of precinct 3;
+L359@P8: Ellsworth Township parts of precincts 1
+L360@P8: and 2; and Green Township parts of
+L361@P8: precincts 1 and 3
+L362@P8: A renewal of a tax for the benefit of Lowellville Local
+L363@P8: School District for the purpose of general
+L364@P8: permanent improvements, that the county auditor
+L365@P8: estimates will collect $224,058 annually, at a rate
+L366@P8: not exceeding 4 mills for each $1 of taxable value,
+L367@P8: which amounts to $107 for each $100,000 of the
+L368@P8: county auditor's market value, for 5 years,
+L369@P8: commencing in 2027, first due in calendar year
+L370@P8: 2028.
+L371@P8: Lowellville Village – all; Coitsville Village –
+L372@P8: part of precinct 2; Poland Township – part
+L373@P8-9: of precinct 1Shall a fixed-sum levy renewing an existing
+L374@P9: levy be imposed by the Poland Local School
+L375@P9: District for the purpose of paying the current
+L376@P9: operating expenses of the district in the sum of
+L377@P9: $2,181,867 and a levy of taxes to be made
+L378@P9: outside of the ten-mill limitation estimated by
+L379@P9: the county auditor to average 3.57 mills for
+L380@P9: each $1 of taxable value, which amounts to
+L381@P9: $125 for each $100,000 of the county auditor's
+L382@P9: market value, for a period of 5 years,
+L383@P9: commencing in 2027, first due in calendar year
+L384@P9: 2028?
+L385@P9: The county auditor has certified that the
+L386@P9: amount by which the carry-over balance in the
+L387@P9: district's general operating budget from the
+L388@P9: preceding fiscal year exceeds the district's
+L389@P9: general fund expenditures made in the
+L390@P9: preceding fiscal year is $0, which is 0% of
+L391@P9: those expenditures.
+L392@P9: Boardman Township precincts 27 and 31;
+L393@P9: Poland Township – all except precincts 1,
+L394@P9: 6 and 12; Poland Village - all
+L395@P9: A renewal of a tax for the benefit of Poland
+L396@P9: Local School District for the purpose of
+L397@P9: permanent improvements, that the county
+L398@P9: auditor estimates will collect $403,667
+L399@P9: annually, at a rate not exceeding 1 mill for each
+L400@P9: $1 of taxable value, which amounts to $22 for
+L401@P9: each $100,000 of the county auditor's market
+L402@P9: value, for 5 years, commencing in 2027, first
+L403@P9: due in calendar year 2028.
+L404@P9: Boardman Township precincts 27 and 31;
+L405@P9: Poland Township – all except precincts 1,
+L406@P9: 6 and 12; Poland Village - all
+L407@P9: An additional tax for the benefit of West Branch
+L408@P9: Local School District for the purpose of general
+L409@P9: permanent improvements that the county
+L410@P9: auditor estimates will collect $441,471
+L411@P9: annually, at a rate not exceeding 1 mill for each
+L412@P9: $1 of taxable value, which amounts to $35 for
+L413@P9: each $100,000 of the county auditor's market
+L414@P9: value, for 5 years, commencing in 2026, first
+L415@P9: due in calendar year 2027.
+L416@P9: Goshen Township – all; Smith Township –
+L417@P9: precincts 1, 3(part) and 4(part); Beloit
+L418@P9: Village – all; Sebring Village – parts of
+L419@P9-10: precincts 3 and 4A renewal of a tax for the benefit of the Alliance
+L420@P10: City School District for the purpose of
+L421@P10: constructing, adding to, renovating,
+L422@P10: remodeling, rehabilitating, improving, furnishing
+L423@P10: and equipping buildings for school purposes
+L424@P10: and acquiring, improving, and equipping school
+L425@P10: sites, that the county auditor estimates will
+L426@P10: collect $317,547 annually, at a rate not
+L427@P10: exceeding 2 mills for each $1 of taxable value,
+L428@P10: which amounts to $17 for each $100,000 of the
+L429@P10: county auditor's market value, for 5 years,
+L430@P10: commencing in 2027, first due in calendar year
+L431@P10: 2028.
+L432@P10: Smith Township, Precinct 2
+L433@P10: 4 An additional tax for the benefit of Mahoning
+L434@P10: County for the purpose of the operation of
+L435@P10: community programs and services and for the
+L436@P10: acquisition, construction, renovation, financing,
+L437@P10: maintenance, and operation of developmental
+L438@P10: disabilities facilities by the Mahoning County
+L439@P10: Board of Developmental Disabilities that the
+L440@P10: county auditor estimates will collect
+L441@P10: $15,522,964 annually, at a rate not exceeding
+L442@P10: 2.4 mills for each $1 of taxable value, which
+L443@P10: amounts to $84 for each $100,000 of the
+L444@P10: county auditor's market value, for 5 years,
+L445@P10: commencing in 2026, first due in calendar year
+L446@P10: 2027.
+L447@P10: All Precincts
+L448@P10: A renewal of a tax for the benefit of City of
+L449@P10: Canfield for the purpose of providing and
+L450@P10: maintaining motor vehicles and other
+L451@P10: equipment used directly in the operation of the
+L452@P10: police department and the payment of salaries
+L453@P10: of police personnel, that the county auditor
+L454@P10: estimates will collect $812,524 annually, at a
+L455@P10: rate not exceeding 3.9 mills for each $1 of
+L456@P10: taxable value, which amounts to $82 for each
+L457@P10: $100,000 of the county auditor's market value,
+L458@P10: for 5 years, commencing in 2027, first due in
+L459@P10: calendar year 2028.
+L460@P10: Canfield City – all precincts
+L461@P10: A renewal of a tax for the benefit of Village of
+L462@P10: New Middletown for the purpose of the general
+L463@P10: construction, reconstruction, resurfacing, and
+L464@P10: repair of streets, roads, and bridges, that the
+L465@P10: county auditor estimates will collect $44,786
+L466@P10: annually, at a rate not exceeding 1.5 mills for
+L467@P10: each $1 of taxable value, which amounts to
+L468@P10: $39 for each $100,000 of the county auditor's
+L469@P10: market value, for 5 years, commencing in
+L470@P10: 2027, first due in calendar year 2028.
+L471@P10-11: New Middletown Village – all precinctsA renewal of a tax for the benefit of Village of
+L472@P11: Poland for the purpose of maintaining motor
+L473@P11: vehicles, communications, other equipment,
+L474@P11: buildings, and sites for such buildings used
+L475@P11: directly in the operation of a police department,
+L476@P11: for the payment of salaries of permanent or
+L477@P11: part-time police personnel, or administrative
+L478@P11: personnel to operate the same, that the county
+L479@P11: auditor estimates will collect $58,268 annually,
+L480@P11: at a rate not exceeding 1 mill for each $1 of
+L481@P11: taxable value, which amounts to $23 for each
+L482@P11: $100,000 of the county auditor's market value,
+L483@P11: for 5 years, commencing in 2027, first due in
+L484@P11: calendar year 2028.
+L485@P11: Poland Village – all precincts
+L486@P11: A renewal of a tax for the benefit of Salem City
+L487@P11: for the purpose of recreational purposes that
+L488@P11: the county auditor estimates will collect
+L489@P11: $235,982 annually, at a rate not exceeding 1.3
+L490@P11: mills for each $1 of taxable value, which
+L491@P11: amounts to $19 for each $100,000 of the
+L492@P11: county auditor's market value, for 5 years,
+L493@P11: commencing in 2027, first due in calendar year
+L494@P11: 2028.
+L495@P11: Green Township, Precinct 2(part)
+L496@P11: Shall the sale of wine and mixed beverages,
+L497@P11: and spirituous liquor be permitted for sale on
+L498@P11: Sunday by Lorenzino's Bocce Club, L.L.C. an
+L499@P11: applicant for a D-6 liquor permit who is
+L500@P11: engaged in the business of operating a bar at
+L501@P11: 128 Jacobs Road, Youngstown, Ohio 44505 in
+L502@P11: this precinct?
+L503@P11: Youngstown Ward 2 Precinct D
+L504@P11: Shall the sale of beer, wine and mixed
+L505@P11: beverages be permitted by Masandeh, Inc.,
+L506@P11: dba Gateway Gas Mart, an applicant for a C-1
+L507@P11: and C-2 liquor permit, who is engaged in the
+L508@P11: business of operating a carryout/grocery store
+L509@P11: at 2732 Glenwood Avenue, Youngstown, Ohio
+L510@P11: 44511 in this precinct?
+L511@P11: Youngstown Ward 6 precinct H
+L512@P11: Shall the sale of wine and mixed beverages be
+L513@P11: permitted for sale on Sunday by Masandeh,
+L514@P11: Inc., dba Gateway Gas Mart an applicant for a
+L515@P11: D-6 liquor permit who is engaged in the

@@ -72,7 +72,7 @@ test("missing people and previous-parser government baselines admit every state 
   assert.ok(governments.every(task => task.cadenceMs === 90 * 86400000 && task.retryMs === 6 * 3600000));
 });
 
-test("overdue meeting deadlines retain priority while missing meetings do not become national baseline work", () => {
+test("unread and overdue meeting deadlines precede national baseline work", () => {
   const now = Date.parse("2026-10-09T12:00:00.000Z");
   const people = ROUTINE_SOURCE_TASKS.find(task => task.id.startsWith("openstates-people-"))!;
   const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
@@ -83,7 +83,7 @@ test("overdue meeting deadlines retain priority while missing meetings do not be
     { task: { ...meeting, id: "unbuilt-meeting" }, deadlineMs: Number.NEGATIVE_INFINITY, baselineOwed: false },
     { task: { ...meeting, id: "later-meeting" }, deadlineMs: now + 1, baselineOwed: false },
   ];
-  assert.deepEqual(routinePassLaunchOrder(jobs, now).map(row => row.task.id), [meeting.id, people.id, "unbuilt-meeting", "later-meeting"]);
+  assert.deepEqual(routinePassLaunchOrder(jobs, now).map(row => row.task.id), ["unbuilt-meeting", meeting.id, people.id, "later-meeting"]);
 });
 
 test("one pass admits one least-recently-considered task per provider domain", () => {

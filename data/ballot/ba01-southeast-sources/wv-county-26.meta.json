@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20McDowell%20261103%20General%20-14inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20McDowell%20261103%20General%20-14inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:36.103186+00:00",
+  "rawHash": "2493993bfa77637746b5a18e403e4e5e20fd42c19fb83a828601889b4aec65d5",
+  "httpStatus": 200,
+  "bytes": 937663,
+  "extractedTextHash": "34f17705dd7db8ac6c79e0c6d515e8bd55400da3e92c79e02dc2e5b7e7a32ba2",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

@@ -4,10 +4,11 @@ import { stageTimer } from "@/lib/api/server-timing";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/location";
 import { readStatePackage } from "@/lib/reader/state";
-import { readPlacePackage } from "@/lib/reader/place";
+import { readPlacePackageHttp as readPlacePackage } from "@/lib/reader/place";
 import { stateCoverage } from "@/lib/reader/coverage";
-import { meetingBodyIds, searchMeetings } from "@/lib/meetings/query";
+import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
+import { wireSnapshot } from "@/lib/meetings/freshness";
 import { readReaderMeetingSettings } from "@/lib/meetings/reader-settings";
 import { readerMeetingScope } from "@/lib/meetings/reader-scope";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
@@ -16,14 +17,18 @@ import { withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model
 import { bindGovernmentBodies } from "@/lib/registration/listings";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { attemptsByFamily } from "@/lib/registry/attempt-families";
+import {readerStateResponse} from "@/lib/reader/state-response";
 import { lookupZcta } from "@/lib/geo/zcta";
+import { publicOfficePoints } from "@/lib/reader/office-points";
+import type { ReaderStateResponse } from "@/lib/reader/client";
 
 export const runtime = "nodejs";
 
 export const GET = readerRoute("/api/meetings", async function GET(request: Request) {
   const timing = stageTimer(), params = new URL(request.url).searchParams;
-  const unknown = rejectUnknown(params, ["lat", "lng", "radiusKm", "zip"]);
+  const unknown = rejectUnknown(params, ["lat", "lng", "radiusKm", "zip", "include"]);
   if (!unknown.ok) return refuse(unknown.error);
+  if (params.has("include") && params.get("include")!=="state") return refuse("include must be state");
   const zipRead = matching(params, "zip", /^\d{5}$/, { default: null });
   if (!zipRead.ok) return refuse(zipRead.error);
   if (zipRead.value && !params.has("lat") && !params.has("lng")) {
@@ -39,14 +44,21 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   if (!radiusRead.ok) return refuse(radiusRead.error);
   if (radiusRead.value <= 0) return refuse(`radiusKm must be greater than 0, received ${radiusRead.value}`);
   const lat = latRead.value, lng = lngRead.value, radiusKm = Math.min(radiusRead.value, MAX_RADIUS_KM);
+  const stateAnswerRead = params.get("include")==="state" && zipRead.value ? readerStateResponse(request).then(async response=>{
+    const value=await response.json() as ReaderStateResponse;
+    const officePoints=response.ok ? await timing.time("offices",()=>publicOfficePoints(value)) : {};
+    return {status:response.status,headers:[...response.headers],value:Object.keys(officePoints).length ? {...value,officePoints} : value};
+  }).catch(()=>
+    ({status:503,headers:[["cache-control","no-store"]],value:{error:"The state's information could not be loaded"}})) : Promise.resolve(null);
   try {
     const location = await readerLocation(lat, lng, zipRead.value);
     // A map movement has one state read and one place read in this handler.
     // ZIP entry already starts its independent state endpoint before this read.
     const stateRead = zipRead.value ? Promise.resolve(null) : timing.time("state", () => readStatePackage(location.state));
     const territoryRead = readerTerritory(location.state);
+    const fringe = zipRead.value ? location.fringe : [];
     const placeRead = timing.time("place", async () => readPlacePackage({ state: location.state, divisionIds: location.divisionIds,
-      bodyIds: territoryBodies(lat, lng, await territoryRead) }));
+      bodyIds: territoryBodies(lat, lng, await territoryRead), namedDivisionIds: fringe }));
     const [state, place, territory, settings] = await Promise.all([
       stateRead, placeRead, territoryRead, readReaderMeetingSettings(),
     ]);
@@ -64,26 +76,28 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       localIds, lat, lng, place.meetings, place.bodies, place.divisions, territory, result.meetings.length);
     coverage.governments = bindGovernmentBodies(place.governments, bodies);
     coverage.governmentInventoryUnavailableStates = place.registrationHeld ? [] : [location.state];
+    coverage.fringeDivisions = fringe.flatMap(ocdId => place.divisions.filter(division => division.ocdId === ocdId).map(division => ({ ocdId, label: division.label })));
     coverage.bodies = coverage.bodies.map(body => ({ ...body,
       publicationAttempts: attemptsByFamily(place.publicationAttempts.filter(attempt => attempt.bodyId === body.bodyId)) }));
     const partial = new Set(location.partial);
     if (zipRead.value) coverage.bodies = coverage.bodies.map(body => body.ocdId && partial.has(body.ocdId) ? { ...body, couldGovern: true } : body);
     const listingIdentity = withRegistryRuntimeProjection(registry, [location.state], () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
+    const stateAnswer = await stateAnswerRead;
     return Response.json({
-      ...result, coverage, listingIdentity,
+      ...result, coverage, listingIdentity, ...(stateAnswer ? {stateResponse:stateAnswer} : {}),
       readerScope: readerMeetingScope({ heldMeetings: place.meetings, bodies: coverage.bodies, ownDivisionIds: divisionIds,
         now: new Date(), listingIdentity: meetingListingIdentity(place.meetings, canonicalBodyIdentity) }),
       commentAccess: place.bodies.flatMap(body => body.comment ?? []), commentAccessDataState: "PROMOTED",
       everydayRouting: place.everydayRouting,
       everydayRoutingDataState: place.everydayRouting ? "PROMOTED" : "NOT_RECORDED",
-      snapshot: { version: 2, generatedAt: place.snapshot.generatedAt, failed: place.snapshot.sources.filter(source => !source.ok)
-        .map(source => ({ source: source.source, ocdIds: source.unreachableOcdIds ?? [] })) },
+      snapshot: wireSnapshot(place.snapshotHeldAt, place.snapshot.sources),
       nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
-    }, { headers: { ...readerCacheHeaders({ states: [location.state], places: ids }),
-      "Netlify-Vary": "query=lat|lng|radiusKm|zip", "Server-Timing": timing.header() } });
+    }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"} : readerCacheHeaders({ states: [location.state], places: ids })),
+      "Netlify-Vary": "query=lat|lng|radiusKm|zip|include", "Server-Timing": timing.header() } });
   } catch (error) {
     console.error("READER_PLACE_LOAD_FAILED", error);
-    return Response.json({ error: "The place's information could not be loaded", dataState: "STORE_UNREACHABLE" },
+    const stateAnswer = await stateAnswerRead;
+    return Response.json({ error: "The place's information could not be loaded", dataState: "STORE_UNREACHABLE", ...(stateAnswer ? {stateResponse:stateAnswer} : {}) },
       { status: 503, headers: { "Cache-Control": "no-store", "Server-Timing": timing.header() } });
   }
 });

@@ -14,6 +14,7 @@ import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
+import { installMeetingReaderRepairSelection } from "../lib/civic-data/reader-repair-protocol.ts";
 import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
 import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -22,6 +23,7 @@ import { wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.
 import { promoteMeetingPartition, promoteMeetingPartitions, reconcileSuccessfulMeetingPartition, selectedMeetingPartitions } from "../scripts/ingest.ts";
 
 import { readEveryBody } from "./helpers/meeting-body-national.ts";
+import { FIXTURE_DOOR_ROWS, installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 
 const FIRST = "2026-09-08T12:00:00.000Z";
 const SECOND = "2026-09-08T13:00:00.000Z";
@@ -119,11 +121,18 @@ class CountingMeetingStore extends MemoryRoutineDataStore {
   readPromotionCalls = 0;
   readPromotionsCalls = 0;
   readPromotionIdentitiesCalls = 0;
+  latestReaderReadbacksCalls = 0;
 
   reset(): void {
     this.readPromotionCalls = 0;
     this.readPromotionsCalls = 0;
     this.readPromotionIdentitiesCalls = 0;
+    this.latestReaderReadbacksCalls = 0;
+  }
+
+  override async latestReaderReadbacks(candidateIds: readonly string[]) {
+    this.latestReaderReadbacksCalls++;
+    return super.latestReaderReadbacks(candidateIds);
   }
 
   override async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string) {
@@ -371,9 +380,9 @@ test("meeting Reader repair reads each partition once and correlates exact parti
     generatedAt: FIRST,
   });
   assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
-  // A partition promotion reads no sibling partition; the repair below is the one read that records every receipt.
+  // Publication stamps its own partition without waiting for the later fleet repair.
   assert.equal(store.readPromotionsCalls, 0, "a partition promotion never reads the sibling partitions' payloads");
-  assert.equal(promoted.every(({ outcome }) => outcome.readerReadback === null), true);
+  assert.equal(promoted.every(({ outcome }) => outcome.readerReadback?.status === "PASS"), true,JSON.stringify(promoted.map(p=>p.outcome.readerReadback)));
   const before = await Promise.all(promoted.map(async ({ candidate }) => ({
     contractId: candidate.scope === legistar.scope ? legistar.id : insite.id,
     pointer: await store.readPromotion("MEETING", candidate.scope),
@@ -389,6 +398,7 @@ test("meeting Reader repair reads each partition once and correlates exact parti
     "f".repeat(40),
   );
   assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
+  assert.equal(store.latestReaderReadbacksCalls, 1, "the bounded domain reads every latest receipt in one indexed request");
   assert.equal(store.readPromotionCalls, 2, "each partition's payload crosses once, as its own Reader reads it");
   assert.equal(store.readPromotionsCalls, 0, "no national batch of payloads is read");
   assert.deepEqual(repairs.map(({ contractId, ok }) => ({ contractId, ok })), [
@@ -430,7 +440,30 @@ test("meeting Reader repair reads each partition once and correlates exact parti
   );
   assert.deepEqual(current.map((repair) => repair.ok ? repair.value.kind : repair.error), ["CURRENT", "CURRENT"]);
   assert.equal(store.readPromotionIdentitiesCalls, 1);
+  assert.equal(store.latestReaderReadbacksCalls, 1);
   assert.equal(store.readPromotionCalls + store.readPromotionsCalls, 0, "a current pass reads no partition payload");
+});
+
+test("a parent-selected meeting partition is checked from its handed snapshot after the registry changes", async () => {
+  const store = new CountingMeetingStore();
+  const snapshot = structuredClone(legistar);
+  const promoted = await promoteMeetingPartitions({
+    store, partitions: [snapshot], meetings: [meeting(snapshot, FIRST, "handed-snapshot")], agendaDocuments: [],
+    reports: [report(snapshot.meetingSource, FIRST)], generatedAt: FIRST,
+  });
+  assert.ok(promoted[0]!.outcome.promoted);
+  try {
+    installFixtureDoors(FIXTURE_DOOR_ROWS.filter(row => row.bodyId !== snapshot.bodyId));
+    assert.equal(MEETING_PARTITION_CONTRACTS.some(partition => partition.id === snapshot.id), false);
+    installMeetingReaderRepairSelection([snapshot]);
+    assert.deepEqual(MEETING_PARTITION_CONTRACTS.map(partition => partition.id), [snapshot.id]);
+    store.reset();
+    const [repair] = await repairMeetingReaderProjectionReadbacks(store, [snapshot], SECOND, "f".repeat(40));
+    assert.ok(repair?.ok, JSON.stringify(repair));
+    assert.equal(repair.value.kind, "RECORDED");
+    assert.equal(repair.value.receipt?.status, "PASS", "the child's newer door registry cannot replace the parent's exact partition");
+    assert.equal(store.readPromotionCalls, 1, "the handed partition's typed reader actually reads its saved version");
+  } finally { installFixtureDoors(); }
 });
 
 test("R31: meeting receipts carry across a commit that changed no Reader code without reading the partitions", async () => {
@@ -524,12 +557,18 @@ test("one partition invocation narrows a shared adapter to exactly one body", ()
   );
 });
 
-test("the executable promotion door accepts exactly one registered partition", () => {
+test("the executable promotion door accepts each registered partition once, in the order given", () => {
   assert.deepEqual(
     selectedMeetingPartitions(["--promote", `--only-partition=${legistar.id}`]).map((row) => row.id),
     [legistar.id],
   );
-  assert.throws(() => selectedMeetingPartitions(["--promote"]), /MEETING_PARTITION_EXACTLY_ONE_REQUIRED/);
+  assert.deepEqual(
+    selectedMeetingPartitions(["--promote", `--only-partition=${insite.id}`, `--only-partition=${legistar.id}`]).map((row) => row.id),
+    [insite.id, legistar.id],
+  );
+  assert.throws(() => selectedMeetingPartitions(["--promote"]), /MEETING_PARTITION_REQUIRED/);
+  assert.throws(() => selectedMeetingPartitions([`--only-partition=${legistar.id}`, `--only-partition=${legistar.id}`]), /MEETING_PARTITION_NAMED_TWICE/);
+  assert.throws(() => selectedMeetingPartitions(["--only-partition=meetings:legistar:not-registered"]), /MEETING_PARTITION_NOT_REGISTERED/);
   assert.throws(
     () => selectedMeetingPartitions([`--partitions=${legistar.id},${insite.id}`]),
     /MEETING_PARTITION_BATCH_ARGUMENT_RETIRED/,
@@ -734,4 +773,24 @@ test("DB-01: the validator accepts a V1 removal for one pass and refuses removin
     { ...window("MEETING_READER_SERVING_WINDOW_V1", 90, HELD_LATER), key: `meeting:${old.id}`, priorStartsAt: old.startsAt },
   ]);
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
+});
+
+test('an unavailable meeting stamp writer never holds publication, and the next unchanged check repairs its stamp',async()=>{
+ class StampFailureStore extends MemoryRoutineDataStore {
+   fail=true;
+   override async appendEvidence(...args:Parameters<MemoryRoutineDataStore['appendEvidence']>){
+     if(this.fail&&args[3].startsWith(READER_PROJECTION_READBACK_PREFIX))throw Error('Stamp store unavailable');
+     return super.appendEvidence(...args);
+   }
+ }
+ const store=new StampFailureStore();
+ const [first]=await promoteMeetingPartitions({store,partitions:[legistar],meetings:[meeting(legistar,FIRST,'stamp-retry')],agendaDocuments:[],reports:[report(legistar.meetingSource,FIRST)],generatedAt:FIRST});
+ assert.equal(first.outcome.candidate.state,'PROMOTED');assert.ok(first.outcome.promoted);
+ assert.equal(first.outcome.readerReadback,null);
+ assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),false);
+ store.fail=false;
+ const [second]=await promoteMeetingPartitions({store,partitions:[legistar],meetings:[meeting(legistar,SECOND,'stamp-retry')],agendaDocuments:[],reports:[report(legistar.meetingSource,SECOND)],generatedAt:SECOND});
+ assert.equal(second.outcome.promoted?.versionId,first.outcome.promoted?.versionId);
+ assert.equal(second.outcome.readerReadback?.status,'PASS');
+ assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),true);
 });

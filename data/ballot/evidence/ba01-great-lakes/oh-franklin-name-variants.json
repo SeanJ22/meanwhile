@@ -1,0 +1,43 @@
+{
+  "differences": [
+    {
+      "candidacyId": "oh-ba01-state-representative-district-5-sldl-5-candidate-eboney-c-eldridge",
+      "heldCertifiedName": "Eboney C. Eldridge",
+      "heldSourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+      "heldDocumentRevisionDate": "2026-10-16",
+      "fwabPrintedName": "Ebony C. Eldridge",
+      "fwabSourceUrl": "https://vote.franklincountyohio.gov/getmedia/352b644d-b348-447e-b60d-aa9b9193a297/2026-General-Form-No-120-FWAB-Notice-46-Day",
+      "fwabHttpLastModified": "Mon, 19 Oct 2026 20:09:59 GMT",
+      "legalCertificationDateOfFwabName": null,
+      "resolution": "Retain held certified name and ID. The FWAB file timestamp is newer, but no later legal certification or written name-correction notice was recovered. Record both official source variants explicitly."
+    },
+    {
+      "candidacyId": "oh-ba01-state-representative-district-5-sldl-5-candidate-meredith-r-lawson-rowe",
+      "heldCertifiedName": "Meredith R. Lawson-Rowe",
+      "heldSourceUrl": "https://www.vote.franklincountyohio.gov/getmedia/e0a4ca45-6893-45c1-8190-87696f8804b4/2026-General-Candidate-List-5",
+      "heldDocumentRevisionDate": "2026-10-16",
+      "fwabPrintedName": "Meredith Lawson-Rowe",
+      "fwabSourceUrl": "https://vote.franklincountyohio.gov/getmedia/352b644d-b348-447e-b60d-aa9b9193a297/2026-General-Form-No-120-FWAB-Notice-46-Day",
+      "fwabHttpLastModified": "Mon, 19 Oct 2026 20:09:59 GMT",
+      "legalCertificationDateOfFwabName": null,
+      "resolution": "Retain held certified name and ID. The FWAB file timestamp is newer, but no later legal certification or written name-correction notice was recovered. Record both official source variants explicitly."
+    }
+  ],
+  "sourceCapture": {
+    "requestedUrl": "https://vote.franklincountyohio.gov/getmedia/352b644d-b348-447e-b60d-aa9b9193a297/2026-General-Form-No-120-FWAB-Notice-46-Day",
+    "finalUrl": "https://vote.franklincountyohio.gov/getmedia/352b644d-b348-447e-b60d-aa9b9193a297/2026-General-Form-No-120-FWAB-Notice-46-Day",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-21T00:18:30.606335+00:00",
+    "rawHash": "dc69b2b2243507bc84e4dda490d77b8a1f2f96f61b7a90aeaa8f5a8c869bce29",
+    "lastModified": "Mon, 19 Oct 2026 20:09:59 GMT",
+    "contentType": "application/pdf",
+    "sameAsPriorCapture": true
+  },
+  "explicitUnheldWithdrawal": {
+    "name": "Davide Cugini",
+    "office": "County Commissioner",
+    "sourceQuote": "Davide Cugini withdrawn",
+    "heldBefore": false,
+    "treatment": "No active candidate inserted; no historical filing or removal ID invented."
+  }
+}

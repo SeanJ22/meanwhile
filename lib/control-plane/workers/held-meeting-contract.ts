@@ -11,13 +11,19 @@ export const PIMA_LEGISTAR_CONTRACT: LegacyCivicExtractionContract = {
   expectedSourceDate: null,
 };
 
+const REGISTERED_HELD_MEETING_CONTRACTS: readonly LegacyCivicExtractionContract[] = [PIMA_LEGISTAR_CONTRACT];
+const eventsAddress = (contract: LegacyCivicExtractionContract): string => `https://webapi.legistar.com/v1/${contract.publisherSlug}/events`;
+
+/** Every address registeredHeldMeetingContract accepts starts with one of these (case aside), so a store can narrow by them first. */
+export const HELD_EVENT_URL_PREFIXES: readonly string[] = REGISTERED_HELD_MEETING_CONTRACTS.map(eventsAddress);
+
 export function registeredHeldMeetingContract(canonicalUrl: string, subjectId?: string): LegacyCivicExtractionContract | null {
   let url: URL;
   try { url = new URL(canonicalUrl); } catch { return null; }
-  if (url.protocol !== "https:" || url.username || url.password || url.hostname !== "webapi.legistar.com" ||
-      url.pathname.toLowerCase() !== "/v1/pima/events") return null;
-  const contract = PIMA_LEGISTAR_CONTRACT;
-  if (subjectId && subjectId !== contract.subjectId) return null;
+  if (url.protocol !== "https:" || url.username || url.password) return null;
+  const address = `https://${url.hostname}${url.pathname}`.toLowerCase();
+  const contract = REGISTERED_HELD_MEETING_CONTRACTS.find(row => eventsAddress(row) === address);
+  if (!contract || (subjectId && subjectId !== contract.subjectId)) return null;
   const partition = meetingPartitionForRow("legistar", contract.subjectId);
   return partition.wiring?.config.slug === contract.publisherSlug ? contract : null;
 }

@@ -35,10 +35,12 @@ export interface ContainerSlice {
 const GEO_TYPES: readonly GeographyType[] = ["county", "congressional_district", "cbsa", "state_leg_upper", "state_leg_lower"];
 
 /** A `scope` row per published scope, so a type the pointer does not carry is never read as "none there". */
-function groupingsQuery(withOverlaps: boolean, where: string): string {
+function groupingsQuery(withOverlaps: boolean, where: string, overlapZipParam?: number): string {
   const grouping =
     "g->>'geoid', g->>'ocdId', g->>'label', g->>'stateFips', g->>'stateAbbr', g->>'cbsaClass', g->'memberStates'" +
-    (withOverlaps ? ", g->'overlaps'" : ", NULL::jsonb");
+    (withOverlaps ? overlapZipParam
+      ? `, (SELECT jsonb_agg(overlap) FROM jsonb_array_elements(g->'overlaps') overlap WHERE overlap->>'zcta5'=$${overlapZipParam}::text)`
+      : ", g->'overlaps'" : ", NULL::jsonb");
   return (
     "WITH scopes AS MATERIALIZED (SELECT x AS scope FROM civic_data_promotions p" +
     " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'scopes') x WHERE p.record_class = $1 AND p.scope = $2)" +
@@ -177,7 +179,8 @@ export function stateContainersStatement(state: string, divisionIds: readonly st
   return {
     ...(districtKeys ? { canonicalKeys: true as const } : {}),
     text: `WITH geography AS MATERIALIZED (
-      ${groupingsQuery(true, "(g->>'stateAbbr' = $4 OR g->'memberStates' @> jsonb_build_array($4::text))")}
+      ${groupingsQuery(true, "(g->>'stateAbbr' = $4 OR g->'memberStates' @> jsonb_build_array($4::text))" +
+        (districtKeys ? " AND g->'overlaps' @> jsonb_build_array(jsonb_build_object('zcta5',$6::text))" : ""),districtKeys ? 6 : undefined)}
     ) SELECT (SELECT pointer.current_version_id FROM civic_data_promotions pointer WHERE pointer.key=$1||':'||$2) AS version_id,
       coalesce((SELECT jsonb_agg(to_jsonb(g)) FROM geography g),'[]'::jsonb) AS geography,
       coalesce((SELECT jsonb_agg(d) FROM civic_data_promotions registration,

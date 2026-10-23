@@ -301,7 +301,7 @@ export async function attemptsForRouteTask(
   return [...mine].sort((a, b) => (a.value.startedAt < b.value.startedAt ? -1 : 1));
 }
 
-/** Metadata only; the bytes live in the vault. The named Attempt must already be persisted. */
+/** Metadata only; the bytes live in the vault. The named Attempt must already be persisted. An artifact is its bytes, so the same bytes seen at another address (a page served under two spellings, one robots.txt on two hosts) are the artifact already held; only different bytes under one id are refused. */
 export async function recordArtifactMetadata(
   repos: ControlPlaneRepositories,
   record: ArtifactRecord,
@@ -320,7 +320,6 @@ export async function recordArtifactMetadata(
       prior !== undefined &&
       prior.contentHash === record.contentHash &&
       prior.byteLength === record.byteLength &&
-      prior.canonicalUrl === record.canonicalUrl &&
       prior.tier === record.tier &&
       prior.partial === record.partial;
     if (!contentIdentical) throw error;

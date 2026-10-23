@@ -1,0 +1,8 @@
+{
+  "url": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:28:42.727569+00:00",
+  "rawHash": "c9c08c4c806c62388b5ee8381103c33c671e35d8c17d9faf20890d20553aa69b",
+  "bytes": 687615
+}

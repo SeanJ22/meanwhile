@@ -6,16 +6,23 @@
 import { readRoutineTaskClocks, routineTaskFromContract, sittingWindowSignals, type RoutineTaskClock, type RoutineSourceTask } from "../civic-data/runner.ts";
 import { statedSittingEndsByScope, statedSittingEndsRead } from "../civic-data/sitting-window-admission.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../civic-data/meeting-partitions.ts";
+import { routineTasksWithoutClocks } from "../civic-data/clock-presence.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 export interface HotPartitionReads {
   readonly readClock: (task: RoutineSourceTask) => Promise<RoutineTaskClock | undefined>;
+  /** Presence pages avoid individual empty-clock proofs for newly discovered calendars. */
+  readonly query?: Parameters<typeof routineTasksWithoutClocks>[1];
   /** Where the publisher-stated sitting ends are read from; a failed read leaves the day bound to decide. */
   readonly db: Parameters<typeof statedSittingEndsRead>[0];
 }
 
 export async function hotMeetingPartitions(reads: HotPartitionReads, nowMs: number): Promise<ReadonlySet<string>> {
   const tasks = MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract);
-  const clocks = await readRoutineTaskClocks(tasks, reads.readClock);
+  let absent: ReadonlySet<string> = new Set();
+  if (reads.query) try { absent = await routineTasksWithoutClocks(tasks, reads.query); }
+  catch (error) { console.warn(`RCD_CLOCK_PRESENCE hot meetings: ${sanitizedErrorDiagnostic(error)}; reading every clock individually`); }
+  const clocks = await readRoutineTaskClocks(tasks, task => absent.has(task.id) ? Promise.resolve(undefined) : reads.readClock(task));
   let ends: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
   try {
     const byScope = statedSittingEndsByScope(await statedSittingEndsRead(reads.db));

@@ -1,0 +1,405 @@
+https://www.portagecounty-oh.gov/sites/g/files/vyhlif3706/f/uploads/november_3_2026_46_day_notice_update.pdf
+Captured HTTP200 original PDF via public source page with ordinary browser request headers. Local pdftotext -layout extraction; original bytes saved as oh-portage.pdf.gz.
+L0: Form No. 120 Prescribed by Secretary of State (03-19)
+L1: 
+L2: 
+L3: 
+L4: Election Notice for use With the Federal Write-In Absentee Ballot
+L5: (FWAB)
+L6: R.C. 3511.16
+L7: 
+L8:                                Issued by the Portage County Board of Elections
+L9: 
+L10:    BOE to check one:            □ Initial notification (to be posted 100 days prior to date of election)
+L11:                                 √ Updated notification (to be posted 46 days prior to date of election)
+L12: 
+L13: 
+L14: 
+L15:                                                   GENERAL ELECTION
+L16:                                                         (November 3, 2026)
+L17: 
+L18: 
+L19:                                       State Executive Offices
+L20:         (Governor, Attorney General, Auditor of State, Secretary of State, Treasurer of State)
+L21: 
+L22:  Name of Candidate                 Office                      Party         Precincts
+L23: 
+L24:  Amy Acton and David               Governor and                Democratic    Portage County
+L25:  Pepper                            Lieutenant Governor
+L26: 
+L27:  Don Kissick and James L.                                      Libertarian
+L28:  Mills
+L29: 
+L30:  Vivek Ramaswamy and                                           Republican
+L31:  Robert A. McColley
+L32: 
+L33:  Timothy Grady and
+L34:  Andrea Neutzling (write
+L35:  in)
+L36: 
+L37:  Heather Hill and Patrick
+L38:  Manley (write in)
+L39: 
+L40:  Renea Turner and Jalen
+L41:  Turner (write in)
+L42: 
+L43:  Ron Ula and Michael C.
+L44:  Lehnerd (write in)
+L45:  (withdrew 10/14/26)
+L46: 
+L47:  John J. Kulewicz                  Attorney General            Democratic    Portage County
+L48: 
+L49:  Keith Faber                                                   Republican
+L50: 
+L51: Annette Blackwell          Auditor of State         Democratic    Portage County
+L52: 
+L53: 
+L54: 
+L55: Frank LaRose                                        Republican
+L56: 
+L57: Allison Russo              Secretary of State       Democratic    Portage County
+L58: 
+L59: Tom Pruss                                           Libertarian
+L60: 
+L61: Robert Sprague                                      Republican
+L62: 
+L63: Seth Walsh                 Treasurer of State       Democratic    Portage County
+L64: 
+L65: Jay Edwards                                         Republican
+L66: 
+L67: 
+L68: 
+L69:                                    U.S. Senate and U.S. Congress
+L70: 
+L71: Name of Candidate          Office /District/Term    Party         Precincts
+L72: 
+L73: Sherrod Brown              U.S. Senate              Democratic    Portage County
+L74: 
+L75: William B. Redpath                                  Libertarian
+L76: 
+L77: Jon Husted                                          Republican
+L78: 
+L79: Greg Levy                                           Other party
+L80: 
+L81: Stephen Faris (write in)
+L82: 
+L83: Anthony Holliman (write
+L84: in)
+L85: 
+L86: Timothy Telymonde
+L87: (write in)
+L88: 
+L89: Emilia Sykes               U.S. Congress – 13th     Democratic    Kent City, Streetsboro City, Franklin
+L90:                            Congressional District                 Township, Sugar Bush Knolls Village
+L91: Carey Coleman                                       Republican
+L92: 
+L93: Sandeep Dixit                                       Nonparty
+L94: 
+L95: Maria Jukic                                         Democratic
+L96: 
+L97: David P. Joyce            U.S. Congress – 14th     Republican    Ravenna City, Aurora City, Atwater
+L98:                           Congressional District                 Township, Brimfield Township,
+L99:                                                                  Charlestown Township, Deerfield
+L100:                                                                  Township, Edinburg Township, Freedom
+L101:                                                                  Township, Garrettsville Village, Hiram
+L102:                                                                  Village, Hiram Township, Mantua Village,
+L103:                                                                  Mantua Township, Mogadore Village,
+L104:                                                                  Nelson Township, Palmyra Township,
+L105:                                                                  Paris Township, Randolph Township,
+L106:                                                                  Ravenna Township, Rootstown
+L107:                                                                  Township, Shalersville Township,
+L108:                                                                  Windham Township, Windham Village
+L109: 
+L110: 
+L111: 
+L112: 
+L113:               Ohio General Assembly (Ohio Senate and Ohio House of Representatives)
+L114: 
+L115: Name of Candidate         Office /District/Term    Party         Precincts
+L116: 
+L117: Mike Roberto              State Senator – 27th     Democratic    Portage County
+L118:                           District
+L119: Steve Demetriou                                    Republican
+L120: 
+L121: Samantha Salamon          State Representative –   Democratic    Aurora City, Streetsboro City, Mantua
+L122:                           35th District                          Township
+L123: Vik Sandhu                                         Republican
+L124: 
+L125: Jeff Clapper              State Representative –   Democratic    Ravenna City, Kent City, Atwater
+L126:                           72nd District                          Township, Brimfield Township,
+L127: Michael Fricke                                     Libertarian   Charlestown Township, Deerfield
+L128:                                                                  Township, Edinburg Township, Franklin
+L129: Heidi Workman                                      Republican    Township, Freedom Township,
+L130:                                                                  Garrettsville Village, Hiram Township,
+L131:                                                                  Hiram Village, Mantua Village, Mogadore
+L132:                                                                  Village, Nelson Township, Palmyra
+L133:                                                                  Township, Paris Township, Randolph
+L134:                                                                  Township, Ravenna Township,
+L135:                                                                  Rootstown Township, Shalersville
+L136:                                                                  Township, Suffield Township, Sugar
+L137:                                                                  Bush Knolls Village, Windham Township,
+L138:                                                                  Windham Village
+L139: 
+L140: 
+L141: 
+L142:                                    County Administrative Offices
+L143: 
+L144: Name of Candidate         Office /District/Term    Party         Precincts
+L145: 
+L146: Jenny D. Adams            County Commissioner      Democratic    Portage County
+L147: 
+L148: Mike Tinlin                                        Republican
+L149: 
+L150: Matt Kelly                County Auditor           Republican    Portage County
+L151: 
+L152:                                             Ohio Supreme Court
+L153: 
+L154: Name of Candidate            Office /Term              Party         Precincts
+L155: 
+L156: Marilyn Zayas                Justice of the Supreme    Democratic    Portage County
+L157:                              Court – term
+L158: Daniel R. Hawkins            commencing 1/1/27         Republican
+L159: 
+L160: Jennifer Brunner             Justice of the Supreme    Democratic    Portage County
+L161:                              Court – term
+L162: Colleen O’Donnell            commencing 1/2/27         Republican
+L163: 
+L164: 
+L165: 
+L166:                                    Ohio Court of Appeals (11th District)
+L167: 
+L168: Name of Candidate            Office /Term              Party         Precincts
+L169: 
+L170: Marisa L. Cornachio          Court of Appeals – 11th   Republican    Portage County
+L171:                              District – term
+L172:                              commencing 2/9/27
+L173: 
+L174: Robert J. Patton             Court of Appeals – 11th   Republican    Portage County
+L175:                              District – Term
+L176:                              commencing 2/10/27
+L177: 
+L178: 
+L179: 
+L180:                             County Court of Common Pleas or County Court
+L181: 
+L182: Name of Candidate            Office /Division/Term     Party         Precincts
+L183: 
+L184: Becky L. Doherty             Court of Common Pleas     Republican    Portage County
+L185:                              – General Division
+L186: 
+L187: Patricia J. Smith            Court of Common Pleas     Democratic    Portage County
+L188:                              – Juvenile/Probate
+L189:                              Divisions
+L190: 
+L191: 
+L192: 
+L193:                                                 State Issues
+L194: 
+L195: Number              Title                                           Precincts
+L196: 
+L197: 3                   Constitutional Amendment to Require Voters to   Portage County
+L198:                     Present Photo Identification in Order to Vote
+L199: 
+L200: 
+L201: 
+L202:                                         Local Questions and Issues
+L203: 
+L204: Number   Title                                           Precincts
+L205: 
+L206: 4        SUMMIT COUNTY OVERLAP                           Aurora City, Reminderville (Summit
+L207:          Aurora City School District                     County)
+L208:          Bond Issue – 4.26 mills - $96,200,000 bond
+L209:          value
+L210:          Elementary school building and other building
+L211:          improvements
+L212:          37 years commencing in 2026
+L213: 
+L214: 5        Ravenna City School District                    Ravenna City, Ravenna Township,
+L215:          Renewal Tax Levy – 2.9 mills                    Charlestown Township A, split 2,
+L216:          $60 per $100,000 of Auditor’s market value      Shalersville Township D, split 2
+L217:          General Permanent Improvements
+L218:          Continuing period of time commencing in 2027
+L219: 
+L220: 6        SUMMIT COUNTY OVERLAP                           Franklin Township A, split 2
+L221:          Stow Munroe Falls City School District
+L222:          Renewal Tax Levy – 3.17 mills
+L223:          $97 per $100,000 of Auditor’s market value
+L224:          Current Expenses
+L225:          5 years commencing in 2026
+L226: 
+L227: 7        Streetsboro City School District                Streetsboro City except Streetsboro City
+L228:          Renewal Tax Levy – 5.1 mills                    4B, split 2
+L229:          $96 per$100,000 of Auditor’s market value
+L230:          Current Expenses (3.6 mills) and General
+L231:          Permanent Improvements (1.5 mills)
+L232:          5 years commencing in 2026
+L233: 
+L234: 8        SUMMIT COUNTY OVERLAP                           Brimfield Township E, split 2
+L235:          Tallmadge City School District
+L236:          Earned Income Tax – 1%
+L237:          Current Expenses
+L238:          Continuing period of time commencing on
+L239:          January 1, 2027
+L240: 
+L241: 9        Crestwood Local School District                 Hiram Village, Hiram Township A and B,
+L242:          Renewal Tax Levy – 3.5 mills                    split 1, Mantua Township, Mantua Village,
+L243:          $26 per $100,000 of Auditor’s market value      Shalersville Township A, B, C, D, split 1
+L244:          General Permanent Improvements
+L245:          5 years commencing in 2027
+L246: 
+L247: 10       MAHONING COUNTY OVERLAP                         Deerfield Township B, split 2
+L248:          West Branch Local School District
+L249:          Additional Tax Levy – 1 mill
+L250:          $35 per $100,000 of Auditor’s market value
+L251:          General Permanent Improvements
+L252:          5 years commencing in 2026
+L253: 
+L254: 11   Garrettsville, Freedom, Nelson Joint Fire       Garrettsville Village, Freedom Township,
+L255:      District                                        Nelson Township
+L256:      Renewal Tax Levy – 3.2 mills
+L257:      $85 per $100,000 of Auditor’s market value
+L258:      Fire and Emergency Medical Services
+L259:      5 years commencing in 2027
+L260: 
+L261: 12   STARK COUNTY OVERLAP                            Suffield Township C, split 2
+L262:      Stark County District Library
+L263:      Renewal and Increase Tax Levy – 2.3 mills
+L264:      $55 per $100,000 of Auditor’s market value
+L265:      Current Expenses
+L266:      8 years commencing in 2027
+L267: 
+L268: 13   Job and Family Services                         Portage County
+L269:      Additional Tax Levy – 0.4 mills
+L270:      $14 per $100,000 of Auditor’s market value
+L271:      Public assistance, human services
+L272:      5 years commencing in 2026
+L273: 
+L274: 14   Mental Health and Recovery Board                Portage County
+L275:      Renewal Tax Levy – 0.3 mill
+L276:      $6 per $100,000 of Auditor’s market value
+L277:      Current Expenses
+L278:      10 years commencing in 2027
+L279: 
+L280: 15   Ravenna City                                    Ravenna City
+L281:      Additional income Tax – 0.25%
+L282:      Facilities for fire, police and city hall
+L283:      30 years commencing on January 1, 2027
+L284: 
+L285: 16   Kent City                                       Kent City
+L286:      Income Tax – Reallocation of .25% income tax
+L287:      and extending the term to a continuing period
+L288:      of time
+L289: 
+L290: 17   Aurora City                                     Aurora City
+L291:      Renewal Tax Levy – 0.9 mill
+L292:      $16 per $100,000 of Auditor’s market value
+L293:      Roads and Bridges
+L294:      5 years commencing in 2026
+L295: 
+L296: 18   Garrettsville Village A                         Garrettsville Village A
+L297:      Local Liquor Option – Sunday Sales
+L298:      Wine and mixed beverages, spirituous liquor
+L299:      Stan Leigh Corp., dba Silver Crik Saloon
+L300: 
+L301: 19   Hiram Village                                   Hiram Village
+L302:      Renewal Tax Levy – 4.4 mills
+L303:      $99 per $100,000 of Auditor’s market value
+L304:      Current Expenses
+L305:      5 years commencing in 2026
+L306: 
+L307: 20   SUMMIT COUNTY OVERLAP                            Mogadore Village
+L308:      Mogadore Village
+L309:      Renewal and Increase Tax Levy – 4.73 mills
+L310:      $135 per $100,000 of Auditor’s market value
+L311:      Fire and Emergency Medical Services
+L312:      5 years commencing in 2027
+L313: 
+L314: 21   SUMMIT COUNTY OVERLAP                            Mogadore Village
+L315:      Mogadore Village
+L316:      Charter Amendment – Article III, Section 3.12
+L317:      Posting of ordinances or resolutions
+L318: 
+L319: 22   SUMMIT COUNTY OVERLAP                            Mogadore Village
+L320:      Mogadore Village
+L321:      Charter Amendment – Article IV, Section 4.03
+L322:      Mayoral Absence
+L323: 
+L324: 23   SUMMIT COUNTY OVERLAP                            Mogadore Village
+L325:      Mogadore Village
+L326:      Charter Amendment – Article V
+L327:      Change Clerk-Treasurer position to Clerk and
+L328:      Fiscal Officer positions
+L329: 
+L330: 24   SUMMIT COUNTY OVERLAP                            Mogadore Village
+L331:      Mogadore Village
+L332:      Charter Amendment – Article X
+L333:      Change Board of Zoning Appeals membership
+L334:      from 7 to 5
+L335: 
+L336: 25   Atwater Township B                               Atwater Township B
+L337:      Local Liquor Option – Particular Location
+L338:      Wine and mixed beverages
+L339:      K.J.’s Watering Hole, L.L.C., dba The Watering
+L340:      Hole
+L341: 
+L342: 26   Atwater Township B                               Atwater Township B
+L343:      Local Liquor Option – Sunday Sales
+L344:      Wine and mixed beverages
+L345:      K.J.’s Watering Hole, L.L.C., dba The Watering
+L346:      Hole
+L347: 
+L348: 27   Brimfield Township                               Brimfield Township
+L349:      Additional Tax Levy – 1.95 mills
+L350:      $68 per $100,000 of the Auditor’s market value
+L351:      Fire & Emergency Medical Services
+L352:      5 years commencing in 2026
+L353: 
+L354: 28   Deerfield Township                               Deerfield Township
+L355:      Renewal and Increase Tax Levy – 2.75 mills
+L356:      $66 per $100,000 of Auditor’s market value
+L357:      Fire & Emergency Medical Services
+L358:      5 years commencing in 2027
+L359: 
+L360: 29   Franklin Township                             Franklin Township
+L361:      Renewal Tax Levy – 2 mills
+L362:      $17 per $100,000 of Auditor’s market value
+L363:      Roads and Bridges
+L364:      5 years commencing in 2026
+L365: 
+L366: 30   Paris Township                                Paris Township
+L367:      Renewal Tax Levy – 2 mills
+L368:      $22 per $100,000 of Auditor’s market value
+L369:      Fire and Emergency Medical Services
+L370:      5 years commencing in 2027
+L371: 
+L372: 31   Paris Township                                Paris Township
+L373:      Repeal of Zoning in the township
+L374: 
+L375: 32   Ravenna Township                              Ravenna Township
+L376:      Additional Tax Levy – 4.5 mills
+L377:      $158 per $100,000 of Auditor’s market value
+L378:      Emergency Medical Services
+L379:      5 years commencing in 2027
+L380: 
+L381:          INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L382:                 FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L383: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of
+L384: downloading a blank, hard copy FWAB to complete by hand, or proceeding through electronic completion of
+L385: the FWAB using the website’s FWAB Wizard.
+L386: 
+L387: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to
+L388: count.
+L389: 
+L390: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before
+L391: the election and the updated election notice issued on the 46th day before the election as a guide to:
+L392: 
+L393:          (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L394:          (2) write the name of your choice of candidate or choice for or against an issue.
+L395: 
+L396: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of
+L397: elections at this address: 449 S. Meridian, Ravenna, OH 44266. A complete listing of all county board of
+L398: elections mailing addresses and contact information is available at
+L399: http://www.sos.state.oh.us/SOS/elections/electionsofficials/boeDirectory.aspx#dir.
+L400: 
+L401:  Do not send your ballot via e-mail or fax; Ohio law prohibits electronic transmission of a voted ballot.
+L402: 

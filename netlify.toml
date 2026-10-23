@@ -23,9 +23,27 @@
 [functions]
   directory = "netlify/functions"
 
+[functions."line-keeper"]
+  node_bundler = "esbuild"
+  external_node_modules = ["@sparticuz/chromium", "playwright"]
+  included_files = ["node_modules/@sparticuz/chromium/bin/**", "data/derived/zip-divisions/*.json"]
+
+[functions."line-keeper-initialize"]
+  node_bundler = "esbuild"
+  external_node_modules = ["@sparticuz/chromium", "playwright"]
+  included_files = ["data/derived/zip-divisions/*.json"]
+
 [functions."grounded-ask"]
   node_bundler = "esbuild"
-  included_files = ["data/derived/zip-divisions/*.json", "data/derived/resolver-geometry.json", "data/derived/zip-coverage-tiers-runtime.json", "data/states/*/geo/**/*.geojson", "public/geo/*.geojson"]
+  included_files = ["data/derived/zip-divisions/*.json", "data/derived/resolver-geometry.json", "data/derived/zip-coverage-tiers-runtime.json", "data/derived/state-geometry.json", "!data/states/*/geo/**", "public/geo/*.geojson", "!public/geo/reader-zips/**"]
+
+[functions."reader-meetings"]
+  node_bundler = "esbuild"
+  external_node_modules = ["next"]
+  included_files = ["data/derived/zip-divisions/*.json", "lib/geo/zcta-centroids.json", "lib/geo/postal-zips.json", "data/derived/resolver-geometry.json", "data/derived/zip-coverage-tiers-runtime.json", "data/derived/state-geometry.json", "!data/states/*/geo/**", "public/geo/*.geojson", "!public/geo/reader-zips/**", "data/reference/fec_state_election_offices.csv", "data/reference/state-cf-agencies.csv"]
+
+[functions."reader-geocode"]
+  node_bundler = "esbuild"
 
 # The site's default Netlify hostname forwards to the real one.
 [[redirects]]

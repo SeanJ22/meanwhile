@@ -1,4 +1,9 @@
-import { withReaderRoute, withReaderSelection } from "../lib/db/reader-route.ts";
+import { refreshOfficialsLeads, officialsLeadProvider } from "../lib/control-plane/officials-leads.ts";
+import { plannerStateReads } from "../lib/civic-data/planner-state-read.ts";
+import { readPlannerMeetingBodies } from "../lib/civic-data/planner-meeting-state-read.ts";
+import { plannerMeetingOwnership } from "../lib/civic-data/planner-ownership-state-read.ts";
+import { refreshPlannerDoorsForPass } from "../lib/civic-data/planner-door-state-read.ts";
+import { readPlannerRoutineClock } from "../lib/civic-data/planner-clock-state-read.ts";
 import { summarizePlanningRound, mergeStatePlanningPass, type StatePlanningSummary, PLANNING_STATES, stateDispatchTarget, planningStateArg, planningStateOf, runStateControlBackfill, runStatePlanningRound } from "../lib/control-plane/scheduler/state-planning.ts";
 import { fork } from "node:child_process";
 import { applyHuntOrders, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
@@ -12,7 +17,7 @@ import "../lib/ask/model.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
-import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { workerMemoryHost, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
@@ -95,11 +100,9 @@ import { preloadRegistrationJurisdictions } from "../lib/registration/jurisdicti
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import {
   UNREAD_FREE_DISCOVERY_WALKS,
-  promotedRegistries,
   type FreeDiscoveryWalks,
   type MaterializedReading,
 } from "../lib/control-plane/scheduler/provider-inputs.ts";
-import { createMeetingPartitionOwnership } from "../lib/control-plane/scheduler/meeting-ownership.ts";
 import { readFreeDiscoveryWalks, type FreeWalkSubject } from "../lib/control-plane/discovery/free-walks.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
 import { foldNewWorkIntoRound, sameRoundFirstHuntEnabled } from "../lib/control-plane/scheduler/same-round-work.ts";
@@ -129,7 +132,7 @@ import { readPlaceWords } from "../lib/hunt/place-words.ts";
 import { duePackets } from "../lib/hunt/runtime.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { EXA_AGENT_LANE_SETTING } from "../lib/hunt/settings.ts";
-import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
+import { preloadOperationalReferenceState, planningJurisdictionRegistries } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { heldCalendarRouteBodies } from "../lib/hunt/mission-meetings-discovery.ts";
@@ -139,7 +142,6 @@ import {
 import { runSpreadPass, sentMoneyPlaces, spreadLine } from "../lib/method/spread-pass.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { guardedLeadGet, LEADS_PASS_BUDGET_MS, runLeadsPass } from "../lib/control-plane/leads/plain-test.ts";
-import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { durableSearchBudget } from "../lib/control-plane/discovery/search-runtime.ts";
 import {
   closeAbandonedOccurrences,
@@ -297,9 +299,6 @@ process.on("message", message => {
     console.log("  runtime release requested: current wave finishes normally; no new autonomous wave will start");
   }
 });
-
-const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
-  { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
 
 const ROOT = process.cwd();
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs", planningStateArg(process.argv.slice(2)) ?? "round");
@@ -492,11 +491,48 @@ if(STATE===null) {
 }
 
 const PLANNING_STATE=STATE;
-await withReaderRoute(`control-planning:${PLANNING_STATE}`, () => withReaderSelection({keys:new Set([`state:${PLANNING_STATE.toUpperCase()}`])}, async () => {
+// The round supervisor only forks state planners and combines their small
+// summaries. The planner doing the work owns the research reservation.
+const plannerMemoryHost = workerMemoryHost({ shared: true });
+const plannerMemoryKey = `freshness-shadow.mts:${PLANNING_STATE}`;
+const samplePlannerMemory = () => plannerMemoryHost.transact(state => {
+  const observed = process.resourceUsage().maxRSS * 1024;
+  const measured = Math.max(observed, ...state.peaks?.[plannerMemoryKey] ?? []);
+  const peak = Math.ceil(measured * 1.05 / 1024 ** 2) * 1024 ** 2;
+  const parent = state.parents.find(row => row.pid === process.pid);
+  if (parent) parent.peak = peak;
+  else state.parents.push({ pid: process.pid, peak, entry: plannerMemoryKey });
+}, false);
+await samplePlannerMemory();
+const plannerMemorySampler = setInterval(() => { void samplePlannerMemory(); }, 1000);
+plannerMemorySampler.unref();
+process.on("exit", code => {
+  clearInterval(plannerMemorySampler);
+  if (argv.includes("--startup-profile")) console.log(`planner memory ${JSON.stringify({ state: PLANNING_STATE, code,
+    rssBytes: process.memoryUsage.rss(), peakRssBytes: process.resourceUsage().maxRSS * 1024, heapUsedBytes: process.memoryUsage().heapUsed })}`);
+  plannerMemoryHost.transact(state => {
+    state.parents = state.parents.filter(row => row.pid !== process.pid);
+    if (code === 0 && !argv.includes("--startup-only")) {
+      (state.peaks ??= {})[plannerMemoryKey] = [...state.peaks[plannerMemoryKey] ?? [], process.resourceUsage().maxRSS * 1024].slice(-5);
+    }
+  }, false);
+});
+const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
+  { host: plannerMemoryHost, admissionsOpen: () => !releaseDrainRequested });
+{
 
 installNeonCircuitBreaker(ROOT, nowIso);
 
 installNeonRequestDeadline();
+if (argv.includes("--startup-only") && !dry) throw new Error("--startup-only requires --dry");
+const startupReads: { name: string; elapsedMs: number; bytes: number; ok: boolean }[] = [];
+const plannerReads = plannerStateReads(PLANNING_STATE, undefined, read => {
+  if (argv.includes("--startup-profile")) {
+    startupReads.push(read);
+    console.log(`planner read ${JSON.stringify({ state: PLANNING_STATE, ...read })}`);
+  }
+});
+plannerReads.install();
 const url = controlPlaneUrlFromEnv();
 if (url === null) {
   console.error(
@@ -524,9 +560,9 @@ if(!dry && !filteredCycle) {
 }
 const planningPolicy=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}});
 const huntsPaused=intents.paused || intents.runnerPause.paused || intentLogUnreadable!==null || ownerIntentsUnreadableByRunner;
-const fundedRefs=huntsPaused?[]:[...expansionScopesOf(planningPolicy?.value??null).scopes.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId),
+const fundedRefs=[...expansionScopesOf(planningPolicy?.value??null).scopes.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId),
   ...intentLog.flatMap(intent=>intent.kind==="INTENT" && intent.action==="DISPATCH" && !intents.cancelledDispatch.has(intent.intentId)?[intent.intentId]:[])];
-if(!dry && !filteredCycle)await deactivateUnfundedHunts(repos,fundedRefs,NOW);
+if(!dry && !filteredCycle && !huntsPaused)await deactivateUnfundedHunts(repos,fundedRefs,NOW);
 const planningSections={expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}} as const;
 const cycleObservation = observeCyclePhases(repos);
 
@@ -546,27 +582,12 @@ const startupReadRetry = {
     ),
 };
 
-let legacyOperationalReference:Awaited<ReturnType<typeof preloadOperationalReferenceBundle>>|null=null;
-let azOperationalReference:Awaited<ReturnType<typeof preloadAzOperationalReferenceBundle>>|null=null;
-if (PLANNING_STATE !== "system") {
-[legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
-  () => preloadOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
-).catch(error => {
-  console.log(`  legacy multi-state operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
-  return null;
-}), retryStartupRead(
-  () => preloadAzOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
-).catch(error => {
-  console.log(`  scoped AZ operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
-  return null;
-})]);
-if (!legacyOperationalReference && !azOperationalReference) throw new Error(
-  "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: neither the scoped AZ pointer nor the legacy reviewed pointer could be read",
-);
-}
+const operationalReference = PLANNING_STATE === "system" ? null : await pending.step("startup:operational-reference", () => retryStartupRead(
+  () => preloadOperationalReferenceState(PLANNING_STATE, plannerReads.query), () => null, startupReadRetry,
+));
 
 {
-  const doors = await refreshDoorsForPass(repos.doors);
+  const doors = await refreshPlannerDoorsForPass(PLANNING_STATE);
   console.log(`  meeting doors: ${doors.rows} read from the registry${doors.reason ? ` — ${doors.reason}` : ""}`);
 }
 
@@ -583,7 +604,9 @@ try {
 }
 
 const trackedStates = {read:()=>({states:PLANNING_STATE==="system"?[]:[PLANNING_STATE],source:"this planning state"})};
-const meetingPartitions = createMeetingPartitionOwnership({ root: ROOT });
+const promotedRegistries = () => planningJurisdictionRegistries(PLANNING_STATE);
+const meetingPartitions = plannerMeetingOwnership({ root: ROOT, reads: plannerReads,
+  registryBodies: () => [...promotedRegistries().registries.values()].flatMap(registry => registry.jurisdictions) });
 let materialized: MaterializedReading;
 try {
   materialized = {ids:await readMaterializedPlanningIds(repos,fundedRefs)};
@@ -591,8 +614,8 @@ try {
   materialized = { unreadable: error instanceof Error ? error.message : String(error) };
 }
 
-if ("ids" in materialized) {
-  await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids].flatMap((id) => planningStateOf(id) ?? []), options: { bypassCache: true } });
+if (PLANNING_STATE !== "system") {
+  await preloadRegistrationJurisdictions({ root: ROOT, states: [PLANNING_STATE], read: plannerReads.registration });
 }
 const ownershipStates = trackedStates.read();
 await meetingPartitions.readStates([
@@ -600,15 +623,19 @@ await meetingPartitions.readStates([
   ...("ids" in materialized ? [...materialized.ids].flatMap(id => planningStateOf(id) ?? []) : []),
 ]);
 
+// Owner-reported official changes are standing Scout instructions in their state's own round.
+const officialsLeads = PLANNING_STATE === "system" ? [] : await pending.step("officials-leads:refresh", () => refreshOfficialsLeads(repos, NOW, { apply: !filteredCycle }));
 const registryProviders = [
-  ...(PLANNING_STATE === "system" ? [campaignFinanceProvider()] : [campaignFinanceProvider(), huntPacketsProvider({ materialized: () => materialized }),
+  ...(PLANNING_STATE === "system" ? [campaignFinanceProvider()] : [campaignFinanceProvider(), officialsLeadProvider(officialsLeads), huntPacketsProvider({ materialized: () => materialized }),
   localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
   await loadCandidateEnrichmentProvider(trackedStates, { root: ROOT, nowIso: NOW }),
-  meetingsDiscoveryProvider({ materialized: () => materialized }),
+  meetingsDiscoveryProvider({ materialized: () => materialized, registered: promotedRegistries }),
 
   (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
     await pending.step("ask-gaps:held-reading", async () =>
-      (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, state:PLANNING_STATE, observations: repos.askGapObservations })),
+      (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, state:PLANNING_STATE,
+        readBodies: () => readPlannerMeetingBodies(PLANNING_STATE, plannerReads.query, NOW),
+        readClock: task => readPlannerRoutineClock(task, PLANNING_STATE, plannerReads.query), observations: repos.askGapObservations })),
   ),]),
 ];
 
@@ -618,6 +645,15 @@ const trackedReading = trackedStates.read();
 const trackedStateCodes: readonly string[] = "states" in trackedReading ? trackedReading.states : [];
 
 let allUnits = registry.units;
+if (argv.includes("--startup-only")) {
+  await samplePlannerMemory();
+  console.log(`planner startup ${JSON.stringify({ state: PLANNING_STATE, reads: startupReads,
+    rssBytes: process.memoryUsage.rss(), peakRssBytes: process.resourceUsage().maxRSS * 1024,
+    heapUsedBytes: process.memoryUsage().heapUsed, obligations: allUnits.length,
+    failures: registry.byProvider.filter(provider => provider.readFailure).map(provider => provider.readFailure) })}`);
+  await releaseWindowLease(repos, CYCLE_LEASE_HOLDER, nowIso());
+  process.exit(startupReads.some(read => !read.ok) ? 1 : 0);
+}
 let units = allUnits.filter(
   (u) => (ONLY === null || u.obligation.id.startsWith(ONLY)) && (IDS === null || IDS.has(u.obligation.id)),
 );
@@ -726,7 +762,7 @@ const dispatchedDiscovery = materializedDiscoveryNeeds(dispatchedDiscoveryIds);
 
 const withAddressSource = (e: { readonly need: MeetingsDiscoveryNeed; readonly reg: Parameters<typeof dispatchedAddressSource>[0] }): MeetingsDiscoveryNeed =>
   ({ ...e.need, addressSource: dispatchedAddressSource(e.reg,
-    (e.reg.stateCode.toLowerCase() === "az" ? azOperationalReference ?? legacyOperationalReference : legacyOperationalReference)?.metadata.versionId ?? null) });
+    operationalReference?.versionId ?? null) });
 const dispatchedNeeds = new Map(dispatchedDiscovery.entries.map((e) => [e.need.jurisdictionId, withAddressSource(e)]));
 
 const freeWalkSubjects: readonly FreeWalkSubject[] = [
@@ -1022,7 +1058,7 @@ const expansionLoad = intents.paused || intents.runnerPause.paused || intentLogU
   obligations: sync.all.map((o) => ({ id: o.id, subjectId: o.subjectId, scopeDivisions: scopeDivisionsByObligation.get(o.id) })),
 
   beforeTerritory: async (states) => {
-    const registration = await preloadRegistrationJurisdictions({ root: ROOT, states, options: { bypassCache: true } });
+    const registration = await preloadRegistrationJurisdictions({ root: ROOT, states, read: plannerReads.registration });
     await meetingPartitions.readStates(states);
     return [...registration.refused].map(
       ([state, why]) => `the ${state.toUpperCase()} registration could not be read as a jurisdiction registry (${why}); nothing in it is placed or created`,
@@ -1505,7 +1541,7 @@ if (dispatchTargets.length > 0) {
   try {
     if ("unreadable" in promoted) throw new Error(`the promoted jurisdiction registries could not be read (${promoted.unreadable})`);
 
-    await preloadRegistrationJurisdictions({ root: ROOT, states: dispatchTargets.flatMap((t) => (t.kind === "DISPATCH" ? t.target.states : [])), options: { bypassCache: true } });
+    await preloadRegistrationJurisdictions({ root: ROOT, states: dispatchTargets.flatMap((t) => (t.kind === "DISPATCH" ? t.target.states : [])), read: plannerReads.registration });
     await meetingPartitions.readStates(dispatchTargets.flatMap(t => t.kind === "DISPATCH" ? t.target.states : []));
     const current = promotedRegistries();
     const registries = "registries" in current ? current.registries : promoted.registries;
@@ -3048,4 +3084,4 @@ exitAfterDrainGrace({
   exit: (code) => process.exit(code),
 });
 
-}));
+}

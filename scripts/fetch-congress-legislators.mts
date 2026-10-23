@@ -15,9 +15,12 @@ import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { acquireCongressSourceRevision } from "../lib/officials/congress-source-revision.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
+import { rosterChanges } from "../lib/officials/roster-changes.ts";
 import { CHAMBER_DIRECTORY_URLS, parseChamberDirectory, withChamberDirectories } from "../lib/officials/chamber-directory.ts";
 import type { FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
 
+const changesFrom = (prior: FederalDirectoryReadModel | null, next: FederalDirectoryReadModel) =>
+  rosterChanges(prior?.roster ?? null, next.roster, { prior: prior?.vacancies ?? [], next: next.vacancies ?? [] });
 const FILES = ["legislators-current", "legislators-social-media", "legislators-district-offices", "committees-current", "committee-membership-current"] as const;
 export async function refreshCongressDirectory(input: {
   state: string;
@@ -60,7 +63,7 @@ export async function refreshCongressDirectory(input: {
       // The core becomes readable immediately; optional files each enrich that same pointer.
       if (!raw["legislators-current"]) continue;
       const projection = withChamberDirectories(federalDirectoryForState(normalizeCongressDirectory(raw,sourceSha,dates["legislators-current"]!,prior,dates,now),state),state,[],prior);
-      const candidate = await federalDirectoryCandidate({state,acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection});
+      const candidate = await federalDirectoryCandidate({state,acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection,changes:changesFrom(prior,projection)});
       const outcome = await processRegisteredManualCandidate(store,contractId,candidate,clock());
       finalReceipt = {candidate,outcome};
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
@@ -74,7 +77,7 @@ export async function refreshCongressDirectory(input: {
           headers:{accept:"application/xml"},validate:bytes=>{parseChamberDirectory({body:new TextDecoder().decode(bytes),finalUrl:url,retrievedAt:clock()},state);} });
         const capture = {requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:new TextDecoder("utf-8",{fatal:true}).decode(held.bytes),retrievedAt:held.retrievedAt,sourceCheck:knownReleaseSourceCheck(held)};
         const projection = withChamberDirectories(latest!,state,[capture],latest);
-        const candidate = await federalDirectoryCandidate({state,acquisitions:[...acquisitions,capture],vault,retrievedAt:held.retrievedAt,projection});
+        const candidate = await federalDirectoryCandidate({state,acquisitions:[...acquisitions,capture],vault,retrievedAt:held.retrievedAt,projection,changes:changesFrom(prior,projection)});
         const outcome = await processRegisteredManualCandidate(store,contractId,candidate,clock());
         if (!outcome.promoted && !outcome.confirmed) throw Error(`Chamber contact publication ${outcome.candidate.state}: ${outcome.candidate.failureDetail}`);
         acquisitions.push(capture); latest=projection; finalReceipt={candidate,outcome};

@@ -12,6 +12,9 @@ export interface VotingSource {
   title?: string;
   lastUpdated?: string;
   checkedAt?: string;
+  official?: boolean;
+  documentHash?: string;
+  documentUrl?: string;
 }
 
 export interface VotingRule {
@@ -56,6 +59,10 @@ export interface VotingSite {
   lat: number | null;
   lng: number | null;
   kind: SiteKind;
+  kinds?: SiteKind[];
+  precincts?: string[];
+  assignments?: { precinct: string; ward?: string; name?: string; room?: string | null; locationNotes?: string; source: VotingSource }[];
+  schedules?: { kind: SiteKind; days?: string; hours?: string; electionDate?: string; source: VotingSource }[];
   /** In the authority's own words, or null; never filled in with the jurisdiction's current election. */
   election: string | null;
   /** Assigned wards or districts in the authority's own words; null where it does not say, never inferred. */
@@ -80,8 +87,62 @@ export interface VotingSite {
   lastUpdated?: string;
   electionDate?: string;
   office?: VotingOfficeContact;
-  geocodeSource?: "CENSUS";
+  geocodeSource?: "CENSUS" | "PUBLISHER";
 
+}
+
+/** One physical location can serve several precincts and voting methods. */
+export function mergeVotingSiteRows(earlier: VotingSite, later: VotingSite): VotingSite {
+  const unique = <T>(values: T[], key: (value: T) => string): T[] => [...new Map(values.map(value => [key(value), value])).values()];
+  const sourceTime = (source: VotingSource) => Date.parse(source.lastUpdated ?? "") || Date.parse(source.checkedAt ?? "") || 0;
+  const sourceOfficial = (source: VotingSource) => source.official ?? /\.gov(?:\/|$)/i.test(source.url);
+  const sourceWins = (before: VotingSource, after: VotingSource) => sourceOfficial(before) !== sourceOfficial(after)
+    ? sourceOfficial(after) : sourceTime(after) >= sourceTime(before);
+  const byUrl = new Map<string, VotingSource>();
+  for (const source of [...(earlier.sources ?? []), ...(later.sources ?? [])]) {
+    const prior = byUrl.get(source.url);
+    if (!prior || sourceWins(prior, source)) byUrl.set(source.url, source);
+  }
+  const sources = [...byUrl.values()];
+  const checked = (site: VotingSite) => Math.max(0, ...(site.sources ?? []).map(sourceTime));
+  const official = (site: VotingSite) => (site.sources ?? []).some(sourceOfficial);
+  const incomingWins = official(later) !== official(earlier) ? official(later) : checked(later) >= checked(earlier);
+  const winning = incomingWins ? later : earlier;
+  const other = incomingWins ? earlier : later;
+  const point = [winning, other].find(site => site.geocodeSource === "PUBLISHER" && isPinnable(site))
+    ?? [winning, other].find(isPinnable);
+  for (const field of ["name", "room", "town", "countyName", "countyFips", "countySubdivisionGeoid", "election", "electionDate"] as const) {
+    if ((field !== "name" || earlier.assignments?.some(before => later.assignments?.some(after => before.precinct === after.precinct && before.ward === after.ward))) &&
+        earlier[field] != null && later[field] != null && earlier[field] !== later[field])
+      console.info(JSON.stringify({ event: "voting_site_conflict", site: winning.id, field,
+        kept: { value: winning[field], sources: [...new Set(winning.sources?.map(source => source.url))] },
+        replaced: { value: other[field], sources: [...new Set(other.sources?.map(source => source.url))] } }));
+  }
+  const assignments = new Map<string, NonNullable<VotingSite["assignments"]>[number]>();
+  for (const assignment of [...(earlier.assignments ?? []), ...(later.assignments ?? [])]) {
+    const key = `${assignment.ward ?? ""}:${assignment.precinct}`, prior = assignments.get(key);
+    if (!prior || sourceWins(prior.source, assignment.source)) assignments.set(key, assignment);
+  }
+  const schedules = new Map<string, NonNullable<VotingSite["schedules"]>[number]>();
+  for (const schedule of [...(earlier.schedules ?? []), ...(later.schedules ?? [])]) {
+    const key = JSON.stringify([schedule.kind, schedule.days, schedule.electionDate]), prior = schedules.get(key);
+    if (!prior || sourceWins(prior.source, schedule.source)) schedules.set(key, schedule);
+    if (prior && prior.hours !== schedule.hours && prior.source.url !== schedule.source.url) {
+      const kept = schedules.get(key)!;
+      console.info(JSON.stringify({ event: "voting_hours_conflict", site: winning.id, kind: kept.kind, days: kept.days,
+        kept: { hours: kept.hours, source: kept.source.url }, replaced: { hours: kept === prior ? schedule.hours : prior.hours,
+          source: kept === prior ? schedule.source.url : prior.source.url } }));
+    }
+  }
+  return { ...other, ...winning, ...(point ? { lat: point.lat, lng: point.lng, geocodeSource: point.geocodeSource } : {}), sources,
+    kinds: unique([...(earlier.kinds ?? [earlier.kind]), ...(later.kinds ?? [later.kind])], value => value),
+    assignments: [...assignments.values()],
+    precincts: unique([...(earlier.precincts ?? (earlier.precinct ? [earlier.precinct] : [])), ...(later.precincts ?? (later.precinct ? [later.precinct] : []))], value => value),
+    schedules: [...schedules.values()] };
+}
+
+export function votingSiteHasKind(site: VotingSite, kind: SiteKind): boolean {
+  return (site.kinds ?? [site.kind]).includes(kind);
 }
 
 export interface SiteRung {
@@ -173,6 +234,9 @@ export function censusOf(file: VotingSitesFile): VotingSitesCensus {
   };
 }
 
+/** Response diagnostics only; the reader panel never renders these reasons. */
+export type VotingFallbackReason = "KEY_MISSING" | "GOOGLE_UNAVAILABLE" | "NO_DATA";
+
 export interface VotingSitesAnswer {
   match: boolean;
   /** Only ever the resolved POINT, never the address that produced it. */
@@ -185,7 +249,9 @@ export interface VotingSitesAnswer {
   })[];
   outsideCoverage: boolean;
   precision?: "ADDRESS" | "ZIP";
-  googleFallback?: { available: boolean; requested: boolean; label?: string; message?: string };
+  googleFallback?: { available: boolean; requested: boolean; reason?: VotingFallbackReason; label?: string; message?: string };
+  /** Transient Google results must disappear from an open panel within 24 hours. */
+  expiresAt?: string;
 
   pollingPlaceLinks: readonly import("./polling-place-links.ts").PollingPlaceLink[];
   ballotNavigationDataState?: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
@@ -227,7 +293,7 @@ export function narrowingFor(j: VotingJurisdiction): Narrowing {
     sentence: `The official address lookup assigns you to ${assigned[0].name}.` };
   return {
     kind: "REFUSED",
-    sentence: "We have not fixed your precinct. These are the published locations for your county and legislative districts, with each precinct named where published. Your precinct is on your voter card.",
+    sentence: "We have not fixed your precinct. These are the published locations for your county and legislative districts, with each precinct named where published.",
     rungs: j.refusal?.rungs ?? [],
   };
 }

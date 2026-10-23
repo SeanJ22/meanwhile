@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test, { type TestContext } from "node:test";
+import { runInNewContext } from "node:vm";
 import { beginAttempt, claim, endAttempt, type Attempt } from "../lib/control-plane/attempt.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -120,6 +122,20 @@ test("standing owed waits for an eligible completed source and retains pending w
   const [task] = await planHeldWorkerFleet(ROOT, h.runtime, true); assert.ok(task);
   assert.equal(task.workerTask?.artifactId, held.record.artifactId); assert.equal(await legacyHeldWorkOwed(ROOT, h.runtime), true);
   assert.deepEqual((await planHeldWorkerFleet(ROOT, h.runtime, true)).map(row => row.id), [task.id]);
+});
+
+test("the planner round's own held statement plans a held source in a state with no legacy saved pages", async t => {
+  const round = readFileSync(path.join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
+  const wave = round.indexOf("async function runAutonomousWave");
+  const statement = /^ {2}const held = .*;$/m.exec(round.slice(wave))?.[0];
+  assert.ok(wave > 0 && statement, "runAutonomousWave plans held work in one statement");
+  assert.doesNotMatch(round, /legacyArtifactActivityRepositories|HELD_EVENT_URL_PREFIXES/, "held planning is not gated on legacy saved pages");
+  const h = await harness(t); const held = await h.hold();
+  const tasks = await runInNewContext(`(async () => { ${statement} return held; })()`,
+    { ROOT, fleet: h.runtime, legacyHeldWorkOwed, planHeldWorkerFleet }) as readonly RouteTask[];
+  assert.equal(tasks.length, 1);
+  assert.equal(tasks[0]!.workerTask?.contract.recordClass, "HELD_MEETING_DETAILS");
+  assert.equal(tasks[0]!.workerTask?.artifactId, held.record.artifactId);
 });
 
 test("the actual standing factory selects native executors and custom beginTask skips research history", async t => {

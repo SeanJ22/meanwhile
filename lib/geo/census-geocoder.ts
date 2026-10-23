@@ -133,7 +133,7 @@ async function geocodeOnce(
   return { lat: body.lat, lng: body.lng };
 }
 
-function plausibleUsPoint(lat: number, lng: number): boolean {
+export function plausibleUsPoint(lat: number, lng: number): boolean {
   return (lat >= 15 && lat <= 72 && lng >= -180 && lng <= -60) ||
     (lat >= 12 && lat <= 22 && lng >= 140 && lng <= 147) ||
     (lat >= -15 && lat <= -10 && lng >= -173 && lng <= -168);

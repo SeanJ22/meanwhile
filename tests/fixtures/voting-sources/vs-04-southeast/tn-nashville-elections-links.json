@@ -1,0 +1,154 @@
+[
+  {
+    "url": "https://www.nashville.gov/departments/elections",
+    "label": "Voting and Elections"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/confirm-voter-registration",
+    "label": "Am I Registered and Ready To Vote"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/register-vote",
+    "label": "Register to Vote"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/what-do-i-bring-vote",
+    "label": "What Do I Bring to Vote"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/find-polling-place",
+    "label": "Where Do I Vote on Election Day"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters",
+    "label": "Voters"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/request-absentee-ballot",
+    "label": "Request Absentee Ballot"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/replace-voter-registration-card",
+    "label": "Card Replacement"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/update-address-voter-registration",
+    "label": "Update Address on Voter Registration"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/update-name-voter-registration",
+    "label": "Change My Name"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/college-students",
+    "label": "College Students"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/find-early-voting-information",
+    "label": "Early Voting (In Person)"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/find-early-voting-information/early-voting-statistics",
+    "label": "Early Voting Statistics"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/find-2026-election-information",
+    "label": "Find 2026 Election Information"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/frequently-asked-questions",
+    "label": "Frequently Asked Questions"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/request-military-or-overseas-ballot",
+    "label": "Military and Overseas Ballots"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/restore-voting-rights",
+    "label": "Restore Voting Rights"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/sample-ballots",
+    "label": "Sample Ballots"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voters/voting-equipment-instructions",
+    "label": "Voting Instructions"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/poll-officials",
+    "label": "Apply to be a Poll Official"
+  },
+  {
+    "url": "https://hub.nashville.gov/s/request-type/a0ut0000002MxuaAAC/poll-official-application?language=en_US",
+    "label": "I'm Ready to Apply"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/poll-officials/frequently-asked-questions",
+    "label": "Frequently Asked Questions"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/candidates/order-voter-list",
+    "label": "Order a Voter List"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/candidates/poll-watcher-guidelines",
+    "label": "Poll Watcher Guidelines"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/voter-registration-drives",
+    "label": "Voter Registration Drives"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/resources/voting-history",
+    "label": "Voting History"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/services",
+    "label": "All Davidson County Election Commission Services"
+  },
+  {
+    "url": "https://www.facebook.com/davidsoncountyelections",
+    "label": "Davidson County Election Commission Facebook\nDavidson County Election Commission Facebook"
+  },
+  {
+    "url": "https://twitter.com/davidsonvotes",
+    "label": "Davidson County Election Commission X\nDavidson County Election Commission X"
+  },
+  {
+    "url": "https://nextdoor.com/agency-detail/tn/davidson/davidson-county-election-commission-1",
+    "label": "Davidson County Election Commission Nextdoor\nDavidson County Election Commission Nextdoor"
+  },
+  {
+    "url": "https://ovr.govote.tn.gov",
+    "label": "GoVoteTN.gov"
+  },
+  {
+    "url": "https://tnmap.tn.gov/voterlookup",
+    "label": "Tennessee Secretary of State – Division of Elections Voter Lookup"
+  },
+  {
+    "url": "http://maps.nashville.gov/pollingplacefinder",
+    "label": "Davidson County Polling Place Finder"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/news/davidson-county-election-commission-completes-congressional-redistricting",
+    "label": "Davidson County Election Commission Completes Congressional Redistricting\nJune 25, 2026"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/news/guidance-election-day-voters",
+    "label": "Guidance for Election Day Voters\nNovember 1, 2024"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/news/important-information-all-davidson-county-voters",
+    "label": "Important Information for All Davidson County Voters\nNovember 5, 2022"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/news/decision-cast-ballot-hands-voter",
+    "label": "The Decision to Cast a Ballot is in the Hands of the Voter\nOctober 20, 2022"
+  },
+  {
+    "url": "https://www.nashville.gov/departments/elections/news/davidson-county-sample-ballots-mailed",
+    "label": "Davidson County Sample Ballots Mailed\nOctober 4, 2022"
+  }
+]

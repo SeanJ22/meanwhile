@@ -110,6 +110,7 @@ async function renderBallot(zip: string): Promise<RenderedBallot> {
   const result: RenderedBallot = { cards: new Map(), names: new Map(), sources: new Map(), text: "" };
   let elementNumber = 0;
   const resolve = async (node: unknown, subject?: string): Promise<unknown> => {
+    node = await node;
     if (typeof node === "string") { result.text += ` ${node}`; return node; }
     if (!node || typeof node !== "object") return node;
     if (Array.isArray(node)) return Promise.all(node.map(child => resolve(child, subject)));

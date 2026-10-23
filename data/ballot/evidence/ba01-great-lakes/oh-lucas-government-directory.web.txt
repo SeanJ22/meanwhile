@@ -1,0 +1,111 @@
+Board of Elections | Lucas County, OH - Official Website (https://www.co.lucas.oh.us/74/Board-of-Elections/)
+【turn807968view0】 [wordlim: 200] Crawled: 2 days ago; Content type: text/html; Source: open({"ref_id":"https://www.co.lucas.oh.us/74/Board-of-Elections/","lineno":null}); Total lines: 98
+L0: ###
+L1: 
+L2: 【0†Skip to Main Content】
+L3: 
+L4: [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input] [Input]
+L5: 
+L6: #
+L7: 
+L8: #
+L9: 
+L10:   * [Input: Search...] Search
+L11: 
+L12:   1. 【1†Home】
+L13:   2. 【2†Departments】
+L14:   3. 【3†A-E】
+L15:   4. Board of Elections
+L16: 
+L17: [Input] [Input] [Input] [Input] [Input] [Input] [Input]
+L18: 
+L19: # Board of Elections
+L20: ## Lucas County Board of Elections has moved.
+L21: 
+L22: 3737 W Sylvania Avenue
+L23: Suite 121, Entrance B
+L24: Toledo OH, 43623
+L25: 
+L26: 【4†Lucas County Board Of Elections Website†www.lucascountyohiovotes.gov】
+L27: 
+L28: 【5†iframe†www.google.com】
+L29: 
+L30:   * 【6†AREIS Real Estate Info†icare.co.lucas.oh.us】
+L31: 
+L32:   * 【7†NOTIFY MEReceive Notifications】
+L33: 
+L34:   * 【8†JobsApply Online】
+L35: 
+L36:   * 【9†Submit a RequestContact the County】
+L37: 
+L38:   * 【10†FormsSearch Online Forms】
+L39: 
+L40:   * 【11†Bid PostingSearch or Submit†co.lucas.oh.us】
+L41: ### 【12†Image: Site Tools】
+L42: 
+L43:   1. 【1†Home】
+L44:   2. 【13†My Account】
+L45:   3. 【14†Printer Friendly】
+L46:   4. 【15†Email Page】
+L47:   5. 【16†Contact Us】
+L48:   6. 【17†RSS】
+L49:   7. 【18†Site Map】
+L50:   8. 【19†Translate Page】
+L51:   9. 【20†Notifications】
+L52:   10. 【21†Documents】
+L53: 
+L54: ### 【22†Image: Share Tools】
+L55: 
+L56:   1. 【23†Facebook】
+L57:   2. 【24†Twitter】
+L58:   3. 【25†Pinterest】
+L59:   4. 【26†Delicious】
+L60:   5. 【27†Blogger】
+L61:   6. 【28†LinkedIn】
+L62: 
+L63: ### Lucas County
+L64: 
+L65:   1. 1 Government Center
+L66: Toledo, OH 43604
+L67: Phone: 419-213-4000
+L68: 【29†Contact Us】
+L69: 【30†WebMaster Disclaimer】
+L70: ### Helpful Numbers
+L71: 
+L72:   1. Auditor 419-213-4406
+L73: Board of Elections 419-213-4001
+L74: Canine Care & Control 419-213-2800
+L75: County Commissioners 419-213-4500
+L76: Sheriff 419-213-4908
+L77: 
+L78: ### 【31†Helpful Links】
+L79: 
+L80:   1. 【32†Privacy】
+L81: 
+L82:   2. 【33†Contact Us】
+L83: 
+L84:   3. 【34†FAQ's】
+L85: 
+L86:   4. 【35†City of Toledo†toledo.oh.gov】
+L87: ### 【36†Using This Site】
+L88: 
+L89:   1. 【37†Accessibility】
+L90: 
+L91:   2. 【38†Copyright Notices】
+L92: 
+L93:   3. 【39†Site Map】
+L94: 
+L95:   1. One Government Center - Toledo, OH 43604 - Phone: 419-213-4000
+L96: 
+L97: 【40†Government Websites by CivicPlus®†civicplus.com】
+
+--------------------------------------------------------------------------------
+Internal Error ()
+【turn807968view1】 [wordlim: 200] Source: open({"ref_id":"https://www.lucascountyoh.gov/74/Board-of-Elections","lineno":null}); Total lines: 1
+L0: Failed to fetch https://www.lucascountyoh.gov/74/Board-of-Elections: (403) Forbidden
+
+--------------------------------------------------------------------------------
+Internal Error ()
+【turn807968view2】 [wordlim: 200] Source: open({"ref_id":"https://www.lucascountyohiovotes.gov/","lineno":null}); Total lines: 1
+L0: Failed to fetch https://www.lucascountyohiovotes.gov/: (403) Forbidden
+

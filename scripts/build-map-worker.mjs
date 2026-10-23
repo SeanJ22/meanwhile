@@ -64,3 +64,6 @@ console.log(
     size / 1024
   ).toFixed(0)} KB, self-contained)`,
 );
+
+await build({ entryPoints: [join(root,"lib/map/boundary-worker.ts")], outfile: join(root,"public/map-boundary-worker.mjs"),
+  bundle:true,format:"esm",platform:"browser",target:"es2020",minify:true,legalComments:"inline",logLevel:"warning" });

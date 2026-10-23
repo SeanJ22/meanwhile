@@ -1139,7 +1139,7 @@ test("all standing routine-source destructive classes are enumerated by the cont
     "MEETING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
     "STATE_LEGISLATOR_VOTES", "STATE_BILL", "REGISTRATION", "MEETING_OUTCOME", "FEDERAL_DIRECTORY",
     "GOOGLE_CIVIC_VOTERINFO",
-    "FEDERAL_MONEY",
+    "FEDERAL_MONEY", "CAMPAIGN_FINANCE",
     // The derived meeting-source wiring never removes a row (a trigger suspends it), so any removal is
     // refused by the generic incomplete-horizon rule (tests/derived-meeting-family.test.ts).
     "CURATED_READER_RECORD",

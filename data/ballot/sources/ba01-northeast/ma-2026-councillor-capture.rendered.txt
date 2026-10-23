@@ -1,0 +1,867 @@
+2026 State Election Candidates (https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm)
+【turn487360view0】 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://www.sec.state.ma.us/divisions/elections/research-and-statistics/2026-state-election-candidates.htm","lineno":250}); Total lines: 1519
+L0: 【0†Skip to main content】
+L1: 
+L2: Secretary of the Commonwealth of Massachusetts
+L3: 
+L4: William Francis Galvin
+L5: 
+L6: [Input]
+L7: 
+L8: ﻿
+L9: 
+L10: 【1†Image: Close】
+L11: 
+L12:   * 【2†Home】
+L13:   * Popular Features
+L14: 
+L15:     * 【3†Register to Vote】
+L16:     * 【4†Financial Protection】
+L17:     * 【5†Educational Resources】
+L18:     * 【6†Levels of State Government】
+L19: 
+L20:     * 【7†Find an Elected Official】
+L21:     * 【8†Citizens Guide to State Services】
+L22:     * 【9†Holiday Information】
+L23:     * 【10†Resources for Veterans】
+L24:     * 【11†Contact a City or Town Hall】
+L25:     * 【12†Search the Corporate Database†corp.sec.state.ma.us】
+L26:     * 【13†State House Tours】
+L27:     * 【14†Voters with Disabilities】
+L28: 
+L29:     * 【15†Consumer Information】
+L30: 
+L31:   * Departments
+L32: 
+L33:     * 【16†Address Confidentiality Program】
+L34:     * 【17†Massachusetts Archives】
+L35:     * 【18†Citizen Information Service】
+L36:     * 【19†Commissions】
+L37: 
+L38:     * 【20†Commonwealth Museum】
+L39:     * 【21†Corporations】
+L40:     * 【22†Elections】
+L41:     * 【23†Historical Commission】
+L42:     * 【24†Lobbyists】
+L43:     * 【25†Public Records】
+L44:     * 【26†Publications & Regulations】
+L45:     * 【27†Registry of Deeds】
+L46: 
+L47:     * 【4†Securities】
+L48:     * 【28†State Bookstore】
+L49:     * 【13†State House Tours】
+L50: 
+L51:   * News & Events
+L52: 
+L53:     * 【29†Recent News】
+L54: 
+L55:     * 【29†Press Releases】
+L56: 
+L57:     * 【30†Press Inquiries】
+L58: 
+L59:   * Records
+L60: 
+L61:     * 【31†Digital Archives†digitalarchives.sec.state.ma.us】
+L62: 
+L63:     * 【32†Records Management】
+L64: 
+L65:     * 【33†Public Records Appeals】
+L66: 
+L67:   * Publications
+L68:     * 【34†Election Deadline Calendar】
+L69:     * 【35†Citizen Information Service Publications】
+L70: 
+L71:     * 【36†Massachusetts Historical Commission Publications】
+L72:     * 【37†Public Notices】
+L73: 
+L74:     * 【38†Publications from the Publications & Regulations Division】
+L75: 
+L76:   * Services
+L77: 
+L78:     * 【13†State House Tours】
+L79:     * 【18†Citizen Information Service】
+L80:     * 【39†Voter Registration】
+L81: 
+L82:     * 【40†One Day Solemnzation】
+L83:     * 【41†Oaths of Office】
+L84:     * 【42†Lobbyist Public Search】
+L85:     * 【43†Corporate Filings】
+L86:     * 【33†Appeal a Public Records Denial】
+L87:     * 【44†Certificates of Good Standing†corp.sec.state.ma.us】
+L88: 
+L89:     * 【45†Preservation Planning】
+L90: 
+L91:   * Learning
+L92: 
+L93:     * 【46†Did You Know?】
+L94:     * 【47†History of Massachusetts】
+L95: 
+L96:     * 【48†Archaeology Resources for Teachers & Students】
+L97:     * 【13†State House Tours】
+L98: 
+L99:     * 【20†Commonwealth Museum】
+L100:     * 【5†Find Educational Resources】
+L101: 
+L102:   * About
+L103: 
+L104:     * 【49†Office Locations】
+L105: 
+L106:     * 【50†Careers】
+L107: 
+L108:     * 【51†Contact Us】
+L109: 
+L110:     * 【52†Sitemap】
+L111: # 2026 State Election Candidates
+L112: 
+L113:   * 【53†Senator in Congress】
+L114: 
+L115: * * *
+L116: 
+L117:   * 【54†Governor & Lieutenant Governor】
+L118: 
+L119: * * *
+L120: 
+L121:   * 【55†Attorney General】
+L122: 
+L123: * * *
+L124: 
+L125:   * 【56†Secretary of State】
+L126: 
+L127: * * *
+L128: 
+L129:   * 【57†Treasurer】
+L130: 
+L131: * * *
+L132: 
+L133:   * 【58†Auditor】
+L134: 
+L135: * * *
+L136: 
+L137:   * 【59†Representative in Congress】
+L138: 
+L139: * * *
+L140: 
+L141:   * 【60†Councillor】
+L142: 
+L143: * * *
+L144: 
+L145:   * 【61†Senator in General Court】
+L146: 
+L147: * * *
+L148: 
+L149:   * 【62†Representative in General Court】
+L150: 
+L151: * * *
+L152: 
+L153:   * 【63†District Attorney】
+L154: 
+L155: * * *
+L156: 
+L157:   * 【64†Register of Probate】
+L158: 
+L159: * * *
+L160: 
+L161:   * 【65†County Treasurer】
+L162: 
+L163: * * *
+L164:   * 【66†County Commissioner】
+L165: 
+L166: * * *
+L167: 
+L168:   * 【67†Sheriff (to fill a vacancy)】
+L169: 
+L170: * * *
+L171: ## Senator in Congress
+L172: 
+L173: Edward J. Markey, 7 Townsend St., Malden, Democratic
+L174: 
+L175: John Deaton, 138 West Berlin Rd., Bolton, Republican
+L176: 
+L177: Shiva Ayyadurai, 69 Snake Hill Rd., Belmont, Independent
+L178: 
+L179: Joe Tache, 40 Mount Pleasant Ave., Boston, Socialism and Liberation
+L180: 
+L181: ## Governor & Lieutenant Governor
+L182: 
+L183: Healey and Driscoll, Democratic
+L184: 
+L185: Minogue and Oliver, Republican
+L186: 
+L187: James and Kittredge, Independent
+L188: ## Attorney General
+L189: 
+L190: Andrea Joy Campbell, 59 William Bradford Rd., Dartmouth, Democratic
+L191: 
+L192: Michael C. Walsh, 7 Townsend Rd., Lynnfield, Republican
+L193: 
+L194: ## Secretary of State
+L195: 
+L196: William Francis Galvin, 46 Lake St., Boston, Democratic
+L197: 
+L198: Anne R. Brensley, 28 Barney Hill Rd., Wayland, Republican
+L199: 
+L200: ## Treasurer
+L201: 
+L202: Deborah B. Goldberg, 37 Hyslop Rd., Brookline, Democratic
+L203: 
+L204: Elizabeth Dionne, 55 Wellesley Rd., Belmont, Republican
+L205: ## Auditor
+L206: 
+L207: Diana DiZoglio, 30 Olive St., Methuen, Democratic
+L208: 
+L209: Al Ozonoff, 17 Orchard St., Medford, Libertarian
+L210: 
+L211: ## Representative in Congress
+L212: 
+L213: ### First District
+L214: 
+L215: Richard E. Neal, 36 Atwater Ter., Springfield
+L216: 
+L217: Nadia Donya Milleron, 615 Boardman St., Sheffield, Independent/Unenrolled
+L218: 
+L219: ### Second District
+L220: 
+L221: James P. McGovern, 393 Burncoat St., Worcester, Democratic
+L222: ### Third District
+L223: 
+L224: Lori Loureiro Trahan, 9 Weetamoo Way, Westford, Democratic
+L225: 
+L226: Gary J. Grossi, 18 Faulkner Hill Rd., Acton, Republican
+L227: 
+L228: Dennis R. Conlon, 29 Tower St., Hudson, Unenrolled
+L229: 
+L230: ### Fourth District
+L231: 
+L232: Jake Auchincloss, 69 Prince St., Newton, Democratic
+L233: 
+L234: Thomas Stalcup, 626 Washington St., Brookline, Republican
+L235: 
+L236: ### Fifth District
+L237: 
+L238: Katherine M. Clark, 15 Ocean Pier Ave., Revere, Democratic
+L239: ### Sixth District
+L240: 
+L241: Micah Quinney Jones, 7 Red Gate Rd., Essex, Republican
+L242: 
+L243: Dan Koh, 21 Windemere Dr., Andover, Democratic
+L244: 
+L245: ### Seventh District
+L246: 
+L247: Ayanna S. Pressley, 119 Blake St., Boston, Democratic
+L248: 
+L249: ### Eighth District
+L250: 
+L251: Stephen F. Lynch, 55 G St., Boston, Democratic
+L252: 
+L253: Robert G. Burke, 98 Taylor Ave., Dedham, Republican
+L254: 
+L255: Rasheed Nicholas Walters, 30 Fendale Ave., Boston, Independent
+L256: ### Ninth District
+L257: 
+L258: Bill Keating, 10 Briarwood Ln., Bourne, Democratic
+L259: 
+L260: R. Tyler Macallister, 103 Mattapoisett Neck Rd., Mattapoisett, Republican
+L261: 
+L262: 【68†▲】 Top of page
+L263: 
+L264: ## Councillor
+L265: 
+L266: ### First District
+L267: 
+L268: Joseph C. Ferreira, 258 Seaview Ave., Swansea, Democratic
+L269: 
+L270: ### Second District
+L271: 
+L272: Tamisha L. Civil, 803 Central St., Stoughton, Democratic
+L273: 
+L274: Francis T. Crimmins, Jr., 271 Plain Dr., Stoughton, Republican
+L275: 
+L276: ### Third District
+L277: 
+L278: Mara Dolan, 1538 Main St., Concord Democratic
+L279: ### Fourth District
+L280: 
+L281: Christopher A. Iannella, Jr., 263 Pond St., Boston, Democratic
+L282: 
+L283: ### Fifth District
+L284: 
+L285: Eunice Delice Zeigler, 25 North St., Methuen, Democratic
+L286: 
+L287: William Falcetano, 8 Beckford St., Gloucester, Republican
+L288: 
+L289: ### Sixth District
+L290: 
+L291: Terrence W. Kennedy, 3 Stafford Rd., Lynnfield, Democratic
+L292: 
+L293: ### Seventh District
+L294: 
+L295: Paul M. DePalo, 7 Underwood St., Worcester, Democratic
+L296: 
+L297: Margaret M. Abboud, 14 Howe Ave., Worcester, Republican
+L298: ### Eighth District
+L299: 
+L300: Tara J. Jacobs, 35 East Quincy St., North Adams, Democratic
+L301: 
+L302: ## Senator in General Court
+L303: 
+L304: ### Berkshire, Hampden, Franklin & Hampshire District
+L305: 
+L306: Paul W. Mark, 126 Mallard Dr., Becket, Democratic
+L307: 
+L308: ### Bristol & Norfolk District
+L309: 
+L310: Paul Richard Feeney, 182 North St., Foxborough, Democratic
+L311: 
+L312: ### First Bristol & Plymouth District
+L313: 
+L314: Michael J. Rodrigues, 428 Sanford Rd., Westport, Democratic
+L315: 
+L316: Gabriel Boomer Amaral, 901 Indian Town Rd., Fall River, Republican
+L317: ### Second Bristol & Plymouth District
+L318: 
+L319: Mark C.W. Montigny, 94 Hawthorn St., New Bedford, Democratic
+L320: 
+L321: Robert Scott McConnell, 32 Abbey St., Fairhaven, Republican
+L322: 
+L323: ### Third Bristol & Plymouth District
+L324: 
+L325: Kelly A. Dooner, 311 Scadding St., Taunton, Republican
+L326: 
+L327: ### Cape & Islands District
+L328: 
+L329: Julian Cyr, 293 Commercial St., Provincetown, Democratic
+L330: 
+L331: ### First Essex District
+L332: 
+L333: Pavel M. Payano, 240 Canal St., Lawrence, Democratic
+L334: 
+L335: ### Second Essex District
+L336: 
+L337: Joan B. Lovely, 16 Cleveland St., Salem, Democratic
+L338: ### Third Essex District
+L339: 
+L340: Brendan Peter Crighton, 25 Split Rock Rd., Lynn, Democratic
+L341: 
+L342: ### First Essex & Middlesex District
+L343: 
+L344: Bruce E. Tarr, 80 Essex Ave., Gloucester, Republican
+L345: 
+L346: ### Second Essex & Middlesex District
+L347: 
+L348: Barry R. Finegold, 39 Morton St., Andover, Democratic
+L349: 
+L350: Theodore T. Semesnyei, 265 Lions Mouth Rd., Amesbury, Republican
+L351: 
+L352: ### Hampden District
+L353: 
+L354: Adam Gomez, 447 Riverside Rd., Springfield, Democratic
+L355: ### Hampden & Hampshire District
+L356: 
+L357: John Christopher Velis, 83 Lindbergh Blvd., Westfield, Democratic
+L358: 
+L359: ### Hampden, Hampshire & Worcester District
+L360: 
+L361: Jacob R. Oliveira, 616 East St., Ludlow, Democratic
+L362: 
+L363: ### Hampshire, Franklin & Worcester District
+L364: 
+L365: Joanne M. Comerford, 186 Federal St., Northampton, Democratic
+L366: 
+L367: ### First Middlesex District
+L368: 
+L369: Vanna Howard, 200 Market St., Lowell, Democratic
+L370: 
+L371: Sam Meas, 94 Branch St., Lowell, Republican
+L372: 
+L373: Joe Espinola, 1 Strawberry Ln., Dracut, Independent
+L374: ### Second Middlesex District
+L375: 
+L376: Erika Uyterhoeven, 11 Wesley Park, Somerville, Democratic
+L377: 
+L378: ### Third Middlesex District
+L379: 
+L380: Michael J. Barrett, 7 Augustus Rd., Lexington, Democratic
+L381: 
+L382: ### Fourth Middlesex District
+L383: 
+L384: Cindy F. Friedman, 26A Academy St., Arlington, Democratic
+L385: 
+L386: ### Fifth Middlesex District
+L387: 
+L388: Kate Lipper-Garabedian, 21 Mystic Ave., Melrose, Democratic
+L389: 
+L390: ### Middlesex & Norfolk District
+L391: 
+L392: Karen E. Spilka, 18 Rome Way, Ashland, Democratic
+L393: ### Middlesex & Suffolk District
+L394: 
+L395: Sal N. DiDomenico, 125 Clarence St., Everett, Democratic
+L396: 
+L397: ### Middlesex & Worcester District
+L398: 
+L399: James Bradley Eldridge, 14 Mt. Pleasant St., Marlborough, Democratic
+L400: 
+L401: Joseph Timothy Shea, 118 Parker St., Acton, Republican
+L402: 
+L403: 【68†▲】 Top of page
+L404: 
+L405: ### Norfolk & Middlesex District
+L406: 
+L407: Cynthia Stone Creem, 110 Huntington Rd., Newton, Democratic
+L408: ### Norfolk & Plymouth District
+L409: 
+L410: John F. Keenan, 25 Tilden Commons Dr., Quincy, Democratic
+L411: 
+L412: Alexander Mendez, 625 Thomas Burgin Pkwy, Quincy, Independent
+L413: 
+L414: ### Norfolk, Plymouth & Bristol District
+L415: 
+L416: William J. Driscoll, Jr., 625 Adams St., Milton, Democratic
+L417: 
+L418: ### Norfolk & Suffolk District
+L419: 
+L420: Persis S. Yu, 76 Child St., Boston, Democratic
+L421: 
+L422: ### Norfolk, Worcester & Middlesex District
+L423: 
+L424: Rebecca L. Rausch, 433 Central Ave., Needham, Democratic
+L425: ### Plymouth & Barnstable District
+L426: 
+L427: Dylan A. Fernandes, 11 George St., Falmouth, Democratic
+L428: 
+L429: Kari Della MacRae, 41 Yearling Run Rd., Bourne, Republican
+L430: 
+L431: ### First Plymouth & Norfolk District
+L432: 
+L433: Patrick M. O'Connor, 700 Justin Dr., Weymouth, Republican
+L434: 
+L435: ### Second Plymouth & Norfolk District
+L436: 
+L437: Michael D. Brady, 28 Ellis St., Brockton, Democratic
+L438: 
+L439: ### First Suffolk District
+L440: 
+L441: Nicholas P. Collins, 612 East Seventh St., Boston, Democratic
+L442: ### Second Suffolk District
+L443: 
+L444: Liz Miranda, 27 Clifton St., Boston, Democratic
+L445: 
+L446: ### Third Suffolk District
+L447: 
+L448: Lydia Marie Edwards, 186 London St., Boston, Democratic
+L449: 
+L450: ### Suffolk & Middlesex District
+L451: 
+L452: William N. Brownsberger, 120 Gilbert Rd., Belmont, Democratic
+L453: 
+L454: Brandon Charles Wood, 10 Townsend Rd., Belmont, Unenrolled
+L455: 
+L456: ### First Worcester District
+L457: 
+L458: Robyn Kennedy, 14 Gothic Ave., Worcester, Democratic
+L459: 
+L460: ### Second Worcester District
+L461: 
+L462: Michael O. Moore, 20 Bengtson Ln., Millbury, Democratic
+L463: ### Worcester & Hampden District
+L464: 
+L465: Ryan C. Fattman, 56 Waters Rd., Sutton, Republican
+L466: 
+L467: ### Worcester & Hampshire District
+L468: 
+L469: Peter J. Durant, 109 Charlton Rd., Spencer, Republican
+L470: 
+L471: Shannon M. Teabo, 36 Ragged Hill Rd., West Brookfield, Democratic
+L472: 
+L473: ### Worcester & Middlesex District
+L474: 
+L475: John Cronin, 415 Blossom St., Fitchburg, Democratic
+L476: 
+L477: Ming Zhang, 15 Patriot Ln., Westford, Unenrolled
+L478: 
+L479: ## Representative in General Court
+L480: ### Barnstable, Dukes & Nantucket District
+L481: 
+L482: Thomas W. Moakley, 392 West Falmouth Hwy, Falmouth, Democratic
+L483: 
+L484: ### First Barnstable District
+L485: 
+L486: Christopher Lambton, 100 Corporation Rd., Dennis, Democratic
+L487: 
+L488: Joe B. Glynn, 822 Route 28, Yarmouth, Gulf War Veteran
+L489: 
+L490: ### Second Barnstable District
+L491: 
+L492: Kip A. Diggs, 46 Penelope Ln., Barnstable, Democratic
+L493: 
+L494: ### Third Barnstable District
+L495: 
+L496: David T. Vieira, 44 North Ockway Rd., Falmouth, Republican
+L497: 
+L498: Jack Peter Richardson, 67 Clearwater Dr., Falmouth, Democratic
+L499: ### Fourth Barnstable District
+L500: 
+L501: Hadley Luddy, 267 Tonset Rd., Orleans, Democratic
+L502: 
+L503: ### Fifth Barnstable District
+L504: 
+L505: Steven G. Xiarhos, 67 Saddler Ln., Barnstable
+L506: 
+L507: ### First Berkshire District
+L508: 
+L509: John Barrett, III, 229 Corinth St., North Adams, Democratic
+L510: 
+L511: ### Second Berkshire District
+L512: 
+L513: Tricia Farley-Bouvier, 113 Oliver Ave., Pittsfield, Democratic
+L514: 
+L515: ### Third Berkshire District
+L516: 
+L517: Leigh Susan Davis, 9 Sumner St., Great Barrington, Democratic
+L518: ### First Bristol District
+L519: 
+L520: Michael Chaisson, 20A Pleasant St., Foxborough, Republican
+L521: 
+L522: ### Second Bristol District
+L523: 
+L524: James Kimball Hawkins, 485 Locust St., Attleboro, Democratic
+L525: 
+L526: Andrew Nelson, 890 West St., Attleboro, Workers Party
+L527: 
+L528: ### Third Bristol District
+L529: 
+L530: Lisa M. Field, 4 Rockland St., Taunton, Democratic
+L531: 
+L532: Lawrence Joseph Quintal, 80 Broadway, Taunton, Republican
+L533: 
+L534: ### Fourth Bristol District
+L535: 
+L536: Steven S. Howitt, 425 Pine St., Seekonk, Republican
+L537: ### Fifth Bristol District
+L538: 
+L539: Justin E. Thurber, 147 Manchester Ave., Somerset, Republican
+L540: 
+L541: Jamison D. Souza, 2290 Riverside Ave., Somerset, Democratic
+L542: 
+L543: ### Sixth Bristol District
+L544: 
+L545: Carole A. Fiola, 307 Archer St., Fall River, Democratic
+L546: 
+L547: Robert G. Anctil, 22 South Hillside St., Freetown, Republican
+L548: 
+L549: ### Seventh Bristol District
+L550: 
+L551: Alan Silvia, 684 Woodman St., Fall River, Democratic
+L552: 
+L553: Talos D. Farris, 602 Dwelly St., Fall River, Republican
+L554: ### Eighth Bristol District
+L555: 
+L556: Steven J. Ouellette, 25 Maple St., Westport, Democratic
+L557: 
+L558: Jesse W. St. Gelais, 32 Gammons Rd., Acushnet, Republican
+L559: 
+L560: 【68†▲】 Top of page
+L561: 
+L562: ### Ninth Bristol District
+L563: 
+L564: Edward M. Pacheco, 188 Hixville Rd., Dartmouth, Democratic
+L565: 
+L566: Chester M. Tam, 355 Carroll St., Dartmouth, Republican
+L567: 
+L568: ### Tenth Bristol District
+L569: 
+L570: Mark D. Sylvia, 38 Oliver St., Fairhaven, Democratic
+L571: 
+L572: Brendalee A. Smith, 71 Fort St., Fairhaven, Republican
+L573: ### Eleventh Bristol District
+L574: 
+L575: Christopher M. Hendricks, 186 Branscomb St., New Bedford, Democratic
+L576: 
+L577: ### Twelfth Bristol District
+L578: 
+L579: Norman J. Orrall, 120 Crooked Ln., Lakeville, Republican
+L580: 
+L581: ### Thirteenth Bristol District
+L582: 
+L583: Antonio F.D. Cabral, 25 Morelands Ter., New Bedford, Democratic
+L584: 
+L585: ### Fourteenth Bristol District
+L586: 
+L587: Adam J. Scanlon, 244 Park St., North Attleborough, Democratic
+L588: 
+L589: ### First Essex District
+L590: 
+L591: Dawne Frances Shand, 18 Boardman St., Newburyport, Democratic
+L592: ### Second Essex District
+L593: 
+L594: Kristin Elena Kassner, 27 Union St., Hamilton, Democratic
+L595: 
+L596: Daniel James Kelly, 6 North Main St., Ipswich, Republican
+L597: 
+L598: ### Third Essex District
+L599: 
+L600: Andres Xavier Vargas, 150 North Ave., Haverhill, Democratic
+L601: 
+L602: ### Fourth Essex District
+L603: 
+L604: Estela Reyes, 94 Maple St., Lawrence, Democratic
+L605: ### Fifth Essex District
+L606: 
+L607: Andrew Francis Robert Tarr, 215 Washington St., Gloucester, Democratic
+L608: 
+L609: Christina Delisio, 6 Lincoln Ave., Manchester-By-The-Sea, Republican
+L610: 
+L611: Gil Frieden, 104 John Wise Ave., Essex, Transparency Inclusion Environment
+L612: 
+L613: ### Sixth Essex District
+L614: 
+L615: Hannah Louise Bowen, 315 Rantoul St., Beverly, Democratic
+L616: 
+L617: ### Seventh Essex District
+L618: 
+L619: Manny Cruz, 10 Whalers Ln., Salem, Democratic
+L620: 
+L621: ### Eighth Essex District
+L622: 
+L623: Jennifer WB Armini, 8 Russell St., Marblehead, Democratic
+L624: ### Ninth Essex District
+L625: 
+L626: Donald H. Wong, 53 Juniper Dr., Saugus, Republican
+L627: 
+L628: Peter Meaney, 93 Grant Rd., Lynn, Democratic
+L629: 
+L630: ### Tenth Essex District
+L631: 
+L632: Daniel Francis Cahill, 20 Belleaire Ave., Lynn, Democratic
+L633: 
+L634: ### Eleventh Essex District
+L635: 
+L636: Sean Daniel Reid, 76 Blakeley St., Lynn, Democratic
+L637: 
+L638: ### Twelfth Essex District
+L639: 
+L640: Thomas P. Walsh, 170 Lynnfield St., Peabody, Democratic
+L641: 
+L642: ### Thirteenth Essex District
+L643: 
+L644: Sally Patrice Kerans, 208 Centre St., Danvers, Democratic
+L645: ### Fourteenth Essex District
+L646: 
+L647: Adrianne Pusateri Ramos, 115 Winter St., North Andover, Democratic
+L648: 
+L649: ### Fifteenth Essex District
+L650: 
+L651: Ryan M. Hamilton, 8 Westwind Dr., Methuen, Democratic
+L652: 
+L653: Ronald L. Heiseler, III, 17 Kelly St., Haverhill, Republican
+L654: 
+L655: ### Sixteenth Essex District
+L656: 
+L657: Celina A. Reyes, 76 Coolidge St., Lawrence, Democratic
+L658: 
+L659: ### Seventeenth Essex District
+L660: 
+L661: Frank A. Moran, 38 Dartmouth St., Lawrence, Democratic
+L662: ### Eighteenth Essex District
+L663: 
+L664: Connor A. Murray, 410 High Plain Rd., Andover, Democratic
+L665: 
+L666: Christopher C. Shepley, 5 Rasmussen Cir., Andover, Republican
+L667: 
+L668: ### First Franklin District
+L669: 
+L670: Lora L. Wondolowski, 191 Conway St., Greenfield, Democratic
+L671: 
+L672: Amy E. Lavallee, 171 State Rd., Whately, Unenrolled
+L673: 
+L674: ### Second Franklin District
+L675: 
+L676: Susannah M. Whipps, 130 Batchelder Rd., Athol, Independent
+L677: 
+L678: ### First Hampden District
+L679: 
+L680: Todd M. Smola, 212 Bridge St., Warren, Republican
+L681: ### Second Hampden District
+L682: 
+L683: Brian Michael Ashe, 183 Rugby Rd., Longmeadow, Democratic
+L684: 
+L685: Peter Warren, 63 Bethany Rd., Monson, Republican
+L686: 
+L687: ### Third Hampden District
+L688: 
+L689: Nicholas A. Boldyga, 13 Sterrett Dr., Southwick, Republican
+L690: 
+L691: Thomas D. Hendrickson, 223 Clover Hill Dr., Agawam, Democratic
+L692: 
+L693: Jason M. Perron, 1 Noble Steed X-ing, Southwick, Independent
+L694: 
+L695: ### Fourth Hampden District
+L696: 
+L697: Kelly W. Pease, 382 Montgomery Rd., Westfield, Republican
+L698: 
+L699: Colby Walshe Hoffman, 22 Darwin Dr., Westfield, Democratic
+L700: ### Fifth Hampden District
+L701: 
+L702: Patricia A. Duffy, 18 Florence Ave., Holyoke, Democratic
+L703: 
+L704: Jose Ramon Candelario Gonzalez, 164 High St., Holyoke, Independent
+L705: 
+L706: ### Sixth Hampden District
+L707: 
+L708: Michael James Finn, 465 Gooseberry Rd., West Springfield, Democratic
+L709: 
+L710: ### Seventh Hampden District
+L711: 
+L712: Aaron L. Saunders, 716 Franklin St., Belchertown, Democratic
+L713: 
+L714: ### Eighth Hampden District
+L715: 
+L716: Shirley Arriaga, 200 Lambert Ter., Chicopee, Democratic
+L717: ### Ninth Hampden District
+L718: 
+L719: Orlando Ramos, 13 Woodrow St., Springfield, Democratic
+L720: 
+L721: ### Tenth Hampden District
+L722: 
+L723: Carlos Gonzalez, 44 Dover St., Springfield, Democratic
+L724: 
+L725: ### Eleventh Hampden District
+L726: 
+L727: Bud L. Williams, 155 Overlook Dr., Springfield, Democratic
+L728: 
+L729: ### Twelfth Hampden District
+L730: 
+L731: Angelo J. Puppolo, Jr., 44 South Shore Dr., Springfield, Democratic
+L732: 
+L733: ### First Hampshire District
+L734: 
+L735: Lindsay N. Sabadosa, 237 Riverside Dr., Northampton, Democratic
+L736: ### Second Hampshire District
+L737: 
+L738: Homar Gomez, 14 Clarke Ave., Easthampton, Democratic
+L739: 
+L740: ### Third Hampshire District
+L741: 
+L742: Mindy Domb, 106 Larkspur Dr., Amherst, Democratic
+L743: 
+L744: ### First Middlesex District
+L745: 
+L746: Margaret R. Scarsdale, 90 Nashua Rd., Pepperell, Democratic
+L747: 
+L748: Christopher M. Lyons, 661 Piper Rd., Ashby, Republican
+L749: 
+L750: 【68†▲】 Top of page
+L751: 
+L752: ### Second Middlesex District
+L753: 
+L754: James Arciero, 29 E. Prescott St., Westford, Democratic
+L755: 
+L756: ### Third Middlesex District
+L757: 
+L758: Kate Hogan, 36 Hastings St., Stow, Democratic
+L759: ### Fourth Middlesex District
+L760: 
+L761: Danielle W. Gregoire, 173 Greenwood St., Marlborough, Democratic
+L762: 
+L763: ### Fifth Middlesex District
+L764: 
+L765: David Paul Linsky, 31 South Main St., Natick, Democratic
+L766: 
+L767: Luisa A. Cestari, 10A Lincoln St., Natick, Republican
+L768: 
+L769: ### Sixth Middlesex District
+L770: 
+L771: Priscila S. Sousa, 265 Mount Wayte Ave., Framingham, Democratic
+L772: 
+L773: ### Seventh Middlesex District
+L774: 
+L775: Jack Patrick Lewis, 10 Lilian Rd., Framingham, Democratic
+L776: ### Eighth Middlesex District
+L777: 
+L778: James C. Arena-DeRosa, 9 Mechanic St., Holliston, Democratic
+L779: 
+L780: ### Ninth Middlesex District
+L781: 
+L782: Thomas M. Stanley, 501 Lexington St., Waltham, Democratic
+L783: 
+L784: ### Tenth Middlesex District
+L785: 
+L786: John J. Lawn, 24 Pilgrim Rd., Watertown, Democratic
+L787: 
+L788: ### Eleventh Middlesex District
+L789: 
+L790: Amy Mah Sangiolo, 389 Central St., Newton, Democratic
+L791: 
+L792: ### Twelfth Middlesex District
+L793: 
+L794: Greg Schwartz, 210 Woodcliff Rd., Newton, Democratic
+L795: ### Thirteenth Middlesex District
+L796: 
+L797: Ravi Simon, 437 Cold Brook Dr., Sudbury, Democratic
+L798: 
+L799: ### Fourteenth Middlesex District
+L800: 
+L801: Simon J. Cataldo, 40 Hosmer Rd., Concord, Democratic
+L802: 
+L803: ### Fifteenth Middlesex District
+L804: 
+L805: Michelle Ciccolo, 50 Shade St., Lexington, Democratic
+L806: 
+L807: ### Sixteenth Middlesex District
+L808: 
+L809: Lorena G. Betts, 204 Groton Rd., Chelmsford, Democratic
+L810: 
+L811: Karla J. Miller, 46 Carly Way, Lowell, Republican
+L812: 
+L813: ### Seventeenth Middlesex District
+L814: 
+L815: John M. Drinkwater, 232 Remington St., Lowell, Democratic
+L816: ### Eighteenth Middlesex District
+L817: 
+L818: Tara Hong, 305 Dutton St., Lowell, Democratic
+L819: 
+L820: ### Nineteenth Middlesex District
+L821: 
+L822: David Allen Robertson, 7 Middlesex Ave., Wilmington, Democratic
+L823: 
+L824: ### Twentieth Middlesex District
+L825: 
+L826: Trevor David Currier, 135 Forest St., Middleton, Republican
+L827: 
+L828: Joseph Markey, 22 Pine St., Lynnfield, Democratic
+L829: 
+L830: ### Twenty-First Middlesex District
+L831: 
+L832: Kenneth Ira Gordon, 1 Short St., Bedford, Democratic
+L833: ### Twenty-Second Middlesex District
+L834: 
+L835: Marc T. Lombardo, 9 Eubar Cir., Billerica, Republican
+L836: 
+L837: Daniel Ronald Darris-O'Connor, 14 Forest Park Ave., Billerica, Democratic
+L838: 
+L839: ### Twenty-Third Middlesex District
+L840: 
+L841: Sean Garballey, 45 Maynard St., Arlington, Democratic
+L842: 
+L843: ### Twenty-Fourth Middlesex District
+L844: 
+L845: David M. Rogers, 18 Richard Ave., Cambridge, Democratic
+L846: 
+L847: ### Twenty-Fifth Middlesex District
+L848: 
+L849: Marjorie C. Decker, 29 Raymond St., Cambridge, Democratic
+L850: ### Twenty-Sixth Middlesex District
+L851: 
+L852: Mike Connolly, 4 Ashburton Pl., Cambridge, Democratic
+L853: 
+L854: ### Twenty-Seventh Middlesex District
+L855: 
+L856: Ben Ewen-Campen, 16 Aldersey St., Somerville, Democratic
+L857: 
+L858: ### Twenty-Eighth Middlesex District
+L859: 
+L860: Joseph W. McGonagle, 13 Hampshire St., Everett, Democratic
+L861: 
+L862: ### Twenty-Ninth Middlesex District
+L863: 
+

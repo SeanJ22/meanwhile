@@ -45,6 +45,8 @@ export interface FreshnessDebt {
   readonly lastFailedAt: string;
   readonly consecutiveFailures: number;
   readonly retryAt: string;
+  /** The state whose planner owns this debt; set when the debt is saved so that planner finds it again. */
+  readonly state?: string;
 }
 
 /** Open or extend the debt for one obligation. `firstFailedAt` never moves; the backoff doubles. */

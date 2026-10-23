@@ -32,7 +32,6 @@ import {
   candidateProfilesReadState,
 } from "../lib/civic-data/manual-read-models.ts";
 import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
-import { stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
 import { POLLING_PLACE_LINKS } from "../lib/ballot/polling-place-links.ts";
@@ -247,6 +246,7 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
   // `money`, which is `CandidateFunding`), so plain objects are walked too, once each.
   const seen = new WeakSet<object>();
   const walk = async (node: unknown): Promise<void> => {
+    node = await node;
     if (typeof node === "string") { text.push(node); return; }
     if (node === null || typeof node !== "object" || seen.has(node)) return;
     seen.add(node);
@@ -344,7 +344,6 @@ test("a cold /ballot?zip=85701 reads one state registry and all ballot families 
     ["the candidate profiles", candidateProfilesReadState("AZ"), EDGE.profiles],
     ["the candidate publications", currentStateAuthorityProjection("candidate-publications", "AZ")!.result, EDGE.corpus],
     ["FEC funding", fundingReadState(), EDGE.funding],
-    ["Arizona money", stateMoneyReadState("AZ"), EDGE.stateMoney("AZ")],
   ] as const)) {
     assert.equal(state.kind, "PROMOTED", `${what} was not read as the promoted version`);
     assert.equal(state.metadata.versionId, version, `${what} was not served from the edge`);
@@ -509,8 +508,15 @@ const idHash = (ids: Set<string>) => createHash("sha256").update([...ids].sort()
 for (const expected of nationalReaderCases) test(`BL-30: ${expected.zip} preserves every live contest, candidate and election source on the national ballot holdings`, async () => {
   activeFixture = ballotFixture;
   const rendered = await renderBallot(expected.zip);
-  assert.equal(rendered.contestIds.size, expected.contests, [...rendered.contestIds].join("\n"));
-  assert.equal(idHash(rendered.contestIds), expected.contestHash, [...rendered.contestIds].join("\n"));
+  const verifiedAdditions = expected.zip === "85701" ? new Set([
+    "ballot-az-2026-general-supreme-court-john-lopez-iv",
+    "ballot-az-pima-general-2026-clerk-of-the-superior-court",
+  ]) : new Set<string>();
+  for (const id of verifiedAdditions) assert.ok(rendered.contestIds.has(id), `The reader lost the verified addition ${id}`);
+  const preserved = new Set([...rendered.contestIds].filter(id => !verifiedAdditions.has(id)));
+  assert.equal(preserved.size, expected.contests, [...preserved].join("\n"));
+  assert.equal(idHash(preserved), expected.contestHash, [...preserved].join("\n"));
+  assert.equal(rendered.contestIds.size, expected.contests + verifiedAdditions.size);
   if ("heldCandidates" in expected) {
     const aliases = new Map(azBallot.lineupReconciliation!.rows.filter(row => row.outcome === "RECONCILED").map(row => [row.cardKey, row.canonicalCandidacyId]));
     const canonical = (id: string) => aliases.get(id) ?? id;

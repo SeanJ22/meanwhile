@@ -661,11 +661,14 @@ export interface ScoreboardMissionRow {
   readonly withinHour: boolean | null;
 }
 
+/** One full hour from the independent line keeper (Now). A number nobody recorded is null and shows "—". */
 export interface ScoreboardVitalHour {
   readonly hour: string;
   readonly factsLive: number | null;
+  readonly factsLiveConfirmed?:boolean;
   readonly costPerFactUsd: number | null;
   readonly neonGb: number | null;
+  readonly neonAtLeast?:boolean;
   readonly overNeonTarget: boolean | null;
   readonly roundsFinished: number | null;
   readonly roundsKilled: number | null;
@@ -674,6 +677,7 @@ export interface ScoreboardVitalHour {
 }
 
 export interface ScoreboardView {
+  readonly lineKeeper?: string;
   readonly rows: readonly ScoreboardRow[];
   readonly byPlace: readonly ScoreboardPlaceRow[];
   readonly byFamily: readonly ScoreboardFamilyRow[];
@@ -749,6 +753,7 @@ export interface FixView {
 
 export type ActionKind =
   "ballot-publish" |
+  "officials-check" |
   "focus" |
   "decide" | "leads-send" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "hunt-stop-state" | "hunt-stop-all" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
 
@@ -824,6 +829,7 @@ export interface AdminV6Data {
   readonly hunts: Sourced<readonly Hunt[]>;
   readonly national: Sourced<readonly StateRow[]>;
   readonly results: Sourced<readonly ReaderResult[]>;
+  readonly officials?: Sourced<import("@/lib/control-plane/admin-view/officials-results.ts").OfficialsResults>;
   readonly stuck: Sourced<readonly StuckItem[]>;
   readonly sameCause: Sourced<readonly SameCause[]>;
   readonly workRows: Sourced<{ readonly rows: readonly WorkRow[]; readonly totals: readonly WorkStageTotal[] }>;

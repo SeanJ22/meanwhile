@@ -1,4 +1,4 @@
-/** A red flag pulls the fact, reopens its work, lands on the fix list, and keeps a lesson that carries the platform. */
+/** A red audit opens Sean's flag and repair work while leaving publication alone. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -18,25 +18,21 @@ function writers(over: Partial<RedFlagWriters> = {}) {
   const log: string[] = [];
   const w: RedFlagWriters = {
     originOf: async () => origin,
-    pull: async (p) => { log.push(`pull ${p.workItemId} ${p.recordIds.join(",")}`); },
-    reopenWorkItem: async (id, why) => { log.push(`reopen ${id} ${why}`); },
+    flag: async (r) => { log.push(`flag ${r.factId}`); },
     addFixItem: async (item: FixItem) => { log.push(`fix ${item.id}`); },
     writeLesson: async (entry: FieldManualEntry) => { log.push(`lesson ${entry.platforms.join(",")}`); },
-    recordCorrection: async (c: AuditCorrection) => { log.push(`correction ${c.action}`); },
     ...over,
   };
   return { w, log };
 }
 
-test("a red flag pulls, reopens, adds a fix-list item, writes the lesson and records the pull, in one pass", async () => {
+test("a red result opens Sean's flag, repair work and a lesson without removing the value", async () => {
   const { w, log } = writers();
   const out = await respondToRedFlag(red, w, NOW);
-  assert.equal(out.status, "PULLED_AND_REOPENED");
-  assert.deepEqual(log.map((l) => l.split(" ")[0]), ["pull", "reopen", "fix", "lesson", "correction"]);
-  assert.ok(log[0].includes("rec-1"));
-  assert.ok(log[1].includes("signup"));
-  assert.equal(log[2], "fix audit-red:comment-access:a:2026-10-05", "one item per fact per day");
-  assert.equal(log[3], "lesson civicplus", "the lesson carries the platform");
+  assert.equal(out.status, "FLAGGED");
+  assert.deepEqual(log.map(l=>l.split(" ")[0]), ["flag", "fix", "lesson"]);
+  assert.equal(log[0], `flag ${red.factId}`);
+  assert.equal(log[2], "lesson civicplus");
 });
 
 test("green and inconclusive results do nothing", async () => {
@@ -50,7 +46,7 @@ test("a fact that cannot be traced is never pulled blind; it still lands on the 
   const { w, log } = writers({ originOf: async () => null });
   const out = await respondToRedFlag(red, w, NOW);
   assert.equal(out.status, "ORIGIN_UNKNOWN");
-  assert.deepEqual(log.map((l) => l.split(" ")[0]), ["fix"]);
+  assert.deepEqual(log.map((l) => l.split(" ")[0]), ["flag", "fix"]);
 });
 
 test("the lesson is keyed by platform and record class, so it reaches every door of that kind", () => {

@@ -1,11 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import {
-  expectedNhMembersTerm,
-  trustedNhMembersImportReadModel,
-  type NhMemberReadModel,
-} from "./candidate-builders.ts";
+import type { NhMemberReadModel } from "./candidate-builders.ts";
 import {
   CivicDataStoreUnavailableError,
   civicDataReadNotInitialized,
@@ -43,7 +39,8 @@ interface TrackedNhMembers {
   readonly members: NhMemberReadModel["members"];
 }
 
-function nhMembersBootstrap(): CivicDataBootstrap<NhMemberReadModel> {
+async function nhMembersBootstrap(): Promise<CivicDataBootstrap<NhMemberReadModel>> {
+  const {expectedNhMembersTerm,trustedNhMembersImportReadModel} = await import("./candidate-builders.ts");
   const corpus = JSON.parse(
     readFileSync(join(process.cwd(), "data/states/nh/hunt/nh-gencourt-members.json"), "utf8"),
   ) as TrackedNhMembers;

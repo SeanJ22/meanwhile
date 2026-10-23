@@ -7,7 +7,7 @@ import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, isDataDoorKind, type DataDoorKind } f
 export const CROSSWALK_CITATION =
   "C16: owner decision recorded 2026-09-24T22:43Z (agents may review and promote the records connecting a calendar to its governing body, on saved official evidence)" as const;
 
-export const CROSSWALK_KINDS = ["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR", ...DATA_DOOR_KINDS] as const;
+export const CROSSWALK_KINDS = ["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", ...DATA_DOOR_KINDS] as const;
 export type CrosswalkKind = (typeof CROSSWALK_KINDS)[number];
 
 /** Filter keys each kind reads, and the selecting ones (at least one is required). */
@@ -15,7 +15,6 @@ const FILTER_KEYS: Readonly<Record<CrosswalkKind, { readonly allowed: readonly s
   ICAL: { allowed: ["titleMatch", "categoryMatch", "titleExclude", "feedScope"], selecting: ["titleMatch", "categoryMatch", "feedScope"] },
   OFFICIAL_PAGE_EVENTS: { allowed: ["nameTerms"], selecting: ["nameTerms"] },
   DILIGENT: { allowed: ["titleMatch", "titleExclude"], selecting: ["titleMatch"] },
-  LEGISTAR: { allowed: ["eventBodyId"], selecting: ["eventBodyId"] },
   ...(Object.fromEntries(DATA_DOOR_KINDS.map((kind) => {
     const spec = DOOR_KIND_SPECS[kind];
     return [kind, { allowed: spec.allowed, selecting: spec.required }];
@@ -25,6 +24,8 @@ const FILTER_KEYS: Readonly<Record<CrosswalkKind, { readonly allowed: readonly s
 export interface MeetingBodyCrosswalkRow {
   readonly id: string;
   readonly jurisdictionId: string;
+  readonly governmentId?: string;
+  readonly governmentWebsite?: string;
   readonly ocdId: string;
   readonly bodyId: string;
   readonly bodyRole: "GOVERNING" | "BOARD" | "SUB_BODY";
@@ -93,15 +94,20 @@ export function crosswalkRowIssue(value: unknown): string | null {
   if (typeof row !== "object" || row === null) return "a crosswalk row is not an object";
   const who = typeof row.id === "string" && row.id !== "" ? row.id : "a crosswalk row";
   const text = (v: unknown): v is string => typeof v === "string" && v.trim() !== "";
-  if (!text(row.jurisdictionId) || !/^[a-z]{2}:[a-z]+:[a-z0-9-]+$/.test(row.jurisdictionId)) return `${who} names no jurisdiction`;
-  if (!text(row.ocdId) || !/^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}(\/[a-z_]+:[a-z0-9_~.-]+)+$/.test(row.ocdId)) return `${who} names no registered division`;
+  const nativeGovernment = /^government:US-[A-Z]{2}:(?:cog|nces|tiger):[a-z0-9:_-]+$/;
+  if (!text(row.jurisdictionId) || (!/^[a-z]{2}:[a-z]+:[a-z0-9-]+$/.test(row.jurisdictionId) && !nativeGovernment.test(row.jurisdictionId))) return `${who} names no jurisdiction`;
+  if (!text(row.ocdId) || !/^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}(\/[a-z_]+:[a-z0-9_~.-]+)*$/.test(row.ocdId)) return `${who} names no registered division`;
   if (!text(row.bodyName) || row.bodyName.length > 160) return `${who} has no body name as the government prints it`;
-  const expectedBody = row.bodyRole === "GOVERNING" ? `${row.ocdId}#governing`
-    : row.bodyRole === "BOARD" ? `${row.ocdId}#board`
-      : row.bodyRole === "SUB_BODY" ? subBodyId(row.ocdId, row.bodyName)
+  if (row.governmentId !== undefined && (!nativeGovernment.test(row.governmentId) || !new RegExp(`/(?:state|district|territory):${row.governmentId.slice(14, 16).toLowerCase()}(?:/|$)`).test(row.ocdId))) return `${who} has no registered government in its state`;
+  const root = row.governmentId && row.bodyId?.startsWith(`${row.governmentId}#`) ? row.governmentId : row.ocdId;
+  const expectedBody = row.bodyRole === "GOVERNING" ? `${root}#governing`
+    : row.bodyRole === "BOARD" ? `${root}#board`
+      : row.bodyRole === "SUB_BODY" ? subBodyId(root, row.bodyName)
         : null;
   if (expectedBody === null) return `${who} names no body role`;
-  if (row.bodyId !== expectedBody) return `${who}: a ${row.bodyRole} body's id is ${expectedBody}, derived from its division${row.bodyRole === "SUB_BODY" ? " and its printed name" : ""}`;
+  const nativeLegistarBody = row.bodyRole === "SUB_BODY" && row.kind === "LEGISTAR" && /^\d+$/.test(row.filter?.eventBodyId ?? "")
+    && row.bodyId === `${expectedBody}-legistar-${row.filter!.eventBodyId}`;
+  if (row.bodyId !== expectedBody && !nativeLegistarBody) return `${who}: a ${row.bodyRole} body's id is ${expectedBody}, derived from its division${row.bodyRole === "SUB_BODY" ? " and its printed name" : ""}`;
   if (!CROSSWALK_KINDS.includes(row.kind as CrosswalkKind)) return `${who}: no reviewed filter is defined for a ${String(row.kind)} calendar`;
   const kind = row.kind as CrosswalkKind;
   if (row.id !== crosswalkRowId(row.bodyId, kind) && row.id !== crosswalkRowId(row.bodyId, kind, row.route)) {

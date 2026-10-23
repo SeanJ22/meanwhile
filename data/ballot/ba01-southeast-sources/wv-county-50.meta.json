@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Webster%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Webster%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.869185+00:00",
+  "rawHash": "5c61b01a3a5dfa98949a9cb6b3b52bc032638d1f582eb12a150068b5e39e4ef7",
+  "httpStatus": 200,
+  "bytes": 766403,
+  "extractedTextHash": "17716e88179b8656efc5ea65947f497e07598cc56edf8fbce43d6c52d7d0fac2",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

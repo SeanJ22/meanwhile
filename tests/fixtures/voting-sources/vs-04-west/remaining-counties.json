@@ -1,0 +1,492 @@
+[
+  {
+    "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+    "finalUrl": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:32:34.943Z",
+    "rawHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+    "path": "tests/fixtures/voting-sources/vs-04-west/co-bd66a8c6102b-161cee87da6c.html",
+    "savedHash": "161cee87da6c15820b4455a92554adf858724dea2909c5f3ee29e6f59db83f10",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+        "label": "Read More"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/index.php",
+        "label": ""
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/faqs/index.php",
+        "label": "FAQs"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/ballot_drop_locations.php",
+        "label": "Zulu"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/voter_service_polling_centers.php",
+        "label": "Voter Service Polling Centers"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/nearest_voting_location.php",
+        "label": "Find My Nearest"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/curbside_ballot_pickup.php",
+        "label": "Curbside Ballot Pickup"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/wait_times.php",
+        "label": "Wait Times"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations",
+        "label": "Home"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/index.php",
+        "label": "Your County"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/voting_locations/index.php",
+        "label": "Voting Locations"
+      },
+      {
+        "url": "https://gisportal.arapahoegov.com/portal/apps/instant/nearby/index.html?appid=5aafba02f9df479c833c476960d1b3ff",
+        "label": "Enter your address to find your nearest ballot drop-off location."
+      },
+      {
+        "url": "https://maps.app.goo.gl/kJzaupVMoR8uNp6K6",
+        "label": "Map)"
+      },
+      {
+        "url": "https://maps.app.goo.gl/Ko9N472djVAfmqfCA",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.google.com?q=39.7247939%2C-104.84913052",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/cfBMP2khFPM5WdGB6",
+        "label": "Map)"
+      },
+      {
+        "url": "https://maps.app.goo.gl/2BoDC2ZmTEYwTVxS9",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/6N7d8csZbGhzjhWq9",
+        "label": "Map)"
+      },
+      {
+        "url": "https://maps.app.goo.gl/uE6tXkLVSwpJ4f1E6",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/Hmh2xLkHHu6XnnfK6",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/rJeyKYtJHVpayGAJ6",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/E42gAjs88wBUfz8z7",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/vHiDaARirNrqmwRQ7",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/2RwaSjRX2B2fCzfW6",
+        "label": "(Map)"
+      },
+      {
+        "url": "https://maps.app.goo.gl/2QcJbcvgrxp3MC7EA",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/Wp4234AbQSXBxpkH9",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/ecg4um28eJG44ZnL6",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/roCVcMTdoL2CKsiN8",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/vc9hxCmXP9oopKzEA",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/dthX3sYiz4CWXA1RA",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/dHhuEtGbyjaXUX3k7",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/rMar1fybXsF9Q7dN9",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/AtvgiitREKqz7aME7",
+        "label": "(Map)"
+      },
+      {
+        "url": "https://maps.app.goo.gl/73bWaSQJeCTk8kFs6",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/iF56C1dQ41iKywZt9",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/2uLCM7ojePs3FsXY8",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/L3FpGcu7oza8HsJb8",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/QEhSfMoHJVEVsMTs7",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.google.com?q=39.689855%2C-104.89105",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/ESUSEAKY7iPcRHbUA",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.google.com?q=39.628536%2C-104.988227",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/wE5CWsFnHr6R3VobA",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.google.com?q=39.698929%2C-104.936069",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/fPqNfNqDttYafQCU6",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/dLEF6nXdvh6Dy24A9",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/Z33v6U9iwTMRexHN9",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/XBQxvbJLsGuijBTB7",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/kdBbkwKsseLc7gkEA",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/xwP9vL7fP3tvBTQ66",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/5gXtAjuK1ndbyiA6A",
+        "label": "Map"
+      },
+      {
+        "url": "https://maps.app.goo.gl/kYZFLnExbCmd5upSA",
+        "label": "Map"
+      },
+      {
+        "url": "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.arapahoeco.gov%2Fyour_county%2Farapahoevotes%2Fvoting_locations%2Fballot_drop_locations.php",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://www.twitter.com/intent/tweet?url=http%3A%2F%2Fwww.arapahoeco.gov%2Fyour_county%2Farapahoevotes%2Fvoting_locations%2Fballot_drop_locations.php",
+        "label": "Twitter"
+      },
+      {
+        "url": "https://www.reddit.com/submit?url=http%3A%2F%2Fwww.arapahoeco.gov%2Fyour_county%2Farapahoevotes%2Fvoting_locations%2Fballot_drop_locations.php",
+        "label": "Reddit"
+      },
+      {
+        "url": "https://userway.org",
+        "label": "website accessibility"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/arapahoevotes/contact_us/index.php",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.arapahoeco.gov/your_county/arapahoevotes/voting_locations/your_county/county_departments/information_technology/technology_accessibility.php",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://www.facebook.com/ArapahoeClerk",
+        "label": ""
+      },
+      {
+        "url": "https://twitter.com/ArapahoeClerk",
+        "label": ""
+      },
+      {
+        "url": "https://www.instagram.com/ArapahoeClerk",
+        "label": ""
+      },
+      {
+        "url": "https://www.youtube.com/user/arapahoecountygov",
+        "label": ""
+      },
+      {
+        "url": "https://www.revize.com",
+        "label": ""
+      },
+      {
+        "url": "https://cms3.revize.com/revize/security/index.jsp?filename=%2Fyour_county%2Farapahoevotes%2Fvoting_locations%2Fballot_drop_locations.php&webspace=arapahoe",
+        "label": "Login"
+      }
+    ]
+  },
+  {
+    "url": "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+    "finalUrl": "https://www.natronacounty-wy.gov/130/Voting-Information",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:32:35.893Z",
+    "rawHash": "22c3d7fd795b5f9d0a011481cc905e9989482da5b68ff2f32bbc49a37b0e76a6",
+    "path": "tests/fixtures/voting-sources/vs-04-west/wy-ee9d6e7c89a0-22c3d7fd795b.html",
+    "savedHash": "c0374768e6c7ce3dd9fce0efe41e51104acfadc37ac87e307bb4427c798d9c95",
+    "redactions": 1,
+    "links": [
+      {
+        "url": "https://www.natronacounty-wy.gov/130/Voting-Information",
+        "label": "Uniformed and Overseas Citizens Absentee Voting Act (UOCAVA)"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/27/Government",
+        "label": "Government"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/31/Services",
+        "label": "Services"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/68/Parks-Recreation",
+        "label": "Parks & Recreation"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/8/Departments",
+        "label": "Departments"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/663/How-Do-I",
+        "label": "How Do I..."
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Search/Results",
+        "label": ""
+      },
+      {
+        "url": "https://www.facebook.com/people/Natrona-County-WY/100064678448170",
+        "label": ""
+      },
+      {
+        "url": "https://www.youtube.com/channel/UCASaHUpncE4V3GngjMjHAaQ",
+        "label": ""
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/659/Election-Results",
+        "label": "Election Results"
+      },
+      {
+        "url": "https://vote.natronacounty-wy.gov",
+        "label": "Where Do I Vote?"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/138/Voter-Registration-Requirements",
+        "label": "required documents"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/941/New-Election-Laws",
+        "label": "New Election Laws"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/942/Important-Dates",
+        "label": "Important Dates"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/131/Candidate-Information",
+        "label": "Candidate Information"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/134/Forms",
+        "label": "Forms"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/DocumentCenter/View/13912/Natrona-County-2026-General-Candidate-Roster",
+        "label": "2026 General Election Candidates (PDF)"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/DocumentCenter/View/13719/2026-Primary-Candidate-Roster-Natrona-County",
+        "label": "2026 Primary Candidates (PDF)"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/948/General-Election-Testing-Data",
+        "label": "General Election Testing Data"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/945/Primary-Election-Testing-Data",
+        "label": "Primary Election Testing Data"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/806/Help-Natrona-County-Vote---Be-an-Electio",
+        "label": "Help Natrona County Vote - Be an Election Judge"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/940/Election-LegalPublic-Notices",
+        "label": "Election Legal/Public Notices"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/944/Wyoming-Restoration-of-Voting-Rights",
+        "label": "Wyoming Restoration of Voting Rights"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/18/Clerk",
+        "label": "Clerk"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/128/Elections",
+        "label": "Elections Office"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/FormCenter/Elections-Encrypted-Forms-2024-11/Natrona-County-Encrypted-Absentee-Ballot-89",
+        "label": "online Absentee Ballot Request Form"
+      },
+      {
+        "url": "https://www.usps.com/manage/informed-delivery.htm",
+        "label": "USPS Informed Delivery website"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/875/Where-Do-I-Vote",
+        "label": "Where Do I Vote tool"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/cdn-cgi/l/email-protection",
+        "label": "email to the Elections Department"
+      },
+      {
+        "url": "https://www.fvap.gov",
+        "label": "Federal Voting Assistance Program website"
+      },
+      {
+        "url": "https://sos.wyo.gov/Elections/Docs/Free_Voter_ID_Info.pdf",
+        "label": "Wyoming Department of Transportation Driver Services (PDF)"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Faq.aspx?TID=26",
+        "label": "View All FAQs"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Faq.aspx?QID=111",
+        "label": "How do I Register to Vote?"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Faq.aspx?QID=126",
+        "label": "How can I change my party affiliation?"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Faq.aspx?QID=112",
+        "label": "Can I vote if I am a student in Laramie?"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Faq.aspx?QID=356",
+        "label": "Where can I find a sample ballot?"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Faq.aspx?QID=354",
+        "label": "How do I know if I am registered to vote in Natrona County?"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Faq.aspx?QID=114",
+        "label": "How do I request an absentee ballot?"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Faq.aspx?QID=115",
+        "label": "How do I find my polling location?"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Faq.aspx?QID=113",
+        "label": "Military/Overseas Citizens Voting"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/Jobs.aspx",
+        "label": "Employment"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/871/Property-Information",
+        "label": "Property Search"
+      },
+      {
+        "url": "https://data-cityofcasper.opendata.arcgis.com",
+        "label": "GIS Mapping"
+      },
+      {
+        "url": "https://secure.rec1.com/WY/natrona-county-wy/catalog",
+        "label": "Camping"
+      },
+      {
+        "url": "https://weather.natronacounty-wy.gov",
+        "label": "Webcam"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/835/Sheriff",
+        "label": "Sheriff"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/sitemap",
+        "label": "Site Map"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/directory.aspx",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/accessibility",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/copyright",
+        "label": "Copyright Notices"
+      },
+      {
+        "url": "https://www.natronacounty-wy.gov/885/Employee-Benefits",
+        "label": "Employee Benefits"
+      },
+      {
+        "url": "https://connect.civicplus.com/referral",
+        "label": "CivicPlus&reg;"
+      }
+    ]
+  }
+]

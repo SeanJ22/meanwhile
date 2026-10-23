@@ -1718,6 +1718,158 @@
             "verifiedAt": "2026-10-14T05:05:14.825330+00:00",
             "doorId": "fec-wy-chief"
           }
+        },
+        {
+          "id": "wy-laramie-general-2026-assessor",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/county:laramie",
+          "divisionVintage": "2026",
+          "title": "Assessor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nAssessor | Republican | Todd A Ernst"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-clerk",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/county:laramie",
+          "divisionVintage": "2026",
+          "title": "Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nClerk | Republican | Misty Tinney"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-clerk-of-district-court",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/county:laramie",
+          "divisionVintage": "2026",
+          "title": "Clerk of District Court",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nClerk of District Court | Republican | Diane Sanchez"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-commissioner",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/county:laramie",
+          "divisionVintage": "2026",
+          "title": "Commissioner",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nCommissioner | Republican | Jess E. Ketcham"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-coroner",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/county:laramie",
+          "divisionVintage": "2026",
+          "title": "Coroner",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nCoroner | Republican | Rebecca Reid"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-district-attorney",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/county:laramie",
+          "divisionVintage": "2026",
+          "title": "District Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nDistrict Attorney | Republican | Sylvia Lee Hackl"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-sheriff",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/county:laramie",
+          "divisionVintage": "2026",
+          "title": "Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nSheriff | Republican | Brian Kozak"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-treasurer",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/county:laramie",
+          "divisionVintage": "2026",
+          "title": "Treasurer",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nTreasurer | Republican | Trista Wood"
+          }
         }
       ],
       "candidacies": [
@@ -3981,6 +4133,227 @@
             "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
             "doorId": "fec-wy-chief"
           }
+        },
+        {
+          "id": "wy-laramie-general-2026-assessor-todd-a-ernst",
+          "contestId": "wy-laramie-general-2026-assessor",
+          "familyName": "Todd A Ernst",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nAssessor | Republican | Todd A Ernst"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-clerk-misty-tinney",
+          "contestId": "wy-laramie-general-2026-clerk",
+          "familyName": "Misty Tinney",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nClerk | Republican | Misty Tinney"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-clerk-of-district-court-diane-sanchez",
+          "contestId": "wy-laramie-general-2026-clerk-of-district-court",
+          "familyName": "Diane Sanchez",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nClerk of District Court | Republican | Diane Sanchez"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-commissioner-jess-e-ketcham",
+          "contestId": "wy-laramie-general-2026-commissioner",
+          "familyName": "Jess E. Ketcham",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nCommissioner | Republican | Jess E. Ketcham"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-commissioner-gunnar-malm",
+          "contestId": "wy-laramie-general-2026-commissioner",
+          "familyName": "Gunnar Malm",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nCommissioner | Republican | Gunnar Malm"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-commissioner-troy-thompson",
+          "contestId": "wy-laramie-general-2026-commissioner",
+          "familyName": "Troy Thompson",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nCommissioner | Republican | Troy Thompson"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-commissioner-barbara-cabot",
+          "contestId": "wy-laramie-general-2026-commissioner",
+          "familyName": "Barbara Cabot",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nCommissioner | Democratic | Barbara Cabot"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-commissioner-lynne-k-davis",
+          "contestId": "wy-laramie-general-2026-commissioner",
+          "familyName": "Lynne K. Davis",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nCommissioner | Democratic | Lynne K. Davis"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-coroner-rebecca-reid",
+          "contestId": "wy-laramie-general-2026-coroner",
+          "familyName": "Rebecca Reid",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nCoroner | Republican | Rebecca Reid"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-district-attorney-sylvia-lee-hackl",
+          "contestId": "wy-laramie-general-2026-district-attorney",
+          "familyName": "Sylvia Lee Hackl",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nDistrict Attorney | Republican | Sylvia Lee Hackl"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-sheriff-brian-kozak",
+          "contestId": "wy-laramie-general-2026-sheriff",
+          "familyName": "Brian Kozak",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nSheriff | Republican | Brian Kozak"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-sheriff-robin-cozad",
+          "contestId": "wy-laramie-general-2026-sheriff",
+          "familyName": "Robin Cozad",
+          "givenName": "",
+          "partyLabel": "Democratic",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nSheriff | Democratic | Robin Cozad"
+          }
+        },
+        {
+          "id": "wy-laramie-general-2026-treasurer-trista-wood",
+          "contestId": "wy-laramie-general-2026-treasurer",
+          "familyName": "Trista Wood",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+            "sourceOrg": "Laramie County Clerk Elections Office",
+            "collectedAt": "2026-10-20T23:38:47.138279+00:00",
+            "verifiedAt": "2026-10-20T23:38:47.138279+00:00",
+            "quote": "2026 GENERAL ELECTION CANDIDATE ROSTER — COUNTY OFFICES — FINAL\nTreasurer | Republican | Trista Wood"
+          }
         }
       ],
       "measures": [
@@ -4005,8 +4378,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:05:15.144850+00:00",
-    "reviewedBy": "Codex BL-16",
+    "reviewedAt": "2026-10-20T23:38:47.138279+00:00",
+    "reviewedBy": "Codex BA-01 official county source replay",
     "sources": [
       {
         "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
@@ -4037,6 +4410,17 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Wyoming Secretary of State",
         "reviewedEvidence": "Official offices on the 2026 general ballot, including all House districts, odd-numbered Senate districts, Senate District 6 unexpired-term election and statewide judicial retention offices."
+      },
+      {
+        "requestedUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+        "finalUrl": "https://www.laramiecountywy.gov/files/sharedassets/public/v/1/clerk/documents/candidate-rosters/2026/final-county-offices-candidates-general.pdf",
+        "httpStatus": 200,
+        "rawHash": "037175edc4db633eced1b0abbe959d569fc7f0a48082386a77f954d7fff63bb4",
+        "retrievedAt": "2026-10-20T23:38:47.138279+00:00",
+        "publisher": "Laramie County Clerk Elections Office",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official FINAL2026 general COUNTY OFFICES candidate roster. Parsed all13 candidates/eight offices, omitting private contact columns from published records. County commission vote count remains unknown until a sample supplies it.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

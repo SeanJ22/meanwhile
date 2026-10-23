@@ -139,7 +139,9 @@ function steppedClock(startIso: string): () => string {
   };
 }
 
-test("a read-only minutes run reads the document and measures reader facts without moving a production pointer", async () => {
+test("a read-only minutes run reads the document and measures reader facts without moving a production pointer", async t => {
+  // A saved copy is never newer than the check that reads it: the recorded portal answers at the run's own clock.
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-09-25T17:00:00.000Z") });
   const store = new MemoryRoutineDataStore();
   const portal = recordedPortal();
   const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({
@@ -192,7 +194,9 @@ test("a held calendar acquisition supplies the native minutes reader once and ke
   assert.equal(await store.readPromotion("MEETING_OUTCOME", SCOPE), null);
 });
 
-test("verified minutes links reach their independent fact sink when the document yields no motion", async () => {
+test("verified minutes links reach their independent fact sink when the document yields no motion", async t => {
+  // A saved copy is never newer than the check that reads it: the recorded portal answers at the run's own clock.
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-09-25T17:00:00.000Z") });
   const store = new MemoryRoutineDataStore(), portal = recordedPortal({ bytes: { "1336056": MOTIONLESS } });
   const links: string[] = [];
   const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({
@@ -216,7 +220,9 @@ test("verified minutes links reach their independent fact sink when the document
   assert.equal(await store.readPromotion("MEETING_OUTCOME", SCOPE), null);
 });
 
-test("a read-only minutes failure leaves the failed detail owed while its verified link remains attachable", async () => {
+test("a read-only minutes failure leaves the failed detail owed while its verified link remains attachable", async t => {
+  // A saved copy is never newer than the check that reads it: the recorded portal answers at the run's own clock.
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse("2026-09-25T17:00:00.000Z") });
   const store = new MemoryRoutineDataStore();
   const portal = recordedPortal({ documents: { "1336056": 404 } });
   const result = await withFetch(portal.fetchImpl, () => runInSiteMinutesOutcomeIngest({

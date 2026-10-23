@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { postalTable } from "./postal.ts";
+import { postalRow } from "./postal.ts";
 import { serverReaderValue } from "../reader/memory.ts";
 import {
   isWellFormedZip,
@@ -29,7 +29,6 @@ const centroidFile = serverReaderValue("zcta-centroids", () => JSON.parse(
   readFileSync(join(process.cwd(), "lib/geo/zcta-centroids.json"), "utf8"),
 ) as { centroids: CentroidTable; complete: boolean; source: string; sourceOrg: string; vintage: string });
 const CENTROIDS = centroidFile.centroids;
-const POSTAL = postalTable();
 
 /**
  * Whether every Census ZCTA is held. This does not establish USPS completeness.
@@ -43,7 +42,8 @@ export const CENTROID_SOURCE = {
 };
 
 export function lookupZcta(input: string): ZctaCentroid | null {
-  return lookupIn(CENTROIDS, input, POSTAL);
+  const zip = input.trim(), row = postalRow(zip);
+  return lookupIn(CENTROIDS, input, row ? {[zip]:row} : {});
 }
 
 export function nearestZcta(lat: number, lng: number): ZctaCentroid | null {
@@ -51,5 +51,6 @@ export function nearestZcta(lat: number, lng: number): ZctaCentroid | null {
 }
 
 export function resolveZip(input: string): ZipResolution {
-  return resolveIn(CENTROIDS, input, POSTAL);
+  const zip = input.trim(), row = postalRow(zip);
+  return resolveIn(CENTROIDS, input, row ? {[zip]:row} : {});
 }

@@ -13,7 +13,7 @@ export const ADMIN_V6_CAPABILITIES: AdminV6CapabilityManifest = Object.freeze({
   receiptLookup: Object.freeze({ contract: "admin-v6/receipt@1", href: "/api/admin/v6/receipt" }),
 });
 
-/** A failed or missing policy or snapshot withdraws these sections rather than announcing an empty hunt or zero dollars. */
+/** Each reader announces the source availability it needs. */
 export function adminV6ReadCapabilities(input: { readonly configRevision: number | null;
   readonly snapshotRevision: number | null; readonly researchRevision: number | null;
   readonly heartbeatRevision?: number | null; readonly sourceProgressId?: string | null;
@@ -25,14 +25,11 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
     sections.hunts = { contract: "admin-v6/hunts@1", href: "/api/admin/v6/hunts", revision: `hunts:${common}` };
     sections.money = { contract: "admin-v6/money@1", href: "/api/admin/v6/money",
       revision: `money:${common}:${input.researchRevision ?? "unread"}` };
-    sections.national = { contract: "admin-v6/national@1", href: "/api/admin/v6/national",
-      revision: `national:${common}:${input.researchRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
   }
   if (input.snapshotRevision !== null) {
     sections.checklist = { contract: "admin-v6/checklist@1", href: "/api/admin/v6/place", revision: `checklist:${input.snapshotRevision}:${input.researchRevision ?? "unread"}` };
     sections.stuck = { contract: "admin-v6/stuck@1", href: "/api/admin/v6/stuck", revision: `stuck:${input.snapshotRevision}` };
     sections.sameCause = { contract: "admin-v6/sameCause@1", href: "/api/admin/v6/same-cause", revision: `sameCause:${input.snapshotRevision}` };
-    sections.results = { contract: "admin-v6/results@1", href: "/api/admin/v6/results", revision: `results:${input.snapshotRevision}:${input.workerAgeBucket ?? "clock-unread"}` };
   }
   if (input.snapshotRevision !== null || input.researchRevision !== null) {
     sections.spend = { contract: "admin-v6/spend@1", href: "/api/admin/v6/spend", revision: `spend:${input.snapshotRevision ?? "unread"}:${input.researchRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
@@ -48,9 +45,14 @@ export function adminV6ReadCapabilities(input: { readonly configRevision: number
     sections.history = { contract: "admin-v6/history@1", href: "/api/admin/v6/history", revision: `history:${input.historyRevision}:${input.heartbeatRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
     sections.fixes = { contract: "admin-v6/fixes@1", href: "/api/admin/v6/fixes", revision: `fixes:${input.historyRevision}:${input.workerAgeBucket ?? "clock-unread"}` };
   }
+  // These readers query retained publications and independent hourly scores;
+  // an unread whole-owner snapshot must not withdraw those working readers.
+  sections.national = { contract: "admin-v6/national@1", href: "/api/admin/v6/national", revision: `national:${input.configRevision ?? "unread"}:${input.snapshotRevision ?? "unread"}:${input.researchRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
+  sections.results = { contract: "admin-v6/results@1", href: "/api/admin/v6/results", revision: `results:${input.snapshotRevision ?? "unread"}:${input.workerAgeBucket ?? "clock-unread"}` };
   sections.publication = { contract: "admin-v6/publication@1", href: "/api/admin/v6/publication", revision: `publication:${input.workerAgeBucket ?? "clock-unread"}` };
+  sections.officials = { contract: "admin-v6/officials@1", href: "/api/admin/v6/officials", revision: `officials:${input.historyRevision ?? "unread"}:${input.heartbeatRevision ?? "unread"}:${input.sourceProgressId ?? "none"}` };
   sections.scoreboard = { contract: "admin-v6/scoreboard@1", href: "/api/admin/v6/scoreboard", revision: `scoreboard:${input.workerAgeBucket ?? "clock-unread"}` };
   return { ...ADMIN_V6_CAPABILITIES, sections };
 }
 
-export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:scoreboard/1:fixes/1:checklist/place1:stuck/1:agents/1:spend/1:sends/1:reliability/1:publication/1:results/1:national/1";
+export const ADMIN_V6_CAPABILITY_REVISION = "admin-v6/1:receipt/1:history/1:hunts/1:money/1:workers/1:scoreboard/1:fixes/1:checklist/place1:stuck/1:agents/1:spend/1:sends/1:reliability/1:publication/1:results/1:national/1:officials/1";

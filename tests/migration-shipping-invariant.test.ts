@@ -163,6 +163,10 @@ test("Windows separators and ./ prefixes do not hide a migration", () => {
   ]);
 });
 
+test("step-named migrations reach the shipping check before River numbers them", () => {
+  assert.deepEqual(migrationTagsIn(["lib/db/migrations/EXAMPLE-01_queue_fix.sql"]), ["EXAMPLE-01_queue_fix"]);
+});
+
 test("migrationTagsIn reads tags off the changed files and ignores the journal", () => {
   assert.deepEqual(
     migrationTagsIn([

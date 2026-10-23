@@ -1128,6 +1128,386 @@
             "doorId": "fec-ak-chief",
             "quote": "Ballot Measure No.3\n25USCV - An Act Addressing\nVoter Qualification\nAlaska law requires that someone must be a United\nStates citizen and meet other requirements to vote.\nThis act would specify that only those who are\nUnited States citizens and meet the other\nrequirements may vote. This act would not change\nthe requirements to vote.\nShould this initiative become law?"
           }
+        },
+        {
+          "id": "ba01-ak-juneau-superior-court-retention-of-marianna-carpeneti",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:1",
+          "divisionVintage": "2026",
+          "title": "Juneau Superior Court — Retention of Marianna Carpeneti",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Marianna Carpeneti\nJuneau Superior Court\nFirst Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-district-court-retention-of-chris-darnall",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Anchorage District Court — Retention of Chris Darnall",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Chris Darnall\nAnchorage District Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-ketchikan-superior-court-retention-of-daniel-e-doty",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:1",
+          "divisionVintage": "2026",
+          "title": "Ketchikan Superior Court — Retention of Daniel E. Doty",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Daniel E. Doty\nKetchikan Superior Court\nFirst Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-kenai-district-court-retention-of-martin-fallon",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Kenai District Court — Retention of Martin Fallon",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Martin Fallon\nKenai District Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-laura-hartz",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Anchorage Superior Court — Retention of Laura Hartz",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Laura Hartz\nAnchorage Superior Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-yvonne-lamoureux",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Anchorage Superior Court — Retention of Yvonne Lamoureux",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Yvonne Lamoureux\nAnchorage Superior Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-kenai-superior-court-retention-of-kelly-j-lawson",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Kenai Superior Court — Retention of Kelly J. Lawson",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Kelly J. Lawson\nKenai Superior Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-ketchikan-superior-court-retention-of-katherine-h-lybrand",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:1",
+          "divisionVintage": "2026",
+          "title": "Ketchikan Superior Court — Retention of Katherine H. Lybrand",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Katherine H. Lybrand\nKetchikan Superior Court\nFirst Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-jack-r-mckenna",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Anchorage Superior Court — Retention of Jack R. McKenna",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Jack R. McKenna\nAnchorage Superior Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-david-a-nesbett",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Anchorage Superior Court — Retention of David A. Nesbett",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "David A. Nesbett\nAnchorage Superior Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-bethel-superior-court-retention-of-nathaniel-peters",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Bethel Superior Court — Retention of Nathaniel Peters",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Nathaniel Peters\nBethel Superior Court\nFourth Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-christina-rankin",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Anchorage Superior Court — Retention of Christina Rankin",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Christina Rankin\nAnchorage Superior Court\nThid Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-dillingham-superior-court-retention-of-christina-tina-reigh",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Dillingham Superior Court — Retention of Christina \"Tina\" Reigh",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Christina \"Tina\" Reigh\nDillingham Superior Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-utqiagvik-superior-court-retention-of-david-l-roghair",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "Utqiagvik Superior Court — Retention of David L. Roghair",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "David L. Roghair\nUtqiagvik Superior Court\nSecond Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-fairbanks-superior-court-retention-of-kirk-schwalm",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fairbanks Superior Court — Retention of Kirk Schwalm",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Kirk Schwalm\nFairbanks Superior Court\nFourth Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-fairbanks-district-court-retention-of-benjamin-a-seekins",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fairbanks District Court — Retention of Benjamin A. Seekins",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Benjamin A. Seekins\nFairbanks District Court\nFourth Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-palmer-district-court-retention-of-shawn-d-traini",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Palmer District Court — Retention of Shawn D. Traini",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Shawn D. Traini\nPalmer District Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-fairbanks-superior-court-retention-of-amy-k-welch",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fairbanks Superior Court — Retention of Amy K. Welch",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Amy K. Welch\nFairbanks Superior Court\nFourth Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-ian-wheeles",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Anchorage Superior Court — Retention of Ian Wheeles",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Ian Wheeles\nAnchorage Superior Court\nThird Judicial District"
+          }
+        },
+        {
+          "id": "ba01-ak-palmer-superior-court-retention-of-jonathan-a-woodman",
+          "electionId": "ak-2026-general",
+          "ocdId": "ocd-division/country:us/state:ak/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Palmer Superior Court — Retention of Jonathan A. Woodman",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Jonathan A. Woodman\nPalmer Superior Court\nThird Judicial District"
+          }
         }
       ],
       "candidacies": [
@@ -3524,6 +3904,346 @@
             "doorId": "fec-ak-chief",
             "quote": "Frier, Robyn Niayuq Burke (Registered Democrat) (Certified) Incumbent"
           }
+        },
+        {
+          "id": "ba01-ak-juneau-superior-court-retention-of-marianna-carpeneti:c22bfc1f5d5c5457",
+          "contestId": "ba01-ak-juneau-superior-court-retention-of-marianna-carpeneti",
+          "familyName": "Marianna Carpeneti",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Marianna Carpeneti"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-district-court-retention-of-chris-darnall:5d053471ce2dac24",
+          "contestId": "ba01-ak-anchorage-district-court-retention-of-chris-darnall",
+          "familyName": "Chris Darnall",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Chris Darnall"
+          }
+        },
+        {
+          "id": "ba01-ak-ketchikan-superior-court-retention-of-daniel-e-doty:27e6eaa3c2efe4f9",
+          "contestId": "ba01-ak-ketchikan-superior-court-retention-of-daniel-e-doty",
+          "familyName": "Daniel E. Doty",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Daniel E. Doty"
+          }
+        },
+        {
+          "id": "ba01-ak-kenai-district-court-retention-of-martin-fallon:8f2826556fceb644",
+          "contestId": "ba01-ak-kenai-district-court-retention-of-martin-fallon",
+          "familyName": "Martin Fallon",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Martin Fallon"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-laura-hartz:7eeb023c4d7616b5",
+          "contestId": "ba01-ak-anchorage-superior-court-retention-of-laura-hartz",
+          "familyName": "Laura Hartz",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Laura Hartz"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-yvonne-lamoureux:a31ba8fc3f9d4e34",
+          "contestId": "ba01-ak-anchorage-superior-court-retention-of-yvonne-lamoureux",
+          "familyName": "Yvonne Lamoureux",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Yvonne Lamoureux"
+          }
+        },
+        {
+          "id": "ba01-ak-kenai-superior-court-retention-of-kelly-j-lawson:2ca5856d0ccee9a7",
+          "contestId": "ba01-ak-kenai-superior-court-retention-of-kelly-j-lawson",
+          "familyName": "Kelly J. Lawson",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Kelly J. Lawson"
+          }
+        },
+        {
+          "id": "ba01-ak-ketchikan-superior-court-retention-of-katherine-h-lybrand:60f2013f0e248930",
+          "contestId": "ba01-ak-ketchikan-superior-court-retention-of-katherine-h-lybrand",
+          "familyName": "Katherine H. Lybrand",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Katherine H. Lybrand"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-jack-r-mckenna:157c9ed88d5639ec",
+          "contestId": "ba01-ak-anchorage-superior-court-retention-of-jack-r-mckenna",
+          "familyName": "Jack R. McKenna",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Jack R. McKenna"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-david-a-nesbett:a53afccd1ae50df0",
+          "contestId": "ba01-ak-anchorage-superior-court-retention-of-david-a-nesbett",
+          "familyName": "David A. Nesbett",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "David A. Nesbett"
+          }
+        },
+        {
+          "id": "ba01-ak-bethel-superior-court-retention-of-nathaniel-peters:627a243147288771",
+          "contestId": "ba01-ak-bethel-superior-court-retention-of-nathaniel-peters",
+          "familyName": "Nathaniel Peters",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Nathaniel Peters"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-christina-rankin:c2638e5f7fa863ad",
+          "contestId": "ba01-ak-anchorage-superior-court-retention-of-christina-rankin",
+          "familyName": "Christina Rankin",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Christina Rankin"
+          }
+        },
+        {
+          "id": "ba01-ak-dillingham-superior-court-retention-of-christina-tina-reigh:5bbb0be70fe79fac",
+          "contestId": "ba01-ak-dillingham-superior-court-retention-of-christina-tina-reigh",
+          "familyName": "Christina \"Tina\" Reigh",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Christina \"Tina\" Reigh"
+          }
+        },
+        {
+          "id": "ba01-ak-utqiagvik-superior-court-retention-of-david-l-roghair:0e3f99f8226fde84",
+          "contestId": "ba01-ak-utqiagvik-superior-court-retention-of-david-l-roghair",
+          "familyName": "David L. Roghair",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "David L. Roghair"
+          }
+        },
+        {
+          "id": "ba01-ak-fairbanks-superior-court-retention-of-kirk-schwalm:3927b76d77ac0872",
+          "contestId": "ba01-ak-fairbanks-superior-court-retention-of-kirk-schwalm",
+          "familyName": "Kirk Schwalm",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Kirk Schwalm"
+          }
+        },
+        {
+          "id": "ba01-ak-fairbanks-district-court-retention-of-benjamin-a-seekins:da088f01e3512704",
+          "contestId": "ba01-ak-fairbanks-district-court-retention-of-benjamin-a-seekins",
+          "familyName": "Benjamin A. Seekins",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Benjamin A. Seekins"
+          }
+        },
+        {
+          "id": "ba01-ak-palmer-district-court-retention-of-shawn-d-traini:d0702205387ecd25",
+          "contestId": "ba01-ak-palmer-district-court-retention-of-shawn-d-traini",
+          "familyName": "Shawn D. Traini",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Shawn D. Traini"
+          }
+        },
+        {
+          "id": "ba01-ak-fairbanks-superior-court-retention-of-amy-k-welch:ab02d3f32ecb2fc9",
+          "contestId": "ba01-ak-fairbanks-superior-court-retention-of-amy-k-welch",
+          "familyName": "Amy K. Welch",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Amy K. Welch"
+          }
+        },
+        {
+          "id": "ba01-ak-anchorage-superior-court-retention-of-ian-wheeles:f253ac109c2fbacc",
+          "contestId": "ba01-ak-anchorage-superior-court-retention-of-ian-wheeles",
+          "familyName": "Ian Wheeles",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Ian Wheeles"
+          }
+        },
+        {
+          "id": "ba01-ak-palmer-superior-court-retention-of-jonathan-a-woodman:7d7ac4c6285f54d8",
+          "contestId": "ba01-ak-palmer-superior-court-retention-of-jonathan-a-woodman",
+          "familyName": "Jonathan A. Woodman",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://ajc.alaska.gov/retention/current2026.html",
+            "sourceOrg": "Alaska Judicial Council",
+            "collectedAt": "2026-10-20T23:06:30.712208Z",
+            "verifiedAt": "2026-10-20T23:06:30.712208Z",
+            "quote": "Jonathan A. Woodman"
+          }
         }
       ],
       "measures": [
@@ -3569,8 +4289,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T05:05:10.560204Z",
+    "reviewedBy": "ba01-pacific-source-replay",
+    "reviewedAt": "2026-10-20T23:06:30.712208Z",
     "sources": [
       {
         "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
@@ -3661,6 +4381,16 @@
         "publisher": "Alaska Division of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official Division of Elections publication served from its public CloudFront distribution. The official hostname www.elections.alaska.gov resolves to d1gqre4bkgnik3.cloudfront.net; the official hostname currently fails upstream certificate verification. Certified general-election candidate entries and statutory ballot wording were parsed directly from the saved bytes. No residential addresses were retained."
+      },
+      {
+        "requestedUrl": "https://ajc.alaska.gov/retention/current2026.html",
+        "finalUrl": "https://ajc.alaska.gov/retention/current2026.html",
+        "publisher": "Alaska Judicial Council",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-20T23:06:30.712208Z",
+        "httpStatus": 200,
+        "rawHash": "249ec882625d8190b797ac728ff3fafc31414d2c0c905456f3b5c94149ee602b",
+        "reviewedEvidence": "Official Alaska Judicial Council page acquired as normalized source text through the web source reader (265-line source). Hash identifies saved transport text, not origin HTML. All21 Judges on the2026 Ballot name/court/electorate triples replayed; recommendations excluded from reader data."
       }
     ]
   }

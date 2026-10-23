@@ -55,7 +55,9 @@ test("every state ZIP index exactly preserves the national shelf's touching ZIPs
     const indexed = await readStateZipPlaces(state);
     assert.deepEqual([...indexed],expected,`${state}: exact ZIP ordering, IDs, partial divisions, and sample counts`);
   }
-  assert.ok((await readStateZipPlaces("AL")).has("30165"),"a Georgia postal ZIP's held Alabama places remain in Alabama's package");
+  assert.ok((await readStateZipPlaces("TN")).has("42223"),"a Kentucky postal ZIP where 7,307 Tennesseans live is in Tennessee's package");
+  assert.ok((await readStateZipPlaces("KY")).has("42223"));
+  assert.ok(!(await readStateZipPlaces("AL")).has("30165"),"51 of 30165's 41,943 residents live in Alabama: its Alabama places are named, not governing");
   assert.ok((await readStateZipPlaces("GA")).has("30165"));
   assert.equal((await readStateZipPlaces("US-AZ")).get("85001"),places.get("85001"),"mail-only aliases reuse their filtered town and county facts");
 });

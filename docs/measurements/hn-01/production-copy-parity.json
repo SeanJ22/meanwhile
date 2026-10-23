@@ -1,0 +1,352 @@
+{
+  "comparison_baseline_shipped_main": "55ec164bd027deebcb92953cd2f73604441b21a2",
+  "live_build_rechecked": "ed0ac299ccf33fe0b1a33429cc8f805b59c5bd1d",
+  "live_release_66_changes_only": "scripts/freshness-shadow.mts: four runner capability lines; reader and Admin code unchanged",
+  "read_only_actual_production": true,
+  "databases": "Separate Neon branches copied from the production reader and control projects; copied schema and data, no handmade replacement tables or views",
+  "api_comparisons": [
+    {
+      "surface": "meetings",
+      "hn_status": 200,
+      "live_code_on_same_copy_status": 200,
+      "deep_equal": true,
+      "differences": []
+    },
+    {
+      "surface": "officials",
+      "hn_status": 200,
+      "live_code_on_same_copy_status": 200,
+      "deep_equal": true,
+      "differences": []
+    },
+    {
+      "surface": "ballot",
+      "hn_status": 200,
+      "live_code_on_same_copy_status": 200,
+      "deep_equal": true,
+      "differences": []
+    },
+    {
+      "surface": "voting",
+      "hn_status": 200,
+      "live_code_on_same_copy_status": 200,
+      "deep_equal": true,
+      "differences": []
+    },
+    {
+      "surface": "ask",
+      "hn_status": 200,
+      "live_code_on_same_copy_status": 200,
+      "deep_equal": false,
+      "differences": [
+        "/trace/preloads/officeholders",
+        "/trace/preloads/registry",
+        "/trace/stages/composition",
+        "/trace/stages/interpretation",
+        "/trace/stages/officeholdersAndBallot",
+        "/trace/stages/resolutionAndRetrieval",
+        "/trace/stages/sourcePreloads",
+        "/trace/totalMs"
+      ]
+    },
+    {
+      "surface": "admin-pulse",
+      "hn_status": 200,
+      "live_code_on_same_copy_status": 200,
+      "deep_equal": false,
+      "differences": [
+        "/at"
+      ]
+    }
+  ],
+  "hn_measurements": [
+    {
+      "name": "meetings",
+      "status": 200,
+      "ms": 2270,
+      "bytes": 560580
+    },
+    {
+      "name": "officials",
+      "status": 200,
+      "ms": 2047,
+      "bytes": 16700
+    },
+    {
+      "name": "ballot",
+      "status": 200,
+      "ms": 720,
+      "bytes": 666
+    },
+    {
+      "name": "voting",
+      "status": 200,
+      "ms": 731,
+      "bytes": 39402
+    },
+    {
+      "name": "ask",
+      "status": 200,
+      "ms": 607,
+      "bytes": 3277
+    },
+    {
+      "name": "admin-pulse",
+      "status": 200,
+      "ms": 1617,
+      "bytes": 3637
+    },
+    {
+      "name": "meetings-page",
+      "status": 200,
+      "ms": 6651,
+      "errors": [],
+      "responses": [
+        {
+          "path": "/api/location/zip",
+          "status": 200
+        },
+        {
+          "path": "/api/meetings",
+          "status": 200
+        },
+        {
+          "path": "/api/reader/state",
+          "status": 200
+        },
+        {
+          "path": "/api/reader/settings",
+          "status": 503
+        },
+        {
+          "path": "/api/log",
+          "status": 204
+        },
+        {
+          "path": "/api/directory",
+          "status": 200
+        },
+        {
+          "path": "/api/directory",
+          "status": 200
+        },
+        {
+          "path": "/api/directory",
+          "status": 200
+        },
+        {
+          "path": "/api/directory",
+          "status": 200
+        },
+        {
+          "path": "/api/directory",
+          "status": 200
+        },
+        {
+          "path": "/api/directory",
+          "status": 200
+        },
+        {
+          "path": "/api/log",
+          "status": 204
+        },
+        {
+          "path": "/api/events",
+          "status": 202
+        },
+        {
+          "path": "/api/boundaries/census-2025-b24d0345381f69be.pmtiles",
+          "status": 503
+        }
+      ]
+    },
+    {
+      "name": "ballot-page",
+      "status": 200,
+      "ms": 8009,
+      "errors": [],
+      "responses": [
+        {
+          "path": "/api/reader/link-health",
+          "status": 503
+        },
+        {
+          "path": "/api/events",
+          "status": 202
+        }
+      ]
+    },
+    {
+      "name": "admin-now-page",
+      "status": 200,
+      "ms": 13063,
+      "errors": [],
+      "responses": [
+        {
+          "path": "/api/admin/v6/daily-brief",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/alerts",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/scheduled",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/live",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/scheduled",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/live",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/reader-problems",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/reader-problems",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/results",
+          "status": 503
+        },
+        {
+          "path": "/api/admin/v6/hunts",
+          "status": 200
+        }
+      ]
+    }
+  ],
+  "live_code_measurements": [
+    {
+      "name": "meetings",
+      "status": 200,
+      "ms": 3904,
+      "bytes": 560580
+    },
+    {
+      "name": "officials",
+      "status": 200,
+      "ms": 6240,
+      "bytes": 16700
+    },
+    {
+      "name": "ballot",
+      "status": 200,
+      "ms": 1175,
+      "bytes": 666
+    },
+    {
+      "name": "voting",
+      "status": 200,
+      "ms": 4173,
+      "bytes": 39402
+    },
+    {
+      "name": "ask",
+      "status": 200,
+      "ms": 3482,
+      "bytes": 3277
+    },
+    {
+      "name": "admin-pulse",
+      "status": 200,
+      "ms": 3669,
+      "bytes": 3637
+    },
+    {
+      "name": "meetings-page",
+      "status": 200,
+      "ms": 27876,
+      "errors": [],
+      "responses": [
+        {
+          "path": "/api/meetings",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "name": "ballot-page",
+      "status": 200,
+      "ms": 19973,
+      "errors": [],
+      "responses": [
+        {
+          "path": "/api/reader/link-health",
+          "status": 503
+        },
+        {
+          "path": "/api/events",
+          "status": 202
+        }
+      ]
+    },
+    {
+      "name": "admin-now-page",
+      "status": 200,
+      "ms": 19416,
+      "errors": [],
+      "responses": [
+        {
+          "path": "/api/admin/live",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/live",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/daily-brief",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/alerts",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/scheduled",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/reader-problems",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/scheduled",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/reader-problems",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/hunts",
+          "status": 200
+        },
+        {
+          "path": "/api/admin/v6/results",
+          "status": 503
+        }
+      ]
+    }
+  ],
+  "visible_pages_inspected": [
+    "meetings map and calendar",
+    "ballot",
+    "Admin Now"
+  ],
+  "limitations": [
+    "The local copies lack Netlify Blobs runtime context: boundary tiles, reader settings and link-health return 503 where recorded. Both versions have these limits. MapTiler requests were blocked by the browser guard.",
+    "Admin results returned 503 in both versions; Now also shows existing unavailable freshness debt. This does not establish that those live services are broken.",
+    "Admin comparison uses live release code against identical copied databases, not an authenticated production Admin session."
+  ]
+}

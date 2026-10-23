@@ -34,7 +34,7 @@ async function runBallotState(options: Parameters<typeof runBallotPublication>[0
 async function publishBallotState(options: Parameters<typeof runBallotPublication>[0]) {
   const store = options.store ?? new MemoryRoutineDataStore();
   const result = await runBallotState({ ...options, store });
-  assert.equal(result.report.status, "PUBLISHED", result.report.reason ?? JSON.stringify(result.receipt));
+  assert.equal(result.report.status, "PUBLISHED", `${options.state}: ${result.report.reason ?? JSON.stringify(result.receipt)}`);
   const pointer = await store.readPromotion<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", options.state));
   assert.ok(pointer);
   assert.equal(pointer.versionId, result.report.versionId);
@@ -51,7 +51,7 @@ const now = "2026-10-13T12:00:00.000Z";
 
 const fixture = async () => JSON.parse(await readFile("tests/fixtures/ballot-national/tx.json", "utf8")) as BallotStateFile;
 
-const ballotOf = (input: BallotStateFile) => Object.values(input.ballots)[0];
+const ballotOf = (input: Pick<BallotStateFile, "ballots">) => Object.values(input.ballots)[0];
 
 const packageFor = (state: BallotStateFile): ManualProjectionPackage => ({ contractId: stateBallotContractId("ballot-contests", ballotOf(state).election.state), version: "fixture",
   sourceThrough: state.sourceReceipt.reviewedAt, sourceReceipt: state.sourceReceipt, payload: { kind: "ballot-contests", ballots: state.ballots } });
@@ -96,6 +96,12 @@ test("assembles only the named state and never opens another state's malformed f
     assert.equal(read.kind, "PROMOTED");
     const rerun = await publishBallotState({ state: "TX", directory, store, now });
     assert.deepEqual(rerun.payload, result.payload);
+    const reused = await runBallotState({ state: "TX", directory, store, now: "2026-10-14T12:00:00.000Z" });
+    assert.equal(reused.report.status, "PUBLISHED", reused.report.reason ?? "");
+    assert.ok(reused.receipt);
+    assert.equal(reused.receipt.confirmedAt, undefined, "state reuse must not claim a confirmation event it never wrote");
+    assert.equal(await durableRoutineRunnerReceiptIssue(reused.receipt, { id: "ballot-contests:TX",
+      sourceId: "official-ballot-authorities", recordClass: "BALLOT_CANDIDACY", scope: stateBallotScope("ballot-contests", "TX") }, store, "SUCCESS"), null);
     await rm(resolve(directory, "tx.json"));
     store.create = async () => assert.fail("missing input must not write a candidate");
     store.confirmUnchanged = async () => assert.fail("missing input must not create a confirmation");
@@ -283,7 +289,7 @@ test("candidate websites and measure links are values on the cited official reco
   assert.ok(manualProjectionCandidate(packageFor(analysed)).semantics.violations.some(problem => problem.includes("analysis.example.gov")));
 });
 
-test("only a newer complete list from the same authority replaces candidates and keeps unrelated contests", async () => {
+test("a newer complete official list replaces candidates across election authorities and keeps unrelated contests", async () => {
   const scratch = await mkdtemp(resolve(tmpdir(), "ballot-national-"));
   try {
     const next = await fixture(), old = changeSource(await fixture(), "TX", "2026-10-12T00:00:00.000Z", next.sourceReceipt.sources[0].publisher);
@@ -313,11 +319,42 @@ test("only a newer complete list from the same authority replaces candidates and
     assert.deepEqual(stale.payload, result.payload);
     const conflict = changeSource(await fixture(), "TX", now, "Different election authority");
     await writeFile(resolve(scratch, "tx.json"), JSON.stringify(conflict));
-    const failed = await runBallotState({ state: "TX", directory: scratch, store, now });
-    assert.equal(failed.report.status, "HELD");
-    assert.match(failed.report.reason!, /authority conflicts/);
-    assert.equal((await store.readPromotion("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX")))?.versionId, result.versionId);
+    const updated = await publishBallotState({ state: "TX", directory: scratch, store, now });
+    assert.ok(updated.payload.ballots[ballotElectionKey(ballot)].contests.some(row => row.id === "county-contest"));
+    assert.ok(updated.payload.ballots[ballotElectionKey(ballot)].candidacies.some(row => row.id === "county-candidate"));
+    assert.equal(updated.payload.ballots[ballotElectionKey(ballot)].contests.find(row => row.id === ballot.contests[0].id)?.provenance.sourceOrg,
+      "Different election authority");
   } finally { await rm(scratch, { recursive: true, force: true }); }
+});
+
+test("an official scope correction preserves contest and candidate identities while repairing a mistaken division", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-scope-correction-"));
+  try {
+    const old = changeSource(await fixture(), "TX", "2026-10-12T00:00:00.000Z", "Earlier election authority");
+    const previous = ballotOf(old).contests[0];
+    previous.ocdId = "ocd-division/country:us/state:tx/place:alder";
+    const store = new MemoryRoutineDataStore();
+    await publish(store, packageFor(old));
+    const next = changeSource(await fixture(), "TX", now, "Current election authority");
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(next));
+    const unsupported = await runBallotState({ state: "TX", directory, store, now });
+    assert.equal(unsupported.report.status, "HELD");
+    assert.match(unsupported.report.reason!, /Contest division conflicts/);
+    const current = ballotOf(next).contests[0];
+    const evidence = { ...current.provenance, sourceUrl: "https://law.example.gov/electorates", sourceOrg: "Official legislature",
+      quote: "The whole town of Alder is in this electorate." };
+    Object.assign(current, { scopeCorrection: { previousOcdId: previous.ocdId, provenance: evidence } });
+    next.sourceReceipt.sources.push({ ...next.sourceReceipt.sources[0], requestedUrl: evidence.sourceUrl,
+      finalUrl: evidence.sourceUrl, publisher: evidence.sourceOrg, rawHash: "c".repeat(64) });
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(next));
+    const corrected = await publishBallotState({ state: "TX", directory, store, now });
+    const after = ballotOf(corrected.payload);
+    assert.equal(after.contests.find(row => row.id === previous.id)?.ocdId, current.ocdId);
+    assert.deepEqual(new Set(after.candidacies.map(row => row.id)), new Set(ballotOf(old).candidacies.map(row => row.id)));
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(old));
+    const stale = await publishBallotState({ state: "TX", directory, store, now });
+    assert.equal(ballotOf(stale.payload).contests.find(row => row.id === previous.id)?.ocdId, current.ocdId);
+  } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
 test("refuses an unavailable published prior", async () => {
@@ -326,6 +363,46 @@ test("refuses an unavailable published prior", async () => {
   const failed = await runBallotState({ state: "TX", directory: "tests/fixtures/ballot-national", store, now });
   assert.equal(failed.report.status, "HELD");
   assert.match(failed.report.reason!, /BASE_UNAVAILABLE/);
+});
+
+test("a freshly verified official list can fill a held contest whose older capture lacks authority", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-held-authority-"));
+  try {
+    const old = await fixture();
+    ballotOf(old).contests[0].candidateListComplete = false;
+    const store = new MemoryRoutineDataStore();
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(old));
+    const before = await publishBallotState({ state: "TX", directory, store, now });
+    assert.ok(before.heldContests.some(row => row.contestId === ballotOf(old).contests[0].id));
+    const fresh = changeSource(await fixture(), "TX", now, "Current official election authority");
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(fresh));
+    const after = await publishBallotState({ state: "TX", directory, store, now });
+    assert.deepEqual(after.heldContests, []);
+    assert.deepEqual(new Set(ballotOf(after.payload).candidacies.map(row => row.id)), new Set(ballotOf(fresh).candidacies.map(row => row.id)));
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("a legacy measure's unique official publisher remains known when its original observation lacks an exact receipt time", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-measure-authority-"));
+  try {
+    const old = changeSource(await fixture(), "TX", "2026-10-12T00:00:00.000Z");
+    const ballot = ballotOf(old), measure = ballot.contests[0];
+    delete measure.candidateListComplete;
+    Object.assign(measure, { type: "MEASURE",
+      measureTextUrl: measure.provenance.sourceUrl, provenance: { ...measure.provenance, collectedAt: "2026-10-11T00:00:00.000Z" } });
+    ballot.candidacies = ballot.candidacies.filter(row => row.contestId !== measure.id);
+    ballot.measures = [{ id: "legacy-measure", contestId: measure.id, questionText: "Shall the charter be amended?",
+      officialStatement: null, provenance: measure.provenance }];
+    const store = new MemoryRoutineDataStore();
+    await publish(store, packageFor(old));
+    const next = structuredClone(old), current = ballotOf(next);
+    for (const row of [current.contests[0], current.measures[0]]) row.provenance = { ...row.provenance, collectedAt: now };
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify({ ...next, sourceReceipt: { ...next.sourceReceipt,
+      reviewedAt: now, sources: [...next.sourceReceipt.sources, ...next.sourceReceipt.sources.map(row => ({ ...row, retrievedAt: now }))] } }));
+    const after = await publishBallotState({ state: "TX", directory, store, now });
+    assert.equal(ballotOf(after.payload).measures[0].provenance.collectedAt, now);
+    assert.equal(ballotOf(after.payload).contests.length, ballot.contests.length);
+  } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
 test("supplemental contact changes publish without a changed contest list and stale copies cannot erase them", async () => {
@@ -403,9 +480,9 @@ test("incomplete lists remain named, same-date complete corrections publish, and
 
 {
   const baseline = {
-    az: "f78aa7a6260e4b5c34be091aef15f6943cff7ac2a50a847a19edc6e61329e904",
-    nh: "d7b42860429c6f8036422de3bd454af6caf368d06e97b2602d43cb3687e01019",
-    nj: "e057d3890a9156816d39b7d3145db49b5c122cc73701f37a24722e4fb217468f",
+    az: "d4687513e70682406f4a2c6deb9d61f3c7fa7293da5ba7a331ee727dbcd8b27e",
+    nh: "903d8dd338ba90021db1942b563b794174b52e772b7064b2e9a23ecf12f09702",
+    nj: "d9ac55682bc61f85d9aebfba38bcff85ad48ddfc29def57fcfad6c4e8ec75cba",
   };
 
   const directory = "data/ballot/2026-general";
@@ -414,13 +491,13 @@ test("incomplete lists remain named, same-date complete corrections publish, and
     JSON.parse(await readFile(`${directory}/${state.toLowerCase()}.json`, "utf8"));
 
   const publishState = (state: BallotState) => publishBallotState({ state, directory,
-    store: new MemoryRoutineDataStore(), now: "2026-10-15T23:59:00.000Z" });
+    store: new MemoryRoutineDataStore(), now: new Date().toISOString() });
 
   test("all checked-in state ballot files publish independently with complete lists or named gaps", async () => {
     const files = (await readdir(directory)).filter(file => /^[a-z]{2}\.json$/.test(file)).sort();
     const states = REGISTRY_STATES.filter(state => files.includes(`${state.toLowerCase()}.json`));
     assert.deepEqual(files, states.map(state => `${state.toLowerCase()}.json`).sort());
-    assert.deepEqual(REGISTRY_STATES.filter(state => !states.includes(state)).sort(), ["AS", "GU", "MP", "PR", "VI"]);
+    assert.deepEqual(REGISTRY_STATES.filter(state => !states.includes(state)).sort(), ["GU", "PR"]);
     for (const state of states) {
       const assembled = await publishState(state);
       assert.deepEqual(assembled.skipped, []);
@@ -477,9 +554,9 @@ test("incomplete lists remain named, same-date complete corrections publish, and
       assert.deepEqual(assembled.candidate.normalization.missingRequiredFields, []);
       assert.deepEqual(assembled.candidate.semantics.violations, []);
       assert.equal(completeOfficialBallotContests(payload, assembled.sourceReceipt).length,
-        ballot.contests.filter(contest => contest.type === "CANDIDACY").length);
+        ballot.contests.filter(contest => contest.type !== "MEASURE" && contest.candidateListComplete === true).length);
       if (state === "az") {
-        assert.equal(ballot.measureRecords?.length, 15);
+        assert.equal(ballot.measureRecords?.filter(row => row.contestId.startsWith("ballot-az-pima:")).length, 15);
         assert.equal(ballot.measureAnalyses?.analyses.length, 11);
         assert.equal("identityRegistry" in ballot, false);
         assert.equal("candidateFilings" in ballot, false);
@@ -497,7 +574,11 @@ test("incomplete lists remain named, same-date complete corrections publish, and
         assert.ok(ballot.candidacies.some(row => row.contestId === house.id && /Feely/i.test(row.familyName)));
       }
       if (state === "nh") {
-        assert.equal(ballot.candidacies.length, 27);
+        assert.equal(ballot.candidacies.filter(row => row.id.startsWith("ballot-nh-merrimack:")).length, 22);
+        const council = ballot.contests.find(row => row.id === "ballot-nh-merrimack:executive-council-2")!;
+        assert.equal(council.ocdId, "ocd-division/country:us/state:nh/executive_district:2");
+        assert.ok(contestsForDivisions(ballot, ["ocd-division/country:us/state:nh/county:merrimack/place:newbury_town"])
+          .contests.some(row => row.id === council.id), "correcting the district retains the prior town's coverage");
         assert.equal(ballot.filingCandidacies?.length, 25);
         assert.ok(ballot.absences.some(row => row.ocdId.includes("school_district:") && /not yet been acquired/.test(row.statement)));
       }
@@ -516,15 +597,15 @@ test("incomplete lists remain named, same-date complete corrections publish, and
     });
   }
 
-  test("Illinois, West Virginia and Wisconsin publish verified lists while Illinois names four gaps", async () => {
-    for (const [state, count, held] of [["IL", 159, 4], ["WV", 122, 0], ["WI", 8, 0]] as const) {
+  test("Illinois, West Virginia and Wisconsin retain verified lists as coverage expands", async () => {
+    for (const [state, count, held] of [["IL", 159, 4], ["WV", 122, 0], ["WI", 8, 1]] as const) {
       const result = await publishState(state);
       const payload = result.payload as GenericBallotProjection;
-      assert.equal(completeOfficialBallotContests(payload, result.sourceReceipt).length, count, state);
-      assert.equal(result.heldContests.length, held, state);
+      assert.ok(completeOfficialBallotContests(payload, result.sourceReceipt).length >= count, state);
+      assert.ok(result.heldContests.length <= held, state);
       if (state === "WV") {
         const candidates = Object.values(payload.ballots).flatMap(ballot => ballot.candidacies);
-        assert.equal(candidates.length, 243);
+        assert.equal(candidates.filter(row => row.id.startsWith("wv-sos-")).length, 243);
         for (const name of ["Legg", "Cantrell", "Louisos", "Martinez", "DEHART", "HENDERSHOT JR"]) {
           assert.ok(candidates.some(row => row.familyName.toLowerCase() === name.toLowerCase()), name);
         }

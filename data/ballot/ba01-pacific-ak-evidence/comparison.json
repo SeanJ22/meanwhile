@@ -1,0 +1,508 @@
+{
+  "state": "AK",
+  "sourceUrl": "https://tlingitandhaida.gov/about-us/2026-election-information/",
+  "sourceType": "government-compiled subset; secondary to DOE",
+  "comparedContests": 24,
+  "sourceCandidates": 45,
+  "matchedCandidates": 43,
+  "unresolvedNames": [
+    {
+      "title": "HOUSE DISTRICT 13",
+      "sourceName": "Felix Rivera",
+      "sourceParty": "Registered Democrat",
+      "heldCandidacyId": null,
+      "status": "unresolved-name-difference; official DOE confirmation required"
+    },
+    {
+      "title": "HOUSE DISTRICT 17",
+      "sourceName": "Matthew H. Salisbury",
+      "sourceParty": "Nonpartisan",
+      "heldCandidacyId": null,
+      "status": "unresolved-name-difference; official DOE confirmation required"
+    }
+  ],
+  "fullCertifiedStatewideComparisonComplete": false,
+  "comparisons": [
+    {
+      "title": "UNITED STATES SENATOR",
+      "contestId": "ak-doe-2026-general-united-states-senator",
+      "sourceCandidateCount": 4,
+      "matches": [
+        {
+          "sourceName": "Gerald L. Heikes",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-united-states-senator-heikes-gerald-l",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Mary Peltola",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-united-states-senator-peltola-mary",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Dan S. Sullivan",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-united-states-senator-sullivan-dan-s",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Daniel J. Sullivan, Jr.",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-united-states-senator-sullivan-daniel-j-jr",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "UNITED STATES REPRESENTATIVE",
+      "contestId": "ak-doe-2026-general-united-states-representative",
+      "sourceCandidateCount": 4,
+      "matches": [
+        {
+          "sourceName": "Nick Begich",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-united-states-representative-begich-nick",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Eric Hafner",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-united-states-representative-hafner-eric",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Bill Hill",
+          "sourceParty": "Nonpartisan",
+          "heldCandidacyId": "ak-doe-2026-general-united-states-representative-hill-bill",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "James C. “Jim” McDermott",
+          "sourceParty": "Registered Libertarian",
+          "heldCandidacyId": "ak-doe-2026-general-united-states-representative-mcdermott-james-c-jim",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "SENATE DISTRICT A",
+      "contestId": "ak-doe-2026-general-senate-district-a",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "    Bert Stedman",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-senate-district-a-stedman-bert-k",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 02",
+      "contestId": "ak-doe-2026-general-house-district-02",
+      "sourceCandidateCount": 3,
+      "matches": [
+        {
+          "sourceName": "    Alston C. Evans",
+          "sourceParty": "Undeclared",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-02-evans-alston-c",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "    Rebecca Himschoot",
+          "sourceParty": "Nonpartisan",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-02-himschoot-rebecca",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "    Kenny “Kenny Karl” Skaflestad",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-02-skaflestad-kenny-kenny-karl",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 03",
+      "contestId": "ak-doe-2026-general-house-district-03",
+      "sourceCandidateCount": 2,
+      "matches": [
+        {
+          "sourceName": "    Annette Kreitzer",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-03-kreitzer-annette",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "    Andrea “Andi” Story",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-03-story-andrea-andi",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 04",
+      "contestId": "ak-doe-2026-general-house-district-04",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "    Sara Hannan",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-04-hannan-sara",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "SENATE DISTRICT E",
+      "contestId": "ak-doe-2026-general-senate-district-e",
+      "sourceCandidateCount": 3,
+      "matches": [
+        {
+          "sourceName": "    Cathy Giessel",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-senate-district-e-giessel-cathy",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "    Gretchen W. Stoddard",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-senate-district-e-stoddard-gretchen-w",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "    Jason “Jace” White",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-senate-district-e-white-jason-jace",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "SENATE DISTRICT G",
+      "contestId": "ak-doe-2026-general-senate-district-g",
+      "sourceCandidateCount": 2,
+      "matches": [
+        {
+          "sourceName": "    Nicholas Danger",
+          "sourceParty": "Nonpartisan",
+          "heldCandidacyId": "ak-doe-2026-general-senate-district-g-danger-nicholas",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "    Elvi Gray-Jackson",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-senate-district-g-gray-jackson-elvi",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "SENATE DISTRICT I",
+      "contestId": "ak-doe-2026-general-senate-district-i",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "    Löki Gale Tobin",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-senate-district-i-tobin-l-ki-gale",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "SENATE DISTRICT K",
+      "contestId": "ak-doe-2026-general-senate-district-k",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "    Bill Wielechowski",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-senate-district-k-wielechowski-bill",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 09",
+      "contestId": "ak-doe-2026-general-house-district-09",
+      "sourceCandidateCount": 2,
+      "matches": [
+        {
+          "sourceName": "Ky Holland",
+          "sourceParty": "Nonpartisan",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-09-holland-ky",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "John C. Boyle",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-09-boyle-john-c",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 10",
+      "contestId": "ak-doe-2026-general-house-district-10",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "Charles M. “Chuck” Kopp",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-10-kopp-charles-m-chuck",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 11",
+      "contestId": "ak-doe-2026-general-house-district-11",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "Julie Coulombe",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-11-coulombe-julie",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 12",
+      "contestId": "ak-doe-2026-general-house-district-12",
+      "sourceCandidateCount": 2,
+      "matches": [
+        {
+          "sourceName": "Calvin R. Schrage",
+          "sourceParty": "Nonpartisan",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-12-schrage-calvin-r",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Jieun C. “Jini” McDonald",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-12-mcdonald-jieun-c-jini",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 13",
+      "contestId": "ak-doe-2026-general-house-district-13",
+      "sourceCandidateCount": 2,
+      "matches": [
+        {
+          "sourceName": "Lisa M. Keller",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-13-keller-lisa-m",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Felix Rivera",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": null,
+          "status": "unresolved-name-difference; official DOE confirmation required"
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 14",
+      "contestId": "ak-doe-2026-general-house-district-14",
+      "sourceCandidateCount": 2,
+      "matches": [
+        {
+          "sourceName": "Alyse S. Galvin",
+          "sourceParty": "Nonpartisan",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-14-galvin-alyse-s",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Russell O. Wyatt",
+          "sourceParty": "Undeclared",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-14-wyatt-russell-o",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 15",
+      "contestId": "ak-doe-2026-general-house-district-15",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "Denny Wells",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-15-wells-denny",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 16",
+      "contestId": "ak-doe-2026-general-house-district-16",
+      "sourceCandidateCount": 2,
+      "matches": [
+        {
+          "sourceName": "Carolyn Hall",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-16-hall-carolyn",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Liz Vazquez",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-16-vazquez-liz",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 17",
+      "contestId": "ak-doe-2026-general-house-district-17",
+      "sourceCandidateCount": 3,
+      "matches": [
+        {
+          "sourceName": "William Z. “Zack” Fields",
+          "sourceParty": "Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-17-fields-william-z-zack",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Matthew H. Salisbury",
+          "sourceParty": "Nonpartisan",
+          "heldCandidacyId": null,
+          "status": "unresolved-name-difference; official DOE confirmation required"
+        },
+        {
+          "sourceName": "Daniel Bradley",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-17-bradley-daniel-l",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 18",
+      "contestId": "ak-doe-2026-general-house-district-18",
+      "sourceCandidateCount": 2,
+      "matches": [
+        {
+          "sourceName": "Cliff Groh",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-18-groh-cliff",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Dan Sager",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-18-sager-dan",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 19",
+      "contestId": "ak-doe-2026-general-house-district-19",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "Genevieve G. Mina",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-19-mina-genevieve-g",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 20",
+      "contestId": "ak-doe-2026-general-house-district-20",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "Paul A. Bauer Jr.",
+          "sourceParty": "Nonpartisan",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-20-bauer-paul-a-jr",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 21",
+      "contestId": "ak-doe-2026-general-house-district-21",
+      "sourceCandidateCount": 2,
+      "matches": [
+        {
+          "sourceName": "Donna Mears",
+          "sourceParty": "Registered Democrat",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-21-mears-donna",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        },
+        {
+          "sourceName": "Aimeé Sims",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-21-sims-aime",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    },
+    {
+      "title": "HOUSE DISTRICT 22",
+      "contestId": "ak-doe-2026-general-house-district-22",
+      "sourceCandidateCount": 1,
+      "matches": [
+        {
+          "sourceName": "Jose Roel A. Tagle",
+          "sourceParty": "Registered Republican",
+          "heldCandidacyId": "ak-doe-2026-general-house-district-22-tagle-jose-roel-a",
+          "matchingMethod": "family-name-and-first-given-word; no data changed",
+          "partyMatches": true
+        }
+      ]
+    }
+  ]
+}

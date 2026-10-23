@@ -42,6 +42,20 @@ test("an unhandled rejection and a thrown callback end the same way", () => {
   assert.match(thrown.stdout, /^RCD_FATAL routine-civic-data-runner: running the source pass — TypeError: clock is undefined$/m);
 });
 
+test("an installed fatal recorder finishes saving the cause before the process exits", () => {
+  const script = [
+    "const { installFatalLine, installFatalRecorder } = await import('./lib/ops/fatal-line.ts');",
+    "installFatalRecorder(async record => { await new Promise(resolve => setTimeout(resolve, 20)); const { writeSync } = await import('node:fs'); writeSync(1, 'SAVED=' + JSON.stringify(record) + '\\n'); });",
+    "installFatalLine('publish-now-runner', () => 'reading its contract file');",
+    "setTimeout(() => { throw Error('CONTRACT_FILE_UNREADABLE'); }, 0);",
+  ].join("\n");
+  const env = { ...process.env }; delete env.NODE_TEST_CONTEXT;
+  const run = spawnSync(process.execPath, ["--experimental-strip-types", "--input-type=module", "-e", script],
+    { cwd: process.cwd(), encoding: "utf8", timeout: 60_000, env });
+  assert.equal(run.status, 1);
+  assert.match(run.stdout, /SAVED=.*CONTRACT_FILE_UNREADABLE/);
+});
+
 test("the parent reads the child's fatal line and still never its raw stderr", () => {
   const output = [
     `raw stderr the parent must not quote: ${SECRET_URL}`,

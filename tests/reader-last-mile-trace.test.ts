@@ -29,7 +29,7 @@ test("Next deployment tracing includes static geography and excludes every migra
   const { globSync } = fs as typeof fs & { globSync(pattern: string, options: { cwd: string }): string[] };
   const includes = Object.values(nextConfig.outputFileTracingIncludes ?? {}).flat();
   for (const required of [
-    "./data/states/*/geo/**/*.geojson",
+    "./data/derived/state-geometry.json",
     "./data/derived/resolver-geometry.json",
     "./public/geo/*.geojson",
     "./data/derived/zip-coverage-tiers-runtime.json",
@@ -91,4 +91,18 @@ test("postbuild checker rejects a removed dynamic holding in emitted route manif
     assert.ok(resolve(root).startsWith(resolve(tmpdir()) + sep));
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+test("no server function packs state geometry; each file is read from the reader edge store by the sha its manifest names", () => {
+  const manifest = JSON.parse(fs.readFileSync("data/derived/state-geometry.json", "utf8")) as { files: Record<string, { sha256: string }> };
+  const held = fs.readdirSync("data/states").flatMap(state => fs.existsSync(`data/states/${state}/geo`)
+    ? fs.readdirSync(`data/states/${state}/geo`).filter(file => file.endsWith(".geojson")).map(file => `data/states/${state}/geo/${file}`) : []).sort();
+  assert.deepEqual(Object.keys(manifest.files).sort(), held, "every committed state geometry file, territories included, is named");
+  const toml = fs.readFileSync("netlify.toml", "utf8");
+  assert.ok(!toml.includes('"data/states/*/geo/**/*.geojson"'), "a function packs state geometry");
+  for (const block of toml.split(/\n(?=\[)/).filter(block => block.includes("resolver-geometry.json"))) {
+    assert.ok(block.includes('"data/derived/state-geometry.json"') && block.includes('"!data/states/*/geo/**"'), block.split("\n")[0]);
+  }
+  assert.ok(Object.values(nextConfig.outputFileTracingExcludes ?? {}).flat().includes("./data/states/*/geo/**"));
+  assert.ok(!Object.values(nextConfig.outputFileTracingIncludes ?? {}).flat().some(pattern => pattern.startsWith("./data/states/")));
 });

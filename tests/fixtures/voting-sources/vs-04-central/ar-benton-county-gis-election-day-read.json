@@ -1,0 +1,152 @@
+{
+  "doorId": "ar-benton-county-gis-election-day",
+  "sites": [
+    {
+      "id": "voting-d50ed96da225e57485d887e6",
+      "name": "Bentonville Church of Christ",
+      "address": "708 N. Walton Blvd, Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "VC7",
+      "sources": [
+        {
+          "publisher": "Benton County Clerk GIS",
+          "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+          "checkedAt": "2026-10-21T04:42:07.714Z",
+          "official": true,
+          "documentHash": "8537aed21fd545b47364c2b81758065cfa0a69e128d810a19d80e452693f1b86",
+          "documentUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1/query?f=json&where=1%3D1&objectIds=69%2C71&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "VC7",
+      "countyFips": "05007",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "VC7"
+      ],
+      "assignments": [
+        {
+          "precinct": "VC7",
+          "name": "Bentonville Church of Christ",
+          "room": null,
+          "source": {
+            "publisher": "Benton County Clerk GIS",
+            "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+            "checkedAt": "2026-10-21T04:42:07.714Z",
+            "official": true,
+            "documentHash": "8537aed21fd545b47364c2b81758065cfa0a69e128d810a19d80e452693f1b86",
+            "documentUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1/query?f=json&where=1%3D1&objectIds=69%2C71&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Benton County Clerk GIS",
+            "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+            "checkedAt": "2026-10-21T04:42:07.714Z",
+            "official": true,
+            "documentHash": "8537aed21fd545b47364c2b81758065cfa0a69e128d810a19d80e452693f1b86",
+            "documentUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1/query?f=json&where=1%3D1&objectIds=69%2C71&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8a66e787ec3d01ca0bf925fb",
+      "name": "First Landmark Baptist Church",
+      "address": "206 S.E. 28th Street, Bentonville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "VC10",
+      "sources": [
+        {
+          "publisher": "Benton County Clerk GIS",
+          "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+          "checkedAt": "2026-10-21T04:42:07.714Z",
+          "official": true,
+          "documentHash": "8537aed21fd545b47364c2b81758065cfa0a69e128d810a19d80e452693f1b86",
+          "documentUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1/query?f=json&where=1%3D1&objectIds=69%2C71&outFields=*&returnGeometry=false"
+        }
+      ],
+      "precinct": "VC10",
+      "countyFips": "05007",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "VC10"
+      ],
+      "assignments": [
+        {
+          "precinct": "VC10",
+          "name": "First Landmark Baptist Church",
+          "room": null,
+          "source": {
+            "publisher": "Benton County Clerk GIS",
+            "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+            "checkedAt": "2026-10-21T04:42:07.714Z",
+            "official": true,
+            "documentHash": "8537aed21fd545b47364c2b81758065cfa0a69e128d810a19d80e452693f1b86",
+            "documentUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1/query?f=json&where=1%3D1&objectIds=69%2C71&outFields=*&returnGeometry=false"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Benton County Clerk GIS",
+            "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+            "checkedAt": "2026-10-21T04:42:07.714Z",
+            "official": true,
+            "documentHash": "8537aed21fd545b47364c2b81758065cfa0a69e128d810a19d80e452693f1b86",
+            "documentUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1/query?f=json&where=1%3D1&objectIds=69%2C71&outFields=*&returnGeometry=false"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Benton County Clerk GIS",
+      "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+      "checkedAt": "2026-10-21T04:42:07.714Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://gis.bentoncountyar.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://gis.bentoncountyar.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/CoClerk/VotingLocations/MapServer/1/query: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1/query?f=json&where=1%3D1&returnIdsOnly=true",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1/query?f=json&where=1%3D1&objectIds=69%2C71&outFields=*&returnGeometry=false",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "contacts": []
+}

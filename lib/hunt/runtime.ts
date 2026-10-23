@@ -1,3 +1,6 @@
+import {huntFindingSubject} from './finding-subject.ts';
+import {liveHuntBodyPreparer} from './body-target-runtime.ts';
+import {huntDirections} from './directions.ts';
 import { indexReportedFinding } from "../control-plane/box.ts";
 import { readSetting } from "../control-plane/settings.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
@@ -15,7 +18,7 @@ import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../control-plane/cost.ts"
 import { readRolePlaybook } from "../control-plane/playbooks.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { ABSENCE_MAX_HOLD_DEFAULT_DAYS, ABSENCE_MAX_HOLD_SETTING } from "../control-plane/scheduler/absence-hold.ts";
-import { listDoors } from "../doors/registry.ts";
+import { isDoorRecord } from "../doors/registry.ts";
 import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/durable-research-tools.ts";
 import type { ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
 import { huntBrief, type HuntRole } from "./brief.ts";
@@ -39,7 +42,7 @@ const orderedAtOf = (assignments: readonly { readonly at: string }[] | undefined
   (assignments ?? []).reduce<string | null>((newest, mark) => newest === null || mark.at > newest ? mark.at : newest, null);
 
 export async function shutDoorsOf(repos: Pick<ControlPlaneRepositories, "doors">, governmentId: string): Promise<ShutDoorNote[]> {
-  const { doors } = await listDoors(repos.doors);
+  const doors=(await repos.doors.listWhere(["ocdId"],governmentId)).map(row=>row.value).filter(isDoorRecord);
   return doors.filter(door => door.status === "SHUT" && door.ocdId === governmentId).map(door => ({ doorId: door.doorId, shutSince: door.shutSince,
     evidence: `${door.shutReason ?? "no reason was recorded"}; it reads ${door.hosts.join(", ") || "no recorded host"}` }));
 }
@@ -124,22 +127,24 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
   const maxWaitMs = await deadEndWaitMs(input.repos);
   const read = input.readPackets ?? readGovernmentPackets;
   const readerQuestion = item.autonomousPlan?.readerQuestion;
+  const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
   const packetNow = async (): Promise<HuntPacket | null> => {
     const divisions = readerQuestion?.divisions.length ? readerQuestion.divisions : [governmentId.split("#")[0]!];
     const packets = await read(divisions, input.now(), await readAskedGaps(input.repos, input.now()));
-    if (!readerQuestion) return packets.get(governmentId) ?? null;
+    const directions=await huntDirections(input.repos,item.autonomousPlan?.ownerInstructions??[],owner?.assignments??[]);
+    if (!readerQuestion) {const packet=packets.get(governmentId);return packet?Object.assign({},packet,{directions}):null;}
     // Read all held facts for the place before hunting its unanswered question.
     // The question is work instructions, never a new checklist or evidence.
     const held = [...packets.values()];
     if (held.length === 0) return null;
     return { governmentId, label: readerQuestion.place ? `ZIP ${readerQuestion.place}` : governmentId,
-      held: held.flatMap(packet => packet.held), blanks: held.flatMap(packet => packet.blanks) };
+      held: held.flatMap(packet => packet.held), blanks: held.flatMap(packet => packet.blanks),...{directions} };
   };
   const opening = await packetNow();
-  const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
   const assignmentKeys = [...new Set((owner?.assignments ?? []).map(mark => mark.assignmentKey))];
   const due = opening === null ? null : packetDue({ packet: opening, last: lastJobOf(last), orderedAt: orderedAtOf(owner?.assignments), shutDoors: doors, now: input.now(), maxWaitMs });
   const role: HuntRole = due?.due ? due.role : last ? "DETECTIVE" : "HUNTER";
+  const prepareBody=liveHuntBodyPreparer({repos:input.repos,root:input.root,now:input.now});
   let packet: HuntPacket | null = null;
   return hunterExecutor({
     role,
@@ -158,6 +163,7 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
       const tried = role === "DETECTIVE" ? triedSteps({ steps: last?.rungs ?? [], unfilled: last?.unfilled ?? [], shutDoors: doors }) : [];
       const bound = durableResearchTools(input.tools, { project: item.project, attemptId: job.attemptId, workItemId: item.id, routeTaskId: task.id, subjectId: governmentId });
       const reportPacket = packet;
+      const subjects=new Set(reportableSubjects(reportPacket));
       return {
         brief: huntBrief(reportPacket, { role, tried, notes }) + (readerQuestion ?
           `\n\nREADER'S UNANSWERED QUESTION: ${readerQuestion.text}\nAnswer this question first, using what we hold above and then public sources. Report each missing fact with its actual field name and exact supporting sentence. Never treat the question or an AI answer as evidence.` : ""),
@@ -175,14 +181,20 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
               governmentId, assignmentKeys, recordedAt: input.now() }), input.now());
           },
           reportFinding: {
-            subjects: reportableSubjects(reportPacket),
-            write: async finding => ({ boxId: (await indexReportedFinding(input.repos.boxFindings, { workItemId: item.id, attemptId: job.attemptId,
-              obligationId: huntPacketObligationId(governmentId), missionPart: null, finding }, input.now())).id }),
+            subjects,
+            write: async raw => {
+              const finding=huntFindingSubject(raw,reportPacket.label);
+              const box=await indexReportedFinding(input.repos.boxFindings,{workItemId:item.id,attemptId:job.attemptId,obligationId:huntPacketObligationId(governmentId),missionPart:null,finding},input.now());
+              await prepareBody?.({...finding,value:String(finding.value)},{workItemId:item.id,attemptId:job.attemptId});
+              subjects.add(finding.subjectId);
+              return {boxId:box.id};
+            },
           },
         },
       };
     },
-    onResult: async result => {
+    onResult: async raw => {
+      const result={...raw,findings:raw.findings.map(f=>huntFindingSubject(f,packet?.label))};
       const given = packet;
       const recorded: ScoutResult = given === null ? result : { ...result, obligationId: huntPacketObligationId(governmentId),
         blankFingerprint: blankFingerprint(given), blankDigests: given.blanks.map(blankDigest) };

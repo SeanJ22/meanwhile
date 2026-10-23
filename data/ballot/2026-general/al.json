@@ -3428,6 +3428,310 @@
             "doorId": "fec-al-chief",
             "quote": "Proposing an amendment to the Constitution of Alabama of 2022, to require local boards of education to adopt policies requiring each public K-12 school to broadcast or sanction the performance of the first stanza of The Star-Spangled Banner at least once per week during school hours. (Proposed by Act 2026-424)"
           }
+        },
+        {
+          "id": "al-ba01-2026-for-jefferson-county-sheriff",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:jefferson",
+          "divisionVintage": "2026",
+          "title": "JEFFERSON COUNTY SHERIFF",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.401358+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.401358+00:00",
+            "quote": "FOR JEFFERSON COUNTY SHERIFF\n(Vote for One)\nMARK LEVIE PETTWAY\nDEMOCRAT\nJACOB REACH\nREPUBLICAN"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-tax-assessor-jefferson-county",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:jefferson",
+          "divisionVintage": "2026",
+          "title": "TAX ASSESSOR, JEFFERSON COUNTY",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.401358+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.401358+00:00",
+            "quote": "FOR TAX ASSESSOR,\nJEFFERSON COUNTY\n(Vote for One)\nGAYNELL HENDRICKS\nDEMOCRAT"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-tax-collector-jefferson-county",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:jefferson",
+          "divisionVintage": "2026",
+          "title": "TAX COLLECTOR, JEFFERSON COUNTY",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.401358+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.401358+00:00",
+            "quote": "FOR TAX COLLECTOR,\nJEFFERSON COUNTY\n(Vote for One)\nJ.T. SMALLWOOD\nDEMOCRAT"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-mobile-county-revenue-commissioner",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:mobile",
+          "divisionVintage": "2026",
+          "title": "MOBILE COUNTY REVENUE COMMISSIONER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.442754+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.442754+00:00",
+            "quote": "FOR MOBILE COUNTY\nREVENUE COMMISSIONER\n(Vote for One)\nKIM HASTIE\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-mobile-county-sheriff",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:mobile",
+          "divisionVintage": "2026",
+          "title": "MOBILE COUNTY SHERIFF",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.442754+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.442754+00:00",
+            "quote": "FOR MOBILE COUNTY\nSHERIFF\n(Vote for One)\nPAMELA J. LAFFITTE\nDemocrat\nPAUL BURCH\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-sheriff",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:madison",
+          "divisionVintage": "2026",
+          "title": "MADISON COUNTY SHERIFF",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nSHERIFF\n(Vote for One)\nBRETT JONES\nDemocrat\nKEVIN H. TURNER\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-tax-assessor",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:madison",
+          "divisionVintage": "2026",
+          "title": "MADISON COUNTY TAX ASSESSOR",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nTAX ASSESSOR\n(Vote for One)\nCLIFF MANN\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-tax-collector",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:madison",
+          "divisionVintage": "2026",
+          "title": "MADISON COUNTY TAX COLLECTOR",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nTAX COLLECTOR\n(Vote for One)\nJEFF TAYLOR\nDemocrat\nVALERIE D. MILES\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-coroner",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:madison",
+          "divisionVintage": "2026",
+          "title": "MADISON COUNTY CORONER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nCORONER\n(Vote for One)\nTYLER BERRYHILL\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-license-director",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:madison",
+          "divisionVintage": "2026",
+          "title": "MADISON COUNTY LICENSE DIRECTOR",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nLICENSE DIRECTOR\n(Vote for One)\nMARK CRAIG\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-baldwin-county-sheriff",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:baldwin",
+          "divisionVintage": "2026",
+          "title": "BALDWIN COUNTY SHERIFF",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.387870+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.387870+00:00",
+            "quote": "FOR BALDWIN COUNTY\nSHERIFF\n(Vote for One)\nANTHONY E. LOWERY\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-baldwin-county-revenue-commissioner",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:baldwin",
+          "divisionVintage": "2026",
+          "title": "BALDWIN COUNTY REVENUE COMMISSIONER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.387870+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.387870+00:00",
+            "quote": "FOR BALDWIN COUNTY\nREVENUE COMMISSIONER\n(Vote for One)\nTEDDY JOE FAUST, JR.\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-baldwin-county-coroner",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:baldwin",
+          "divisionVintage": "2026",
+          "title": "BALDWIN COUNTY CORONER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.387870+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.387870+00:00",
+            "quote": "FOR BALDWIN COUNTY\nCORONER\n(Vote for One)\nBRIAN E. PIERCE\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-shelby-county-sheriff",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:shelby",
+          "divisionVintage": "2026",
+          "title": "SHELBY COUNTY SHERIFF",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.206406+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.206406+00:00",
+            "quote": "FOR SHELBY COUNTY\nSHERIFF\n(Vote for One)\nANTONIO WEATHERLY\nDemocrat\nJOHN SAMANIEGO\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-shelby-county-coroner",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:shelby",
+          "divisionVintage": "2026",
+          "title": "SHELBY COUNTY CORONER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.206406+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.206406+00:00",
+            "quote": "FOR SHELBY COUNTY\nCORONER\n(Vote for One)\nMARSHA S STURDEVANT\nDemocrat\nLINA EVANS\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-shelby-county-property-tax-commissioner",
+          "electionId": "al-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:al/county:shelby",
+          "divisionVintage": "2026",
+          "title": "SHELBY COUNTY PROPERTY TAX COMMISSIONER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.206406+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.206406+00:00",
+            "quote": "FOR SHELBY COUNTY\nPROPERTY TAX COMMISSIONER\n(Vote for One)\nMiCHELLE VAUGHNER KNIGHT\nDemocrat\nJACOB TIDMORE\nRepublican"
+          }
         }
       ],
       "candidacies": [
@@ -7768,6 +8072,397 @@
             "doorId": "fec-al-chief",
             "quote": "State Representative 65 — Elaine Beech"
           }
+        },
+        {
+          "id": "al-ba01-2026-for-jefferson-county-sheriff-mark-levie-pettway",
+          "contestId": "al-ba01-2026-for-jefferson-county-sheriff",
+          "familyName": "MARK LEVIE PETTWAY",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.401358+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.401358+00:00",
+            "quote": "FOR JEFFERSON COUNTY SHERIFF\n(Vote for One)\nMARK LEVIE PETTWAY\nDEMOCRAT\nJACOB REACH\nREPUBLICAN"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-jefferson-county-sheriff-jacob-reach",
+          "contestId": "al-ba01-2026-for-jefferson-county-sheriff",
+          "familyName": "JACOB REACH",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.401358+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.401358+00:00",
+            "quote": "FOR JEFFERSON COUNTY SHERIFF\n(Vote for One)\nMARK LEVIE PETTWAY\nDEMOCRAT\nJACOB REACH\nREPUBLICAN"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-tax-assessor-jefferson-county-gaynell-hendricks",
+          "contestId": "al-ba01-2026-for-tax-assessor-jefferson-county",
+          "familyName": "GAYNELL HENDRICKS",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.401358+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.401358+00:00",
+            "quote": "FOR TAX ASSESSOR,\nJEFFERSON COUNTY\n(Vote for One)\nGAYNELL HENDRICKS\nDEMOCRAT"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-tax-collector-jefferson-county-j-t-smallwood",
+          "contestId": "al-ba01-2026-for-tax-collector-jefferson-county",
+          "familyName": "J.T. SMALLWOOD",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.401358+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.401358+00:00",
+            "quote": "FOR TAX COLLECTOR,\nJEFFERSON COUNTY\n(Vote for One)\nJ.T. SMALLWOOD\nDEMOCRAT"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-mobile-county-revenue-commissioner-kim-hastie",
+          "contestId": "al-ba01-2026-for-mobile-county-revenue-commissioner",
+          "familyName": "KIM HASTIE",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.442754+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.442754+00:00",
+            "quote": "FOR MOBILE COUNTY\nREVENUE COMMISSIONER\n(Vote for One)\nKIM HASTIE\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-mobile-county-sheriff-pamela-j-laffitte",
+          "contestId": "al-ba01-2026-for-mobile-county-sheriff",
+          "familyName": "PAMELA J. LAFFITTE",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.442754+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.442754+00:00",
+            "quote": "FOR MOBILE COUNTY\nSHERIFF\n(Vote for One)\nPAMELA J. LAFFITTE\nDemocrat\nPAUL BURCH\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-mobile-county-sheriff-paul-burch",
+          "contestId": "al-ba01-2026-for-mobile-county-sheriff",
+          "familyName": "PAUL BURCH",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.442754+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.442754+00:00",
+            "quote": "FOR MOBILE COUNTY\nSHERIFF\n(Vote for One)\nPAMELA J. LAFFITTE\nDemocrat\nPAUL BURCH\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-sheriff-brett-jones",
+          "contestId": "al-ba01-2026-for-madison-county-sheriff",
+          "familyName": "BRETT JONES",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nSHERIFF\n(Vote for One)\nBRETT JONES\nDemocrat\nKEVIN H. TURNER\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-sheriff-kevin-h-turner",
+          "contestId": "al-ba01-2026-for-madison-county-sheriff",
+          "familyName": "KEVIN H. TURNER",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nSHERIFF\n(Vote for One)\nBRETT JONES\nDemocrat\nKEVIN H. TURNER\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-tax-assessor-cliff-mann",
+          "contestId": "al-ba01-2026-for-madison-county-tax-assessor",
+          "familyName": "CLIFF MANN",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nTAX ASSESSOR\n(Vote for One)\nCLIFF MANN\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-tax-collector-jeff-taylor",
+          "contestId": "al-ba01-2026-for-madison-county-tax-collector",
+          "familyName": "JEFF TAYLOR",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nTAX COLLECTOR\n(Vote for One)\nJEFF TAYLOR\nDemocrat\nVALERIE D. MILES\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-tax-collector-valerie-d-miles",
+          "contestId": "al-ba01-2026-for-madison-county-tax-collector",
+          "familyName": "VALERIE D. MILES",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nTAX COLLECTOR\n(Vote for One)\nJEFF TAYLOR\nDemocrat\nVALERIE D. MILES\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-coroner-tyler-berryhill",
+          "contestId": "al-ba01-2026-for-madison-county-coroner",
+          "familyName": "TYLER BERRYHILL",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nCORONER\n(Vote for One)\nTYLER BERRYHILL\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-madison-county-license-director-mark-craig",
+          "contestId": "al-ba01-2026-for-madison-county-license-director",
+          "familyName": "MARK CRAIG",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.184560+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.184560+00:00",
+            "quote": "FOR MADISON COUNTY\nLICENSE DIRECTOR\n(Vote for One)\nMARK CRAIG\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-baldwin-county-sheriff-anthony-e-lowery",
+          "contestId": "al-ba01-2026-for-baldwin-county-sheriff",
+          "familyName": "ANTHONY E. LOWERY",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.387870+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.387870+00:00",
+            "quote": "FOR BALDWIN COUNTY\nSHERIFF\n(Vote for One)\nANTHONY E. LOWERY\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-baldwin-county-revenue-commissioner-teddy-joe-faust-jr",
+          "contestId": "al-ba01-2026-for-baldwin-county-revenue-commissioner",
+          "familyName": "TEDDY JOE FAUST, JR.",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.387870+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.387870+00:00",
+            "quote": "FOR BALDWIN COUNTY\nREVENUE COMMISSIONER\n(Vote for One)\nTEDDY JOE FAUST, JR.\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-baldwin-county-coroner-brian-e-pierce",
+          "contestId": "al-ba01-2026-for-baldwin-county-coroner",
+          "familyName": "BRIAN E. PIERCE",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.387870+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.387870+00:00",
+            "quote": "FOR BALDWIN COUNTY\nCORONER\n(Vote for One)\nBRIAN E. PIERCE\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-shelby-county-sheriff-antonio-weatherly",
+          "contestId": "al-ba01-2026-for-shelby-county-sheriff",
+          "familyName": "ANTONIO WEATHERLY",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.206406+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.206406+00:00",
+            "quote": "FOR SHELBY COUNTY\nSHERIFF\n(Vote for One)\nANTONIO WEATHERLY\nDemocrat\nJOHN SAMANIEGO\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-shelby-county-sheriff-john-samaniego",
+          "contestId": "al-ba01-2026-for-shelby-county-sheriff",
+          "familyName": "JOHN SAMANIEGO",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.206406+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.206406+00:00",
+            "quote": "FOR SHELBY COUNTY\nSHERIFF\n(Vote for One)\nANTONIO WEATHERLY\nDemocrat\nJOHN SAMANIEGO\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-shelby-county-coroner-marsha-s-sturdevant",
+          "contestId": "al-ba01-2026-for-shelby-county-coroner",
+          "familyName": "MARSHA S STURDEVANT",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.206406+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.206406+00:00",
+            "quote": "FOR SHELBY COUNTY\nCORONER\n(Vote for One)\nMARSHA S STURDEVANT\nDemocrat\nLINA EVANS\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-shelby-county-coroner-lina-evans",
+          "contestId": "al-ba01-2026-for-shelby-county-coroner",
+          "familyName": "LINA EVANS",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.206406+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.206406+00:00",
+            "quote": "FOR SHELBY COUNTY\nCORONER\n(Vote for One)\nMARSHA S STURDEVANT\nDemocrat\nLINA EVANS\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-shelby-county-property-tax-commissioner-michelle-vaughner-knight",
+          "contestId": "al-ba01-2026-for-shelby-county-property-tax-commissioner",
+          "familyName": "MiCHELLE VAUGHNER KNIGHT",
+          "givenName": "",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.206406+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.206406+00:00",
+            "quote": "FOR SHELBY COUNTY\nPROPERTY TAX COMMISSIONER\n(Vote for One)\nMiCHELLE VAUGHNER KNIGHT\nDemocrat\nJACOB TIDMORE\nRepublican"
+          }
+        },
+        {
+          "id": "al-ba01-2026-for-shelby-county-property-tax-commissioner-jacob-tidmore",
+          "contestId": "al-ba01-2026-for-shelby-county-property-tax-commissioner",
+          "familyName": "JACOB TIDMORE",
+          "givenName": "",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+            "sourceOrg": "Alabama Secretary of State",
+            "collectedAt": "2026-10-20T22:57:22.206406+00:00",
+            "verifiedAt": "2026-10-20T22:57:22.206406+00:00",
+            "quote": "FOR SHELBY COUNTY\nPROPERTY TAX COMMISSIONER\n(Vote for One)\nMiCHELLE VAUGHNER KNIGHT\nDemocrat\nJACOB TIDMORE\nRepublican"
+          }
         }
       ],
       "measures": [
@@ -7841,7 +8536,7 @@
   "sourceReceipt": {
     "contractVersion": 1,
     "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T05:05:50+00:00",
+    "reviewedAt": "2026-10-20T22:57:22.442754+00:00",
     "sources": [
       {
         "requestedUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
@@ -7941,6 +8636,61 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official November 3, 2026 general-election certification or official enrolled act; converted from saved PDF bytes by convert.py; scanned text checked against rendered source pages.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Jefferson-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.401358+00:00",
+        "httpStatus": 200,
+        "rawHash": "0d66c4b614f385a6e823f02b72b15e5d9cc925f0086d457a2bb4d6e7ca2f0fc3",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Jefferson County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Mobile-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.442754+00:00",
+        "httpStatus": 200,
+        "rawHash": "fcdce42c6f4b1fe8cb4e92c9d4f2dc98c4415e829c47debe27d0e7e3f6189734",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Mobile County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Madison-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.184560+00:00",
+        "httpStatus": 200,
+        "rawHash": "5b45f5b61184ab739be5b39cd6e363acbb420fbedc56af94ab97d170e6580670",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Madison County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Baldwin-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.387870+00:00",
+        "httpStatus": 200,
+        "rawHash": "447c8f03a758c2c81dd73e338a55f8f46342cd079c483b2477571f531016953c",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Baldwin County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+        "finalUrl": "https://www.sos.alabama.gov/sites/default/files/sample-ballots/2026/gen/Shelby-Sample.pdf",
+        "retrievedAt": "2026-10-20T22:57:22.206406+00:00",
+        "httpStatus": 200,
+        "rawHash": "d2537b9118a1a0f093c11418d0cd1185910c522bfccbee1ce79279f1d3fe7651",
+        "publisher": "Alabama Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Saved official November 3, 2026 Shelby County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
       }
     ]
   }

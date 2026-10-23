@@ -1,0 +1,86 @@
+{
+  "checkedAt": "2026-10-21T01:10:11.847419+00:00",
+  "officialFederalContests": 13,
+  "officialFederalCandidacies": 39,
+  "officialRegularNonFederalStatewideContests": 0,
+  "officialRegularLegislativeContests": 0,
+  "novemberLegislativeSpecialCertificationsListed": 0,
+  "generalCertificationNamedOffices": [
+    "U.S. Senator",
+    "U.S. House of Representatives, all 12 congressional districts"
+  ],
+  "separate2026SpecialElection": {
+    "office": "U.S. House of Representatives, Congressional District11",
+    "date": "2026-04-16",
+    "candidates": 3,
+    "onNovemberBallot": false
+  },
+  "basis": "The current official 2026 Division index and full primary/general certifications list Senate and House offices. Its only listed 2026 special-general certification is CD11 for April16. Official 2023 general-election records list State Senate; official 2025 general-election records list Governor and General Assembly, with a separate District 35 Senate special. Constitutional terms give senators four years after the post-census two-year term and Assembly members two years. These primary sources establish zero regular 2026 nonfederal statewide/legislative contests and no November legislative special in the authority’s published 2026 certification index.",
+  "generalCertificationDeclarationOcr": "the persons named on the attached sheets were nominated at the June 2, 2026 Primary Election, or by direct petition to nominate candidates, for the Office of United States Senator and Office of Member of the United States House of Representatives for the State’s Twelve Congressional Districts.",
+  "absenceLimit": "All 21 county sample ballots have not been exhaustively compared. No additional November legislative special is listed by the state authority in the current sources checked; this is not an independent county-by-county absence finding.",
+  "elecCorroboration": {
+    "sourceUrl": "https://www.elec.nj.gov/aboutelec/pressreleases.htm",
+    "publishedAt": "2026-08-17",
+    "indexedOfficialText": "Campaign finance reports filed for the first six months of 2026 by the so-called “Big Six” fundraising committees- the two state parties and four legislative leadership committees- show more activity than usual for a year with no state elections.",
+    "access": "Official-source indexed search text is corroboration only. Direct retrieval returned an Incapsula page with HTTP200 and did not yield the statement. It is not a successful fact receipt."
+  },
+  "sources": [
+    {
+      "requestedUrl": "https://www.nj.gov/state/elections/election-information-2026.shtml",
+      "finalUrl": "https://www.nj.gov/state/elections/election-information-2026.shtml",
+      "retrievedAt": "2026-10-21T01:04:38.990891+00:00",
+      "httpStatus": 200,
+      "rawHash": "0e6bcd95e9195e9fb1a3cfb7bb043d6964dc093caeb690c10c2b0e692f320ae0",
+      "sourceFile": "nj-2026-election-information-current.html"
+    },
+    {
+      "requestedUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-general-election-nominees_us-senate_us-house.pdf",
+      "finalUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-general-election-nominees_us-senate_us-house.pdf",
+      "retrievedAt": "2026-10-21T01:04:59.213425+00:00",
+      "httpStatus": 200,
+      "rawHash": "c4c64097c2f4f99f1e6fda176c318b91d86098ab6d8a2e066fa3ce7b33b4f7ec",
+      "sourceFile": "2026-certification-of-general-election-nominees_us-senate_us-house.pdf"
+    },
+    {
+      "requestedUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-primary-nominees.pdf",
+      "finalUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-primary-nominees.pdf",
+      "retrievedAt": "2026-10-21T01:04:57.566003+00:00",
+      "httpStatus": 200,
+      "rawHash": "a99c2e17c551dad46f7c029b866a44a47f405fda8b19d400198be79cc038330d",
+      "sourceFile": "2026-certification-of-primary-nominees.pdf"
+    },
+    {
+      "requestedUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-special-general-election-nominees.pdf",
+      "finalUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-certification-of-special-general-election-nominees.pdf",
+      "retrievedAt": "2026-10-21T01:04:57.685091+00:00",
+      "httpStatus": 200,
+      "rawHash": "6f506e72604150b604c76118782794883ffd4221d4323c5ecc4c5a8ee36c41a9",
+      "sourceFile": "2026-certification-of-special-general-election-nominees.pdf"
+    },
+    {
+      "requestedUrl": "https://www.nj.gov/redistricting/bylaws/legislative/",
+      "finalUrl": "https://www.nj.gov/redistricting/bylaws/legislative/",
+      "retrievedAt": "2026-10-21T01:06:05.277827+00:00",
+      "httpStatus": 200,
+      "rawHash": "24fc7a8907384062f0fac484ce46508c79fc59c1014e00e79b576244c4efc32d",
+      "sourceFile": "nj-legislative-election-constitutional-terms.html"
+    },
+    {
+      "requestedUrl": "https://www.nj.gov/state/elections/election-information-2025.shtml",
+      "finalUrl": "https://www.nj.gov/state/elections/election-information-2025.shtml",
+      "retrievedAt": "2026-10-21T01:08:34.230586+00:00",
+      "httpStatus": 200,
+      "rawHash": "5b31b0d4aedd17cb7d789ef5e3c8154aa35eda457a014627e4a528c01f6f10d7",
+      "sourceFile": "nj-election-information-2025.html"
+    },
+    {
+      "requestedUrl": "https://www.nj.gov/state/elections/election-information-2023.shtml",
+      "finalUrl": "https://www.nj.gov/state/elections/election-information-2023.shtml",
+      "retrievedAt": "2026-10-21T01:08:35.724579+00:00",
+      "httpStatus": 200,
+      "rawHash": "82621ee7aa8345caae20d48da2c3f1a70f85df5f11934d0c789a4dbf0860a019",
+      "sourceFile": "nj-election-information-2023.html"
+    }
+  ],
+  "remaining": "All 13 federal races / 39 candidates match their official final lists. The current state primary/general/special certification set lists no November 3 state office contests. County/city/school coverage outside the verified Morris County inputs remains incomplete; all-county sample absence and live parity remain unverified."
+}

@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://webapi.legistar.com/v1/madison/bodies?$top=1000",
+  "state": "WI",
+  "retrievedAt": "2026-10-13T19:22:19.258787+00:00",
+  "sha256": "adfbda928d45552ab0fdce2a3acdb223d2f91c916c6949e5340777309c8d504e",
+  "records": 253
+}

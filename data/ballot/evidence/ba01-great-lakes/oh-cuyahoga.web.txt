@@ -1,0 +1,487 @@
+Candidate List for Web (https://boe.cuyahogacounty.gov/docs/default-source/boe/candidates-page/candidate-list.pdf?sfvrsn=4b1792c0_450)
+【turn539827view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 25; Source: open({"ref_id":"turn645005view0","lineno":null}); Total lines: 775
+L0@P0: 2026
+L1@P0: Candidate List
+L2@P0: 10/15/2026 3:57 pm
+L3@P0: 2026
+L4@P0: Lista de Candidatos
+L5@P0: Candidates who withdraw less than 70 days before election day will have their names printed on
+L6@P0: the ballot.
+L7@P0: Los nombres de los candidatos que se retiren a menos de 70 días antes del día de las elecciones
+L8@P0-1: serán impresos en la paeleta.Cuyahoga County Board of Elections
+L9@P1: November 3, 2026 General Election
+L10@P1: Candidate List
+L11@P1: Junta Electoral del Condado de Cuyahoga
+L12@P1: Elección General del 3 de noviembre de 2026
+L13@P1: Lista de Candidatos
+L14@P1: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L15@P1: 4 Year Term
+L16@P1: Período de 4 Años
+L17@P1: Vote for Not More Than 1
+L18@P1: Vote por No Más De 1
+L19@P1: For Governor and Lieutenant Governor Para Gobernador y Vicegobernador
+L20@P1: County Wide District Distrito A Nivel De Condado
+L21@P1: Amy Acton & David Pepper Democratic | Demóc 2/4/2026 Yes | Sí rata
+L22@P1: Vivek Ramaswamy & Robert A. McColley Republican | Republicana 2/4/2026 Yes | Sí
+L23@P1: Don Kissick & James L. Mills 2/4/2026 Yes | Sí Libertarian | Libertaria
+L24@P1: Timothy Grady & Andrea Neutz 8/24/2026 Yes - Write-In | Sí - Por Escrito
+L25@P1: Heather Hill & Patrick Manley 8/24/2026 Yes - Write-In | Sí - Por Escrito
+L26@P1: Renea Turner & Jalen Turner 8/24/2026 Yes - Write-In | Sí - Por Escrito
+L27@P1: Ron Ula & Michael C. Lehnerd 8/24/2026 Withdrawn 10/15/2026
+L28@P1: Retirado 10/15/2026
+L29@P1-2: 2 / 25Cuyahoga County Board of Elections
+L30@P2: November 3, 2026 General Election
+L31@P2: Candidate List
+L32@P2: Junta Electoral del Condado de Cuyahoga
+L33@P2: Elección General del 3 de noviembre de 2026
+L34@P2: Lista de Candidatos
+L35@P2: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L36@P2: 4 Year Term
+L37@P2: Período de 4 Años
+L38@P2: Vote for Not More Than 1
+L39@P2: Vote por No Más De 1
+L40@P2: For Attorney General Para Fiscal General
+L41@P2: County Wide District Distrito A Nivel De Condado
+L42@P2: John J. Kulewicz Democratic | Demóc 2/4/2026 Yes | Sí rata
+L43@P2: Keith Faber Republican | Republicana 2/4/2026 Yes | Sí
+L44@P2: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L45@P2: 4 Year Term
+L46@P2: Período de 4 Años
+L47@P2: Vote for Not More Than 1
+L48@P2: Vote por No Más De 1
+L49@P2: For Auditor of State Para Auditor del Estado
+L50@P2: County Wide District Distrito A Nivel De Condado
+L51@P2: Annette Blackwell Democratic | Demóc 2/4/2026 Yes | Sí rata
+L52@P2: Frank LaRose Republican | Republicana 2/4/2026 Yes | Sí
+L53@P2-3: 3 / 25Cuyahoga County Board of Elections
+L54@P3: November 3, 2026 General Election
+L55@P3: Candidate List
+L56@P3: Junta Electoral del Condado de Cuyahoga
+L57@P3: Elección General del 3 de noviembre de 2026
+L58@P3: Lista de Candidatos
+L59@P3: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L60@P3: 4 Year Term
+L61@P3: Período de 4 Años
+L62@P3: Vote for Not More Than 1
+L63@P3: Vote por No Más De 1
+L64@P3: For Secretary of State Para Secretario de Estado
+L65@P3: County Wide District Distrito A Nivel De Condado
+L66@P3: Allison Russo Democratic | Demóc 2/4/2026 Yes | Sí rata
+L67@P3: Robert Sprague Republican | Republicana 2/4/2026 Yes | Sí
+L68@P3: Tom Pruss 2/4/2026 Yes | Sí Libertarian | Libertaria
+L69@P3: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L70@P3: 4 Year Term
+L71@P3: Período de 4 Años
+L72@P3: Vote for Not More Than 1
+L73@P3: Vote por No Más De 1
+L74@P3: For Treasurer of State Para Tesorero del Estado
+L75@P3: County Wide District Distrito A Nivel De Condado
+L76@P3: Seth Walsh Democratic | Demóc 2/4/2026 Yes | Sí rata
+L77@P3: Jay Edwards Republican | Republicana 2/4/2026 Yes | Sí
+L78@P3-4: 4 / 25Cuyahoga County Board of Elections
+L79@P4: November 3, 2026 General Election
+L80@P4: Candidate List
+L81@P4: Junta Electoral del Condado de Cuyahoga
+L82@P4: Elección General del 3 de noviembre de 2026
+L83@P4: Lista de Candidatos
+L84@P4: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L85@P4: 2 Year Term
+L86@P4: Período de 2 Años
+L87@P4: Vote for Not More Than 1
+L88@P4: Vote por No Más De 1
+L89@P4: For United States Senator
+L90@P4: (Unexpired term ending 1/3/29)
+L91@P4: Para Senador de los Estados Unidos
+L92@P4: (Período inconcluso que finaliza el 1/3/29)
+L93@P4: County Wide District Distrito A Nivel De Condado
+L94@P4: Sherrod Brown Democratic | Demóc 2/4/2026 Yes | Sí rata
+L95@P4: Jon Husted Republican | Republicana 2/4/2026 Yes | Sí
+L96@P4: William B. Redpath 2/4/2026 Yes | Sí Libertarian | Libertaria
+L97@P4: Stephen Faris 8/24/2026 Yes - Write-In | Sí - Por Escrito
+L98@P4: Anthony Holliman 8/24/2026 Yes - Write-In | Sí - Por Escrito
+L99@P4: Greg Levy Nonpartisan | No Partidista 5/5/2026 Yes | Sí
+L100@P4: Timothy Telymonde 8/24/2026 Yes - Write-In | Sí - Por Escrito
+L101@P4-5: 5 / 25Cuyahoga County Board of Elections
+L102@P5: November 3, 2026 General Election
+L103@P5: Candidate List
+L104@P5: Junta Electoral del Condado de Cuyahoga
+L105@P5: Elección General del 3 de noviembre de 2026
+L106@P5: Lista de Candidatos
+L107@P5: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L108@P5: 2 Year Term
+L109@P5: Período de 2 Años
+L110@P5: Vote for Not More Than 1
+L111@P5: Vote por No Más De 1
+L112@P5: For Representative to Congress
+L113@P5: (7th District)
+L114@P5: Para Representante al Congreso
+L115@P5: (Distrito 7)
+L116@P5: Congressional District 07 Distrito Del Congreso 07
+L117@P5: Brian Poindexter Democratic | Demóc 1/9/2026 Yes | Sí rata
+L118@P5: Max Miller Republican | Republicana 1/28/2026 Yes | Sí
+L119@P5: Thahbia Asad Nonpartisan | No Partidista 4/22/2026 Yes - Write-In | Sí - Por Escrito
+L120@P5: Andrey Joseph Martinichin Nonpartisan | No Partidista 2/2/2026 Yes - Write-In | Sí - Por Escrito
+L121@P5-6: 6 / 25Cuyahoga County Board of Elections
+L122@P6: November 3, 2026 General Election
+L123@P6: Candidate List
+L124@P6: Junta Electoral del Condado de Cuyahoga
+L125@P6: Elección General del 3 de noviembre de 2026
+L126@P6: Lista de Candidatos
+L127@P6: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L128@P6: 2 Year Term
+L129@P6: Período de 2 Años
+L130@P6: Vote for Not More Than 1
+L131@P6: Vote por No Más De 1
+L132@P6: For Representative to Congress
+L133@P6: (11th District)
+L134@P6: Para Representante al Congreso
+L135@P6: (Distrito 11)
+L136@P6: Congressional District 11 Distrito Del Congreso 11
+L137@P6: Shontel M. Brown Democratic | Demóc 1/9/2026 Yes | Sí rata
+L138@P6: Mike Kirchner Republican | Republicana 1/13/2026 Yes | Sí
+L139@P6: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L140@P6: 4 Year Term
+L141@P6: Período de 4 Años
+L142@P6: Vote for Not More Than 1
+L143@P6: Vote por No Más De 1
+L144@P6: For State Senator
+L145@P6: (21st District)
+L146@P6: Para Senador del Estado
+L147@P6: (Distrito 21)
+L148@P6: State Senate District 21 Distrito Del Senado Estatal 21
+L149@P6: Kent Smith Democratic | Demóc 11/21/2025 Yes | Sí rata
+L150@P6: Mikhail Alterman Republican | Republicana 2/4/2026 Yes | Sí
+L151@P6-7: 7 / 25Cuyahoga County Board of Elections
+L152@P7: November 3, 2026 General Election
+L153@P7: Candidate List
+L154@P7: Junta Electoral del Condado de Cuyahoga
+L155@P7: Elección General del 3 de noviembre de 2026
+L156@P7: Lista de Candidatos
+L157@P7: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L158@P7: 4 Year Term
+L159@P7: Período de 4 Años
+L160@P7: Vote for Not More Than 1
+L161@P7: Vote por No Más De 1
+L162@P7: For State Senator
+L163@P7: (23rd District)
+L164@P7: Para Senador del Estado
+L165@P7: (Distrito 23)
+L166@P7: State Senate District 23 Distrito Del Senado Estatal 23
+L167@P7: Bride Rose Sweeney Democratic | Demóc 1/23/2026 Yes | Sí rata
+L168@P7: Robert E. Dintaman Republican | Republicana 2/4/2026 Yes | Sí
+L169@P7: Elijah Knoll 5/4/2026 Removed by Board action |
+L170@P7: Eliminado por acción de la
+L171@P7: Junta
+L172@P7: Nonpartisan | No Partidista
+L173@P7: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L174@P7: 2 Year Term
+L175@P7: Período de 2 Años
+L176@P7: Vote for Not More Than 1
+L177@P7: Vote por No Más De 1
+L178@P7: For State Representative
+L179@P7: (13th District)
+L180@P7: Para Representante del Estado
+L181@P7: (Distrito 13)
+L182@P7: House District 13 Cámara De Distrito 13
+L183@P7: Tristan W. Rader Democratic | Demóc 1/5/2026 Yes | Sí rata
+L184@P7: Billy Fronimo Republican | Republicana 2/4/2026 Yes | Sí
+L185@P7-8: 8 / 25Cuyahoga County Board of Elections
+L186@P8: November 3, 2026 General Election
+L187@P8: Candidate List
+L188@P8: Junta Electoral del Condado de Cuyahoga
+L189@P8: Elección General del 3 de noviembre de 2026
+L190@P8: Lista de Candidatos
+L191@P8: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L192@P8: 2 Year Term
+L193@P8: Período de 2 Años
+L194@P8: Vote for Not More Than 1
+L195@P8: Vote por No Más De 1
+L196@P8: For State Representative
+L197@P8: (14th District)
+L198@P8: Para Representante del Estado
+L199@P8: (Distrito 14)
+L200@P8: House District 14 Cámara De Distrito 14
+L201@P8: Sean Patrick Brennan Democratic | Demóc 1/28/2026 Yes | Sí rata
+L202@P8: David J. Morgan Republican | Republicana 2/9/2026 Yes | Sí
+L203@P8: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L204@P8: 2 Year Term
+L205@P8: Período de 2 Años
+L206@P8: Vote for Not More Than 1
+L207@P8: Vote por No Más De 1
+L208@P8: For State Representative
+L209@P8: (15th District)
+L210@P8: Para Representante del Estado
+L211@P8: (Distrito 15)
+L212@P8: House District 15 Cámara De Distrito 15
+L213@P8: Chris Glassburn Democratic | Demóc 1/27/2026 Yes | Sí rata
+L214@P8: Daniel Conway Republican | Republicana 1/28/2026 Yes | Sí
+L215@P8-9: 9 / 25Cuyahoga County Board of Elections
+L216@P9: November 3, 2026 General Election
+L217@P9: Candidate List
+L218@P9: Junta Electoral del Condado de Cuyahoga
+L219@P9: Elección General del 3 de noviembre de 2026
+L220@P9: Lista de Candidatos
+L221@P9: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L222@P9: 2 Year Term
+L223@P9: Período de 2 Años
+L224@P9: Vote for Not More Than 1
+L225@P9: Vote por No Más De 1
+L226@P9: For State Representative
+L227@P9: (16th District)
+L228@P9: Para Representante del Estado
+L229@P9: (Distrito 16)
+L230@P9: House District 16 Cámara De Distrito 16
+L231@P9: Scott DiMauro Democratic | Demóc 12/18/2025 Yes | Sí rata
+L232@P9: Sophia Tjotjos Republican | Republicana 2/2/2026 Yes | Sí
+L233@P9: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L234@P9: 2 Year Term
+L235@P9: Período de 2 Años
+L236@P9: Vote for Not More Than 1
+L237@P9: Vote por No Más De 1
+L238@P9: For State Representative
+L239@P9: (17th District)
+L240@P9: Para Representante del Estado
+L241@P9: (Distrito 17)
+L242@P9: House District 17 Cámara De Distrito 17
+L243@P9: Megan Coy Democratic | Demóc 1/8/2026 Yes | Sí rata
+L244@P9: Mike Dovilla Republican | Republicana 1/27/2026 Yes | Sí
+L245@P9-10: 10 / 25Cuyahoga County Board of Elections
+L246@P10: November 3, 2026 General Election
+L247@P10: Candidate List
+L248@P10: Junta Electoral del Condado de Cuyahoga
+L249@P10: Elección General del 3 de noviembre de 2026
+L250@P10: Lista de Candidatos
+L251@P10: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L252@P10: 2 Year Term
+L253@P10: Período de 2 Años
+L254@P10: Vote for Not More Than 1
+L255@P10: Vote por No Más De 1
+L256@P10: For State Representative
+L257@P10: (18th District)
+L258@P10: Para Representante del Estado
+L259@P10: (Distrito 18)
+L260@P10: House District 18 Cámara De Distrito 18
+L261@P10: Davida Russell Democratic | Demóc 2/2/2026 Yes | Sí rata
+L262@P10: Maureen Lynn Republican | Republicana 2/4/2026 Yes | Sí
+L263@P10: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L264@P10: 2 Year Term
+L265@P10: Período de 2 Años
+L266@P10: Vote for Not More Than 1
+L267@P10: Vote por No Más De 1
+L268@P10: For State Representative
+L269@P10: (19th District)
+L270@P10: Para Representante del Estado
+L271@P10: (Distrito 19)
+L272@P10: House District 19 Cámara De Distrito 19
+L273@P10: Nicole Sigurdson Democratic | Demóc 12/19/2025 Yes | Sí rata
+L274@P10: Ed Hargate Republican | Republicana 4/22/2026 Yes | Sí
+L275@P10-11: 11 / 25Cuyahoga County Board of Elections
+L276@P11: November 3, 2026 General Election
+L277@P11: Candidate List
+L278@P11: Junta Electoral del Condado de Cuyahoga
+L279@P11: Elección General del 3 de noviembre de 2026
+L280@P11: Lista de Candidatos
+L281@P11: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L282@P11: 2 Year Term
+L283@P11: Período de 2 Años
+L284@P11: Vote for Not More Than 1
+L285@P11: Vote por No Más De 1
+L286@P11: For State Representative
+L287@P11: (20th District)
+L288@P11: Para Representante del Estado
+L289@P11: (Distrito 20)
+L290@P11: House District 20 Cámara De Distrito 20
+L291@P11: Eugene Miller Democratic | Demóc 2/3/2026 Yes | Sí rata
+L292@P11: Donna Walker-Brown 2/4/2026 Withdrawn 6/2/2026
+L293@P11: Retirado 6/2/2026
+L294@P11: Republican | Republicana
+L295@P11: Teri Wang 5/4/2026 Removed by Board action |
+L296@P11: Eliminado por acción de la
+L297@P11: Junta
+L298@P11: Nonpartisan | No Partidista
+L299@P11: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L300@P11: 2 Year Term
+L301@P11: Período de 2 Años
+L302@P11: Vote for Not More Than 1
+L303@P11: Vote por No Más De 1
+L304@P11: For State Representative
+L305@P11: (21th District)
+L306@P11: Para Representante del Estado
+L307@P11: (Distrito 21)
+L308@P11: House District 21 Cámara De Distrito 21
+L309@P11: Eric Synenberg Democratic | Demóc 12/19/2025 Yes | Sí rata
+L310@P11: Tina Barhams Republican | Republicana 2/11/2026 Yes | Sí
+L311@P11-12: 12 / 25Cuyahoga County Board of Elections
+L312@P12: November 3, 2026 General Election
+L313@P12: Candidate List
+L314@P12: Junta Electoral del Condado de Cuyahoga
+L315@P12: Elección General del 3 de noviembre de 2026
+L316@P12: Lista de Candidatos
+L317@P12: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L318@P12: 2 Year Term
+L319@P12: Período de 2 Años
+L320@P12: Vote for Not More Than 1
+L321@P12: Vote por No Más De 1
+L322@P12: For State Representative
+L323@P12: (22nd District)
+L324@P12: Para Representante del Estado
+L325@P12: (Distrito 22)
+L326@P12: House District 22 Cámara De Distrito 22
+L327@P12: Darnell T. Brewer Democratic | Demóc 12/30/2025 Yes | Sí rata
+L328@P12: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L329@P12: 2 Year Term
+L330@P12: Período de 2 Años
+L331@P12: Vote for Not More Than 1
+L332@P12: Vote por No Más De 1
+L333@P12: For State Representative
+L334@P12: (23rd District)
+L335@P12: Para Representante del Estado
+L336@P12: (Distrito 23)
+L337@P12: House District 23 Cámara De Distrito 23
+L338@P12: Daniel P. Troy Democratic | Demóc 2/4/2026 Yes | Sí rata
+L339@P12: Julie A. Belich Republican | Republicana 2/4/2026 Yes | Sí
+L340@P12-13: 13 / 25Cuyahoga County Board of Elections
+L341@P13: November 3, 2026 General Election
+L342@P13: Candidate List
+L343@P13: Junta Electoral del Condado de Cuyahoga
+L344@P13: Elección General del 3 de noviembre de 2026
+L345@P13: Lista de Candidatos
+L346@P13: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L347@P13: 4 Year Term
+L348@P13: Período de 4 Años
+L349@P13: Vote for Not More Than 1
+L350@P13: Vote por No Más De 1
+L351@P13: For County Executive Para Ejecutivo del Condado
+L352@P13: County Wide District Distrito A Nivel De Condado
+L353@P13: Chris Ronayne Democratic | Demóc 12/23/2025 Yes | Sí rata
+L354@P13: Christopher Michael Litwinowicz Nonpartisan | No Partidista 8/5/2026 Yes - Write-In | Sí - Por Escrito
+L355@P13: Tariq K. Shabazz 5/4/2026 Removed by Board action |
+L356@P13: Eliminado por acción de la
+L357@P13: Junta
+L358@P13: Nonpartisan | No Partidista
+L359@P13: Tariq K. Shabazz 8/24/2026 Removed by Board action |
+L360@P13: Eliminado por acción de la
+L361@P13: Junta
+L362@P13: Nonpartisan | No Partidista
+L363@P13-14: 14 / 25Cuyahoga County Board of Elections
+L364@P14: November 3, 2026 General Election
+L365@P14: Candidate List
+L366@P14: Junta Electoral del Condado de Cuyahoga
+L367@P14: Elección General del 3 de noviembre de 2026
+L368@P14: Lista de Candidatos
+L369@P14: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L370@P14: 4 Year Term
+L371@P14: Período de 4 Años
+L372@P14: Vote for Not More Than 1
+L373@P14: Vote por No Más De 1
+L374@P14: For Member of County Council
+L375@P14: (District 1)
+L376@P14: Para Miembro del Consejo del Condado
+L377@P14: (Distrito 1)
+L378@P14: County Council District 01 Consejo Del Condado Distrito 01
+L379@P14: Patrick Kelly Democratic | Demóc 12/22/2025 Yes | Sí rata
+L380@P14: James M. Trutko Republican | Republicana 2/4/2026 Yes | Sí
+L381@P14: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L382@P14: 4 Year Term
+L383@P14: Período de 4 Años
+L384@P14: Vote for Not More Than 1
+L385@P14: Vote por No Más De 1
+L386@P14: For Member of County Council
+L387@P14: (District 3)
+L388@P14: Para Miembro del Consejo del Condado
+L389@P14: (Distrito 3)
+L390@P14: County Council District 03 Consejo Del Condado Distrito 03
+L391@P14: Martin J. Sweeney Democratic | Demóc 1/15/2026 Yes | Sí rata
+L392@P14-15: 15 / 25Cuyahoga County Board of Elections
+L393@P15: November 3, 2026 General Election
+L394@P15: Candidate List
+L395@P15: Junta Electoral del Condado de Cuyahoga
+L396@P15: Elección General del 3 de noviembre de 2026
+L397@P15: Lista de Candidatos
+L398@P15: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L399@P15: 4 Year Term
+L400@P15: Período de 4 Años
+L401@P15: Vote for Not More Than 1
+L402@P15: Vote por No Más De 1
+L403@P15: For Member of County Council
+L404@P15: (District 5)
+L405@P15: Para Miembro del Consejo del Condado
+L406@P15: (Distrito 5)
+L407@P15: County Council District 05 Consejo Del Condado Distrito 05
+L408@P15: Courtney Scheff Democratic | Demóc 1/27/2026 Yes | Sí rata
+L409@P15: Michael J. Gallagher Republican | Republicana 1/29/2026 Yes | Sí
+L410@P15: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L411@P15: 4 Year Term
+L412@P15: Período de 4 Años
+L413@P15: Vote for Not More Than 1
+L414@P15: Vote por No Más De 1
+L415@P15: For Member of County Council
+L416@P15: (District 7)
+L417@P15: Para Miembro del Consejo del Condado
+L418@P15: (Distrito 7)
+L419@P15: County Council District 07 Consejo Del Condado Distrito 07
+L420@P15: Yvonne M. Conwell Democratic | Demóc 1/13/2026 Yes | Sí rata
+L421@P15: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L422@P15: 4 Year Term
+L423@P15: Período de 4 Años
+L424@P15: Vote for Not More Than 1
+L425@P15: Vote por No Más De 1
+L426@P15: For Member of County Council
+L427@P15: (District 9)
+L428@P15: Para Miembro del Consejo del Condado
+L429@P15: (Distrito 9)
+L430@P15: County Council District 09 Consejo Del Condado Distrito 09
+L431@P15: Meredith M. Turner Democratic | Demóc 12/22/2025 Yes | Sí rata
+L432@P15-16: 16 / 25Cuyahoga County Board of Elections
+L433@P16: November 3, 2026 General Election
+L434@P16: Candidate List
+L435@P16: Junta Electoral del Condado de Cuyahoga
+L436@P16: Elección General del 3 de noviembre de 2026
+L437@P16: Lista de Candidatos
+L438@P16: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L439@P16: 4 Year Term
+L440@P16: Período de 4 Años
+L441@P16: Vote for Not More Than 1
+L442@P16: Vote por No Más De 1
+L443@P16: For Member of County Council
+L444@P16: (District 11)
+L445@P16: Para Miembro del Consejo del Condado
+L446@P16: (Distrito 11)
+L447@P16: County Council District 11 Consejo Del Condado Distrito 11
+L448@P16: Christine McIntosh Democratic | Demóc 1/22/2026 Yes | Sí rata
+L449@P16: William McLaughlin Republican | Republicana 2/4/2026 Yes | Sí
+L450@P16: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L451@P16: 6 Year Term
+L452@P16: Período de 6 Años
+L453@P16: Vote for Not More Than 1
+L454@P16: Vote por No Más De 1
+L455@P16: For Justice of the Supreme Court
+L456@P16: (Full Term Commencing 1/1/2027)
+L457@P16: Para Juez del Tribunal Supremo
+L458@P16: (Período Completo que Comienza el 1/1/27)
+L459@P16: County Wide District Distrito A Nivel De Condado
+L460@P16: Marilyn Zayas Democratic | Demóc 2/4/2026 Yes | Sí rata
+L461@P16: Daniel R. Hawkins Republican | Republicana 2/4/2026 Yes | Sí
+L462@P16-17: 17 / 25Cuyahoga County Board of Elections
+L463@P17: November 3, 2026 General Election
+L464@P17: Candidate List
+L465@P17: Junta Electoral del Condado de Cuyahoga
+L466@P17: Elección General del 3 de noviembre de 2026
+L467@P17: Lista de Candidatos
+L468@P17: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L469@P17: 6 Year Term
+L470@P17: Período de 6 Años
+L471@P17: Vote for Not More Than 1
+L472@P17: Vote por No Más De 1
+L473@P17: For Justice of the Supreme Court
+L474@P17: (Full Term Commencing 1/2/2027)
+L475@P17: Para Juez del Tribunal Supremo
+L476@P17: (Período Completo que Comienza el 1/2/2027)
+L477@P17: County Wide District Distrito A Nivel De Condado
+L478@P17: Jennifer Brunner Democratic | Demóc 2/4/2026 Yes | Sí rata
+L479@P17: Colleen O'Donnell Republican | Republicana 2/4/2026 Yes | Sí
+L480@P17: Candidate Name | Nombre del Candidato Party | Partido Filed | Presentada Valid | Válido
+L481@P17: 6 Year Term
+L482@P17: Período de 6 Años
+L483@P17: Vote for Not More Than 1
+

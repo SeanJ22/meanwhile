@@ -1,0 +1,1751 @@
+{
+  "doorId": "tx-el-paso-early-voting-2026",
+  "sites": [
+    {
+      "id": "voting-ca26254de77f367698ffced7",
+      "name": "Agua Dulce Community Center",
+      "address": "15371 Kentwood Ave. 79928",
+      "room": "Classroom B",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7f2317b33cdad5cbd12837fb",
+      "name": "Arlington Park Shelter",
+      "address": "10350 Pasadena Cir. 79924",
+      "room": "Main Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bcfe463c8fd4f04885c571ad",
+      "name": "Bassett Place",
+      "address": "6101 Gateway West 79925",
+      "room": "Next to Claire's",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-90df36fe555a716d0bc01f0a",
+      "name": "Canutillo Nutrition Center",
+      "address": "7351 Bosque Rd. 79835",
+      "room": "Exercise Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-098c68de6b06c464118e6cbb",
+      "name": "Carl L. Robinson Heat Retreat",
+      "address": "5509 Will Ruth Ave. 79924",
+      "room": "The People's Place",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8dcea1b4b6d97e19a7cf49dc",
+      "name": "Chayo Apodaca Community Center",
+      "address": "341 N. Moon Rd. 79927",
+      "room": "Community Center",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-243fe388d2a25b1d820d7a08",
+      "name": "City of San Elizario Municipal Court",
+      "address": "12004 Socorro Rd. Suite B, 79849",
+      "room": "Council Chambers",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-91cff505cb1f37744c5273ee",
+      "name": "Clint Junior High School",
+      "address": "12625 Alameda Ave. 79836",
+      "room": "Library Conference Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0410860bc411d11c4ff6c290",
+      "name": "Commissioner's Corner",
+      "address": "10700 Montana Ave. 79936",
+      "room": "Community Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ee461e3f16f026ab52b19edf",
+      "name": "Dorris Van Doren Library",
+      "address": "551 Redd Rd. 79912",
+      "room": "Multipurpose Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3eb8190e467a9a5f2f40f80f",
+      "name": "EPCC Administrative Services Center",
+      "address": "9050 Viscount Blvd. 79925",
+      "room": "A-Building Foyer",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6ae4870ed0253cd860e47645",
+      "name": "EPCC Transmountain Campus",
+      "address": "9570 Gateway North Blvd. 79924",
+      "room": "Pit, Next to the Union",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0b0d36b8419c27db346ee307",
+      "name": "El Paso County Eastside Annex",
+      "address": "2350 George Dieter Dr. 79936",
+      "room": "Community Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6d68765a27a4ba4c2c8e8f90",
+      "name": "El Paso County Northwest Annex",
+      "address": "435 E. Vinton Rd. 79821",
+      "room": "Community Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bc8f1ea406487b78f39e892b",
+      "name": "Enrique Moreno County Courthouse - Main Early Voting Location",
+      "address": "500 E. San Antonio Ave. 79901",
+      "room": "Third Floor, Back Lobby",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-cbd1f52f985e13a67521ebdc",
+      "name": "Esperanza Acosta Moreno Library",
+      "address": "12480 Pebble Hills Blvd. 79938",
+      "room": "Meeting Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e247d6b4795096a564277864",
+      "name": "Fabens Community Center",
+      "address": "201 NW Camp St. 79838",
+      "room": "Pool Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d815bae0456ff0998a6abedb",
+      "name": "Gary del Palacio Recreation Center",
+      "address": "3001 Parkwood St. 79925",
+      "room": "Multipurpose Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-60a97407967c57e512186735",
+      "name": "Gonzalez Place",
+      "address": "4101 Rich Beem Blvd. 79938",
+      "room": "Community Room",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-dcbf184412ceb73d99b68040",
+      "name": "Hilos de Plata Senior Center",
+      "address": "4451 Delta Dr. 79905",
+      "room": "Classroom",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ec92b5d3169177ac67b0ee65",
+      "name": "Kennedy Brothers Memorial Recreation Center",
+      "address": "400 S Zaragoza Rd. 79907",
+      "room": "Kennedy Gym",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0182c9d79b5a4b0247345e40",
+      "name": "La Fe Montana Vista Community Center",
+      "address": "14618 Greg Dr. 79938",
+      "room": "Auditorium",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8aa4217485d0d81b118fbe93",
+      "name": "Marty Robbins Recreation Center",
+      "address": "11620 Vista Del Sol Dr. 79936",
+      "room": "Lobby",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f64e6fb18457c17a211dcd1f",
+      "name": "Memorial Park Senior Citizen Center",
+      "address": "1800 Byron St. 79930",
+      "room": "Classroom",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-938cf34aa92d39e57bb5428c",
+      "name": "Mountain View-Rae Gilmore Recreation Center",
+      "address": "8501 Diana Dr. 79904",
+      "room": "Classroom",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-19722d6e577c5f32223e5352",
+      "name": "Nations Tobin Sports Center",
+      "address": "8831 Railroad Dr. 79904",
+      "room": "Small Rink",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5a7581dbd81035431cffe6d2",
+      "name": "Officer David Ortiz Recreation Center",
+      "address": "563 N. Carolina Dr. 79915",
+      "room": "Classroom A",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-df3d3465808e6749eecec095",
+      "name": "Oz Glaze Senior Center",
+      "address": "13969 Veny Webb St. 79928",
+      "room": "Main Dining Area",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a23b016eb924b78d5b64241d",
+      "name": "Pebble Hills High School",
+      "address": "14400 Pebble Hills Blvd. 79938",
+      "room": "Auditorium Foyer",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d9c5d3b8c96082014b1f89c1",
+      "name": "SISD District Service Center",
+      "address": "12440 Rojas Dr. 79928",
+      "room": "TSC Library",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5425e2ed672d1a0c54c5b830",
+      "name": "South El Paso Senior Center",
+      "address": "600 S. Ochoa St. 79901",
+      "room": "Classroom",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-fbcb79a287f1d683f6b43025",
+      "name": "The Shoppes at Solana",
+      "address": "750 Sunland Park Dr. 79912",
+      "room": "By the Food Court, Next to Book Nook",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-849e1e26d06d1dc616ca0878",
+      "name": "UTEP-Union Building East",
+      "address": "351 W. University Ave. 79968",
+      "room": "River View Room 102H",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c52fc9025f28a191d2aae88b",
+      "name": "W.E. Neill Community Center",
+      "address": "19210 Cobb Ave. 79853",
+      "room": "Library",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-635c4599e096971ef313efca",
+      "name": "Wayne Thornton Community Center at Grandview",
+      "address": "3134 Jefferson Ave. 79930",
+      "room": "Classroom",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3d3381e800f303d1e84848d3",
+      "name": "Wellington Chew Senior Center",
+      "address": "4430 Maxwell Ave. 79904",
+      "room": "Classroom",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bd12f636d66697942cea32a7",
+      "name": "Western Technical College-Northeast",
+      "address": "9451 Diana Dr. 79924",
+      "room": "Classroom 400",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-012a2c335c4183dd9722c8ea",
+      "name": "YWCA-Central",
+      "address": "1600 Brown St. Bldg. A, 79902",
+      "room": "Program Offices",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-120408b29f448003dc37babd",
+      "name": "YWCA-West",
+      "address": "313 Bartlett Dr. 79912",
+      "room": "Program Offices",
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "November 2026 General & Special Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+          "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+          "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+          "checkedAt": "2026-10-21T04:46:41.064Z",
+          "official": true,
+          "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+          "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+        }
+      ],
+      "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+      "countyFips": "48141",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+            "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+            "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+            "checkedAt": "2026-10-21T04:46:41.064Z",
+            "official": true,
+            "documentHash": "2e56fe1651a268cb37d197ea7e8686d6ca658a5ef8a4bd01e16f2285c26c9386",
+            "documentUrl": "https://epcountyvotestx.gov/voter-information/early-voting-locations"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+      "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+      "title": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+      "checkedAt": "2026-10-21T04:46:41.064Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://epcountyvotestx.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://epcountyvotestx.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt CANNOT_TELL for /voter-information/early-voting-locations: robots.txt answered HTTP 200 with a body carrying no robots directive at all; not robots-shaped, so recorded as unread — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "fileTitle": "Early Voting Locations - El Paso County, TX Elections | El Paso County Elections Department",
+  "contacts": []
+}

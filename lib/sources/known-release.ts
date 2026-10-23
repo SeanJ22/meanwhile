@@ -10,6 +10,8 @@ import { researchVaultResolver } from "../control-plane/workers/vault-object.ts"
 import { SourceAcquisitionFailure, isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { readCompleteResponse } from "./source-bytes.ts";
 import { sourceUserAgent } from "./http.ts";
+import { SOURCE_CHECK_AFTER_ENV } from "./source-check-request.ts";
+export { SOURCE_CHECK_AFTER_ENV } from "./source-check-request.ts";
 
 export interface KnownRelease {
   readonly sourceId: string;
@@ -55,6 +57,8 @@ interface ReleaseIndex extends Omit<KnownRelease, "bytes" | "reused"> {
   readonly parsers: readonly string[];
 }
 export interface KnownReleaseOptions {
+  /** A requested check must observe the publisher after this instant, even inside the normal cache interval. Defaults to the runner's request. */
+  readonly checkedAfter?: string;
   readonly sourceId: string;
   readonly releaseId: string;
   readonly url: string;
@@ -73,6 +77,10 @@ export interface KnownReleaseOptions {
   readonly readHeld?: () => Promise<KnownRelease | null>;
   /** Full source shape/archive validation must finish before advancing the index. */
   readonly validate?: (bytes: Uint8Array, release: KnownRelease) => void | Promise<void>;
+}
+function requestedSourceCheckAfter(): string | undefined {
+  const value = process.env[SOURCE_CHECK_AFTER_ENV];
+  return value && Number.isFinite(Date.parse(value)) ? value : undefined;
 }
 const hash = (bytes: Uint8Array | string) => createHash("sha256").update(bytes).digest("hex");
 const pending = new WeakMap<EvidenceStore, Map<string, Promise<KnownRelease>>>();
@@ -185,6 +193,8 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
   // The first caller shares transport; each caller still checks its own
   // parser revision and limits against the resulting held release.
   if (waiting) { await waiting; return acquireKnownRelease(options); }
+  const checkedAfter = options.checkedAfter ?? requestedSourceCheckAfter();
+  const observedSinceRequest = (checkedAt: string) => checkedAfter === undefined || Date.parse(checkedAt) >= Date.parse(checkedAfter);
   const work = withKnownReleaseLock(locks, `source-release:${identity}`, options.signal, async () => {
     options.signal.throwIfAborted();
     const now = options.now?.() ?? new Date().toISOString();
@@ -234,13 +244,15 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
         await options.validate?.(inherited.bytes, inherited);
         // Deliver already held evidence first. Its old source check remains
         // due; the next invocation can perform the conditional refresh.
-        return await save({ ...inherited, reused: true }, [options.parserVersion]);
+        const saved = await save({ ...inherited, reused: true }, [options.parserVersion]);
+        if (observedSinceRequest(saved.checkedAt)) return saved;
+        heldBytes = saved.bytes;
       }
     }
     if (prior && heldBytes) {
       const replay = { ...prior, bytes: heldBytes, reused: true };
       const parserChanged = !prior.parsers.includes(options.parserVersion);
-      if (parserChanged || !options.refresh && Date.parse(now) - Date.parse(prior.checkedAt) < options.checkAfterMs) {
+      if (observedSinceRequest(prior.checkedAt) && (parserChanged || !options.refresh && Date.parse(now) - Date.parse(prior.checkedAt) < options.checkAfterMs)) {
         if (parserChanged) await options.validate?.(heldBytes, replay);
         if (parserChanged) await writeIndex({ ...prior, parsers: [...prior.parsers, options.parserVersion] });
         return replay;

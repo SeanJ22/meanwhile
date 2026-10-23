@@ -22,6 +22,8 @@ import { normalizeWithDrops as normalizeLegistar } from "../../sources/legistar/
 import { legistarClientsFromWiring } from "../../sources/legistar/client-registry.ts";
 import type { LegistarEvent } from "../../sources/legistar/types.ts";
 import type { Meeting } from "../../sources/types.ts";
+import { heldInSiteCalendar, normalizeWithDrops as normalizeInSite } from "../../sources/legistar-insite/index.ts";
+import { inSiteTenantsFromWiring } from "../../sources/legistar-insite/tenant-registry.ts";
 import { sameRoute, type WiringVerification } from "./derived-wiring.ts";
 
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
@@ -66,11 +68,13 @@ export async function readHeldCalendars(input: {
   }
   const verifications = new Map<string, WiringVerification>();
   const pages=input.readings.flatMap(reading=>[...(reading.linkingPages ?? []),...('unreadable' in reading.held?[]:[{canonicalUrl:reading.row.route,text:reading.held.text}])]);
-  for (const reading of input.readings) verifications.set(reading.key, await readOne({...reading,linkingPages:pages}, input.now, input.adapterDigest));
+  for (const reading of input.readings) verifications.set(reading.key, await readHeldCalendar({...reading,linkingPages:pages}, input.now, input.adapterDigest));
   return { kind: "READ", verifications };
 }
 
-async function readOne(reading: HeldCalendarReading, now: string, adapterDigest: (kind: DerivedWiringKind) => string): Promise<WiringVerification> {
+/** Runs the existing adapter on one saved response. The canonical venue projection must already be initialized. */
+export async function readHeldCalendar(reading: HeldCalendarReading, now: string, adapterDigest: (kind: DerivedWiringKind) => string,
+  onMeetings?: (meetings: readonly Meeting[]) => void): Promise<WiringVerification> {
   const { row } = reading;
   if ("unreadable" in reading.held) return { refused: `the vaulted bytes could not be read: ${reading.held.unreadable}` };
   const { text, contentType } = reading.held;
@@ -97,6 +101,9 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
       meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
+    } else if (row.kind === "LEGISTAR_INSITE") {
+      const tenants = inSiteTenantsFromWiring([wiring]);
+      meetings = normalizeInSite([heldInSiteCalendar({ html: text, url: row.route, retrievedAt: reading.evidence.retrievedAt, slug: wiring.config.slug })], new Date(now), tenants).meetings;
     } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "MUNICODE", "SWAGIT", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "PRIMEGOV"].includes(row.kind)) {
       // The exact retained route is the adapter's input. Running its fetch
       // here would ask for additional URLs whose bytes were never vaulted.
@@ -147,7 +154,9 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
   const emptyBody = total === 0 && ((row.kind === "LEGISTAR" && /^\d+$/.test(row.config.eventBodyId)) || (row.kind === "BOARDDOCS" && row.config.committeeId) || (row.kind === "CIVICCLERK" && row.config.bodyMatch && /eventCategoryId eq \d+/.test(new URL(row.route).searchParams.get("$filter") ?? "")));
   if (own.length === 0 && !emptyBody) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
   const name = row.bodyName.toLowerCase();
-  const foreign = own.find((m) => !m.title.toLowerCase().includes(name) && reading.others.some((o) => m.title.toLowerCase().includes(o.toLowerCase())));
+  // A native body selector owns the event even when its comment names a joint hearing's other committee.
+  const nativeBody = row.kind === "LEGISTAR" && /^\d+$/.test(row.config.eventBodyId);
+  const foreign = nativeBody ? undefined : own.find((m) => !m.title.toLowerCase().includes(name) && reading.others.some((o) => m.title.toLowerCase().includes(o.toLowerCase())));
   if (foreign !== undefined) {
     return { wrongAttribution: `"${foreign.title}" (${foreign.startsAt}) names another reviewed body of ${row.jurisdictionId}, not ${row.bodyName}` };
   }
@@ -158,5 +167,6 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
     sittings: own.length,
     evidence: reading.evidence,
   };
+  onMeetings?.(own);
   return { verified, selected: own.map((m) => `${m.startsAt}|${m.title}`) };
 }

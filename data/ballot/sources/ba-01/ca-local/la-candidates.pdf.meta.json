@@ -1,0 +1,13 @@
+{
+  "url": "https://content.lavote.gov/docs/rrcc/documents/final-list-of-qualified-candidates-to-appear-on-the-ballot9fcf3b64-1a33-4882-9e17-8cbc3b3c8d76.pdf",
+  "finalUrl": "https://content.lavote.gov/docs/rrcc/documents/final-list-of-qualified-candidates-to-appear-on-the-ballot9fcf3b64-1a33-4882-9e17-8cbc3b3c8d76.pdf",
+  "retrievedAt": "2026-10-21T00:55:25.475251+00:00",
+  "httpStatus": 200,
+  "rawHash": "49f9f856430dd121ce4fdfa9b1b7e99291076656724a9ff842b9aff0378de539",
+  "file": "la-candidates.pdf.gz",
+  "extractedText": {
+    "file": "la-candidates.txt",
+    "sha256": "a683a3eda7ec3cf82f1559888b987a5f7bbc17ed99c7e639a9ed6a073fd1a06d",
+    "command": "pdftotext -layout la-candidates.pdf la-candidates.txt"
+  }
+}

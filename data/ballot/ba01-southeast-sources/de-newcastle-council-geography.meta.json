@@ -1,0 +1,8 @@
+{
+  "url": "https://gis.nccde.org/entserver/rest/services/Initiatives/County_Council/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://gis.nccde.org/entserver/rest/services/Initiatives/County_Council/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:28:54.979014+00:00",
+  "rawHash": "18e70c9ff5759e17b395349f1d483682d5f3c0e967756074e8a4e6efaf786d31",
+  "bytes": 842224
+}

@@ -1,7 +1,8 @@
 import { readFile } from "node:fs/promises";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { join } from "node:path";
 import { setImmediate as yieldToReaders } from "node:timers/promises";
-import { readPromotedCivicDataBatch, CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
+import { readPromotedCivicDataBatch, CivicDataStoreUnavailableError, type CivicDataReadStore } from "../civic-data/read-model.ts";
 import { readCanonicalShelf } from "./canonical.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { REGISTRY_STATES, requireRegistryState } from "../civic-data/state-scopes.ts";
@@ -10,9 +11,10 @@ import { federalDirectoryScope, federalDirectoryProjectionIssues, type FederalDi
 import type { OfficeholderSet } from "../officials/types.ts";
 import type { ZipDivisionEntry } from "../geo/zip-division-index.ts";
 import { postalArea, postalTable } from "../geo/postal.ts";
-import { isTownOrCountyDivision } from "../geo/postal-core.ts";
+import { isTownOrCountyDivision, postalAreaNeedsAddress } from "../geo/postal-core.ts";
 import { readerMemory, serverReaderValue } from "./memory.ts";
-import { indexedZipDivisionEntry } from "../geo/zip-division-index.ts";
+import { indexedZipDivisionEntry, shardEntry, type ZipDivisionShard } from "../geo/zip-division-index.ts";
+import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 export { readerMemory } from "./memory.ts";
 
 export interface NationalShelf {
@@ -23,20 +25,19 @@ export interface NationalShelf {
   readonly version: string;
 }
 
-type ZipShard = { divisions: string[]; zips: Record<string, number[]>; partial: Record<string, number[]>; zipSamples: Record<string, number> };
 const stateZipPlaces = serverReaderValue("state-zip-places", () => ({ value: new Map<string, ReadonlyMap<string, ZipDivisionEntry>>() }));
 
 /** A place lookup reads its ZIP shard and postal alias, without opening the national index. */
 export async function readZipPlace(zip: string): Promise<ZipDivisionEntry | null> {
   const own = await indexedZipDivisionEntry(zip), area = postalArea(zip);
-  if (own && (!area || area.type === "standard")) return own;
+  if (own && !postalAreaNeedsAddress(zip, area)) return own;
   const baseZip = area?.zcta ?? zip;
   // Match the national reader's postal pass: an earlier alias already has its postal restrictions.
   const order = serverReaderValue("postal-order", () => new Map(Object.keys(postalTable()).map((value, index) => [value, index])));
   const earlier = (order.get(baseZip) ?? Infinity) < (order.get(zip) ?? Infinity);
   const entry = baseZip === zip ? own : earlier ? await readZipPlace(baseZip) : await indexedZipDivisionEntry(baseZip);
   if (!entry) return own;
-  if (area && area.type !== "standard") {
+  if (postalAreaNeedsAddress(zip, area)) {
     const ids = entry.ids.filter(isTownOrCountyDivision);
     return { ids, partial: ids.filter(id => id.split("/").length > 3), samples: 0 };
   }
@@ -48,7 +49,7 @@ export const readZipPlaces = serverReaderValue("zip-places", () => readerMemory(
   const names = [...new Set(Object.values(manifest.statesToShards).flat())].sort();
   const shards = await Promise.all(names.map(async name => {
     if (!/^\d{2}$/.test(name)) throw new Error("ZIP_PLACE_SHARD_INVALID");
-    return JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${name}.json`), "utf8")) as ZipShard;
+    return JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", `${name}.json`), "utf8")) as ZipDivisionShard;
   }));
   const out = new Map<string, ZipDivisionEntry>();
   const byState = new Map<string, Map<string, ZipDivisionEntry>>();
@@ -65,19 +66,9 @@ export const readZipPlaces = serverReaderValue("zip-places", () => readerMemory(
     }
   };
   for (const shard of shards) {
-    const partialDivision = shard.divisions.map(id => !/^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(id));
-    const divisionStates = shard.divisions.map(divisionState);
     for (const zip in shard.zips) {
-      const refs = shard.zips[zip];
-      const ids: string[] = [], partial: string[] = [], states: string[] = [];
-      for (const index of refs) {
-        const id = shard.divisions[index];
-        ids.push(id);
-        if (partialDivision[index]) partial.push(id);
-        const state = divisionStates[index];
-        if (state && !states.includes(state)) states.push(state);
-      }
-      put(zip, { ids, partial, samples: shard.zipSamples[zip] ?? 0 }, states);
+      const entry = shardEntry(shard, zip)!;
+      put(zip, entry, touchedStates(entry.ids));
     }
     // Build the resident table without blocking HTML and place requests behind the whole country.
     await yieldToReaders();
@@ -89,7 +80,7 @@ export const readZipPlaces = serverReaderValue("zip-places", () => readerMemory(
     const row = postal[zip];
     const base = out.get(row[3] ?? zip);
     if (!base) continue;
-    if (row[2] !== "standard") {
+    if (postalAreaNeedsAddress(zip, { type: row[2], zcta: row[3] })) {
       const ids = base.ids.filter(isTownOrCountyDivision);
       put(zip, { ids, partial: ids.filter(id => id.split("/").length > 3), samples: 0 }, touchedStates(ids));
     } else if (!out.has(zip)) put(zip, base, touchedStates(base.ids));
@@ -109,28 +100,31 @@ export function stateForZip(zip: string): string | null {
   return /^\d{5}$/.test(zip) ? postalArea(zip)?.state || null : null;
 }
 
-/** A historical President remains retrievable without being presented as the current holder. */
+/** Current national executive memberships (the President, the Vice President and the Cabinet); historical holders remain retrievable separately. */
 export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet | null {
-  const countryLinks = roster.divisions.filter(link => link.ocdId === "ocd-division/country:us");
-  const currentIds = new Set(countryLinks.filter(link => {
-    const holder = roster.officeholders.find(person => person.id === link.officeholderId);
-    return holder && (!link.membershipId || holder.memberships?.find(membership => membership.id === link.membershipId)?.current !== false);
-  }).map(link => link.officeholderId));
-  const officeholders = roster.officeholders.filter(holder => currentIds.has(holder.id) && /^President(?: of the United States)?$/i.test(holder.officeTitle));
-  if (!officeholders.length) return null;
-  const ids = new Set(officeholders.map(holder => holder.id));
-  return { ...roster, officeholders, divisions: countryLinks.filter(link => ids.has(link.officeholderId)), unmatched: roster.unmatched.filter(row => ids.has(row.officeholderId)) };
+  const byId = new Map(roster.officeholders.map(person => [person.id, person]));
+  const links = roster.divisions.filter(link => {
+    const holder = link.ocdId === "ocd-division/country:us" ? byId.get(link.officeholderId) : undefined;
+    const membership = link.membershipId ? holder?.memberships?.find(row => row.id === link.membershipId) : undefined;
+    return holder && membership?.current !== false && whiteHouseOffice(membership?.officeTitle ?? holder.officeTitle) !== null;
+  });
+  const ids = new Set(links.map(link => link.officeholderId));
+  if (!ids.size) return null;
+  return { ...roster, officeholders: roster.officeholders.filter(holder => ids.has(holder.id)), divisions: links, unmatched: roster.unmatched.filter(row => ids.has(row.officeholderId)) };
 }
 
 /** The national roster is deliberately resident in each server, independent of runner publication copies. */
 const national = serverReaderValue("national-current", () => ({ value: null as NationalShelf | null }));
 export const currentNationalShelf = (): NationalShelf | null => national.value;
 
-/** A state needs the President immediately, independently of Congress's national directory load. */
-export const readNationalPresident = serverReaderValue("national-president", () => readerMemory(async (): Promise<OfficeholderSet | null> => {
-  const sources = ["statewide-executive-sources", "wikidata-people"];
-  const canonical = await readCanonicalShelf(sources.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) })));
-  const reads = await Promise.all(sources.map(source => readPeopleSourceProjection("US", source, { store: canonical })));
+/** States read the national executives independently of Congress's national directory load. */
+const presidentSources = ["statewide-executive-sources", "wikidata-people"];
+export const nationalPresidentPointers = () => presidentSources.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) }));
+const presidentContext = serverReaderValue("national-president-context", () => new AsyncLocalStorage<() => Promise<CivicDataReadStore>>());
+const residentPresident = serverReaderValue("national-president", () => readerMemory(async (): Promise<OfficeholderSet | null> => {
+  const supplied = presidentContext.getStore();
+  const canonical = await (supplied ? supplied() : readCanonicalShelf(nationalPresidentPointers()));
+  const reads = await Promise.all(presidentSources.map(source => readPeopleSourceProjection("US", source, { store: canonical })));
   const president = reads.flatMap(read => {
     if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return [];
     const roster = currentPresidentRoster(read.value.roster);
@@ -139,6 +133,11 @@ export const readNationalPresident = serverReaderValue("national-president", () 
   if (national.value) national.value = { ...national.value, president };
   return president;
 }));
+
+/** A state's existing batch can supply the national executives without opening another connection. */
+export function readNationalPresident(store?: () => Promise<CivicDataReadStore>): Promise<OfficeholderSet | null> {
+  return store ? presidentContext.run(store,residentPresident) : residentPresident();
+}
 
 export const readNationalShelf = serverReaderValue("national", () => readerMemory(async (): Promise<NationalShelf> => {
   const [canonical, places, president] = await Promise.all([

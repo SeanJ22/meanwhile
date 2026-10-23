@@ -76,7 +76,7 @@ test("terminal preparation stays scalar and serializes same-state origins before
   ];
   const running = new Set<string>(), settled: string[] = [];
   const actual = await reconcileNationalStatePointers({ query: async sql => { assert.ok(!sql.includes("p.payload")); return origins; },
-    env: { NODE_ENV: "test", DATABASE_URL: "postgres://fixture/retirement", WTP_CONTROL_PLANE_READS_DIR: directory,
+    env: { NODE_ENV: "test", DATABASE_URL: "postgres://fixture/retirement", WTP_CONTROL_PLANE_READS_DIR: "/var/lib/meanwhile/control-plane-reads",
       WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40) },
     slots: { async acquire(id) { assert.ok(!running.has(id!)); running.add(id!); return () => { running.delete(id!); }; } },
     launch: async command => {

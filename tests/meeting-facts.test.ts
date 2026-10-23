@@ -84,3 +84,34 @@ test("readers see each sitting with its live facts and the saved page every one 
   assert.deepEqual([seen!.fieldSources?.title?.sourceUrl, seen!.fieldSources?.startsAt?.quote], [FEED, "2026-05-12T00:00:00 1:00 PM"]);
   assert.deepEqual(withSittingFacts([first], []), [first], "with no facts the partition row stands");
 });
+
+test("platform meeting bodies and sittings retain their registered district or territory state", async () => {
+  for (const [state, division] of [["DC", "district:dc"], ["PR", "territory:pr"]]) {
+    const db = await factDb();
+    try {
+      const ocdId = `ocd-division/country:us/${division}`, bodyId = `government:US-${state}:cog:fixture#governing`;
+      await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Fixture place',$2)", [ocdId, state]);
+      const text = "BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Regular Council Meeting\nDTSTART;TZID=America/New_York:20260812T190000\nEND:VEVENT\nEND:VCALENDAR";
+      const meeting = { id: `ical:fixture:${state}`, ocdId, bodyId, bodyName: "Fixture Council", title: "Regular Council Meeting",
+        startsAt: "2026-08-12T19:00:00-04:00", timeZone: "America/New_York", location: null, agendaUrl: null,
+        provenance: { sourceUrl: "https://publisher.example.gov/calendar.ics", sourceOrg: "Fixture Government", collectedAt: NOW.toISOString(), verifiedAt: null } } as Meeting;
+      const report = await publishMeetingFacts(db, { meeting, capture: capture(text, meeting.provenance.sourceUrl!), producedBy: "platform-door" }, factClocks(null), NOW);
+      assert.equal(report.live, 2);
+      const rows = await db.query("SELECT id,state FROM entity WHERE id=ANY($1::text[]) ORDER BY id", [[bodyId, meetingEntityId(meeting.id)]]);
+      assert.equal(rows.length, 2); assert.ok(rows.every(row => row.state === state));
+    } finally { await db.pg.close(); }
+  }
+});
+
+test("sittings read after the pass began publish on the first pass", async () => {
+  const { publishReadMeetingFacts } = await import("../lib/civic-data/meeting-fact-publication.ts");
+  const db = await factDb();
+  await ensureFactEntities(db, ROOT, ["az"]);
+  const events = JSON.parse(bytes) as LegistarEvent[];
+  const { meetings } = normalizeWithDrops(events.map(event => ({ event, slug: "pima", collectedAt: NOW.toISOString(), items: null })), NOW);
+  const body = new TextEncoder().encode(bytes);
+  const response = { source: "legistar", requestedUrl: FEED, finalUrl: FEED, httpStatus: 200, rawHash: createHash("sha256").update(body).digest("hex"), byteCount: body.byteLength,
+    bytes: body, retrievedAt: "2026-08-12T22:30:00.000Z", contentType: "application/json" };
+  const report = await publishReadMeetingFacts({ facts: db, vault: new MemoryEvidenceStore(), meetings, responses: [response], producedBy: "door:legistar:pima", clocks: factClocks(null), now: NOW });
+  assert.ok(report.live > 0, "the bytes were read after the pass's start time and still publish");
+});

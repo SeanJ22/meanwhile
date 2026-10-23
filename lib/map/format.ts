@@ -181,6 +181,28 @@ export function formatDateMDY(iso: string): string {
  * reader's: the time they will be expected in the room.
  */
 
+type MeetingFormatters = {
+  weekday: Intl.DateTimeFormat;
+  date: Intl.DateTimeFormat;
+  time: Intl.DateTimeFormat;
+};
+const meetingFormatters = new Map<string, MeetingFormatters>();
+
+/** Grouping and drawing a list reuse the zone's compiled formats, never a meeting's values. */
+function formatsForZone(timeZone: string): MeetingFormatters {
+  const existing = meetingFormatters.get(timeZone);
+  if (existing) return existing;
+  const formats = {
+    weekday: new Intl.DateTimeFormat("en-US", { timeZone, weekday: "short" }),
+    date: new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }),
+    time: new Intl.DateTimeFormat("en-US", { timeZone, hour: "numeric", minute: "2-digit", timeZoneName: "short" }),
+  };
+  // A page normally uses a handful of zones; bound unusual mixed-source lists too.
+  if (meetingFormatters.size >= 64) meetingFormatters.delete(meetingFormatters.keys().next().value!);
+  meetingFormatters.set(timeZone, formats);
+  return formats;
+}
+
 export function formatMeetingDate(
   // Widened to the two fields it reads so other row types share this formatter.
   meeting: Pick<Meeting, "startsAt" | "timeZone">,
@@ -191,16 +213,9 @@ export function formatMeetingDate(
    * offset it carries and can land an evening meeting on the previous day.
    */
   const d = new Date(meeting.startsAt);
-  const weekday = new Intl.DateTimeFormat("en-US", {
-    timeZone: meeting.timeZone,
-    weekday: "short",
-  }).format(d);
-  const local = new Intl.DateTimeFormat("en-CA", {
-    timeZone: meeting.timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(d);
+  const formats = formatsForZone(meeting.timeZone);
+  const weekday = formats.weekday.format(d);
+  const local = formats.date.format(d);
   return `${weekday}, ${formatDateLong(local) ?? local}`;
 }
 
@@ -220,24 +235,13 @@ export function startTimeIsKnown(meeting: CalendarSafeMeeting): boolean {
  * `Intl` rather than sliced off the ISO string.
  */
 export function meetingLocalDate(meeting: CalendarSafeMeeting): string {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: meeting.timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date(meeting.startsAt));
-  return parts;
+  return formatsForZone(meeting.timeZone).date.format(new Date(meeting.startsAt));
 }
 
 export function formatMeetingTime(meeting: Meeting): string {
   // The single choke point for a meeting's clock.
   if (!startTimeIsKnown(meeting)) return TIME_NOT_POSTED;
-  return new Intl.DateTimeFormat("en-US", {
-    timeZone: meeting.timeZone,
-    hour: "numeric",
-    minute: "2-digit",
-    timeZoneName: "short",
-  }).format(new Date(meeting.startsAt));
+  return formatsForZone(meeting.timeZone).time.format(new Date(meeting.startsAt));
 }
 
 /** "in 3 days", "tomorrow", "12 days ago". */

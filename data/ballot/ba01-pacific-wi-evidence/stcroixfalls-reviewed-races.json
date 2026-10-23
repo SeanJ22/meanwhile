@@ -1,0 +1,64 @@
+[
+  [
+    "Representative in Congress District 7",
+    "ocd-division/country:us/state:wi/cd:7",
+    [
+      [
+        "Michael Alfonso",
+        "Republican"
+      ],
+      [
+        "Fred Clark",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "State Senator District 25",
+    "ocd-division/country:us/state:wi/sldu:25",
+    [
+      [
+        "Erik Severson",
+        "Republican"
+      ],
+      [
+        "Charly Ray",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 75",
+    "ocd-division/country:us/state:wi/sldl:75",
+    [
+      [
+        "Duke Tucker",
+        "Republican"
+      ],
+      [
+        "Keith Mogel",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Polk County Sheriff",
+    "ocd-division/country:us/state:wi/county:polk",
+    [
+      [
+        "Rob Rorvick",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Polk County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:polk",
+    [
+      [
+        "Jackie Patterson",
+        "Republican"
+      ]
+    ]
+  ]
+]

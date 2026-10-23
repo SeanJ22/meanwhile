@@ -48,6 +48,7 @@ export interface SittingAnswerInput {
   sittingGaps: readonly SittingGap[];
   now: number;
   includeLocation?: boolean;
+  includeMeetingTime?: boolean;
   requestedLocalDate?: string | null;
   questionClass?: string | null;
   actions?: readonly HeldMeetingAction[];
@@ -237,6 +238,21 @@ export function composeSittingAnswer(input: SittingAnswerInput): { answer: strin
   const missing = (what: string) => ({ answer: `We don't have ${subjectName}'s ${what} yet.`, citedUrls: [] as string[], missingAnswer: true });
   if (input.shape === "BODY_AGENDA") {
     if (input.records.some(row => CONTENT_KINDS.has(row.kind))) return null;
+    if (input.includeMeetingTime && input.sittings.length) {
+      const chosen = input.sittings[0];
+      const meetings = input.records.filter(record => record.kind === "MEETING");
+      if (input.sittings.some(sitting => sitting.status === "CANCELED" || !zoneOf(sitting).known ||
+        sitting.timeZone !== chosen.timeZone || localDate(sitting) !== localDate(chosen) ||
+        !meetings.some(record => record.id === sitting.id && record.sourceUrl && !record.meetingListingIdentity))) return null;
+      const day = new Intl.DateTimeFormat("en-US", { timeZone: chosen.timeZone!, month: "long", day: "numeric",
+        ...(new Date(input.now).getUTCFullYear() !== Number(localDate(chosen).slice(0, 4)) ? { year: "numeric" } : {}) }).format(new Date(chosen.startsAt));
+      const slots = input.sittings.map(sitting => `${eventTitle(sitting.title)}${startTimePosted(sitting)
+        ? ` at ${new Intl.DateTimeFormat("en-US", { timeZone: sitting.timeZone!, hour: "numeric", minute: "2-digit" }).format(new Date(sitting.startsAt))}`
+        : " (time not posted)"}`);
+      const answer = `${subjectName} meets on ${day}: ${slots.join("; ")}. We don't have the agenda details yet.`;
+      if (overLengthBudget(answer)) return null;
+      return { answer, citedUrls: [...new Set(input.records.filter(record => record.kind === "MEETING" || record.kind === "AGENDA_DOCUMENT").flatMap(record => record.sourceUrl ?? []))] };
+    }
     return roles.has("AGENDA") || roles.has("NO_SITTING") ? missing("agenda details") : null;
   }
   if (input.shape === "MEETING_OUTCOME") {

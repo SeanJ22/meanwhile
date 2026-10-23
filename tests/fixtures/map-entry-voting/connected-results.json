@@ -1,0 +1,115 @@
+{
+  "origin": "http://127.0.0.1:3000",
+  "controlledResponses": false,
+  "apiOrigin": "PUBLIC_SITE_ORIGIN",
+  "transport": "Real public API requests through the managed session proxy; no response fixtures",
+  "runId": "vs03-connected@2026-10-21T04:40:42.919Z",
+  "results": [
+    {
+      "state": "AZ",
+      "kind": "address",
+      "input": "255 W Alameda St, Tucson, AZ 85701",
+      "status": 200,
+      "ms": 2376,
+      "point": {
+        "lat": 32.223036925689,
+        "lng": -110.975000602086
+      },
+      "jurisdictions": 1,
+      "sites": 168,
+      "pins": 168,
+      "outsideCoverage": false,
+      "camera": [
+        -110.97500060208597,
+        32.223036925689016
+      ]
+    },
+    {
+      "state": "AZ",
+      "kind": "zip",
+      "input": "85701",
+      "status": 200,
+      "ms": 2086,
+      "point": null,
+      "jurisdictions": 1,
+      "sites": 168,
+      "pins": 168,
+      "outsideCoverage": false,
+      "camera": [
+        -110.85671097,
+        32.181774029999985
+      ]
+    },
+    {
+      "state": "NH",
+      "kind": "address",
+      "input": "41 Green St, Concord, NH 03301",
+      "status": 200,
+      "ms": 1916,
+      "point": {
+        "lat": 43.205962379671,
+        "lng": -71.539847558045
+      },
+      "jurisdictions": 1,
+      "sites": 0,
+      "pins": 0,
+      "outsideCoverage": true,
+      "camera": [
+        -71.53984755804498,
+        43.20596237967101
+      ]
+    },
+    {
+      "state": "NH",
+      "kind": "zip",
+      "input": "03301",
+      "status": 200,
+      "ms": 511,
+      "point": null,
+      "jurisdictions": 1,
+      "sites": 0,
+      "pins": 0,
+      "outsideCoverage": true,
+      "camera": [
+        -71.53984755804498,
+        43.20596237967101
+      ]
+    },
+    {
+      "state": "NJ",
+      "kind": "address",
+      "input": "200 South St, Morristown, NJ 07960",
+      "status": 200,
+      "ms": 2459,
+      "point": {
+        "lat": 40.790274202244,
+        "lng": -74.473835819178
+      },
+      "jurisdictions": 1,
+      "sites": 7,
+      "pins": 7,
+      "outsideCoverage": false,
+      "camera": [
+        -74.47383581917802,
+        40.79027420224398
+      ]
+    },
+    {
+      "state": "NJ",
+      "kind": "zip",
+      "input": "07960",
+      "status": 200,
+      "ms": 1876,
+      "point": null,
+      "jurisdictions": 7,
+      "sites": 44,
+      "pins": 38,
+      "outsideCoverage": false,
+      "camera": [
+        -74.39266897127402,
+        40.72405219333703
+      ]
+    }
+  ],
+  "errors": []
+}

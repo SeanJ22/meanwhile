@@ -1,0 +1,44 @@
+{
+  "added_contests": 0,
+  "added_candidates": 0,
+  "added_memberships": 0,
+  "contests": 102,
+  "candidacies": 148,
+  "batch_contests": 7,
+  "batch_candidates": 9,
+  "batch_memberships": 3,
+  "official_styles": [
+    {
+      "style": 1,
+      "officialContests": 12,
+      "officialCandidates": 20,
+      "heldContests": 11,
+      "heldCandidates": 18,
+      "missing": "Justice Court District 1"
+    },
+    {
+      "style": 2,
+      "officialContests": 11,
+      "officialCandidates": 18,
+      "heldContests": 11,
+      "heldCandidates": 18,
+      "missing": null
+    },
+    {
+      "style": 3,
+      "officialContests": 13,
+      "officialCandidates": 22,
+      "heldContests": 11,
+      "heldCandidates": 18,
+      "missing": "Chancery 17-1 Place 3 and Circuit 21-1 Place 4"
+    },
+    {
+      "style": 4,
+      "officialContests": 12,
+      "officialCandidates": 20,
+      "heldContests": 11,
+      "heldCandidates": 18,
+      "missing": "School Board District 5"
+    }
+  ]
+}

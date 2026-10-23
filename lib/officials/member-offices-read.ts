@@ -7,18 +7,21 @@ import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { federalOfficeRecordsForMember, officeRecordsForHolder, officesForMember, type MemberOfficeRecord } from "./member-offices.ts";
 import { fromMemberOffice, type OfficeLocation } from "./office-locations.ts";
 import { personIdentityKeys, statePeopleScopeForId } from "./people-identity.ts";
+import { readerRecordsWithOwnerChoices } from "../facts/owner-flags.ts";
+import { factReader } from "../facts/db.ts";
 
 export { refreshMemberOfficesFromPromoted, settleMemberOfficesRead } from "../civic-data/curated-reader-read-model.ts";
 
 /** Core people publication makes its offices immediately available; one request loads one state. */
 export async function readMemberOffices(officeholderId: string, state?: string, options: PromotedCivicDataReadOptions = {}): Promise<readonly MemberOfficeRecord[]> {
+  const owned = (records: readonly MemberOfficeRecord[]) => readerRecordsWithOwnerChoices(factReader(),"member-offices",records);
   if(/^congress:[A-Z]\d{6}$/.test(officeholderId)) {
     const places=state ? [state.replace(/^US-/i,"")] : selectedRegistryStates();
     if(!places.length) return [];
     const read=await readFederalDirectoryProjection(places,options);
     if(read.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(read);
     if(read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return [];
-    return federalOfficeRecordsForMember(read.value,officeholderId);
+    return owned(federalOfficeRecordsForMember(read.value,officeholderId));
   }
   const jurisdiction = statePeopleScopeForId(officeholderId,state);
   const aliases = new Set([officeholderId]);
@@ -44,12 +47,12 @@ export async function readMemberOffices(officeholderId: string, state?: string, 
       knownPerson = true;
       for (const key of personIdentityKeys(matches[0])) aliases.add(key);
       const records = officeRecordsForHolder(matches[0]);
-      if (records.length) return officesForMember(records,matches[0].id);
+      if (records.length) return owned(officesForMember(records,matches[0].id));
     }
   }
   try { if(options.store) await refreshMemberOfficesFromPromoted(options); else await settleMemberOfficesRead(); }
   catch (error) { if (knownPerson) return []; throw error; }
-  return [...new Map([...aliases].flatMap(currentMemberOffices).map(row => [row.id,row])).values()];
+  return owned([...new Map([...aliases].flatMap(currentMemberOffices).map(row => [row.id,row])).values()]);
 }
 
 export async function readOfficeLocations(officeholderId: string, state?: string, options: PromotedCivicDataReadOptions = {}): Promise<readonly OfficeLocation[]> {

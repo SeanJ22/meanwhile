@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://d1mphjegypfd5j.cloudfront.net/info.js" type="text/javascript"></script><script src="/Scripts/modernizr.min.js" type="text/javascript"></script><script type="text/javascript">
+(function () {
+"use strict";
+var samesiteCookie = "";
+// Get enableSameSiteCookie flag based on configuration and add samesite/secure cookie attribute
+var enableSameSiteCookie = 'True';
+if(enableSameSiteCookie.toLowerCase() === "true") {
+samesiteCookie = "; SameSite=None; Secure;";
+}
+var cookiesEnabled = navigator && navigator.cookieEnabled;
+if (cookiesEnabled) {
+document.cookie = "cookietest=1" + samesiteCookie;
+cookiesEnabled = document.cookie.indexOf("cookietest=") != -1;
+document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT" + samesiteCookie;
+}
+if (!cookiesEnabled) {
+document.location.replace("/open/error/cookiesrequired?target=" + encodeURIComponent('/container?config=024453JABiMWFjOTk0OS1hNTVlLTQ1MDctYmZkOS1mNGRkY2I0ZTg2YzQKAFBvZENhdGFsb2fNaUTUAugmXPqNctTcuqLy&crid=4a818169-2e20-45ed-a8d9-e2aa3174e64f'));
+}
+else {
+// cookies.js (https://developer.mozilla.org/en-US/docs/DOM/document.cookie)
+var docCookies = { getItem: function (a) { return !a || !this.hasItem(a) ? null : unescape(document.cookie.replace(RegExp("(?:^|.*;\\s*)" + escape(a).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*((?:[^;](?!;))*[^;]?).*"), "$1")) }, setItem: function (a, b, c, e, f, g) { if (a && !/^(?:expires|max\-age|path|domain|secure)$/i.test(a)) { var d = ""; if (c) switch (c.constructor) { case Number: d = Infinity === c ? "; expires=Tue, 19 Jan 2038 03:14:07 GMT" : "; max-age=" + c; break; case String: d = "; expires=" + c; break; case Date: d = "; expires=" + c.toGMTString() } document.cookie = escape(a) + "=" + escape(b) + d + (f ? "; domain=" + f : "") + (e ? "; path=" + e + samesiteCookie : "") + (g ? "; secure" : "") } }, removeItem: function (a, b) { a && this.hasItem(a) && (document.cookie = escape(a) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (b ? "; path=" + b : "")) }, hasItem: function (a) { return RegExp("(?:^|;\\s*)" + escape(a).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=").test(document.cookie) }, keys: function () { for (var a = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/), b = 0; b < a.length; b++) a[b] = unescape(a[b]); return a } };
+var modernizr = window.Modernizr && JSON.parse(JSON.stringify(window.Modernizr));
+// Build a LNDOMENV cookie
+docCookies.setItem("LNDOMENV", JSON.stringify({
+id: "fingerprint",
+props: {
+"modernizr": modernizr,
+"lang": navigator.language || navigator.browserLanguage,
+"time": JSON.parse(JSON.stringify(new Date())),
+"useragent": JSON.parse(JSON.stringify(window.navigator.userAgent)),
+"resolution": {
+"availWidth": window.screen.availWidth,
+"availHeight": window.screen.availHeight,
+"availTop": window.screen.availTop,
+"availLeft": window.screen.availLeft,
+"colorDepth": window.screen.colorDepth,
+"width": window.screen.width,
+"height": window.screen.height
+},
+"cdnsupport": window.lncdnallowed ? true : false
+}
+}), null, '/');
+// Browser redirect to the intended destination page
+window.location.replace('/container?config=024453JABiMWFjOTk0OS1hNTVlLTQ1MDctYmZkOS1mNGRkY2I0ZTg2YzQKAFBvZENhdGFsb2fNaUTUAugmXPqNctTcuqLy&crid=4a818169-2e20-45ed-a8d9-e2aa3174e64f'); } }).call(this);</script><img src='https://webanalytics.lexisnexis.com/lexisadvancev2.watag?sessionid=f361974e-8eee-44c0-84d6-e5db17dcaf00&un=urn:user:PA6468625&rf=&lc=http://advance.lexis.com/open/entry/CaptureReturnUrl?target=%2Fcontainer%3Fconfig%3D024453JABiMWFjOTk0OS1hNTVlLTQ1MDctYmZkOS1mNGRkY2I0ZTg2YzQKAFBvZENhdGFsb2fNaUTUAugmXPqNctTcuqLy'/></body></html>

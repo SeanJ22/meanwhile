@@ -189,7 +189,7 @@ export function ActionDialog(props: {
 
         {showWords && (
           <label className={s.stack} style={{ gap: 4 }}>
-            <span className={s.small}>{chosen?.ownWords ? "Note" : "Add a note (optional)"}</span>
+            <span className={s.small}>{chosen?.ownWords ? "Note" : preview.noteLabel ?? "Add a note (optional)"}</span>
             <textarea className={s.textarea} value={words} maxLength={1000} onChange={(e) => setWords(e.target.value)} />
           </label>
         )}

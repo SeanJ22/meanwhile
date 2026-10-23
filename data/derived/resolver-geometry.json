@@ -5,7 +5,7 @@
     "Every canonical state geometry and national geometry file appears on exactly one list."
   ],
   "schemaVersion": 2,
-  "generatedAt": "2026-10-06",
+  "generatedAt": "2026-10-22",
   "coveredStateFips": [
     "10",
     "11",
@@ -65,23 +65,54 @@
     "09"
   ],
   "totals": {
-    "features": 2268,
-    "coordinates": 116378
+    "features": 12348,
+    "coordinates": 1440400
   },
   "files": [
+    "data/states/ak/geo/territory-02.geojson",
+    "data/states/al/geo/territory-01.geojson",
+    "data/states/ar/geo/territory-05.geojson",
     "data/states/az/geo/cousub-04.geojson",
     "data/states/az/geo/elsd-04.geojson",
     "data/states/az/geo/place-04.geojson",
     "data/states/az/geo/scsd-04.geojson",
     "data/states/az/geo/sldl-04.geojson",
     "data/states/az/geo/sldu-04.geojson",
+    "data/states/az/geo/territory-04.geojson",
     "data/states/az/geo/unsd-04.geojson",
+    "data/states/ca/geo/territory-06.geojson",
+    "data/states/co/geo/territory-08.geojson",
+    "data/states/ct/geo/territory-09.geojson",
+    "data/states/dc/geo/territory-11.geojson",
+    "data/states/de/geo/territory-10.geojson",
+    "data/states/fl/geo/territory-12.geojson",
+    "data/states/ga/geo/territory-13.geojson",
+    "data/states/hi/geo/territory-15.geojson",
+    "data/states/ia/geo/territory-19.geojson",
+    "data/states/id/geo/territory-16.geojson",
+    "data/states/il/geo/territory-17.geojson",
+    "data/states/in/geo/territory-18.geojson",
+    "data/states/ks/geo/territory-20.geojson",
+    "data/states/ky/geo/territory-21.geojson",
+    "data/states/la/geo/territory-22.geojson",
+    "data/states/ma/geo/territory-25.geojson",
+    "data/states/md/geo/territory-24.geojson",
+    "data/states/me/geo/territory-23.geojson",
+    "data/states/mi/geo/territory-26.geojson",
+    "data/states/mn/geo/territory-27.geojson",
+    "data/states/mo/geo/territory-29.geojson",
+    "data/states/ms/geo/territory-28.geojson",
+    "data/states/mt/geo/territory-30.geojson",
+    "data/states/nc/geo/territory-37.geojson",
+    "data/states/nd/geo/territory-38.geojson",
+    "data/states/ne/geo/territory-31.geojson",
     "data/states/nh/geo/cousub-33.geojson",
     "data/states/nh/geo/elsd-33.geojson",
     "data/states/nh/geo/place-33.geojson",
     "data/states/nh/geo/scsd-33.geojson",
     "data/states/nh/geo/sldl-33.geojson",
     "data/states/nh/geo/sldu-33.geojson",
+    "data/states/nh/geo/territory-33.geojson",
     "data/states/nh/geo/unsd-33.geojson",
     "data/states/nj/geo/cousub-34.geojson",
     "data/states/nj/geo/elsd-34.geojson",
@@ -89,11 +120,46 @@
     "data/states/nj/geo/scsd-34.geojson",
     "data/states/nj/geo/sldl-34.geojson",
     "data/states/nj/geo/sldu-34.geojson",
+    "data/states/nj/geo/territory-34.geojson",
     "data/states/nj/geo/unsd-34.geojson",
+    "data/states/nm/geo/territory-35.geojson",
+    "data/states/nv/geo/territory-32.geojson",
+    "data/states/ny/geo/territory-36.geojson",
+    "data/states/oh/geo/territory-39.geojson",
+    "data/states/ok/geo/territory-40.geojson",
+    "data/states/or/geo/territory-41.geojson",
+    "data/states/pa/geo/territory-42.geojson",
+    "data/states/ri/geo/territory-44.geojson",
+    "data/states/sc/geo/territory-45.geojson",
+    "data/states/sd/geo/territory-46.geojson",
+    "data/states/tn/geo/territory-47.geojson",
+    "data/states/tx/geo/territory-48.geojson",
+    "data/states/ut/geo/territory-49.geojson",
+    "data/states/va/geo/territory-51.geojson",
+    "data/states/vt/geo/territory-50.geojson",
+    "data/states/wa/geo/territory-53.geojson",
+    "data/states/wi/geo/territory-55.geojson",
+    "data/states/wv/geo/territory-54.geojson",
+    "data/states/wy/geo/territory-56.geojson",
     "public/geo/cd119.geojson",
     "public/geo/county-us.geojson"
   ],
   "detail": [
+    {
+      "file": "data/states/ak/geo/territory-02.geojson",
+      "features": 210,
+      "coordinates": 15932
+    },
+    {
+      "file": "data/states/al/geo/territory-01.geojson",
+      "features": 90,
+      "coordinates": 11091
+    },
+    {
+      "file": "data/states/ar/geo/territory-05.geojson",
+      "features": 65,
+      "coordinates": 11627
+    },
     {
       "file": "data/states/az/geo/cousub-04.geojson",
       "features": 53,
@@ -125,9 +191,144 @@
       "coordinates": 1830
     },
     {
+      "file": "data/states/az/geo/territory-04.geojson",
+      "features": 185,
+      "coordinates": 63962
+    },
+    {
       "file": "data/states/az/geo/unsd-04.geojson",
       "features": 61,
       "coordinates": 1922
+    },
+    {
+      "file": "data/states/ca/geo/territory-06.geojson",
+      "features": 581,
+      "coordinates": 90622
+    },
+    {
+      "file": "data/states/co/geo/territory-08.geojson",
+      "features": 2489,
+      "coordinates": 199395
+    },
+    {
+      "file": "data/states/ct/geo/territory-09.geojson",
+      "features": 40,
+      "coordinates": 1725
+    },
+    {
+      "file": "data/states/dc/geo/territory-11.geojson",
+      "features": 46,
+      "coordinates": 949
+    },
+    {
+      "file": "data/states/de/geo/territory-10.geojson",
+      "features": 3,
+      "coordinates": 198
+    },
+    {
+      "file": "data/states/fl/geo/territory-12.geojson",
+      "features": 264,
+      "coordinates": 10786
+    },
+    {
+      "file": "data/states/ga/geo/territory-13.geojson",
+      "features": 19,
+      "coordinates": 7974
+    },
+    {
+      "file": "data/states/hi/geo/territory-15.geojson",
+      "features": 59,
+      "coordinates": 1799
+    },
+    {
+      "file": "data/states/ia/geo/territory-19.geojson",
+      "features": 6,
+      "coordinates": 371
+    },
+    {
+      "file": "data/states/id/geo/territory-16.geojson",
+      "features": 512,
+      "coordinates": 78297
+    },
+    {
+      "file": "data/states/il/geo/territory-17.geojson",
+      "features": 443,
+      "coordinates": 47589
+    },
+    {
+      "file": "data/states/in/geo/territory-18.geojson",
+      "features": 250,
+      "coordinates": 16605
+    },
+    {
+      "file": "data/states/ks/geo/territory-20.geojson",
+      "features": 20,
+      "coordinates": 1208
+    },
+    {
+      "file": "data/states/ky/geo/territory-21.geojson",
+      "features": 168,
+      "coordinates": 137324
+    },
+    {
+      "file": "data/states/la/geo/territory-22.geojson",
+      "features": 14,
+      "coordinates": 2435
+    },
+    {
+      "file": "data/states/ma/geo/territory-25.geojson",
+      "features": 77,
+      "coordinates": 25872
+    },
+    {
+      "file": "data/states/md/geo/territory-24.geojson",
+      "features": 1,
+      "coordinates": 6
+    },
+    {
+      "file": "data/states/me/geo/territory-23.geojson",
+      "features": 88,
+      "coordinates": 10722
+    },
+    {
+      "file": "data/states/mi/geo/territory-26.geojson",
+      "features": 24,
+      "coordinates": 1970
+    },
+    {
+      "file": "data/states/mn/geo/territory-27.geojson",
+      "features": 20,
+      "coordinates": 26583
+    },
+    {
+      "file": "data/states/mo/geo/territory-29.geojson",
+      "features": 38,
+      "coordinates": 3019
+    },
+    {
+      "file": "data/states/ms/geo/territory-28.geojson",
+      "features": 16,
+      "coordinates": 2387
+    },
+    {
+      "file": "data/states/mt/geo/territory-30.geojson",
+      "features": 298,
+      "coordinates": 74101
+    },
+    {
+      "file": "data/states/nc/geo/territory-37.geojson",
+      "features": 22,
+      "coordinates": 5098
+    },
+    {
+      "file": "data/states/nd/geo/territory-38.geojson",
+      "features": 303,
+      "coordinates": 35634
+    },
+    {
+      "file": "data/states/ne/geo/territory-31.geojson",
+      "features": 443,
+      "coordinates": 28016
     },
     {
       "file": "data/states/nh/geo/cousub-33.geojson",
@@ -158,6 +359,11 @@
       "file": "data/states/nh/geo/sldu-33.geojson",
       "features": 24,
       "coordinates": 837
+    },
+    {
+      "file": "data/states/nh/geo/territory-33.geojson",
+      "features": 9,
+      "coordinates": 1262
     },
     {
       "file": "data/states/nh/geo/unsd-33.geojson",
@@ -195,9 +401,109 @@
       "coordinates": 654
     },
     {
+      "file": "data/states/nj/geo/territory-34.geojson",
+      "features": 7,
+      "coordinates": 1575
+    },
+    {
       "file": "data/states/nj/geo/unsd-34.geojson",
       "features": 127,
       "coordinates": 1488
+    },
+    {
+      "file": "data/states/nm/geo/territory-35.geojson",
+      "features": 55,
+      "coordinates": 18180
+    },
+    {
+      "file": "data/states/nv/geo/territory-32.geojson",
+      "features": 76,
+      "coordinates": 15488
+    },
+    {
+      "file": "data/states/ny/geo/territory-36.geojson",
+      "features": 227,
+      "coordinates": 18339
+    },
+    {
+      "file": "data/states/oh/geo/territory-39.geojson",
+      "features": 19,
+      "coordinates": 1528
+    },
+    {
+      "file": "data/states/ok/geo/territory-40.geojson",
+      "features": 63,
+      "coordinates": 9720
+    },
+    {
+      "file": "data/states/or/geo/territory-41.geojson",
+      "features": 155,
+      "coordinates": 30251
+    },
+    {
+      "file": "data/states/pa/geo/territory-42.geojson",
+      "features": 107,
+      "coordinates": 17162
+    },
+    {
+      "file": "data/states/ri/geo/territory-44.geojson",
+      "features": 28,
+      "coordinates": 2151
+    },
+    {
+      "file": "data/states/sc/geo/territory-45.geojson",
+      "features": 16,
+      "coordinates": 4940
+    },
+    {
+      "file": "data/states/sd/geo/territory-46.geojson",
+      "features": 78,
+      "coordinates": 15230
+    },
+    {
+      "file": "data/states/tn/geo/territory-47.geojson",
+      "features": 87,
+      "coordinates": 14284
+    },
+    {
+      "file": "data/states/tx/geo/territory-48.geojson",
+      "features": 1448,
+      "coordinates": 131286
+    },
+    {
+      "file": "data/states/ut/geo/territory-49.geojson",
+      "features": 73,
+      "coordinates": 20955
+    },
+    {
+      "file": "data/states/va/geo/territory-51.geojson",
+      "features": 9,
+      "coordinates": 2703
+    },
+    {
+      "file": "data/states/vt/geo/territory-50.geojson",
+      "features": 5,
+      "coordinates": 348
+    },
+    {
+      "file": "data/states/wa/geo/territory-53.geojson",
+      "features": 493,
+      "coordinates": 68527
+    },
+    {
+      "file": "data/states/wi/geo/territory-55.geojson",
+      "features": 19,
+      "coordinates": 3369
+    },
+    {
+      "file": "data/states/wv/geo/territory-54.geojson",
+      "features": 5,
+      "coordinates": 2163
+    },
+    {
+      "file": "data/states/wy/geo/territory-56.geojson",
+      "features": 307,
+      "coordinates": 31264
     },
     {
       "file": "public/geo/cd119.geojson",
@@ -213,7 +519,7 @@
   "excluded": [
     {
       "file": "data/states/az/geo/body-territories.geojson",
-      "reason": "BODY territories, not DIVISION boundaries — recorded plats belonging to governments the Census enumerates no division for. lib/registry/body-territory.ts point-tests them; they have no ocdId, so including them would make the division resolver answer with a body id."
+      "reason": "BODY territories, not DIVISION boundaries (NH233) — recorded plats belonging to governments the Census enumerates no division for, such as the Rocking K South Community Facilities District. It is loaded and point-tested by lib/registry/body-territory.ts on the same sweep, and it is excluded HERE because every feature in this manifest is keyed by ocdId and these features deliberately have none. Including it would make the division resolver answer with a body id, which is the join confusion this session spent its day removing."
     },
     {
       "file": "public/geo/state-outlines.geojson",

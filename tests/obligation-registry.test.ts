@@ -1,3 +1,4 @@
+import type {HuntSourceScope} from '../lib/hunt/own-site-runtime.ts';
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync, readFileSync, existsSync, writeFileSync, mkdirSync } from "node:fs";
@@ -97,8 +98,9 @@ test("the standing research registry is not a parallel tracked-meetings authorit
   );
   assert.equal(discovery.units.length, 1, "a materialized meetings-discovery need is scheduled");
   for (const unit of discovery.units) {
-    assert.equal(unit.route.open.kind, "NOT_MACHINE_EXECUTABLE", "a discovery route can never open a meeting source: it is not an acquisition clock");
-    assert.equal(unit.route.executorClass, "BOUNDED_MODEL_WORKER");
+    assert.equal(unit.route.open.kind, "HTTP_GET", "the free hunter reads the government's recorded site");
+    assert.equal(unit.route.executorClass, "DETERMINISTIC");
+    assert.equal((unit.route as typeof unit.route & {placeHunt?:HuntSourceScope}).placeHunt?.knownOwnSite, true);
     assert.ok(unit.obligation.id.startsWith("freshness:meetings-discovery:"), "discovery owns its own namespace, never the retired meetings clocks'");
   }
 

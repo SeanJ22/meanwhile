@@ -1,0 +1,130 @@
+[
+  {
+    "file": "co-alias.gz",
+    "uncompressedHash": "aa4a36f29654ea925a207fbd566e7fca22571047184976a4d403fc9c12bb7cae",
+    "uncompressedBytes": 71771,
+    "sourceUrl": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
+    "retrievedOrExtractedAt": "2026-10-20T22:53:06.911820+00:00",
+    "captureType": "complete public official source download"
+  },
+  {
+    "file": "co-rows.json.gz",
+    "uncompressedHash": "75a1e66737b64ffa826afdfccc6a416c81342f20bdc6b61add71258cd33e0c83",
+    "uncompressedBytes": 29168,
+    "sourceUrl": "https://www.coloradosos.gov/pubs/elections/vote/generalCandidates.html",
+    "retrievedOrExtractedAt": "2026-10-20T22:53:51.562505+00:00",
+    "captureType": "derived parsed table or pdftotext snapshot"
+  },
+  {
+    "file": "nm.gz",
+    "uncompressedHash": "1c7e1464f185f9404b6f93eedb0f06492b9503bfef1f1660b8dd409378d81398",
+    "uncompressedBytes": 967953,
+    "sourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
+    "retrievedOrExtractedAt": "2026-10-20T22:52:26.564940+00:00",
+    "captureType": "complete public official source download"
+  },
+  {
+    "file": "nm-rows.json.gz",
+    "uncompressedHash": "0f127eb23c5cb2467606dbf0f43dc302c8f8ab921accd4f274f7735f5a93098e",
+    "uncompressedBytes": 191438,
+    "sourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
+    "retrievedOrExtractedAt": "2026-10-20T22:53:03.032619+00:00",
+    "captureType": "derived parsed table or pdftotext snapshot"
+  },
+  {
+    "file": "id-all.gz",
+    "uncompressedHash": "3a444e0eb5f8a2236534ad3b801187034625453d14ae6577be619074ef4210cd",
+    "uncompressedBytes": 280391,
+    "sourceUrl": "https://api-run.voteidaho.gov/api/FiledCandidates/SearchCandidates",
+    "retrievedOrExtractedAt": "2026-10-20T22:58:33.213382+00:00",
+    "captureType": "complete public official source download"
+  },
+  {
+    "file": "nd-all.gz",
+    "uncompressedHash": "e5917d1907915251a4815ddcc6a71033e69811d8875cd6cf91ecf2a55163f29d",
+    "uncompressedBytes": 1697561,
+    "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+    "retrievedOrExtractedAt": "2026-10-20T22:58:24.511355+00:00",
+    "captureType": "complete public official source download"
+  },
+  {
+    "file": "nd-all-rows.json.gz",
+    "uncompressedHash": "0f8b9bf17380d05005abaa5cce6e8ea0d7cdba3beab4dfc9463535f87d9d827c",
+    "uncompressedBytes": 226034,
+    "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+    "retrievedOrExtractedAt": "2026-10-20T22:58:42.953080+00:00",
+    "captureType": "derived parsed table or pdftotext snapshot"
+  },
+  {
+    "file": "sd-export.gz",
+    "uncompressedHash": "16c5b2020bf5d6eb52e635c687694dca0e27a2920b5e859c70739b7198d67142",
+    "uncompressedBytes": 91427,
+    "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+    "retrievedOrExtractedAt": "2026-10-20T22:58:21.778070+00:00",
+    "captureType": "complete public official source download"
+  },
+  {
+    "file": "wy.gz",
+    "uncompressedHash": "2f5727287045d2596097ddbfc84e98984f18c518009ca61e4ef194807b6080a2",
+    "uncompressedBytes": 31030,
+    "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+    "retrievedOrExtractedAt": "2026-10-20T22:52:23.979105+00:00",
+    "captureType": "complete public official source download"
+  },
+  {
+    "file": "nv-alternate.gz",
+    "uncompressedHash": "027f6deb6e3103ce940d3f7d28f1ef4a5c20b0604dbac369a7c829fdcf320b66",
+    "uncompressedBytes": 262312,
+    "sourceUrl": "https://cms1files.revize.com/landercounty25/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf",
+    "retrievedOrExtractedAt": "2026-10-20T22:57:21.035625+00:00",
+    "captureType": "complete public official source download"
+  },
+  {
+    "file": "nv.txt.gz",
+    "uncompressedHash": "7e68c64554d05398f0d66f52def4e42a59b85597b8ff3d489fb9334da3bb5568",
+    "uncompressedBytes": 115800,
+    "sourceUrl": "https://cms1files.revize.com/landercounty25/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf",
+    "retrievedOrExtractedAt": "2026-10-20T22:57:49.036109+00:00",
+    "captureType": "derived parsed table or pdftotext snapshot"
+  },
+  {
+    "file": "ut-alternate.gz",
+    "uncompressedHash": "1d1a009e5754194c05b70666a1c7ee200c252f87f18c1fe6f1c00f65621a0956",
+    "uncompressedBytes": 2365988,
+    "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+    "retrievedOrExtractedAt": "2026-10-20T22:57:20.564672+00:00",
+    "captureType": "complete public official source download"
+  },
+  {
+    "file": "ut.txt.gz",
+    "uncompressedHash": "4cdebd535cbe94be4d63593fb83afdb31fa0365c5c6e608b978d8f946ff3f415",
+    "uncompressedBytes": 54279,
+    "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+    "retrievedOrExtractedAt": "2026-10-20T22:57:49.072109+00:00",
+    "captureType": "derived parsed table or pdftotext snapshot"
+  },
+  {
+    "file": "ut-writeins.gz",
+    "uncompressedHash": "3333f66076656c3a5dbf3c4be16af75f6fe3c07b285809afb6ed9ab9bcec93a5",
+    "uncompressedBytes": 128975,
+    "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Write-In-Certification.pdf",
+    "retrievedOrExtractedAt": "2026-10-20T23:05:19.649020+00:00",
+    "captureType": "complete public official source download"
+  },
+  {
+    "file": "ut-writeins.txt.gz",
+    "uncompressedHash": "5fb06b6f26b2a244939c17d86c23f1bb4bdbde35545c1ae7eb0b5608f9b34208",
+    "uncompressedBytes": 1634,
+    "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Write-In-Certification.pdf",
+    "retrievedOrExtractedAt": "2026-10-20T23:07:25.455155+00:00",
+    "captureType": "derived parsed table or pdftotext snapshot"
+  },
+  {
+    "file": "mt-browser-trusted-export.gz",
+    "uncompressedHash": "d491215c215b9fe74a9fcc2eedf8b9cc507b495bbaada079446d80a9c7b8cc8d",
+    "uncompressedBytes": 62991,
+    "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
+    "retrievedOrExtractedAt": "2026-10-20T23:12:34.615184+00:00",
+    "captureType": "complete public official source download"
+  }
+]

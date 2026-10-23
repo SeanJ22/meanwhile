@@ -12,6 +12,7 @@ import { DISCHARGING_DISPOSITIONS } from "./dispatch.ts";
 import type { FreshnessObligation } from "./obligation.ts";
 import { runPool } from "./shadow-loop.ts";
 import { absenceHold } from "./absence-hold.ts";
+import { planningStateOf } from "./state-planning.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 
 export const FRESHNESS_PROJECT = "freshness";
@@ -81,6 +82,7 @@ const RUNTIME_OWNED = [
 
   "materializedFrom",
   "autonomousPlan",
+  "officialsLead",
 ] as const;
 
 export async function syncObligations(
@@ -146,6 +148,7 @@ export async function syncObligations(
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       ...(held.assignments !== undefined ? { assignments: held.assignments } : {}),
       ...(held.materializedFrom !== undefined ? { materializedFrom: held.materializedFrom } : {}),
+      ...(held.officialsLead !== undefined ? { officialsLead: held.officialsLead } : {}),
       ...(plan !== undefined ? { autonomousPlan: plan } : {}),
       updatedAt: now,
     };
@@ -891,6 +894,21 @@ export async function loadDebts(
   return rows.map((r) => r.value);
 }
 
+/**
+ * The state a debt is saved under. A debt carries only its obligation's id, which for most
+ * obligations names no state, so the row is stamped: `cp_control_state` reads the `state`
+ * field when the id names none. An id that names a state keeps it, as `cp_control_state` does.
+ * Otherwise the planner that saves the debt works exactly one state's obligations, and that
+ * state is the debt's. A planner without a state reads it from the obligation's subject.
+ */
+export function debtStateOf(obligationId: string, planningState: string | undefined): string | null {
+  const named = planningStateOf(obligationId);
+  if (named !== null) return named;
+  if (planningState !== undefined) return planningState === "system" ? null : planningState;
+  const subject = /^freshness:[^:]+:([^#]+)(?:#.*)?$/.exec(obligationId)?.[1];
+  return subject === undefined ? null : planningStateOf(subject);
+}
+
 export async function persistDebts(
   repos: ControlPlaneRepositories,
   next: readonly FreshnessDebt[],
@@ -905,11 +923,24 @@ export async function persistDebts(
   readonly cleared: readonly string[];
   readonly clearedAsRetired: readonly string[];
 }> {
-  const byId = new Map(next.map((d) => [d.obligationId, d]));
+  const stamped = next.map((debt) => {
+    const state = debtStateOf(debt.obligationId, repos.planningState);
+    return state === null || debt.state === state ? debt : { ...debt, state };
+  });
+  const byId = new Map(stamped.map((d) => [d.obligationId, d]));
   const existing = scope === null
     ? await repos.debts.list()
     : (await Promise.all(scope.map((id) => repos.debts.read(id)))).filter((row) => row !== null);
   const existingById = new Map(existing.map(row => [row.id, row]));
+
+  /* A planner lists only its own state's debts. A debt saved before it carried a state is not in that list but still holds its id. */
+  const unlisted = stamped.map(debt => debt.obligationId).filter(id => !existingById.has(id));
+  if (unlisted.length > 0) {
+    const held = repos.debts.readMany !== undefined
+      ? await repos.debts.readMany(unlisted)
+      : (await Promise.all(unlisted.map(id => repos.debts.read(id)))).filter(row => row !== null);
+    for (const row of held) existingById.set(row.id, row);
+  }
   const operations: {
     id: string;
     obligationId: string;
@@ -944,7 +975,7 @@ export async function persistDebts(
     ) });
   }
 
-  for (const debt of next) {
+  for (const debt of stamped) {
     const row = existingById.get(debt.obligationId) ?? null;
     if (row === null) {
       operations.push({ id: debt.obligationId, obligationId: debt.obligationId, kind: "WRITTEN",

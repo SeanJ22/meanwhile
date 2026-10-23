@@ -420,7 +420,7 @@ export interface RoutineCivicDataSupervisorOutcome {
   readonly verifiedSourceFailures: number;
   readonly taskReceiptEvidence: "EXACT" | "UNAVAILABLE_OUTER_SUPERVISOR";
   readonly taskReceipts: readonly RoutineCivicDataTaskReceiptReference[];
-  readonly readerReadbackEvidence: "EXACT" | "UNAVAILABLE_OUTER_SUPERVISOR";
+  readonly readerReadbackEvidence: "EXACT" | "SUMMARY" | "UNAVAILABLE_OUTER_SUPERVISOR";
   readonly readerReadbackDenominator: number;
   readonly readerReadbacksRecordedPass: number;
   readonly readerReadbacksRecordedFail: number;
@@ -433,6 +433,17 @@ export interface RoutineCivicDataSupervisorOutcome {
     readonly code: string;
     readonly detail: string;
   }[];
+
+  /** Totals survive bounded digest samples; exact source evidence remains in its candidate/event records. */
+  readonly summary?: {
+    readonly failureCount: number;
+    readonly failuresByCode: Readonly<Record<string, number>>;
+    readonly failuresOmitted: number;
+    readonly readerReadbacksOmitted: number;
+    readonly taskReceiptsOmitted: number;
+    readonly crashedTasksOmitted: number;
+    readonly linesOmitted: number;
+  };
 
   readonly crashedTasks?: readonly { readonly taskId: string; readonly detail: string }[];
   readonly attributionBoundary: {
@@ -499,15 +510,31 @@ function parsedReaderReadbackReceipt(value: unknown): ReaderProjectionReadbackRe
 export function routineReaderReadbackEvidenceIssue(
   outcome: RoutineCivicDataSupervisorOutcome,
 ): string | null {
+  if (outcome.readerReadbackEvidence === "SUMMARY") {
+    const counts = [outcome.readerReadbacksRecordedPass, outcome.readerReadbacksRecordedFail,
+      outcome.readerReadbacksCurrentFail, outcome.readerReadbackNoops, outcome.readerReadbackRepairFailures];
+    const summary = outcome.summary, failures = summary ? Object.values(summary.failuresByCode) : [];
+    if (!summary || counts.some(count => !Number.isSafeInteger(count) || count < 0) ||
+        counts.reduce((sum, count) => sum + count, 0) !== outcome.readerReadbackDenominator ||
+        !Array.isArray(outcome.readerReadbacks) || outcome.readerReadbacks.length !== 0 ||
+        summary.readerReadbacksOmitted !== outcome.readerReadbackDenominator ||
+        failures.some(count => !Number.isSafeInteger(count) || count < 0) ||
+        failures.reduce((sum, count) => sum + count, 0) !== summary.failureCount ||
+        summary.failuresOmitted !== summary.failureCount - outcome.failures.length ||
+        (summary.failuresByCode.READER_READBACK_REPAIR_FAILED ?? 0) !== outcome.readerReadbackRepairFailures) {
+      return "Reader summary counts do not reconcile to their checked contract denominator.";
+    }
+    return null;
+  }
   if (outcome.readerReadbackEvidence !== "EXACT") {
     return "Exact per-contract Reader readback references are unavailable.";
   }
   if (
     !Number.isInteger(outcome.readerReadbackDenominator) ||
-    outcome.readerReadbackDenominator <= 0 ||
+    outcome.readerReadbackDenominator < 0 ||
     !Array.isArray(outcome.readerReadbacks) ||
     outcome.readerReadbacks.length !== outcome.readerReadbackDenominator
-  ) return "Exact Reader readback references do not reconcile to a non-empty contract denominator.";
+  ) return "Exact Reader readback references do not reconcile to their contract denominator.";
 
   const allowedDispositions: readonly RoutineCivicDataReaderReadbackDisposition[] = [
     "NOT_APPLICABLE",
@@ -601,7 +628,7 @@ export function routineReaderReadbackEvidenceIssue(
   );
   const repairFailureRows = outcome.failures.filter((failure) => failure.code === "READER_READBACK_REPAIR_FAILED");
   if (
-    repairFailureRows.length !== repairFailureContracts.size ||
+    (outcome.summary?.failuresByCode.READER_READBACK_REPAIR_FAILED ?? repairFailureRows.length) !== repairFailureContracts.size ||
     repairFailureRows.some((failure) => !repairFailureContracts.has(failure.taskId))
   ) return "Reader repair failures do not reconcile to their exact supervisor incidents.";
   return null;
@@ -671,7 +698,7 @@ export function ownerDigestAttention(digest: OwnerDigestRecord): OwnerDigestAtte
         level: "RED",
         headline: "Routine civic-data supervision needs attention",
         happened:
-          `${outcome.failures.length} supervisor or infrastructure failure(s) were recorded. ` +
+          `${outcome.summary?.failureCount ?? outcome.failures.length} supervisor or infrastructure failure(s) were recorded. ` +
           "Exact source receipts remain authoritative; no source was blamed from this supervisor failure.",
         needsYou: true,
         action: "inspect and restore the failed routine-data supervisor path",

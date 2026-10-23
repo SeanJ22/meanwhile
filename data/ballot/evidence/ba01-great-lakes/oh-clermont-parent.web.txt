@@ -1,0 +1,179 @@
+46 Day Election Notice for use with the Federal Write-In Absentee Ballot (FWAB) for the November 3, 2026 General (https://boe.clermontcountyohio.gov/news_detail_T9_R39.php)
+【turn574277view0】 [wordlim: 200] Crawled: yesterday; Content type: text/html; Source: click({"ref_id":"turn415264view0","id":51}); Total lines: 176
+L0: 【0†Skip to main content】
+L1: 
+L2: 【1†Image: US flag】 An official government website. [Button: Here's how you know.]
+L3: 
+L4: 【2†Image: gov domain icon†designsystem.digital.gov】
+L5: 
+L6: Official websites use .gov
+L7: 
+L8: A .gov website belongs to an official government organization in the United States.
+L9: 
+L10: 【3†Image: https icon†designsystem.digital.gov】
+L11: 
+L12: A lock or https:// means you've safely connected to the .gov website. Share sensitive information only on official, secure websites.
+L13: A .gov website belongs to an official government organization in the United States.
+L14: 
+L15: 【0†Skip to main content】
+L16:   * 【4†Home】
+L17:   * 【5†Board of Elections】
+L18:     * 【6†Team Member Directory】
+L19:     * 【7†Ohio Boards of Elections†www.ohiosos.gov】
+L20:     * 【8†NCOA】
+L21:     * 【9†Mission Statement】
+L22:     * 【10†White Paper】
+L23:     * 【11†Public Records Policy】
+L24:     * 【12†Board Meeting Minutes】
+L25:     * 【13†Board Meeting Policy】
+L26:     * 【14†Retention Schedule†www.ohiosos.gov】
+L27:   * 【15†Voter Info】
+L28:     * 【16†Voter View FAQ】
+L29:       * 【17†Am I Registered to Vote?】
+L30:       * 【18†Find Your Polling Place†clermont-voterview.boe.ohio.gov】
+L31:       * 【19†Track Your Absentee Ballot†clermont-voterview.boe.ohio.gov】
+L32:       * 【18†View Sample Ballot†clermont-voterview.boe.ohio.gov】
+L33:     * 【20†GUIDES and Links】
+L34:       * 【21†FAQs】
+L35:       * 【22†Maps】
+L36:       * 【23†Ohio Election Official Manual†www.sos.state.oh.us】
+L37:       * 【24†Ohio Administrative Code†codes.ohio.gov】
+L38:       * 【25†Guide to Local Liquor Options Elections†www.sos.state.oh.us】
+L39:       * 【26†Ohio Questions and Issues Handbook†www.sos.state.oh.us】
+L40:       * 【24†Ohio Revised Code†codes.ohio.gov】
+L41:     * 【27†Voting】
+L42:       * 【28†Voter Registration】
+L43:       * 【29†ID Requirements†www.sos.state.oh.us】
+L44:       * 【30†Absentee Voting】
+L45:       * 【31†Absentee Voting by Military Personnel】
+L46:       * 【32†Vote in Honor of a Veteran†www.sos.state.oh.us】
+L47:     * 【33†Additional Resources】
+L48:       * 【34†Polling Location Updates】
+L49:       * 【35†Resource Links】
+L50:   * 【36†Candidate Tools】
+L51:     * 【37†Vote-By-Mail Tracking】
+L52:     * 【38†Walking Lists】
+L53:     * 【39†Campaign Finance】
+L54:     * 【40†BOe-file†boefile.ohiosos.gov】
+L55:     * 【41†Forms & Petitions†www.sos.state.oh.us】
+L56:     * 【42†Ohio Voter Files†www6.ohiosos.gov】
+L57:     * 【43†Polling Locations】
+L58:     * 【22†Maps】
+L59:     * 【44†Candidate Guides】
+L60:     * 【45†2026 Election Calendar†cms2.revize.com】
+L61:   * 【46†Elections】
+L62:     * 【47†Voter View】
+L63:     * 【48†Issues】
+L64:     * 【49†Election Results】
+L65:   * 【50†Poll Workers】
+L66:     * 【51†How to become a Poll Worker】
+L67:     * 【52†PEO Online Training】
+L68:   * 【6†Contact Us】
+L69: 【53†Image: search icon】 search
+L70: 
+L71: Search [Input: Enter search terms...] [Button: Go]
+L72:   *     * 【54†English】
+L73:     * 【54†Afrikaans】
+L74:     * 【54†Albanian】
+L75:     * 【54†Arabic】
+L76:     * 【54†Armenian】
+L77:     * 【54†Azerbaijani】
+L78:     * 【54†Basque】
+L79:     * 【54†Belarusian】
+L80:     * 【54†Bengali】
+L81:     * 【54†Bosnian】
+L82:     * 【54†Bulgarian】
+L83:     * 【54†Catalan】
+L84:     * 【54†Cebuano】
+L85:     * 【54†Chinese (Simplified)】
+L86:     * 【54†Chinese (Traditional)】
+L87:     * 【54†Croatian】
+L88:     * 【54†Czech】
+L89:     * 【54†Danish】
+L90:     * 【54†Dutch】
+L91:     * 【54†Esperanto】
+L92:     * 【54†Estonian】
+L93:     * 【54†Filipino】
+L94:     * 【54†Finnish】
+L95:     * 【54†French】
+L96:     * 【54†Galician】
+L97:     * 【54†Georgian】
+L98:     * 【54†German】
+L99:     * 【54†Greek】
+L100:     * 【54†Gujarati】
+L101:     * 【54†Haitian Creole】
+L102:     * 【54†Hausa】
+L103:     * 【54†Hebrew】
+L104:     * 【54†Hindi】
+L105:     * 【54†Hmong】
+L106:     * 【54†Hungarian】
+L107:     * 【54†Icelandic】
+L108:     * 【54†Igbo】
+L109:     * 【54†Indonesian】
+L110:     * 【54†Irish】
+L111:     * 【54†Italian】
+L112:     * 【54†Japanese】
+L113:     * 【54†Javanese】
+L114:     * 【54†Kannada】
+L115:     * 【54†Khmer】
+L116:     * 【54†Korean】
+L117:     * 【54†Lao】
+L118:     * 【54†Latin】
+L119:     * 【54†Latvian】
+L120:     * 【54†Lithuanian】
+L121:     * 【54†Macedonian】
+L122:     * 【54†Malay】
+L123:     * 【54†Maltese】
+L124:     * 【54†Maori】
+L125:     * 【54†Marathi】
+L126:     * 【54†Mongolian】
+L127:     * 【54†Nepali】
+L128:     * 【54†Norwegian】
+L129:     * 【54†Persian】
+L130:     * 【54†Polish】
+L131:     * 【54†Portuguese】
+L132:     * 【54†Punjabi】
+L133:     * 【54†Romanian】
+L134:     * 【54†Russian】
+L135:     * 【54†Serbian】
+L136:     * 【54†Slovak】
+L137:     * 【54†Slovenian】
+L138:     * 【54†Somali】
+L139:     * 【54†Spanish】
+L140:     * 【54†Swahili】
+L141:     * 【54†Swedish】
+L142:     * 【54†Tamil】
+L143:     * 【54†Telugu】
+L144:     * 【54†Thai】
+L145:     * 【54†Turkish】
+L146:     * 【54†Ukrainian】
+L147:     * 【54†Urdu】
+L148:     * 【54†Vietnamese】
+L149:     * 【54†Welsh】
+L150:     * 【54†Yiddish】
+L151:     * 【54†Yoruba】
+L152:     * 【54†Zulu】
+L153:   * 【55†Home】
+L154:   * 【56†News List】
+L155:   * News Post
+L156: # 46 Day Election Notice for use with the Federal Write-In Absentee Ballot (FWAB) for the November 3, 2026 General
+L157: 
+L158: 【57†Federal Write-In Absentee Ballot (FWAB)】
+L159: Updated 46 day FWAB (posted 15SEP2026)
+L160: 【58†R.C. §3511.16†codes.ohio.gov】
+L161: 【59†(notice to Ohio voters - candidate withdrawal)】
+L162: 
+L163:   * 【60†Military and Overseas Voter Information†www.ohiosos.gov】
+L164:   * 【61†Federal Voting Assistance Program†www.fvap.gov】
+L165: 
+L166: Board of Elections | Clermont County, Ohio
+L167: 76 South Riverside Dr. Batavia, OH 45103 | 513.732.7275
+L168: Powered by 【62†revize.†www.revize.com】, the Government Website Experts | 【63†Login†cms2.revize.com】
+L169: ##
+L170: 
+L171: ###
+L172: 
+L173: [Button: Close] 【54†Read More】
+L174: 
+L175: Please ensure Javascript is enabled for purposes of 【64†website accessibility†userway.org】
+

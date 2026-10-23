@@ -39,28 +39,21 @@ function state(heldPresident: OfficeholderSet | null): ReaderStatePackage {
   } as ReaderStatePackage;
 }
 
-test("the sourced current President reaches both ZIPs' existing Federal rows and survives local-data merging", () => {
+test("the sourced current President is not on any ZIP's list of who governs there; the senators and the district's House member are", () => {
   const coverage = stateCoverage(state(president), [STATE, CD7, CD3], 32.2, -110.9);
   const payload: ReaderStateResponse = { state: "AZ", version: "held", coverage, directory: null, boundaryUrl: "/boundaries.pmtiles",
     zipPlaces: { "85701": { ids: [CD7], partial: [], samples: 1 }, "85003": { ids: [CD3], partial: [], samples: 1 } } };
-  assert.deepEqual(coverage.seatCounts, { total: 3, named: 3 });
+  assert.equal(coverage.seats.some(seat => seat.ocdId === COUNTRY), false);
+  assert.deepEqual(coverage.seatCounts, { total: 2, named: 2 });
   for (const [zip, house] of [["85701", "congress:X000007"], ["85003", "congress:X000003"]]) {
     const scoped = stateCoverageForZip(payload, zip)!;
-    const country = scoped.seats.find(seat => seat.ocdId === COUNTRY)!;
-    assert.equal(country.label, "United States");
-    assert.equal(country.divisionType, "country");
-    assert.equal(country.representatives[0].name, "Jordan Example");
-    assert.equal(country.representatives[0].sourceUrl, URL);
-    assert.equal(country.representatives[0].officeTitle, "President of the United States");
-    assert.equal(country.representatives[0].fieldSources?.name?.sourceUrl, URL);
-    assert.deepEqual(scoped.seatCounts, { total: 2, named: 2 });
+    assert.equal(scoped.seats.some(seat => seat.ocdId === COUNTRY), false);
+    assert.deepEqual(scoped.seatCounts, { total: 1, named: 1 });
     const rows = panelSeatsFor(scoped, zipOnly(zip), FEDERAL_SEAT_TYPES).yours;
-    assert.ok(rows.some(row => row.representatives.some(holder => holder.id === president.officeholders[0].id)), "existing Federal panel data includes the President without changing its markup");
-    assert.deepEqual(groupOfficials(scoped).federal.map(row => row.holder.id).sort(), [house, "congress:K000377", "congress:G000574", president.officeholders[0].id].sort());
-    const local = { ...scoped, seats: scoped.seats.filter(seat => seat.ocdId !== COUNTRY) };
-    const merged = mergeReaderCoverage(scoped, local, 1)!;
-    assert.equal(merged.seats.filter(seat => seat.ocdId === COUNTRY).length, 1);
-    assert.equal(groupOfficials(merged).federal.length, 4, "local results preserve the President, House member and both senators");
+    assert.ok(!rows.some(row => row.representatives.some(holder => holder.id === president.officeholders[0].id)), "the Federal panel no longer lists the President");
+    assert.deepEqual(groupOfficials(scoped).federal.map(row => row.holder.id).sort(), [house, "congress:K000377", "congress:G000574"].sort());
+    const merged = mergeReaderCoverage(scoped, { ...scoped }, 1)!;
+    assert.equal(groupOfficials(merged).federal.length, 3, "the House member and both senators survive local-data merging");
   }
 });
 

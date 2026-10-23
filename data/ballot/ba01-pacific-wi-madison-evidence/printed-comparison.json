@@ -1,0 +1,196 @@
+{
+  "zip": "53703",
+  "address": "201 W Mifflin St, Madison, Wisconsin, 53703",
+  "ward": 52,
+  "divisions": [
+    "ocd-division/country:us/state:wi",
+    "ocd-division/country:us/state:wi/county:dane",
+    "ocd-division/country:us/state:wi/cd:2",
+    "ocd-division/country:us/state:wi/sldl:76"
+  ],
+  "electionDate": "2026-11-03",
+  "ballotStyle": "005",
+  "comparisonStatus": "OFFICIAL_PRINTED_SAMPLE_AND_GIS_MATCH",
+  "printedSampleStatus": "VERIFIED_FOR_THIS_ADDRESS",
+  "liveStatus": "NOT_VERIFIED",
+  "sampleUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf",
+  "officialLinkingUrl": "https://www.blmgrove.com/election-info",
+  "sourceUrls": [
+    "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+    "https://maps.cityofmadison.com/arcgis/rest/services/Locators/AddressPoints_w_Unit/GeocodeServer/findAddressCandidates?f=json&SingleLine=210+Martin+Luther+King+Jr+Blvd+Madison+WI+53703&outFields=%2A&outSR=4326",
+    "https://maps.cityofmadison.com/arcgis/rest/services/Public/PollsWards/MapServer/1/query?f=json&geometry=-89.3823933439%2C43.072423155106&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false",
+    "https://www.blmgrove.com/election-info",
+    "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf",
+    "https://maps.cityofmadison.com/arcgis/rest/services/Locators/AddressPoints_w_Unit/GeocodeServer/findAddressCandidates?f=json&SingleLine=201+W+Mifflin+St+Madison+WI+53703&outFields=%2A&outSR=4326",
+    "https://maps.cityofmadison.com/arcgis/rest/services/Public/PollsWards/MapServer/1/query?f=json&geometry=-89.387519798072%2C43.073588323556&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false"
+  ],
+  "matchedCandidateContests": 8,
+  "matchedMeasures": 3,
+  "matchedContests": 11,
+  "matchedCandidateChoices": 14,
+  "missingContests": [],
+  "missingCandidates": [],
+  "rows": [
+    {
+      "title": "Governor / Lieutenant Governor",
+      "type": "CANDIDACY",
+      "expectedChoices": 2,
+      "actualChoices": 2,
+      "choices": [
+        [
+          "Tom Tiffany / David Varnam",
+          "Republican"
+        ],
+        [
+          "David Crowley / Sarah Godlewski",
+          "Democratic"
+        ]
+      ],
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    },
+    {
+      "title": "Attorney General",
+      "type": "CANDIDACY",
+      "expectedChoices": 2,
+      "actualChoices": 2,
+      "choices": [
+        [
+          "Eric Toney",
+          "Republican"
+        ],
+        [
+          "Josh Kaul",
+          "Democratic"
+        ]
+      ],
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    },
+    {
+      "title": "Secretary of State",
+      "type": "CANDIDACY",
+      "expectedChoices": 3,
+      "actualChoices": 3,
+      "choices": [
+        [
+          "Jay Schroeder",
+          "Republican"
+        ],
+        [
+          "JoCasta Zamarripa",
+          "Democratic"
+        ],
+        [
+          "Pete Karas",
+          "Wisconsin Green"
+        ]
+      ],
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    },
+    {
+      "title": "State Treasurer",
+      "type": "CANDIDACY",
+      "expectedChoices": 2,
+      "actualChoices": 2,
+      "choices": [
+        [
+          "John S. Leiber",
+          "Republican"
+        ],
+        [
+          "Yee Leng Xiong",
+          "Democratic"
+        ]
+      ],
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    },
+    {
+      "title": "Representative in Congress District 2",
+      "type": "CANDIDACY",
+      "expectedChoices": 1,
+      "actualChoices": 1,
+      "choices": [
+        [
+          "Mark Pocan",
+          "Democratic"
+        ]
+      ],
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    },
+    {
+      "title": "Representative to the Assembly District 76",
+      "type": "CANDIDACY",
+      "expectedChoices": 2,
+      "actualChoices": 2,
+      "choices": [
+        [
+          "Nina Chat",
+          "Republican"
+        ],
+        [
+          "Dina Nina Martinez-Rutherford",
+          "Democratic"
+        ]
+      ],
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    },
+    {
+      "title": "Dane County Sheriff",
+      "type": "CANDIDACY",
+      "expectedChoices": 1,
+      "actualChoices": 1,
+      "choices": [
+        [
+          "Kalvin D. Barrett",
+          "Democratic"
+        ]
+      ],
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    },
+    {
+      "title": "Dane County Clerk of Circuit Court",
+      "type": "CANDIDACY",
+      "expectedChoices": 1,
+      "actualChoices": 1,
+      "choices": [
+        [
+          "Jeff Okazaki",
+          "Democratic"
+        ]
+      ],
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    }
+  ],
+  "measures": [
+    {
+      "title": "Partial veto",
+      "officialNumber": "QUESTION 1",
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    },
+    {
+      "title": "Freedom to gather in places of worship during an emergency",
+      "officialNumber": "QUESTION 2",
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    },
+    {
+      "title": "Governmental entity discrimination prohibited",
+      "officialNumber": "QUESTION 3",
+      "matched": true,
+      "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+    }
+  ],
+  "limitations": [
+    "This printed sample comparison covers Central Library, 201 W Mifflin St in Madison Ward 52, ZIP 53703. It does not establish every address in this ZIP.",
+    "The separately checked City Hall address is in Ward 51, which is absent from this printed style; its printed sample remains unverified.",
+    "This verifies the repository reader projection against official sources. The live page still requires verification."
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Berkeley%20261103%20General%20-14inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Berkeley%20261103%20General%20-14inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.579574+00:00",
+  "rawHash": "c9215fdf0850378aeeffb7771db28d6d5746403c1d700a3d30f5e0f41241f14d",
+  "httpStatus": 200,
+  "bytes": 1514187,
+  "extractedTextHash": "d0c985e8cc05a7986b2052c55724caa6ca21d84a25e88d01dc3c0408ea77afce",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

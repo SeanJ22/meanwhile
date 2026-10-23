@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Greenbrier%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Greenbrier%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.621488+00:00",
+  "rawHash": "d840159829a7d936972cdcd4c95382dc650d6251594e02263c998d95eae017ff",
+  "httpStatus": 200,
+  "bytes": 911990,
+  "extractedTextHash": "d55457e9c5385fc5ae3e6d97b9faa0e6b3e6b8583a978f36d32eccc38ef7308f",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "url": "https://tnmap.tn.gov/voterlookup",
+    "label": "Skip to main content"
+  },
+  {
+    "url": "https://tnsos.org/elections/election_commissions.php",
+    "label": "county election commission"
+  },
+  {
+    "url": "https://sos.tn.gov/products/elections/how-do-i-update-my-voter-registration-information",
+    "label": "Address Changes"
+  },
+  {
+    "url": "https://sos.tn.gov/products/elections/how-do-i-request-absentee-ballot",
+    "label": "By Mail Voting"
+  },
+  {
+    "url": "https://sos.tn.gov/products/elections/early-voting-person",
+    "label": "Early\r\nVoting"
+  },
+  {
+    "url": "https://sos.tn.gov/products/elections/militaryoverseas-uocava-absentee-information",
+    "label": "Military and Overseas Voting"
+  },
+  {
+    "url": "https://sos.tn.gov/products/elections/purging-voter-registration-information",
+    "label": "Purging a Voter"
+  },
+  {
+    "url": "https://sos.tn.gov/products/elections/register-vote",
+    "label": "Voter\r\nQualifications"
+  },
+  {
+    "url": "https://sos.tn.gov/products/elections/restoration-voting-rights",
+    "label": "Restoration of Voting Rights"
+  },
+  {
+    "url": "https://sos.tn.gov/products/elections/what-id-required-when-voting",
+    "label": "Voting ID Requirements"
+  },
+  {
+    "url": "https://sos.tn.gov/products/elections/voting-systems-tennessee",
+    "label": "Voting Machines"
+  }
+]

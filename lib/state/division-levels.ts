@@ -70,6 +70,10 @@ const CLASSIFIED_LEVELS: Readonly<
      * elementary board and a regional high school board at once.
      */
     "school_district",
+    // Fire, water, library and other districts of several kinds cover one point at once.
+    "special_district",
+    // Reservations and their off-reservation trust land overlap counties and places.
+    "aiannh",
   ],
 };
 

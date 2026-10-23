@@ -1,0 +1,96 @@
+{
+  "doorId": "wy-natrona-early-voting-2026",
+  "sites": [
+    {
+      "id": "voting-0e90d81c073b132408a14021",
+      "name": "Natrona County Clerk's Office",
+      "address": "200 N. Center St. Room 154 Casper, WY 82601",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "EARLY_VOTING",
+      "election": "2026 General Election",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Natrona County Clerk",
+          "url": "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+          "title": "Voting Information | Natrona County, WY",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "d18b1e76ca8ed815e17ea7b8050e615d9b9c10e5562649cfaf8facbe41b72ac0",
+          "documentUrl": "https://www.natronacounty-wy.gov/130/Voting-Information"
+        }
+      ],
+      "days": "October 6th and ends November 2nd",
+      "hours": "8:00 am - 5:00 pm, Monday thru Friday",
+      "countyFips": "56025",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "EARLY_VOTING"
+      ],
+      "schedules": [
+        {
+          "kind": "EARLY_VOTING",
+          "days": "October 6th and ends November 2nd",
+          "hours": "8:00 am - 5:00 pm, Monday thru Friday",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Natrona County Clerk",
+            "url": "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+            "title": "Voting Information | Natrona County, WY",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "d18b1e76ca8ed815e17ea7b8050e615d9b9c10e5562649cfaf8facbe41b72ac0",
+            "documentUrl": "https://www.natronacounty-wy.gov/130/Voting-Information"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Natrona County Clerk",
+      "url": "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+      "title": "Voting Information | Natrona County, WY",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://www.natronacounty-wy.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.natronacounty-wy.gov/130/Absentee-Voting-Information",
+      "route": "direct",
+      "outcome": "HTTP 301"
+    },
+    {
+      "url": "https://www.natronacounty-wy.gov/130/Voting-Information",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://www.natronacounty-wy.gov/robots.txt",
+      "contentType": "text/plain; charset=utf-8",
+      "rawHash": "6771bf6465ddd6e600a7866b5e41825007c4a20433b378e56746547c40d205c5",
+      "path": "tests/fixtures/voting-sources/vs-04-west/wy-9af9b08c1b23-6771bf6465dd.bin"
+    },
+    {
+      "url": "https://www.natronacounty-wy.gov/130/Voting-Information",
+      "contentType": "text/html; charset=utf-8",
+      "rawHash": "d18b1e76ca8ed815e17ea7b8050e615d9b9c10e5562649cfaf8facbe41b72ac0",
+      "path": "tests/fixtures/voting-sources/vs-04-west/wy-344bea8fc9b1-fe330313faa6.html"
+    }
+  ],
+  "fileTitle": "Voting Information | Natrona County, WY",
+  "contacts": []
+}

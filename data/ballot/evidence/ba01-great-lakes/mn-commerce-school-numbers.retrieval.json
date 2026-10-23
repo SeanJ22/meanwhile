@@ -1,0 +1,9 @@
+{
+  "requestedUrl": "https://mn.gov/commerce-stat/pdfs/school-district-list-type-1-3.pdf",
+  "finalUrl": "https://mn.gov/commerce-stat/pdfs/school-district-list-type-1-3.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:47:19.313806+00:00",
+  "rawHash": "dc062911873d8f88f738b69c037f50573b90ecfa822604910c2ad210839bc35f",
+  "contentType": "application/pdf",
+  "usable": true
+}

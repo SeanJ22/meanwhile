@@ -38,13 +38,11 @@ export function classifyRenderer(renderer: string | null | undefined): RasterKin
 }
 
 /**
- * Read the renderer string from a throwaway WebGL context, so the map's own
- * context is never touched. Every failure returns `null` (`"unknown"`).
+ * Read the map's existing canvas; creating another graphics context
+ * merely to identify the map's renderer adds work to its first visit.
  */
-export function readRendererString(): string | null {
-  if (typeof document === "undefined") return null;
+export function readRendererString(canvas: HTMLCanvasElement): string | null {
   try {
-    const canvas = document.createElement("canvas");
     const gl = (canvas.getContext("webgl2") ??
       canvas.getContext("webgl")) as WebGLRenderingContext | null;
     if (!gl) return null;
@@ -60,7 +58,7 @@ export function readRendererString(): string | null {
 }
 
 /** The reading and the classification together, for the one caller that wants both. */
-export function detectRaster(): { kind: RasterKind; renderer: string | null } {
-  const renderer = readRendererString();
+export function detectRaster(canvas: HTMLCanvasElement): { kind: RasterKind; renderer: string | null } {
+  const renderer = readRendererString(canvas);
   return { kind: classifyRenderer(renderer), renderer };
 }

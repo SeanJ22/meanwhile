@@ -4,8 +4,8 @@
  *
  * 1. `markDoorsReadNow`: at mission start, sets only `readNow` and `updatedAt`
  *    on matching OPEN doors; never touches `editedAt`.
- * 2. `readNowDueRequests`: each marked meeting door becomes an ordinary due
- *    request, spent by the partition's first attempt after the mark and
+ * 2. `readNowDueRequests`: each marked meeting or feed door becomes an ordinary due
+ *    request, spent by its source's first attempt after the mark and
  *    expiring after the request lifetime.
  * 3. `settleReadNow`: clears a mark once the door has recorded an outcome
  *    since it, or it has expired.
@@ -67,10 +67,10 @@ export async function markDoorsReadNow(
 
 /**
  * The partition a meeting door is read through: a hand-wired door's id is its partition's id, and a derived member is
- * read by its family's partition (`meeting.family`). A door that is not a meeting door is read by no partition.
+ * read by its family's partition (`meeting.family`). A feed door is read by its registered source contract.
  */
 export function doorPartitionIds(door: DoorRecord): readonly string[] {
-  if (door.meeting == null) return [];
+  if (door.meeting == null) return door.doorId.startsWith("feed:") && typeof door.config.contractId === "string" ? [door.config.contractId] : [];
   return [door.meeting.family ?? door.doorId];
 }
 
@@ -120,7 +120,8 @@ export async function settleReadNow(repo: DoorRepository, now: string): Promise<
     const outcomeSince = [door.lastSuccessAt, door.lastFailureAt].some((at) => at !== null && Date.parse(at) >= markedMs);
     if (!expired && !outcomeSince) continue;
     const row = await repo.read(door.doorId);
-    if (row === null || !isDoorRecord(row.value) || !row.value.readNow) continue;
+    // A mark renewed after this listing belongs to a newer request.
+    if (row === null || !isDoorRecord(row.value) || !row.value.readNow || row.value.updatedAt !== door.updatedAt) continue;
     try {
       await repo.compareAndSet(door.doorId, row.revision, { ...row.value, readNow: false, updatedAt: row.value.updatedAt }, now);
       cleared += 1;

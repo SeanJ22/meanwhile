@@ -6,6 +6,15 @@ import type { BoundedChildResult } from "../civic-data/bounded-child-pass.ts";
 /** A child that dies says why, in one redacted `RCD_FATAL` line its parent may quote; raw stderr is never quoted. */
 export const FATAL_LINE_PREFIX = "RCD_FATAL ";
 
+export interface FatalRecord {
+  readonly child: string;
+  readonly step: string;
+  readonly line: string;
+}
+let fatalRecorder: ((record: FatalRecord) => Promise<void>) | undefined;
+/** A runner entry point can save a fatal outcome before its normal fatal-line exit. */
+export function installFatalRecorder(record: (record: FatalRecord) => Promise<void>): void { fatalRecorder = record; }
+
 export function fatalLine(child: string, step: string, error: unknown): string {
   return `${FATAL_LINE_PREFIX}${child}: ${step} — ${sanitizedErrorDiagnostic(error)}`;
 }
@@ -25,10 +34,11 @@ export function installFatalLine(
   const die = (error: unknown): void => {
     if (fired) return;
     fired = true;
-    try {
-      write(fatalLine(child, step(), error));
-    } finally {
-      exit(1);
+    const at = step(), line = fatalLine(child, at, error);
+    try { write(line); }
+    finally {
+      if (fatalRecorder) void Promise.resolve().then(() => fatalRecorder!({ child, step: at, line })).finally(() => exit(1));
+      else exit(1);
     }
   };
   process.on("uncaughtException", die);

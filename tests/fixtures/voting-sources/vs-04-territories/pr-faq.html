@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>FAQInformacionalElector</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/img/cee_ico.ico" />
+    <link href="/Scripts/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/Style/site.css" rel="stylesheet" />
+    <link href="/Scripts/lib/KendoUI/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="/Scripts/lib/KendoUI/styles/kendo.bootstrap.min.css" rel="stylesheet" />
+    <link href="/Scripts/lib/KendoUI/styles/kendo.bootstrap.mobile.min.css" rel="stylesheet" />
+    <script src="/Scripts/lib/jquery/dist/jquery.js" type="text/javascript"></script>
+    <script src="/Scripts/lib/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/Scripts/lib/KendoUI/js/kendo.all.min.js" type="text/javascript"></script>
+
+    <!-- 🔹 FONT AWESOME (para los íconos de las tarjetas modernas) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* Íconos base */
+        img.social-icon {
+            width: 55px;
+            height: 55px;
+            margin: 0 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            filter: brightness(0.9) contrast(1.1);
+            transition: all 0.4s ease;
+        }
+
+            /* 🎨 Efecto hover: cambia el color del ícono negro a gris */
+            img.social-icon:hover {
+                filter: brightness(1.3) grayscale(1) contrast(1.2);
+                transform: scale(1.1);
+                box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+            }
+        /* 🔹 Modernización navbar */
+        .navbar {
+            background-color: #ffeb00; /* Amarillo institucional */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* Sombrilla moderna */
+            display: block;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        /* 🔹 Logo centrado y más grande */
+        .navbar-brand {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+            .navbar-brand img {
+                max-height: 80px; /* Ajusta tamaño */
+                margin: 0 auto;
+                display: block;
+            }
+
+        /* 🔹 Menú debajo del logo */
+        .navbar-nav {
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+            /* 🔹 Enlaces del menú modernizados */
+            .navbar-nav .nav-link {
+                color: #111111 !important; /* Negro fuerte */
+                font-weight: 700; /* Bold más marcado */
+                font-size: 15px; /* Tamaño más fresco */
+                letter-spacing: 0.5px; /* Espaciado moderno */
+                padding: 8px 14px; /* Más aire */
+                transition: all 0.3s ease; /* Animación suave */
+            }
+
+                .navbar-nav .nav-link:hover {
+                    color: #000000 !important; /* Texto negro */
+                    background-color: #ffffff; /* Fondo blanco */
+                    border-radius: 6px; /* Bordes redondeados */
+                }
+        /* Documentos estilo básico */
+        .documentos-lista a {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            color: #000;
+            text-decoration: none;
+            background: #fff;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+            /* Hover */
+            .documentos-lista a:hover {
+                background: #ffeb00; /* Amarillo institucional */
+                color: #000;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8ea27; color: #333333; font-weight: bold">
+            <div class="container">
+                
+
+                <a class="navbar-brand" asp-area="" href="/Home/Index" style=" padding: 0 !important;">
+
+                    <img src="/img/Logo CEE - sin ELA.png" class="d-inline-block align-top" alt="" loading="lazy" style="height: 50px">
+                </a>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/Presidencia">Presidencia</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="/Home/Index" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Servicios Elector
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <a class="dropdown-item" href="/Home/ServiciosElector">Servicios Elector</a>
+
+                                
+
+                                <a class="dropdown-item" href="/Home/SolicituddeVoto">Solicitud de Voto</a>
+
+                                <a class="dropdown-item" href="https://www.ceepur.org/directorio.htm" target="_blank">Juntas de Inscripción Permanente</a>
+
+                                <a class="dropdown-item" href="/Home/FAQInformacionalElector">Preguntas Frecuentes (FAQ's)</a>
+
+                                <!--<a class="dropdown-item" href="/Home/Calendario">Calendario</a>-->
+
+                                <a class="dropdown-item" href="/Home/Estadisticas">Estadísticas</a>
+
+                                
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://www.ceepur.org/eventoscee/">Eventos</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" asp-area="" asp-page="/Index" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Secretaría
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <a class="dropdown-item" href="/Home/Secretaria">Oficina del Secretario</a>
+                                <a class="dropdown-item" href="https://www.ceepur.org/ordenesyreglamentosadministrativos/">Órdenes y Reglamentos Administrativos</a>
+
+                                <a class="dropdown-item" href="https://www.ceepur.org/acuerdos-de-comision/#">Acuerdos</a>
+                                <a class="dropdown-item" href="https://www.ceepur.org/desacuerdos-de-comision/">Desacuerdos - Resolución</a>
+
+                                <a class="dropdown-item" href="/Home/Manuales">Manuales</a>
+
+                                <!--<a class="dropdown-item" href="/Home/Formularios">Formularios</a>-->
+
+                                <a class="dropdown-item" href="/Home/Certificaciones">Certificaciones</a>
+
+                                <a class="dropdown-item" href="/Home/Querellas">Querellas</a>
+
+                                <a class="dropdown-item" href="https://www.ceepur.org/reglamentos/">Reglamentos</a>
+
+                                <a class="dropdown-item" href="https://www.ceepur.org/resoluciones-de-comision/">Resoluciones</a>
+
+                                <a class="dropdown-item" href="https://individuo.cee.pr.gov/Public/Default.aspx" target="_blank">Radicación de Candidatura</a>
+                                
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" asp-area="" asp-page="/Index" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Administración
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="https://www.ceepur.org/subastas/#">Subastas</a>
+                                <a class="dropdown-item" href="/sites/ComisionEE/es-pr/administracion/ordenes-de-compra.pdf">Órdenes de compras</a>
+                                
+                                
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" asp-area="" asp-page="/Index" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Prensa
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <a class="dropdown-item" href="/Home/Prensa">Oficina</a>
+
+                                <a class="dropdown-item" href="https://www.ceepur.org/comunicados-de-prensa/" target="_blank">Comunicados</a>
+                                
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" asp-area="" asp-page="/Index" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Comisionados
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                <a class="dropdown-item" href="/Home/ComisionadosElectorales">Comisionados</a>
+
+                                <a class="dropdown-item" href="/Home/ComisionadoElectoralPartidoNuevoProgresista">Partido Nuevo Progresista</a>
+
+                                <a class="dropdown-item" href="/Home/ComisionadoElectoralPartidoPopularDemocratico">Partido Popular Democrático</a>
+
+                                
+
+                                <a class="dropdown-item" href="/Home/PartidoIndependentistaPuertorriqueño">Partido Independentista Puertorriqueño</a>
+
+                                
+
+                                
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            
+                            <a class="nav-link dropdown-toggle" asp-area="" asp-page="/Index" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Agencia
+                            </a>
+                            <div class="dropdown-menu " aria-labelledby="navbardropleft">
+                                <a class="dropdown-item" href="/Home/SolicituddeVoto">JAVAA</a>
+
+                                <a hidden class="dropdown-item" href="#">Centro de Estudios Electorales</a>
+
+                                <a class="dropdown-item" href="/Home/AsuntosLegales">Asuntos Legales</a>
+
+                                <a hidden class="dropdown-item" href="#">Recursos Humanos</a>
+
+                                <a class="dropdown-item" href="/Home/Planificacion">Oficina de Planificación</a>
+
+                                <a hidden class="dropdown-item" href="#">OSIPE</a>
+
+                                <a hidden class="dropdown-item" href="#">Programa de Ayuda al Empleado (PAE)</a>
+
+                                
+
+                                <a class="dropdown-item" href="/Home/HAVA">HAVA - Help America Vote Act</a>
+
+                                <a class="dropdown-item" href="https://ceepr.follettdestiny.com/common/welcome.jsp?context=saas023_7000010">Biblioteca Virtual</a>
+
+                                <a class="dropdown-item" href="/sites/ComisionEE/es-pr/Secretaria/Manuales/Manual%20para%20las%20Comisiones%20Locales%20-%20Elecciones%20Generales%202020.pdf">Comisión Local</a>
+
+                                
+                            </div>
+                        </li>
+                        <!--<li class="nav-item">
+        <a class="nav-link" href="/Home/FrequentlyAskedQuestionsCEE">English</a>
+    </li>-->
+                    </ul>
+                    
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="container body-content mb-2 mt-3">
+        <div class="row text-center justify-content-sm-end justify-content-center">
+            <!--<div class="col-lg-8 col-md-6 col-sm-12 text-md-left">
+               <a href="/Home/FrequentlyAskedQuestionsCEE">English</a>
+            </div>-->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" placeholder="Buscar en este sitio..." aria-label="Buscar" aria-describedby="basic-addon2" id="textbusqueda">
+                    <div class="input-group-append">
+                        <button class="btn btn-sm btn-outline-secondary" type="button" style="background-color: #333333; color: white" onclick="location.href='/Home/Busqueda?busqueda=' + $('#textbusqueda').val()">Buscar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+
+    <div class="container body-content mb-5">
+        
+
+
+
+    <div class="row text-left justify-content-center">
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-1 mt-3">
+            <h1 class="text-left">PREGUNTAS FRECUENTES (FAQs)</h1>
+        </div>
+        
+        <div class="col-lg-12 col-md-12 col-sm-12 mb-1 mt-3">
+            <div class="accordion" id="accordionExample">
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left" type="button"
+                                    data-toggle="collapse" data-target="#collapseOne"
+                                    aria-expanded="false" aria-controls="collapseOne">
+                                ¿Cuáles son los Requisitos para Inscribirme?
+                            </button>
+                        </h2>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+
+                            <ol>
+                                <li>Ser Ciudadano Americano</li>
+                                <li>Estar domiciliado en la Isla</li>
+                                <li>Tener 18 años en o antes del 5 de noviembre de 2024</li>
+                                <li>No estar Incapacitado judicialmente</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse20"
+                                    aria-expanded="false"
+                                    aria-controls="collapse20">
+                                ¿Dónde puedo inscribirme?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse20"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            <p>
+                                Si cumple con los cuatro requisitos de inscripción (Ciudadano Americano, domiciliado en Puerto Rico, tener 18 años en o antes del 5 de noviembre de 2024 y No estar incapacitado judicialmente) puede visitar una Junta de Inscripción Permanente.
+                                <a href="http://www.ceepur.org/directorio.htm">Vea el directorio de JIP</a>.<br />
+                                <br />Pronto estará disponible un Sistema de Registro Electrónico de Electores (Sistema eRE).
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+                <!----------------------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                ¿Qué documentos debo presentar al momento de Inscribirme?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            <ol>
+                                <li>
+                                    <strong>Nacido en Puerto Rico mayor de dieciocho (18) años:</strong>
+                                    <ul>
+                                        <li>Identificación con foto vigente expedida por Gobierno Estatal, Municipal o Federal y sus últimos cuatro dígitos del Seguro Social.</li>
+                                        <li>De forma voluntaria podrá presentar la factura de LUMA de la residencia donde vive.</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Nacido en Puerto Rico y cumple los dieciocho (18) años durante el cuatrienio:</strong>
+                                    <ul>                                        
+                                        <li>Visitar la Junta de Inscripción Permanente más cercana para cotejar que su nombre e información aparezca en la Base de Datos del Registro Demográfico. De ser así no tendrá que presentar evidencia para inscribirse.</li>
+                                        <li>Si su información <strong>no</strong> aparece en la Base de Datos del Registro Demográfico <strong>no se podrá inscribir</strong>, a menos que presente un Certificado de Nacimiento en <strong>original</strong> (el nuevo formato emitido por la Oficina de Registro Demográfico).</li>
+                                        <li>Identificación con foto vigente expedida por Gobierno Estatal, Municipal o Federal y sus últimos cuatro dígitos del Seguro Social.</li>
+                                        <li>De forma voluntaria podrá presentar la factura de LUMA de la residencia donde vive.</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Nacidos en los Estados Unidos, Continentales, Territorios o Posesiones:</strong>
+                                        <ul>
+                                            <li>Certificado de nacimiento en original o Pasaporte o “Passport Card” de Estados Unidos de América, <strong>aunque no esté vigente.</strong></li>
+                                            <li>Identificación con foto vigente expedida por Gobierno Estatal, Municipal o Federal y sus últimos cuatro dígitos del Seguro Social.</li>
+                                            <li>De forma voluntaria podrá presentar la factura de LUMA de la residencia donde vive.</li>
+                                        </ul>
+                                    </li>
+                                <li>
+                                    <strong>Nacidos en países extranjeros:</strong>
+                                    <ul>
+                                        <li>Pasaporte de Estados Unidos de América vigente o Certificado de Naturalización (Certificate of Naturalization) o Certification of Birth (Report of Birth) o Certificate of Citizenship oUS Citizen Identification Card (vigente).</li>                                        
+                                        <li>Identificación con foto vigente expedida por Gobierno Estatal, Municipal o Federal y sus últimos cuatro dígitos del Seguro Social.</li>
+                                        <li>De forma voluntaria podrá presentar la factura de LUMA de la residencia donde vive.</li>
+                                    </ul>
+                                    <br />
+                                    <p><strong>Nota:</strong>Todo ciudadano que presente su solicitud de inscripción dentro de los sesenta (60) días previos al Cierre del Registro General de Electorales, deberá presentar copia certificada de su Certificado de Nacimiento, además de evidencia de la dirección de su domicilio.</p>
+
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse4"
+                                    aria-expanded="false"
+                                    aria-controls="collapse4">
+                                ¿Cuál es el horario de las Juntas de Inscripción Permanente (JIP)?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse4"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            <p>Las Juntas de Inscripción Permanente trabajan de lunes a viernes de 8:00 a.m. a 4:15 p.m.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse5"
+                                    aria-expanded="false"
+                                    aria-controls="collapse5">
+                                ¿Debo costear el sello postal o entrega especial?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse5"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            No. Junta Administrativa de Voto Ausente y Adelantado (JAVAA) cuenta con fondos predestinados para hacerle llegar las papeletas y sobres predirigidos, donde usted deberá enviar las mismas una vez emita su voto. De ser un lugar remoto fuera de E.U., debe indagar en la oficina postal de su localidad, si no conlleva un costo adicional.
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse6"
+                                    aria-expanded="false"
+                                    aria-controls="collapse6">
+                                ¿Puedo inscribirme o activarme electrónicamente fuera de Puerto Rico?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse6"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            <p>En este momento no puede Inscribirse o Activarse electrónicamente. Debe visitar la Junta de Inscripción Permanente.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse7"
+                                    aria-expanded="false"
+                                    aria-controls="collapse7">
+                                ¿Si mi papeleta no me llega, puedo solicitar otra?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse7"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            ​Si. Luego de verificar en la Junta Administrativa de Voto Ausente y Adelantado (JAVAA) que efectivamente su papeleta no le ha llegado, usted tiene derecho a un segundo envío. Para más información se puede comunicar al <a href="tel:17877645601">(787) 764-5601</a> o escribir a <a href="mailto:java@cee.pr.gov">java@cee.pr.gov</a>.
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse8"
+                                    aria-expanded="false"
+                                    aria-controls="collapse8">
+                                ¿Tiene que estar la papeleta que envié el día de la elecciones o en cualquier evento electoral, el mismo día?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse8"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            <p>No necesariamente. Verificamos el día en que Junta Administrativa de Voto Ausente y Adelantado (JAVAA) le envió la papeleta y si está dentro de los 30 días en E.U., ó 45 días fuera de E.U., la misma se cuenta y se agrega al total general, según van llegando.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse9"
+                                    aria-expanded="false"
+                                    aria-controls="collapse9">
+                                ¿Puedo solicitar que mi papeleta la envíen a una dirección en Puerto Rico?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse9"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            ​Sí. De usted preferir que algún familiar se responsabilice por enviársela a usted, la Junta Administrativa de Voto Ausente y Adelantado (JAVAA) aceptará su decisión.
+
+                            El Código Electoral de Puerto Rico indica que en su solicitud deberá incluir la dirección postal completa del lugar donde recibirá por correo sus papeletas de votación.
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse10"
+                                    aria-expanded="false"
+                                    aria-controls="collapse10">
+                                ¿Qué hago si se me perdió la Tarjeta de Identificación Electoral (TIE)?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse10"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            Tendrá que acudir a la Junta de Inscripción Permanente para que le expidan una Tarjeta de Identificación Electoral.
+
+                            Podría presentar al momento de votar, además de la Tarjeta de Identificación Electoral de la Comisión, se autoriza la validez de tarjetas de identificación vigentes y con fotos como: cualquiera expedida conforme al Real ID Act of 2005, el U.S. Passport, el U.S. Global Entry, las Tarjetas de Identificación de las U.S. Armed Forces y de la Marina Mercante de Estados Unidos de América, la licencia de conducir expedida por el Departamento de Transportación y Obras Públicas de Puerto Rico (DTOP).
+
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse11"
+                                    aria-expanded="false"
+                                    aria-controls="collapse11">
+                                Tengo un impedimento físico y no puedo subir escaleras y camino con dificultad ¿Qué puedo hacer para votar?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse11"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            <p>Solicitar que se le asigne al Colegio de Fácil Acceso de su centro de votación (escuela) para garantizarle la mayor accesibilidad al proceso de votación.</p>
+                            ​<ul>
+                                <li>Debe descargar la solicitud, llenarla, y enviarla firmada a la Junta Administrativa de Voto Ausente y Adelantado (JAVAA) mediante correo electrónico</li>
+                                <li>Ver las<a href="https://ww2.ceepur.org/Home/SolicituddeVoto">Solicitudes</a></li>
+                                <li>correo electrónico: <a href="mailto:java@cee.pr.gov">java@cee.pr.gov</a></li>
+                            </ul>
+                             <p>A estos fines, usted o un pariente suyo puede acudir a la JIP o acceder a la página de internet y solicitar dicho servicio en o antes del Cierre Electoral que es el 16 de septiembre de 2024.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse12"
+                                    aria-expanded="false"
+                                    aria-controls="collapse12">
+                                ¿Qué alternativas tiene la Comisión Estatal de Elecciones (CEE) en los eventos electorales para facilitar el proceso a los electores con impedimentos?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse12"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            <p>​La CEE tiene un programa de acción afirmativa para facilitar el proceso de votación a electores con impedimentos. El día del evento en cada unidad existen herramientas de asistencia para los electores con impedimentos que así lo soliciten, para que pueda ejercer su derecho al voto de forma privada e independiente. Tales como:</p>
+                            <ul>
+                                <li>Plantillas en braille para los electores ciegos</li>
+                                <li>Lupa la cual permite ampliar la letra de la papeleta</li>
+                                <li>Rampa removible en la entrada del Centro de Votación</li>
+                                <li>Casetas amplias que permiten la entrada de sillas de ruedas, andadores, etc.</li>
+                            </ul>
+                            <p>Además, los electores que posean otras herramientas de asistencia tecnológicas para su uso personal están autorizados por la CEE a llevarlos al Centro de Votación.</p>
+
+                            <p>​La Comisión ofrece las siguientes modalidades:</p>
+                            <ul>
+                                <li>Voto adelantado por correo</li>
+                                <li>Voto adelantado en el domicilio</li>
+                                <li>Voto adelantado en el precinto</li>
+                                <li>Voto por Teléfono en el domicilio o en el Colegio de Fácil Acceso el día de la elección general</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse13"
+                                    aria-expanded="false"
+                                    aria-controls="collapse13">
+                                Durante el pasado evento electoral en que participe en el Colegio de Votación me retuvieron la Tarjeta de Identificación Electoral (TIE). ¿Qué puedo hacer?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse13"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            <p>​Tiene que acudir a la JIP para que coteje su estatus electoral y le realicen la transacción que requiera. De proceder le entregarán una nueva Tarjeta de Identificación Electoral (TIE).</p>
+                        </div>
+                    </div>
+                </div>
+                <!-------------------------------------------->
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left collapsed"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#collapse14"
+                                    aria-expanded="false"
+                                    aria-controls="collapse14">
+                                Si en el momento de votar me equivoco o daño la papeleta, ¿qué puedo hacer?
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="collapse14"
+                         class="collapse"
+                         aria-labelledby="headingThree"
+                         data-parent="#accordionExample">
+                        <div class="card-body" style="padding-left: 2.25rem;">
+                            Si por accidente o equivocación daña la papeleta de votación tiene derecho a solicitarle al funcionario de Colegio que le entregue otra papeleta de la misma categoría. Tiene que devolver la papeleta al funcionario de Colegio.
+                            
+                            No se le podrán entregar más de dos papeletas por categoría o candidatura.
+                        </div>
+                    </div>
+                    <!-------------------------------------------->
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    ¿Cómo solicito el voto ausente?
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                            <div class="card-body" style="padding-left: 2.25rem;">
+                                ​<ul>
+                                     <li>Debe descargar la solicitud, llenarla, y enviarla firmada a la Junta Administrativa de Voto Ausente y Adelantado (JAVAA) mediante correo electrónico.</li>
+                                    <li>Ver la <a href="http://ww2.ceepur.org/Home/SolicituddeVoto">Solicitud</a></li>
+                                    <li>correo electrónico: <a href="mailto:java@cee.pr.gov">java@cee.pr.gov</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-------------------------------------------->
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed"
+                                        type="button" data-toggle="collapse"
+                                        data-target="#collapse15"
+                                        aria-expanded="false"
+                                        aria-controls="collapse15">
+                                    ¿Qué debo hacer si no he recibido mi papeleta?
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapse15"
+                             class="collapse"
+                             aria-labelledby="headingThree"
+                             data-parent="#accordionExample">
+                            <div class="card-body" style="padding-left: 2.25rem;">
+                                <p>
+                                    ​Si usted es un elector con una solicitud aprobada por la JAVAA y notificado del envío de sus papeletas, en caso de no recibirlas, puede contactar a la JAVAA. La JAVAA evaluara y determinara si un segundo envío aplica.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-------------------------------------------->
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed"
+                                        type="button" data-toggle="collapse"
+                                        data-target="#collapse16"
+                                        aria-expanded="false"
+                                        aria-controls="collapse16">
+                                    ¿Tiene que estar la papeleta que envíe el día de las elecciones o en cualquier evento electoral, el mismo día?
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapse16"
+                             class="collapse"
+                             aria-labelledby="headingThree"
+                             data-parent="#accordionExample">
+                            <div class="card-body" style="padding-left: 2.25rem;">
+                                <p>
+                                    ​Toda papeleta del voto ausente y voto adelantado por correo deberán ser enviada por US Postal Service o una empresa postal autorizada para operar dentro de los Estados Unidos con matasello postal fechado no más tarde del día de votación o elección general. Se considerarán válidamente emitidos aquellas papeletas votadas que sean recibidas en la Comisión Estatal de Elecciones, en o antes del último día de escrutinio general del evento electoral.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--------------------------------------------
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed"
+                                        type="button" data-toggle="collapse"
+                                        data-target="#collapse18"
+                                        aria-expanded="false"
+                                        aria-controls="collapse18">
+                                    ¿Tengo un impedimento físico y no puedo subir escaleras y camino con dificultad, que puedo hacer para votar?
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="collapse18"
+                             class="collapse"
+                             aria-labelledby="headingThree"
+                             data-parent="#accordionExample">
+                            <div class="card-body" style="padding-left: 2.25rem;">
+                                <p>
+                                    Todo elector con impedimento físico o no vidente que, durante los cincuenta(50) días previos  a una votación y hasta el día de esta, haya estado y continuara utilizando sillón de ruedas, muletas, equipo o artefactos indispensables para lograr su movilidad; o que tenga una evidente limitación para moverse por sus piernas, aunque no utilice un artefacto de apoyo, tendrá derecho a reclamar el Voto Adelantado como sistema de votación que le garantice el acceso a ejercer el derecho al voto de forma privada e independiente.
+                                </p>
+                            </div>
+                        </div>
+                    </div>>
+                    <!-------------------------------------------->
+                    
+                    <!--------------------------------------------
+    <div class="card">
+        <div class="card-header" id="headingThree">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left collapsed"
+                        type="button" data-toggle="collapse"
+                        data-target="#collapse21"
+                        aria-expanded="false"
+                        aria-controls="collapse21">
+                    ¿Dónde puedo inscribirme?
+                </button>
+            </h2>
+        </div>
+        <div id="collapse21"
+             class="collapse"
+             aria-labelledby="headingThree"
+             data-parent="#accordionExample">
+            <div class="card-body" style="padding-left: 2.25rem;">
+                <p>
+                    Actualmente solo se puede inscribir, una persona domiciliada en Puerto Rico, visitando una Junta de Inscripción Permanente.<br /><br />
+                    <br />Pronto estará disponible un Sistema de Registro Electrónico de Electores (Sistema eRE).
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-------------------------------------------->
+                </div>
+            </div>
+
+
+        
+    </div>
+
+
+        <!--<hr />-->
+
+    </div>
+    <!-- Footer -->
+    <footer class="page-footer font-small mt-5" style="background-color: #6E6E6B;">
+
+        <!-- Footer Links -->
+        <div class="container text-center text-md-left" style="color: white">
+
+            <!-- Grid row -->
+            <div class="row mt-5">
+
+                <!-- Grid column -->
+                <div class="col-md-3 mx-auto">
+
+                    <!-- Links -->
+                    
+
+                    <div class="row text-center mt-3 mb-2">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <h5 class="font-weight-bold text-uppercase cambioA">Redes Sociales</h5>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-6 mt-1">
+                            <a href="https://www.facebook.com/CEEPuertoRico/" target="_blank">
+                                <img src="/img/iconsSo/facebook-2-32.png" alt="Facebook" />
+                            </a>
+                            <a href="https://twitter.com/ceedepuertorico" target="_blank">
+                                <img src="/img/iconsSo/twitter-2-32.png" alt="Twitter" />
+                            </a>
+                            <a href="https://www.instagram.com/cee_puertorico/" target="_blank">
+                                <img src="/img/iconsSo/instagram-2-32.png" alt="Instagram" />
+                            </a>
+                            <a href="https://www.youtube.com/channel/UCAohQLDz_FoavCBvZnXAXuw" target="_blank">
+                                <img src="/img/iconsSo/youtube-2-32.png" alt="YouTube" />
+                            </a>
+                        </div>
+                        
+
+                    </div>
+
+                </div>
+                <!-- Grid column -->
+
+                <hr class="clearfix w-100 d-md-none">
+
+                <!-- Grid column -->
+                <div class="col-md-3 mx-auto">
+
+                    <!-- Links -->
+                    <h5 class="font-weight-bold text-uppercase mt-3 mb-2 cambioA">Dirección</h5>
+
+                    <ul class="list-unstyled" style="font-size: 12px">
+                        <li>
+                            <b>Comisión Estatal de Elecciones</b><br /> PO Box 195552<br />San Juan, PR 00919-5552
+                        </li>
+                    </ul>
+
+                </div>
+                <!-- Grid column -->
+
+                <hr class="clearfix w-100 d-md-none">
+
+                <!-- Grid column -->
+                <div class="col-md-3 mx-auto">
+
+                    <!-- Links -->
+                    <h5 class="font-weight-bold text-uppercase mt-3 mb-2 cambioA">Número telefónico</h5>
+
+                    <ul class="list-unstyled" style="font-size: 12px">
+                        <li>
+                            <b>Cuadro Telefónico</b> 787-777-8682
+                        </li>
+                        <li>
+                            <b>Oficina de Prensa</b> 787-296-0524
+                        </li>
+                        <li>
+                            <b>Secretario de la Comisión</b> 787-294-1190
+                        </li>
+                        <li>
+                            <b>Estudios Electorales</b> 787-777-8720
+                        </li>
+                    </ul>
+
+                </div>
+                <!-- Grid column -->
+
+                <hr class="clearfix w-100 d-md-none">
+
+                <!-- Grid column -->
+
+                <div class="col-md-3 mx-auto">
+
+                    <!-- Links -->
+                    <!-- *******************************************************************************************************************************Oficina del Inspector General (OIG) -->
+                    <h5 class="font-weight-bold text-uppercase mt-3 mb-2 cambioA">OFICINA DEL INSPECTOR GENERAL</h5>
+
+                    <ul class="list-unstyled" style="font-size: 12px">
+                        <li>
+                            <h6 class=""><a href="https://oig.pr.gov/" target="_blank" style="color: #ffffff"><b>https://oig.pr.gov/</b></a></h6>
+                        </li>
+                    </ul>
+
+                </div>
+                <!-- ************************************************************************************************************************************Oficina del Inspector General (OIG)-->
+                <!--<div class="col-md-3 mx-auto">-->
+                <!-- Links -->
+                
+
+            </div>
+            <!-- Grid column -->
+
+        </div>
+        <!-- Grid row -->
+        </div>
+        <!-- Footer Links -->
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3 mt-3" style="background-color: #333333; color: white">
+            <!--Política de privacidad • Términos y condiciones • Reportar problemas con la página-->
+            <a href="#"> </a>
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
+
+    <script>
+        function Subscirbe() {
+            var email = $("#emailtext").val();
+            if (email !== "") {
+                var dataRequest = {
+                    "email": email
+                }
+                var acutualiza = {
+                    url: "/api/values",
+                    headers: {
+                        // 'Content-Type': 'application/json'
+                    },
+                    data: dataRequest
+                };
+                GetAjaxAsync(acutualiza, notifica)
+                $("#emailtext").val("");
+            }
+        }
+        function notifica(e) {
+            alert(e)
+        }
+        function GetAjaxAsync(properties, callback) {
+            $.ajax({
+                url: properties.url,
+                headers: properties.headers,
+                async: true,
+                data: properties.data,
+                success: function (response) {
+                    if (callback != null)
+                        callback(response);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    //console.log('Failed to retrieve ' + nameCtrl);
+                    //console.log('Request Status: ' + xhr.status + ' Status Text: ' + xhr.statusText + ' ' + xhr.responseText);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

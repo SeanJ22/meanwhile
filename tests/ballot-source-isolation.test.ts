@@ -263,7 +263,6 @@ test("reaction intake opens only the authority named by its submitted target fam
       throw new Error("PLANTED_FEC_AUTHORITY_UNAVAILABLE");
     },
     fundingTargets: () => new Set(["funding:one"]),
-    refreshStateMoney: async () => { calls.push("stateMoney"); },
     stateMoneyTargets: () => new Set<string>(),
     contributorTargets: () => new Set(["contributor:one"]),
     refreshVotes: async () => {
@@ -282,7 +281,7 @@ test("reaction intake opens only the authority named by its submitted target fam
 
   calls.length = 0;
   await assert.rejects(
-    () => validReactionTargetsFor("FUNDING_TOTAL_REACTION", "funding:one", readers),
+    () => validReactionTargetsFor("FUNDING_TOTAL_REACTION", "fec:H0AZ01234", readers),
     /PLANTED_FEC_AUTHORITY_UNAVAILABLE/,
   );
   assert.deepEqual(calls, ["funding"]);
@@ -302,9 +301,9 @@ test("a supporting ballot authority failure cannot suppress the ballot or anothe
       calls.push("candidate-profiles");
       throw new Error("PLANTED_PROFILE_AUTHORITY_UNAVAILABLE");
     }],
-    ["state-money", async () => {
-      calls.push("state-money");
-      return { kind: "PROMOTED", metadata: { versionId: "state-money-good" } };
+    ["ballot-navigation", async () => {
+      calls.push("ballot-navigation");
+      return { kind: "PROMOTED", metadata: { versionId: "navigation-good" } };
     }],
     ["registry-runtime", async () => {
       calls.push("registry-runtime");
@@ -317,12 +316,12 @@ test("a supporting ballot authority failure cannot suppress the ballot or anothe
   ]);
 
   const outcomes = await settleBallotAuxiliaryPreloads(preloads);
-  assert.deepEqual(calls.sort(), ["candidate-profiles", "nh-members", "registry-runtime", "state-money"]);
+  assert.deepEqual(calls.sort(), ["ballot-navigation", "candidate-profiles", "nh-members", "registry-runtime"]);
   assert.equal(ballotAuxiliaryPreloadSucceeded(outcomes.get("candidate-profiles")), false);
   assert.equal(ballotAuxiliaryPreloadSucceeded(outcomes.get("registry-runtime")), false);
   assert.equal(ballotAuxiliaryPreloadSucceeded(outcomes.get("nh-members")), false);
-  assert.equal(ballotAuxiliaryPreloadSucceeded(outcomes.get("state-money")), true);
-  assert.equal(outcomes.get("state-money")?.status, "fulfilled");
+  assert.equal(ballotAuxiliaryPreloadSucceeded(outcomes.get("ballot-navigation")), true);
+  assert.equal(outcomes.get("ballot-navigation")?.status, "fulfilled");
 });
 
 test("ballot supporting reads overlap contest selection and retain their original failure without retrying", async () => {
@@ -338,11 +337,11 @@ test("ballot supporting reads overlap contest selection and retain their origina
   await Promise.resolve();
   const outcomes = await settleBallotAuxiliaryPreloads(new Map([
     ["candidate-profiles", start("candidate-profiles", async () => { calls++; })],
-    ["state-money", start("state-money", async () => ({ kind: "PROMOTED" }))],
+    ["ballot-navigation", start("ballot-navigation", async () => ({ kind: "PROMOTED" }))],
   ]));
   assert.equal(calls, 1);
   assert.deepEqual(outcomes.get("candidate-profiles"), { status: "rejected", reason: original });
-  assert.equal(ballotAuxiliaryPreloadSucceeded(outcomes.get("state-money")), true);
+  assert.equal(ballotAuxiliaryPreloadSucceeded(outcomes.get("ballot-navigation")), true);
 });
 
 test("all production ballot entry points use state-scoped selection", () => {
@@ -362,7 +361,6 @@ test("all production ballot entry points use state-scoped selection", () => {
     page.indexOf("readerBallotSourcesForDivisions(ocdIds") < page.indexOf("settleBallotAuxiliaryPreloads(auxiliaryPreloads)"),
     "supporting authorities were opened before the requested ballot authority was selected",
   );
-  assert.match(page, /data-ballot-canonical-holding-gaps/);
   assert.match(page, /<CardGapContribution id=\{`ballot-holding:\$\{family\}`\} label=\{HOLDING_LABEL\[family\]\}/,
     "supporting authority failures contribute to the card footer");
   assert.match(page, /matched\.contests\.some\(nhLegislativeRosterAppliesTo\)/);

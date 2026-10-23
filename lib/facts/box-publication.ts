@@ -1,4 +1,4 @@
-import { findingFact, finishBoxFinding, holdBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
+import { findingFact, finishBoxFinding, holdBoxFinding, otherSources, PUBLISHER, reopenBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { datesInQuote, electionFieldId, publishElectionFields } from "../civic-data/election-field-publication.ts";
@@ -10,52 +10,63 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import type { ProbeFetch } from "../doors/probe.ts";
 import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
+import { looksLikeNameCell, splitPersonTitle } from "../hunt/roster-page.ts";
+import { isPlainSentence, OTHER_NOTICE, schedulePhrase } from "../hunt/page-rules.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
-import { learnOfficialHost } from "./entities.ts";
+import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, officeNamed, splitSubject } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, slotFor, type FindingSlot } from "./finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, otherOffice, COMMENT_SUMMARY_LEAD, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
-import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
+import { nameKey, publishBodyNameFromPage, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
-
-/** How far back the Box is read for findings to publish. */
-const HUNTER_FINDING_DAYS = 30;
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 
 interface Finding {
-  readonly row: BoxFinding; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
+  readonly row: BoxFinding; /** The subject under the one board name: its government's registered id, then its tail. */ readonly subject: string; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
   readonly exactQuote: string; readonly sourceUrl: string; readonly recordClass: string | null;
 }
 
 interface BoxPublicationReport {
   readonly looked: number;
+  readonly deferred: number;
   readonly published: number;
   /** Published by where each went: the fact store's classes and ballot navigation. */
   readonly publishedByRoute: Readonly<Record<string, number>>;
-  /** Handed to the campaign-site chain or the candidate-profile writer, which check each on their own passes. */
+  /** Handed to the campaign-site chain, the candidate-profile writer or the site walk, which check or read each on their own passes. */
   readonly handed: number;
   readonly refused: number;
   readonly waitingByClass: Readonly<Record<string, number>>;
   readonly failuresByReason: Readonly<Record<string, number>>;
+  readonly errorExamples: readonly { readonly findingId: string; readonly stage: string; readonly detail: string }[];
   readonly byPlace: Readonly<Record<string, { published: number; refused: number; waiting: number }>>;
-  /** Box seats taken down for never showing the seat, and those flagged for naming a ward another member holds. */
-  readonly seats: { readonly pulled: number; readonly flagged: number };
+  /** Published seats needing Sean's decision. */
+  readonly seats: { readonly flagged: number };
+  /** Box facts that read as a label, a heading, a notice or a bare link (flagged for Sean), cut to the part that states the thing, re-filed, or renamed to the name alone. */
+  readonly labels: { readonly flagged: number; readonly moved: number; readonly cut: number; readonly renamed: number };
+}
+
+/** Audits read what already reached readers; the publication lane calls them separately so they cannot stop waiting facts. */
+export async function reviewPublishedBoxFacts(query: Query, purge?: ReaderCachePurger) {
+  return { seats: await reviewBoxSeats(query), labels: await reviewBoxFacts(query, purge) };
 }
 
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
 
-type Routed = Exclude<FindingSlot, { waiting: string } | { lead: string } | { election: string }>;
-const kindOf = (slot: Routed): FieldKind => slot.class === "rosters" || slot.class === "body links" && slot.slot === "name" ? "officeholder"
+type Routed = Exclude<FindingSlot, { waiting: string } | { lead: string } | { handoff: string } | { election: string }>;
+const kindOf = (slot: Routed): FieldKind => slot.class === "rosters" || slot.class === "bodies" || slot.class === "body links" && slot.slot === "name" ? "officeholder"
   : slot.class === "schedules" || slot.class === "sittings" && slot.slot === "video_url" ? "meeting"
   : slot.class === "meeting routes" || slot.class === "sittings" ? "agenda" : slot.class === "comment rules" ? "comment_rule" : "contact";
 
-interface Target { readonly body: { id: string; name: string; state: string | null; parentId: string | null }; readonly holder: string | null; readonly entityId: string }
+export interface Target { readonly body: { id: string; name: string; state: string | null; parentId: string | null }; readonly holder: string | null; readonly entityId: string }
 
 const BODY_SQL = "SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND id = $1";
 const SITTING_SQL = "SELECT m.id AS meeting_id, m.parent_id AS body_id FROM entity m WHERE m.kind = 'meeting' AND m.id = $1";
-const GOVERNS = "b.kind = 'body' AND (b.id LIKE '%#governing' OR b.id LIKE '%#board')";
-// Each branch is one index lookup: by parent, by the government's parent, and by id prefix (`#` then `$` in C collation).
+// $2 is the board the subject names (`governing` or `board`), or null where it names none.
+const GOVERNS = "b.kind = 'body' AND (b.id LIKE '%#governing' OR b.id LIKE '%#board') AND ($2::text IS NULL OR b.id LIKE '%#' || $2::text)";
+// Each branch is one index lookup: by parent government, by the place's government, and by id prefix (`#` then `$` in C collation) for a board filed on its place.
 const GOVERNING_SQL = `SELECT id, name, state, parent_id FROM (
     SELECT b.id, b.name, b.state, b.parent_id FROM entity b WHERE b.parent_id = $1 AND ${GOVERNS}
     UNION SELECT b.id, b.name, b.state, b.parent_id FROM entity g JOIN entity b ON b.parent_id = g.id WHERE g.parent_id = $1 AND g.kind = 'government' AND ${GOVERNS}
@@ -68,7 +79,7 @@ const SEAT_SQL = `SELECT f.entity_id AS body_id, f.value->>'name' AS holder FROM
 const bodyRow = (row: Record<string, unknown> | undefined) =>
   row ? { id: String(row.id), name: String(row.name), state: row.state as string | null, parentId: row.parent_id as string | null } : null;
 
-/** What a finding's subject stands for: a body, a body's calendar, a sitting, a seat's body and holder, or a place's or government's governing board. */
+/** What a finding's subject stands for: a body, a body's calendar, a sitting, a seat's body and holder, or a place's or government's board, found by its parent government. */
 async function targetOf(query: Query, subjectId: string): Promise<Target | null> {
   if (subjectId.includes("#inventory:")) return null;
   const own = bodyRow((await query(BODY_SQL, [subjectId.replace(/#calendar$/, "")]))[0]);
@@ -84,23 +95,50 @@ async function targetOf(query: Query, subjectId: string): Promise<Target | null>
     const body = bodyRow((await query(BODY_SQL, [String(seat.body_id)]))[0]);
     return body ? { body, holder: seat.holder === null ? null : String(seat.holder), entityId: body.id } : null;
   }
-  const governing = bodyRow((await query(GOVERNING_SQL, [subjectId]))[0]);
+  // A committee is found by its own name or not at all; the council is never its stand-in.
+  const { root, tail } = splitSubject(subjectId);
+  if (tail.startsWith("#body:")) return null;
+  const governing = bodyRow((await query(GOVERNING_SQL, [root, tail === "#governing" || tail === "#board" ? tail.slice(1) : null]))[0]);
   return governing ? { body: governing, holder: null, entityId: governing.id } : null;
+}
+
+/** The board a subject stands for: found by its parent government, or made when its government has none (a committee is never answered with the council). */
+export async function boardFor(query: Query, subject: string): Promise<Target | null> {
+  const found = await targetOf(query, subject);
+  // Only a government, its governing board or its school board makes the board; a committee, an inventory or a sitting is found or not at all.
+  if (found || !["", "#governing", "#board"].includes(splitSubject(subject).tail)) return found;
+  const made = await ensureGoverningBody(query, subject);
+  return made ? { body: made, holder: null, entityId: made.id } : null;
 }
 
 const PACKET = "hunt:packet:";
 const placeOf = (row: BoxFinding) => row.origins.find(origin => origin.resultKey?.startsWith(PACKET))?.resultKey!.slice(PACKET.length) ?? row.subjectId;
 
-const STAFF_TITLE = /\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff)\b/i;
+/** These blanks can change without a software release. Source recovery and missing entities keep their own retry. */
+const recoverableBlank = (reason: string) => /^(?:SOURCE_BLOCKED:|ELECTION_FIELD_PUBLICATION_HELD$|SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE$|SUBJECT_HAS_NO_DIVISION$|NAME_IS_NOT_ON_A_GOVERNMENT$|STATE_NOT_IN_THE_FACT_STORE$|COPY_OUTSIDE_FRESHNESS_WINDOW$)/.test(reason);
+
+// A supervisor of a kind of work is staff ("Maintenance Supervisor", "Road Supervisor"); a bare "Supervisor", "Town Supervisor" or "Supervisor Rex Scott, District 1" is a seat.
+const JOB_SUPERVISOR = "(?:maintenance|road|roads|highway|street|streets|bridge|public works|works|water|sewer|wastewater|sanitation|solid waste|landfill|utilit(?:y|ies)|park|parks|recreation|facilit(?:y|ies)|building|grounds|cemetery|fleet|equipment|shop|garage|transportation|bus|custodial|food service|nutrition|cafeteria|library|operations|field|crew|shift|plant|program|department|dept|office|it|technology|payroll|billing|collections|records|dispatch|animal control|code enforcement|inspection|election|elections|youth|school|district office)\\s+supervisors?";
+const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff|${JOB_SUPERVISOR}|supervisors? of (?:maintenance|roads?|highways?|streets?|public works|operations|parks))\\b`, "i");
 const COUNCIL_SEAT = /\b((vice|deputy)[- ]?)?mayor\b|\bcouncil[- ]?(m[ae]n|member|woman|person|or|lor|president)s?\b|\balder(m[ae]n|woman|person)\b|\bselect(m[ae]n|woman|board)\b|\b(trustee|supervisor|freeholder|legislator|commissioner)s?\b/i;
 const BOARD_SEAT = /\b(vice[- ]?)?(chair(person|man|woman)?|president)\b|\bboard members?\b|\bmember of the board\b/i;
+const SEAT_NUMBER = /\b(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?\d+|seat\s+[a-f]|at[- ]large)\b/i;
+const TERM_LINE = /\bterms?\s*(?:expires?|ends?|:|\()|\bterm of office\b|\b(?:elected|appointed) (?:to|in|for) /i;
+const SEAT_MARKER = /\b(?:(?:seat|position|place|zone|ward)\s*(?:no\.?\s*)?\d+|seat\s+[a-f])\b/i;
 const WARD = /\b(?:ward|district)\s*(?:no\.?\s*)?(\d+)\b/i;
 
 /** The seat a person's own words show on this body, or null: a staff title never seats anyone, and a council seats only by its own titles. */
-function seatIn(words: string, bodyId: string): { readonly ward: string | null } | null {
+export function seatIn(words: string, bodyId: string): { readonly ward: string | null } | null {
   const council = bodyId.endsWith("#governing"), board = bodyId.endsWith("#board");
-  if (STAFF_TITLE.test(words)) return null;
-  if (!COUNCIL_SEAT.test(words) && (council || !BOARD_SEAT.test(words)) && (council || board || !/\bmembers?\b/i.test(words))) return null;
+  // A lettered or numbered seat is a seat held, whatever office the holder also fills ("Seat E - Secretary/Treasurer" is a school board member).
+  const seated = (council || board) && SEAT_MARKER.test(words);
+  if (STAFF_TITLE.test(words) && !seated) return null;
+  // On a council or a board, the district, ward or seat a person holds is a seat on its own ("Annie Williams, District 1"), and a school board's plain "Member" is a member.
+  // A county board's "Chairman" is a seat on it, unless the words put that chair on a committee, department or authority.
+  const chairs = council && /\b(?:vice[- ]?)?chair(?:man|woman|person)?\b/i.test(words) && !/\b(?:committee|department|commission|authority|library|hospital|district board)\b/i.test(words);
+  // A term served is a seat held: staff do not serve terms ("Term: October 2023 - October 2026", "Term Expires 3/28").
+  const numbered = (council || board) && (SEAT_NUMBER.test(words) || TERM_LINE.test(words)) || board && /\bmember\b/i.test(words) || chairs;
+  if (!numbered && !COUNCIL_SEAT.test(words) && (council || !BOARD_SEAT.test(words)) && (council || board || !/\bmembers?\b/i.test(words))) return null;
   return { ward: council || board ? WARD.exec(words)?.[1] ?? null : null };
 }
 
@@ -115,91 +153,275 @@ async function liveMembers(query: Query, bodyIds: readonly string[]): Promise<re
     .map(row => ({ factId: Number(row.id), bodyId: String(row.entity_id), name: String(row.name), words: String(row.words), producedBy: String(row.produced_by) }));
 }
 
-/** Box seats whose words never showed the seat come down; one naming a ward another member holds is flagged for Sean. */
-async function reviewBoxSeats(query: Query, purge?: ReaderCachePurger): Promise<{ readonly pulled: number; readonly flagged: number }> {
+/** A suspect published seat goes to Sean, including one whose quote never showed the seat. */
+async function reviewBoxSeats(query: Query): Promise<{ readonly flagged: number }> {
   const since = Number(await readPassCursor(query, "box-seats") ?? 0);
   const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
   // Only bodies whose members changed since the last pass; the pass starts where this one read up to.
   const bodies = (await query("SELECT DISTINCT entity_id FROM fact WHERE id > $1 AND id <= $2 AND field LIKE 'member:%'", [since, newest])).map(row => String(row.entity_id));
   const members = bodies.length ? await liveMembers(query, bodies) : [];
-  let pulled = 0, flagged = 0;
+  let flagged = 0;
   for (const member of members.filter(row => row.producedBy === "box")) {
     const seat = seatIn(member.words, member.bodyId);
-    if (!seat) {
-      await query("UPDATE fact SET status = 'pulled', held_reason = 'SEAT_NOT_IN_QUOTE' WHERE id = $1", [member.factId]);
-      await invalidateReaderCache(await readerCacheScopeForEntity(query, member.bodyId), purge);
-      pulled++;
-    } else if (seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
+    if (!seat || seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
       flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'
         WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
     }
   }
   await writePassCursor(query, "box-seats", String(newest));
-  return { pulled, flagged };
+  return { flagged };
+}
+
+const SCHEDULE_WORDS = /\b(?:mon|tues|wednes|thurs|fri|satur|sun)day|\bmonthly\b|\bweekly\b|\bbi-?weekly\b|\bquarterly\b|\bannual(?:ly)?\b/i;
+
+/** What a Box fact that is a label, a heading, a notice, a bare link or a paragraph should become: come down, move to the field it belongs to, or be cut to the part that states the thing. */
+export type Remedy = { readonly pull: string } | { readonly move: "comment:detail" } | { readonly value: string } | null;
+export function remedyFor(field: string, kind: string, value: string, quote: string, name: string | null): Remedy {
+  if (field.startsWith("member:")) return name !== null && !looksLikeNameCell(name) ? { pull: "NOT_A_PERSON" } : null;
+  if (field === "agenda_url") return kind === "body" && normalizeText(quote) === normalizeText(value) ? { pull: "BARE_LINK" } : null;
+  if (field === "meeting_cadence") {
+    const phrase = schedulePhrase(value);
+    if (value.length <= 160 && SCHEDULE_WORDS.test(value)) return null;
+    return phrase !== null ? { value: phrase } : { pull: "NOT_A_SCHEDULE" };
+  }
+  // A comment period is yes or no; a sentence about how to comment is the rule itself, so it moves to the rule.
+  if (field === "comment:period") return /^(yes|no)$/i.test(value) ? null : isPlainSentence(value) && !OTHER_NOTICE.test(value) ? { move: "comment:detail" } : { pull: "NOT_YES_OR_NO" };
+  if (field === "comment:detail") return isPlainSentence(value) && !OTHER_NOTICE.test(value) ? null : { pull: "NOT_A_COMMENT_RULE" };
+  return null;
+}
+
+/**
+ * A member saved with the title written after the name ("Priscilla Alderete - President") is the name alone, and the
+ * title is the seat. The person's own record, their name fact and the body's member fact all take the clean name;
+ * honorifics and suffixes stay. Every live member is read once, then each new one as it arrives.
+ */
+async function retitleMembers(query: Query, purge?: ReaderCachePurger): Promise<number> {
+  const since = Number(await readPassCursor(query, "box-names") ?? 0);
+  const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
+  const rows = await query(`SELECT id, entity_id, field, value->>'name' AS name, value->>'office' AS office FROM fact
+    WHERE id > $1 AND id <= $2 AND status = 'live' AND field LIKE 'member:%' AND value->>'name' ~ '[-–—,(]'`, [since, newest]);
+  let renamed = 0;
+  for (const row of rows) {
+    const old = String(row.name), { name, title } = splitPersonTitle(old);
+    if (title === null || !name) continue;
+    const person = String(row.field).slice("member:".length);
+    await query(`UPDATE fact SET value = value || jsonb_build_object('name', $2::text, 'office', coalesce(value->>'office', $3::text)), value_text = $2 WHERE id = $1 AND status = 'live'`, [row.id, name, title]);
+    await query("UPDATE entity SET name = $2 WHERE id = $1 AND name = $3", [person, name, old]);
+    await query("UPDATE fact SET value = to_jsonb($2::text), value_text = $2 WHERE entity_id = $1 AND field = 'name' AND status = 'live' AND value_text = $3", [person, name, old]);
+    if (row.office === null) {
+      await query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, cost_usd)
+        SELECT $2, $3, to_jsonb($4::text), $4, 'live', provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, 0 FROM fact WHERE id = $1 AND quote ILIKE '%' || $4 || '%'
+        AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = $2 AND d.field = $3 AND d.status = 'live')`, [row.id, person, `office:${row.entity_id}`, title]);
+    }
+    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge);
+    renamed++;
+  }
+  await writePassCursor(query, "box-names", String(newest));
+  return renamed;
+}
+
+/** A fact that looks wrong is flagged for Sean (remove, keep, send the fleet, or type the value), never taken down by the system (rulings §2 step 6). */
+async function flagLooksWrong(query: Query, factId: number, reason: string): Promise<number> {
+  return (await query(`INSERT INTO owner_flag (fact_id, kind, reason) SELECT $1, 'AUDIT_LOOKS_WRONG', $2
+    WHERE EXISTS (SELECT 1 FROM fact WHERE id = $1 AND status = 'live') AND NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [factId, reason])).length;
+}
+
+/** Box facts that are a label, a heading, a notice, a bare link or a paragraph get their remedy, and the walk's better reading of the same page takes their place; the pass reads only facts added since its last. */
+async function reviewBoxFacts(query: Query, purge?: ReaderCachePurger): Promise<{ readonly flagged: number; readonly moved: number; readonly cut: number; readonly renamed: number }> {
+  const since = Number(await readPassCursor(query, "box-labels") ?? 0);
+  const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
+  const rows = await query(`SELECT f.id, f.entity_id, f.field, e.kind, coalesce(f.value_text, '') AS value_text, coalesce(f.quote, '') AS quote, f.value->>'name' AS name
+    FROM fact f JOIN entity e ON e.id = f.entity_id
+    WHERE f.id > $1 AND f.id <= $2 AND f.produced_by = 'box' AND f.status = 'live'
+      AND (f.field IN ('agenda_url', 'meeting_cadence', 'comment:period', 'comment:detail') OR f.field LIKE 'member:%')`, [since, newest]);
+  const tally = { flagged: 0, moved: 0, cut: 0, renamed: await retitleMembers(query, purge) };
+  for (const row of rows) {
+    const remedy = remedyFor(String(row.field), String(row.kind), String(row.value_text), String(row.quote), row.name === null ? null : String(row.name));
+    if (!remedy) continue;
+    if ("move" in remedy) {
+      const [moved] = await query(`UPDATE fact SET field = $2 WHERE id = $1 AND status = 'live'
+        AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = fact.entity_id AND d.field = $2 AND d.status = 'live') RETURNING id`, [row.id, remedy.move]);
+      if (moved) {
+        // The page's own words on how to comment show the body takes it.
+        await query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, cost_usd)
+          SELECT entity_id, 'comment:period', '"YES"'::jsonb, 'YES', 'live', provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, 0 FROM fact WHERE id = $1
+          AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = $2 AND d.field = 'comment:period' AND d.status = 'live')`, [row.id, row.entity_id]);
+        tally.moved++;
+      } else {
+        tally.flagged += await flagLooksWrong(query, Number(row.id), "NOT_YES_OR_NO");
+      }
+    } else if ("value" in remedy) {
+      await query("UPDATE fact SET value = to_jsonb($2::text), value_text = $2 WHERE id = $1 AND status = 'live'", [row.id, remedy.value]);
+      tally.cut++;
+    } else {
+      tally.flagged += await flagLooksWrong(query, Number(row.id), remedy.pull);
+    }
+    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge);
+  }
+  await writePassCursor(query, "box-labels", String(newest));
+  return tally;
 }
 
 const named = (quote: string, name: string) => boundedIndexOf(normalizeText(quote).toLowerCase(), normalizeText(name).toLowerCase()) !== -1;
 
+/** The office a contact belongs to as the saved page names it: in the finding's own sentence, or in the page text just before the contact. */
+export function officeNameOn(pageText: string, quote: string, value: string): { readonly name: string; readonly quote: string } | undefined {
+  const own = OFFICE_NAME.exec(quote)?.[0].trim();
+  if (own) return { name: own, quote };
+  const at = pageText.indexOf(normalizeText(value));
+  if (at === -1) return undefined;
+  const window = pageText.slice(Math.max(0, at - 300), at + normalizeText(value).length);
+  let found: RegExpExecArray | undefined;
+  for (const match of window.matchAll(new RegExp(OFFICE_NAME.source, "g"))) found = match;
+  return found ? { name: found[0].trim(), quote: window.slice(found.index) } : undefined;
+}
+
+/** The office as the page names it: "Cochise County Recorder", "Elections Department", "Public Works Department". */
+const OFFICE_NAME = /(?:(?:[A-Z][a-z]+\s+)County\s+|City of [A-Z][a-z]+\s+|Town of [A-Z][a-z]+\s+)?(?:Office of the\s+)?(?:Recorder|Elections?|Voter Registration|Assessor|Treasurer|Sheriff|Public Works|Police|Fire|Library|Utilities|Transportation|Transit|Airport|Human Resources|Attendance|Athletics|Nutrition|Food Services?|Help ?Desk|Business Office)(?:['’]s)?(?:\s+(?:Office|Department|Dept\.?|Division|District|Services?))?/;
+
 const PHONE_IN_QUOTE = /\+?1?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;
 const DATED: readonly ElectionFieldKind[] = ["registration_deadline", "early_voting", "certified_outcome"];
 
-/** Box findings from the last month, each routed where its record publishes, checked on its own page; what has no route waits with its reason. */
+/** Box findings, each routed where its record publishes, checked on its own page; what has no route waits with its reason. */
 export async function publishBoxFindings(input: {
   readonly repos: Pick<ControlPlaneRepositories, "boxFindings" | "artifacts">;
   readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly fetch: ProbeFetch;
   readonly store: RoutineDataStore; readonly clocks: Clocks; readonly now: string; readonly limit: number;
   readonly purge?: ReaderCachePurger;
+  /** The standing publisher runs audits separately from publication. */
+  readonly audit?: boolean;
+  /** Stop admitting work while the parent still has time to save this pass's outcome. In-flight source reads keep their transport deadlines. */
+  readonly deadlineMs?: number;
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
-  const now = new Date(input.now), since = new Date(now.getTime() - HUNTER_FINDING_DAYS * 86_400_000).toISOString();
-  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.purge),
+  const now = new Date(input.now);
+  const report = { looked: 0, deferred: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0,
+    seats: { flagged: 0 }, labels: { flagged: 0, moved: 0, cut: 0, renamed: 0 },
+    errorExamples: [] as { findingId: string; stage: string; detail: string }[],
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
+  if (input.audit !== false) {
+    try { Object.assign(report, await reviewPublishedBoxFacts(facts.query, input.purge)); }
+    catch (error) {
+      report.failuresByReason.BOX_AUDIT_FAILED = 1;
+      report.errorExamples.push({ findingId: "published-facts", stage: "AUDIT", detail: sanitizedErrorDiagnostic(error).slice(0, 600) });
+    }
+  }
   // A packet's findings count toward its government; any other finding toward its own subject.
   const place = (row: BoxFinding) => report.byPlace[placeOf(row)] ??= { published: 0, refused: 0, waiting: 0 };
-  const rows = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: input.now, since, limit: input.limit });
+  const rows = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: input.now, limit: input.limit });
+  const deferred = new Set<string>(), settled = new Set<string>();
+  const outOfTime = () => Date.now() >= (input.deadlineMs ?? Infinity);
+  // Preparing a whole page must leave time to check its sources and publish. Otherwise the same untouched rows can consume every pass in metadata lookups.
+  const preparationStartedMs = Date.now();
+  const preparationDeadlineMs = input.deadlineMs === undefined ? Infinity
+    : preparationStartedMs + Math.max(0, input.deadlineMs - preparationStartedMs) / 3;
+  const retryAt = (reason: string) => recoverableBlank(reason) ? { retryAt: new Date(now.getTime() + 60 * 60_000).toISOString() } : {};
   const wait = (row: BoxFinding, slotClass: string, reason: string) =>
-    holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: FINDING_SLOTS_VERSION }, input.now);
+    holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: FINDING_SLOTS_VERSION, ...retryAt(reason) }, input.now);
   const hold = async (row: BoxFinding, slotClass: string, reason: string) => {
     await wait(row, slotClass, reason);
     report.waitingByClass[slotClass] = (report.waitingByClass[slotClass] ?? 0) + 1;
     place(row).waiting++;
   };
-  const settle = async (row: BoxFinding, outcome: PublishOutcome, route: string) => {
-    const claim = await takeBoxFinding(repos.boxFindings, row.id, "fact-publisher", input.now, new Date(now.getTime() + 120_000).toISOString());
+  const failed = async (row: BoxFinding, stage: string, error: unknown) => {
+    const detail = sanitizedErrorDiagnostic(error).slice(0, 600);
+    const claim = await takeBoxFinding(repos.boxFindings, row.id, PUBLISHER, input.now, new Date(now.getTime() + 120_000).toISOString());
+    if (!claim) return;
+    report.failuresByReason.BOX_PUBLICATION_EXCEPTION = (report.failuresByReason.BOX_PUBLICATION_EXCEPTION ?? 0) + 1;
+    if (report.errorExamples.length < 5) report.errorExamples.push({ findingId: row.id, stage, detail });
+    // A programming, source or database failure is its own retry, never a refusal of the finding's truth.
+    await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "failed", reason: `${stage}: ${detail}`,
+      slots: FINDING_SLOTS_VERSION, retryAt: new Date(now.getTime() + 5 * 60_000).toISOString() }, input.now);
+  };
+  // A verified page publishes at once. Only a refusal waits for the other saved pages, any of which may prove the fact.
+  const sources = new Map<string, { left: number; best: PublishOutcome | null }>();
+  const settle = async (row: BoxFinding, said: PublishOutcome, route: string) => {
+    const pending = sources.get(row.id);
+    let outcome = said;
+    if (pending) {
+      pending.left--;
+      if (!pending.best || "blank" in pending.best) pending.best = said;
+      if (pending.left > 0 && "blank" in pending.best) return;
+      outcome = pending.best;
+    }
+    const claim = await takeBoxFinding(repos.boxFindings, row.id, PUBLISHER, input.now, new Date(now.getTime() + 120_000).toISOString());
     if (!claim) return;
     if ("blank" in outcome) {
-      await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "refused", reason: outcome.blank }, input.now);
+      if (!await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "refused", reason: outcome.blank, slots: FINDING_SLOTS_VERSION, ...retryAt(outcome.blank) }, input.now)) return;
+      settled.add(row.id);
       report.refused++; place(row).refused++;
       report.failuresByReason[outcome.blank] = (report.failuresByReason[outcome.blank] ?? 0) + 1;
     } else {
-      await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "built", publicationId: `${outcome.decision}:${outcome.factId ?? "current"}` }, input.now);
+      if (!await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "built", publicationId: `${outcome.decision}:${outcome.factId ?? "current"}` }, input.now)) return;
+      settled.add(row.id);
       report.published++; place(row).published++;
       report.publishedByRoute[route] = (report.publishedByRoute[route] ?? 0) + 1;
     }
   };
 
-  const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string }[] = [];
+  // Each subject is named, and looked up, once in a pass.
+  const names = new Map<string, Promise<string>>();
+  const subjectOf = (id: string) => names.get(id) ?? names.set(id, canonicalSubject(facts.query, id)).get(id)!;
+  const targets = new Map<string, Promise<Target | null>>();
+  const targetFor = (subject: string) => targets.get(subject) ?? targets.set(subject, boardFor(facts.query, subject)).get(subject)!;
+  const slotOfRow = (row: BoxFinding) => {
+    const fact = findingFact(row);
+    return fact && row.exactQuote && row.sourceUrl ? slotFor(fact.field, fact.value, fact.recordClass, row.exactQuote, row.sourceUrl, row.subjectId) : null;
+  };
+  // A committee is made by the finding that names it, so those are read first and the findings about the committee find it.
+  const naming = new Set(rows.filter(row => slotOfRow(row)?.class === "bodies").map(row => row.id));
+
+  const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string; asNamed?: string }[] = [];
   const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
-  for (const row of rows) {
+  const orderedRows = [...rows.filter(row => naming.has(row.id)), ...rows.filter(row => !naming.has(row.id))];
+  for (const [index, row] of orderedRows.entries()) {
+    if (Date.now() >= preparationDeadlineMs) { for (const pending of orderedRows.slice(index)) deferred.add(pending.id); break; }
     report.looked++;
+    try {
+    if (row.state === "refused") await reopenBoxFinding(repos.boxFindings, row.id, FINDING_SLOTS_VERSION, input.now);
     if (!row.origins.some(o => o.kind === "SCOUT")) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
     const raw = findingFact(row);
     if (!raw || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
-    const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote);
+    const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote, row.sourceUrl, row.subjectId);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
+    // A link is a page to go read: the next walk of the government's own site reads it first and turns what it holds into facts.
+    if ("handoff" in slot) { await wait(row, slot.class, slot.handoff === "site-walk" ? SITE_WALK_LEAD : COMMENT_SUMMARY_LEAD); report.handed++; continue; }
     if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
-    const finding: Finding = { row, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };
+    const subject = await subjectOf(row.subjectId);
+    const finding: Finding = { row, subject, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };
+    // Each page that said the fact is checked on its own saved copy.
+    const findings: readonly Finding[] = [finding, ...otherSources(row).map(other => ({ ...finding, origin: other.origin, exactQuote: other.exactQuote, sourceUrl: other.sourceUrl }))];
+    const queue = <T extends { finding: Finding }>(into: T[], make: (finding: Finding) => T) => {
+      sources.set(row.id, { left: findings.length, best: null });
+      into.push(...findings.map(make));
+    };
     if ("election" in slot) {
       const divisionId = [row.subjectId, placeOf(row)].find(id => id.startsWith("ocd-division/"));
-      if (divisionId) elections.push({ finding, kind: slot.election, divisionId });
+      if (divisionId) queue(elections, each => ({ finding: each, kind: slot.election, divisionId }));
       else await hold(row, slot.class, "SUBJECT_HAS_NO_DIVISION");
       continue;
     }
-    const target = await targetOf(facts.query, row.subjectId);
+    const target = await targetFor(subject);
+    // A body or an office is added under its government even where the government has no governing board of its own, as a state has none.
+    if (slot.class === "bodies") {
+      const named = await bodyNamed(facts.query, subject, target?.body ?? null, String(finding.value));
+      if (named) {
+        targets.delete(subject); targets.delete(named.id);
+        queue(ready, each => ({ finding: each, slot, body: named, holder: null, entityId: named.id, asNamed: named.asNamed }));
+      }
+      else await hold(row, slot.class, "NAME_IS_NOT_ON_A_GOVERNMENT");
+      continue;
+    }
+    if (slot.class === "other offices") {
+      // The office is found or added once the saved page is read, because the page is what names it.
+      queue(ready, each => ({ finding: each, slot, body: target?.body ?? { id: subject, name: "", state: null, parentId: null }, holder: null, entityId: target?.entityId ?? subject }));
+      continue;
+    }
     if (!target) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
     if ((slot.class === "sittings") !== target.entityId.startsWith("meeting:")) { await hold(row, slot.class, slot.class === "sittings" ? "SUBJECT_IS_NOT_A_SITTING" : "SUBJECT_IS_A_SITTING"); continue; }
-    ready.push({ finding, slot, body: target.body, holder: target.holder, entityId: target.entityId });
+    queue(ready, each => ({ finding: each, slot, body: target.body, holder: target.holder, entityId: target.entityId }));
+    } catch (error) { await failed(row, "SORT", error); }
   }
 
   const captures = new Map<string, Promise<{ capture: WorkerPublicationCapture } | { error: string }>>();
@@ -208,7 +430,7 @@ export async function publishBoxFindings(input: {
   const captureFor = (finding: Finding, kind: FieldKind) => {
     const key = `${finding.origin.artifactIds[0] ?? ""}|${finding.sourceUrl}|${kind}`;
     if (!captures.has(key)) captures.set(key, (async () => {
-      const records = (await repos.artifacts.read(finding.origin.workItemId)).filter(record => finding.origin.artifactIds.includes(record.artifactId));
+      const records = (await repos.artifacts.read(finding.origin.workItemId)).filter(record => finding.origin.artifactIds.includes(record.artifactId) && record.canonicalUrl === finding.sourceUrl);
       for (const record of records) {
         const held = await readHeld(record);
         if (held && (now.getTime() - Date.parse(held.observedAt)) / 3_600_000 <= clocks.windowHours(kind)) return { capture: held };
@@ -224,10 +446,21 @@ export async function publishBoxFindings(input: {
 
   const groups = new Map<string, typeof ready>();
   for (const entry of ready) {
-    const key = `${entry.entityId}|${entry.finding.origin.artifactIds[0] ?? entry.finding.sourceUrl}|${kindOf(entry.slot)}`;
+    const key = `${entry.entityId}|${entry.finding.origin.artifactIds[0] ?? ""}|${entry.finding.sourceUrl}|${kindOf(entry.slot)}`;
     groups.set(key, [...groups.get(key) ?? [], entry]);
   }
-  for (const group of groups.values()) {
+  // People come first: a member's phone or email names a member the same pass has to have made, or it would land on the board's own office.
+  const peopleFirst = (group: typeof ready) => kindOf(group[0]!.slot) === "officeholder" ? 0 : 1;
+  const byBody = new Map<string, (typeof ready)[]>();
+  for (const group of [...groups.values()].sort((a, b) => peopleFirst(a) - peopleFirst(b))) {
+    const id = group[0]!.body.id;
+    byBody.set(id, [...byBody.get(id) ?? [], group]);
+  }
+  // A slow page for one government cannot hold other places. Each body keeps its own dependent records in order.
+  const publications = await runBoundedWorkPool([...byBody.values()], 4, async bodyGroups => {
+  for (const group of bodyGroups) {
+    if (outOfTime()) { for (const entry of group) deferred.add(entry.finding.row.id); continue; }
+    try {
     const { body, entityId } = group[0]!, kind = kindOf(group[0]!.slot);
     const read = await captureFor(group[0]!.finding, kind);
     if ("error" in read) {
@@ -235,41 +468,72 @@ export async function publishBoxFindings(input: {
       continue;
     }
     const people = group.filter(entry => entry.slot.class === "rosters" || entry.slot.class === "contacts");
+    const forOffice: typeof ready = [];
     if (people.length) {
       const seated = (await liveMembers(facts.query, [body.id])).map(row => row.name);
-      const known = [...people.filter(e => e.slot.slot === "member_name").map(e => String(e.finding.value)), ...seated];
+      const known = [...people.filter(e => e.slot.slot === "member_name").map(e => splitPersonTitle(String(e.finding.value)).name), ...seated];
+      const titled = new Map<string, { title: string; quote: string }>();
       const members = new Map<string, RosterMember & { fields: Record<string, unknown>; fieldSources: Record<string, { quote: string; sourceUrl: string; sourceOrg: string; collectedAt: string; verifiedAt: null }> }>();
-      const sourceFieldOf = new Map<BoxFinding, { recordId: string; field: string }>();
+      const sourceFieldOf = new Map<Finding, { recordId: string; field: string }>();
       const quoteOf = (quote: string) => ({ quote, sourceUrl: read.capture.evidence.canonicalUrl, sourceOrg: "", collectedAt: read.capture.observedAt, verifiedAt: null });
-      for (const { finding, slot: own, holder } of people) {
-        const name = own.slot === "member_name" ? String(finding.value) : holder ?? known.find(candidate => named(finding.exactQuote, candidate));
-        if (!name) { await settle(finding.row, { blank: "NO_PERSON_NAMED_IN_QUOTE" }, own.class); continue; }
+      for (const entry of people) {
+        const { finding, slot: own, holder } = entry;
+        // A name is just the name: the title a page writes after it ("Priscilla Alderete - President") is the seat, and honorifics and suffixes stay.
+        const written = own.slot === "member_name" ? splitPersonTitle(String(finding.value)) : null;
+        const name = written ? written.name : holder ?? known.find(candidate => named(finding.exactQuote, candidate));
+        // A cell that is a menu item, a heading or a place ("Date Elected", "BID PACKAGE", "Board of Education Home") is not a person, however the page laid it out.
+        if (written && !looksLikeNameCell(written.name)) { await settle(finding.row, { blank: "NOT_A_PERSON" }, own.class); continue; }
+        if (!name) {
+          if (own.class === "contacts" && (own.slot === "phone" || own.slot === "email")) {
+            const field = own.slot === "phone" ? "office_phone" : "office_email", elsewhere = otherOffice(finding.field, String(finding.value), finding.exactQuote, finding.sourceUrl);
+            forOffice.push({ ...entry, slot: elsewhere ? { class: "other offices", slot: field, office: elsewhere } : { class: "office contacts", slot: field } });
+          }
+          else await settle(finding.row, { blank: "NO_PERSON_NAMED_IN_QUOTE" }, own.class);
+          continue;
+        }
         const recordId = `box:${nameKey(name)}`;
+        if (written?.title && named(finding.exactQuote, written.title)) titled.set(recordId, { title: written.title, quote: finding.exactQuote });
         const member = members.get(recordId) ?? { recordId, fields: {}, fieldSources: {} };
         const field = MEMBER_FIELD[own.slot as keyof typeof MEMBER_FIELD];
+        const value = written && field === "name" ? written.name : finding.value;
         if (field !== "name" && !member.fields.name) { member.fields.name = name; member.fieldSources.name = quoteOf(finding.exactQuote); }
         if (field !== "name" && member.fields[field] !== undefined && member.fields[field] !== finding.value) { await settle(finding.row, { blank: "OTHER_VALUE_ON_THE_SAME_PAGE" }, own.class); continue; }
-        member.fields[field] = finding.value; member.fieldSources[field] = quoteOf(linkQuote(String(finding.value), finding.exactQuote));
+        member.fields[field] = value; member.fieldSources[field] = quoteOf(linkQuote(String(value), finding.exactQuote));
         members.set(recordId, member);
-        sourceFieldOf.set(finding.row, { recordId, field });
+        sourceFieldOf.set(finding, { recordId, field });
+      }
+      // The title that came with a name is the seat when no finding gave one.
+      for (const [recordId, { title, quote }] of titled) {
+        const member = members.get(recordId);
+        if (member && member.fields.office === undefined) { member.fields.office = title; member.fieldSources.office = quoteOf(quote); }
       }
       const unseated = new Set([...members.values()].filter(member => !seated.some(name => nameKey(name) === nameKey(String(member.fields.name))) &&
         !seatIn([member.fieldSources.name?.quote, member.fields.office, member.fieldSources.office?.quote].filter(Boolean).join("\n"), body.id)).map(member => member.recordId));
       const tally = await publishRosterFacts(facts, { body, capture: read.capture, members: [...members.values()].filter(member => !unseated.has(member.recordId)),
         complete: false, producedBy: "box", purge: input.purge }, clocks, now);
       for (const { finding, slot } of people) {
-        const at = sourceFieldOf.get(finding.row);
+        const at = sourceFieldOf.get(finding);
         if (at) await settle(finding.row, unseated.has(at.recordId) ? { blank: "SEAT_NOT_IN_QUOTE" } : tally.outcomes.get(at.recordId)?.get(at.field) ?? { blank: "NOT_CLAIMED" }, slot.class);
       }
     }
-    const own = group.filter(entry => entry.slot.class !== "rosters" && entry.slot.class !== "contacts");
+    const own = [...group.filter(entry => entry.slot.class !== "rosters" && entry.slot.class !== "contacts"), ...forOffice];
     if (!own.length) continue;
-    const entity = (await readCheckEntity(facts.query, entityId))!;
     const copy = await facts.transaction(query => saveCaptureCopy(query, read.capture));
-    const provenance = captureProvenance(read.capture, entity.hosts);
-    const claim = (field: string, value: unknown, valueText: string, quote: string) =>
-      publishClaim(facts, { entity, field, fieldKind: kind, provenance, value, valueText, quote, copy, producedBy: "box", costUsd: 0 }, clocks, now, { purge: input.purge });
-    for (const { finding, slot } of own) {
+    const entities = new Map<string, NonNullable<Awaited<ReturnType<typeof readCheckEntity>>>>();
+    const entityOf = async (id: string) => entities.get(id) ?? entities.set(id, (await readCheckEntity(facts.query, id))!).get(id)!;
+    const pageText = normalizeText(copy.text);
+    for (const { finding, slot, entityId: held, body: governing, asNamed } of own) {
+      try {
+      let at = held, name: { readonly name: string; readonly quote: string } | undefined;
+      if (slot.class === "other offices") {
+        name = officeNameOn(pageText, finding.exactQuote, String(finding.value));
+        const office = name && await officeNamed(facts.query, finding.subject, governing, slot.office, name.name);
+        if (!office) { await settle(finding.row, { blank: "OFFICE_NAME_NOT_ON_THE_PAGE" }, slot.class); continue; }
+        at = office.id;
+      }
+      const entity = await entityOf(at), provenance = captureProvenance(read.capture, entity.hosts);
+      const claim = (field: string, value: unknown, valueText: string, quote: string) =>
+        publishClaim(facts, { entity, field, fieldKind: kind, provenance, value, valueText, quote, copy, producedBy: "box", costUsd: 0 }, clocks, now, { purge: input.purge });
       const value = String(finding.value), quote = linkQuote(value, finding.exactQuote);
       if (slot.class === "official hosts") {
         const host = /^https?:\/\//i.test(value) ? value : `https://${value}`;
@@ -278,15 +542,30 @@ export async function publishBoxFindings(input: {
         await settle(finding.row, checked.ok ? { decision: "PUBLISH", factId: null } : { blank: checked.reason }, slot.class);
         continue;
       }
-      const outcome = slot.slot === "comment:period" ? await claim(slot.slot, value.toUpperCase(), finding.exactQuote, finding.exactQuote) : await claim(slot.slot, value, value, quote);
+      // A body the Box added is shown to readers once its name is on a saved page.
+      if (name) {
+        const named = await claim("name", name.name, name.name, name.quote);
+        if ("blank" in named) { await settle(finding.row, named, slot.class); continue; }
+      }
+      // The board is named as the page names it, without what the page hangs on it ("Board of Education Home" names the Board of Education).
+      const shown = slot.class === "bodies" ? asNamed ?? value : value;
+      const outcome = slot.class === "bodies" ? await claim("name", shown, shown, quote)
+        : slot.slot === "comment:period" ? await claim(slot.slot, value.toUpperCase(), finding.exactQuote, finding.exactQuote) : await claim(slot.slot, value, value, quote);
       // A page's own words on how to comment show the body takes it.
       if (slot.class === "comment rules" && slot.slot !== "comment:period" && !("blank" in outcome)) await claim("comment:period", "YES", finding.exactQuote, finding.exactQuote);
       await settle(finding.row, outcome, slot.class);
+      } catch (error) { await failed(finding.row, "PUBLISH", error); }
     }
+    } catch (error) { for (const { finding } of group) await failed(finding.row, "SOURCE_GROUP", error); }
   }
+  });
+  const unwritten = publications.filter(result => !result.ok);
+  if (unwritten.length) throw new Error(`BOX_FAILURE_RECORD_UNWRITTEN: ${unwritten.map(result => result.error).slice(0, 3).join("; ")}`);
 
   const fields: { finding: Finding; field: ElectionFieldInput }[] = [];
   for (const { finding, kind, divisionId } of elections) {
+    if (outOfTime()) { deferred.add(finding.row.id); continue; }
+    try {
     const read = await captureFor(finding, "ballot");
     if ("error" in read) { await blocked(divisionId, kind, finding, "ballot", read.error, "ballot navigation"); continue; }
     // Election authorities write about the state's elections, so the page is checked as being about the state.
@@ -301,11 +580,16 @@ export async function publishBoxFindings(input: {
       dates: DATED.includes(kind) ? [...datesInQuote(finding.exactQuote)].sort() : [],
       ...(kind === "election_office" ? { phone: PHONE_IN_QUOTE.exec(finding.exactQuote)?.[0].trim() ?? null } : {}),
       document: { url, text: read.capture.evidence.text, collectedAt: read.capture.observedAt, capture: read.capture } } });
+    } catch (error) { await failed(finding.row, "ELECTION", error); }
   }
   if (fields.length) {
     let outcome: Awaited<ReturnType<typeof publishElectionFields>> | { readonly held: string };
     try { outcome = await publishElectionFields({ store: input.store, now: input.now, fields: fields.map(row => row.field), verify: section3Record }); }
-    catch (error) { outcome = { held: error instanceof Error ? error.message : String(error) }; }
+    catch (error) {
+      const detail = sanitizedErrorDiagnostic(error).slice(0, 600);
+      if (report.errorExamples.length < 5) report.errorExamples.push({ findingId: fields[0]!.finding.row.id, stage: "ELECTION_PUBLICATION", detail });
+      outcome = { held: detail };
+    }
     for (const { finding, field } of fields) {
       if ("held" in outcome) { await settle(finding.row, { blank: outcome.held.split(":")[0]! }, "ballot navigation"); continue; }
       const gap = outcome.gaps.find(row => row.divisionId === field.divisionId && row.kind === field.kind);
@@ -313,5 +597,48 @@ export async function publishBoxFindings(input: {
         : { blank: `ELECTION_FIELD_GAP:${gap?.detail ?? "not published"}` }, "ballot navigation");
     }
   }
+  report.deferred = [...deferred].filter(id => !settled.has(id)).length;
+  try { await nameBoardsFromTheirPages(input); }
+  catch (error) {
+    report.failuresByReason.BOX_PUBLICATION_EXCEPTION = (report.failuresByReason.BOX_PUBLICATION_EXCEPTION ?? 0) + 1;
+    if (report.errorExamples.length < 5) report.errorExamples.push({ findingId: "board-names", stage: "BODY_NAMING", detail: sanitizedErrorDiagnostic(error).slice(0, 600) });
+  }
   return report;
+}
+
+const NAMING_PER_PASS = 20;
+const NAME_NOT_ON_PAGE_RETRY_MINUTES = 5 * 24 * 60;
+
+/** Bodies holding verified facts but no verified name: the page that supplied a fact is read again and names the board when it writes the name. */
+async function nameBoardsFromTheirPages(input: { readonly repos: Pick<ControlPlaneRepositories, "artifacts">; readonly facts: FactDb & { readonly query: Query };
+  readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly clocks: Clocks; readonly now: string; readonly purge?: ReaderCachePurger; readonly deadlineMs?: number }): Promise<number> {
+  const { facts } = input;
+  const outOfTime = () => Date.now() >= (input.deadlineMs ?? Infinity);
+  if (outOfTime()) return 0;
+  const nameless = await facts.query(`SELECT e.id, (SELECT s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id WHERE f.entity_id = e.id AND f.status = 'live'
+        AND s.url ~ '^https?://' ORDER BY f.checked_at DESC, f.id DESC LIMIT 1) AS url
+    FROM entity e WHERE e.kind = 'body'
+      AND EXISTS (SELECT 1 FROM fact f WHERE f.entity_id = e.id AND f.status = 'live')
+      AND NOT EXISTS (SELECT 1 FROM fact n WHERE n.entity_id = e.id AND n.field = 'name' AND n.status = 'live')
+      AND NOT EXISTS (SELECT 1 FROM blank b WHERE b.entity_id = e.id AND b.field = 'name' AND b.next_try_at > now())
+    ORDER BY e.id LIMIT $1`, [NAMING_PER_PASS]);
+  let named = 0;
+  for (const row of nameless) {
+    if (outOfTime()) break;
+    const id = String(row.id);
+    if (!row.url) continue;
+    const read = await fetchCapture({ url: String(row.url), repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now });
+    if ("error" in read) {
+      await openBlank(facts.query, { entityId: id, field: "name", stage: "ACQUIRE", reason: read.error.split(":")[0]!, detail: String(row.url), retryMinutes: input.clocks.retryMinutes("officeholder") });
+      continue;
+    }
+    const entity = await readCheckEntity(facts.query, id);
+    if (!entity) continue;
+    const copy = await facts.transaction(query => saveCaptureCopy(query, read.capture));
+    const outcome = await publishBodyNameFromPage(facts, { entity, copy, provenance: captureProvenance(read.capture, entity.hosts), producedBy: "box", purge: input.purge },
+      input.clocks, new Date(input.now));
+    if (outcome && "decision" in outcome && outcome.decision === "PUBLISH") named++;
+    else if (!outcome) await openBlank(facts.query, { entityId: id, field: "name", stage: "READ", reason: "NAME_NOT_ON_PAGE", detail: String(row.url), retryMinutes: NAME_NOT_ON_PAGE_RETRY_MINUTES });
+  }
+  return named;
 }

@@ -1,4 +1,5 @@
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
+import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { factReader, statementQuery } from "../facts/db.ts";
 import { factCommentAccessFromRows } from "../facts/comment-read.ts";
 import { sittingFactsFromRows, withSittingFacts } from "../facts/meeting-read.ts";
@@ -27,6 +28,7 @@ import { serverReaderValue } from "./memory.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { readerDatabaseQuery } from "./database.ts";
+import { installDatabaseTransferCounter } from "../db/transfer.ts";
 
 const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
 const retiredMeetingScopesSql = RETIRED_MEETING_ROUTES.map(route =>
@@ -60,10 +62,12 @@ const agendaDocumentLinksSql = (owned = "true") => `coalesce((
   ) links),'[]'::jsonb)`;
 
 /** The place indexes lead to bodies; live facts and canonical source calendars are read together. */
-export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED (
+const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_places AS MATERIALIZED (
   SELECT unnest($2::text[]) AS id
   UNION SELECT split_part(id,'#',1) FROM unnest($3::text[]) body(id) WHERE $9::boolean AND id LIKE 'ocd-division/%'
   UNION SELECT place_id FROM entity_place WHERE $9::boolean AND entity_id=ANY($3::text[])
+), named_places AS MATERIALIZED (
+  SELECT unnest($10::text[]) AS id
 ), registration AS MATERIALIZED (
   SELECT payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), government_inventory AS MATERIALIZED (
@@ -91,21 +95,33 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
     WHERE header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR header.value->>'id'=ANY($3::text[]) OR $5::boolean
       OR header.value->>'id' IN (SELECT id FROM owned WHERE kind='body')
 ), ancestors AS (
-  SELECT id, parent_id FROM entity WHERE id=ANY(ARRAY(SELECT id FROM selected_places)) AND state=$1 AND id<>$4
+  SELECT id, parent_id FROM entity WHERE id=ANY(ARRAY(SELECT id FROM selected_places)) AND state=$1::char(2) AND id<>$4
   UNION
-  SELECT p.id,p.parent_id FROM ancestors a JOIN entity p ON p.id=a.parent_id WHERE p.state=$1 AND p.id<>$4
+  SELECT p.id,p.parent_id FROM ancestors a JOIN entity p ON p.id=a.parent_id WHERE p.state=$1::char(2) AND p.id<>$4
+), linked_bodies AS MATERIALIZED (
+  -- A board filed on the state belongs to the one local government here that shares its website.
+  SELECT DISTINCT ON (b.id) b.id,a->>'divisionId' AS division FROM local_governments lg
+    CROSS JOIN LATERAL jsonb_array_elements(lg.g->'associations') a
+    JOIN entity_host gh ON gh.entity_id=lg.g->>'jurisdictionId'
+    JOIN entity_host bh ON bh.host=gh.host
+    JOIN entity b ON b.id=bh.entity_id AND b.kind='body' AND b.parent_id=$4 AND b.state=$1::char(2)
+    WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places))
+      AND NOT EXISTS (SELECT 1 FROM entity_host o JOIN entity og ON og.id=o.entity_id AND og.kind='government' WHERE o.host=gh.host AND o.entity_id<>gh.entity_id)
+      AND NOT EXISTS (SELECT 1 FROM domains d WHERE d.d->>'domain'=gh.host AND d.d->>'type' ~ '^(State|Federal|Interstate)')
+    ORDER BY b.id,a->>'divisionId'
 ), covered AS (
   SELECT id FROM ancestors
   UNION SELECT ep.entity_id FROM entity_place ep JOIN ancestors a ON a.id=ep.place_id
+  UNION SELECT id FROM linked_bodies
 ), owned AS (
   SELECT e.id,e.kind,e.name,e.parent_id,e.state FROM entity e JOIN covered c ON c.id=e.id
   UNION
   SELECT e.id,e.kind,e.name,e.parent_id,e.state FROM entity e JOIN owned p ON e.parent_id=p.id
-    WHERE e.state=$1 AND e.kind IN ('government','body')
+    WHERE e.state=$1::char(2) AND e.kind IN ('government','body')
 ), bodies AS MATERIALIZED (
   SELECT id,kind,name,parent_id,state FROM owned WHERE kind='body'
   UNION SELECT id,kind,name,parent_id,state FROM entity
-    WHERE (id=ANY($3::text[]) OR id IN (SELECT value->>'id' FROM runtime_bodies) OR $5::boolean) AND state=$1 AND kind='body'
+    WHERE (id=ANY($3::text[]) OR id IN (SELECT value->>'id' FROM runtime_bodies) OR $5::boolean) AND state=$1::char(2) AND kind='body'
   UNION SELECT requested.id,'body',coalesce(r.value->>'name',requested.id),coalesce(r.value->>'ocdId',split_part(requested.id,'#',1)),$1
     FROM (SELECT unnest($3::text[]) AS id UNION SELECT value->>'id' FROM runtime_bodies) requested
     LEFT JOIN runtime_bodies r ON r.value->>'id'=requested.id
@@ -335,10 +351,10 @@ export const PLACE_PACKAGE_SQL = `WITH RECURSIVE selected_places AS MATERIALIZED
     CROSS JOIN LATERAL (SELECT payload FROM civic_data_payload_parts WHERE hash=hashes.hash LIMIT 1) part,
     LATERAL jsonb_path_query(part.payload,'strict $.**."$civicPayloadPart"','{}',true) ref
 )
-SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id FROM selected_places) AS division_ids,
+SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS registration_held,ARRAY(SELECT id FROM selected_places) AS division_ids,
   coalesce((SELECT jsonb_agg(value ORDER BY text_id) FROM agenda_texts),'[]'::jsonb) AS agenda_texts,
-  (SELECT reader_payload_value(payload) FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD') AS everyday_routing,
-  coalesce((SELECT jsonb_agg(jsonb_build_object(
+  CASE WHEN ${!bodyFactsOnly} THEN (SELECT reader_payload_value(payload) FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD') END AS everyday_routing,
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(jsonb_build_object(
       'bodyId',w.value#>'{autonomousPlan,publication,bodyId}','contractId',w.value#>'{autonomousPlan,publication,contractId}',
       'at',w.value#>'{publicationOutcome,at}','status',w.value#>'{publicationOutcome,status}','code',w.value#>'{publicationOutcome,code}',
       'sourceUrl',CASE WHEN w.value#>>'{autonomousPlan,contract,schemaVersion}'='2' THEN w.value#>'{autonomousPlan,contract,sourceScope,canonicalUrls,0}' ELSE NULL END,
@@ -346,8 +362,8 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id F
         jsonb_array_length(w.value#>'{publicationOutcome,acceptedRecordIds}'),jsonb_array_length(w.value#>'{publicationOutcome,bodyIds}')),
       'versionId',w.value#>'{publicationOutcome,versionId}') ORDER BY w.value#>>'{publicationOutcome,at}' DESC,w.id)
     FROM cp_work_items w WHERE $8::text[] IS NULL AND (w.value#>>'{autonomousPlan,publication,bodyId}')=ANY(ARRAY(SELECT id FROM bodies))
-      AND w.value ? 'publicationOutcome'),'[]'::jsonb) AS publication_attempts,
-  (SELECT reader_payload_value(root.value-'registry'-'bodyRosters'-'rosterReaderDispositions'-'statewideExecutives'-'officialCandidacies'-'officialPhotos'-'rosterPhotos')
+      AND w.value ? 'publicationOutcome'),'[]'::jsonb) ELSE '[]'::jsonb END AS publication_attempts,
+  CASE WHEN ${!bodyFactsOnly} THEN (SELECT reader_payload_value(root.value-'registry'-'bodyRosters'-'rosterReaderDispositions'-'statewideExecutives'-'officialCandidacies'-'officialPhotos'-'rosterPhotos')
     || jsonb_build_object('registry',reader_payload_value(r.value-'bodies'-'divisions') || jsonb_build_object(
       'bodies',coalesce((SELECT jsonb_agg(reader_payload_value(b.item)) FROM runtime_bodies b),'[]'::jsonb),
       'divisions',coalesce((SELECT jsonb_agg(reader_payload_value(d.item)) FROM runtime_divisions d WHERE d.value->>'ocdId' IN (SELECT id FROM runtime_division_ids)),'[]'::jsonb)),
@@ -365,13 +381,15 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id F
       'rosterPhotos',CASE WHEN $8::text[] IS NULL THEN coalesce((SELECT jsonb_object_agg(photo.key,reader_payload_value(photo.value))
         FROM jsonb_each(reader_payload_node(root.value->'rosterPhotos')) photo
         WHERE photo.key IN (SELECT id FROM runtime_people UNION SELECT value->>'officeholderId' FROM runtime_photos)),'{}'::jsonb) ELSE '{}'::jsonb END)
-    FROM runtime_root root CROSS JOIN runtime_registry r) AS registry,
-  coalesce((SELECT jsonb_agg(g || jsonb_build_object('govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
+    FROM runtime_root root CROSS JOIN runtime_registry r) END AS registry,
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
     'domain',d->>'domain','website','https://'||(d->>'domain'),'sourceUrl',source->>'url','checkedAt',source->>'readAt'))
-    FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) AS governments,
-  coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
-    WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places))),'[]'::jsonb) AS divisions,
-  coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('division',coalesce(
+    FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) ELSE '[]'::jsonb END AS governments,
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
+    WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR d->>'ocdId' IN (SELECT id FROM named_places)),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
+  coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('placed',b.id IN (SELECT id FROM linked_bodies)
+    OR EXISTS (SELECT 1 FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),'division',coalesce(
+    (SELECT l.division FROM linked_bodies l WHERE l.id=b.id),
     (SELECT ep.place_id FROM entity_place ep WHERE ep.entity_id=b.id ORDER BY ep.place_id LIMIT 1),
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
     split_part(b.id,'#',1)))) FROM bodies b),'[]'::jsonb) AS entities,
@@ -385,6 +403,9 @@ SELECT EXISTS(SELECT 1 FROM registration) AS registration_held,ARRAY(SELECT id F
   coalesce((SELECT jsonb_agg(item) FROM archived_document_links),'[]'::jsonb) AS archived_document_links,
   coalesce((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)),'{}'::jsonb) AS parts`;
 
+export const PLACE_PACKAGE_SQL = placePackageSql(false);
+const BODY_FACTS_PACKAGE_SQL = placePackageSql(true);
+
 type Row = Record<string, unknown>;
 export type AgendaDocumentLink = Pick<MeetingsSnapshot["agendaDocuments"][number], "meetingId" | "documentUrl">;
 export interface PlacePackage {
@@ -397,31 +418,54 @@ export interface PlacePackage {
   readonly registrationHeld: boolean;
   readonly meetings: readonly Meeting[];
   readonly snapshot: MeetingsSnapshot;
+  /** When a held calendar was last gathered; null when this place holds none, so no reader surface shows a date. */
+  readonly snapshotHeldAt: string | null;
   /** URL ownership for unopened agendas, used only within this request's publication reading. */
   readonly agendaDocumentLinks: readonly AgendaDocumentLink[];
   readonly bodySnapshots: Readonly<Record<string, MeetingsSnapshot>>;
 }
 
 type PlaceInput = { readonly state: string; readonly divisionIds: readonly string[]; readonly bodyIds?: readonly string[]; readonly allBodies?: boolean; readonly includeHistory?: boolean; readonly includeAgenda?: boolean;
+  /** Ballot reads consume only body facts; their registry and directory come from the state package. */
+  readonly bodyFactsOnly?: boolean;
   /** Load these sittings and their merge/identity/URL context; ordinary body reads retain the complete calendar. */
   readonly meetingIds?: readonly string[];
-  readonly neighbors?: boolean };
+  readonly neighbors?: boolean;
+  /** Divisions read only for their names: the ones reaching into a ZIP where few of its residents live. */
+  readonly namedDivisionIds?: readonly string[] };
 const places = serverReaderValue("place-inflight", () => new Map<string, Promise<PlacePackage>>());
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
 
 /** Reuse one place read within a request; concurrent requests share only work still in progress. */
 export function readPlacePackage(input: PlaceInput, query?: Query | null): Promise<PlacePackage> {
   if (query !== undefined || currentReaderAuthorityEdge()) return loadPlacePackage(input, query === undefined ? factReader() : query);
+  return readCachedPlacePackage(input, () => {
+    const socket=readerDatabaseQuery();
+    return socket ? statementQuery(socket) : factReader();
+  });
+}
+
+/** A one-shot API read avoids opening a socket session after database suspension. */
+export function readPlacePackageHttp(input: PlaceInput): Promise<PlacePackage> {
+  if(currentReaderAuthorityEdge())return loadPlacePackage(input,factReader());
+  return readCachedPlacePackage(input,()=>{
+    installDatabaseTransferCounter();
+    const http=factReader(),socket=http ? null : readerDatabaseQuery();
+    return http ?? (socket ? statementQuery(socket) : null);
+  });
+}
+
+function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<PlacePackage> {
   const selected = { state: input.state.toUpperCase(), divisionIds: [...new Set(input.divisionIds)].sort(), bodyIds: [...new Set(input.bodyIds ?? [])].sort(),
-    allBodies: input.allBodies ?? false, includeHistory: input.includeHistory ?? false, includeAgenda: input.includeAgenda ?? false,
-    meetingIds: input.meetingIds ? [...new Set(input.meetingIds)].sort() : undefined,neighbors:input.neighbors ?? false };
+    allBodies: input.allBodies ?? false, includeHistory: input.includeHistory ?? false, includeAgenda: input.includeAgenda ?? false, bodyFactsOnly: input.bodyFactsOnly ?? false,
+    meetingIds: input.meetingIds ? [...new Set(input.meetingIds)].sort() : undefined,neighbors:input.neighbors ?? false,
+    namedDivisionIds: [...new Set(input.namedDivisionIds ?? [])].sort() };
   const key = JSON.stringify(selected), selection = currentReaderSelection();
   let request = selection ? requests.get(selection) : undefined;
   if (selection && !request) { request = new Map(); requests.set(selection, request); }
   const prior = request?.get(key) ?? places.get(key);
   if (prior) { request?.set(key, prior); return prior; }
-  const socket = readerDatabaseQuery();
-  const read = loadPlacePackage(selected, socket ? statementQuery(socket) : factReader());
+  const read = loadPlacePackage(selected,query());
   request?.set(key, read);
   places.set(key, read);
   const settled = () => { if (places.get(key) === read) places.delete(key); };
@@ -433,8 +477,9 @@ export function readPlacePackage(input: PlaceInput, query?: Query | null): Promi
 async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise<PlacePackage> {
   if (!query) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
   const state = input.state.toUpperCase();
-  const [row] = await query(PLACE_PACKAGE_SQL, [state, input.divisionIds, input.bodyIds ?? [], `ocd-division/country:us/state:${state.toLowerCase()}`,
-    input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? false,input.meetingIds ?? null,input.neighbors ?? false]);
+  const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
+  const [row] = await query(input.bodyFactsOnly ? BODY_FACTS_PACKAGE_SQL : PLACE_PACKAGE_SQL, [state, input.divisionIds, input.bodyIds ?? [], stateRoot,
+    input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? false,input.meetingIds ?? null,input.neighbors ?? false,input.namedDivisionIds ?? []]);
   if (!row) throw new Error("PLACE_PACKAGE_READ_FAILED");
   const divisionIds = row.division_ids as string[] | undefined ?? input.divisionIds;
   const entities = row.entities as Row[], rawSittings = row.sittings as Row[];
@@ -443,7 +488,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   const sittings = sittingFactsFromRows(rawSittings), disposition = new Map(dispositions.map(d => [d.sourceId,d]));
   const bodies: BodyFacts[] = entities.map(e => {
     const id = String(e.id), own = roster.get(id) ?? null;
-    return { id, division: String(e.division), fields: fields[id] ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
+    return { id, division: String(e.division), fields: fields[id] || (e.placed === true && e.division !== stateRoot) ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [] };
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });
@@ -475,10 +520,10 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
     agendaDocumentLinks.push(...r.payload.agendaDocumentLinks?.filter(link => ids.has(link.meetingId)) ?? []);
     const confirmation = r.confirmation ? parseUnchangedConfirmation(r.confirmation) : null;
     const checked = confirmationCheckedAt(confirmation,r.current_version_id,meetingVersionReadsASource(r.payload.sources));
-    const scope = /^source:([^:]+):body:(.+?)(?::history)?$/.exec(r.scope);
+    const scope = /^source:([^:]+):body:([^:]+)(:route:[a-f0-9]{16})?(?::history)?$/.exec(r.scope);
     const sources = family ? familySources(r.payload,owned,selected) : r.payload.sources;
     const own = {...r.payload,sources,meetings:owned,agendaDocuments:r.payload.agendaDocuments.filter(d => ids.has(d.meetingId))};
-    const stamped = stampMeetingDoor({id:scope ? `meetings:${decodeURIComponent(scope[1]!)}:${scope[2]}` : r.scope,derivedFamily:family ? state : null},applyPartitionFreshCheck(own,checked));
+    const stamped = stampMeetingDoor({id:scope ? `meetings:${decodeURIComponent(scope[1]!)}:${scope[2]}${scope[3] ?? ""}` : r.scope,derivedFamily:family ? state : null},applyPartitionFreshCheck(own,checked));
     const owners = family ? [...new Set([...owned.flatMap(m => m.bodyId ?? []),...r.payload.derivedMembers?.filter(m => selected.has(m.bodyId)).map(m => m.bodyId) ?? []])]
       : scope ? [decodeURIComponent(scope[2]!)] : [];
     for (const bodyId of owners) {
@@ -522,7 +567,9 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   }
   const overlaid = withSittingFacts(meetings,[...sittings.values()].flat()).sort((a,b) => Date.parse(a.startsAt)-Date.parse(b.startsAt) || a.id.localeCompare(b.id));
   const accounting = accountCarriedCollapses(snapshots,snapshots.flatMap(s => s.sources),[...exact.dropped,...merged.dropped]);
-  const snapshot: MeetingsSnapshot = { formatVersion: 1,generatedAt: snapshots.map(s => s.generatedAt).sort().at(-1) ?? new Date(0).toISOString(),
+  const snapshotHeldAt = snapshots.map(s => s.generatedAt).sort().at(-1) ?? null;
+  // The placeholder only satisfies the snapshot shape for the search; readers get `snapshotHeldAt`.
+  const snapshot: MeetingsSnapshot = { formatVersion: 1,generatedAt: snapshotHeldAt ?? new Date(0).toISOString(),
     counts: snapshotCounts(overlaid,accounting.freshCollapsed),sources: [...accounting.sources],meetings: overlaid,agendaDocuments: snapshots.flatMap(s => s.agendaDocuments).map(d => ({...d,meetingId:merged.aliases.get(d.meetingId) ?? d.meetingId})) };
   // A published calendar names its body independently of the reviewed registry.
   // Use that source only where an independently published body-name fact is absent.
@@ -543,7 +590,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   return { registry:row.registry as RegistryRuntimeReadModel | null ?? null,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
     publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])
       .map(({contractId,...attempt}) => ({...attempt,family:attemptFamilyOf(contractId)})),
-    bodies,meetings: overlaid,snapshot,bodySnapshots,
+    bodies,meetings: overlaid,snapshot,snapshotHeldAt,bodySnapshots,
     agendaDocumentLinks:agendaDocumentLinks.map(link => ({...link,meetingId:merged.aliases.get(link.meetingId) ?? link.meetingId})),
     governments:row.governments as RegistrationGovernmentListing[],
     divisions:row.divisions as Division[],registrationHeld:row.registration_held === true };

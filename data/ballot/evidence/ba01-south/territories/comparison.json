@@ -1,0 +1,276 @@
+[
+  {
+    "territory": "AS",
+    "electionDate": "2026-11-03",
+    "officialCandidateContests": 18,
+    "candidateUnits": 44,
+    "people": 44,
+    "federalCandidates": [
+      {
+        "name": "Aumua Amata",
+        "partyLabel": null
+      },
+      {
+        "name": "Fualaau Rosie Tago Lancaster",
+        "partyLabel": null
+      },
+      {
+        "name": "Meleagi Suitonu Chapman",
+        "partyLabel": null
+      },
+      {
+        "name": "Samana Semo Veavea",
+        "partyLabel": null
+      },
+      {
+        "name": "Sandra King Young",
+        "partyLabel": null
+      },
+      {
+        "name": "Tuifagaloa Dr. Afu Lefaoseu",
+        "partyLabel": null
+      }
+    ],
+    "held": {
+      "fileExists": true,
+      "contests": 18,
+      "candidacies": 44
+    },
+    "sources": [
+      {
+        "url": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+        "finalUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:34:11.037319+00:00",
+        "sha256": "c9e5326bbd18e30100f0f44aeff8c347aded8c8d22b0cc93fd7c518eaeb5b342"
+      }
+    ],
+    "limits": [
+      "Certified list captured; official sample ballot not yet acquired.",
+      "Party labels and vote limits are not stated in the captured certified list; do not infer them.",
+      "Swains Island selection and Senate selection are not added as invented popular contests."
+    ]
+  },
+  {
+    "territory": "MP",
+    "electionDate": "2026-11-03",
+    "officialCandidateContests": 22,
+    "candidateUnits": 74,
+    "people": 77,
+    "federalCandidates": [
+      {
+        "name": "Galvin Sablan Deleon Guerrero",
+        "partyLabel": "Independent"
+      },
+      {
+        "name": "Kimberlyn Kay King-Hinds",
+        "partyLabel": "Republican"
+      }
+    ],
+    "held": {
+      "fileExists": true,
+      "contests": 21,
+      "candidacies": 72
+    },
+    "sources": [
+      {
+        "url": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+        "finalUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:34:18.585441+00:00",
+        "sha256": "57b159cfe04da4409ff76931f4d868985fcead02284315171bbc778c357b248e"
+      },
+      {
+        "url": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+        "finalUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:35:09.562328+00:00",
+        "sha256": "354056ab131c3ee5d034eed9fe6539de66baa1c9f3776a8f896e83e464744960"
+      }
+    ],
+    "limits": [
+      "Governor has three joint tickets: 74 candidate units are 77 people including running mates.",
+      "Thirteen specimen precinct fronts plus blank specimen back captured; measure questions do not appear in this pack.",
+      "Every one of the 77 certified people and every printed party label matches the 13 sample fronts in mp-sample-comparison.json. Northern Islands has no canonical municipality ID in the captured registry. Precinct 4D uses its mayor while sharing the third-senatorial-district council and education contests."
+    ]
+  },
+  {
+    "territory": "GU",
+    "electionDate": "2026-11-03",
+    "officialCandidateContests": 6,
+    "candidateUnits": 48,
+    "people": 50,
+    "federalCandidates": [
+      {
+        "name": "MOYLAN, James Craig",
+        "partyLabel": "REPUBLICAN"
+      },
+      {
+        "name": "LIMTIACO, Alicia Anne Garrido",
+        "partyLabel": "DEMOCRAT"
+      }
+    ],
+    "held": {
+      "fileExists": false,
+      "contests": 0,
+      "candidacies": 0
+    },
+    "sources": [
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+        "finalUrl": "https://drive.usercontent.google.com/download?id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN&export=download",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:37:32.701071+00:00",
+        "sha256": "515c39311649f7efddd50a7fee0f08f94f72e9eb3e3148f7ffc33999d2512432",
+        "contentType": "application/octet-stream"
+      },
+      {
+        "url": "https://drive.google.com/file/d/1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN/view",
+        "finalUrl": "https://drive.google.com/file/d/1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN/view",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:37:29.361020+00:00",
+        "sha256": "2694397af97201a24588952b118c6e88de7aec2e26528247143d46d320c1ff73",
+        "contentType": "text/html; charset=utf-8"
+      }
+    ],
+    "limits": [
+      "Actual public sample PDF captured; Google Drive metadata states organization Guam Election Commission and owner roy.park@gec.guam.gov. Direct GEC government pages currently return503; their backlink to this exact file is not yet captured. A third-party page was used solely to discover the file URL, never for candidate facts.",
+      "Three nonparty offices have no printed party labels. Education board vote limit is not printed; leave unknown pending official law/manual.",
+      "No measure or retention question appears on either captured sample page."
+    ]
+  },
+  {
+    "territory": "VI",
+    "electionDate": "2026-11-03",
+    "officialCandidateContests": 10,
+    "candidateUnits": 70,
+    "people": 75,
+    "federalCandidates": [
+      {
+        "number": 1,
+        "name": "Shelley A. H. Moorhead",
+        "partyLabel": "Independent",
+        "office": "Delegate to Congress",
+        "filingDistrict": "St. Croix"
+      },
+      {
+        "number": 1,
+        "name": "Janelle K. Sarauw",
+        "partyLabel": "Democrat",
+        "office": "Delegate to Congress",
+        "filingDistrict": "St. Thomas/St. John"
+      }
+    ],
+    "held": {
+      "fileExists": true,
+      "contests": 10,
+      "candidacies": 70
+    },
+    "sources": [
+      {
+        "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-Election-Public-Offices-Aspirant-Listing-STX-OFFICIAL-August-2026.pdf",
+        "finalUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-Election-Public-Offices-Aspirant-Listing-STX-OFFICIAL-August-2026.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:35:04.778727+00:00",
+        "sha256": "5842605654886ea86aea1eab815805c3f79a44dc31d8603a7ea61d2b0c1d3fe9"
+      },
+      {
+        "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-Listing-of-Candidates-St.Thomas-St.-John-District-Official-.pdf",
+        "finalUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-Listing-of-Candidates-St.Thomas-St.-John-District-Official-.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:35:04.890027+00:00",
+        "sha256": "60dea977e787d975c290acd5578278f7e9bbf2aee9d10bdc9d96c53328221000"
+      },
+      {
+        "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+        "finalUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:35:04.964501+00:00",
+        "sha256": "dd922269b08e31d5e249a57dd3fd801f38801cca45761fc493e72d7743ae7e73"
+      },
+      {
+        "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+        "finalUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:35:04.872404+00:00",
+        "sha256": "9040205e56e7506ee501e284b9514735ecd79eac3f8491179838c7d94b62fb81"
+      },
+      {
+        "url": "https://vivote.gov/about/board-elections/",
+        "finalUrl": "https://vivote.gov/about/board-elections/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:51:43.941410+00:00",
+        "sha256": "7b75b1952741d3ffb993e287528c13aa7e2530c03a869c93880c62a5dbfe4f27"
+      }
+    ],
+    "sampleCounts": [
+      {
+        "district": "St. Croix",
+        "contests": 6,
+        "candidateUnits": 42,
+        "people": 47
+      },
+      {
+        "district": "St. Thomas/St. John",
+        "contests": 7,
+        "candidateUnits": 37,
+        "people": 42
+      }
+    ],
+    "limits": [
+      "Both separately labelled St. John and St. Thomas Board of Elections seat groups appear together on the one official combined-district sample. Do not restrict their electorates using candidates’ home islands; the current official Board page confirms that seven members from each district are elected by that district’s electors. That exact whole-district statement and its receipt are held in vi-board.html.",
+      "Every one of the 70 candidate units and all printed parties compare with both certified tables in vi-sample-comparison.json. Five name variants are preserved explicitly; prefer the newer official sample value uniformly.",
+      "No measure question appears on either two-page district sample."
+    ]
+  },
+  {
+    "territory": "PR",
+    "regularGeneralElectionDate": "2028-11-07",
+    "verifiedStatement": "Las próximas elecciones generales serán el 7 de noviembre de 2028.",
+    "held": {
+      "fileExists": false,
+      "contests": 0,
+      "candidacies": 0
+    },
+    "sources": [
+      {
+        "url": "https://www.ceepur.org/subastas/docs/2026/RFP-Escrutinio/es/SOLICITUD-DE-PROPUESTAS-ESCRUTINIO-ELECTRONICO-2028-%28final%29.pdf",
+        "finalUrl": "https://www.ceepur.org/subastas/docs/2026/RFP-Escrutinio/es/SOLICITUD-DE-PROPUESTAS-ESCRUTINIO-ELECTRONICO-2028-%28final%29.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:34:26.967159+00:00",
+        "sha256": "90ac419fa8a9ed815fe92a5ff9c49e697544e8141ad6d29bfff36b5dabba6464"
+      },
+      {
+        "url": "https://www.pr.gov/directorio-de-agencias/comision-estatal-de-elecciones-cee-4",
+        "finalUrl": "https://www.pr.gov/directorio-de-agencias/comision-estatal-de-elecciones-cee-4",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:34:25.372672+00:00",
+        "sha256": "b3bb50ff054d121beb470a0316e55a01d0a8f5f51482e66e5bd98caa8dd037e3"
+      },
+      {
+        "url": "https://ceepur.org/eleccionespecialcatano2026/",
+        "finalUrl": "https://ceepur.org/eleccionespecialcatano2026/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:48:06.443662+00:00",
+        "sha256": "2db531b870b64eb59577d5d9820d7da7398754d18d6d062e15ccb9816c9b57e7"
+      },
+      {
+        "url": "https://www.ceepur.org/eventoscee/",
+        "finalUrl": "https://www.ceepur.org/eventoscee/",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-21T00:48:06.385171+00:00",
+        "sha256": "7fdbfea15bbb02758ff4835714f781d8bdb29d5f95bbfff654bff7dbd8097244"
+      }
+    ],
+    "specialElection": {
+      "municipality": "Cataño",
+      "date": "2026-09-27",
+      "officialStatement": "domingo, 27 de septiembre de 2026"
+    },
+    "limits": [
+      "Explicit next regular general date is verified from current official CEE2026RFP; do not create a Nov3,2026 general contest.",
+      "Official Cataño special-election page explicitly dates that event September 27, 2026. The current official events index lists it under 2026. No universal no-special-election statement for November 3 has been captured; keep that distinct from the verified regular-cycle date.",
+      "The linked CEEcalendar page is an unconfigured Telerik demo calendar and is not evidence of election absence."
+    ]
+  }
+]

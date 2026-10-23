@@ -1,0 +1,30 @@
+{
+  "sourceUrl": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Early-Vote-Locations.pdf",
+  "sourceSha256": "9c091e8aaf6cd6edf72bcab0cc78aba74804c2430159ddbd2376028746c9f0d5",
+  "readAt": "2026-10-21T04:44:51.456Z",
+  "engine": "Tesseract eng; Poppler300DPI; lib/extract/ocr.ts",
+  "layer": "OCR",
+  "outcome": "EXTRACTED",
+  "items": [
+    {
+      "page": 1,
+      "text": "EARLY VOTING LOCATIONS FOR 2026 GENERAL ELECTION\n\nEARLY VOTE LOCATION\n\nBELLA VISTA\n\nADDRESS\n\n2026 AUG 31\n\nEARLY VOTE HOURS\n\nBella Vista Community Church\n\n75 E. Lancashire Blvd., Bella Vista\n\nOctober 19-23\nOctober 26-30\n\n8:00 am - 6:00 pm\n\nBella Vista Recreation Center\n\n3 Riordan Drive, Bella Vista\n\nOctober 19-23\nOctober 26-30\n\n8:00 am - 6:00 pm\n\nBENTONVILLE\n\nBenton County Admin Building\n\n215 E. Central Ave., Bentonville\n\nOctober 19-23\nOctober 24\nOctober 26-30\nOctober 31\nNovember 2\n\n8:00 am - 6:00 pm\n10:00 am - 4:00 pm\n8:00 am - 6:00 pm\n10:00 am - 4:00 pm\n8:00 am - 5:00 pm\n\nFirst Landmark Baptist Church\n\n206 S.E. 28th Street, Bentonville\n\nOctober 19-23\nOctober 26-30\nNovember 2\n\n8:00 am - 6:00 pm\n8:00 am - 6:00 pm\n8:00 am - 5:00 pm\n\nBogle Family Public Services Building\n\n1204 S.W. 14th Street, Bentonville\n\nOctober 19-23\nOctober 26-30\n\n8:00 am - 6:00 pm\n\nCENTERTON\n\nCenterton Municipal Complex\n\n210 Captain Kelley Drive, Centerton\n\nOctober 19-23\nOctober 26-30\n\n8:00 am - 6:00 pm\n8:00 am - 6:00 pm\n\nNovember 2 8:00 am - 5:00 pm\nGARFIELD\n. : October 19-23 .\nNEBCO Community Center 17823 Marshall Street, Garfield October 26-30 8:00 am - 6:00 pm\nGRAVETTE\n\nGravette Civic Center\n\n401 Charlotte Street S.E., Gravette\n\nOctober 19-23\nOctober 26-30\n\n8:00 am - 6:00 pm\n\nLOWELL\n\nGrace Lutheran Church\n\n415 N. 6th Place, Lowell\n\nOctober 19-23\nOctober 26-30\nNovember 2\n\n8:00 am - 6:00 pm\n8:00 am - 6:00 pm\n8:00 am - 5:00 pm\n\nROGERS\n\nBenton County Election Commission\n\n1428 W. Walnut Street, Rogers\n\nOctober 19-23\nOctober 24\nOctober 26-30\nOctober 31\nNovember 2\n\n8:G0 am - 6:00 pm\n10:00 am - 4:00 pm\n8:00 am - 6:00 pm\n10:00 am - 4:00 pm\n8:00 am - 5:00 pm\n\nSunnyside Baptist Church\n\n210 E Locust Street, Rogers\n\nOctober 19-23\nOctober 26-30\n\n8:00 am - 6:00 pm\n\nFirst Baptist Church Rogers\n\n3364 W. Pleasant Grove Road, Rogers\n\nOctober 19-23\nOctober 26-30\nNovember 2\n\n8:00 am - 6:00 pm\n8:00 am - 6:00 pm\n8:00 am - 5:00 pm\n\nPEA RIDGE\n\nThe Ridge Church\n\n836 N. Curtis Ave., Pea Ridge\n\nOctober 19-23\nOctober 26-30\n\n8:00 am-6:00 pm\n\nSILOAM SPRINGS\n\nSiloam Springs Community Building\n\n110 N. Mt. Olive Street, Siloam Springs\n\nOctober 19-23\nOctober 26-30\nNovember 2\n\n8:00 am - 6:00 pm\n8:00 am - 6:00 pm\n8:00 am - 5:00 pm\n\nCounty Clerk's Office-Siloam Springs\n\n707 §. Lincoln Street, Sitoam Springs\n\nOctober 19-23\nOctober 24\nOctober 26-30\nOctober 31\nNovember 2\n\n8:00 am - 6:00 pm\n10:00 am - 4:00 pm\n8:00 am - 6:00 pm\n10:00 am - 4:00 pm\n8:00 am - 5:00 pm\n\n2026 6544\n\nAM & {|"
+    }
+  ],
+  "rows": 1,
+  "inputBytes": 89252,
+  "reason": "",
+  "source": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Early-Vote-Locations.pdf",
+  "counts": {
+    "pages": 1,
+    "pagesWithText": 1,
+    "pagesEmpty": 0
+  },
+  "count": {
+    "verdict": "NOT_ASSERTABLE",
+    "stated": null,
+    "statedBy": null,
+    "extracted": 1,
+    "reason": "no count is stated by the source — this layer was given no stated count to check against"
+  }
+}

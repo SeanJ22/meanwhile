@@ -1,4 +1,4 @@
-import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
+import { recordFreeDiscoveryWalks } from "./helpers/free-discovery-walk.ts";
 
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -53,6 +53,7 @@ import {
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import type { HuntSourceScope } from "../lib/hunt/own-site-runtime.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { preloadRegistrationJurisdictions } from "../lib/registration/jurisdictions.ts";
@@ -271,7 +272,9 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(slice.kind, "HELD");
   if (slice.kind !== "HELD") return;
   const preview = registrationGovernmentsPlaced(codes, slice.value);
-  assert.deepEqual(preview.certain, [COLUMBUS, "oh:county:county-of-franklin"], "only governments with qualified native associations enter this held geometry");
+  assert.deepEqual(preview.certain, [COLUMBUS, "oh:county:county-of-franklin", "oh:special:columbus-and-franklin-county-metropolitan-park-district",
+    "oh:special:columbus-franklin-county-finance-authority", "oh:special:franklin-county-transportation-improvement-district"],
+    "only governments with qualified associations enter this held geometry, the districts named for the county among them");
   assert.ok(slice.value.every(g => g.bodyId === null), "registration does not manufacture governing bodies");
   for (const id of ["oh:county:county-of-franklin", COLUMBUS]) assert.ok(preview.certain.includes(id), `${id} is in the preview`);
   const sentence = stateSendPreviewSentence({ kind: "REGISTRATION", state: "OH", versionId, governments: preview.certain, edge: preview.edge });
@@ -346,8 +349,8 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal((await readFreeDiscoveryWalks(repos, subjects)).latestFor(COLUMBUS), "NOT_WALKED");
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
-  await runCensusState({
-    repos, state: "OH", needs: [columbus],
+  await recordFreeDiscoveryWalks({
+    repos, needs: [columbus],
     runtime: {
       open: recordedDiscoveryOpen({
         [`https://${COLUMBUS_HOST}/robots.txt`]: ALLOW,
@@ -370,8 +373,9 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.deepEqual(walked.map((a) => [a.jurisdictionId, a.outcome]), [[COLUMBUS, "FOUND"]], "the free walk took the Send's city first");
   const [attempt] = walked;
   assert.equal(attempt!.found[0]?.url, COLUMBUS_ROUTE);
-  assert.equal(attempt!.site?.address?.source, "WEBSITE_EVIDENCE");
-  assert.ok(vault.has(attempt!.site!.address!.versionId!), "the host is attested by its saved source copy");
+  assert.deepEqual(attempt!.site?.address, { source: "REGISTRATION", versionId });
+  assert.ok(attempt!.steps.some(step => step.url === `https://${COLUMBUS_HOST}/` && step.artifactId && vault.has(step.artifactId)),
+    "the registered website's actual source page is retained for its calendar link");
   assert.equal((await readFreeDiscoveryWalks(repos, subjects)).latestFor(COLUMBUS), "FOUND");
 
   const regInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: reg.metadata.scope, versionId, readModelSha256: sha(reg.value), promotedAt: reg.metadata.promotedAt! };
@@ -514,6 +518,8 @@ test("A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from regist
   assert.equal(walks.latestFor(adjuntas.need.jurisdictionId), "NO_SITE_TO_WALK");
   const route = buildRegistry([meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ ids: new Set(created.map((o) => o.id)) }) })], { root: ROOT, nowIso: T_NEXT })
     .routeFor(`${MEETINGS_DISCOVERY_NAMESPACE}pr:county:adjuntas-municipio#find-own-site`);
-  assert.match(route?.citation ?? "", /PR's registration names this government \(promoted version .+\), and the Census records no web address for it, so none is invented/);
+  assert.equal(route?.citation, `PR's promoted registration ${versionId}`);
+  assert.equal(route?.open.kind, "HTTP_GET", "the recorded government directory can be read while its own site remains blank");
+  assert.equal((route as typeof route & {placeHunt?:HuntSourceScope})?.placeHunt?.knownOwnSite, false);
   clearRegistrationJurisdictionRegistries();
 });

@@ -1,0 +1,893 @@
+{
+  "sanitizerVersion": "fx-cred-v1-2026-08-28",
+  "explanation": "Only credential substrings were replaced. Original source and receipt hashes remain fingerprints of the original captures; sanitized hashes identify the archived bytes. Unsanitized originals are excluded from git under .scratch/ba01-raw-evidence/.",
+  "captures": {
+    "data/ballot/ba01-southeast-sources/de-newcastle-council.gz": {
+      "rawSha256": "d529bc104e07bb46cff299217cf1ff10427145e6a00c8640e92308136d5a4c71",
+      "sanitizedSha256": "f864f730b7d00043b6fad11a45367ce0505c15b9a31acf32b4c5c9469f5d5675",
+      "encoding": "gzip",
+      "rawDecodedSha256": "2e91e92223918ce13bf0eb90f77b56f7a2877e68a856da86a7ba04b7771381cb",
+      "sanitizedDecodedSha256": "bcb80e543895388765b492f3cecf06029ac10b8f8b7d46d331cf8910f5b0b423",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 386,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-southeast-sources/fl-doral-atlarge.gz": {
+      "rawSha256": "a38a72aa0851beb70629d62512054d2b55a3c971f652d9c46e4435a68be9ade5",
+      "sanitizedSha256": "77a86f9fc7ff90d5fa041aeb6c19df1d5cc1b3619fe04b324e177f2e473c9949",
+      "encoding": "gzip",
+      "rawDecodedSha256": "7317cec4d40d5774e58bc9aa89d10eba291594e209cf46427cd809478ef91cb0",
+      "sanitizedDecodedSha256": "52a8eab7932862a54acbbf9f838ca7ba549fa12753b7836c385906d5c6008311",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "75b3dafeae80",
+          "length": 39,
+          "line": 256,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-southeast-sources/fl-gardens-election.gz": {
+      "rawSha256": "6e608ddc9bc0db7f9a07ceb5368eaf0ec5162e7cc6cbc9944c2e9f1596e08325",
+      "sanitizedSha256": "e440abd3a11beda00d01c671d8e4ee389fc7c67aad949c0ee0ae6bc95f549505",
+      "encoding": "gzip",
+      "rawDecodedSha256": "94bf152e683cf32ecfecf5d5502831a021b510841ac56086978e00f10caed793",
+      "sanitizedDecodedSha256": "38fd2e110da9fd76b76e35ce0214565a72e0bc9dc16965c2545fc4cbc0d0a885",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 389,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-southeast-sources/fl-gardens-map-index.gz": {
+      "rawSha256": "57ff3ede26bb42293ca1c6c36411391d93d4ef00b00ddd851e2a3d5fa1bc082c",
+      "sanitizedSha256": "a0d81215d804bc73c5ca3f2cc4eaba2681da268db451f8439474cfcd1b448f5e",
+      "encoding": "gzip",
+      "rawDecodedSha256": "f313b7d7cca721df7b8aa8c019c8c55af2025365fba51dbe92c13cda323d8af0",
+      "sanitizedDecodedSha256": "181b52113cabe1513563e64ce5b76038d13b6fece1d9533b309cfbdbe348a2ae",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 388,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-southeast-sources/fl-hialeah-atlarge.gz": {
+      "rawSha256": "83599f756417f431870fb9a89dcfda0992c27c45960241ad8bc2a169163f233b",
+      "sanitizedSha256": "3b0d8046866d59589e3a4e039c6b427e544b6f2e9eb5f1f6fead35522dce9b2c",
+      "encoding": "gzip",
+      "rawDecodedSha256": "f77c0a81537d4374f5d20fe5aaa4dd5bbff508906fe412e3dc867a5c449aca4e",
+      "sanitizedDecodedSha256": "e83738418b8f99f1bb4bb60644b631827ebfdc6b3d3f8b7c71106049f2ff1ff7",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 388,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-southeast-sources/fl-hillsborough-general.gz": {
+      "rawSha256": "490250fb024edc471641def1cbbcb3301b49efe5b8e42df4f14200fb6ed2775c",
+      "sanitizedSha256": "a8c26ed62649210cf442ef3ef6dd2a4bc38d33713326214b0c88de5c33332fdc",
+      "encoding": "gzip",
+      "rawDecodedSha256": "adc9f2cd4aefb01381fc13d6f818aa59ca709fcd1cdee9edb80eff6158c978f4",
+      "sanitizedDecodedSha256": "dc76f486b371d7af9c4d6c7b485153e84dd66eb5446a038b5b5076aa257f4f27",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 387,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-southeast-sources/fl-south-miami-atlarge.gz": {
+      "rawSha256": "aaa588aeee2a36df2f7ace718d5561e4d078a70a15a8cd89da3fa568095f15b0",
+      "sanitizedSha256": "4962c94339dcb8e65a5e00561ebd487b6f133b18ce579b239250e820ca17fc37",
+      "encoding": "gzip",
+      "rawDecodedSha256": "59685f13e13e578856153d4f1b723fd9eaa8c8e3b276ab62680dea10f2da39d2",
+      "sanitizedDecodedSha256": "8f7583df9f05e6f26be9b2ef77119377067291daeb956f3e43b43e387b87ef27",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 399,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-southeast-sources/fl-sunny-isles-atlarge.gz": {
+      "rawSha256": "2eaff5399bd02c082c0b57e9309f0f23c60791663337df3e8988efd290ce7c17",
+      "sanitizedSha256": "4e58ebed6465d45aec4b61e1f0834e00ceeb0d5c71937fc1f913b5f2e48f3adb",
+      "encoding": "gzip",
+      "rawDecodedSha256": "9588e6970eb91e57b1a03f53a424d05a2719b0f801fc4237653d448b2011d914",
+      "sanitizedDecodedSha256": "8b40f3dc9cfb72086bfcfa0966fbc51367b9f3d30d23a67de1b96ef7eae3752a",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "23cfc2d39a0e",
+          "length": 39,
+          "line": 253,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-southeast-sources/fl-temple-election.gz": {
+      "rawSha256": "50a89e5a4a870a80f8602080cab0e89473446fbdd8abc462ba23ddbaf27b1dc8",
+      "sanitizedSha256": "50f137a69629186e17d5b8bdc268f60ef3414110b0b5eb9fdad8ec888a16543c",
+      "encoding": "gzip",
+      "rawDecodedSha256": "9d30404e4c48d4da070f39c70d22d3e28522b16eab461dba49585bbd4c7dd65f",
+      "sanitizedDecodedSha256": "4b5ecfb2f9fee77251d862bb66ce8a97ab88242c1ffcc719df3782487c6fd67c",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 388,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/az-ccec-candidate-disclaimer.html": {
+      "rawSha256": "1b928b9d758de89c4406c296c828679c8a71809ed28839b634690a3f356f80aa",
+      "sanitizedSha256": "ef6e747c986408dca37506936641c9d177db2e452073e7c5f7e91a6cb133b2d2",
+      "encoding": "identity",
+      "rawDecodedSha256": "1b928b9d758de89c4406c296c828679c8a71809ed28839b634690a3f356f80aa",
+      "sanitizedDecodedSha256": "ef6e747c986408dca37506936641c9d177db2e452073e7c5f7e91a6cb133b2d2",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "92e605756849",
+          "length": 39,
+          "line": 18,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/county-captures/wy-laramie-local-page.gz": {
+      "rawSha256": "b00d23d966d124533e47789fa6292a16cecfb9132496108078e07bd5b24c56f0",
+      "sanitizedSha256": "56a027dde0ca4214060080fc6a5b68efa821d9dd73c7a3f116c466529dcd4e10",
+      "encoding": "gzip",
+      "rawDecodedSha256": "1af9f72f08c535add458f1afb8038d4cc3d0a6bf8eca18b5853691323d745532",
+      "sanitizedDecodedSha256": "4d6efda11b94f88cb2d27f9a5322e8ccf33d06e9ae093dbc3702899b929cf754",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "6a7623b5e1eb",
+          "length": 39,
+          "line": 253,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-county-election-law.gz": {
+      "rawSha256": "d4bf107752fc43aa6b9cc97e279d090d82b76455985ce48405767700a6013bdd",
+      "sanitizedSha256": "7a45577c61a46f510735b0fa4fee14814592026753350c1edaf749fb395eed3d",
+      "encoding": "gzip",
+      "rawDecodedSha256": "7754280a7ba7fe8cccd42b7e3c5f7e285a5541dfec4b34e81a1c6e6f43e271e6",
+      "sanitizedDecodedSha256": "49ec701cc15eeeca5c4cad895bdf133d033de1fca123263c48d4de0a1643aa12",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 112,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-county-election-law.txt": {
+      "rawSha256": "5084c975474bd287b49bcac85dabc467f0330c332ac63a03736c4aecb2c908d0",
+      "sanitizedSha256": "b18e33b879fecdd1d3e1791998c5d263ca061e47c4e2d74cafbad5ee1f04e0df",
+      "encoding": "identity",
+      "rawDecodedSha256": "5084c975474bd287b49bcac85dabc467f0330c332ac63a03736c4aecb2c908d0",
+      "sanitizedDecodedSha256": "b18e33b879fecdd1d3e1791998c5d263ca061e47c4e2d74cafbad5ee1f04e0df",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 1,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-fourth-district-scope.gz": {
+      "rawSha256": "03e5b3c45fd14de8a11653e95060a0d59b42f233ea40af5067788ad229a964be",
+      "sanitizedSha256": "7b01fb9f5dab3a8d7c125046ee3488cd10c335a2b1823827447a28565032a280",
+      "encoding": "gzip",
+      "rawDecodedSha256": "4f740683c9b310c577c543622f047a26a34341d1fd37dd9588cc7410f68469e7",
+      "sanitizedDecodedSha256": "c33106bac9962c6104d1403fc575b7cdacd3a5efff8cda8d89245ef42c0a85ae",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 112,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-fourth-district-scope.txt": {
+      "rawSha256": "93fe48d2dcd74fa56fc8e09e536dbd05c5cc6e482f406a7acc9821996d96b377",
+      "sanitizedSha256": "e98186639811755aca6373ee45a0545196d07cca214bb8e1dbf16f40ea4bcf1b",
+      "encoding": "identity",
+      "rawDecodedSha256": "93fe48d2dcd74fa56fc8e09e536dbd05c5cc6e482f406a7acc9821996d96b377",
+      "sanitizedDecodedSha256": "e98186639811755aca6373ee45a0545196d07cca214bb8e1dbf16f40ea4bcf1b",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 1,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-highway-codified.gz": {
+      "rawSha256": "52dca9dccb2f0ecd6197af53f46d76c5af52f7c59a6966d7123347552e4c4b97",
+      "sanitizedSha256": "edf2ec47e27834598de193cbd39ded10d49c9d1a6fd754840499a91073f9e76a",
+      "encoding": "gzip",
+      "rawDecodedSha256": "6901af39e17ca27f903aa0add2607bce25d80028675179bd0862746969276422",
+      "sanitizedDecodedSha256": "c5d14afb9cd3d23e8c339431a9d96aea0b4f4a6e394a5484c887b0e9fe429756",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 112,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-highway-codified.txt": {
+      "rawSha256": "93db03e08652550d4e77e8f6314886cc0d0bc48f13fa20bb67aef3abf445e16c",
+      "sanitizedSha256": "5ea326ba82c4abadaaea898365af6e7bb9fb1262c259b87159cdf20770c5584a",
+      "encoding": "identity",
+      "rawDecodedSha256": "93db03e08652550d4e77e8f6314886cc0d0bc48f13fa20bb67aef3abf445e16c",
+      "sanitizedDecodedSha256": "5ea326ba82c4abadaaea898365af6e7bb9fb1262c259b87159cdf20770c5584a",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 1,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-judicial-elections-constitution.gz": {
+      "rawSha256": "b9eed451916db3bd6a36cbdb6c2b7db4010ab05e4b946620e4b1213673f585c0",
+      "sanitizedSha256": "9c4b247456b5f09762d47e93ba0618023f0e67b31573683f626a8d5e9e666ea6",
+      "encoding": "gzip",
+      "rawDecodedSha256": "64658afc6d7915c1a3c4bfacacb3679854870abaa015aa12313325e12ca980f1",
+      "sanitizedDecodedSha256": "e4e7f9bfcae45c97e47d557f7362200f591a2986e0a52fd7a112035bc30ea0ba",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 112,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-judicial-elections-constitution.txt": {
+      "rawSha256": "ce3544e4453c9d489123299ea01225daa2d1a5bdc0834e7b8830118ed7988898",
+      "sanitizedSha256": "fb1f2ded10e179c89c1171eada9409d4cbd26028c592eb9f2c08a590ef0fbb21",
+      "encoding": "identity",
+      "rawDecodedSha256": "ce3544e4453c9d489123299ea01225daa2d1a5bdc0834e7b8830118ed7988898",
+      "sanitizedDecodedSha256": "fb1f2ded10e179c89c1171eada9409d4cbd26028c592eb9f2c08a590ef0fbb21",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 1,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-magistrate-retention.gz": {
+      "rawSha256": "2e2a68c66644ee3c98cb662517ab936d7eec8046b823724576b5760a739f04c9",
+      "sanitizedSha256": "08fd840abbe18a1f65ceec15f7cba6ee9cff3524664f5516cdf60ab33120afd3",
+      "encoding": "gzip",
+      "rawDecodedSha256": "1e350a5e2371ceed9baccd505f6dd2152bf84e9cae18749bffaa6288f507bffc",
+      "sanitizedDecodedSha256": "2698702e81677d86dade88cd1566de9a15ab662c85e48786729123eb3ac54407",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 112,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/ba01-west-evidence/id-local-captures/id-magistrate-retention.txt": {
+      "rawSha256": "ebda897154030e7a8ecb1b21f2800fb0487988415a687265513465740eedf37d",
+      "sanitizedSha256": "9d95678f7578200f0c6cff6212a910716dafe001ddc928a79e7ac7a07952fc75",
+      "encoding": "identity",
+      "rawDecodedSha256": "ebda897154030e7a8ecb1b21f2800fb0487988415a687265513465740eedf37d",
+      "sanitizedDecodedSha256": "9d95678f7578200f0c6cff6212a910716dafe001ddc928a79e7ac7a07952fc75",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "30617c753656",
+          "length": 39,
+          "line": 1,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-great-lakes/il-brown-cdc.raw.gz": {
+      "rawSha256": "c5704ae64552e808413407233da52476a93d287f56ddb42747d75ac4af4baa62",
+      "sanitizedSha256": "f833cb040bb992de6d7ef45f75fafe4a0c2602af9653bb180a77af4840b44ea5",
+      "encoding": "gzip",
+      "rawDecodedSha256": "1dfd301cf112468c07c73f28a7401b12dce802ef6ec2c6a3deedba79f40c15de",
+      "sanitizedDecodedSha256": "dadb5fdd4adaa4d32ff6b764eee995b5aed327ac269099007f0980aae7d36913",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "8ea12ce37b8a",
+          "length": 39,
+          "line": 763,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-great-lakes/mi-wayne-general-parent.raw.gz": {
+      "rawSha256": "99e9062379dc188f0d45136d234fdb645fdd5d66d9ab83c488ba87a28b437ec7",
+      "sanitizedSha256": "9d235a818f4da0ecbd3904da69019805567d70f5800208df55a48d6016bb5944",
+      "encoding": "gzip",
+      "rawDecodedSha256": "2ee346cd33f036389dbab174be70dd98932646aeac03af01c47e61dd88fc29b2",
+      "sanitizedDecodedSha256": "184571efe5e334f5ea21aefc31db5f456ebb9cadcb39703f7f1710b3dc83c9e7",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "9240bcb87529",
+          "length": 39,
+          "line": 255,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/ar-core/garland.html": {
+      "rawSha256": "01330c1f6661cadd3535db1c514e4a133a883f40ea8936e81351b4eb1480c73c",
+      "sanitizedSha256": "603436b4a90d6e165c2a2a1d08711d1623c6302c00f7c26ca44836ad43dd8f05",
+      "encoding": "identity",
+      "rawDecodedSha256": "01330c1f6661cadd3535db1c514e4a133a883f40ea8936e81351b4eb1480c73c",
+      "sanitizedDecodedSha256": "603436b4a90d6e165c2a2a1d08711d1623c6302c00f7c26ca44836ad43dd8f05",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 389,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/ms-desoto/candidate-list.html": {
+      "rawSha256": "cd58776e48fe0f04fa7c40c82741939f0bf6696eeef8a1270cf205bfbf97fe05",
+      "sanitizedSha256": "fab3884841977d93d48d0c5b31cfa986619747506d66fa4aeea4739bc0321180",
+      "encoding": "identity",
+      "rawDecodedSha256": "cd58776e48fe0f04fa7c40c82741939f0bf6696eeef8a1270cf205bfbf97fe05",
+      "sanitizedDecodedSha256": "fab3884841977d93d48d0c5b31cfa986619747506d66fa4aeea4739bc0321180",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 387,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/ms-desoto/elections.html": {
+      "rawSha256": "7b002a35c6f15ff0469831c278e4b85feda3b6136e7b10f94ad5fc8db46d8c41",
+      "sanitizedSha256": "7d031225a71e99360948d8265cf213f6fbf80de6f3dd95b3ad258025748142b5",
+      "encoding": "identity",
+      "rawDecodedSha256": "7b002a35c6f15ff0469831c278e4b85feda3b6136e7b10f94ad5fc8db46d8c41",
+      "sanitizedDecodedSha256": "7d031225a71e99360948d8265cf213f6fbf80de6f3dd95b3ad258025748142b5",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 387,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/territories/as-calendar.html": {
+      "rawSha256": "1064cad209cfe658f85ae1b0b7595cb5e96417afbe70df95ce7e8490babaa512",
+      "sanitizedSha256": "bcad4c0a48e75ec8e0ac8e1d4efd468ca92bc61e6b231ff98b1610bd2eda4123",
+      "encoding": "identity",
+      "rawDecodedSha256": "1064cad209cfe658f85ae1b0b7595cb5e96417afbe70df95ce7e8490babaa512",
+      "sanitizedDecodedSha256": "bcad4c0a48e75ec8e0ac8e1d4efd468ca92bc61e6b231ff98b1610bd2eda4123",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "01725060db56",
+          "length": 39,
+          "line": 14,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/territories/as-candidate-rules.html": {
+      "rawSha256": "5d8140295d7f04a6d58fed1a33d8f8429d99b239f6d5ff57cb73ff653ade676b",
+      "sanitizedSha256": "83f8c48e3da54099ae039cb01c10e56f5c3d1314d02cbabcc033985b8ecc9c2b",
+      "encoding": "identity",
+      "rawDecodedSha256": "5d8140295d7f04a6d58fed1a33d8f8429d99b239f6d5ff57cb73ff653ade676b",
+      "sanitizedDecodedSha256": "83f8c48e3da54099ae039cb01c10e56f5c3d1314d02cbabcc033985b8ecc9c2b",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "01725060db56",
+          "length": 39,
+          "line": 14,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/territories/as-candidates.html": {
+      "rawSha256": "c9e5326bbd18e30100f0f44aeff8c347aded8c8d22b0cc93fd7c518eaeb5b342",
+      "sanitizedSha256": "f9667888a8249142e7c8bd9f62f96a37b3601841f4442aaf5627ec4d10a03886",
+      "encoding": "identity",
+      "rawDecodedSha256": "c9e5326bbd18e30100f0f44aeff8c347aded8c8d22b0cc93fd7c518eaeb5b342",
+      "sanitizedDecodedSha256": "f9667888a8249142e7c8bd9f62f96a37b3601841f4442aaf5627ec4d10a03886",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "01725060db56",
+          "length": 39,
+          "line": 14,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/territories/as-home.html": {
+      "rawSha256": "b7d47785b509feff3718e7eb2b8cc856c9e8533c28593dd61be05419bfcb1668",
+      "sanitizedSha256": "8b94b4c26c999cdc2bf0833f902e53d444cac723f48dae10d751defcb4875bd0",
+      "encoding": "identity",
+      "rawDecodedSha256": "b7d47785b509feff3718e7eb2b8cc856c9e8533c28593dd61be05419bfcb1668",
+      "sanitizedDecodedSha256": "8b94b4c26c999cdc2bf0833f902e53d444cac723f48dae10d751defcb4875bd0",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "01725060db56",
+          "length": 39,
+          "line": 16,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/territories/as-voting.html": {
+      "rawSha256": "d7a719515165b9aa9730ef50ef5bb29366e7e55124e97e838836af94202075eb",
+      "sanitizedSha256": "8e667561c84ff0621d3213bbdc6369bb7f281cfdbb69d83e27f5be89059968c3",
+      "encoding": "identity",
+      "rawDecodedSha256": "d7a719515165b9aa9730ef50ef5bb29366e7e55124e97e838836af94202075eb",
+      "sanitizedDecodedSha256": "8e667561c84ff0621d3213bbdc6369bb7f281cfdbb69d83e27f5be89059968c3",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "01725060db56",
+          "length": 39,
+          "line": 14,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/territories/gu-code-index.html": {
+      "rawSha256": "dea42dd1bf09ae2eceddfa27a2f30beab3f6ef3f8b4ef18f537f3955f0427edb",
+      "sanitizedSha256": "13a47603a1506afd83f60a8bad7e4573f2f9eceb0930e742b5328c37b8bdf0c5",
+      "encoding": "identity",
+      "rawDecodedSha256": "dea42dd1bf09ae2eceddfa27a2f30beab3f6ef3f8b4ef18f537f3955f0427edb",
+      "sanitizedDecodedSha256": "13a47603a1506afd83f60a8bad7e4573f2f9eceb0930e742b5328c37b8bdf0c5",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "f04b17842b82",
+          "length": 39,
+          "line": 1844,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/territories/gu-public-notice.html": {
+      "rawSha256": "ccc2a4e9dd831ad84c6ae444dc00aa7521296d287f2d81b2f58fac9e059f9f7b",
+      "sanitizedSha256": "66d71e88de10b292421ba6d6d8f964637fa0df3e12293fc8ca70b4a0cc502c31",
+      "encoding": "identity",
+      "rawDecodedSha256": "ccc2a4e9dd831ad84c6ae444dc00aa7521296d287f2d81b2f58fac9e059f9f7b",
+      "sanitizedDecodedSha256": "66d71e88de10b292421ba6d6d8f964637fa0df3e12293fc8ca70b4a0cc502c31",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "9ed0bf9fa3ac",
+          "length": 39,
+          "line": 497,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/evidence/ba01-south/territories/gu-sample-drive.html": {
+      "rawSha256": "2694397af97201a24588952b118c6e88de7aec2e26528247143d46d320c1ff73",
+      "sanitizedSha256": "671f891f20437b87d07e5f6a9c59f0b3047c47098d185452fd6779a9f8b66dd1",
+      "encoding": "identity",
+      "rawDecodedSha256": "2694397af97201a24588952b118c6e88de7aec2e26528247143d46d320c1ff73",
+      "sanitizedDecodedSha256": "671f891f20437b87d07e5f6a9c59f0b3047c47098d185452fd6779a9f8b66dd1",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "f5800ea77725",
+          "length": 39,
+          "line": 3,
+          "occurrences": 5,
+          "confirmed": true
+        },
+        {
+          "classId": "google_api_key",
+          "fingerprint": "3591c0c02960",
+          "length": 39,
+          "line": 3,
+          "occurrences": 1,
+          "confirmed": true
+        },
+        {
+          "classId": "google_api_key",
+          "fingerprint": "6591b732e7d5",
+          "length": 39,
+          "line": 3,
+          "occurrences": 2,
+          "confirmed": true
+        },
+        {
+          "classId": "google_api_key",
+          "fingerprint": "f3e0b6278dc9",
+          "length": 39,
+          "line": 3,
+          "occurrences": 1,
+          "confirmed": true
+        },
+        {
+          "classId": "google_api_key",
+          "fingerprint": "b0792c64f6e9",
+          "length": 39,
+          "line": 3,
+          "occurrences": 1,
+          "confirmed": true
+        },
+        {
+          "classId": "google_api_key",
+          "fingerprint": "015cc0ec7017",
+          "length": 39,
+          "line": 3,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/sources/ba-01/ca/sf-candidates.html": {
+      "rawSha256": "59f410e98008088d39e0d3c7354acdc1e1e1d153fbe54ae203d933a11b136def",
+      "sanitizedSha256": "30415f29f0174bb18d015d8de5fa0e09a22f8a5bb81bc364e44a86f56b83557c",
+      "encoding": "identity",
+      "rawDecodedSha256": "59f410e98008088d39e0d3c7354acdc1e1e1d153fbe54ae203d933a11b136def",
+      "sanitizedDecodedSha256": "30415f29f0174bb18d015d8de5fa0e09a22f8a5bb81bc364e44a86f56b83557c",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "46d6985d8040",
+          "length": 39,
+          "line": 1,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/sources/ba-01/ca/sf-qualified-measures.html": {
+      "rawSha256": "6970baab061fc59e4816eadcbea31ed17ab7c39447bc256c9fb802f490ef72c3",
+      "sanitizedSha256": "efbacd784df7b30c5ba2bed97050963713e299af1db8afb8b551b89240496c86",
+      "encoding": "identity",
+      "rawDecodedSha256": "6970baab061fc59e4816eadcbea31ed17ab7c39447bc256c9fb802f490ef72c3",
+      "sanitizedDecodedSha256": "efbacd784df7b30c5ba2bed97050963713e299af1db8afb8b551b89240496c86",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "46d6985d8040",
+          "length": 39,
+          "line": 1,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/sources/ba01-northeast/nh-lebanon-sample-index.html": {
+      "rawSha256": "0910b31ef0a25bcee0ac0a387361be47269e36fdd193f1a01f48f519fbaaac92",
+      "sanitizedSha256": "a2e5e3309ea37f98d3cf4b8608c45d7475abb695e453936e3bb8152d0e8984ec",
+      "encoding": "identity",
+      "rawDecodedSha256": "0910b31ef0a25bcee0ac0a387361be47269e36fdd193f1a01f48f519fbaaac92",
+      "sanitizedDecodedSha256": "a2e5e3309ea37f98d3cf4b8608c45d7475abb695e453936e3bb8152d0e8984ec",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 412,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/sources/ba01-northeast/nyc-10001-pollsite.json": {
+      "rawSha256": "965c58db5053dd2872d3ee21a0c04e1a0b6a044378817eb964b6563baca473bd",
+      "sanitizedSha256": "95122197f60f4709ef895ecb9c3f0015299267c94c9f12a58285957266eccd47",
+      "encoding": "identity",
+      "rawDecodedSha256": "965c58db5053dd2872d3ee21a0c04e1a0b6a044378817eb964b6563baca473bd",
+      "sanitizedDecodedSha256": "95122197f60f4709ef895ecb9c3f0015299267c94c9f12a58285957266eccd47",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "7942a9e762c3",
+          "length": 39,
+          "line": 1,
+          "occurrences": 2,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": [
+        {
+          "pointer": "/mapURI",
+          "rawSha256": "8b6875a974ba86ec8a164840108e8c0da2852b71d06d9e6c2f02e829bab7c1c3",
+          "sanitizedSha256": "cbb3b4f4f62cdf7819481a72305c617682d750203adfe0c8fb17d128b36ba74e"
+        },
+        {
+          "pointer": "/ev_mapURI",
+          "rawSha256": "71a492a7c9ff3858b1f74c209ed4b5291a23a3f52f04340bc07158e48f8f0520",
+          "sanitizedSha256": "4bd472ef3c8c963db774aeac26b4fbe12b811f51f6ca46760856614955850147"
+        }
+      ]
+    },
+    "data/ballot/sources/ba01-northeast/nyc-10001-rendered.html": {
+      "rawSha256": "c55500c8e06b3212703e1ac62e4039f4ddcd6dd0e0b5c24b68c05b906de0c94e",
+      "sanitizedSha256": "372029cc21c6b4b30311166feb55f39b7923f2e294c5e558f787e949ca602c47",
+      "encoding": "identity",
+      "rawDecodedSha256": "c55500c8e06b3212703e1ac62e4039f4ddcd6dd0e0b5c24b68c05b906de0c94e",
+      "sanitizedDecodedSha256": "372029cc21c6b4b30311166feb55f39b7923f2e294c5e558f787e949ca602c47",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "7942a9e762c3",
+          "length": 39,
+          "line": 83,
+          "occurrences": 3,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    },
+    "data/ballot/sources/ba01-northeast/nyc-bronx-2.json": {
+      "rawSha256": "45c07d844e6c0a9a64a6c93d83ac4815f877926ba0893d0fe6ff8c4c8fa96ef3",
+      "sanitizedSha256": "fc3af2662aa0f405134469b22dd878f45e0a53a9a55b55267062c8acf12a0f39",
+      "encoding": "identity",
+      "rawDecodedSha256": "45c07d844e6c0a9a64a6c93d83ac4815f877926ba0893d0fe6ff8c4c8fa96ef3",
+      "sanitizedDecodedSha256": "fc3af2662aa0f405134469b22dd878f45e0a53a9a55b55267062c8acf12a0f39",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "7942a9e762c3",
+          "length": 39,
+          "line": 1,
+          "occurrences": 2,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": [
+        {
+          "pointer": "/mapURI",
+          "rawSha256": "693211d3d7f2f02eb51fca94d7b7aaad17a631b4b9e9af587a1e39f57c3e3647",
+          "sanitizedSha256": "bd3184cb2b4037c11a537ccc1ebb18e48a232dd0f6bdc0b718f19c3319bde5d3"
+        },
+        {
+          "pointer": "/ev_mapURI",
+          "rawSha256": "9e39849f72fa8d210dc763160a124482e15e8cb91e264d629475c8c9ece10d69",
+          "sanitizedSha256": "24bf676326f2e523a43fb6ee82adeb87e6115c5363ff94b1110056139befd366"
+        }
+      ]
+    },
+    "data/ballot/sources/ba01-northeast/nyc-kings-2.json": {
+      "rawSha256": "9f396256dd2f3925f5335cb64ccb9cff81fa9ea44d453added98dc75f74f8f16",
+      "sanitizedSha256": "52ac0e3dd4cc8f8e20ac47dc55c38db16ede6ecf6c3a61bab9225b8560868663",
+      "encoding": "identity",
+      "rawDecodedSha256": "9f396256dd2f3925f5335cb64ccb9cff81fa9ea44d453added98dc75f74f8f16",
+      "sanitizedDecodedSha256": "52ac0e3dd4cc8f8e20ac47dc55c38db16ede6ecf6c3a61bab9225b8560868663",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "7942a9e762c3",
+          "length": 39,
+          "line": 1,
+          "occurrences": 2,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": [
+        {
+          "pointer": "/mapURI",
+          "rawSha256": "39aa951b77c8c2080018747afbfabbbb83be898fb8c3bcf79cebf13911a7f3ff",
+          "sanitizedSha256": "f0c69895d4b34714a51cd022aff85ad7b0611e981e090d0d46a78c36b7725260"
+        },
+        {
+          "pointer": "/ev_mapURI",
+          "rawSha256": "734ffcd80164e1633527b89146536ac47f2f36f328f423fc564fa9e15b1d9b68",
+          "sanitizedSha256": "b870ecbc66909da21bb1fb92e588467c76bcbab1299cc123fae2b7faf850b242"
+        }
+      ]
+    },
+    "data/ballot/sources/ba01-northeast/nyc-queens-2.json": {
+      "rawSha256": "70ed366adf26fd4b10e58b4100e0830684ae87d348efb5935c5d5ccc28b879d7",
+      "sanitizedSha256": "1034b0f29cce570384a2d25fe552e04f22d534b5b52453b5c0a7b8ec039c8013",
+      "encoding": "identity",
+      "rawDecodedSha256": "70ed366adf26fd4b10e58b4100e0830684ae87d348efb5935c5d5ccc28b879d7",
+      "sanitizedDecodedSha256": "1034b0f29cce570384a2d25fe552e04f22d534b5b52453b5c0a7b8ec039c8013",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "7942a9e762c3",
+          "length": 39,
+          "line": 1,
+          "occurrences": 2,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": [
+        {
+          "pointer": "/mapURI",
+          "rawSha256": "c37720a2f80ce9ab98b6bd841ed2f5b07b374b7651c9d1be5c16135a57895dea",
+          "sanitizedSha256": "0607dec44ec47631dab66f6f35a1ed3f25711232158b358dead31dbe90646ec5"
+        },
+        {
+          "pointer": "/ev_mapURI",
+          "rawSha256": "27a4d34be3ac51413bf43df7ffaafa698a3f23d196e9aedcd1a061b23bf1c83c",
+          "sanitizedSha256": "a564113557cb53ef81aad113002b4a142c259b1749fd3a78dea64057a9f19042"
+        }
+      ]
+    },
+    "data/ballot/sources/ba01-northeast/nyc-richmond-2.json": {
+      "rawSha256": "ecec352b6a4542a6cee5c47672bc81c539e2a4644745b8bc66eb049ca08d656e",
+      "sanitizedSha256": "8ca69bca3dafdddc03a9b0b8b4795402803a0af4e5a783d65e8adc9f9ee09b9c",
+      "encoding": "identity",
+      "rawDecodedSha256": "ecec352b6a4542a6cee5c47672bc81c539e2a4644745b8bc66eb049ca08d656e",
+      "sanitizedDecodedSha256": "8ca69bca3dafdddc03a9b0b8b4795402803a0af4e5a783d65e8adc9f9ee09b9c",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "7942a9e762c3",
+          "length": 39,
+          "line": 1,
+          "occurrences": 2,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": [
+        {
+          "pointer": "/mapURI",
+          "rawSha256": "79a6fbf1c91d1c6922239a9f92e804d25a5e9829443a3d07cd5e3e87bd5fa0bf",
+          "sanitizedSha256": "e02088bba0e8acf8a662474b7c24454ec1f001a11dd93ce00c441f195df71cc7"
+        },
+        {
+          "pointer": "/ev_mapURI",
+          "rawSha256": "2e913f76e669e247e3cd4d4abfd445ec4679c7dd21f58cc753a2311e8bee89fc",
+          "sanitizedSha256": "74aeed125b44ca0e7baafcafa66c4c7920b567201fa41eabe90fdaa11ac28186"
+        }
+      ]
+    },
+    "data/ballot/sources/ba01-northeast/pa-centre-sample-index.html": {
+      "rawSha256": "f4853fd12396623dd645f9d1ffa11e73ea9fb0952d9b5ebd8cd738311813c4fc",
+      "sanitizedSha256": "08636aa8f63fc09b1fda9fd58df685b37b1c6fff9a86d1d92dc9d674795ab863",
+      "encoding": "identity",
+      "rawDecodedSha256": "f4853fd12396623dd645f9d1ffa11e73ea9fb0952d9b5ebd8cd738311813c4fc",
+      "sanitizedDecodedSha256": "08636aa8f63fc09b1fda9fd58df685b37b1c6fff9a86d1d92dc9d674795ab863",
+      "redactions": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "142ea3c41e7c",
+          "length": 39,
+          "line": 389,
+          "occurrences": 1,
+          "confirmed": true
+        }
+      ],
+      "embeddedBodies": []
+    }
+  }
+}

@@ -4,7 +4,6 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { absencesForDivisions } from "../lib/ask/ballot-inventory.ts";
-import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import type { EvidencePack, EvidenceRecord, EvidenceSubject } from "../lib/ask/evidence.ts";
 import { overLengthBudget } from "../lib/ask/length-contract.ts";
 import { financeQuestionAsked, financeRegimeNotesFor } from "../lib/ask/local-finance.ts";
@@ -19,7 +18,6 @@ import {
 } from "../lib/ask/money-answer.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import type { CampaignMoney } from "../lib/funding/campaign-money.ts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
 
@@ -73,7 +71,7 @@ const MONEY: StateMoneyRecord[] = [
 
 interface Race { contest: { id: string; title: string; ocdId: string }; candidates: GroupCandidate[]; records: EvidenceRecord[]; gaps: EvidencePack["gaps"] }
 
-/** A contest's candidates and their held money, through the route's own selector (state records only). */
+
 function race(contestId: string): Race {
   const contest = CONTESTS.find((row) => row.id === contestId)!;
   const records: EvidenceRecord[] = [];
@@ -83,14 +81,10 @@ function race(contestId: string): Race {
     const name = [candidacy.givenName, candidacy.familyName].filter(Boolean).join(" ");
     const subject: EvidenceSubject = { kind: "PERSON", id: candidacy.id, name };
     const shown = stateMoneyRecordsForDisplay(MONEY.filter((record) => record.targetKeys.includes(candidacy.id)));
-    const select = (): CampaignMoney => ({
-      requestedTargetKey: candidacy.id, federal: { kind: "none" }, officialIdentity: "NOT_OFFICIAL",
-      state: { records: shown, resolution: "DIRECT_CANDIDACY_KEY", resolvedTargetKey: candidacy.id },
-    });
-    const evidence = campaignMoneyEvidenceFor(subject, candidacy.id, contestId, select);
-    records.push(...evidence.records);
-    gaps.push(...evidence.gaps);
-    candidates.push({ id: candidacy.id, name, matched: evidence.denominators.financeIdentityUnresolved === 0 });
+    records.push(...shown.map((record,index):EvidenceRecord=>({kind:"FINANCE_SUMMARY",id:`state-money:${candidacy.id}:${index}`,subjectId:subject.id,text:"Filed campaign totals",
+      sourceUrl:record.filingsUrl,sourceOrg:record.agency,retrievedAt:record.checkedAt,
+      finance:{jurisdiction:record.jurisdiction,filingState:record.filingState,totals:record.totals,registeredName:record.registeredName,agency:record.agency,electionYear:record.electionYear,checkedAt:record.checkedAt}})));
+    candidates.push({id:candidacy.id,name,matched:true});
   }
   const contestSubject: EvidenceSubject = { kind: "CONTEST", id: contestId, name: contest.title };
   gaps.push(...financeRegimeNotesFor(contestSubject, { state: records.length > 0, federal: false, county: false }).map((note) => note.gap));

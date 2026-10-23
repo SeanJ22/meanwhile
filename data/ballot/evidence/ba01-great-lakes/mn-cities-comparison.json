@@ -1,0 +1,72 @@
+{
+  "state": "MN",
+  "before": [
+    373,
+    596
+  ],
+  "after": [
+    381,
+    613
+  ],
+  "verifiedCityContests": 8,
+  "verifiedCityCandidates": 17,
+  "contests": [
+    {
+      "county": "Dakota",
+      "city": "Apple Valley",
+      "office": "Mayor (Apple Valley)",
+      "candidates": 1,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/C40D18F1-2428-4F21-9E8F-7C38BDBC75AD.pdf"
+    },
+    {
+      "county": "Dakota",
+      "city": "Apple Valley",
+      "office": "Council Member (Apple Valley) (Elect 2)",
+      "candidates": 5,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/C40D18F1-2428-4F21-9E8F-7C38BDBC75AD.pdf"
+    },
+    {
+      "county": "Sherburne",
+      "city": "Elk River",
+      "office": "Mayor (Elk River)",
+      "candidates": 1,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/51C60E72-591F-4603-8C9A-335302D35F47.pdf"
+    },
+    {
+      "county": "Carver",
+      "city": "Chaska",
+      "office": "Mayor (Chaska)",
+      "candidates": 2,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/BEDD527F-E9CE-46B0-9D27-12F7D7399FCC.pdf"
+    },
+    {
+      "county": "Anoka",
+      "city": "Ramsey",
+      "office": "Council Member At Large (Ramsey)",
+      "candidates": 2,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3B5B72C-967A-4CB9-87B0-EC8D2D7EB14A.pdf"
+    },
+    {
+      "county": "Olmsted",
+      "city": "Rochester",
+      "office": "Mayor (Rochester)",
+      "candidates": 2,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/6E960D4E-A8F8-4BDB-93DB-F59A079A5826.pdf"
+    },
+    {
+      "county": "Blue Earth",
+      "city": "Mankato",
+      "office": "Mayor (Mankato)",
+      "candidates": 2,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/86514F35-D4FA-4E42-8658-887379C5D192.pdf"
+    },
+    {
+      "county": "Beltrami",
+      "city": "Bemidji",
+      "office": "Council Member At Large (Bemidji)",
+      "candidates": 2,
+      "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3C6DCC8-B2BA-49EF-AC99-E4FD061F347A.pdf"
+    }
+  ],
+  "remaining": "City ward/district, soil-water and school/local measure work remains open. No live or complete-ZIP claim."
+}

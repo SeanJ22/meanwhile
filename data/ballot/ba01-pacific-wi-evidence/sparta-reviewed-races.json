@@ -1,0 +1,62 @@
+[
+  [
+    "Representative in Congress District 3",
+    "ocd-division/country:us/state:wi/cd:3",
+    [
+      [
+        "Derrick Van Orden",
+        "Republican"
+      ],
+      [
+        "Rebecca Cooke",
+        "Democratic"
+      ],
+      [
+        "Alexander Valiensi Kent",
+        "Independent"
+      ],
+      [
+        "Rustin Provance",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 95",
+    "ocd-division/country:us/state:wi/sldl:95",
+    [
+      [
+        "Cedric Schnitzler",
+        "Republican"
+      ],
+      [
+        "Jill Billings",
+        "Democratic"
+      ],
+      [
+        "Paul Michael Weber",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Monroe County Sheriff",
+    "ocd-division/country:us/state:wi/county:monroe",
+    [
+      [
+        "Mike Krause",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Monroe County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:monroe",
+    [
+      [
+        "Laura L. Endres",
+        "Republican"
+      ]
+    ]
+  ]
+]

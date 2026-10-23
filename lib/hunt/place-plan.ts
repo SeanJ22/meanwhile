@@ -2,7 +2,6 @@ import { buildPlaceOwedList, missingPlaceWork, openPlaceWork, type HeldPlaceFiel
 import { openBlanksOf } from "../coverage/open-blanks.ts";
 import { readFieldManual } from "../control-plane/field-manual.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
 export interface PlaceCapture {
@@ -25,7 +24,7 @@ export async function planPlaceHunt(input: {
   readonly acquireNational: (missing: readonly PlaceOwedItem[], knowledge: Awaited<ReturnType<typeof readFieldManual>>) => Promise<PlaceCapture>;
 }) {
   const knowledge = input.knowledge ?? await readFieldManual(input.repos, { ocdIds: input.divisions.map(d => d.id),limit:40 });
-  const held = await (input.readHeld ?? (ids => readHeldPlaceCapture(ids, { ...input.readOptions, now: input.now })))(input.divisions.map(d => d.id));
+  const held = await (input.readHeld ?? (async ids => (await import("../civic-data/held-place-capture.ts")).readHeldPlaceCapture(ids, { ...input.readOptions, now: input.now })))(input.divisions.map(d => d.id));
   const before = buildPlaceOwedList({ ...input, ...held });
 
   const blanks = openBlanksOf(before).all;

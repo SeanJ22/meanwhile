@@ -1,6 +1,7 @@
 "use client";
 
 import { useOfficePins } from "@/hooks/use-office-pins";
+import { primeOfficePoints } from "@/lib/map/office-geocode";
 import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
 import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
@@ -56,7 +57,7 @@ import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
 import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
-import { lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
+import { heldSnapshot, lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
 import { isPlaceUnrecorded, onlineAccessFor, placelessWhereLine } from "@/lib/meetings/online";
 import type { Meeting } from "@/lib/sources/types";
@@ -88,17 +89,9 @@ import { jurisdictionClaim, representationNoteForClaim } from "@/lib/meetings/ju
 import { CoverageNotice } from "./coverage-notice";
 import { GoverningSkeleton } from "./governing-skeleton";
 import { DistrictPicker } from "./district-picker";
-import { MapCanvas, type CameraTarget, type MapFocus, type VotingSitePin } from "./map-canvas";
+import type { CameraTarget, MapFocus, VotingSitePin } from "./map-canvas";
 import type { ModalSubject } from "./popup/entity-modal";
 
-const AskBox = dynamic(
-  () => import("@/components/ask/ask-box").then((m) => m.AskBox),
-  { ssr: false },
-);
-const DoorOverlay = dynamic(
-  () => import("./door-overlay").then((m) => m.DoorOverlay),
-  { ssr: false },
-);
 const MeetingPanel = dynamic(
   () => import("./meeting-panel").then((m) => m.MeetingPanel),
   { ssr: false },
@@ -113,10 +106,6 @@ const OfficialModal = dynamic(
 );
 const EntityModal = dynamic(
   () => import("./popup/entity-modal").then((m) => m.EntityModal),
-  { ssr: false },
-);
-const ListOverlay = dynamic(
-  () => import("./list-overlay").then((m) => m.ListOverlay),
   { ssr: false },
 );
 const WelcomeOverlay = dynamic(
@@ -152,6 +141,17 @@ interface ViewTarget {
 
 const EMPTY_COVERED_BODIES: CoveredBody[] = [];
 const EMPTY_MEETINGS: Meeting[] = [];
+// Start the split map download when its client module arrives, before hydration's effects.
+let arrivingMap = typeof window === "undefined" ? null : import("./map-canvas");
+void arrivingMap?.catch(() => { arrivingMap=null; });
+let arrivingAsk: Promise<typeof import("@/components/ask/ask-box")> | null = null;
+function prepareAsk() {
+  if (!arrivingAsk) {
+    arrivingAsk = import("@/components/ask/ask-box");
+    void arrivingAsk.catch(() => { arrivingAsk = null; });
+  }
+  return arrivingAsk;
+}
 
 export function MapEntry() {
   return (
@@ -162,6 +162,19 @@ export function MapEntry() {
 }
 
 function MapEntryInner() {
+  const [MapCanvas, setMapCanvas] = useState<typeof import("./map-canvas").MapCanvas | null>(null);
+  const [AskBox, setAskBox] = useState<typeof import("@/components/ask/ask-box").AskBox | null>(null);
+  const [DoorOverlay, setDoorOverlay] = useState<typeof import("./door-overlay").DoorOverlay | null>(null);
+  const [ListOverlay, setListOverlay] = useState<typeof import("./list-overlay").ListOverlay | null>(null);
+  const [mapLoadError, setMapLoadError] = useState<Error | null>(null);
+  useEffect(() => {
+    let active = true;
+    void (arrivingMap ?? import("./map-canvas")).then(module => {
+      module.prepareMapWorkers();
+      if (active) setMapCanvas(() => module.MapCanvas);
+    }).catch(error => { if (active) setMapLoadError(error); });
+    return () => { active = false; };
+  }, []);
   const { location, restored, remember } = useStoredZip();
   const { theme } = useStoredTheme();
   const ui = useUi();
@@ -302,6 +315,7 @@ function MapEntryInner() {
       },
       signal: controller.signal,
       onState: state => {
+        if (state.officePoints) primeOfficePoints(state.officePoints);
         primeStateMemberDirectories(state.memberDirectories, state.state);
         primeMemberDirectories(state.directory, state.state);
         const coverage = zip ? stateCoverageForZip(state, zip) : null;
@@ -969,6 +983,17 @@ function MapEntryInner() {
   const [selectedVotingSiteId, setSelectedVotingSiteId] = useState<string | null>(
     null,
   );
+  const onVotingSites = useCallback((sites: VotingSitePin[]) => {
+    setVotingPins(sites);
+    // ZIP answers may have no address point; their sites still locate the map.
+    const point = sites[0];
+    if (point) setFocus({ lat: point.lat, lng: point.lng, zoom: 10, key: `vote:${point.lat},${point.lng}` });
+  }, []);
+  const onVotingAddressPoint = useCallback((point: { lat: number; lng: number } | null) => {
+    setVotingAddressPoint(point);
+    if (point) setFocus({ lat: point.lat, lng: point.lng, zoom: 10, key: `vote:${point.lat},${point.lng}` });
+  }, []);
+
   const closePop = useCallback(() => {
     setPop(null);
     setVotingPins([]);
@@ -1064,6 +1089,21 @@ function MapEntryInner() {
           : `${cardView.kind}`
     : null;
   const cardLabel = cardView ? cardViewLabel(cardView) : "";
+  const cardKind = cardView?.kind;
+  useEffect(() => {
+    let active = true;
+    // Publish a downloaded panel directly, as with the map. Suspending an
+    // already-open card adds React's reveal delay after its module arrives.
+    const failed = (kind: "list" | "door" | "ask", error: Error) => { if (active && (cardKind === kind || kind === "ask" && pop === "ask")) setMapLoadError(error); };
+    const phoneMenu = layoutBp === "phone" && sidebarState === "open";
+    if ((cardKind === "list" || phoneMenu) && !ListOverlay) void import("./list-overlay")
+      .then(module => { if (active) setListOverlay(() => module.ListOverlay); }).catch(error=>failed("list",error));
+    if ((cardKind === "door" || phoneMenu) && !DoorOverlay) void import("./door-overlay")
+      .then(module => { if (active) setDoorOverlay(() => module.DoorOverlay); }).catch(error=>failed("door",error));
+    if (pop === "ask" && !AskBox) void prepareAsk()
+      .then(module => { if (active) setAskBox(() => module.AskBox); }).catch(error=>failed("ask",error));
+    return () => { active = false; };
+  }, [cardKind, pop, AskBox, DoorOverlay, ListOverlay, layoutBp, sidebarState]);
 
   interface CardSnapshot {
     key: string;
@@ -1246,17 +1286,6 @@ function MapEntryInner() {
     return () => window.removeEventListener("mw:open-pop", onRequest);
   }, [closeCard]);
 
-  // Ask opens with the cursor in its box (4a's original focus rule, kept).
-  useEffect(() => {
-    if (pop !== "ask") return;
-    const frame = requestAnimationFrame(() => {
-      document
-        .querySelector<HTMLInputElement>("[data-ask-panel] [data-ask-box]")
-        ?.focus({ preventScroll: true });
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [pop]);
-
   const openGoverns = useCallback(() => {
     if (wghOpen) {
       closeCard();
@@ -1335,10 +1364,20 @@ function MapEntryInner() {
 
   const selectionTop =
     pillVenue || pillDistrict ? (layoutBp === "phone" && (parked || pillVenue) ? 112 : 64) : 0;
-  const mapInsets = useMemo(
+  const desiredMapInsets = useMemo(
     () => insetsFor({ sidebar: sidebarUp, selection: selectionTop }),
     [insetsFor, sidebarUp, selectionTop],
   );
+  // A phone detail card covers the map and makes it inert. Keep its current
+  // viewport while the drawer yields, then apply the visible layout on close.
+  // Otherwise opening a list downloads and paints a second, covered viewport.
+  const mapCovered = layoutBp === "phone" && Boolean(cardView) && !parked;
+  const [visibleMapInsets, setVisibleMapInsets] = useState(desiredMapInsets);
+  if (!mapCovered && (visibleMapInsets.top !== desiredMapInsets.top || visibleMapInsets.bottom !== desiredMapInsets.bottom
+    || visibleMapInsets.left !== desiredMapInsets.left || visibleMapInsets.right !== desiredMapInsets.right)) {
+    setVisibleMapInsets(desiredMapInsets);
+  }
+  const mapInsets = mapCovered ? visibleMapInsets : desiredMapInsets;
 
   const cluster = (
     <PillCluster
@@ -1351,7 +1390,6 @@ function MapEntryInner() {
       onOpenPop={openPopup}
       onOpenGoverns={openGoverns}
       onOpenBallot={closePop}
-      prefetchReady={Boolean(shown && !shown.localPending && !refreshing)}
     />
   );
 
@@ -1377,7 +1415,7 @@ function MapEntryInner() {
             failedSourceOcdIds={
               shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
             }
-            lastCheckedAt={shown.snapshot?.generatedAt ?? null}
+            lastCheckedAt={heldSnapshot(shown.snapshot)?.generatedAt ?? null}
             lastReadByOcdId={lastReadByDivision(shown.meetings ?? [])}
             ocdIdsWithMeetings={[
               ...new Set(
@@ -1397,9 +1435,9 @@ function MapEntryInner() {
           />
         );
       case "list":
-        return <ListOverlay embedded onPickMeeting={onPickMeeting} />;
+        return ListOverlay && <ListOverlay embedded onPickMeeting={onPickMeeting} />;
       case "door":
-        return (
+        return DoorOverlay && (
           <DoorOverlay
             embedded
             door={cardView.door}
@@ -1559,6 +1597,7 @@ function MapEntryInner() {
   const popTitle =
     pop === "zip" ? "Show me a ZIP" : pop === "vote" ? "Where can I vote?" : "Ask";
 
+  if (mapLoadError) throw mapLoadError;
   return (
     <DataProvider value={data}>
       {/* The jurisdiction badge can open the address prompt anywhere; the page re-resolves from the answer. */}
@@ -1567,6 +1606,12 @@ function MapEntryInner() {
       >
       <main
         className="mw-reader relative h-dvh w-full overflow-hidden"
+        onPointerDownCapture={event => {
+          if (event.button === 0 && event.target instanceof Element && event.target.closest(".ask-pill")) void prepareAsk();
+        }}
+        onFocusCapture={event => {
+          if (event.target instanceof Element && event.target.closest(".ask-pill")) void prepareAsk();
+        }}
         data-sidebar={sidebarUp ? "open" : "closed"}
         data-bp={layoutBp}
         style={
@@ -1577,7 +1622,7 @@ function MapEntryInner() {
         }
       >
         <div className="mw-map-layer absolute inset-0">
-          {districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
+          {MapCanvas && districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
             onPresentationReadyChange={onMapPresentationReady}
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
@@ -1615,8 +1660,8 @@ function MapEntryInner() {
               openOffice(office);
             }}
             onBoundsChange={onMapBounds}
-            votingSites={votingPins.filter(pin => contains(pin.lat, pin.lng))}
-            votingAddressPoint={votingAddressPoint && contains(votingAddressPoint.lat, votingAddressPoint.lng) ? votingAddressPoint : null}
+            votingSites={votingPins}
+            votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}
           />}
@@ -1760,8 +1805,8 @@ function MapEntryInner() {
             {pop === "vote" && (
               <VotingSitesPanel
                 embedded
-                onSites={setVotingPins}
-                onAddressPoint={setVotingAddressPoint}
+                onSites={onVotingSites}
+                onAddressPoint={onVotingAddressPoint}
                 selectedSiteId={selectedVotingSiteId}
                 onSelectSite={setSelectedVotingSiteId}
                 onClose={closePop}
@@ -1770,7 +1815,7 @@ function MapEntryInner() {
             {pop === "ask" &&
               (clusterCoverage && clusterZip ? (
                 <div data-ask-panel>
-                  <AskBox
+                  {AskBox && <AskBox
                     coverage={clusterCoverage}
                     zip={clusterZip}
                     ocdIds={clusterOcdIds}
@@ -1782,7 +1827,7 @@ function MapEntryInner() {
                       })
                     }
                     onOpenPerson={(holder) => openOfficial(holder, null, "local", null)}
-                  />
+                  />}
                 </div>
               ) : (
                 <p className="mw-pop-note">

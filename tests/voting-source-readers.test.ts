@@ -5,6 +5,7 @@ import { applyVotingChangeNotices, arcgisVotingRows, fingerprintVotingPlatform, 
 import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 const fixture = (name: string) => new Uint8Array(readFileSync(`tests/fixtures/voting-sources/${name}`));
+const primaryDoor = JSON.parse(readFileSync("tests/fixtures/voting-sources/nc-primary-door.json", "utf8")) as VotingSourceDoor;
 const NC: VotingSourceDoor = { id: "nc-early", publisher: "North Carolina State Board of Elections", url: "https://vt.ncsbe.gov/OSSite?handler=StatewideList", shape: "file", covers: ["EARLY_VOTING"], scope: { state: "NC", ocdId: "ocd-division/country:us/state:nc", name: "North Carolina" }, electionDate: "2026-11-03", electionPageUrl: "https://vt.ncsbe.gov/EVSite/", extraction: { format: "tsv", headers: ["election", "county", "flag", "name", "street", "cityStateZip", "day", "hours"], columns: { name: "name", address: ["street", "cityStateZip"], days: "day", hours: "hours", election: "election" } } };
 const source = { publisher: NC.publisher, url: NC.url };
 
@@ -15,9 +16,9 @@ test("real statewide early-voting file retains every site's published day and ho
   assert.equal(sites.length, 8);
   const elmira = sites.find(s => s.name === "ELMIRA COMMUNITY CENTER")!;
   assert.equal(elmira.address, "810 WICKER ST, BURLINGTON, NC 27217");
-  assert.match(elmira.hours!, /10\/15\/2026: 8:00AM - 7:30PM/);
-  assert.match(elmira.hours!, /10\/18\/2026: Closed/);
-  assert.match(elmira.hours!, /10\/31\/2026/);
+  assert.ok(elmira.schedules?.some(schedule => schedule.days === "10/15/2026" && schedule.hours === "8:00AM - 7:30PM"));
+  assert.ok(elmira.schedules?.some(schedule => schedule.days === "10/18/2026" && schedule.hours === "Closed"));
+  assert.ok(elmira.schedules?.some(schedule => schedule.days === "10/31/2026"));
   assert.ok(sites.every(s => s.kind === "EARLY_VOTING" && s.electionDate === "2026-11-03"));
 });
 
@@ -26,10 +27,10 @@ test("official rendered HTML tables retain early voting, drop boxes and publishe
   const rows = await parseVotingCapture({ url: door.url, contentType: "text/html", bytes: fixture("nd-2026-official-tables.html") }, door);
   const { sites } = votingRowsToSites(rows, door, { publisher: "North Dakota Secretary of State", url: door.url });
   assert.ok(sites.some(s => s.kind === "EARLY_VOTING"));
-  const drop = sites.find(s => s.name === "Barnes County Courthouse (Dropbox)")!;
-  assert.equal(drop.kind, "DROP_BOX");
-  assert.match(drop.hours!, /north side of Courthouse entry available 24\/7/);
-  assert.match(drop.hours!, /7:00 pm on Tuesday, November 3, 2026/);
+  const drop = sites.find(s => s.kinds?.includes("DROP_BOX") && s.countyName === "Barnes")!;
+  assert.ok(drop.kinds?.includes("DROP_BOX"));
+  assert.match(drop.schedules!.find(schedule => schedule.kind === "DROP_BOX")!.hours!, /north side of Courthouse entry available 24\/7/);
+  assert.match(drop.schedules!.find(schedule => schedule.kind === "DROP_BOX")!.hours!, /7:00 pm on Tuesday, November 3, 2026/);
   assert.equal(drop.office?.phone, "(701) 845-8500 Ext. 6666");
 });
 
@@ -99,7 +100,9 @@ test("all ArcGIS object-ID batches are acquired without transfer-limit truncatio
     return Response.json({ features: ids.map(id => ({ attributes: factualRows[id - 1] })) });
   }) as typeof fetch };
   const rows = await arcgisVotingRows("https://vt.ncsbe.gov/arcgis/rest/services/locations/FeatureServer/0", votingFetchSession(runtime));
-  assert.deepEqual(rows, factualRows);
+  const withoutCapture = (row: Record<string, unknown>) => Object.fromEntries(Object.entries(row).filter(([key]) => key !== "__captureHash" && key !== "__captureUrl"));
+  assert.deepEqual(rows.map(withoutCapture), factualRows.map(withoutCapture));
+  assert.ok(rows.every(row => /^[a-f0-9]{64}$/.test(String(row.__captureHash)) && String(row.__captureUrl).includes("objectIds=")));
   assert.ok(calls.filter(url => url.searchParams.has("objectIds")).length > 2);
 });
 
@@ -123,19 +126,16 @@ test("the shared voterfocus card reader reads real precinct directory text, not 
   }
 });
 
-test("an address lookup cannot forward a reader's address through a redirect to another host", async () => {
+test("address-only portals remain bulk acquisition work and never receive a reader input", async () => {
   const requests: string[] = [];
   const door: VotingSourceDoor = { ...NC, shape: "address-lookup", extraction: { addressFields: { street: "streetName" } } };
-  const read = await readVotingSource(door, { readerAddress: { address: "810 Wicker St", street: "Wicker St" }, fetch: async input => {
-    const url = new URL(String(input)); requests.push(url.href);
-    if (url.pathname === "/robots.txt") return new Response("User-agent: *\nAllow: /", { headers: { "content-type": "text/plain" } });
-    return new Response(null, { status: 302, headers: { location: "https://example.org/redirect-target" } });
+  const read = await readVotingSource(door, { fetch: async input => {
+    requests.push(String(input)); throw new Error("Address-only lookup must not be requested");
   } });
-  assert.equal(requests.length, 2);
-  assert.ok(requests.every(url => new URL(url).hostname === "vt.ncsbe.gov"));
-  assert.match(requests[1]!, /streetName=Wicker\+St/);
-  assert.match(read.blanks[0]!.tried.join(" "), /address was not forwarded/);
-  assert.equal(read.sources.length, 0);
+  assert.deepEqual(requests, []);
+  assert.equal(read.blanks[0]!.reason, "missing-sites");
+  assert.deepEqual(read.blanks[0]!.tried, [door.url]);
+  assert.match(read.blanks[0]!.owed, /bulk location lists and precinct boundaries/);
 });
 
 test("native statewide workbook returns Dillon precinct 1 and each tribal satellite schedule", async () => {
@@ -145,14 +145,15 @@ test("native statewide workbook returns Dillon precinct 1 and each tribal satell
   const satellite = doors.find(door => door.id === "mt-statewide-satellite-2026")!;
   const rows = await parseVotingCapture({ url: polling.url, contentType: "application/octet-stream", bytes }, polling);
   const sites = votingRowsToSites(rows, polling, { publisher: polling.publisher, url: polling.url }).sites;
-  assert.equal(sites.length, 730);
-  const dillon = sites.find(site => site.countyName === "Beaverhead" && site.precinct === "1")!;
+  assert.equal(sites.length, 304);
+  assert.equal(sites.reduce((sum, site) => sum + (site.precincts?.length ?? 0), 0), 730);
+  const dillon = sites.find(site => site.countyName === "Beaverhead" && site.precincts?.includes("1"))!;
   assert.equal(dillon.name, "LUTHERAN CHURCH - CENTRAL");
   assert.equal(dillon.address, "715 E BANNACK, DILLON, 59725");
   assert.equal(dillon.hours, "7:00 am - 8:00 pm");
   const satelliteRows = await parseVotingCapture({ url: satellite.url, contentType: "application/octet-stream", bytes }, satellite);
   const parsed = votingRowsToSites(satelliteRows, satellite, { publisher: satellite.publisher, url: satellite.url });
-  assert.equal(parsed.sites.length, 30); assert.deepEqual(parsed.missingRows, []);
+  assert.equal(parsed.sites.length, 31); assert.deepEqual(parsed.missingRows, []);
   const crow = parsed.sites.find(site => site.tribalNation === "Crow Nation")!;
   assert.equal(crow.name, "Student Union Building of the Little Big Horn College");
   assert.equal(crow.address, "8645 S. Weaver Dr., Crow Agency, MT");
@@ -166,10 +167,10 @@ test("native government HTML keeps nested pager tables out of the voting records
   const door: VotingSourceDoor = { ...NC, id: "nd-native", url: "https://vip.sos.nd.gov/Precincts.aspx?eid=348", shape: "list-page", covers: ["ELECTION_DAY", "EARLY_VOTING", "DROP_BOX"], extraction: { format: "html", columns: { address: ["Address", "City", "State", "Zip Code", "ZipCode"] } } };
   const rows = await parseVotingCapture({ url: door.url, contentType: "text/html", bytes: fixture("nd-2026-native.html") }, door);
   const sites = votingRowsToSites(rows, door, source).sites;
-  assert.equal(sites.filter(site => site.kind === "EARLY_VOTING").length, 10);
-  assert.equal(sites.filter(site => site.kind === "DROP_BOX").length, 10);
+  assert.equal(sites.flatMap(site => site.schedules ?? []).filter(schedule => schedule.kind === "EARLY_VOTING" && (schedule.days || schedule.hours)).length, 8);
+  assert.equal(sites.filter(site => site.kinds?.includes("DROP_BOX")).length, 10);
   assert.ok(sites.every(site => !site.address.includes("Data pager")));
-  assert.match(sites.find(site => site.name === "Barnes County Courthouse (Dropbox)")!.hours!, /north side of Courthouse entry/);
+  assert.match(sites.find(site => site.countyName === "Barnes" && site.kinds?.includes("DROP_BOX"))!.schedules!.find(schedule => schedule.kind === "DROP_BOX")!.hours!, /north side of Courthouse entry/);
 });
 
 test("native vendor HTML shares one precinct-card reader across both counties", async () => {
@@ -182,8 +183,7 @@ test("native vendor HTML shares one precinct-card reader across both counties", 
 });
 
 test("native statewide polling CSV decodes UTF-16 tab fields and retains earlier-election work", async () => {
-  const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
-  const door = doors.find(item => item.id === "nc-statewide-polling-primary-2026")!;
+  const door = primaryDoor;
   assert.ok(door);
   const bytes = fixture("nc-polling-place-20260303-native.csv.bin");
   const rows = await parseVotingCapture({ url: door.url, contentType: "application/octet-stream", bytes }, door);
@@ -236,8 +236,7 @@ test("an identity-locked state is answered from the native county list without v
 });
 
 test("an earlier election named only in the official file title stays an open blank in the same year", async () => {
-  const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
-  const original = doors.find(item => item.id === "nc-statewide-polling-primary-2026")!;
+  const original = primaryDoor;
   const door = structuredClone(original);
   delete door.extraction!.columns!.election;
   const bytes = fixture("nc-polling-place-20260303-native.csv.bin");

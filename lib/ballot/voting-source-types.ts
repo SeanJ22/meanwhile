@@ -14,12 +14,16 @@ export interface VotingDoorScope {
 }
 export interface VotingExtraction {
   format?: "csv" | "tsv" | "xlsx" | "pdf" | "html" | "json";
+  /** Exact public archive member; evidence and citations retain the publisher's archive URL. */
+  archiveMember?: string;
   /** Column names (or 0-based indexes for a headerless file), joined in order. */
   columns?: Partial<Record<VotingColumn, string | string[]>>;
   headerRow?: number;
   headers?: string[];
   delimiter?: string;
   sheet?: string;
+  /** Zero-based index among the source page's tables, for separately scoped county tables. */
+  tableIndex?: number;
   jsonPath?: string;
   kind?: SiteKind;
   /** PDF column left edges in points; preserves wrapped text in each cell. */
@@ -27,7 +31,11 @@ export interface VotingExtraction {
   /** A new record starts when this column matches. Other lines continue it. */
   pdfRecordStart?: { column: string; pattern: string };
   pdfCenteredRecords?: boolean;
-  records?: { pattern: string; group?: number; jsonString?: boolean; fields: Record<string, { pattern: string; group: number }> };
+  /** Repeated PDF blocks identified by their printed column headings and following section heading. */
+  pdfBlocks?: { heading: string; end: string; columns: Record<string, string>; pageExclude?: string };
+  records?: { pattern: string; group?: number; jsonString?: boolean; fields: Record<string, { pattern: string; group: number }>;
+    /** Scope child locations to their published county/parish section and inherit its printed fields. */
+    within?: { pattern: string; group?: number; fields?: Record<string, { pattern: string; group: number }> } };
   splitRows?: { column: string; pattern: string; alignedColumns?: string[]; alignedPattern?: string };
   filters?: Record<string, string>;
   /** Regex capture groups applied to a named input column; data configuration only. */
@@ -63,6 +71,7 @@ export interface VotingSourceDoor {
   publication?: VotingPublication;
   delegation?: "county" | "town";
   boundaries?: VotingBoundary[];
+  boundaryLayer?: boolean;
   changeNotices?: VotingChangeNotice[];
   platform?: VotingPlatform;
   extraction?: VotingExtraction;
@@ -73,6 +82,8 @@ export interface VotingSourceDoor {
   rules?: VotingRule[];
   access?: { status: "open" | "robots" | "bot-wall" | "identity-locked" | "unreachable"; detail?: string; checkedAt?: string };
   discoveredFrom?: string;
+  /** Older file URLs replaced once this source's current-election sites have published. */
+  supersedes?: string[];
 }
 export interface VotingSourceBlank {
   id: string;
@@ -90,6 +101,7 @@ export interface VotingSourceRead {
   doorId: string;
   contacts?: VotingSourceContact[];
   sites: VotingSite[];
+  boundaries?: VotingBoundary[];
   office?: VotingOfficeContact;
   rules: VotingRule[];
   sources: VotingSource[];
@@ -100,14 +112,13 @@ export interface VotingSourceRead {
   fileUpdatedAt?: string;
   publicationMessage?: string;
 }
-export interface VotingAddressInput { address: string; streetNumber?: string; street?: string; city?: string; state?: string; zip?: string; }
 export interface VotingSourceRuntime {
   captureCache?: Map<string, Promise<import("./voting-source-fetch.ts").VotingCapture[]>>;
   discoverySeen?: Set<string>;
   fetch: typeof fetch;
   deadlineMs?: number;
   onDiscoveredDoor?: (door: VotingSourceDoor, captures: { url: string; contentType: string; bytes: Uint8Array }[]) => Promise<void>;
-  onDiscoveredSource?: (source: import("./voting-source-discovery.ts").ClassifiedVotingSource) => Promise<void>;
+  onDiscoveredSource?: (source: import("./voting-source-discovery.ts").ClassifiedVotingSource) => Promise<void | "HELD">;
   resolveAiannhGeoid?: (tribalNation: string, reservation: string, state: string) => string | null;
   resolveCountyFips?: (countyName: string, state: string) => string | null;
   resolveScope?: (label: string, url: string, parent: VotingDoorScope) => VotingDoorScope | null;
@@ -115,8 +126,6 @@ export interface VotingSourceRuntime {
   /** The established browser-UA rung only; it must not solve a challenge. */
   browserFetch?: typeof fetch;
   geocode?: (address: string) => Promise<{ lat: number; lng: number } | null>;
-  /** Supplied only for a reader's address request; never during refresh. */
-  readerAddress?: VotingAddressInput;
 }
 export interface VotingChangeNotice {
   publishedAt: string;

@@ -55,6 +55,7 @@ import { partyColorVar } from "@/lib/officials/party-color";
 import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 import { GovernmentListings } from "./government-listings";
+import { NationalLink } from "../shell/national-link";
 import { StateOfficeContacts } from "../state-office-contacts";
 
 interface CoverageNoticeProps {
@@ -170,7 +171,7 @@ function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; 
     >
       {seat.label && <span className={TYPE_LABEL_CLASS}>{seat.label}</span>}
       {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
-      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">Seat vacant · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">House Clerk</a></span>}
+      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">{seat.vacancy.since ? `Vacant since ${new Date(`${seat.vacancy.since}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}` : "Seat vacant"} · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">{seat.vacancy.sourceOrg}</a></span>}
       {seat.representatives.length > 0 && <span className="block person-under-heading">
         <HolderList holders={[...seat.representatives]} seatLabel={seat.label ?? ""} seatOcdId={seat.ocdId} tier={seat.tier} onOpenOfficial={onOpenOfficial} />
       </span>}
@@ -425,6 +426,9 @@ function CoverageBody({
 
       {coverage.federalDirectoryUnavailable && <p className="mt-1 t-detail text-voice">We could not load the federal directory just now.</p>}
       <GovernmentListings records={coverage.governments ?? []} states={coverage.governmentInventoryStates ?? []} unavailableStates={coverage.governmentInventoryUnavailableStates} />
+      {coverage.fringeDivisions && coverage.fringeDivisions.length > 0 && <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-fringe>
+        A small part of {zip} is in {coverage.fringeDivisions.map(division => division.label).join(", ")}. Enter your street address to see if one of them is yours.
+      </p>}
 
       {!localPending && othersLine && (
         <p className="mt-1 t-detail leading-relaxed text-voice">
@@ -763,6 +767,8 @@ function CoverageBody({
 
         </>
       )}
+
+      <NationalLink className="national-link mt-3 block" />
 
       {stateLegislatorGaps.map(authority => (
         <CardGapContribution key={authority.scope} id={`area-state-authority:${authority.scope}`} label={`state legislators in ${authority.scope.replace(/^US-/, "")}`} />

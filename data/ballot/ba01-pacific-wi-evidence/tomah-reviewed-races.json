@@ -1,0 +1,58 @@
+[
+  [
+    "Representative in Congress District 3",
+    "ocd-division/country:us/state:wi/cd:3",
+    [
+      [
+        "Derrick Van Orden",
+        "Republican"
+      ],
+      [
+        "Rebecca Cooke",
+        "Democratic"
+      ],
+      [
+        "Alexander Valiensi Kent",
+        "Independent"
+      ],
+      [
+        "Rustin Provance",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 70",
+    "ocd-division/country:us/state:wi/sldl:70",
+    [
+      [
+        "Nancy VanderMeer",
+        "Republican"
+      ],
+      [
+        "Stephanie Stuve Bodeen",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Monroe County Sheriff",
+    "ocd-division/country:us/state:wi/county:monroe",
+    [
+      [
+        "Mike Krause",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Monroe County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:monroe",
+    [
+      [
+        "Laura L. Endres",
+        "Republican"
+      ]
+    ]
+  ]
+]

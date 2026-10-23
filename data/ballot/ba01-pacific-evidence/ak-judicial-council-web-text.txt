@@ -1,0 +1,268 @@
+2026 Alaska Judges Standing for Retention | Alaska Judicial Council (https://ajc.alaska.gov/retention/current2026.html)
+【turn813703view0】 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://ajc.alaska.gov/retention/current2026.html","lineno":null}); Total lines: 265
+L0: 【0†Skip to the main content】
+L1: 
+L2: 【1†Image: Search the Alaska Judicial Council website】
+L3: 
+L4: [Input] [Input] [Input] [Input] [Input]
+L5: 
+L6: [Button: ☰ Menu]
+L7:   * 【2†HOME】
+L8:   * 【3†SELECTION】
+L9:     * 【3†Vacancies】
+L10:     * 【4†Current Applicant Biographical Statements】
+L11:     * 【5†Applications, Procedures, & Guidelines】
+L12:     * 【6†Selection FAQ】
+L13:     * 【7†For Judicial Applicants】
+L14:     * 【8†Historical Selection Log】
+L15:     * 【9†Judicial Selection Laws】
+L16:   * 【10†RETENTION】
+L17:     * 【10†2026 Judge Evaluations】
+L18:     * 【11†Retention Procedures】
+L19:     * 【12†Past Judicial Evaluations】
+L20:     * 【13†Judges Standing in Upcoming Elections】
+L21:     * 【6†Retention FAQ】
+L22:     * 【14†Judicial Retention Laws】
+L23:     * 【15†Comment on Judges】
+L24:   * 【16†PUBLICATIONS】
+L25:     * 【17†Biennial Reports】
+L26:     * 【18†Alaska Criminal Justice Data Analysis Commission】
+L27:     * 【19†Council Publications】
+L28:     * 【20†Research Reports】
+L29:   * 【21†JUDGES】
+L30:     * 【21†Current Sitting Judges】
+L31:     * 【22†Former Judges】
+L32:   * 【23†ABOUT AJC】
+L33:     * 【24†Member Roster】
+L34:     * 【25†Member Duties】
+L35:     * 【26†Member Postion Descriptions】
+L36:     * 【27†Bylaws】
+L37:     * 【28†Constitutional Minutes】
+L38:     * 【29†Constitutional Provisions】
+L39:     * 【30†Contact Us】
+L40: 【2†AJC Home >】 Retention Election Information
+L41: # Retention Election Information
+L42: ## Why do judges appear on the ballot?
+L43: 
+L44: The Alaska Constitution requires a vote of the people for sitting judges to be retained in office. Judges appear on the ballot at the general election in even-numbered years; this is referred to as a “retention election” or a “judicial retention election.” A majority of votes determines whether a judge remains in office for another term.
+L45: Judicial retention elections are non-partisan. Judges standing for retention do not run “against” anyone; instead, they run to retain their positions, based on their performance in office. Judges are not allowed to campaign unless someone actively opposes their bid to stay in office.
+L46: ## How do I know whether the judges on the ballot are doing a good job?
+L47: To give voters information about judges’ performance, state law requires the Judicial Council to evaluate each judge on the ballot, to make this information available to voters, and authorizes the Judicial Council to provide a recommendation regarding retention or rejection. The Judicial Council has developed a process to fairly and accurately evaluate each judge's performance and report back to you.
+L48: 【11†Judicial evaluations】 collect information about the judge’s performance and from people who are familiar with the judge's work, including jurors, police officers, court staff, lawyers, social services professionals, and litigants. The Council then uses this information to determine whether the judge met 【31†performance standards】 and to make a recommendation whether the judge should be retained in office.
+L49: ## Judges on the 2026 Ballot
+L50: 
+L51: See only the judges that will be on your ballot: [Select]
+L52: 
+L53: # 【32†Marianna Carpeneti】
+L54: 
+L55: Juneau Superior Court
+L56: First Judicial District
+L57: Judicial Council's Recommendation:
+L58: 
+L59: ## RECOMMENDATION NOT MADE
+L60: 
+L61: 【32†View full performance evaluation »】
+L62: 
+L63: # 【33†Chris Darnall】
+L64: 
+L65: Anchorage District Court
+L66: Third Judicial District
+L67: Judicial Council's Recommendation:
+L68: 
+L69: ## VOTE YES
+L70: 
+L71: 【33†View full performance evaluation »】
+L72: # 【34†Daniel E. Doty】
+L73: 
+L74: Ketchikan Superior Court
+L75: First Judicial District
+L76: Judicial Council's Recommendation:
+L77: 
+L78: ## VOTE YES
+L79: 
+L80: 【34†View full performance evaluation »】
+L81: 
+L82: # 【35†Martin Fallon】
+L83: 
+L84: Kenai District Court
+L85: Third Judicial District
+L86: Judicial Council's Recommendation:
+L87: 
+L88: ## VOTE NO
+L89: 
+L90: 【35†View full performance evaluation »】
+L91: 
+L92: # 【36†Laura Hartz】
+L93: 
+L94: Anchorage Superior Court
+L95: Third Judicial District
+L96: Judicial Council's Recommendation:
+L97: 
+L98: ## VOTE YES
+L99: 
+L100: 【36†View full performance evaluation »】
+L101: # 【37†Yvonne Lamoureux】
+L102: 
+L103: Anchorage Superior Court
+L104: Third Judicial District
+L105: Judicial Council's Recommendation:
+L106: 
+L107: ## VOTE YES
+L108: 
+L109: 【37†View full performance evaluation »】
+L110: 
+L111: # 【38†Kelly J. Lawson】
+L112: 
+L113: Kenai Superior Court
+L114: Third Judicial District
+L115: Judicial Council's Recommendation:
+L116: 
+L117: ## VOTE NO
+L118: 
+L119: 【38†View full performance evaluation »】
+L120: 
+L121: # 【39†Katherine H. Lybrand】
+L122: 
+L123: Ketchikan Superior Court
+L124: First Judicial District
+L125: Judicial Council's Recommendation:
+L126: 
+L127: ## VOTE YES
+L128: 
+L129: 【39†View full performance evaluation »】
+L130: # 【40†Jack R. McKenna】
+L131: 
+L132: Anchorage Superior Court
+L133: Third Judicial District
+L134: Judicial Council's Recommendation:
+L135: 
+L136: ## VOTE YES
+L137: 
+L138: 【40†View full performance evaluation »】
+L139: 
+L140: # 【41†David A. Nesbett】
+L141: 
+L142: Anchorage Superior Court
+L143: Third Judicial District
+L144: Judicial Council's Recommendation:
+L145: 
+L146: ## VOTE YES
+L147: 
+L148: 【41†View full performance evaluation »】
+L149: 
+L150: # 【42†Jude Pate】
+L151: 
+L152: Alaska Supreme Court
+L153: Statewide
+L154: Judicial Council's Recommendation:
+L155: 
+L156: ## VOTE YES
+L157: 
+L158: 【42†View full performance evaluation »】
+L159: # 【43†Nathaniel Peters】
+L160: 
+L161: Bethel Superior Court
+L162: Fourth Judicial District
+L163: Judicial Council's Recommendation:
+L164: 
+L165: ## VOTE YES
+L166: 
+L167: 【43†View full performance evaluation »】
+L168: 
+L169: # 【44†Christina Rankin】
+L170: 
+L171: Anchorage Superior Court
+L172: Thid Judicial District
+L173: Judicial Council's Recommendation:
+L174: 
+L175: ## VOTE YES
+L176: 
+L177: 【44†View full performance evaluation »】
+L178: 
+L179: # 【45†Christina "Tina" Reigh】
+L180: 
+L181: Dillingham Superior Court
+L182: Third Judicial District
+L183: Judicial Council's Recommendation:
+L184: 
+L185: ## VOTE YES
+L186: 
+L187: 【45†View full performance evaluation »】
+L188: # 【46†David L. Roghair】
+L189: 
+L190: Utqiagvik Superior Court
+L191: Second Judicial District
+L192: Judicial Council's Recommendation:
+L193: 
+L194: ## VOTE YES
+L195: 
+L196: 【46†View full performance evaluation »】
+L197: 
+L198: # 【47†Kirk Schwalm】
+L199: 
+L200: Fairbanks Superior Court
+L201: Fourth Judicial District
+L202: Judicial Council's Recommendation:
+L203: 
+L204: ## VOTE YES
+L205: 
+L206: 【47†View full performance evaluation »】
+L207: 
+L208: # 【48†Benjamin A. Seekins】
+L209: 
+L210: Fairbanks District Court
+L211: Fourth Judicial District
+L212: Judicial Council's Recommendation:
+L213: 
+L214: ## VOTE YES
+L215: 
+L216: 【48†View full performance evaluation »】
+L217: # 【49†Shawn D. Traini】
+L218: 
+L219: Palmer District Court
+L220: Third Judicial District
+L221: Judicial Council's Recommendation:
+L222: 
+L223: ## VOTE YES
+L224: 
+L225: 【49†View full performance evaluation »】
+L226: 
+L227: # 【50†Amy K. Welch】
+L228: 
+L229: Fairbanks Superior Court
+L230: Fourth Judicial District
+L231: Judicial Council's Recommendation:
+L232: 
+L233: ## VOTE YES
+L234: 
+L235: 【50†View full performance evaluation »】
+L236: 
+L237: # 【51†Ian Wheeles】
+L238: 
+L239: Anchorage Superior Court
+L240: Third Judicial District
+L241: Judicial Council's Recommendation:
+L242: 
+L243: ## VOTE YES
+L244: 
+L245: 【51†View full performance evaluation »】
+L246: # 【52†Jonathan A. Woodman】
+L247: 
+L248: Palmer Superior Court
+L249: Third Judicial District
+L250: Judicial Council's Recommendation:
+L251: 
+L252: ## VOTE YES
+L253: 
+L254: 【52†View full performance evaluation »】
+L255: 
+L256: Alaska Judicial Council, 510 L Street, Suite 450, Anchorage, AK 99501
+L257: 
+L258: 【53†State of Alaska†www.alaska.gov】 | 【30†Contact us】 | FAX (907) 276-5046 | Phone (907) 279-2526
+L259: 
+L260: 
+L261: 
+L262: Follow us on:
+L263: 
+L264: 【54†Image】
+

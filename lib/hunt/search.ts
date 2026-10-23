@@ -33,8 +33,10 @@ const BRAVE_WEB = "https://api.search.brave.com/res/v1/web/search";
 const BRAVE_LLM_CONTEXT = "https://api.search.brave.com/res/v1/llm/context";
 const EXA_SEARCH = "https://api.exa.ai/search";
 export const SEARCH_HOSTS = { brave: new URL(BRAVE_WEB).host, exa: new URL(EXA_SEARCH).host } as const;
-/** Covers the bounded HTTP call and delayed budget release after a crashed process. */
-export const SEARCH_REQUEST_LIFETIME_MS = 120_000;
+/** The existing shared slot must outlive a complete research run and cancellation.
+ * Successful searches still release immediately; only crash recovery uses this bound. */
+export const EXA_AGENT_WALL_MS = 15 * 60_000;
+export const SEARCH_REQUEST_LIFETIME_MS = EXA_AGENT_WALL_MS + 60_000;
 /** List prices per request: Brave Search plan, Exa search with contents (Exa reports its own charge when it can). */
 export const SEARCH_PRICE_USD = { brave: 0.005, exa: 0.007 } as const;
 

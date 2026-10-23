@@ -1,0 +1,212 @@
+(https://votehamiltoncountyohio.gov/wp-content/uploads/2026/09/November-2026-Certified-Candidate-Profile-and-Data.pdf)
+【turn569164view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 6; Source: click({"ref_id":"turn980114view4","id":1390}); Total lines: 210
+L0@P0: Hamilton County Board of Elections
+L1@P0: November 2026 General Election Candidate List CERTIFIED
+L2@P0:  9/8/2026
+L3@P0: First
+L4@P0: Name
+L5@P0: Middle
+L6@P0: Name Last Name Office Sought Commence Date
+L7@P0: Party for
+L8@P0: Office Address City State Zip
+L9@P0: Amy
+L10@P0: David
+L11@P0: Acton
+L12@P0: Pepper Governor & Lt. Governor 1/11/2027 Democratic
+L13@P0: Don
+L14@P0: James L.
+L15@P0: Kissick
+L16@P0: Mills Governor & Lt. Governor 1/11/2027 Libertarian
+L17@P0: Vivek
+L18@P0: Robert A.
+L19@P0: Ramaswamy
+L20@P0: McColley Governor & Lt. Governor 1/11/2027 Republican
+L21@P0: Timothy
+L22@P0: Andrea
+L23@P0: Grady
+L24@P0: Neutzling (WI) Governor & Lt. Governor 1/11/2027 Write-in candidate
+L25@P0: Heather
+L26@P0: Patrick
+L27@P0: Hill
+L28@P0: Manley (WI) Governor & Lt. Governor 1/11/2027 Write-in candidate
+L29@P0: Renea
+L30@P0: Jalen
+L31@P0: Turner
+L32@P0: Turner (WI) Governor & Lt. Governor 1/11/2027 Write-in candidate
+L33@P0: Ron
+L34@P0: Michael C.
+L35@P0: Ula
+L36@P0: Lehnerd (WI) Governor & Lt. Governor 1/11/2027 Write-in candidate
+L37@P0: Keith Faber Attorney General 1/11/2027 Republican
+L38@P0: John J. Kulewicz Attorney General 1/11/2027 Democratic
+L39@P0: Annette Blackwell Auditor of State 1/11/2027 Democratic
+L40@P0: Frank LaRose Auditor of State 1/11/2027 Republican
+L41@P0: Tom Pruss Secretary of State 1/11/2027 Libertarian
+L42@P0: Filed with Ohio Secretary of State
+L43@P0: Filed with Ohio Secretary of State
+L44@P0: Filed with Ohio Secretary of State
+L45@P0: Filed with Ohio Secretary of State
+L46@P0: Filed with Ohio Secretary of State
+L47@P0: Filed with Ohio Secretary of State
+L48@P0: Filed with Ohio Secretary of State
+L49@P0: Filed with Ohio Secretary of State
+L50@P0: Filed with Ohio Secretary of State
+L51@P0: Filed with Ohio Secretary of State
+L52@P0: Filed with Ohio Secretary of State
+L53@P0: Filed with Ohio Secretary of State
+L54@P0-1: Page 1 of 6Hamilton County Board of Elections
+L55@P1: November 2026 General Election Candidate List CERTIFIED
+L56@P1:  9/8/2026
+L57@P1: Allison Russo Secretary of State 1/11/2027 Democratic
+L58@P1: Robert Sprague Secretary of State 1/11/2027 Republican
+L59@P1: Jay Edwards Treasurer of State 1/11/2027 Republican
+L60@P1: Seth Walsh Treasurer of State 1/11/2027 Democratic
+L61@P1: Daniel R. Hawkins Justice of the Supreme Court 1/1/2027 Republican
+L62@P1: Marilyn Zayas Justice of the Supreme Court 1/1/2027 Democratic
+L63@P1: Jennifer Brunner Justice of the Supreme Court 1/2/2027 Democratic
+L64@P1: Colleen O'Donnell Justice of the Supreme Court 1/2/2027 Republican
+L65@P1: Sherrod Brown U.S. Senator UTE 1/3/29 Democratic
+L66@P1: Jon Husted U.S. Senator UTE 1/3/29 Republican
+L67@P1: Greg Levy U.S. Senator UTE 1/3/29 Other party
+L68@P1: candidate
+L69@P1: William B. Redpath U.S. Senator UTE 1/3/29 Libertarian
+L70@P1: Stephen Faris (WI) U.S. Senator UTE 1/3/29 Write-in
+L71@P1: candidate
+L72@P1: Filed with Ohio Secretary of State
+L73@P1: Filed with Ohio Secretary of State
+L74@P1: Filed with Ohio Secretary of State
+L75@P1: Filed with Ohio Secretary of State
+L76@P1: Filed with Ohio Secretary of State
+L77@P1: Filed with Ohio Secretary of State
+L78@P1: Filed with Ohio Secretary of State
+L79@P1: Filed with Ohio Secretary of State
+L80@P1: Filed with Ohio Secretary of State
+L81@P1: Filed with Ohio Secretary of State
+L82@P1: Filed with Ohio Secretary of State
+L83@P1: Filed with Ohio Secretary of State
+L84@P1: Filed with Ohio Secretary of State
+L85@P1-2: Page 2 of 6Hamilton County Board of Elections
+L86@P2: November 2026 General Election Candidate List CERTIFIED
+L87@P2:  9/8/2026
+L88@P2: Anthony Holliman (WI) U.S. Senator UTE 1/3/29 Write-in
+L89@P2: candidate
+L90@P2:  Timothy Telymonde
+L91@P2: (WI) U.S. Senator UTE 1/3/29 Write-in candidate
+L92@P2: Eric Conroy Representative to Congress
+L93@P2: (1st District) 1/3/2027 Republican 205 W. 4th St. #1006 Cincinnati OH 45202
+L94@P2: Greg Landsman Representative to Congress
+L95@P2: (1st District) 1/3/2027 Democratic 5187 Adena Trail Cincinnati OH 45230
+L96@P2: Nathan Weise Representative to Congress
+L97@P2: (1st District) 1/3/2027 Libertarian 621 E. Mehring Way #903 Cincinnati OH 45202
+L98@P2: Warren Davidson Representative to Congress
+L99@P2: (8th District) 1/3/2027 Republican 1865 Pheasant Point Court Troy OH 45373
+L100@P2: Vanessa Enoch Representative to Congress
+L101@P2: (8th District) 1/3/2027 Democratic 8172 Misty Shore Drive West Chester OH 45069
+L102@P2: Zac Haines State Senate (7th District) 1/1/2027 Republican
+L103@P2: Cara Jacob State Senate (7th District) 1/1/2027 Democratic
+L104@P2: Catherine Ingram State Senate (9th District) 1/1/2027 Democratic 250 Dorchester Avenue Cincinnati OH 45219
+L105@P2: Linda D. Matthews State Senate (9th District) 1/1/2027 Republican 3612 Eaton Lane Cincinnati OH 45229
+L106@P2: Dani Isaacsohn State Representative
+L107@P2: (24th district) 1/1/2027 Democratic 14 W. 15th Street Cincinnati OH 45202
+L108@P2: Cecil Thomas State Representative
+L109@P2: (25th District) 1/1/2027 Democratic 4901 Chalet Drive #11 Cincinnati OH 45217
+L110@P2: Certified by Warren County
+L111@P2: Certified by Warren County
+L112@P2: Filed with Ohio Secretary of State
+L113@P2: Filed with Ohio Secretary of State
+L114@P2-3: Page 3 of 6Hamilton County Board of Elections
+L115@P3: November 2026 General Election Candidate List CERTIFIED
+L116@P3:  9/8/2026
+L117@P3: Tom Brinkman State Representative
+L118@P3: (26th District) 1/1/2027 Republican 3215 Hardisty Avenue Cincinnati OH 45208
+L119@P3: Ashley Bryant Bailey State Representative
+L120@P3: (26th District) 1/1/2027 Democratic 2618 Hackberry Street Cincinnati OH 45206
+L121@P3: Nancy Reed Aichholz State Representative
+L122@P3: (27th District) 1/1/2027 Republican 8405 Indian Hill Road Cincinnati OH 45243
+L123@P3: Rachel Baker State Representative
+L124@P3: (27th District) 1/1/2027 Democratic 7807 Asbury Hills Drive Cincinnati OH 45255
+L125@P3: Karen Brownlee State Representative
+L126@P3: (28th District) 1/1/2027 Democratic 8417 Preakness Lane Cincinnati OH 45249
+L127@P3: Jill Cole State Representative
+L128@P3: (28th District) 1/1/2027 Republican 11 Woodcreek Drive Cincinnati OH 45241
+L129@P3: Cindy Abrams State Representative
+L130@P3: (29th District) 1/1/2027 Republican 92 Fawn Drive Harrison OH 45030
+L131@P3: Jonathan R. Bradner State Representative
+L132@P3: (29th District) 1/1/2027 Democratic 6631 Cheviot Road Cincinnati OH 45247
+L133@P3: Mike Odioso State Representative
+L134@P3: (30th District) 1/1/2027 Republican 6073 Garden View Court Cincinnati OH 45247
+L135@P3: Caleb Price State Representative
+L136@P3: (30th District) 1/1/2027 Democratic 4473 Oakville Drive Cincinnati OH 45211
+L137@P3: Ginger S. Bock Judge, Court of Appeals
+L138@P3: 1st District 2/9/2027 Democratic
+L139@P3: Katie Casch Judge, Court of Common
+L140@P3: Pleas, General Division 1/1/2027 Republican
+L141@P3: Donte Johnson Judge, Court of Common
+L142@P3: Pleas, General Division 1/1/2027 Democratic Address redacted per ORC 149.45
+L143@P3: Address redacted per ORC 149.45
+L144@P3: Address redacted per ORC 149.45
+L145@P3-4: Page 4 of 6Hamilton County Board of Elections
+L146@P4: November 2026 General Election Candidate List CERTIFIED
+L147@P4:  9/8/2026
+L148@P4: Christian A. Jenkins Judge, Court of Common
+L149@P4: Pleas, General Division 1/2/2027 Democratic
+L150@P4: Betsy Sundermann Judge, Court of Common
+L151@P4: Pleas, General Division 1/2/2027 Republican
+L152@P4: Chris Wagner Judge, Court of Common
+L153@P4: Pleas, General Division 1/4/2027 Democratic
+L154@P4: Roger Bouchard Judge, Court of Common
+L155@P4: Pleas, General Division 2/9/2027 Republican 970 Hatch Street #1 Cincinnati OH 45202
+L156@P4: Jennifer Branch Judge, Court of Common
+L157@P4: Pleas, General Division 2/9/2027 Democratic
+L158@P4: Dennis Charles Mahoney Judge, Court of Common
+L159@P4: Pleas, General Division 2/10/2027 Republican 5651 Ohio Trail Cincinnati OH 45248
+L160@P4: Alan C. Triggs Judge, Court of Common
+L161@P4: Pleas, General Division 2/10/2027 Democratic 2857 Perthwood Drive Cincinnati OH 45244
+L162@P4: Robert A. Goering Judge, Court of Common
+L163@P4: Pleas, General Division 2/11/2027 Republican 7289 Brixton Lane Cincinnati OH 45255
+L164@P4: Latoya S. Maley Judge, Court of Common
+L165@P4: Pleas, General Division 2/11/2027 Democratic
+L166@P4: Wende C. Cross Judge, Court of Common
+L167@P4: Pleas, General Division 2/12/2027 Democratic
+L168@P4: Alison Hatheway Judge, Court of Common
+L169@P4: Pleas, General Division 2/13/2027 Democratic
+L170@P4: Nicole L. Sanders Judge, Court of Common
+L171@P4: Pleas, Drug Court Divison 1/3/2027 Democratic
+L172@P4: Elizabeth A. Tye Judge, Court of Common
+L173@P4: Pleas, Probate Division 2/9/2027 Democratic 820 Red Bud Avenue Cincinnati OH 45229
+L174@P4: Address redacted per ORC 149.45
+L175@P4: Address redacted per ORC 149.45
+L176@P4: Address redacted per ORC 149.45
+L177@P4: Address redacted per ORC 149.45
+L178@P4: Address redacted per ORC 149.45
+L179@P4: Address redacted per ORC 149.45
+L180@P4: Address redacted per ORC 149.45
+L181@P4: Address redacted per ORC 149.45
+L182@P4-5: Page 5 of 6Hamilton County Board of Elections
+L183@P5: November 2026 General Election Candidate List CERTIFIED
+L184@P5:  9/8/2026
+L185@P5: Ralph Winkler Judge, Court of Common
+L186@P5: Pleas, Probate Division 2/9/2027 Republican 6164 West Fork Road Cincinnati OH 45247
+L187@P5: Kari L. Bloom Judge, Court of Common
+L188@P5: Pleas, Juvenile Division 2/14/2027 Democratic
+L189@P5: Susan Luken Judge, Court of Common
+L190@P5: Pleas, Juvenile Division 2/14/2027 Republican
+L191@P5: Tiffany Evans Judge, Court of Common
+L192@P5: Pleas, Domestic Relations 7/1/2027 Democratic 6936 Miami Bluff Drive Cincinnati OH 45227
+L193@P5: Sarah Henry Judge, Court of Common
+L194@P5: Pleas, General Division UTE 1/3/29 Democratic
+L195@P5: Chris McDowell Judge, Court of Common
+L196@P5: Pleas, General Division UTE 1/3/29 Republican 5014 Leonard Street Cincinnati OH 45208
+L197@P5: Leah Dinkelacker Judge, Court of Common
+L198@P5: Pleas, General Division UTE 1/14/29 Republican 6451 Taylor Road Cincinnati OH 45248
+L199@P5: Manisha Kotian Judge, Court of Common
+L200@P5: Pleas, General Division UTE 1/14/29 Democratic 8849 Appleknoll Lane Cincinnati OH 45236
+L201@P5: Meeka Owens County Commissioner 1/1/2027 Democratic 151 E Mitchell Avenue Cincinnati OH 45217
+L202@P5: Jonathan Pearson County Commissioner 1/1/2027 Republican 3808 Southern Avenue Cincinnati OH 45227
+L203@P5: Carrie R. Davis (WI) County Commissioner 1/1/2027 Write-in
+L204@P5: candidate 8364 Royal Heights Drive Cincinnati OH 45239
+L205@P5: Jessica E. Miranda County Auditor 3/8/2027 Democratic 11511 Oxfordshire Lane Cincinnati OH 45240
+L206@P5: Address redacted per ORC 149.45
+L207@P5: Address redacted per ORC 149.45
+L208@P5: Address redacted per ORC 149.45
+L209@P5: Page 6 of 6

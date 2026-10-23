@@ -1,0 +1,973 @@
+[
+  {
+    "county": "winnebago",
+    "url": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097",
+    "finalUrl": "https://www.winnebagocountywi.gov/DocumentCenter/View/4097/Election-Information-Packet-11326-AutoRecovered?bidId=",
+    "publisher": "Winnebago County Clerk",
+    "file": "winnebago.pdf.gz",
+    "textFile": "winnebago.web.txt",
+    "retrievedAt": "2026-10-20T23:16:26.526568Z",
+    "rawHash": "6e53929a59fc42a9a29984b8c078de37ac525d773d31bd0e1c55ef26eb014beb",
+    "method": "Official November3 2026 general-election county candidate packet. All candidate names and party/designation labels replayed within their exact office block. Raw PDF bytes and previously captured official web extraction retained; residential/contact fields excluded."
+  },
+  {
+    "county": "sauk",
+    "url": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+    "finalUrl": "https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf",
+    "publisher": "Sauk County Clerk",
+    "file": "sauk.pdf.gz",
+    "textFile": "sauk.web.txt",
+    "retrievedAt": "2026-10-20T23:16:25.467716Z",
+    "rawHash": "5ed436e552f0a884eacdb91b234bc524a24f045cf5fa8d8d1855f1950ab1964e",
+    "method": "Official November3 2026 general-election county candidate packet. All candidate names and party/designation labels replayed within their exact office block. Raw PDF bytes and previously captured official web extraction retained; residential/contact fields excluded."
+  },
+  {
+    "county": "brown",
+    "url": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+    "finalUrl": "https://www.browncountywi.gov/i/f/files/County-Clerk/Elections/Legal%20Notices/26-NOV%20TYPE%20BCD%20LEGAL%20NOTICE%20-%20PRESS%20GAZETTE%20-%20AC.pdf",
+    "publisher": "Brown County Clerk",
+    "file": "brown.pdf.gz",
+    "textFile": "brown.txt",
+    "retrievedAt": "2026-10-20T23:21:15.816857Z",
+    "rawHash": "288422f4aaa1e639643a6422db68e9d2b831f916820378e72f8a47ba56783367",
+    "style": "parentheses",
+    "expected": [
+      12,
+      23
+    ],
+    "method": "Official November 3 2026 certified county candidate list. Text extracted directly from preserved PDF bytes with PyMuPDF; Brown County page4 left column only, Kenosha both pages. All district/county candidate office blocks replayed equally; party abbreviations expanded exactly. Contact/residential fields excluded."
+  },
+  {
+    "county": "kenosha",
+    "url": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+    "finalUrl": "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS",
+    "publisher": "Kenosha County Clerk",
+    "file": "kenosha.pdf.gz",
+    "textFile": "kenosha.txt",
+    "retrievedAt": "2026-10-20T23:21:51.873265Z",
+    "rawHash": "69df06578de420352befc91b32513ecf5b8f756aedffdec604267b2aa33b9ad3",
+    "style": "parentheses",
+    "expected": [
+      7,
+      13
+    ],
+    "method": "Official November 3 2026 certified county candidate list. Text extracted directly from preserved PDF bytes with PyMuPDF; Brown County page4 left column only, Kenosha both pages. All district/county candidate office blocks replayed equally; party abbreviations expanded exactly. Contact/residential fields excluded."
+  },
+  {
+    "county": "waukesha",
+    "url": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+    "finalUrl": "https://www.tn.ottawa.wi.gov/AA/townofottawa/T%20Ottawa%20Sample%2011-3-2026.pdf",
+    "publisher": "Town of Ottawa / Waukesha County Clerk",
+    "file": "ottawa.pdf.gz",
+    "textFile": "ottawa.txt",
+    "retrievedAt": "2026-10-20T23:21:15.027106Z",
+    "rawHash": "6ea23fa6905fb02e0298ed1e51bbceb248f7088456c5b6f83f9ff1df1148103c",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      7
+    ],
+    "method": "Official November 3 2026 Town of Ottawa sample ballot page1, before Statewide(cont.) overlay. Native ASCII text recovered by scripts/ba01-pacific-wi-pdf.py for missing standard Arial ToUnicode map; raw PDF unchanged. District and county races checked against printed ballot."
+  },
+  {
+    "county": "oneida",
+    "url": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+    "finalUrl": "https://www.oneidacountywi.gov/wp-content/uploads/Sample-All-Towns.pdf",
+    "publisher": "Oneida County Clerk",
+    "file": "oneida.pdf.gz",
+    "textFile": "oneida.txt",
+    "retrievedAt": "2026-10-20T23:27:31.969437Z",
+    "rawHash": "5a9875ba88a8893802afbe0c9fdcce7330b709a0e4ce85bb09338b2585e71819",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official November 3 2026 all-county sample ballot packet. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Exact repeated district and county office candidate blocks deduplicated across styles; each office checked for conflicting choices."
+  },
+  {
+    "county": "columbia",
+    "url": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+    "finalUrl": "https://www.co.columbia.wi.us/columbiacounty/LinkClick.aspx?fileticket=z_XyKLKFm44%3D&mid=2148&portalid=2&tabid=102",
+    "publisher": "Columbia County Clerk",
+    "file": "columbia.pdf.gz",
+    "textFile": "columbia.txt",
+    "retrievedAt": "2026-10-20T23:26:37.055352Z",
+    "rawHash": "691d3ee37f7275e43f91d3b0fdfab72104d0fdf7213d44e91fe4c5618da25c78",
+    "style": "ballot-lines",
+    "expected": [
+      16,
+      31
+    ],
+    "method": "Official November 3 2026 all-county sample ballot packet. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Exact repeated district and county office candidate blocks deduplicated across styles; each office checked for conflicting choices. City of Wisconsin Dells styles include Sauk (front97/back98) and Adams (front99/back100); county scope follows the explicit county printed on each reverse.",
+    "countyPageOverrides": {
+      "97": "sauk",
+      "99": "adams"
+    }
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+    "finalUrl": "https://www.franklinwi.gov/Files/Elections/Sample-Ballot-11-3-2026-Election-FranklinWI-AD1-Wards-1-3.pdf",
+    "publisher": "City of Franklin Clerk",
+    "file": "franklin.pdf.gz",
+    "textFile": "franklin.txt",
+    "retrievedAt": "2026-10-20T23:28:33.708649Z",
+    "rawHash": "dd159ef4a40b295c05251e540f265f80e7af5f69bfd7e7cbf7ed02dc238c7be2",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official November 3 2026 municipal sample ballot. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed, preserving all printed independent/party choices."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+    "finalUrl": "https://www.wfbvillage.gov/DocumentCenter/View/3384/Whitefish-Bay-Sample-11032026",
+    "publisher": "Village of Whitefish Bay Clerk",
+    "file": "whitefish.pdf.gz",
+    "textFile": "whitefish.txt",
+    "retrievedAt": "2026-10-20T23:28:32.478791Z",
+    "rawHash": "ae5631b72d5334cc0dfc07ec788a1d1fa9a13f6c5c2b0205a3a6423076619c34",
+    "style": "ballot-lines",
+    "expected": [
+      4,
+      7
+    ],
+    "method": "Official November 3 2026 municipal sample ballot. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed, preserving all printed independent/party choices."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=210",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=210",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward210.pdf.gz",
+    "textFile": "mke-ward210.txt",
+    "retrievedAt": "2026-10-20T23:37:03.917271Z",
+    "rawHash": "87bbc50d1d8557f69e060729c98b2eb45f5df10ec45e3c9e6c36f9948bda4b73",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=202",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=202",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward202.pdf.gz",
+    "textFile": "mke-ward202.txt",
+    "retrievedAt": "2026-10-20T23:37:03.829480Z",
+    "rawHash": "092e4deac07c63145c2ff679ce71e126c2d32c1c7577855412ed7681af677925",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      5,
+      9
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=300",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=300",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward300.pdf.gz",
+    "textFile": "mke-ward300.txt",
+    "retrievedAt": "2026-10-20T23:34:39.163173Z",
+    "rawHash": "4afb9135a717e6e6de47075d8746bb901105979b9115e2fe225a016733f5c99a",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      5,
+      9
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=260",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=260",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward260.pdf.gz",
+    "textFile": "mke-ward260.txt",
+    "retrievedAt": "2026-10-20T23:34:38.557481Z",
+    "rawHash": "e34117ed0117ead31272647eb246cebe58c59e1bf9f2911026c0034c72288b6f",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      5,
+      9
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=201",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=201",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward201.pdf.gz",
+    "textFile": "mke-ward201.txt",
+    "retrievedAt": "2026-10-20T23:37:03.905023Z",
+    "rawHash": "c9e9313c26c6764b25f9ca77aaff861071ada2cb6dba9ae6d8eaf716466d759c",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=356",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=356",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward356.pdf.gz",
+    "textFile": "mke-ward356.txt",
+    "retrievedAt": "2026-10-20T23:34:39.034735Z",
+    "rawHash": "9105386d43da9dddc782e006fbb2f963e0665543b7caeae017f2a4d7dbc26f3d",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      5,
+      9
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=320",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=320",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward320.pdf.gz",
+    "textFile": "mke-ward320.txt",
+    "retrievedAt": "2026-10-20T23:34:38.825408Z",
+    "rawHash": "41c6d872ec017153ad7fedc47b72755f3e30e2032a6965e65d22869911531d60",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      4,
+      7
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=280",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=280",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward280.pdf.gz",
+    "textFile": "mke-ward280.txt",
+    "retrievedAt": "2026-10-20T23:34:38.682880Z",
+    "rawHash": "6d5a88aa8122b2d9da6986c8a0a7e6d1c0a3cf1d43023e93997bef0add69b303",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=200",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=200",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward200.pdf.gz",
+    "textFile": "mke-ward200.txt",
+    "retrievedAt": "2026-10-20T23:34:38.443979Z",
+    "rawHash": "7ba995ad2267a4aa8042deab1ce6790c3a2908ec0b888460faba4e465e325fd7",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      4,
+      7
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=180",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=180",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward180.pdf.gz",
+    "textFile": "mke-ward180.txt",
+    "retrievedAt": "2026-10-20T23:34:38.298273Z",
+    "rawHash": "b4bb1353f672799a9592b035bfeb16757812c0ce1158bc5776e6ce8aa1011e58",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      5,
+      9
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=140",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=140",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward140.pdf.gz",
+    "textFile": "mke-ward140.txt",
+    "retrievedAt": "2026-10-20T23:34:38.125590Z",
+    "rawHash": "2439583bdea6ae75b646b00971a9ceeeb702ea7f91adbfc132389546e68db977",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      4,
+      7
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=120",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=120",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward120.pdf.gz",
+    "textFile": "mke-ward120.txt",
+    "retrievedAt": "2026-10-20T23:34:37.977012Z",
+    "rawHash": "1c819f78d72c18a2bdd6ddbe3a217ad7c444da5a172979b548a3f87a5effcb3a",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      4,
+      7
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=20",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=20",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward20.pdf.gz",
+    "textFile": "mke-ward20.txt",
+    "retrievedAt": "2026-10-20T23:34:37.381559Z",
+    "rawHash": "075452a094c351f8df425e9caa0282ba4417cbc38420aea08eaa9e7ebc00e501",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      4,
+      7
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "milwaukee",
+    "url": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=1",
+    "finalUrl": "https://itmdapps.milwaukee.gov/MyMilwaukeeHome/DownloadSpecial?ward=1",
+    "publisher": "City of Milwaukee Election Commission",
+    "file": "mke-ward1.pdf.gz",
+    "textFile": "mke-ward1.txt",
+    "retrievedAt": "2026-10-20T23:33:05.382205Z",
+    "rawHash": "9a3ffcd4e04a9c7242b23d3e6126319541856b11206f725f61a1149863ce0f03",
+    "style": "ballot-lines",
+    "bilingual": true,
+    "expected": [
+      4,
+      6
+    ],
+    "method": "Official City of Milwaukee November 3 2026 bilingual sample ballot returned by public city sampleBallot ward lookup. Native PDF text retained. Duplicate Spanish office/party labels normalized only for English-office parsing; every candidate name and English party is retained, including minor parties. Selected ward samples cover every one of 14 Assembly IDs returned by official city election GIS; city GIS used as a discovery guide, printed ballot district is authoritative."
+  },
+  {
+    "county": "la_crosse",
+    "url": "https://www.lacrossecounty.org/docs/default-source/county-clerk/sample-ballots/hc1-samp.pdf?sfvrsn=39d2a3a_1",
+    "finalUrl": "https://www.lacrossecounty.org/docs/default-source/county-clerk/sample-ballots/hc1-samp.pdf?sfvrsn=39d2a3a_1",
+    "publisher": "La Crosse County Clerk",
+    "file": "lacrosse-hc1.pdf.gz",
+    "textFile": "lacrosse-hc1.txt",
+    "retrievedAt": "2026-10-20T23:31:22.512643Z",
+    "rawHash": "b4c96a39363fdc88776fe4edc57e382ecaae251603bd0676ef8b5e8379e8efca",
+    "style": "ballot-lines",
+    "expected": [
+      4,
+      9
+    ],
+    "method": "Official November 3 2026 municipal sample ballot / Type B notice. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed; repeated styles must agree exactly, and all independent/party choices receive equal fields."
+  },
+  {
+    "county": "la_crosse",
+    "url": "https://www.lacrossecounty.org/docs/default-source/county-clerk/sample-ballots/hc2-samp.pdf?sfvrsn=bf232549_1",
+    "finalUrl": "https://www.lacrossecounty.org/docs/default-source/county-clerk/sample-ballots/hc2-samp.pdf?sfvrsn=bf232549_1",
+    "publisher": "La Crosse County Clerk",
+    "file": "lacrosse-hc2.pdf.gz",
+    "textFile": "lacrosse-hc2.txt",
+    "retrievedAt": "2026-10-20T23:31:20.360886Z",
+    "rawHash": "050653951e7e52dc6775924cf40cb03e6c3b27136b51622d46990a9fa38166b5",
+    "style": "ballot-lines",
+    "expected": [
+      4,
+      8
+    ],
+    "method": "Official November 3 2026 municipal sample ballot / Type B notice. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed; repeated styles must agree exactly, and all independent/party choices receive equal fields."
+  },
+  {
+    "county": "waukesha",
+    "url": "https://townofbrookfieldwi.gov/wp-content/uploads/2026/09/Type-B-Notice-2026-General-Election.pdf",
+    "finalUrl": "https://townofbrookfieldwi.gov/wp-content/uploads/2026/09/Type-B-Notice-2026-General-Election.pdf",
+    "publisher": "Town of Brookfield Clerk / Waukesha County Clerk",
+    "file": "brookfield-typeb.pdf.gz",
+    "textFile": "brookfield-typeb.txt",
+    "retrievedAt": "2026-10-20T23:33:33.171774Z",
+    "rawHash": "8ab9707b0af60b7ab82aa666d0c56556e4141a447ab35b33ec84028fa04a5a6e",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official November 3 2026 municipal sample ballot / Type B notice. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed; repeated styles must agree exactly, and all independent/party choices receive equal fields."
+  },
+  {
+    "county": "douglas",
+    "url": "https://www.superiorwi.gov/DocumentCenter/View/16687/Sample-Ballots-20261103",
+    "finalUrl": "https://www.superiorwi.gov/DocumentCenter/View/16687/Sample-Ballots-20261103",
+    "publisher": "City of Superior Clerk / Douglas County Clerk",
+    "file": "superior.pdf.gz",
+    "textFile": "superior.txt",
+    "retrievedAt": "2026-10-20T23:33:35.960937Z",
+    "rawHash": "f8f0238966c09f2372859c8f57d71649e5e0b67c799bc83b6739576e6cf9ed7f",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official November 3 2026 municipal sample ballot / Type B notice. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed; repeated styles must agree exactly, and all independent/party choices receive equal fields."
+  },
+  {
+    "county": "green",
+    "url": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+    "finalUrl": "https://www.greencountywi.org/DocumentCenter/View/4639/C-Monroe-",
+    "publisher": "Green County Clerk",
+    "file": "green.pdf.gz",
+    "textFile": "green.txt",
+    "retrievedAt": "2026-10-20T23:32:53.699513Z",
+    "rawHash": "10d7fd0ed0279c84225899aabaa5b17423d4f974e1a472b2d7cc4dfb6b015082",
+    "style": "ballot-lines",
+    "expected": [
+      6,
+      10
+    ],
+    "method": "Official November 3 2026 municipal sample ballot / Type B notice. Native PDF text from scripts/ba01-pacific-wi-pdf.py. Every district and county office candidate block parsed; repeated styles must agree exactly, and all independent/party choices receive equal fields."
+  },
+  {
+    "county": "clark",
+    "url": "https://www.clarkcountywi.gov/_files/ugd/02a99f_77e841c4af2c44bfadad41214c575b5a.pdf",
+    "finalUrl": "https://www.clarkcountywi.gov/_files/ugd/02a99f_77e841c4af2c44bfadad41214c575b5a.pdf",
+    "publisher": "Clark County Clerk",
+    "file": "clark.pdf.gz",
+    "textFile": "clark.txt",
+    "retrievedAt": "2026-10-20T23:39:15.253989Z",
+    "rawHash": "f59e0aaa21b36bd56021864c5a8c3f413e9f5759fcc458ae01b3c7582700e886",
+    "style": "ballot-lines",
+    "expected": [
+      6,
+      11
+    ],
+    "method": "Official November 3 2026 county sample ballot. Portage all78pages replayed from native PDF text; Clark scanned sample front on page2 visually read at high resolution and transcribed into clark-reviewed-races.json, covering every district/county office and all choices equally. Raw complete PDF preserved.",
+    "reviewedFile": "clark-reviewed-races.json"
+  },
+  {
+    "county": "portage",
+    "url": "https://www.co.portage.wi.gov/DocumentCenter/View/7365/2026-General-Election-Sample-Ballot---web",
+    "finalUrl": "https://www.co.portage.wi.gov/DocumentCenter/View/7365/2026-General-Election-Sample-Ballot---web",
+    "publisher": "Portage County Clerk",
+    "file": "portage.pdf.gz",
+    "textFile": "portage.txt",
+    "retrievedAt": "2026-10-20T23:42:56.357677Z",
+    "rawHash": "d8b911d30840dbca5b31aa98f09ac64e834283e97f4fbf251f8ab6f72a3e67d6",
+    "style": "ballot-lines",
+    "expected": [
+      9,
+      18
+    ],
+    "method": "Official November 3 2026 county sample ballot. Portage all78pages replayed from native PDF text; Clark scanned sample front on page2 visually read at high resolution and transcribed into clark-reviewed-races.json, covering every district/county office and all choices equally. Raw complete PDF preserved."
+  },
+  {
+    "county": "dunn",
+    "url": "https://www.menomonie-wi.gov/DocumentCenter/View/1929/2026-November-General-Election-Sample-Ballots-PDF",
+    "finalUrl": "https://www.menomonie-wi.gov/DocumentCenter/View/1929/2026-November-General-Election-Sample-Ballots-PDF",
+    "publisher": "City of Menomonie Clerk / Dunn County Clerk",
+    "file": "menomonie-page1.jpg.gz",
+    "textFile": "menomonie-page1.txt",
+    "reviewedFile": "menomonie-reviewed-races.json",
+    "retrievedAt": "2026-10-20T23:37:09.242803Z",
+    "rawHash": "74d0d152668b24ad794a9c7bec9d051ab28a3a4f6676807c45b2972c3a7d496a",
+    "originPdfRawHash": "cef804b774952e33aef3c19e01035697a077a05274089cbbc3e7973d710ba0ee",
+    "expected": [
+      5,
+      10
+    ],
+    "method": "Official November3 2026 Menomonie all-ward packet, page1 Wards1/2. Full original PDF is45.7MB; durable capture stores the untouched JPEG image stream embedded on page1 (xref3), without re-encoding. rawHash binds that exact native image stream, not the complete origin PDF; originPdfRawHash separately records whole download. All page1 district/county names and party labels visually transcribed from high-resolution rendered original; OCR text retained as extraction evidence."
+  },
+  {
+    "county": "sheboygan",
+    "url": "https://cdn.townweb.com/moselwi.gov/wp-content/uploads/2026/10/Nov-3rd-Sample-Ballot.pdf",
+    "finalUrl": "https://cdn.townweb.com/moselwi.gov/wp-content/uploads/2026/10/Nov-3rd-Sample-Ballot.pdf",
+    "publisher": "Town of Mosel Clerk / Sheboygan County Clerk",
+    "file": "mosel.pdf.gz",
+    "textFile": "mosel.txt",
+    "retrievedAt": "2026-10-20T23:45:01.716594Z",
+    "rawHash": "b33003f8243d60725110b1d352e084e31a0213b98ff216b45e6e2e69340d8841",
+    "style": "ballot-lines",
+    "partyFirst": true,
+    "expected": [
+      5,
+      11
+    ],
+    "method": "Official Town of Mosel November3 2026 sample ballot linked from https://moselwi.gov/elections/ (anchor mislabeled Partisan Primary Sample Ballot; PDF itself is November3 general). Government-linked TownWeb CDN official source. Native PDF prints each party before its candidate name; parser respects that order and retains both Senate9 Republican/independent choices equally."
+  },
+  {
+    "url": "https://newberlinwi.gov/DocumentCenter/View/26904/C-New-Berlin-Sample-Ballots_November-3-2026-Election",
+    "finalUrl": "https://newberlinwi.gov/DocumentCenter/View/26904/C-New-Berlin-Sample-Ballots_November-3-2026-Election",
+    "publisher": "City of New Berlin Clerk",
+    "retrievedAt": "2026-10-20T23:56:25.743616Z",
+    "httpStatus": 200,
+    "rawHash": "76b22bed84fdb0fc8b525117f992804815b4840c03216ee0608d7bff7e9665fb",
+    "file": "newberlin.pdf.gz",
+    "textFile": "newberlin.txt",
+    "county": "waukesha",
+    "expected": [
+      4,
+      5
+    ],
+    "style": "ballot-lines",
+    "method": "Native PDF extraction; printed November 3, 2026 races reviewed in full"
+  },
+  {
+    "url": "https://www.villageofhartland.wi.gov/DocumentCenter/View/12203/Swallow-Sample-Ballot-Nov-26",
+    "finalUrl": "https://www.villageofhartland.wi.gov/DocumentCenter/View/12203/Swallow-Sample-Ballot-Nov-26",
+    "publisher": "Village of Hartland Clerk",
+    "retrievedAt": "2026-10-20T23:57:28.593270Z",
+    "httpStatus": 200,
+    "rawHash": "421709369b80a5527dede2f4b0cee6c2713a4711ab479be2ad57f10df18f3f5d",
+    "file": "hartland-swallow.pdf.gz",
+    "textFile": "hartland-swallow.txt",
+    "county": "waukesha",
+    "expected": [
+      5,
+      7
+    ],
+    "style": "ballot-lines",
+    "method": "Scanned official ballot front visually reviewed at rendered resolution; OCR retained as aid only",
+    "reviewedFile": "hartland-swallow-reviewed-races.json"
+  },
+  {
+    "url": "https://www.co.walworth.wi.us/DocumentCenter/View/20544/Vote-for-One--Candidates-for-CongressionalLegisState-110326",
+    "finalUrl": "https://www.co.walworth.wi.us/DocumentCenter/View/20544/Vote-for-One--Candidates-for-CongressionalLegisState-110326",
+    "publisher": "Walworth County Clerk",
+    "retrievedAt": "2026-10-20T23:58:16.490378Z",
+    "httpStatus": 200,
+    "rawHash": "243c7b40d161c4a4eaffb63ff046daaee46b1e69ebf2afe61518b6afd7f49868",
+    "file": "walworth-list.pdf.gz",
+    "textFile": "walworth-list.txt",
+    "county": "walworth",
+    "expected": [
+      11,
+      21
+    ],
+    "style": "ballot-lines",
+    "method": "Native PDF extraction; printed November 3, 2026 races reviewed in full",
+    "reviewedFile": "walworth-list-reviewed-races.json"
+  },
+  {
+    "url": "https://www.outagamie.gov/files/3c9edf3f-eeac-433e-ab98-bc8fb178b1f3/2026-November-Election-Outagamie-County-Type-B-C-D-Notice-Final.pdf",
+    "finalUrl": "https://www.outagamie.gov/files/3c9edf3f-eeac-433e-ab98-bc8fb178b1f3/2026-November-Election-Outagamie-County-Type-B-C-D-Notice-Final.pdf",
+    "publisher": "Outagamie County Clerk",
+    "retrievedAt": "2026-10-20T23:59:44.334119Z",
+    "httpStatus": 200,
+    "rawHash": "7b6c3402c894bfff0943a24631bd30bee83f91c9511d6c16ff4511a80f990bb4",
+    "file": "outagamie-typeb.pdf.gz",
+    "textFile": "outagamie-typeb.txt",
+    "county": "outagamie",
+    "expected": [
+      19,
+      40
+    ],
+    "style": "ballot-lines",
+    "method": "Current candidate listing on PDF page 3 visually reviewed in full; obsolete hidden primary-text layer excluded",
+    "officialLinkingUrl": "https://www.outagamie.gov/Our-County/County-Clerk/Elections/Outagamie-County-Election-Results/2026-Elections/2026-November-General-Election-File-Archive",
+    "reviewedFile": "outagamie-typeb-reviewed-races.json"
+  },
+  {
+    "url": "https://drive.google.com/file/d/1E2_XL83xteNo7AQ3esflN2rVPeKPyuGD/view?usp=sharing",
+    "finalUrl": "https://drive.google.com/file/d/1E2_XL83xteNo7AQ3esflN2rVPeKPyuGD/view?usp=sharing",
+    "publisher": "Ashland County Clerk",
+    "retrievedAt": "2026-10-21T00:01:47.548899Z",
+    "httpStatus": 200,
+    "rawHash": "10891fbad4aa45ff61cad6db0063c6ad0787236901248fbebe576bb098e9fc3e",
+    "file": "ashland-sample1.pdf.gz",
+    "textFile": "ashland-sample1.txt",
+    "county": "ashland",
+    "expected": [
+      5,
+      8
+    ],
+    "style": "ballot-lines",
+    "method": "Native PDF extraction; printed November 3, 2026 races reviewed in full",
+    "officialLinkingUrl": "https://ashlandcountywi.gov/election"
+  },
+  {
+    "url": "https://drive.google.com/file/d/1vce7CX13Wx_d8lsiLZmLoG4Epjn8-o2r/view?usp=sharing",
+    "finalUrl": "https://drive.google.com/file/d/1vce7CX13Wx_d8lsiLZmLoG4Epjn8-o2r/view?usp=sharing",
+    "publisher": "Ashland County Clerk",
+    "retrievedAt": "2026-10-21T00:01:48.251772Z",
+    "httpStatus": 200,
+    "rawHash": "cae45f8e9900dd027bd3b5e594dcbd02da326723639579dce47ad4ae827a056f",
+    "file": "ashland-sample2.pdf.gz",
+    "textFile": "ashland-sample2.txt",
+    "county": "ashland",
+    "expected": [
+      5,
+      8
+    ],
+    "style": "ballot-lines",
+    "method": "Native PDF extraction; printed November 3, 2026 races reviewed in full",
+    "officialLinkingUrl": "https://ashlandcountywi.gov/election"
+  },
+  {
+    "url": "https://cdn.townweb.com/grandrapidswi.gov/wp-content/uploads/2026/10/20260915104455.pdf",
+    "finalUrl": "https://cdn.townweb.com/grandrapidswi.gov/wp-content/uploads/2026/10/20260915104455.pdf",
+    "publisher": "Town of Grand Rapids Clerk",
+    "retrievedAt": "2026-10-21T00:03:01.489465Z",
+    "httpStatus": 200,
+    "rawHash": "04c7f0a37a15b924d3a3a7767e5d478f29c8dbdf8d7d65d7e81fade78eb5a57c",
+    "file": "grandrapids.pdf.gz",
+    "textFile": "grandrapids.txt",
+    "county": "wood",
+    "expected": [
+      5,
+      9
+    ],
+    "style": "ballot-lines",
+    "method": "Scanned official ballot front visually reviewed in full after display rotation; OCR retained as aid only",
+    "officialLinkingUrl": "https://grandrapidswi.gov/election-information/",
+    "reviewedFile": "grandrapids-reviewed-races.json"
+  },
+  {
+    "url": "https://storage.googleapis.com/juniper-media-library/330/2026/09/Sample%20Ballot%20Both%20Sides.pdf",
+    "finalUrl": "https://storage.googleapis.com/juniper-media-library/330/2026/09/Sample%20Ballot%20Both%20Sides.pdf",
+    "publisher": "Village of Rochester Clerk",
+    "retrievedAt": "2026-10-21T00:01:24.842165Z",
+    "httpStatus": 200,
+    "rawHash": "333cc66b641b9e0397ea3c3a3d711e6b5d2cc051162b4fc9133f705ac72ca993",
+    "file": "rochester.pdf.gz",
+    "textFile": "rochester.txt",
+    "county": "racine",
+    "expected": [
+      5,
+      9
+    ],
+    "style": "ballot-lines",
+    "method": "Scanned official ballot front visually reviewed in full; OCR retained as aid only",
+    "officialLinkingUrl": "https://www.rochesterwi.gov/news-notices/nov-3-general-election-sample-ballot/",
+    "reviewedFile": "rochester-reviewed-races.json"
+  },
+  {
+    "url": "https://townofstcroixfallswi.gov/wp-content/uploads/2026/09/Sample-Ballot-St.-Croix-Falls-School-District.pdf",
+    "finalUrl": "https://townofstcroixfallswi.gov/wp-content/uploads/2026/09/Sample-Ballot-St.-Croix-Falls-School-District.pdf",
+    "publisher": "Town of St. Croix Falls Clerk",
+    "retrievedAt": "2026-10-21T00:08:17.563592Z",
+    "httpStatus": 200,
+    "rawHash": "3b9650e22c140f2df96e2bf50226ca79c897aaa2d752984b50754f384ffa9755",
+    "file": "stcroixfalls.pdf.gz",
+    "textFile": "stcroixfalls.txt",
+    "reviewedFile": "stcroixfalls-reviewed-races.json",
+    "county": "polk",
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Scanned official November ballot front visually reviewed in full; OCR retained as an aid only"
+  },
+  {
+    "url": "https://www.townofbeloitwi.gov/media/12751",
+    "finalUrl": "https://www.townofbeloitwi.gov/media/12751",
+    "publisher": "Town of Beloit Clerk",
+    "retrievedAt": "2026-10-21T00:09:58.156421Z",
+    "httpStatus": 200,
+    "rawHash": "49bd251a8d1beda5eb4123cad2fb9cc1c6bee9d9e086ea64fbb470284e97c67c",
+    "file": "beloit.pdf.gz",
+    "textFile": "beloit.txt",
+    "reviewedFile": "beloit-reviewed-races.json",
+    "county": "rock",
+    "expected": [
+      5,
+      9
+    ],
+    "method": "Native PDF extraction; complete printed races reviewed, including custom designation for third Senate candidate",
+    "officialLinkingUrl": "https://www.townofbeloitwi.gov/document-library?search=election"
+  },
+  {
+    "url": "https://www.vernoncountywi.gov/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+    "finalUrl": "https://cms8.revize.com/revize/vernoncountywi/County%20Clerk/Elections%202026/2026.11%20Type%20B%20Notice%20for%20General%20Election%20Nov%203%20website.pdf?t=202609141711510",
+    "publisher": "Vernon County Clerk",
+    "retrievedAt": "2026-10-21T00:10:34.373018Z",
+    "httpStatus": 200,
+    "rawHash": "dbcefd333659e4251ae606208ad1305c2ede0b5848a8bf0b25217a37a325e941",
+    "file": "vernon-typeb.pdf.gz",
+    "textFile": "vernon-typeb.txt",
+    "reviewedFile": "vernon-typeb-reviewed-races.json",
+    "county": "vernon",
+    "expected": [
+      14,
+      20
+    ],
+    "method": "Native PDF extraction after standard Arial text-map restoration; Webdings symbols left untouched. All58sample fronts compared; pages2,96,110 visually checked. Reverse labels on pages97/111 establish Crawford/Richland scopes. Richland coroner prints only write-in.",
+    "officialLinkingUrl": "https://www.vernoncountywi.gov/departments/county_clerk/2026_elections.php"
+  },
+  {
+    "url": "https://www.townofmountain.com/elections/",
+    "finalUrl": "https://www.townofmountain.com/elections/",
+    "publisher": "Town of Mountain Clerk",
+    "retrievedAt": "2026-10-21T00:22:14.924778Z",
+    "httpStatus": 200,
+    "rawHash": "fd1a3f37e9a5a76794393b59e255c64248d02572d4421fd48f716e8c408c2926",
+    "file": "mountain.html.gz",
+    "textFile": "mountain.txt",
+    "reviewedFile": "mountain-reviewed-races.json",
+    "county": "oconto",
+    "expected": [
+      4,
+      6
+    ],
+    "method": "Official municipal online November3,2026 ballot transcription; every printed district/county candidate reviewed, excluding write-in and undervote placeholders."
+  },
+  {
+    "county": "washington",
+    "url": "https://www.westbendwi.gov/clerk/Sample%20Ballots/D1%20Wards%201,%203%20-%20Ballot%204132.pdf?t=202609171528540",
+    "finalUrl": "https://cms9files.revize.com/westbend/clerk/Sample%20Ballots/D1%20Wards%201,%203%20-%20Ballot%204132.pdf?t=202609171528540",
+    "publisher": "City of West Bend / Washington County Clerk",
+    "file": "westbend-ad58.pdf.gz",
+    "textFile": "westbend-ad58.txt",
+    "retrievedAt": "2026-10-21T00:45:52.600598Z",
+    "rawHash": "7d47c5ac94be192924188839b452fc2cf3d304ea9adc5ebdae7371a0d15570c7",
+    "officialLinkingUrl": "https://www.westbendwi.gov/city_clerk/sample_ballots.php",
+    "style": "ballot-lines",
+    "expected": [
+      4,
+      6
+    ],
+    "method": "Official November 3,2026 sample ballot. Complete raw PDF retained. Full OCR capture retained; each district/county office candidate block visually checked against the original rendered front and reverse-side county label, replayed through reviewed JSON fixture. Write-in lines are not candidates.",
+    "reviewedFile": "westbend-ad58-reviewed-races.json"
+  },
+  {
+    "county": "washington",
+    "url": "https://www.westbendwi.gov/clerk/Sample%20Ballots/D1%20Wards%202,%2024,%2027%20-%20Ballot%204133.pdf?t=202609171529120",
+    "finalUrl": "https://cms9files.revize.com/westbend/clerk/Sample%20Ballots/D1%20Wards%202,%2024,%2027%20-%20Ballot%204133.pdf?t=202609171529120",
+    "publisher": "City of West Bend / Washington County Clerk",
+    "file": "westbend-ad59.pdf.gz",
+    "textFile": "westbend-ad59.txt",
+    "retrievedAt": "2026-10-21T00:45:52.835549Z",
+    "rawHash": "8ee61d13b39441e5506413a4937781c8434b6f564f1d9068228caecfb2cbe22c",
+    "officialLinkingUrl": "https://www.westbendwi.gov/city_clerk/sample_ballots.php",
+    "style": "ballot-lines",
+    "expected": [
+      4,
+      6
+    ],
+    "method": "Official November 3,2026 sample ballot. Complete raw PDF retained. Full OCR capture retained; each district/county office candidate block visually checked against the original rendered front and reverse-side county label, replayed through reviewed JSON fixture. Write-in lines are not candidates.",
+    "reviewedFile": "westbend-ad59-reviewed-races.json"
+  },
+  {
+    "county": "dodge",
+    "url": "https://aptg.co/1BHfr0",
+    "finalUrl": "https://files-backend.assets.thrillshare.com/documents/asset/uploaded_file/5330/Cow/6966eafe-f50f-450b-993e-c06e9ebcd023/SAMPLE-BALLOT---DODGE-COUNTY---WARDS-1-7---11-03-26.pdf?disposition=inline",
+    "publisher": "City of Watertown / Dodge County Clerk",
+    "file": "watertown-dodge.pdf.gz",
+    "textFile": "watertown-dodge.txt",
+    "retrievedAt": "2026-10-21T00:45:52.395965Z",
+    "rawHash": "a3f2fb61bb7fd12c979adcdd9bf196c83397050a3c097f4f5e8b0a2b86f8ffbb",
+    "officialLinkingUrl": "https://www.watertownwi.gov/o/cow/page/electionvoter-information",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      8
+    ],
+    "method": "Official November 3,2026 sample ballot. Complete raw PDF retained. Native text extracted with scripts/ba01-pacific-wi-pdf.py; all office candidate blocks checked against the original."
+  },
+  {
+    "county": "sheboygan",
+    "url": "https://www.randomlakewi.com/DocumentCenter/View/1871",
+    "finalUrl": "https://www.randomlakewi.com/DocumentCenter/View/1871/Sample-Ballot-11-03-26?bidId=",
+    "publisher": "Village of Random Lake / Sheboygan County Clerk",
+    "file": "randomlake-villages.pdf.gz",
+    "textFile": "randomlake-villages.txt",
+    "retrievedAt": "2026-10-21T00:45:54.137964Z",
+    "rawHash": "9bf990529b702143e77d02f01aee620c8f8f229f84835e8a5715e3a1878db1ff",
+    "officialLinkingUrl": "https://www.randomlakewi.com/m/calendar/event/detail/475",
+    "style": "ballot-lines",
+    "expected": [
+      6,
+      12
+    ],
+    "method": "Official November 3,2026 sample ballot. Complete raw PDF retained. Native text extracted with scripts/ba01-pacific-wi-pdf.py; all office candidate blocks checked against the original.",
+    "partyFirst": true
+  },
+  {
+    "county": "racine",
+    "url": "https://windpoint.org/November%203%20-%20Sample%20Ballot.pdf?t=202609171245310",
+    "finalUrl": "https://cms3.revize.com/revize/windpoint/November%203%20-%20Sample%20Ballot.pdf?t=202609171245310",
+    "publisher": "Village of Wind Point / Racine County Clerk",
+    "file": "windpoint.pdf.gz",
+    "textFile": "windpoint.txt",
+    "retrievedAt": "2026-10-21T00:45:55.929660Z",
+    "rawHash": "179f91c1ca16b9b8ecd800eed54fb56c4ed9f1f7dfc7715d56df758ad571def8",
+    "officialLinkingUrl": "https://windpoint.org/government/elections_voting.php",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      9
+    ],
+    "method": "Official November 3,2026 sample ballot. Complete raw PDF retained. Full OCR capture retained; each district/county office candidate block visually checked against the original rendered front and reverse-side county label, replayed through reviewed JSON fixture. Write-in lines are not candidates.",
+    "reviewedFile": "windpoint-reviewed-races.json"
+  },
+  {
+    "county": "st_croix",
+    "url": "https://storage.googleapis.com/juniper-media-library/627/2026/10/20261103_TypeC_SampleBallot_Website.pdf",
+    "finalUrl": "https://storage.googleapis.com/juniper-media-library/627/2026/10/20261103_TypeC_SampleBallot_Website.pdf",
+    "publisher": "Town of Star Prairie / St. Croix County Clerk",
+    "file": "starprairie.pdf.gz",
+    "textFile": "starprairie.txt",
+    "retrievedAt": "2026-10-21T00:45:58.785941Z",
+    "rawHash": "d937b9bb6b1b7ce70992434553c880558c37f0069b9ad456b16f908c3636950d",
+    "officialLinkingUrl": "https://townofstarprairiewi.gov/election-information/",
+    "style": "ballot-lines",
+    "expected": [
+      4,
+      6
+    ],
+    "method": "Official November 3,2026 sample ballot. Complete raw PDF retained. Full OCR capture retained; each district/county office candidate block visually checked against the original rendered front and reverse-side county label, replayed through reviewed JSON fixture. Write-in lines are not candidates.",
+    "reviewedFile": "starprairie-reviewed-races.json"
+  },
+  {
+    "county": "buffalo",
+    "url": "https://drive.google.com/file/d/1DASeGS5lmQ_e6-R8Eh_tSP-mXdr4V9It/view?usp=sharing",
+    "finalUrl": "https://drive.usercontent.google.com/download?id=1DASeGS5lmQ_e6-R8Eh_tSP-mXdr4V9It&export=download",
+    "publisher": "City of Mondovi / Buffalo County Clerk",
+    "file": "mondovi.pdf.gz",
+    "textFile": "mondovi.txt",
+    "retrievedAt": "2026-10-21T00:45:58.053232Z",
+    "rawHash": "6727013d2e5f6bb1774f9bc9776910256e30a92feebda059643944bbb5757f66",
+    "officialLinkingUrl": "https://mondoviwi.gov/voter-information-2/",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      9
+    ],
+    "method": "Official November 3,2026 sample ballot. Complete raw PDF retained. Full OCR capture retained; each district/county office candidate block visually checked against the original rendered front and reverse-side county label, replayed through reviewed JSON fixture. Write-in lines are not candidates.",
+    "reviewedFile": "mondovi-reviewed-races.json"
+  },
+  {
+    "county": "monroe",
+    "url": "https://www.spartawisconsin.org/sites/g/files/vyhlif14126/files/media/finance-and-administration/file/13761/11_03_2026_general_election_sample_ballot_wd_1-5.pdf",
+    "finalUrl": "https://www.spartawisconsin.org/sites/g/files/vyhlif14126/files/media/finance-and-administration/file/13761/11_03_2026_general_election_sample_ballot_wd_1-5.pdf",
+    "publisher": "City of Sparta / Monroe County Clerk",
+    "file": "sparta.pdf.gz",
+    "textFile": "sparta.txt",
+    "retrievedAt": "2026-10-21T00:45:56.954967Z",
+    "rawHash": "826b4e33f6e988e164e71cc735c0647a89b5082086ebc849dbecd442458e0e21",
+    "officialLinkingUrl": "https://www.spartawisconsin.org/finance-and-administration/page/upcoming-general-election",
+    "style": "ballot-lines",
+    "expected": [
+      4,
+      9
+    ],
+    "method": "Official November 3,2026 sample ballot. Complete raw PDF retained. Full OCR capture retained; each district/county office candidate block visually checked against the original rendered front and reverse-side county label, replayed through reviewed JSON fixture. Write-in lines are not candidates.",
+    "reviewedFile": "sparta-reviewed-races.json"
+  },
+  {
+    "county": "barron",
+    "url": "https://cdn.townweb.com/townofricelake.com/wp-content/uploads/2026/09/Sample-Ballot-11.3.26.pdf",
+    "finalUrl": "https://cdn.townweb.com/townofricelake.com/wp-content/uploads/2026/09/Sample-Ballot-11.3.26.pdf",
+    "publisher": "Town of Rice Lake / Barron County Clerk",
+    "file": "ricelake.pdf.gz",
+    "textFile": "ricelake.txt",
+    "retrievedAt": "2026-10-21T00:50:20.915485Z",
+    "rawHash": "fbba19b6171da29e2cc10eaae89db75209ca3746df5eb1b1dac5fd0d0ea53f1d",
+    "officialLinkingUrl": "https://townofricelake.com/election-information/",
+    "style": "ballot-lines",
+    "expected": [
+      5,
+      8
+    ],
+    "reviewedFile": "ricelake-reviewed-races.json",
+    "method": "Official November3,2026 sample ballot. Complete raw PDF unchanged; rotated only during OCR rendering. All five district/county fields visually checked against printed original, including Jodi Kummet as Barron County Sheriff. Full OCR capture retained. Write-in lines are not candidates."
+  },
+  {
+    "url": "https://img1.wsimg.com/blobby/go/4192b007-d27c-4592-beb5-7f6a28d2006f/downloads/d7f76949-7f94-4870-8c17-292db23e2350/Notice%20of%20General%20Election%20and%20Sample%20Ballot%20N.pdf?ver=1792523749051",
+    "finalUrl": "https://img1.wsimg.com/blobby/go/4192b007-d27c-4592-beb5-7f6a28d2006f/downloads/d7f76949-7f94-4870-8c17-292db23e2350/Notice%20of%20General%20Election%20and%20Sample%20Ballot%20N.pdf?ver=1792523749051",
+    "file": "tomah.pdf.gz",
+    "retrievedAt": "2026-10-21T01:12:04.240501Z",
+    "httpStatus": 200,
+    "rawHash": "b89a6b877ec55ffbc3bd988bb65077d3405deeac8f27b4aa4bf166f960d7889d",
+    "rawBytes": 16933146,
+    "publisher": "Town of Tomah / Monroe County Clerk",
+    "responseHeaders": {
+      "content-type": "application/pdf",
+      "x-version": "0.7.3+sha-39bd3e8",
+      "etag": "\"87103fac0c1e3c3e925c7c379e290a6e\"",
+      "last-modified": "Tue, 20 Oct 2026 18:53:52 GMT",
+      "x-amzn-trace-id": "Root=1-6ad7b8be-5eba87745362da5971a22907",
+      "x-forwarded-port": "443",
+      "x-forwarded-for": "50.63.4.64",
+      "x-forwarded-proto": "https",
+      "access-control-allow-credentials": "true",
+      "access-control-allow-headers": "*",
+      "access-control-allow-methods": "GET",
+      "access-control-max-age": "86400",
+      "vary": "Accept-Encoding",
+      "cache-control": "public, max-age=31536000",
+      "expires": "Thu, 21 Oct 2027 01:11:56 GMT",
+      "date": "Wed, 21 Oct 2026 01:11:56 GMT",
+      "timing-allow-origin": "*",
+      "access-control-allow-origin": "*",
+      "x-envoy-upstream-service-time": "917",
+      "server": "envoy",
+      "connection": "close",
+      "transfer-encoding": "chunked"
+    },
+    "county": "monroe",
+    "textFile": "tomah.txt",
+    "officialLinkingUrl": "https://townoftomah.wi.gov/elections",
+    "officialLinkingCapture": {
+      "url": "https://townoftomah.wi.gov/elections",
+      "finalUrl": "https://townoftomah.wi.gov/elections",
+      "file": "tomah-parent.html.gz",
+      "retrievedAt": "2026-10-21T01:11:56.347125Z",
+      "httpStatus": 200,
+      "rawHash": "711605fab8e43b063d7769377aa0ff08d2bafeafdba38375d28306cf1cd371a5",
+      "rawBytes": 158085,
+      "publisher": "Town of Tomah",
+      "responseHeaders": {
+        "etag": "5389e06e597ee788d968c91c26b10c16",
+        "link": "<//img1.wsimg.com/ceph-p3-01/website-builder-data-prod/static/widgets/UX.7.3.8.js>; rel=preload; as=script; crossorigin,<https://img1.wsimg.com/gfonts/s/playfairdisplay/v40/nuFiD-vYSZviVYUb_rj3ij__anPXDTzYgA.woff2>; rel=preload; as=font; crossorigin,<https://img1.wsimg.com/gfonts/s/sourcesanspro/v24/6xKwdSBYKcSV-LCoeQqfX1RYOo3qPZZMkids18Q.woff2>; rel=preload; as=font; crossorigin,<https://img1.wsimg.com/gfonts/s/sourcesanspro/v24/6xK1dSBYKcSV-LCoeQqfX1RYOo3qPZ7nsDI.woff2>; rel=preload; as=font; crossorigin,<https://img1.wsimg.com/gfonts/s/sourcesanspro/v24/6xKwdSBYKcSV-LCoeQqfX1RYOo3qPZZclSds18Q.woff2>; rel=preload; as=font; crossorigin,<https://img1.wsimg.com/gfonts/s/sourcesanspro/v24/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdu.woff2>; rel=preload; as=font; crossorigin,<https://img1.wsimg.com/gfonts/s/sourcesanspro/v24/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7l.woff2>; rel=preload; as=font; crossorigin,<https://img1.wsimg.com/gfonts/s/sourcesanspro/v24/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdu.woff2>; rel=preload; as=font; crossorigin,<https://img1.wsimg.com/gfonts/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2>; rel=preload; as=font; crossorigin,<https://fonts.googleapis.com>; rel=preconnect; crossorigin,<https://fonts.gstatic.com>; rel=preconnect; crossorigin,<https://img1.wsimg.com>; rel=preconnect; crossorigin,<https://isteam.wsimg.com>; rel=preconnect; crossorigin",
+        "cache-control": "max-age=30",
+        "content-security-policy": "frame-ancestors 'self' godaddy.com *.godaddy.com dev-godaddy.com *.dev-godaddy.com test-godaddy.com *.test-godaddy.com",
+        "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+        "content-type": "text/html;charset=utf-8",
+        "content-length": "158085",
+        "set-cookie": "dps_site_id=us-east-1; path=/; secure",
+        "vary": "Accept-Encoding",
+        "server": "envoy",
+        "x-version": "24a41f4",
+        "x-siteid": "us-east-1",
+        "date": "Wed, 21 Oct 2026 01:11:56 GMT",
+        "x-envoy-upstream-service-time": "639",
+        "connection": "close"
+      }
+    },
+    "style": "ballot-lines",
+    "reviewedFile": "tomah-reviewed-races.json",
+    "expected": [
+      4,
+      8
+    ],
+    "method": "Official Monroe County November 3, 2026 Type B notice and Town of Tomah Wards 1-3 printed sample, page6. Complete original six-page PDF preserved. Each district/county office field, including both Assembly70 candidates and printed party designations, visually verified against the original rendered page; OCR and reviewed JSON retained. The packet omits the ballot reverse and is used only for the complete candidate office fields shown, not a full municipal ballot comparison. Write-in lines are not candidates."
+  }
+]

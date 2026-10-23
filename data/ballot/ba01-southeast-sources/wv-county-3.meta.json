@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Braxton%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Braxton%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.113609+00:00",
+  "rawHash": "5e1ee1d1b4e03b7a79beb10e92fb7a2b7955cb2d189a0f33fbc15e920af5ffcf",
+  "httpStatus": 200,
+  "bytes": 764908,
+  "extractedTextHash": "2c729a178fb6c694d3ec100d1c56780149fca736ddcf8d336efd5ee0d54afb4f",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

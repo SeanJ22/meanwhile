@@ -1,0 +1,71 @@
+https://lookup.boe.ohio.gov/vtrapp/lucas/getballot.aspx?elect=20261103G&prsid=001A__1&bpty=X
+Captured HTTP200 official November 3, 2026 sample ballot. Original PDF bytes saved as oh-sample-lucas-house-district-42.pdf.gz. Numbered text is local pdftotext -layout output.
+L0:  Lucas County Board of Elections web site.
+L1:  ERAL ELECTION                                        TOLEDO 1A
+L2:   County
+L3:   Election
+L4:  er 3, 2026
+L5:  ns to Voter
+L6:  ffice title.
+L7:   do, that contest or question will not be counted.
+L8:   left of the blank line and write in the candidate’s name.
+L9:   es can be counted.
+L10:   rinted on the ballot for that same contest.
+L11:  our ballot to an election official and get a new ballot.
+L12:     For U.S. Senator
+L13:     (Unexpired term ending 1-3-2029)
+L14:     (Vote for not more than 1)
+L15:         Sherrod Brown
+L16:         Democratic
+L17:         Jon Husted
+L18:         Republican
+L19:         Greg Levy
+L20:         Other-party candidate
+L21:         William B. Redpath
+L22:         Libertarian
+L23:        Write-in
+L24:     For Representative to Congress
+L25:     (9th District)
+L26:     (Vote for not more than 1)
+L27:         Marcy Kaptur
+L28:         Democratic
+L29:         Derek Merrin
+L30:         Republican
+L31:   p l eWrite-in
+L32:     For State Senator
+L33:     (11th District)
+L34:     (Vote for not more than 1)
+L35:         Paula Hicks-Hudson
+L36:         Democratic
+L37:         James Nowak
+L38:         Republican
+L39:         Kenneth W. Sharp
+L40:         Libertarian
+L41:     For State Representative
+L42:     (42nd District)
+L43:     (Vote for not more than 1)
+L44:         Robert McMahon
+L45:         Republican
+L46:         Elgin Rogers Jr.
+L47:         Democratic
+L48:     For Judge of the Court of Appeals
+L49:     (6th District)
+L50:     (Full term commencing 2-9-2027)
+L51:     (Vote for not more than 1)
+L52:         Michael R. Goulding
+L53:         Republican
+L54:     For Judge of the Court of Appeals
+L55:     (6th District)
+L56:     (Full term commencing 2-10-2027)
+L57:     (Vote for not more than 1)
+L58:         Myron C. Duhart
+L59:         Democratic
+L60:         CJ Kamm
+L61:         Republican
+L62:     For Judge of the Court of Common Pleas
+L63:     (Full term commencing 2-9-2027)
+L64:     (Vote for not more than 1)
+L65:         Ian B. English
+L66:  DO 1A
+L67:  S OF THE BALLOT
+L68:  1 OF 4

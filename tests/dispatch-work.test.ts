@@ -44,7 +44,16 @@ import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 import { modelLaneClosure } from "@/lib/control-plane/scheduler/model-lane.ts";
 import { OWNER_DISPATCH } from "@/lib/control-plane/scheduler/obligation.ts";
-import { planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
+import { openOccurrence, planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
+import { scheduleObligation } from "@/lib/control-plane/scheduler/obligation.ts";
+import { submit } from "@/lib/control-plane/gateway/gateway.ts";
+import { huntPacketsProvider } from "@/lib/control-plane/scheduler/providers/hunt-packets.ts";
+import { placeSourceExecutor, type HuntSourceScope } from "@/lib/hunt/own-site-runtime.ts";
+import { ensureEntity } from "@/lib/facts/entities.ts";
+import { MemoryEvidenceStore, putArtifact } from "@/lib/control-plane/evidence/store.ts";
+import { factDb } from "./helpers/hunters-db.ts";
+import { beginAttempt, claim } from "@/lib/control-plane/attempt.ts";
+import { nextAutonomousOperation } from "@/lib/control-plane/workers/coordinator.ts";
 import { parseDispatchTarget } from "@/lib/control-plane/scheduler/dispatch-target.ts";
 import { RESEARCH_INTENT_LOG_KEY, readIntents } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { buildRegistry, type RegistryPass } from "@/lib/control-plane/scheduler/registry.ts";
@@ -464,8 +473,8 @@ test("creating work opens no paid lane: the owner's PAUSE stands and nothing but
 
   const [t] = dispatchWorkReading(plan, applied, CONTEXT).targets;
   const says = t.says.join(" ");
-  assert.match(says, /need a model and wait: paused by owner intent pause-1/);
-  assert.match(says, /\$105\.00 rolling 24-hour ceiling \(your dial\) first, then this Send's own \$0\.00 rolling 24-hour budget over the work it reached, and this geography's\./);
+  assert.match(says, /run on the plain-code lane as they come due, at no model cost/);
+  assert.doesNotMatch(says, /need a model and wait:/);
   assert.doesNotMatch(says, /no per-assignment budget/);
   assert.match(says, /without waiting for free routes to fail/);
 });
@@ -600,7 +609,7 @@ test("a meetings route with a known address is carried by what the partition wir
   assert.equal(jurisdictionRequirements(REGISTRIES.az, REGISTRIES.az.jurisdictions.find((x) => x.id === "az:city:city-of-tucson")!).some((r) => r.source.recordClass === "MEETINGS"), false, "a DISCOVERY_OWED meetings source is discovery, not a route here");
 });
 
-test("explicit paid meetings discovery keeps the materialized needs in the registry derivation's shape", () => {
+test("materialized meetings hunts keep their identities and read the government's own website for free", async () => {
   const empty = meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }) }).enumerate({ root: ROOT, nowIso: T0 });
   assert.equal(empty.obligations.length, 0);
   assert.match(empty.emptyReason ?? "", /no registered government website/);
@@ -617,12 +626,99 @@ test("explicit paid meetings discovery keeps the materialized needs in the regis
   assert.deepEqual(pass.units.map((u) => u.obligation.id).sort(), [...ids].sort(), "a need whose basis moved, and another provider's id, are not emitted");
   for (const u of pass.units) {
     assert.equal(u.obligation.recordClass, "meetings-discovery");
-    assert.equal(u.route.open.kind, "NOT_MACHINE_EXECUTABLE");
+    assert.equal(u.route.open.kind, "HTTP_GET");
   }
   const ownUnit = pass.units.find((u) => u.obligation.subjectId === own.jurisdictionId)!;
-  assert.equal(ownUnit.route.open.kind === "NOT_MACHINE_EXECUTABLE" ? ownUnit.route.open.target : null, own.ownWebAddress);
+  assert.equal(ownUnit.route.open.kind === "HTTP_GET" ? ownUnit.route.open.url : null, own.ownWebAddress);
   assert.equal(ownUnit.route.routeId, "own-site-meetings");
   assert.equal(pass.units.find((u) => u.obligation.subjectId === noSite.jurisdictionId)!.route.routeId, "find-own-site");
+
+  const facts = await factDb();
+  try {
+    const repos = createMemoryRepositories(), vault = new MemoryEvidenceStore();
+    const scope = (ownUnit.route as typeof ownUnit.route & { placeHunt: HuntSourceScope }).placeHunt;
+    assert.equal(scope.website, own.ownWebAddress);
+    assert.equal(ownUnit.route.executorClass, "DETERMINISTIC");
+    await ensureEntity(facts.query, { id: own.jurisdictionId, kind: "government", name: own.name, state: own.stateCode, parentId: null });
+    const calendar = new URL("/meetings.ics", scope.website).href;
+    const seen: string[] = [];
+    const scheduled = scheduleObligation(ownUnit.obligation, Date.parse(T0));
+    assert.ok("cadenceHours" in scheduled);
+    const attempt = beginAttempt({ routeTaskId: "rt-free-meetings", workItemId: "wi-free-meetings",
+      worker: { role: "ACQUIRER", provider: "test", version: "1", instance: "test" },
+      lease: claim("rt-free-meetings", "test", T0, 30_000, null), now: T0, methodVersion: 0, policyVersion: "test" });
+    await repos.attempts.put(attempt.id, attempt, T0);
+    const run = placeSourceExecutor({ repos, scope, query: facts.query, now: () => T0,
+      readHeldPage: async () => null, spaceOut: async () => {},
+      vault: async (artifact, body) => {
+        const stored = await putArtifact(vault, "freshness", artifact, Buffer.from(body));
+        return { stored: true, where: stored.key, why: "saved" };
+      },
+      open: async ({ url }) => {
+        seen.push(url);
+        const body = url.endsWith("/robots.txt") ? "User-agent: *\nDisallow: /\n"
+          : url === calendar ? "BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:City Council meeting\nDTSTART:20261031T170000Z\nEND:VEVENT\nEND:VCALENDAR"
+          : `<main><h1>City Council</h1><a href="${calendar}">Council meeting calendar</a></main>`;
+        return { status: 200, body, bytes: Buffer.byteLength(body), contentType: url.endsWith(".txt") ? "text/plain" : url === calendar ? "text/calendar" : "text/html",
+          durationMs: 1, transportError: null };
+      } });
+    const result = await run({ obligation: scheduled, workItemId: "wi-free-meetings", routeTaskId: "rt-free-meetings",
+      attemptId: attempt.id, holder: "test", executor: "DETERMINISTIC", bound: { maxAttempts: 1, maxWallMs: 30_000 } });
+    assert.equal(result.kind, "DISPOSED", result.detail);
+    assert.equal(result.ranAs, "DETERMINISTIC");
+    assert.equal(result.cost?.usd, 0);
+    assert.ok((result.cost?.requestCount ?? 0) > 0, "the free route made real source requests");
+    assert.ok(seen.some(url => new URL(url).href === new URL(scope.website).href), "the registered government's own page was read");
+    assert.ok(seen.includes(calendar), "the calendar linked by that page was read");
+    const saved = await repos.discoveryAttempts.read(own.jurisdictionId);
+    assert.ok(saved.some(attempt => attempt.found.some(source => source.url === calendar)), "the acquired calendar enters the existing discovery path");
+    assert.ok((await repos.boxFindings.list()).length > 0, "source findings enter the existing Box");
+  } finally {
+    await facts.pg.close();
+  }
+});
+
+test("an Admin order still creates its paid hunt packet beside the free meeting reads", async () => {
+  const repos = createMemoryRepositories();
+  const accepted = await submit({ type: "fleet.deployHere", subject: "fleet", input: { note: "Send agents to Tucson AZ. Fill OFF-17 portraits first.", budgetUsd: 1 },
+    stateVersion: null, idempotencyKey: "hn01-paid-dispatch", caller: "OWNER_SESSION", actorRef: "test-owner" },
+  { repos, now: () => T0, currentStateVersion: null, codeSha: null, readPlaceScore: async () => null, wake: null });
+  assert.equal(accepted.ok, true, accepted.receipt.says);
+  const [intent] = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch;
+  assert.equal(intent.budgetUsd, 1);
+  const place = "ocd-division/country:us/state:az/place:tucson";
+  const target = { ...dispatchWorkTarget({ intentId: intent.intentId, note: intent.note!, requestedAt: intent.requestedAt }), budgetUsd: intent.budgetUsd };
+  const { world } = await cycleWorld(repos, T0);
+  const plan = planDispatchWork({ targets: [target], world: { ...world, packetDivisions: new Map([[target.key, [place]]]) } });
+  const applied = await applyDispatchWork(repos, plan, { now: T0 });
+  assert.deepEqual(applied.failed, []);
+  const materialized = new Set((await repos.obligations.list()).map(row => row.id));
+  const paid = buildRegistry([huntPacketsProvider({ materialized: () => ({ ids: materialized }) })], { root: ROOT, nowIso: T0 });
+  const packet = paid.units.find(unit => unit.obligation.subjectId === place);
+  assert.ok(packet, "the same Admin order still owns a hunt packet for its place");
+  assert.equal(packet.route.executorClass, "BOUNDED_MODEL_WORKER", "free meeting reads do not replace the ordered paid hunt");
+  const synced = await syncObligations(repos, [packet.obligation], T0);
+  const occurrence = await openOccurrence(repos, { obligation: synced.all[0], dueAt: T0, now: T0 });
+  assert.ok(occurrence);
+  assert.equal(occurrence.routeTask.state, "PENDING");
+  assert.equal(occurrence.routeTask.routeId, "hunter:packet");
+  assert.deepEqual(occurrence.workItem.autonomousPlan?.ownerInstructions, [intent.intentId]);
+  const next = await nextAutonomousOperation({ repos, now: () => T0, methodVersion: 0,
+    readEvidence: async () => { throw new Error("No evidence read is needed to schedule the paid hunt"); },
+    independentContext: async () => { throw new Error("No audit is needed to schedule the paid hunt"); } }, occurrence.workItem.id);
+  assert.equal(next.action, "SCOUT");
+  assert.equal(next.task?.id, occurrence.routeTask.id, "the ordered paid task is handed to the hunter, not replaced by the free route");
+  assert.equal(readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch[0].budgetUsd, 1,
+    "materializing the paid job preserves the owner's budget");
+});
+
+test("a pause holds paid work, never free work: hunts are not stopped while paused, and Box publishing still runs", () => {
+  const planner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
+  assert.match(planner, /if\(!dry && !filteredCycle && !huntsPaused\)await deactivateUnfundedHunts\(repos,fundedRefs,NOW\);/);
+  const runner = readFileSync(join(ROOT, "scripts/routine-civic-data-runner.mts"), "utf8");
+  const read = runner.slice(runner.indexOf("async function readHuntSourceTasks("));
+  assert.ok(read.indexOf("publishBoxFindings(") > 0 && read.indexOf("publishBoxFindings(") < read.indexOf("if (intents.runnerPause.paused) return [];"),
+    "the free Box publishing pass runs before the pause can return");
 });
 
 test("candidate enrichment enumerates the tracked states and names one with no ballot authority", async () => {

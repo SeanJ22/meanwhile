@@ -1,0 +1,48 @@
+{
+  "doorId": "ar-sebastian-general-election-notice-2026",
+  "sites": [],
+  "rules": [],
+  "sources": [],
+  "blanks": [
+    {
+      "id": "ar-sebastian-general-election-notice-2026:extraction:dcbea26708d7",
+      "doorId": "ar-sebastian-general-election-notice-2026",
+      "scope": {
+        "state": "AR",
+        "ocdId": "ocd-division/country:us/state:ar/county:sebastian",
+        "name": "Sebastian County",
+        "countyFips": "05131"
+      },
+      "status": "open",
+      "reason": "extraction",
+      "owed": "Published ELECTION_DAY, EARLY_VOTING sites and hours",
+      "tried": [
+        "https://www.sebastiancountyar.gov/robots.txt: HTTP 200",
+        "https://www.sebastiancountyar.gov/robots.txt: robots.txt DISALLOWED for /Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf: longest-match rule in the `*` group is `Disallow: /Portals/` for /Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf — recorded as evidence; the public page is still read",
+        "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf: HTTP 200",
+        "Error: Cannot find package 'pdfjs-dist' imported from /workspace/meanwhile/lib/ballot/voting-source-tables.ts"
+      ],
+      "next": [
+        "Follow the chief election office's current election files and map services",
+        "Read the delegated county or town election office's public lists and files"
+      ]
+    }
+  ],
+  "attempts": [
+    {
+      "url": "https://www.sebastiancountyar.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.sebastiancountyar.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt DISALLOWED for /Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf: longest-match rule in the `*` group is `Disallow: /Portals/` for /Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

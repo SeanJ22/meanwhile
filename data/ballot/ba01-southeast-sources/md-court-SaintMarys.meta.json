@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/SaintMarys.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/SaintMarys.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:55:37.800483+00:00",
+  "rawHash": "f35e9fcf8a9cc7aae899d70ef472ea32c9906230986bcdf53e0bddcc47606b25",
+  "bytes": 528543,
+  "convertedTextHash": "5c3145499550a1ea709b45eec62ee5510265c1805bf79301b222255968d578b3",
+  "extraction": "pdftotext -layout; exact official certified ballot source text; original PDF identified by rawHash"
+}

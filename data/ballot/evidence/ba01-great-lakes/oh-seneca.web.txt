@@ -1,0 +1,247 @@
+ (https://www.boe.ohio.gov/seneca/c/upload/FWAB_11November46Day.pdf)
+【turn583937view1】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 7; Source: open({"ref_id":"https://www.boe.ohio.gov/seneca/c/upload/FWAB_11November46Day.pdf","lineno":60}); Total lines: 248
+L0@P0: Form No. 120 Prescribed by Secretary of State (07-22)
+L1@P0: Election Notice for use with the Federal Write-In Absentee Ballot
+L2@P0: (FWAB)
+L3@P0: R.C. 3511.16
+L4@P0: Issued by the Seneca County Board of Elections
+L5@P0: BOE to check one:  Initial notification (to be posted 100 days prior to date of election)
+L6@P0: XX Updated notification (to be posted 46 days prior to date of election)
+L7@P0: NOVEMBER 3, 2026, GENERAL ELECTION
+L8@P0: (month, date, year, primary/general/special)
+L9@P0: State Executive Offices
+L10@P0: (Governor, Attorney General, Auditor of State, Secretary of State, Treasurer of State)
+L11@P0: Name of Candidate Office Party Precincts
+L12@P0: Amy Acton/David Pepper For Governor and
+L13@P0: Lieutenant Governor
+L14@P0: D All Seneca County
+L15@P0: Don Kissick/James L.
+L16@P0: Mills
+L17@P0: For Governor and
+L18@P0: Lieutenant Governor
+L19@P0: L All Seneca County
+L20@P0: Vivek
+L21@P0: Ramaswamy/Robert A.
+L22@P0: McColley
+L23@P0: For Governor and
+L24@P0: Lieutenant Governor
+L25@P0: R All Seneca County
+L26@P0: Write-in For Governor and
+L27@P0: Lieutenant Governor
+L28@P0: All Seneca County
+L29@P0: Keith Faber For Attorney General R All Seneca County
+L30@P0: John J. Kulewicz For Attorney General D All Seneca County
+L31@P0: Annette Blackwell For Auditor of State D All Seneca County
+L32@P0: Frank LaRose For Auditor of State R All Seneca County
+L33@P0: Tom Pruss For Secretary of State L All Seneca County
+L34@P0: Allison Russo For Secretary of State D All Seneca County
+L35@P0: Robert Sprague For Secretary of State R All Seneca County
+L36@P0: Jay Edwards For Treasurer of State R All Seneca County
+L37@P0-1: Seth Walsh For Treasurer of State D All Seneca CountyOhio Supreme Court
+L38@P1: Name of Candidate Office /Term Party Precincts
+L39@P1: Daniel R. Hawkins For Justice of the
+L40@P1: Supreme Court
+L41@P1: (FTC 01/01/2027)
+L42@P1: R All Seneca County
+L43@P1: Marilyn Zayas For Justice of the
+L44@P1: Supreme Court
+L45@P1: (FTC 01/01/2027)
+L46@P1: D All Seneca County
+L47@P1: Jennifer Brunner For Justice of the
+L48@P1: Supreme Court
+L49@P1: (FTC 01/02/2027)
+L50@P1: D All Seneca County
+L51@P1: Colleen O’Donnell For Justice of the
+L52@P1: Supreme Court
+L53@P1: (FTC 01/02/2027)
+L54@P1: R All Seneca County
+L55@P1: U.S. Senate and U.S. Congress
+L56@P1: Name of Candidate Office /District/Term Party Precincts
+L57@P1: Sherrod Brown For U.S. Senator
+L58@P1: (UTE 1/3/2029)
+L59@P1: D All Seneca County
+L60@P1: Jon Husted For U.S. Senator
+L61@P1: (UTE 1/3/2029)
+L62@P1: R All Seneca County
+L63@P1: Greg Levy For U.S. Senator
+L64@P1: (UTE 1/3/2029)
+L65@P1: Other
+L66@P1: Party
+L67@P1: All Seneca County
+L68@P1: William B. Redpath For U.S. Senator
+L69@P1: (UTE 1/3/2029)
+L70@P1: L All Seneca County
+L71@P1: Write-in For U.S. Senator
+L72@P1: (UTE 1/3/2029)
+L73@P1: All Seneca County
+L74@P1: Bob Latta For Representative to
+L75@P1: Congress (5
+L76@P1: th District)
+L77@P1: R All Seneca County
+L78@P1: Brian A. Shaver For Representative to
+L79@P1: Congress (5th District)
+L80@P1: D All Seneca County
+L81@P1: Michael J. Veloff For Representative to
+L82@P1: Congress (5th District)
+L83@P1-2: L All Seneca CountyOhio General Assembly (Ohio Senate and Ohio House of Representatives)
+L84@P2: Name of Candidate Office /District/Term Party Precincts
+L85@P2: Gary Click For State
+L86@P2: Representative
+L87@P2: (88th District)
+L88@P2: R All Seneca County
+L89@P2: Aaron W. Jones For State
+L90@P2: Representative
+L91@P2: (88th District)
+L92@P2: D All Seneca County
+L93@P2: Ohio Court of Appeals 3
+L94@P2: rd District
+L95@P2: Name of Candidate Office /Term Party Precincts
+L96@P2: Mark C. Miller For Judge of the Court
+L97@P2: of Appeals (3rd District)
+L98@P2: (FTC 2-9-2027)
+L99@P2: R All Seneca County
+L100@P2: County Court of Common Pleas or County Court
+L101@P2: Name of Candidate Office /Division/Term Party Precincts
+L102@P2: Jay A. Meyer For Judge of the Court
+L103@P2: of Common Pleas
+L104@P2: (Probate Division)
+L105@P2: (FTC 02-09-2027)
+L106@P2: All Seneca County
+L107@P2: County Administrative Offices (County Commissioner or County Council, Prosecuting
+L108@P2: Attorney, Clerk of the Court of Common Pleas, Sheriff, County Recorder, County Treasurer,
+L109@P2: County Engineer, Coroner, County Auditor, and Municipal Court Clerk)
+L110@P2: Name of Candidate Office /District/Term Party Precincts
+L111@P2: Bill Frankart For County
+L112@P2: Commissioner
+L113@P2: (Full term commencing 1-1-
+L114@P2: 2027)
+L115@P2: R All Seneca County
+L116@P2: David G. Zielger For County
+L117@P2: Commissioner
+L118@P2: (Full term commencing 1-1-
+L119@P2: 2027)
+L120@P2: All Seneca County
+L121@P2-3: Julie A. Adkins For County Auditor R All Seneca CountyState Issues
+L122@P3: Number Title Precincts
+L123@P3: 3
+L124@P3: Issue 3
+L125@P3: Proposed Constitutional Amendment
+L126@P3: TO REQUIRE VOTERS TO PRESENT PHOTO
+L127@P3: IDENTIFICATION IN ORDER TO VOTE
+L128@P3: Proposed by Joint Resolution of the General
+L129@P3: Assembly
+L130@P3: To enact Section 5 of Article V of the
+L131@P3: Constitution of the State of Ohio
+L132@P3: A majority yes vote is required for the adoption of
+L133@P3: Section 5.
+L134@P3: This proposed amendment would:
+L135@P3: Require voters to present an approved form of
+L136@P3: government-issued photo identification in order to
+L137@P3: vote.
+L138@P3: Allow state law to provide for an alternative method
+L139@P3: of verifying a voter’s identity for a voter who has a
+L140@P3: sincere religious objection to being photographed
+L141@P3: and, therefore, does not possess an approved form
+L142@P3: of government-issued photo identification.
+L143@P3: Require that voters who do not vote in person
+L144@P3: provide an approved form of government-issued
+L145@P3: photo identification, unless the law authorizes those
+L146@P3: persons to vote by providing a signature and at
+L147@P3: least one other specified unique identifier.
+L148@P3: Define approved forms of government-issued photo
+L149@P3: identification as an unexpired Ohio driver license or
+L150@P3: state identification card; a United States passport or
+L151@P3: passport card; or a United States military
+L152@P3: identification card, Ohio National Guard
+L153@P3: identification card, or United States Department of
+L154@P3: Veterans Affairs identification card.
+L155@P3: If approved, the amendment shall take effect
+L156@P3: immediately.
+L157@P3: A “YES” vote means approval of the
+L158@P3: amendment.
+L159@P3: A “NO” vote means disapproval of the amendment.
+L160@P3-4: All Seneca CountyLocal Questions and Issues
+L161@P4: Number Title Precincts
+L162@P4: A renewal of a tax for the benefit of Old Fort Local
+L163@P4: School District for the purpose of current operating
+L164@P4: expenses and general permanent improvements,
+L165@P4: that the county auditor estimates will collect
+L166@P4: $528,626 annually, at a rate not exceeding 4.30
+L167@P4: mills for current operating expenses and at a rate
+L168@P4: not exceeding 2.00 mills for general permanent
+L169@P4: improvements at a collective rate not exceeding 6.3
+L170@P4: mills for each $1 of taxable value, which amounts to
+L171@P4: $111 for each $100,000 of the county auditor's
+L172@P4: market value, for 5 years, commencing in 2027, first
+L173@P4: due in calendar year 2028. The county auditor has
+L174@P4: certified that the amount by which the carry-over
+L175@P4: balance in the district's general operating budget
+L176@P4: from the preceding fiscal year exceeds the district's
+L177@P4: general fund expenditures made in the preceding
+L178@P4: fiscal year is $0, which is 0% of those expenditures.
+L179@P4: Adams 3, Clinton A2, Liberty A 1 & 2,
+L180@P4: Liberty B1, Pleasant 1, Hopewell A1
+L181@P4: All Bettsville Village
+L182@P4: A renewal of a tax for the benefit of Bettsville Public
+L183@P4: Library for the purpose of current expenses, that the
+L184@P4: county auditor estimates will collect $10,828
+L185@P4: annually, at a rate not exceeding 0.4 mill for each
+L186@P4: $1 of taxable value, which amounts to $10 for each
+L187@P4: $100,000 of the county auditor's market value, for 5
+L188@P4: years, commencing in 2027, first due in calendar
+L189@P4: year 2028.
+L190@P4: All Bettsville Village, Liberty Twp A 2,
+L191@P4: Liberty B1
+L192@P4: A renewal of a tax for the benefit of Seneca County
+L193@P4: for the purpose of providing for the operation of
+L194@P4: community addiction services providers and
+L195@P4: community mental health services providers and the
+L196@P4: acquisition, construction, renovation, financing,
+L197@P4: maintenance, and operation of alcohol and drug
+L198@P4: addiction facilities and mental health facilities in
+L199@P4: Seneca County that the county auditor estimates
+L200@P4: will collect $1,043,000 annually, at a rate not
+L201@P4: exceeding 0.7 mill for each $1 of taxable value,
+L202@P4: which amounts to $18 for each $100,000 of the
+L203@P4: county auditor's market value, for 10 years,
+L204@P4: commencing in 2027, first due in calendar year
+L205@P4: 2028.
+L206@P4-5: All Seneca CountyA renewal of a tax for the benefit of Fostoria City for
+L207@P5: the purpose of current expenses, that the county
+L208@P5: auditor estimates will collect 1,047,593 annually, at
+L209@P5: a rate not exceeding 6 mills for each $1 of taxable
+L210@P5: value, which amounts to $140 for each $100,000 of
+L211@P5: the county auditor's market value, for 5 years,
+L212@P5: commencing in 2027, first due in calendar year
+L213@P5: 2028.
+L214@P5: All of Fostoria
+L215@P5: An additional tax for the benefit of Green Springs
+L216@P5: Village for the purpose of fire protection that the
+L217@P5: county auditor estimates will collect $69,080
+L218@P5: annually, at a rate not exceeding 3 mills for each $1
+L219@P5: of taxable value, which amounts to $105 for each
+L220@P5: $100,000 of the county auditor's market value, for 5
+L221@P5: years, commencing in 2026, first due in calendar
+L222@P5: year 2027.
+L223@P5: All Greens Springs Village
+L224@P5: Shall the sale of beer, wine and mixed beverages
+L225@P5: be permitted for sale on Sunday by Kamb, LLC dba
+L226@P5: The Quarry Campground an applicant for a C-1, C2, and D-6 liquor permit authorizing off-premise
+L227@P5: sales who is engaged in the business of operating a
+L228@P5: campground and food and beverage carryout at
+L229@P5: 7800 N. Township Rd 70, Tiffin, OH 44883 in this
+L230@P5: precinct?
+L231@P5-6: Bettsville VillageINSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L232@P6: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L233@P6: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of
+L234@P6: downloading a blank, hard copy FWAB to complete by hand, or proceeding through electronic completion of
+L235@P6: the FWAB using the website’s FWAB Wizard.
+L236@P6: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to
+L237@P6: count.
+L238@P6: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before
+L239@P6: the election and the updated election notice issued on the 46
+L240@P6: th day before the election as a guide to:
+L241@P6: (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L242@P6: (2) write the name of your choice of candidate or choice for or against an issue.
+L243@P6: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of
+

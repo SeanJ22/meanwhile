@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?where=STATE%3D%2727%27&outFields=GEOID%2CNAME%2CSDUNI&returnGeometry=false&f=json",
+  "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?where=STATE%3D%2727%27&outFields=GEOID%2CNAME%2CSDUNI&returnGeometry=false&f=json",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:41:13.708147+00:00",
+  "rawHash": "0a3ada02807b07b488a460ca8474e148cb1a074d2b4acf73ab0b970823158a5d"
+}

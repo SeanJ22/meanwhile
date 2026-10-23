@@ -1538,6 +1538,82 @@
             "collectedAt": "2026-10-14T05:24:31.208593+00:00",
             "verifiedAt": "2026-10-14T05:24:31.208593+00:00"
           }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-county-auditor",
+          "electionId": "sd-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:sd/county:minnehaha",
+          "divisionVintage": "2026",
+          "title": "County Auditor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "County Auditor | Minnehaha | Curt Deedrich | DEM"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-sheriff",
+          "electionId": "sd-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:sd/county:minnehaha",
+          "divisionVintage": "2026",
+          "title": "Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "Sheriff | Minnehaha | Josh Phillips | REP"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-register-of-deeds",
+          "electionId": "sd-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:sd/county:minnehaha",
+          "divisionVintage": "2026",
+          "title": "Register of Deeds",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "Register of Deeds | Minnehaha | Riley Karsky | REP"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-county-commissioner-at-large",
+          "electionId": "sd-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:sd/county:minnehaha",
+          "divisionVintage": "2026",
+          "title": "County Commissioner At Large",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "County Commissioner At Large | Minnehaha | Kenny Anderson Jr | DEM"
+          }
         }
       ],
       "candidacies": [
@@ -4388,6 +4464,159 @@
             "collectedAt": "2026-10-14T16:13:26.470330+00:00",
             "verifiedAt": "2026-10-14T16:13:26.470330+00:00"
           }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-county-auditor-curt-deedrich",
+          "contestId": "sd-minnehaha-general-2026-county-auditor",
+          "familyName": "Curt Deedrich",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "County Auditor | Minnehaha | Curt Deedrich | DEM"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-county-auditor-leah-g-anderson",
+          "contestId": "sd-minnehaha-general-2026-county-auditor",
+          "familyName": "Leah G Anderson",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "County Auditor | Minnehaha | Leah G Anderson | REP"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-sheriff-josh-phillips",
+          "contestId": "sd-minnehaha-general-2026-sheriff",
+          "familyName": "Josh Phillips",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "Sheriff | Minnehaha | Josh Phillips | REP"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-register-of-deeds-riley-karsky",
+          "contestId": "sd-minnehaha-general-2026-register-of-deeds",
+          "familyName": "Riley Karsky",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "Register of Deeds | Minnehaha | Riley Karsky | REP"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-county-commissioner-at-large-kenny-anderson-jr",
+          "contestId": "sd-minnehaha-general-2026-county-commissioner-at-large",
+          "familyName": "Kenny Anderson Jr",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "County Commissioner At Large | Minnehaha | Kenny Anderson Jr | DEM"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-county-commissioner-at-large-curt-soehl",
+          "contestId": "sd-minnehaha-general-2026-county-commissioner-at-large",
+          "familyName": "Curt Soehl",
+          "givenName": "",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "County Commissioner At Large | Minnehaha | Curt Soehl | IND"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-county-commissioner-at-large-brent-r-hoffman",
+          "contestId": "sd-minnehaha-general-2026-county-commissioner-at-large",
+          "familyName": "Brent R Hoffman",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "County Commissioner At Large | Minnehaha | Brent R Hoffman | REP"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-county-commissioner-at-large-jen-bleyenberg",
+          "contestId": "sd-minnehaha-general-2026-county-commissioner-at-large",
+          "familyName": "Jen Bleyenberg",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "County Commissioner At Large | Minnehaha | Jen Bleyenberg | REP"
+          }
+        },
+        {
+          "id": "sd-minnehaha-general-2026-county-commissioner-at-large-rick-bonander",
+          "contestId": "sd-minnehaha-general-2026-county-commissioner-at-large",
+          "familyName": "Rick Bonander",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+            "sourceOrg": "South Dakota Secretary of State",
+            "collectedAt": "2026-10-20T22:58:21.778070+00:00",
+            "verifiedAt": "2026-10-20T22:58:21.778070+00:00",
+            "quote": "County Commissioner At Large | Minnehaha | Rick Bonander | REP"
+          }
         }
       ],
       "measures": [
@@ -4453,18 +4682,19 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:13:26.470330+00:00",
-    "reviewedBy": "BL-15 official-source script conversion",
+    "reviewedAt": "2026-10-20T23:59:55.217268+00:00",
+    "reviewedBy": "Codex BA-01 official county source replay",
     "sources": [
       {
         "requestedUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
         "finalUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
         "httpStatus": 200,
         "rawHash": "16c5b2020bf5d6eb52e635c687694dca0e27a2920b5e859c70739b7198d67142",
-        "retrievedAt": "2026-10-14T16:13:26.470330+00:00",
+        "retrievedAt": "2026-10-20T22:58:21.778070+00:00",
         "publisher": "South Dakota Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Full official public 2026 General Election Candidate List CSV export: all 745 rows, including 178 active candidacies across all 81 federal, statewide and legislative contests. ExportToCsvButton returned the entire unfiltered statewide roster. The three expressly withdrawn federal/legislative rows were excluded. Every published active candidacy in each contest is retained; mailing addresses are omitted."
+        "reviewedEvidence": "Complete official2026 general CSV export, Minnehaha county. Nine active candidates in four expressly countywide offices. Conservation district scope and commission vote count remain separate sample work; no electorate widened.",
+        "reviewOutcome": "SUPPORTED"
       },
       {
         "requestedUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
@@ -4625,6 +4855,16 @@
         "publisher": "South Dakota Unified Judicial System",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official UJS announcement states that Janine M. Kern retired December 8, 2025."
+      },
+      {
+        "requestedUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+        "finalUrl": "https://vip.sdsos.gov/candidatelist.aspx?eid=774",
+        "httpStatus": 200,
+        "rawHash": "16c5b2020bf5d6eb52e635c687694dca0e27a2920b5e859c70739b7198d67142",
+        "retrievedAt": "2026-10-14T16:13:26.470330+00:00",
+        "publisher": "South Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Full official public 2026 General Election Candidate List CSV export: all 745 rows, including 178 active candidacies across all 81 federal, statewide and legislative contests. ExportToCsvButton returned the entire unfiltered statewide roster. The three expressly withdrawn federal/legislative rows were excluded. Every published active candidacy in each contest is retained; mailing addresses are omitted."
       }
     ]
   }

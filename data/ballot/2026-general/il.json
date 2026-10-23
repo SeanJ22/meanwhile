@@ -3105,6 +3105,139 @@
             "verifiedAt": "2026-10-14T16:24:04.866633+00:00",
             "doorId": "fec-il-chief"
           }
+        },
+        {
+          "id": "il-ba01-for-representative-in-the-general-assembly-ninety-ninth-representative-district-sldl-99",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/sldl:99",
+          "divisionVintage": "2026",
+          "title": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY NINETY-NINTH REPRESENTATIVE DISTRICT",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+            "sourceOrg": "Brown County Clerk and Recorder",
+            "collectedAt": "2026-10-21T00:08:12.638933+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY NINETY-NINTH REPRESENTATIVE DISTRICT"
+          }
+        },
+        {
+          "id": "il-ba01-brown-county-for-county-clerk-and-recorder-county-brown",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:brown",
+          "divisionVintage": "2026",
+          "title": "Brown County — FOR COUNTY CLERK AND RECORDER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+            "sourceOrg": "Brown County Clerk and Recorder",
+            "collectedAt": "2026-10-21T00:08:12.638933+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Brown County — FOR COUNTY CLERK AND RECORDER"
+          }
+        },
+        {
+          "id": "il-ba01-brown-county-for-county-treasurer-county-brown",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:brown",
+          "divisionVintage": "2026",
+          "title": "Brown County — FOR COUNTY TREASURER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+            "sourceOrg": "Brown County Clerk and Recorder",
+            "collectedAt": "2026-10-21T00:08:12.638933+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Brown County — FOR COUNTY TREASURER"
+          }
+        },
+        {
+          "id": "il-ba01-brown-county-for-county-sheriff-county-brown",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:brown",
+          "divisionVintage": "2026",
+          "title": "Brown County — FOR COUNTY SHERIFF",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+            "sourceOrg": "Brown County Clerk and Recorder",
+            "collectedAt": "2026-10-21T00:08:12.638933+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Brown County — FOR COUNTY SHERIFF"
+          }
+        },
+        {
+          "id": "il-ba01-sangamon-county-for-county-clerk-county-sangamon",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:sangamon",
+          "divisionVintage": "2026",
+          "title": "Sangamon County — FOR COUNTY CLERK",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+            "sourceOrg": "Sangamon County Clerk",
+            "collectedAt": "2026-10-21T00:10:34.573767+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Sangamon County — FOR COUNTY CLERK"
+          }
+        },
+        {
+          "id": "il-ba01-sangamon-county-for-county-treasurer-county-sangamon",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:sangamon",
+          "divisionVintage": "2026",
+          "title": "Sangamon County — FOR COUNTY TREASURER",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+            "sourceOrg": "Sangamon County Clerk",
+            "collectedAt": "2026-10-21T00:10:34.573767+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Sangamon County — FOR COUNTY TREASURER"
+          }
+        },
+        {
+          "id": "il-ba01-sangamon-county-for-county-sheriff-county-sangamon",
+          "electionId": "il-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:il/county:sangamon",
+          "divisionVintage": "2026",
+          "title": "Sangamon County — FOR COUNTY SHERIFF",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+            "sourceOrg": "Sangamon County Clerk",
+            "collectedAt": "2026-10-21T00:10:34.573767+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Sangamon County — FOR COUNTY SHERIFF"
+          }
         }
       ],
       "candidacies": [
@@ -7442,6 +7575,142 @@
             "verifiedAt": "2026-10-14T16:27:24.028946Z",
             "doorId": "fec-il-chief"
           }
+        },
+        {
+          "id": "il-ba01-for-representative-in-the-general-assembly-ninety-ninth-representative-district-sldl-99-candidate-kyle-a-moore",
+          "contestId": "il-ba01-for-representative-in-the-general-assembly-ninety-ninth-representative-district-sldl-99",
+          "givenName": "",
+          "familyName": "Kyle A. Moore",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+            "sourceOrg": "Brown County Clerk and Recorder",
+            "collectedAt": "2026-10-21T00:08:12.638933+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "FOR REPRESENTATIVE IN THE GENERAL ASSEMBLY NINETY-NINTH REPRESENTATIVE DISTRICT | Kyle A. Moore | REPUBLICAN"
+          }
+        },
+        {
+          "id": "il-ba01-brown-county-for-county-clerk-and-recorder-county-brown-candidate-jenny-welty",
+          "contestId": "il-ba01-brown-county-for-county-clerk-and-recorder-county-brown",
+          "givenName": "",
+          "familyName": "Jenny Welty",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+            "sourceOrg": "Brown County Clerk and Recorder",
+            "collectedAt": "2026-10-21T00:08:12.638933+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Brown County — FOR COUNTY CLERK AND RECORDER | Jenny Welty | DEMOCRATIC"
+          }
+        },
+        {
+          "id": "il-ba01-brown-county-for-county-treasurer-county-brown-candidate-heather-mcclelland",
+          "contestId": "il-ba01-brown-county-for-county-treasurer-county-brown",
+          "givenName": "",
+          "familyName": "Heather McClelland",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+            "sourceOrg": "Brown County Clerk and Recorder",
+            "collectedAt": "2026-10-21T00:08:12.638933+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Brown County — FOR COUNTY TREASURER | Heather McClelland | REPUBLICAN"
+          }
+        },
+        {
+          "id": "il-ba01-brown-county-for-county-sheriff-county-brown-candidate-justin-d-oliver",
+          "contestId": "il-ba01-brown-county-for-county-sheriff-county-brown",
+          "givenName": "",
+          "familyName": "Justin D. Oliver",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+            "sourceOrg": "Brown County Clerk and Recorder",
+            "collectedAt": "2026-10-21T00:08:12.638933+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Brown County — FOR COUNTY SHERIFF | Justin D. Oliver | REPUBLICAN"
+          }
+        },
+        {
+          "id": "il-ba01-sangamon-county-for-county-clerk-county-sangamon-candidate-don-gray",
+          "contestId": "il-ba01-sangamon-county-for-county-clerk-county-sangamon",
+          "givenName": "",
+          "familyName": "Don Gray",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+            "sourceOrg": "Sangamon County Clerk",
+            "collectedAt": "2026-10-21T00:10:34.573767+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Sangamon County — FOR COUNTY CLERK | Don Gray | REPUBLICAN"
+          }
+        },
+        {
+          "id": "il-ba01-sangamon-county-for-county-treasurer-county-sangamon-candidate-joe-aiello",
+          "contestId": "il-ba01-sangamon-county-for-county-treasurer-county-sangamon",
+          "givenName": "",
+          "familyName": "Joe Aiello",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+            "sourceOrg": "Sangamon County Clerk",
+            "collectedAt": "2026-10-21T00:10:34.573767+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Sangamon County — FOR COUNTY TREASURER | Joe Aiello | REPUBLICAN"
+          }
+        },
+        {
+          "id": "il-ba01-sangamon-county-for-county-sheriff-county-sangamon-candidate-paula-crouch",
+          "contestId": "il-ba01-sangamon-county-for-county-sheriff-county-sangamon",
+          "givenName": "",
+          "familyName": "Paula Crouch",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+            "sourceOrg": "Sangamon County Clerk",
+            "collectedAt": "2026-10-21T00:10:34.573767+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Sangamon County — FOR COUNTY SHERIFF | Paula Crouch | REPUBLICAN"
+          }
+        },
+        {
+          "id": "il-ba01-sangamon-county-for-county-sheriff-county-sangamon-candidate-marc-bell",
+          "contestId": "il-ba01-sangamon-county-for-county-sheriff-county-sangamon",
+          "givenName": "",
+          "familyName": "Marc Bell",
+          "partyLabel": "DEMOCRATIC",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+            "sourceOrg": "Sangamon County Clerk",
+            "collectedAt": "2026-10-21T00:10:34.573767+00:00",
+            "verifiedAt": "2026-10-21T00:14:33.754649Z",
+            "quote": "Sangamon County — FOR COUNTY SHERIFF | Marc Bell | DEMOCRATIC"
+          }
         }
       ],
       "measures": [],
@@ -7458,7 +7727,8 @@
         "House 79 spans Cook, Grundy, Kankakee and Will counties. Official Kankakee and Grundy countywide masters supply the acquired candidate facts; complete Cook and Will county components remain unacquired. Kankakee government links a primary-election results service; no government link to the separate hosted general-election candidate roster was acquired.",
         "House 118 spans Alexander, Jackson, Pulaski, Union and Williamson counties. The acquired Williamson ballot supplies candidate facts only. Public Williamson and Pulaski services list primary-election data, Jackson’s acquired November notice lists offices without nominees, the Union public results door returned 500 and its candidate-filings door required login, and Alexander’s acquired clerk page supplied no qualifying general-election inventory. The complete official district candidate set remains unacquired.",
         "All 17 U.S. House districts are acquired. State Senate districts 27 and State House districts 2, 17, 30, 37, 38, 44, 53, 54, 63, 80, 86, 97, 98, 99, 103, 104 remain unacquired after searches of public State Board and county nominee inventories.",
-        "The Chicago Board candidate list is dated August 19, 2026 and lists whole district offices intersecting Chicago. Candidate rows are included; Removed and Withdrawn rows are excluded."
+        "The Chicago Board candidate list is dated August 19, 2026 and lists whole district offices intersecting Chicago. Candidate rows are included; Removed and Withdrawn rows are excluded.",
+        "BA-01: Brown and Sangamon official November 3 sample ballots add House District 99 and three countywide offices in each county. Every named candidate and printed party in those races is preserved; No Candidate and blank write-in lines are not people. County board, regional education, judicial and other local contests remain standing acquisition work."
       ]
     }
   },
@@ -8137,6 +8407,56 @@
         "publisher": "DeKalb County Clerk and Recorder",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official November 3, 2026 Referenda publication lists local school-district questions. This does not establish the statewide measure inventory or the absence of statewide measures."
+      },
+      {
+        "requestedUrl": "https://npin.cdc.gov/organization/brown-county-health-department",
+        "finalUrl": "https://npin.cdc.gov/organization/brown-county-health-department",
+        "httpStatus": 200,
+        "rawHash": "1dfd301cf112468c07c73f28a7401b12dce802ef6ec2c6a3deedba79f40c15de",
+        "retrievedAt": "2026-10-21T00:08:12.447518+00:00",
+        "publisher": "U.S. Centers for Disease Control and Prevention",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original public bytes retained in data/ballot/evidence/ba01-great-lakes/il-brown-cdc.raw.gz; hash identifies original decompressed bytes. Brown county election host is linked from CDC.gov; Sangamon.gov links the public sample-ballot service. Replay validates election/jurisdiction and complete printed candidate-party blocks."
+      },
+      {
+        "requestedUrl": "https://www.browncoil.org/officials/county-clerk-recorder/elections/",
+        "finalUrl": "https://www.browncoil.org/officials/county-clerk-recorder/elections/",
+        "httpStatus": 200,
+        "rawHash": "6da348204b02c08404822d9d2941d96d93842208d90a41e49da617e7a938a435",
+        "retrievedAt": "2026-10-21T00:11:09.286774+00:00",
+        "publisher": "Brown County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public bytes retained in data/ballot/evidence/ba01-great-lakes/il-brown-parent.raw.gz; hash identifies original decompressed bytes. Brown county election host is linked from CDC.gov; Sangamon.gov links the public sample-ballot service. Replay validates election/jurisdiction and complete printed candidate-party blocks."
+      },
+      {
+        "requestedUrl": "https://sangamonil.gov/departments/a-c/county-clerk/elections/vote/where-do-i-vote-view-a-sample-ballot",
+        "finalUrl": "https://sangamonil.gov/departments/a-c/county-clerk/elections/vote/where-do-i-vote-view-a-sample-ballot",
+        "httpStatus": 200,
+        "rawHash": "5534b80c2d1404c76d4b0774fd404e524fff968e86ac4d94b7f8ffaba29e4ebc",
+        "retrievedAt": "2026-10-21T00:11:19.052009+00:00",
+        "publisher": "Sangamon County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public bytes retained in data/ballot/evidence/ba01-great-lakes/il-sangamon-parent.raw.gz; hash identifies original decompressed bytes. Brown county election host is linked from CDC.gov; Sangamon.gov links the public sample-ballot service. Replay validates election/jurisdiction and complete printed candidate-party blocks."
+      },
+      {
+        "requestedUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+        "finalUrl": "https://www.browncoil.org/wp-content/uploads/2026/09/il_brown_261103_publication_ballot.pdf",
+        "httpStatus": 200,
+        "rawHash": "04056f445aed43a400e25ec9b1cfa38d68032e981d0f45cacfaf7e6c6e597f5a",
+        "retrievedAt": "2026-10-21T00:08:12.638933+00:00",
+        "publisher": "Brown County Clerk and Recorder",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public bytes retained in data/ballot/evidence/ba01-great-lakes/il-brown-sample.raw.gz; hash identifies original decompressed bytes. Brown county election host is linked from CDC.gov; Sangamon.gov links the public sample-ballot service. Replay validates election/jurisdiction and complete printed candidate-party blocks."
+      },
+      {
+        "requestedUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+        "finalUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+        "httpStatus": 200,
+        "rawHash": "bf22b031f08eeeab06a7e52a82f903797aef8ff414768cae825fe0afc67258b2",
+        "retrievedAt": "2026-10-21T00:10:34.573767+00:00",
+        "publisher": "Sangamon County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Original public bytes retained in data/ballot/evidence/ba01-great-lakes/il-sangamon-sample.raw.gz; hash identifies original decompressed bytes. Brown county election host is linked from CDC.gov; Sangamon.gov links the public sample-ballot service. Replay validates election/jurisdiction and complete printed candidate-party blocks."
       }
     ]
   }

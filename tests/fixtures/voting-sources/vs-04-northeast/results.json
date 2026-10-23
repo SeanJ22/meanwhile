@@ -1,0 +1,323 @@
+[
+  {
+    "state": "CT",
+    "sites": 174,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "Statewide current early-voting PDF; 174 listed facilities, with town names.",
+    "remaining": "Election-day polling lists, county/town scope joins, precise hours, and remaining service kinds remain open. The current source page also links an older drop-box file, retained as a lead rather than treated as a newly verified 2026 list.",
+    "sourceIds": [
+      "vs04-ct-state-early"
+    ],
+    "sources": [
+      "https://portal.ct.gov/-/media/sots/electionservices/early-voting/2026/early-voting-locations--november-3--2026.pdf?rev=d5562e4275dd4d1f8e9ec93e8e62d0d7&hash=FB351F2ECA0C7B1DBC22210AEB4D2092"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "DC",
+    "sites": 129,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "District-wide election-day vote-center and ballot-drop-box lists. Both source mappings carry official county-equivalent FIPS 11001 so held DC ZIPs retain the sites.",
+    "remaining": "Precise ward coverage, per-day early-voting schedules and map coordinates remain open. The total counts separate services; shared physical facilities can merge in the read model.",
+    "sourceIds": [
+      "vs04-dc-centers",
+      "vs04-dc-dropboxes"
+    ],
+    "sources": [
+      "https://www.dcboe.org/voters/find-out-where-to-vote/election-day-vote-centers",
+      "https://www.dcboe.org/voters/find-out-where-to-vote/mail-ballot-drop-box-locations"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "DE",
+    "sites": 297,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "Current official GIS app links the live PollingPlaces_And_EarlyVoting_Official dataset; 530 district-assignment rows deduplicate to 278 election-day facilities, plus19 early facilities.",
+    "remaining": "Election-day county joins, precinct polygons and early-voting hours remain open. The separate HTML locations page returned Request Rejected; the official GIS route yielded data without submitting personal information.",
+    "sourceIds": [
+      "vs04-de-de-current-election-sites",
+      "vs04-de-de-current-early-sites"
+    ],
+    "sources": [
+      "https://services1.arcgis.com/bFDgLqS5IyUBQLAd/arcgis/rest/services/PollingPlaces_And_EarlyVoting_Official/FeatureServer/3/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+      "https://services1.arcgis.com/bFDgLqS5IyUBQLAd/arcgis/rest/services/PollingPlaces_And_EarlyVoting_Official/FeatureServer/5/query?f=json&where=1%3D1&outFields=*&returnGeometry=false"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "IL",
+    "sites": 24,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "State and Chicago/Cook routes returned access failures; DuPage County published a current 2026 early-voting list with24 facilities.",
+    "remaining": "Other Illinois counties and election-day lists remain open. State root403, Chicago403 and Cook403 were retained; next use delegated county files and the publicly linked DuPage GIS application.",
+    "sourceIds": [
+      "vs04-il-dupage-early"
+    ],
+    "sources": [
+      "https://www.dupagecounty.gov/elected_officials/election_and_voter_information/voting_information/early_voting_locations.php"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "IN",
+    "sites": 182,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "Official state root was read first; Marion County current public vote-center page embeds182 facility names and addresses.",
+    "remaining": "Other Indiana counties, precinct boundaries, and site schedules remain open. The county also publishes a legacy XLS file; original binary retained, and the structured public HTML route supplies the current parsed data.",
+    "sourceIds": [
+      "vs04-in-marion-centers"
+    ],
+    "sources": [
+      "https://vote.indy.gov/vote-centers/"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "MA",
+    "sites": 164,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "State pages served access-rejection content; Boston current official polling list yields164 physical facilities with source ward/precinct assignments.",
+    "remaining": "Other Massachusetts cities/towns and early-voting lists remain open. Boston companion early-voting page links a public ArcGIS layer for further acquisition.",
+    "sourceIds": [
+      "vs04-ma-boston-polls"
+    ],
+    "sources": [
+      "https://www.boston.gov/departments/elections/city-boston-polling-locations"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "MD",
+    "sites": 102,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "Current state PDF supplies102 early-voting centers; all24 county/Baltimore City counts match their printed counts.",
+    "remaining": "Election-day polling places, precinct polygons, and complete service schedules remain open. Older state HTML locations differ from the newer2026 PDF; only the current PDF supplied sites.",
+    "sourceIds": [
+      "vs04-md-24001-early",
+      "vs04-md-24003-early",
+      "vs04-md-24510-early",
+      "vs04-md-24005-early",
+      "vs04-md-24009-early",
+      "vs04-md-24011-early",
+      "vs04-md-24013-early",
+      "vs04-md-24015-early",
+      "vs04-md-24017-early",
+      "vs04-md-24019-early",
+      "vs04-md-24021-early",
+      "vs04-md-24023-early",
+      "vs04-md-24025-early",
+      "vs04-md-24027-early",
+      "vs04-md-24029-early",
+      "vs04-md-24031-early",
+      "vs04-md-24033-early",
+      "vs04-md-24035-early",
+      "vs04-md-24037-early",
+      "vs04-md-24039-early",
+      "vs04-md-24041-early",
+      "vs04-md-24043-early",
+      "vs04-md-24045-early",
+      "vs04-md-24047-early"
+    ],
+    "sources": [
+      "https://elections.maryland.gov/elections/2026/2026_Early_Voting_Centers-GG-EN.pdf"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "ME",
+    "sites": 1,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "State route403 and Portland route503; Bangor current official election notice supplies its city-wide election-day facility.",
+    "remaining": "Other Maine municipalities and statewide/municipal bulk lists remain open. Bangor notice and voting page are both retained with the current election date, public address and hours.",
+    "sourceIds": [
+      "vs04-me-bangor-election"
+    ],
+    "sources": [
+      "https://www.bangormaine.gov/m/newsflash/home/detail/414"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "MI",
+    "sites": 4,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "State voting and drop-box pages direct voters to a voter lookup; Grand Rapids current official early-voting list supplies4 facilities without identity input.",
+    "remaining": "Other Michigan municipalities and election-day precinct files remain open. Detroit current PDF is image-only under text extraction; its exact PDF and official link are retained for image extraction. Public Grand Rapids precinct/drop-box routes are also available.",
+    "sourceIds": [
+      "vs04-mi-grand-rapids-early"
+    ],
+    "sources": [
+      "https://www.grandrapidsmi.gov/departments/clerks-office/elections/early-voting/"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "NH",
+    "sites": 1,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "State root403 and known clerk lookup has a recorded CAPTCHA; New London current town election page supplies1 polling facility.",
+    "remaining": "Other New Hampshire towns and a statewide public file remain open. No CAPTCHA was solved or gated endpoint called; town election files are the active alternative.",
+    "sourceIds": [
+      "vs04-nh-new-london"
+    ],
+    "sources": [
+      "https://newlondon.nh.gov/?SEC=78EB571E-6FA5-46AB-B16D-CFF45739DF7E&Type=B_BASIC"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "NJ",
+    "sites": 458,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "Statewide current drop-box list supplies458 facilities across21 county sections, each bound to its own printed source section.",
+    "remaining": "Election-day lists outside the existing Morris holding, early-voting files and exact schedules remain open. State polling page exposes a public address lookup; county files continue independently.",
+    "sourceIds": [
+      "vs04-nj-atlantic-dropboxes",
+      "vs04-nj-bergen-dropboxes",
+      "vs04-nj-burlington-dropboxes",
+      "vs04-nj-camden-dropboxes",
+      "vs04-nj-cape-may-dropboxes",
+      "vs04-nj-cumberland-dropboxes",
+      "vs04-nj-essex-dropboxes",
+      "vs04-nj-gloucester-dropboxes",
+      "vs04-nj-hudson-dropboxes",
+      "vs04-nj-hunterdon-dropboxes",
+      "vs04-nj-mercer-dropboxes",
+      "vs04-nj-middlesex-dropboxes",
+      "vs04-nj-monmouth-dropboxes",
+      "vs04-nj-morris-dropboxes",
+      "vs04-nj-ocean-dropboxes",
+      "vs04-nj-passaic-dropboxes",
+      "vs04-nj-salem-dropboxes",
+      "vs04-nj-somerset-dropboxes",
+      "vs04-nj-sussex-dropboxes",
+      "vs04-nj-union-dropboxes",
+      "vs04-nj-warren-dropboxes"
+    ],
+    "sources": [
+      "https://www.nj.gov/state/elections/vote-secure-drop-boxes.shtml"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "NY",
+    "sites": 25,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "State early-voting page directs residents to a lookup; Westchester current county list supplies25 early-voting sites.",
+    "remaining": "Other New York counties, election-day lists and precinct polygons remain open. No voter identity was submitted. NYC lookup page and Westchester replacement-site notice were retained.",
+    "sourceIds": [
+      "vs04-ny-westchester-early"
+    ],
+    "sources": [
+      "https://citizenparticipation.westchestercountyny.gov/voting/early-voting-2026"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "OH",
+    "sites": 88,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "Current state early-voting directory supplies88 county early-voting locations.",
+    "remaining": "Election-day polling facilities, precinct polygons and local hours remain open. County names are printed in each section; county FIPS joins require the runtime registry.",
+    "sourceIds": [
+      "vs04-oh-state-early"
+    ],
+    "sources": [
+      "https://www.ohiosos.gov/directories/early-voting-locations"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "PA",
+    "sites": 683,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "State polling page directs residents to an address lookup; current Philadelphia official workbook supplies1703 ward/division rows deduplicating to683 physical facilities.",
+    "remaining": "Other Pennsylvania counties, precinct polygons, early locations and schedules remain open. The fresh county news page links the current workbook and PDF directly.",
+    "sourceIds": [
+      "vs04-pa-philadelphia-polls"
+    ],
+    "sources": [
+      "https://vote.phila.gov/media/2026_General_Polling_Places.xlsx"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "RI",
+    "sites": 80,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "Current state tables supply41 ballot drop boxes and39 early-voting sites.",
+    "remaining": "Election-day facilities, municipal scope joins and complete hours remain open. Separate service counts can merge at shared physical facilities; no statewide completeness claim is made.",
+    "sourceIds": [
+      "vs04-ri-dropboxes",
+      "vs04-ri-early"
+    ],
+    "sources": [
+      "https://elections.ri.gov/voter-resources/mail-ballot-drop-boxes",
+      "https://elections.ri.gov/voter-resources/person-early-voting-emergency-mail-ballots"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "VT",
+    "sites": 8,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "State root403; current Burlington official ward list supplies8 polling facilities and includes the November2026 changed Ward4 location.",
+    "remaining": "Other Vermont towns and current statewide files remain open. Previously held Bennington/Arlington non-gov source authority gaps remain with those prior records, and do not hold Burlington .gov evidence.",
+    "sourceIds": [
+      "vs04-vt-burlington-polls"
+    ],
+    "sources": [
+      "https://www.burlingtonvt.gov/CT/Maps-Wards-State-Districts-and-Polling-Places"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  },
+  {
+    "state": "WI",
+    "sites": 11,
+    "status": "sites-acquired-production-copy-proof-pending",
+    "coverage": "State root403; current Milwaukee official early-voting page supplies11 facilities.",
+    "remaining": "Other Wisconsin municipalities, election-day facilities and dated schedule extraction remain open. Current official PDF and per-date HTML schedules are retained; no single undated hours value was inferred across different days.",
+    "sourceIds": [
+      "vs04-wi-milwaukee-early"
+    ],
+    "sources": [
+      "https://city.milwaukee.gov/earlyvoting"
+    ],
+    "captureManifest": "captures.json",
+    "readerResults": "read-results.json",
+    "verification": "Generic readVotingSource, exact saved-source hashes and native field extraction. Focused NJ section-reorder, MD county-count and Boston ward-assignment tests and DC ZIP visibility regression pass 4/4. Production-copy proof is owned by production_copy."
+  }
+]

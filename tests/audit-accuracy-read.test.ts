@@ -52,3 +52,9 @@ test("pulled facts are named as pulled; the old coverage report rides as a secon
   assert.equal(r.coverageLine, "100% of the 20 checked results were audited, 20% had a closer second look.");
   assert.equal(coverageLineFrom(null), null);
 });
+
+test('an old audit record that is no longer published stays outside current accuracy',()=>{
+ const reading=weeklyAuditAccuracy({now:NOW,corrections:[],results:[result('a','GREEN','2026-10-04T00:00:00Z'),
+ result('retired','RED','2026-10-03T00:00:00Z'),result('retired','INCONCLUSIVE','2026-10-04T00:00:00Z',{published:false})]});
+ assert.equal(reading.audited,1);assert.equal(reading.accuratePercent,100);assert.equal(reading.wrong,0);assert.equal(reading.couldNotJudge,0);
+});

@@ -30,9 +30,12 @@ test("posted to live counts the hour target inside the 7 days, and never rounds 
     post("2026-09-01T00:00:00Z", 5),
   ] }));
   const r = rows.get("Posted to live")!;
-  assert.equal(r.value, "50%");
-  assert.match(r.counts!, /2 of 4 changes live within an hour · 1 not live yet · 2 timed from the body's own posting, 1 from when we first saw it/);
-  assert.match(r.says, /slowest took 3\.3 hours/);
+  assert.equal(r.value, "at least 50%");
+  assert.match(r.counts!, /2 of 4 changes confirmed live within an hour · 1 without a delivery stamp · 2 timed from the body's own posting, 1 from when we first saw it/);
+  assert.match(r.says, /slowest confirmed change took 3\.3 hours/);
+  const seen=doorRows(base({posting:[{...post("2026-10-04T00:00:00Z",null),pageSeenAt:"2026-10-04T02:00:00Z"}]})).get("Posted to live")!;
+  assert.match(seen.says,/hourly check saw 1 of the unstamped changes live/);
+  assert.doesNotMatch(seen.says,/not live/);
 });
 
 test("overdue doors show the late count against open doors and the facts behind them", () => {

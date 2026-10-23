@@ -73,3 +73,13 @@ test("the installed plain-Node timer loads and writes a configured brief without
  const result=spawnSync(process.execPath,["--experimental-strip-types","--input-type=module","-e",code],{cwd:process.cwd(),env:{...process.env,DATABASE_URL:"",FEEDBACK_DATABASE_URL:"",WTP_CONTROL_PLANE_DATABASE_URL:"",WTP_ASSET_STORE:""},encoding:"utf8",timeout:15_000});
  assert.equal(result.status,0,result.stderr);
 });
+
+test('hourly line-keeper findings do not prevent the scheduled daily brief from gathering its wins and decisions',async()=>{
+ const repos=createMemoryRepositories(),config=defaultAdminConfig(at);
+ const provisional={...projectBrief(config,[],at),lineKeeperOnly:true,problems:[{key:'line-keeper:broken',what:'The line is broken',owner:'diggers',next:'Restore useful output'}]};
+ await repos.adminConfig.put(ADMIN_CONFIG_ID,{...config,settings:{[BRIEF_TIME_SETTING]:'09:00'},latestBrief:provisional},at);
+ const read=async():Promise<BriefReading>=>({fresh:{...projectBrief(config,[],at),problems:provisional.problems,decisions:[{key:'order',what:'A real decision',next:'Review it'}]},latest:provisional,alertsOn:false});
+ assert.equal(await writeDailyBrief(repos,at,read),true);
+ const held=await repos.adminConfig.mustRead(ADMIN_CONFIG_ID);assert.equal(held.value.latestBrief?.lineKeeperOnly,undefined);assert.equal(held.value.latestBrief?.decisions.length,1);assert.equal(held.value.latestBrief?.problems[0].owner,'diggers');
+ assert.equal(await writeDailyBrief(repos,at,read),false);
+});

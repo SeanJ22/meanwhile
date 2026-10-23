@@ -3,6 +3,7 @@ import { TRANSLATION_SCOPE, translationScope, translationRecordIssue, type Trans
 import { translationProjectionProblems, type TranslationProjection } from "./projection-contract.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "../ballot/types.ts";
+import { measureLabels, pageNamesMeasure } from "./routine-measure-pages.ts";
 
 export async function readTranslationProjection(options: PromotedCivicDataReadOptions & { scope?: string } = {}) {
   const { scope = TRANSLATION_SCOPE, ...readOptions } = options;
@@ -28,11 +29,27 @@ export async function readTranslations(divisions: readonly string[], options: Pr
 /** Only the loaded ballot's exact subjects and currently held source hashes attach. */
 export function withMeasureTranslations(ballot: BallotSet, records: readonly TranslationRecord[]): BallotSet {
   const current = ballot.measureRecords ?? [];
-  const translated = current.map(record => {
-    const contest = ballot.contests.find(row => row.id === record.contestId && row.type === "MEASURE");
-    const translation = records.find(row => row.kind === "MEASURE" && row.subjectId === record.contestId && row.ocdId === contest?.ocdId &&
-      row.sourceUrl === record.sourceUrl && (row.sourceHash === record.sourceHash || Date.parse(row.retrievedAt) >= Date.parse(record.writtenAt)) && !translationRecordIssue(row));
-    return translation?.kind === "MEASURE" ? translation.measure : record;
-  });
-  return translated.some((row, at) => row !== current[at]) ? { ...ballot, measureRecords: translated } : ballot;
+  const translated = [...current];
+  for (const contest of ballot.contests.filter(row => row.type === "MEASURE")) {
+    const at = translated.findIndex(row => row.contestId === contest.id), prior = translated[at];
+    const measure = ballot.measures?.find(row => row.contestId === contest.id);
+    const analysis = ballot.measureAnalyses?.analyses.find(row => row.contestId === contest.id);
+    // These are the sources the existing ballot card links. Keep the explainer
+    // attached to the exact contest and a source readers can follow there.
+    const sources = new Set([prior?.sourceUrl, measure?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance?.sourceUrl].filter(Boolean));
+    // A page found on the election office's own site is not linked by the ballot card. Its saved text
+    // must name this exact measure, as it had to when the explainer was written and checked.
+    const names = measureLabels({ title: contest.title, questionText: measure?.questionText, officialNumber: measure?.officialNumber, analysisText: analysis?.text });
+    const translation = records.filter(row => row.kind === "MEASURE" && row.subjectId === contest.id && row.ocdId === contest.ocdId &&
+      (sources.has(row.sourceUrl) || pageNamesMeasure(row.sourceText, names)) && (!prior || row.sourceHash === prior.sourceHash || Date.parse(row.retrievedAt) >= Date.parse(prior.writtenAt)) &&
+      !translationRecordIssue(row)).sort((a, b) => Date.parse(b.retrievedAt) - Date.parse(a.retrievedAt) || Date.parse(b.writtenAt) - Date.parse(a.writtenAt))[0];
+    if (translation?.kind !== "MEASURE") continue;
+    // Legacy reaction targets remain available while the summary and vote
+    // meanings acquire independent sentence checks.
+    const parts = prior?.parts.filter(part => !translation.measure.parts.some(row => row.id === part.id)) ?? [];
+    const record = parts.length ? { ...translation.measure, parts: [...translation.measure.parts, ...parts] } : translation.measure;
+    if (at < 0) translated.push(record);
+    else translated[at] = record;
+  }
+  return translated.length !== current.length || translated.some((row, at) => row !== current[at]) ? { ...ballot, measureRecords: translated } : ballot;
 }

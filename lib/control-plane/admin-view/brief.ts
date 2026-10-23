@@ -36,6 +36,8 @@ export async function readerQuestionRows(repos: Pick<ControlPlaneRepositories, "
 
 export interface BriefSnapshot {
   readonly day: string; readonly createdAt: string;
+  /** Hourly findings may arrive before the scheduled daily snapshot. */
+  readonly lineKeeperOnly?:boolean;
   readonly updates: readonly UpdateLine[];
   readonly problems: readonly {key:string;what:string;owner:string;next:string}[];
   readonly decisions: readonly {key:string;what:string;next:string}[];
@@ -78,18 +80,25 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   const fixes=v6FixesView(fixQueueView(collapseDecisionLog([])),fixItems(config));
   const rows=buildQueue({receipts:history?.data as readonly UiReceipt[]|null ?? null,stuck:stuck as readonly StuckItem[]|null,fixes,sends:null,hunts:null,doors,scheduled:scheduledView(config,at).rows});
   if(reports?.sites.some(s=>s.kind==="READ"&&s.total>s.rows.length))unread.push("older reader problems outside the current page");
-  const fresh=projectBrief(config,[...rows,...(reports?readerProblemRows(reports):[]),...questions],at,unread);
+  const projected=projectBrief(config,[...rows,...(reports?readerProblemRows(reports):[]),...questions],at,unread);
+  const keeperFixKeys=new Set(fixItems(config).filter(f=>f.addedBy==='The line keeper').map(f=>`fix:${f.id}`));
+  const keeperProblems=config.latestBrief?.problems.filter(p=>p.key.startsWith('line-keeper:'))??[];
+  const fresh={...projected,problems:[...projected.problems.filter(p=>!keeperFixKeys.has(p.key)),...keeperProblems]};
+
   return {fresh,latest:config.latestBrief??null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
+}
+function dailySnapshotSaved(config:AdminConfig,day:string):boolean{
+ const saved=config.latestBrief;return !!saved&&(saved.day>day||saved.day===day&&saved.lineKeeperOnly!==true);
 }
 /** Runs in BR-37's existing parent timer, even with the owner's PC off. Restart and competing ticks cannot save twice. */
 export async function writeDailyBrief(repos:ControlPlaneRepositories,at:string,read:(repos:ControlPlaneRepositories,at:string)=>Promise<BriefReading>=readBrief):Promise<boolean> {
   const clock=easternBriefClock(at);const held=await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if(!held||!isAdminConfig(held.value))return false;
   const time=readSetting<string>(held.value,BRIEF_TIME_SETTING,"");
-  if(!time||clock.time<time||(held.value.latestBrief?.day??"")>=clock.day)return false;
+  if(!time||clock.time<time||dailySnapshotSaved(held.value,clock.day))return false;
   const snapshot=(await read(repos,at)).fresh;
   for(let n=0;n<4;n++){
-    const latest=await repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value)||(latest.value.latestBrief?.day??"")>=clock.day)return false;
+    const latest=await repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value)||dailySnapshotSaved(latest.value,clock.day))return false;
     const currentTime=readSetting<string>(latest.value,BRIEF_TIME_SETTING,"");if(!currentTime||clock.time<currentTime)return false;
     try{await repos.adminConfig.save(latest,{...latest.value,latestBrief:snapshot},at);return true;}catch(e){if(n===3)throw e;}
   }

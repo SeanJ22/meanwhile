@@ -1,0 +1,30 @@
+[
+  {
+    "name": "richmond-0.json",
+    "url": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543210053",
+    "retrievedAt": "2026-10-21T00:40:10.223Z",
+    "httpStatus": 200,
+    "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4"
+  },
+  {
+    "name": "richmond-1.json",
+    "url": "https://electionstreet.com/api/nyc/addresses?streetnumber=1&streetname=Edgewater%20Street&postalcode=10305&callback=jQuery351049603446973631293_1792543209911&_=1792543209912",
+    "retrievedAt": "2026-10-21T00:40:11.293Z",
+    "httpStatus": 200,
+    "rawHash": "28151be7a3992cf272b47e34406e30290511c67e72855a082d315fd01089e8ec"
+  },
+  {
+    "name": "richmond-2.json",
+    "url": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.61903501853341&longitude=-74.06871683893752&county=Richmond&streetnumber=1&streetname=Edgewater%20Street&postalcode=10305&districtkey=002/63",
+    "retrievedAt": "2026-10-21T00:40:11.460Z",
+    "httpStatus": 200,
+    "rawHash": "ecec352b6a4542a6cee5c47672bc81c539e2a4644745b8bc66eb049ca08d656e"
+  },
+  {
+    "name": "richmond-3.json",
+    "url": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=63002&electionid=387209&lang_code=eng",
+    "retrievedAt": "2026-10-21T00:40:11.688Z",
+    "httpStatus": 200,
+    "rawHash": "b33dd18a208d34c8dddb8a4017c42456226ebd1c34c40c9ab159ad76661edd18"
+  }
+]

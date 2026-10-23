@@ -8,10 +8,11 @@ export interface ReaderTraceRequirement { route: string; loader: string; files: 
 export function readerTraceRequirements(root: string): ReaderTraceRequirement[] {
   const resolver = "data/derived/resolver-geometry.json";
   const geometry = JSON.parse(readFileSync(join(root, resolver), "utf8")) as { files: string[] };
+  // State geometry is read from the reader edge store by the sha its manifest names; only national files are packed.
   const staticGeography = [...new Set([
     resolver,
-    ...geometry.files,
-    "data/states/az/geo/body-territories.geojson",
+    "data/derived/state-geometry.json",
+    ...geometry.files.filter(file => !file.startsWith("data/states/")),
   ])];
   if (geometry.files.length === 0) throw new Error("Reader trace denominator is empty");
   // The national ZIP index is read one shard per request, and any ZIP can be asked for, so every shard must be traced.
@@ -23,7 +24,8 @@ export function readerTraceRequirements(root: string): ReaderTraceRequirement[] 
     ...zipShards,
   ];
   return [
-    ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/voting-sites/route", "api/ask/grounded/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: staticGeography })),
+    ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/ask/grounded/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: staticGeography })),
+    { route: "api/voting-sites/route", loader: "lib/geo/zip-division-index.ts + lib/geo/postal.ts", files: [...zipShards, "lib/geo/postal-zips.json"] },
     // The map reads only the ZIP index; the tier ledger's reader for it is `/api/log`.
     { route: "api/meetings/route", loader: "lib/geo/zip-division-index.ts + lib/registry/server.ts", files: zipShards },
     { route: "api/reader/places/route", loader: "lib/geo/zip-division-index.ts", files: [...zipShards, "data/derived/zip-divisions/index.json"] },

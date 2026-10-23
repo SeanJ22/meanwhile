@@ -15,6 +15,7 @@ import { FiltersArea } from "./filters-area";
 import { NearMeControl } from "./near-me-control";
 import { ScopeSelectors } from "./scope-selectors";
 import { StatsBar } from "./stats-bar";
+import { NationalLink } from "./national-link";
 import { ViewToggle } from "./view-toggle";
 
 /**
@@ -101,6 +102,7 @@ export function Sidebar({
         )}
 
         <ViewToggle />
+        <NationalLink />
         <ScopeSelectors onJurisdictionChosen={onJurisdictionChosen} />
       </div>
 

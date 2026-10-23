@@ -37,6 +37,13 @@ test("the ordinary registered command reads one door, one body, and its own venu
   } finally { installFixtureDoors(); }
 });
 
+test("a state's calendar program and an unprepared command read no single-board slice", async () => {
+  const refuse = { readDoor: async () => { throw new Error("A state program read one board's door"); },
+    query: async () => { throw new Error("A state program read one board's reader slice"); } };
+  assert.deepEqual(await readHeldMeetingCliOptions(["composite", "--promote", "--contracts-file=handoff.json", "--contracts-count=2", "--contracts-sha256=0"], refuse), {});
+  assert.deepEqual(await readHeldMeetingCliOptions(["composite"], refuse), {});
+});
+
 test("fresh saved agendas keep their original evidence clock and make no duplicate request", async () => {
   const capturedAt = new Date().toISOString(), url = "https://example.gov/agenda/one";
   const meeting: Meeting = { id: "fresh-one", bodyId: "one-body", ocdId: "ocd-division/country:us/state:az/place:tucson",

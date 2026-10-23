@@ -102,10 +102,11 @@
           "termYears": 6,
           "electionId": "nj-2026-11-03",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15T03:53:29.860Z",
-            "collectedAt": "2026-10-15T03:53:29.860Z"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-senate.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "US Senate | JOANNE KUNIANSKY | SOCIALIST WORKERS PARTY"
           },
           "divisionVintage": "TIGER_GENZ2025",
           "candidateListComplete": true
@@ -120,10 +121,11 @@
           "termYears": 2,
           "electionId": "nj-2026-11-03",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15T03:53:29.860Z",
-            "collectedAt": "2026-10-15T03:53:29.860Z"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 7 | SEAMUS PATRICK O'TOOLE | STOP ISRAEL'S GENOCIDE"
           },
           "divisionVintage": "TIGER_GENZ2025",
           "candidateListComplete": true
@@ -138,10 +140,11 @@
           "termYears": 2,
           "electionId": "nj-2026-11-03",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15T03:53:29.860Z",
-            "collectedAt": "2026-10-15T03:53:29.860Z"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 11 | ALAN B. BOND | HOPE FOR TOMORROW"
           },
           "divisionVintage": "TIGER_GENZ2025",
           "candidateListComplete": true
@@ -1873,6 +1876,196 @@
           },
           "divisionVintage": "TIGER_GENZ2025",
           "candidateListComplete": true
+        },
+        {
+          "id": "nj-doe-2026-us-house-1",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:1",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 1)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 1 | DAMON GALDO | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-2",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:2",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 2)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 2 | RAMON MORA JR. | INDEPENDENT"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-3",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:3",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 3)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 3 | STEVEN WELZER | Green Party"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-4",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:4",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 4)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 4 | RACHEL PEACE | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-5",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:5",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 5)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 5 | ADAM RUEDA | HUMANE SUSTAINABLE FUTURE"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-6",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:6",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 6)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 6 | HILLARY HERZIG | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-8",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:8",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 8)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 8 | DA'SHONE HUGHEY | WE THE PEOPLE"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-9",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:9",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 9)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 9 | TERRISA BUKOVINAC | SAVE OUR BABIES"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-10",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:10",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 10)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 10 | CARMEN BUCCO | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-12",
+          "electionId": "nj-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:nj/cd:12",
+          "divisionVintage": "2026",
+          "title": "Member of the House of Representatives (District 12)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": 2,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 12 | WINSTON JORDAN | GET MONEY OUT"
+          }
         }
       ],
       "election": {
@@ -1913,14 +2106,15 @@
           "slogan": null,
           "contestId": "ballot-nj-morris:us-senate",
           "givenName": "Justin",
-          "incumbent": null,
+          "incumbent": false,
           "familyName": "MURPHY",
           "partyLabel": "Republican",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-senate.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "US Senate | JUSTIN MURPHY | Republican"
           },
           "websiteUrl": null
         },
@@ -1929,14 +2123,15 @@
           "slogan": null,
           "contestId": "ballot-nj-morris:us-senate",
           "givenName": "Cory",
-          "incumbent": null,
+          "incumbent": true,
           "familyName": "BOOKER",
           "partyLabel": "Democratic",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-senate.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "US Senate | CORY BOOKER | Democratic"
           },
           "websiteUrl": null
         },
@@ -1945,14 +2140,15 @@
           "slogan": "End The Corruption!",
           "contestId": "ballot-nj-morris:us-senate",
           "givenName": "Veronica",
-          "incumbent": null,
+          "incumbent": false,
           "familyName": "FERNANDEZ",
-          "partyLabel": "Independent",
+          "partyLabel": "END THE CORRUPTION!",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-senate.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "US Senate | VERONICA FERNANDEZ | END THE CORRUPTION!"
           },
           "websiteUrl": null
         },
@@ -1961,14 +2157,15 @@
           "slogan": "Socialist Workers Party",
           "contestId": "ballot-nj-morris:us-senate",
           "givenName": "Joanne",
-          "incumbent": null,
+          "incumbent": false,
           "familyName": "KUNIANSKY",
-          "partyLabel": "Independent",
+          "partyLabel": "SOCIALIST WORKERS PARTY",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-senate.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "US Senate | JOANNE KUNIANSKY | SOCIALIST WORKERS PARTY"
           },
           "websiteUrl": null
         },
@@ -1977,14 +2174,15 @@
           "slogan": null,
           "contestId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
           "givenName": "Thomas H.",
-          "incumbent": null,
+          "incumbent": true,
           "familyName": "KEAN, JR.",
           "partyLabel": "Republican",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 7 | THOMAS H. KEAN JR. | Republican"
           },
           "websiteUrl": null
         },
@@ -1993,14 +2191,15 @@
           "slogan": null,
           "contestId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
           "givenName": "Rebecca",
-          "incumbent": null,
+          "incumbent": false,
           "familyName": "BENNETT",
           "partyLabel": "Democratic",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 7 | REBECCA BENNETT | Democratic"
           },
           "websiteUrl": null
         },
@@ -2009,14 +2208,15 @@
           "slogan": "Stop Israel's Genocide",
           "contestId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
           "givenName": "Seamus Patrick",
-          "incumbent": null,
+          "incumbent": false,
           "familyName": "O'TOOLE",
-          "partyLabel": "Independent",
+          "partyLabel": "STOP ISRAEL'S GENOCIDE",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 7 | SEAMUS PATRICK O'TOOLE | STOP ISRAEL'S GENOCIDE"
           },
           "websiteUrl": null
         },
@@ -2025,14 +2225,15 @@
           "slogan": null,
           "contestId": "ballot-nj-morris:us-house-11",
           "givenName": "Joe",
-          "incumbent": null,
+          "incumbent": false,
           "familyName": "HATHAWAY",
           "partyLabel": "Republican",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 11 | JOE HATHAWAY | Republican"
           },
           "websiteUrl": null
         },
@@ -2041,14 +2242,15 @@
           "slogan": null,
           "contestId": "ballot-nj-morris:us-house-11",
           "givenName": "Analilia",
-          "incumbent": null,
+          "incumbent": true,
           "familyName": "MEJIA",
           "partyLabel": "Democratic",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 11 | ANALILIA MEJIA | Democratic"
           },
           "websiteUrl": null
         },
@@ -2057,14 +2259,15 @@
           "slogan": "Hope For Tomorrow",
           "contestId": "ballot-nj-morris:us-house-11",
           "givenName": "Alan B.",
-          "incumbent": null,
+          "incumbent": false,
           "familyName": "BOND",
-          "partyLabel": "Independent",
+          "partyLabel": "HOPE FOR TOMORROW",
           "provenance": {
-            "sourceOrg": "Morris County Clerk",
-            "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
-            "verifiedAt": "2026-10-15",
-            "collectedAt": "2026-10-15"
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 11 | ALAN B. BOND | HOPE FOR TOMORROW"
           },
           "websiteUrl": null
         },
@@ -6307,6 +6510,499 @@
             "collectedAt": "2026-10-15"
           },
           "websiteUrl": null
+        },
+        {
+          "id": "nj-doe-2026-us-house-1:donald-norcross",
+          "contestId": "nj-doe-2026-us-house-1",
+          "givenName": "",
+          "familyName": "DONALD NORCROSS",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 1 | DONALD NORCROSS | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-1:damon-galdo",
+          "contestId": "nj-doe-2026-us-house-1",
+          "givenName": "",
+          "familyName": "DAMON GALDO",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Republican",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 1 | DAMON GALDO | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-2:jeff-van-drew",
+          "contestId": "nj-doe-2026-us-house-2",
+          "givenName": "",
+          "familyName": "JEFF VAN DREW",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Republican",
+          "incumbent": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 2 | JEFF VAN DREW | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-2:zack-mullock",
+          "contestId": "nj-doe-2026-us-house-2",
+          "givenName": "",
+          "familyName": "ZACK MULLOCK",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 2 | ZACK MULLOCK | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-2:ramon-mora-jr",
+          "contestId": "nj-doe-2026-us-house-2",
+          "givenName": "",
+          "familyName": "RAMON MORA JR.",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "INDEPENDENT",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 2 | RAMON MORA JR. | INDEPENDENT"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-3:herb-conaway",
+          "contestId": "nj-doe-2026-us-house-3",
+          "givenName": "",
+          "familyName": "HERB CONAWAY",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 3 | HERB CONAWAY | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-3:michael-p-mcguire",
+          "contestId": "nj-doe-2026-us-house-3",
+          "givenName": "",
+          "familyName": "MICHAEL P. MCGUIRE",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Republican",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 3 | MICHAEL P. MCGUIRE | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-3:ryan-michael-kelly",
+          "contestId": "nj-doe-2026-us-house-3",
+          "givenName": "",
+          "familyName": "RYAN MICHAEL KELLY",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "AFFORDABILITY, ACCOUNTABILITY, PEOPLE",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 3 | RYAN MICHAEL KELLY | AFFORDABILITY, ACCOUNTABILITY, PEOPLE"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-3:steven-welzer",
+          "contestId": "nj-doe-2026-us-house-3",
+          "givenName": "",
+          "familyName": "STEVEN WELZER",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Green Party",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 3 | STEVEN WELZER | Green Party"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-4:christopher-h-smith",
+          "contestId": "nj-doe-2026-us-house-4",
+          "givenName": "",
+          "familyName": "CHRISTOPHER H. SMITH",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Republican",
+          "incumbent": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 4 | CHRISTOPHER H. SMITH | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-4:rachel-peace",
+          "contestId": "nj-doe-2026-us-house-4",
+          "givenName": "",
+          "familyName": "RACHEL PEACE",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 4 | RACHEL PEACE | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-5:josh-gottheimer",
+          "contestId": "nj-doe-2026-us-house-5",
+          "givenName": "",
+          "familyName": "JOSH GOTTHEIMER",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 5 | JOSH GOTTHEIMER | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-5:sean-kirrane",
+          "contestId": "nj-doe-2026-us-house-5",
+          "givenName": "",
+          "familyName": "SEAN KIRRANE",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Republican",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 5 | SEAN KIRRANE | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-5:adam-rueda",
+          "contestId": "nj-doe-2026-us-house-5",
+          "givenName": "",
+          "familyName": "ADAM RUEDA",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "HUMANE SUSTAINABLE FUTURE",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 5 | ADAM RUEDA | HUMANE SUSTAINABLE FUTURE"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-6:frank-pallone-jr",
+          "contestId": "nj-doe-2026-us-house-6",
+          "givenName": "",
+          "familyName": "FRANK PALLONE JR.",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 6 | FRANK PALLONE JR. | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-6:hillary-herzig",
+          "contestId": "nj-doe-2026-us-house-6",
+          "givenName": "",
+          "familyName": "HILLARY HERZIG",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Republican",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 6 | HILLARY HERZIG | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-8:rob-menendez",
+          "contestId": "nj-doe-2026-us-house-8",
+          "givenName": "",
+          "familyName": "ROB MENENDEZ",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 8 | ROB MENENDEZ | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-8:aristotle-eliopoulos",
+          "contestId": "nj-doe-2026-us-house-8",
+          "givenName": "",
+          "familyName": "ARISTOTLE ELIOPOULOS",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "INDEPENDENT",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 8 | ARISTOTLE ELIOPOULOS | INDEPENDENT"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-8:craig-honts",
+          "contestId": "nj-doe-2026-us-house-8",
+          "givenName": "",
+          "familyName": "CRAIG HONTS",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "SOCIALIST WORKERS PARTY",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 8 | CRAIG HONTS | SOCIALIST WORKERS PARTY"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-8:da-shone-hughey",
+          "contestId": "nj-doe-2026-us-house-8",
+          "givenName": "",
+          "familyName": "DA'SHONE HUGHEY",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "WE THE PEOPLE",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 8 | DA'SHONE HUGHEY | WE THE PEOPLE"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-9:nelida-pou",
+          "contestId": "nj-doe-2026-us-house-9",
+          "givenName": "",
+          "familyName": "NELIDA POU",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 9 | NELIDA POU | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-9:rosie-pino",
+          "contestId": "nj-doe-2026-us-house-9",
+          "givenName": "",
+          "familyName": "ROSIE PINO",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Republican",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 9 | ROSIE PINO | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-9:terrisa-bukovinac",
+          "contestId": "nj-doe-2026-us-house-9",
+          "givenName": "",
+          "familyName": "TERRISA BUKOVINAC",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "SAVE OUR BABIES",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 9 | TERRISA BUKOVINAC | SAVE OUR BABIES"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-10:lamonica-r-mciver",
+          "contestId": "nj-doe-2026-us-house-10",
+          "givenName": "",
+          "familyName": "LAMONICA R. MCIVER",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": true,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 10 | LAMONICA R. MCIVER | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-10:carmen-bucco",
+          "contestId": "nj-doe-2026-us-house-10",
+          "givenName": "",
+          "familyName": "CARMEN BUCCO",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Republican",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 10 | CARMEN BUCCO | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-12:adam-hamawy",
+          "contestId": "nj-doe-2026-us-house-12",
+          "givenName": "",
+          "familyName": "ADAM HAMAWY",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Democratic",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 12 | ADAM HAMAWY | Democratic"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-12:gregg-mele",
+          "contestId": "nj-doe-2026-us-house-12",
+          "givenName": "",
+          "familyName": "GREGG MELE",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Republican",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 12 | GREGG MELE | Republican"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-12:andres-jinete",
+          "contestId": "nj-doe-2026-us-house-12",
+          "givenName": "",
+          "familyName": "ANDRES JINETE",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "Green Party",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 12 | ANDRES JINETE | Green Party"
+          }
+        },
+        {
+          "id": "nj-doe-2026-us-house-12:winston-jordan",
+          "contestId": "nj-doe-2026-us-house-12",
+          "givenName": "",
+          "familyName": "WINSTON JORDAN",
+          "slogan": null,
+          "websiteUrl": null,
+          "partyLabel": "GET MONEY OUT",
+          "incumbent": false,
+          "provenance": {
+            "sourceUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+            "sourceOrg": "New Jersey Division of Elections",
+            "collectedAt": "2026-10-20T23:03:42.451261+00:00",
+            "verifiedAt": "2026-10-21T00:05:01.894139+00:00",
+            "quote": "House of Representatives, District 12 | WINSTON JORDAN | GET MONEY OUT"
+          }
         }
       ],
       "measureRecords": [],
@@ -8257,8 +8953,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-15T03:53:29.864Z",
-    "reviewedBy": "BL-30 official source review",
+    "reviewedAt": "2026-10-21T00:05:01.894139+00:00",
+    "reviewedBy": "BA-01 official ballot PDF replay",
     "sources": [
       {
         "requestedUrl": "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates",
@@ -8309,6 +9005,26 @@
         "publisher": "Morris County Clerk",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "The clerk redirects this historical filing URL to its current general-candidate PDF. The retained removal history comes from promoted version cv-297b58fba837b11107e63179047a6b90; these response bytes verify the current list, not the earlier document. The complete general and school candidate inventories were parsed and checked against every held contest: all 275 candidates across 99 contests agree, including each source office, jurisdiction and term grouping. No candidate was added or omitted."
+      },
+      {
+        "requestedUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+        "finalUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-house-0904.pdf",
+        "publisher": "New Jersey Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:03:42.451261+00:00",
+        "httpStatus": 200,
+        "rawHash": "d1816b5eaf0edcd287159047da6ccbbe33e8152546e4ac2f57755fcc28b0f603",
+        "reviewedEvidence": "Official November 3, 2026 list: 35 printed candidates. Candidate names, party cells and incumbency markers replayed by PDF coordinates; all printed candidates receive the same fields. Addresses are excluded."
+      },
+      {
+        "requestedUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-senate.pdf",
+        "finalUrl": "https://www.nj.gov/state/elections/assets/pdf/election-results/2026/2026-official-general-candidates-us-senate.pdf",
+        "publisher": "New Jersey Division of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:03:42.451261+00:00",
+        "httpStatus": 200,
+        "rawHash": "f1458af2e44ef482ed01314ddadc515dc351d7b6c963533ba5504ea5a873422e",
+        "reviewedEvidence": "Official November 3, 2026 list: 4 printed candidates. Candidate names, party cells and incumbency markers replayed by PDF coordinates; all printed candidates receive the same fields. Addresses are excluded."
       }
     ]
   }

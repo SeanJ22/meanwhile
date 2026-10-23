@@ -1,4 +1,4 @@
-import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
+import { recordFreeDiscoveryWalks } from "./helpers/free-discovery-walk.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -191,8 +191,8 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   };
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
-  await runCensusState({
-    repos, state: "OH", needs,
+  await recordFreeDiscoveryWalks({
+    repos, needs,
     runtime: {
       open: recordedDiscoveryOpen(site),
       spaceOut: async () => {},
@@ -390,9 +390,9 @@ test("A STATE WITH NO CONNECTED CALENDAR: its family reads the wiring first and 
   assert.equal(prepared, 0, "a family with no member never loads the registry and venue projections (about 24 MB a run)");
   assert.equal(await store.readPromotion("MEETING", partition.scope), null, "nothing is published for a state with no member");
   const ingest = readFileSync(join(ROOT, "scripts", "ingest.ts"), "utf8");
-  const main = ingest.slice(ingest.indexOf("async function main()"));
+  const program = ingest.slice(ingest.indexOf("async function readStateCalendars("));
   assert.ok(
-    main.indexOf("promoteDerivedMeetingFamily(") < main.indexOf("await preloadCanonicalMeetingDependencies({ sourceName: name, state });"),
+    program.indexOf("promoteDerivedMeetingFamily(store, partition, prepare") < program.indexOf("await prepare();"),
     "the child routes a family before the preload every source/body partition needs",
   );
 });

@@ -1,0 +1,1396 @@
+[
+  {
+    "id": "nc-statewide-early-voting-2026",
+    "state": "NC",
+    "capture": "nc-statewide-early-voting-2026.txt",
+    "rows": 6239,
+    "sites": 367,
+    "counties": 100,
+    "missing": [],
+    "sample": [
+      {
+        "id": "voting-ab92ce647b2865aef3045a64",
+        "name": "ELMIRA COMMUNITY CENTER",
+        "address": "810 WICKER ST, BURLINGTON, NC 27217",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "EARLY_VOTING",
+        "election": "11/03/2026",
+        "electionDate": "2026-11-03",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+            "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+            "checkedAt": "2026-10-21T04:24:55.230Z",
+            "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+            "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+          }
+        ],
+        "days": "10/31/2026",
+        "hours": "8:00AM - 3:00PM",
+        "countyName": "ALAMANCE",
+        "kinds": [
+          "EARLY_VOTING"
+        ],
+        "schedules": [
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/15/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/16/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/17/2026",
+            "hours": "Closed",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/18/2026",
+            "hours": "Closed",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/19/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/20/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/21/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/22/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/23/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/24/2026",
+            "hours": "8:00AM - 4:00PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/25/2026",
+            "hours": "1:00PM - 5:00PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/26/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/27/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/28/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/29/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/30/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/31/2026",
+            "hours": "8:00AM - 3:00PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          }
+        ],
+        "assignments": [],
+        "precincts": []
+      },
+      {
+        "id": "voting-64404dbb5e8a0a05bdb7ac2d",
+        "name": "ELON SOUTH CAMPUS GYM",
+        "address": "329 S ANTIOCH AVE, ELON, NC 27244",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "EARLY_VOTING",
+        "election": "11/03/2026",
+        "electionDate": "2026-11-03",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+            "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+            "checkedAt": "2026-10-21T04:24:55.230Z",
+            "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+            "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+          }
+        ],
+        "days": "10/31/2026",
+        "hours": "8:00AM - 3:00PM",
+        "countyName": "ALAMANCE",
+        "kinds": [
+          "EARLY_VOTING"
+        ],
+        "schedules": [
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/15/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/16/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/17/2026",
+            "hours": "Closed",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/18/2026",
+            "hours": "Closed",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/19/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/20/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/21/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/22/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/23/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/24/2026",
+            "hours": "8:00AM - 4:00PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/25/2026",
+            "hours": "1:00PM - 5:00PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/26/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/27/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/28/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/29/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/30/2026",
+            "hours": "8:00AM - 7:30PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          },
+          {
+            "kind": "EARLY_VOTING",
+            "days": "10/31/2026",
+            "hours": "8:00AM - 3:00PM",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "State Board of Elections & Ethics Enforcement, Raleigh, NC",
+              "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+              "checkedAt": "2026-10-21T04:24:55.230Z",
+              "documentHash": "e6c919e196ef134ec3c2cdd2f0f9533c5a7211f0d48e7b707e813df9bc20173e",
+              "documentUrl": "https://vt.ncsbe.gov/OSSite?handler=StatewideList"
+            }
+          }
+        ],
+        "assignments": [],
+        "precincts": []
+      }
+    ]
+  },
+  {
+    "id": "nc-statewide-polling-general-2026",
+    "state": "NC",
+    "capture": "nc-november-polling.csv.bin",
+    "rows": 2626,
+    "sites": 2610,
+    "counties": 100,
+    "missing": [],
+    "sample": [
+      {
+        "id": "voting-768a1141819eb40bf2ac402a",
+        "name": "ALAMANCE CIVITAN CLUB HOUSE",
+        "address": "3328 DOCTOR PICKETT RD, BURLINGTON, NC, 27215",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "ELECTION_DAY",
+        "election": "11/03/2026",
+        "electionDate": "2026-11-03",
+        "serves": "COBLE",
+        "sources": [
+          {
+            "publisher": "North Carolina State Board of Elections",
+            "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
+            "checkedAt": "2026-10-21T04:26:00.733Z",
+            "documentHash": "9dd25308dbe40561ba77b73e3b07a3f78d484597ddf8dcc91309e04cd6731001",
+            "documentUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv"
+          }
+        ],
+        "precinct": "COBLE",
+        "town": "BURLINGTON",
+        "countyName": "ALAMANCE",
+        "matchingUnit": "PRECINCT",
+        "kinds": [
+          "ELECTION_DAY"
+        ],
+        "precincts": [
+          "COBLE"
+        ],
+        "assignments": [
+          {
+            "precinct": "COBLE",
+            "name": "ALAMANCE CIVITAN CLUB HOUSE",
+            "room": null,
+            "source": {
+              "publisher": "North Carolina State Board of Elections",
+              "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
+              "checkedAt": "2026-10-21T04:26:00.733Z",
+              "documentHash": "9dd25308dbe40561ba77b73e3b07a3f78d484597ddf8dcc91309e04cd6731001",
+              "documentUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv"
+            }
+          }
+        ],
+        "schedules": [
+          {
+            "kind": "ELECTION_DAY",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "North Carolina State Board of Elections",
+              "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
+              "checkedAt": "2026-10-21T04:26:00.733Z",
+              "documentHash": "9dd25308dbe40561ba77b73e3b07a3f78d484597ddf8dcc91309e04cd6731001",
+              "documentUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv"
+            }
+          }
+        ]
+      },
+      {
+        "id": "voting-860fd9678cbd12c94340b3d8",
+        "name": "ELMIRA COMMUNITY CENTER",
+        "address": "810 WICKER ST, BURLINGTON, NC, 27217",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "ELECTION_DAY",
+        "election": "11/03/2026",
+        "electionDate": "2026-11-03",
+        "serves": "BURLINGTON 7",
+        "sources": [
+          {
+            "publisher": "North Carolina State Board of Elections",
+            "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
+            "checkedAt": "2026-10-21T04:26:00.733Z",
+            "documentHash": "9dd25308dbe40561ba77b73e3b07a3f78d484597ddf8dcc91309e04cd6731001",
+            "documentUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv"
+          }
+        ],
+        "precinct": "BURLINGTON 7",
+        "town": "BURLINGTON",
+        "countyName": "ALAMANCE",
+        "matchingUnit": "PRECINCT",
+        "kinds": [
+          "ELECTION_DAY"
+        ],
+        "precincts": [
+          "BURLINGTON 7"
+        ],
+        "assignments": [
+          {
+            "precinct": "BURLINGTON 7",
+            "name": "ELMIRA COMMUNITY CENTER",
+            "room": null,
+            "source": {
+              "publisher": "North Carolina State Board of Elections",
+              "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
+              "checkedAt": "2026-10-21T04:26:00.733Z",
+              "documentHash": "9dd25308dbe40561ba77b73e3b07a3f78d484597ddf8dcc91309e04cd6731001",
+              "documentUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv"
+            }
+          }
+        ],
+        "schedules": [
+          {
+            "kind": "ELECTION_DAY",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "North Carolina State Board of Elections",
+              "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
+              "checkedAt": "2026-10-21T04:26:00.733Z",
+              "documentHash": "9dd25308dbe40561ba77b73e3b07a3f78d484597ddf8dcc91309e04cd6731001",
+              "documentUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "va-statewide-polling-general-2026",
+    "state": "VA",
+    "capture": "va-november-polling.xlsx",
+    "rows": 2817,
+    "sites": 2651,
+    "counties": 133,
+    "missing": [],
+    "sample": [
+      {
+        "id": "voting-0ae6c5895a94d21eca1d4b97",
+        "name": "Ashland Town Hall",
+        "address": "121 Thompson St., Ashland, VA, 23005-2081",
+        "room": "Council Chambers",
+        "lat": null,
+        "lng": null,
+        "kind": "ELECTION_DAY",
+        "election": "2026 November General",
+        "electionDate": "2026-11-03",
+        "serves": "Ashland - 0110",
+        "sources": [
+          {
+            "publisher": "Virginia Department of Elections",
+            "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.743Z",
+            "documentHash": "b511e32781088274193f6978a528deed1950d4b05d4a1b4533d660f05c91b7d3",
+            "documentUrl": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx"
+          }
+        ],
+        "precinct": "Ashland - 0110",
+        "countyName": "Hanover County",
+        "matchingUnit": "PRECINCT",
+        "kinds": [
+          "ELECTION_DAY"
+        ],
+        "precincts": [
+          "Ashland - 0110"
+        ],
+        "assignments": [
+          {
+            "precinct": "Ashland - 0110",
+            "name": "Ashland Town Hall",
+            "room": "Council Chambers",
+            "source": {
+              "publisher": "Virginia Department of Elections",
+              "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.743Z",
+              "documentHash": "b511e32781088274193f6978a528deed1950d4b05d4a1b4533d660f05c91b7d3",
+              "documentUrl": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx"
+            }
+          }
+        ],
+        "schedules": [
+          {
+            "kind": "ELECTION_DAY",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "Virginia Department of Elections",
+              "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.743Z",
+              "documentHash": "b511e32781088274193f6978a528deed1950d4b05d4a1b4533d660f05c91b7d3",
+              "documentUrl": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx"
+            }
+          }
+        ]
+      },
+      {
+        "id": "voting-52599acf12b7152f62e625f2",
+        "name": "Gloucester High School",
+        "address": "6680 Short Ln, Gloucester, VA, 23061-4410",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "ELECTION_DAY",
+        "election": "2026 November General",
+        "electionDate": "2026-11-03",
+        "serves": "302 - Roanes",
+        "sources": [
+          {
+            "publisher": "Virginia Department of Elections",
+            "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.743Z",
+            "documentHash": "b511e32781088274193f6978a528deed1950d4b05d4a1b4533d660f05c91b7d3",
+            "documentUrl": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx"
+          }
+        ],
+        "precinct": "302 - Roanes",
+        "countyName": "Gloucester County",
+        "matchingUnit": "PRECINCT",
+        "kinds": [
+          "ELECTION_DAY"
+        ],
+        "precincts": [
+          "302 - Roanes"
+        ],
+        "assignments": [
+          {
+            "precinct": "302 - Roanes",
+            "name": "Gloucester High School",
+            "room": null,
+            "source": {
+              "publisher": "Virginia Department of Elections",
+              "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.743Z",
+              "documentHash": "b511e32781088274193f6978a528deed1950d4b05d4a1b4533d660f05c91b7d3",
+              "documentUrl": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx"
+            }
+          }
+        ],
+        "schedules": [
+          {
+            "kind": "ELECTION_DAY",
+            "electionDate": "2026-11-03",
+            "source": {
+              "publisher": "Virginia Department of Elections",
+              "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.743Z",
+              "documentHash": "b511e32781088274193f6978a528deed1950d4b05d4a1b4533d660f05c91b7d3",
+              "documentUrl": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sc-statewide-public-polling-directory",
+    "state": "SC",
+    "capture": "sc-all-locations.txt",
+    "rows": 2358,
+    "sites": 1956,
+    "counties": 46,
+    "missing": [],
+    "sample": [
+      {
+        "id": "voting-a8175752baa89ff6f79e1da3",
+        "name": "Abbeville Civic Center",
+        "address": "404 N Main St Abbeville  SC 29620",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "ELECTION_DAY",
+        "election": "Statewide precinct and polling location directory",
+        "serves": "Abbeville No. 2",
+        "sources": [
+          {
+            "publisher": "South Carolina State Election Commission",
+            "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+            "checkedAt": "2026-10-21T04:26:00.745Z",
+            "documentHash": "41188b9fe7ad9c4309048f8b34e643857ebe9d751390b35be081ce3640a3eb49",
+            "documentUrl": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults"
+          }
+        ],
+        "precinct": "Abbeville No. 2",
+        "countyName": "ABBEVILLE",
+        "matchingUnit": "PRECINCT",
+        "kinds": [
+          "ELECTION_DAY"
+        ],
+        "precincts": [
+          "Abbeville No. 1",
+          "Abbeville No. 2"
+        ],
+        "assignments": [
+          {
+            "precinct": "Abbeville No. 1",
+            "name": "Abbeville Civic Center",
+            "room": null,
+            "source": {
+              "publisher": "South Carolina State Election Commission",
+              "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+              "checkedAt": "2026-10-21T04:26:00.745Z",
+              "documentHash": "41188b9fe7ad9c4309048f8b34e643857ebe9d751390b35be081ce3640a3eb49",
+              "documentUrl": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults"
+            }
+          },
+          {
+            "precinct": "Abbeville No. 2",
+            "name": "Abbeville Civic Center",
+            "room": null,
+            "source": {
+              "publisher": "South Carolina State Election Commission",
+              "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+              "checkedAt": "2026-10-21T04:26:00.745Z",
+              "documentHash": "41188b9fe7ad9c4309048f8b34e643857ebe9d751390b35be081ce3640a3eb49",
+              "documentUrl": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults"
+            }
+          }
+        ],
+        "schedules": [
+          {
+            "kind": "ELECTION_DAY",
+            "source": {
+              "publisher": "South Carolina State Election Commission",
+              "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+              "checkedAt": "2026-10-21T04:26:00.745Z",
+              "documentHash": "41188b9fe7ad9c4309048f8b34e643857ebe9d751390b35be081ce3640a3eb49",
+              "documentUrl": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults"
+            }
+          }
+        ]
+      },
+      {
+        "id": "voting-c69882933e3860f0ac482f65",
+        "name": "Abbeville County Complex",
+        "address": "903 W Greenwood St Abbeville  SC 29620",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "ELECTION_DAY",
+        "election": "Statewide precinct and polling location directory",
+        "serves": "Abbeville No. 3",
+        "sources": [
+          {
+            "publisher": "South Carolina State Election Commission",
+            "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+            "checkedAt": "2026-10-21T04:26:00.745Z",
+            "documentHash": "41188b9fe7ad9c4309048f8b34e643857ebe9d751390b35be081ce3640a3eb49",
+            "documentUrl": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults"
+          }
+        ],
+        "precinct": "Abbeville No. 3",
+        "countyName": "ABBEVILLE",
+        "matchingUnit": "PRECINCT",
+        "kinds": [
+          "ELECTION_DAY"
+        ],
+        "precincts": [
+          "Abbeville No. 3"
+        ],
+        "assignments": [
+          {
+            "precinct": "Abbeville No. 3",
+            "name": "Abbeville County Complex",
+            "room": null,
+            "source": {
+              "publisher": "South Carolina State Election Commission",
+              "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+              "checkedAt": "2026-10-21T04:26:00.745Z",
+              "documentHash": "41188b9fe7ad9c4309048f8b34e643857ebe9d751390b35be081ce3640a3eb49",
+              "documentUrl": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults"
+            }
+          }
+        ],
+        "schedules": [
+          {
+            "kind": "ELECTION_DAY",
+            "source": {
+              "publisher": "South Carolina State Election Commission",
+              "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+              "checkedAt": "2026-10-21T04:26:00.745Z",
+              "documentHash": "41188b9fe7ad9c4309048f8b34e643857ebe9d751390b35be081ce3640a3eb49",
+              "documentUrl": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ky-statewide-election-day-general-2026",
+    "state": "KY",
+    "capture": "ky-all-polling-locations.xlsx",
+    "rows": 1419,
+    "sites": 1409,
+    "counties": 120,
+    "missing": [],
+    "sample": [
+      {
+        "id": "voting-51e1c0c4bf8f4f4e3756694e",
+        "name": "BEARWALLOW FELLOWSHIP HALL",
+        "address": "6090 LIBERTY RD, COLUMBIA, 42728",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "ELECTION_DAY",
+        "election": "G26 - Election Day November 3",
+        "serves": "A102, A104, A105",
+        "sources": [
+          {
+            "publisher": "Kentucky State Board of Elections",
+            "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.744Z",
+            "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+            "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+          }
+        ],
+        "hours": "6:00AM - 6:00PM",
+        "precinct": "A102, A104, A105",
+        "countyName": "Adair",
+        "matchingUnit": "PRECINCT",
+        "kinds": [
+          "ELECTION_DAY"
+        ],
+        "precincts": [
+          "A102, A104, A105"
+        ],
+        "assignments": [
+          {
+            "precinct": "A102, A104, A105",
+            "name": "BEARWALLOW FELLOWSHIP HALL",
+            "room": null,
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ],
+        "schedules": [
+          {
+            "kind": "ELECTION_DAY",
+            "hours": "6:00AM - 6:00PM",
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ]
+      },
+      {
+        "id": "voting-e014592006e70736b1a8a0cf",
+        "name": "WHEET FELLOWSHIP HALL",
+        "address": "1208 JAMESTOWN ST, COLUMBIA, 42728",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "ELECTION_DAY",
+        "election": "G26 - Election Day November 3",
+        "serves": "B102, C102",
+        "sources": [
+          {
+            "publisher": "Kentucky State Board of Elections",
+            "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.744Z",
+            "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+            "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+          }
+        ],
+        "hours": "6:00AM - 6:00PM",
+        "precinct": "B102, C102",
+        "countyName": "Adair",
+        "matchingUnit": "PRECINCT",
+        "kinds": [
+          "ELECTION_DAY"
+        ],
+        "precincts": [
+          "B102, C102"
+        ],
+        "assignments": [
+          {
+            "precinct": "B102, C102",
+            "name": "WHEET FELLOWSHIP HALL",
+            "room": null,
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ],
+        "schedules": [
+          {
+            "kind": "ELECTION_DAY",
+            "hours": "6:00AM - 6:00PM",
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ky-statewide-excused-in-person-general-2026",
+    "state": "KY",
+    "capture": "ky-all-polling-locations.xlsx",
+    "rows": 120,
+    "sites": 120,
+    "counties": 119,
+    "missing": [],
+    "sample": [
+      {
+        "id": "voting-79f7abc67ed551b139ba76b8",
+        "name": "Adair County Clerk's Office",
+        "address": "424 Public Square, Suite 3, Columbia, 42728",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "EARLY_VOTING",
+        "election": "G26 - 6Day ExcusedIn-Person",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "Kentucky State Board of Elections",
+            "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.744Z",
+            "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+            "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+          }
+        ],
+        "hours": "MON-FRI 8 AM - 4 PM",
+        "countyName": "Adair",
+        "matchingUnit": "COUNTY",
+        "kinds": [
+          "EARLY_VOTING"
+        ],
+        "schedules": [
+          {
+            "kind": "EARLY_VOTING",
+            "hours": "MON-FRI 8 AM - 4 PM",
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ]
+      },
+      {
+        "id": "voting-82058b6dc6c958233345900b",
+        "name": "Allen County Clerk's Office",
+        "address": "201 W Main St, Room 6, Scottsville, 42164",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "EARLY_VOTING",
+        "election": "G26 - 6Day ExcusedIn-Person",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "Kentucky State Board of Elections",
+            "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.744Z",
+            "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+            "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+          }
+        ],
+        "hours": "8 AM - 4:30 PM",
+        "countyName": "Allen",
+        "matchingUnit": "COUNTY",
+        "kinds": [
+          "EARLY_VOTING"
+        ],
+        "schedules": [
+          {
+            "kind": "EARLY_VOTING",
+            "hours": "8 AM - 4:30 PM",
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ky-statewide-no-excuse-in-person-general-2026",
+    "state": "KY",
+    "capture": "ky-all-polling-locations.xlsx",
+    "rows": 202,
+    "sites": 202,
+    "counties": 120,
+    "missing": [],
+    "sample": [
+      {
+        "id": "voting-38b385c67b28f6ec3e9e388e",
+        "name": "Adair County Courthouse Annex Basement",
+        "address": "424 Public Square, Columbia, 42728",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "EARLY_VOTING",
+        "election": "G26 - 3Day No-ExcuseIn-Person",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "Kentucky State Board of Elections",
+            "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.744Z",
+            "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+            "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+          }
+        ],
+        "hours": "8 AM - 4 PM",
+        "countyName": "Adair",
+        "matchingUnit": "COUNTY",
+        "kinds": [
+          "EARLY_VOTING"
+        ],
+        "schedules": [
+          {
+            "kind": "EARLY_VOTING",
+            "hours": "8 AM - 4 PM",
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ]
+      },
+      {
+        "id": "voting-5fcd039b4fdf52dc448a7f7a",
+        "name": "Allen County Extension Office",
+        "address": "200 East Main Street, Scottsville, 42164",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "EARLY_VOTING",
+        "election": "G26 - 3Day No-ExcuseIn-Person",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "Kentucky State Board of Elections",
+            "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.744Z",
+            "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+            "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+          }
+        ],
+        "hours": "8 AM - 4 PM",
+        "countyName": "Allen",
+        "matchingUnit": "COUNTY",
+        "kinds": [
+          "EARLY_VOTING"
+        ],
+        "schedules": [
+          {
+            "kind": "EARLY_VOTING",
+            "hours": "8 AM - 4 PM",
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ky-statewide-dropbox-general-2026",
+    "state": "KY",
+    "capture": "ky-all-polling-locations.xlsx",
+    "rows": 174,
+    "sites": 168,
+    "counties": 120,
+    "missing": [],
+    "sample": [
+      {
+        "id": "voting-b4c3c09b55692b93721962fb",
+        "name": "Adair County Clerk's Office",
+        "address": "424 Public Square, Ste 3, Columbia, 42728",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "DROP_BOX",
+        "election": "G26 - DropboxLocations",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "Kentucky State Board of Elections",
+            "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.744Z",
+            "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+            "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+          }
+        ],
+        "hours": "Inside (MON-FRI 8 AM - 4 PM, 1st & 3rd SAT 8 AM - 11 AM)",
+        "countyName": "Adair",
+        "matchingUnit": "COUNTY",
+        "kinds": [
+          "DROP_BOX"
+        ],
+        "schedules": [
+          {
+            "kind": "DROP_BOX",
+            "hours": "Inside (MON-FRI 8 AM - 4 PM, 1st & 3rd SAT 8 AM - 11 AM)",
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ]
+      },
+      {
+        "id": "voting-e1c1acf7f3273dc277fbfd79",
+        "name": "Allen County Clerk's Office",
+        "address": "201 W Main Street #6, Scottsville, 42164",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "DROP_BOX",
+        "election": "G26 - DropboxLocations",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "Kentucky State Board of Elections",
+            "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+            "checkedAt": "2026-10-21T04:26:00.744Z",
+            "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+            "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+          }
+        ],
+        "hours": "Inside (MON-FRI 8 AM - 4:30 PM, 1st & 4th SAT 8 AM - 12 PM)",
+        "countyName": "Allen",
+        "matchingUnit": "COUNTY",
+        "kinds": [
+          "DROP_BOX"
+        ],
+        "schedules": [
+          {
+            "kind": "DROP_BOX",
+            "hours": "Inside (MON-FRI 8 AM - 4:30 PM, 1st & 4th SAT 8 AM - 12 PM)",
+            "source": {
+              "publisher": "Kentucky State Board of Elections",
+              "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+              "checkedAt": "2026-10-21T04:26:00.744Z",
+              "documentHash": "e36a0b0d6d765c10897add91a8223f6de5c050c859653ccda94cf68028289ca8",
+              "documentUrl": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wv-statewide-early-general-2026",
+    "state": "WV",
+    "capture": "wv-early-locations.html",
+    "rows": 99,
+    "sites": 99,
+    "counties": 55,
+    "missing": [],
+    "sample": [
+      {
+        "id": "voting-e91b85dc626ce4e2749e1885",
+        "name": "Barbour County Courthouse",
+        "address": "26 N Main St, Philippi, WV 26416",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "EARLY_VOTING",
+        "election": "2026 General Election early voting locations",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "West Virginia Secretary of State",
+            "url": "https://sos.wv.gov/early-voting-locations",
+            "checkedAt": "2026-10-21T04:25:29.601Z",
+            "documentHash": "82c36266b586f607cc04fdfc29283c4ecf6fe4389055cf12d40ae575eeae04da",
+            "documentUrl": "https://sos.wv.gov/early-voting-locations"
+          }
+        ],
+        "days": "Oct. 21–31, 2026",
+        "hours": "Mon–Fri 8:30 A.M. – 4:30 P.M., Saturday 9:00 A.M. – 5:00 P.M.",
+        "countyName": "Barbour",
+        "office": {
+          "name": "Barbour",
+          "phone": "304-457-2232",
+          "url": "https://sos.wv.gov/early-voting-locations"
+        },
+        "kinds": [
+          "EARLY_VOTING"
+        ],
+        "schedules": [
+          {
+            "kind": "EARLY_VOTING",
+            "days": "Oct. 21–31, 2026",
+            "hours": "Mon–Fri 8:30 A.M. – 4:30 P.M., Saturday 9:00 A.M. – 5:00 P.M.",
+            "source": {
+              "publisher": "West Virginia Secretary of State",
+              "url": "https://sos.wv.gov/early-voting-locations",
+              "checkedAt": "2026-10-21T04:25:29.601Z",
+              "documentHash": "82c36266b586f607cc04fdfc29283c4ecf6fe4389055cf12d40ae575eeae04da",
+              "documentUrl": "https://sos.wv.gov/early-voting-locations"
+            }
+          }
+        ]
+      },
+      {
+        "id": "voting-b7cda9c23397389858e209ec",
+        "name": "South Berkeley Fire Station",
+        "address": "7556 Winchester Ave, Inwood, WV 25428",
+        "room": null,
+        "lat": null,
+        "lng": null,
+        "kind": "EARLY_VOTING",
+        "election": "2026 General Election early voting locations",
+        "serves": null,
+        "sources": [
+          {
+            "publisher": "West Virginia Secretary of State",
+            "url": "https://sos.wv.gov/early-voting-locations",
+            "checkedAt": "2026-10-21T04:25:29.601Z",
+            "documentHash": "82c36266b586f607cc04fdfc29283c4ecf6fe4389055cf12d40ae575eeae04da",
+            "documentUrl": "https://sos.wv.gov/early-voting-locations"
+          }
+        ],
+        "days": "Oct. 21–31, 2026",
+        "hours": "Mon–Fri 8:00 A.M. – 5:00 P.M., Saturday 9:00 A.M. – 5:00 P.M.",
+        "countyName": "Berkeley",
+        "office": {
+          "name": "Berkeley",
+          "phone": "304-264-1989",
+          "url": "https://sos.wv.gov/early-voting-locations"
+        },
+        "kinds": [
+          "EARLY_VOTING"
+        ],
+        "schedules": [
+          {
+            "kind": "EARLY_VOTING",
+            "days": "Oct. 21–31, 2026",
+            "hours": "Mon–Fri 8:00 A.M. – 5:00 P.M., Saturday 9:00 A.M. – 5:00 P.M.",
+            "source": {
+              "publisher": "West Virginia Secretary of State",
+              "url": "https://sos.wv.gov/early-voting-locations",
+              "checkedAt": "2026-10-21T04:25:29.601Z",
+              "documentHash": "82c36266b586f607cc04fdfc29283c4ecf6fe4389055cf12d40ae575eeae04da",
+              "documentUrl": "https://sos.wv.gov/early-voting-locations"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

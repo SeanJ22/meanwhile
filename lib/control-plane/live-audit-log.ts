@@ -7,21 +7,9 @@ import type { SpeedPass } from "../health/worst-case-speed.ts";
 import type { ClaimPass } from "./workers/claim-audit.ts";
 import type { LookPass } from "../frontend/look-pass.ts";
 
-export interface LiveAuditPull {
-  readonly workItemId: string;
-  readonly parserResultId: string;
-  readonly parserAttemptId: string;
-  /** The extraction records to leave out of the next published version. */
-  readonly recordIds: readonly string[];
-  readonly factId: string;
-  readonly at: string;
-  readonly reason: string;
-}
-
 export type LiveAuditLogRow =
   | { readonly kind: "RESULT"; readonly result: LiveAuditResult }
   | { readonly kind: "CORRECTION"; readonly correction: AuditCorrection }
-  | { readonly kind: "PULL"; readonly pull: LiveAuditPull }
   | { readonly kind: "SPEED"; readonly pass: SpeedPass }
   | { readonly kind: "TASKS"; readonly pass: TaskPass }
   | { readonly kind: "TASK_ZIP"; readonly zip: string; readonly at: string }
@@ -33,7 +21,6 @@ export type LiveAuditRepos = Pick<ControlPlaneRepositories, "liveAudits">;
 
 export const CORRECTIONS_KEY = "corrections";
 export const dayKey = (iso: string): string => `day:${iso.slice(0, 10)}`;
-export const PULLS_KEY = "pulls";
 export const speedDayKey = (iso: string): string => `speed:${iso.slice(0, 10)}`;
 export const tasksDayKey = (iso: string): string => `tasks:${iso.slice(0, 10)}`;
 export const TASK_ZIPS_KEY = "task-zips";
@@ -52,18 +39,6 @@ export async function recordLiveAuditResult(repos: LiveAuditRepos, result: LiveA
 
 export async function recordAuditCorrection(repos: LiveAuditRepos, correction: AuditCorrection): Promise<void> {
   await repos.liveAudits.append(CORRECTIONS_KEY, `${correction.action}:${correction.factId}@${correction.at}`, { kind: "CORRECTION", correction }, correction.at);
-}
-
-export async function recordLiveAuditPull(repos: LiveAuditRepos, pull: LiveAuditPull): Promise<void> {
-  await repos.liveAudits.append(PULLS_KEY, `${pull.workItemId}:${pull.factId}@${pull.at}`, { kind: "PULL", pull }, pull.at);
-}
-
-export async function readAllLiveAuditPulls(repos: LiveAuditRepos): Promise<readonly LiveAuditPull[]> {
-  return (await repos.liveAudits.read(PULLS_KEY)).flatMap((row) => (row.kind === "PULL" ? [row.pull] : []));
-}
-
-export async function readLiveAuditPulls(repos: LiveAuditRepos, workItemId: string): Promise<readonly LiveAuditPull[]> {
-  return (await readAllLiveAuditPulls(repos)).filter((pull) => pull.workItemId === workItemId);
 }
 
 export async function readAuditWeek(repos: LiveAuditRepos, now: string): Promise<{ results: LiveAuditResult[]; corrections: AuditCorrection[] }> {

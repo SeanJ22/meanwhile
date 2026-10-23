@@ -1,0 +1,10 @@
+{
+  "url": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us.csv",
+  "finalUrl": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us.csv",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:33:07.663618+00:00",
+  "rawHash": "f1297a1d2dbe1f1b691a9ebeb0cff3808228a466d95b3d13336a4e55a9f53388",
+  "bytes": 21964847,
+  "sourceTextSha256": "6112966b7b347cb69c0b8eba1a6e1640a8681497088e86a29988e8a36b9baa7e",
+  "sourceText": "Exact 82 Mississippi counties, 20 chancery courts, 22 circuit courts and five appellate courts extracted from the captured full OCD registry; rawHash describes the full registry and sourceTextSha256 describes this excerpt."
+}

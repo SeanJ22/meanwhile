@@ -7,7 +7,7 @@ import type { CoverageSummary } from "@/lib/registry/coverage";
 import { representationForDivision } from "@/lib/registry/representation";
 import { levelKeyOf, type ResolvedLocation } from "@/lib/state/resolved-location";
 import { getCachedStateDivision, isStateDivisionPending } from "@/lib/reader/client";
-import type { FederalVacancy } from "@/lib/officials/chamber-directory";
+import type { SeatVacancy } from "@/lib/officials/types";
 
 /**
  * The reader's confirmed divisions, resolved by key. `coverage.seats` is the
@@ -18,7 +18,7 @@ import type { FederalVacancy } from "@/lib/officials/chamber-directory";
 export type DivisionStatus = "resolved" | "looking" | "unsourced" | "unavailable";
 
 export interface ConfirmedDivision {
-  readonly vacancy?: FederalVacancy;
+  readonly vacancy?: SeatVacancy;
   readonly ocdId: string;
   /** The division's own name. Null until known — never an OCD-ID, never a guess. */
   readonly label: string | null;
@@ -29,7 +29,7 @@ export interface ConfirmedDivision {
 }
 
 interface Answer {
-  vacancy?: FederalVacancy;
+  vacancy?: SeatVacancy;
   label: string | null;
   divisionType: string | null;
   tier: string | null;
@@ -86,7 +86,7 @@ export function useConfirmedDivisions(
               divisionType?: string | null;
               tier?: string | null;
               holders?: SeatHolder[];
-              vacancy?: FederalVacancy;
+              vacancy?: SeatVacancy;
             } | null,
           ) => {
             if (controller.signal.aborted) return;

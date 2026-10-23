@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { runInNewContext } from "node:vm";
 import test from "node:test";
 
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
@@ -12,6 +12,7 @@ import {
   warmAfterDeploy,
 } from "../lib/ops/post-deploy-warm.ts";
 import { handleDeploySucceeded } from "../netlify/functions/deploy-succeeded.mts";
+import { readerStartScript } from "../lib/reader/bootstrap.ts";
 
 /** A new deploy is warmed and its place answers are in the CDN before a reader asks. The plan is pure. */
 
@@ -49,12 +50,17 @@ const PLACES: readonly WarmPlace[] = [
   { zip: "59701", lat: 46.0, lng: -112.5 },
 ];
 
-test("POST-DEPLOY · each fill asks exactly what the map asks, so it fills the object a reader will hit", () => {
-  // The map's own request, whose query the CDN keys on exactly (`Netlify-Vary: query`).
-  const map = readFileSync("components/map/map-entry.tsx", "utf8");
-  assert.ok(map.includes("`/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`"), "the map's request shape changed; change readerMeetingsPath with it");
-  assert.ok(map.includes('const zipParam = zip ? `&zip=${zip}` : "";'));
-  assert.equal(readerMeetingsPath(PLACES[0]), "/api/meetings?lat=31.4&lng=-110.3&zip=85635");
+test("POST-DEPLOY · the fill and arriving page request the same CDN object", async () => {
+  const point=PLACES[0],calls:string[]=[];
+  const runtime={URL,URLSearchParams,Response,
+    location:{pathname:"/",search:`?zip=${point.zip}`,href:`${PUBLIC_SITE_ORIGIN}/?zip=${point.zip}`},
+    document:{documentElement:{dataset:{}}},window:{}as{__readerStart?:{location:Promise<unknown>}},
+    fetch:async(input:string)=>{calls.push(input);return Response.json({locations:{[point.zip]:point}});},
+  };
+  runInNewContext(readerStartScript(""),runtime);
+  assert.ok(runtime.window.__readerStart);
+  await runtime.window.__readerStart.location;
+  assert.deepEqual(calls.filter(path=>path.startsWith("/api/meetings?")),[readerMeetingsPath(point)]);
 });
 
 /** A fake production: `/api/build` serves `served()`, every other request answers 200 and is recorded. */

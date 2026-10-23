@@ -2668,6 +2668,310 @@
             "verifiedAt": "2026-10-14T05:11:28.336677Z",
             "doorId": "fec-wa-chief"
           }
+        },
+        {
+          "id": "ba01-wa-king-county-prosecuting-attorney",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king",
+          "divisionVintage": "2026",
+          "title": "King County Prosecuting Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "King County Prosecuting Attorney"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-assessor",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king",
+          "divisionVintage": "2026",
+          "title": "King County Assessor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "King County Assessor"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-director-of-elections",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king",
+          "divisionVintage": "2026",
+          "title": "King County Director of Elections",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "King County Director of Elections"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:2",
+          "divisionVintage": "2026",
+          "title": "Metropolitan King County, Council District No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Metropolitan King County , Council District No. 2"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:4",
+          "divisionVintage": "2026",
+          "title": "Metropolitan King County, Council District No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Metropolitan King County , Council District No. 4"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-6",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:6",
+          "divisionVintage": "2026",
+          "title": "Metropolitan King County, Council District No. 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Metropolitan King County , Council District No. 6"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-8",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/county:king/council_district:8",
+          "divisionVintage": "2026",
+          "title": "Metropolitan King County, Council District No. 8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Metropolitan King County , Council District No. 8"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-council-district-no-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle/council_district:5",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Council District No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "City of Seattle , Council District No. 5"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 1",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "City of Seattle , Municipal Court Judge Position No. 1"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 2",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "City of Seattle , Municipal Court Judge Position No. 2"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 3",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "City of Seattle , Municipal Court Judge Position No. 3"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "City of Seattle , Municipal Court Judge Position No. 4"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "City of Seattle , Municipal Court Judge Position No. 5"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "City of Seattle , Municipal Court Judge Position No. 6"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Municipal Court Judge Position No. 7",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "City of Seattle , Municipal Court Judge Position No. 7"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-proposition-no-1-seattle-transit-measure",
+          "electionId": "wa-2026-general",
+          "ocdId": "ocd-division/country:us/state:wa/place:seattle",
+          "divisionVintage": "2026",
+          "title": "City of Seattle, Proposition No. 1 — Seattle Transit Measure",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102258&groupname=City",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102258&groupname=City",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:57:09.556164Z",
+            "verifiedAt": "2026-10-20T22:57:09.556164Z",
+            "quote": "The City of Seattle adopted Ordinance No. 127474 concerning funding for transit service and related transportation needs in Seattle. The City of Seattle’s Proposition 1 would dedicate funding to transit services benefiting Seattle residents, including more frequent service; affordable fare programs for qualifying individuals; reliability, access, and climate projects; enhanced service on RapidRide and routes serving regional centers and high equity priority areas; facilitation of Sound Transit expansion; and others as provided in Ordinance 127474. It authorizes a 0.3% sales and use tax for up to ten years to replace the current voter-approved 0.15% sales tax expiring March 31, 2027. Should this Proposition be approved?"
+          }
         }
       ],
       "candidacies": [
@@ -7260,6 +7564,346 @@
             "doorId": "fec-wa-chief",
             "quote": "Todd A. Bloom"
           }
+        },
+        {
+          "id": "ba01-wa-king-county-prosecuting-attorney:86fbb7f76c638008",
+          "contestId": "ba01-wa-king-county-prosecuting-attorney",
+          "familyName": "Leesa Manion",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Leesa Manion"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-assessor:2b8ee8ed52b87987",
+          "contestId": "ba01-wa-king-county-assessor",
+          "familyName": "Rob Foxcurran",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Rob Foxcurran"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-assessor:1c511aa436cddb29",
+          "contestId": "ba01-wa-king-county-assessor",
+          "familyName": "Dominique M Scarimbolo",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Dominique M Scarimbolo"
+          }
+        },
+        {
+          "id": "ba01-wa-king-county-director-of-elections:ef5c0e0b762ebc42",
+          "contestId": "ba01-wa-king-county-director-of-elections",
+          "familyName": "Julie Wise",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Julie Wise"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-2:0e15640113bb70f4",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-2",
+          "familyName": "Rebecca Saldaña",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Rebecca Saldaña"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-2:4baf71d0bc2c9efc",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-2",
+          "familyName": "Toshiko Grace Hasegawa",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Toshiko Grace Hasegawa"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-4:7d2d90a16f2245db",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-4",
+          "familyName": "Jorge L. Barón",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Jorge L. Barón"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-6:32c6641a4753eff9",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-6",
+          "familyName": "Claudia Balducci",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Claudia Balducci"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-8:c9b937b5a51b33a8",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-8",
+          "familyName": "Teresa Mosqueda",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Teresa Mosqueda"
+          }
+        },
+        {
+          "id": "ba01-wa-metropolitan-king-county-council-district-no-8:5d94dfc120de29aa",
+          "contestId": "ba01-wa-metropolitan-king-county-council-district-no-8",
+          "familyName": "Nick Duda",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Nick Duda"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-council-district-no-5:4c74391fddafc980",
+          "contestId": "ba01-wa-city-of-seattle-council-district-no-5",
+          "familyName": "Nilu Jenks",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Nilu Jenks"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-council-district-no-5:5b3f024f249bd755",
+          "contestId": "ba01-wa-city-of-seattle-council-district-no-5",
+          "familyName": "Julie Kang",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Julie Kang"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1:d8b6293dfdb1e61e",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1",
+          "familyName": "Cat McDowall",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Cat McDowall"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2:35753d70c2cf67bd",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2",
+          "familyName": "Katharine Edwards",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Katharine Edwards"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3:e2e194e294e61add",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3",
+          "familyName": "Pooja Vaddadi",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Pooja Vaddadi"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4:22c8350b756424c8",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4",
+          "familyName": "Anita Crawford-Willis",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Anita Crawford-Willis"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5:6139acb387749b1b",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5",
+          "familyName": "Gabe Rothstein",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Gabe Rothstein"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5:804d2ab0f49fba1d",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5",
+          "familyName": "Garmon Newsom",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Garmon Newsom"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6:264973d008cf0011",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6",
+          "familyName": "Shantrice Anderson",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Shantrice Anderson"
+          }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7:e56d2adb9bb2132a",
+          "contestId": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7",
+          "familyName": "Damon Shadid",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:53:36.318832Z",
+            "verifiedAt": "2026-10-20T22:53:36.318832Z",
+            "quote": "Damon Shadid"
+          }
         }
       ],
       "measures": [
@@ -7307,18 +7951,32 @@
             "doorId": "fec-wa-chief",
             "quote": "Initiative Measure No. IP26-645 concerns state and local taxes. This measure would repeal a 9.9% tax on annual individual income over $1,000,000; prohibit taxes measured by individual income and taxes on individual income or the receipt of individual income; and define “income.” This measure would decrease funding for public K-12 education, higher education (including universities and community colleges), and human services (primarily healthcare). Should this measure be enacted into law? [ ] Yes [ ] No"
           }
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-proposition-no-1-seattle-transit-measure:question",
+          "contestId": "ba01-wa-city-of-seattle-proposition-no-1-seattle-transit-measure",
+          "officialNumber": "Proposition No. 1",
+          "questionText": "The City of Seattle adopted Ordinance No. 127474 concerning funding for transit service and related transportation needs in Seattle. The City of Seattle’s Proposition 1 would dedicate funding to transit services benefiting Seattle residents, including more frequent service; affordable fare programs for qualifying individuals; reliability, access, and climate projects; enhanced service on RapidRide and routes serving regional centers and high equity priority areas; facilitation of Sound Transit expansion; and others as provided in Ordinance 127474. It authorizes a 0.3% sales and use tax for up to ten years to replace the current voter-approved 0.15% sales tax expiring March 31, 2027. Should this Proposition be approved?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102258&groupname=City",
+            "sourceOrg": "King County Elections",
+            "collectedAt": "2026-10-20T22:57:09.556164Z",
+            "verifiedAt": "2026-10-20T22:57:09.556164Z",
+            "quote": "The City of Seattle adopted Ordinance No. 127474 concerning funding for transit service and related transportation needs in Seattle. The City of Seattle’s Proposition 1 would dedicate funding to transit services benefiting Seattle residents, including more frequent service; affordable fare programs for qualifying individuals; reliability, access, and climate projects; enhanced service on RapidRide and routes serving regional centers and high equity priority areas; facilitation of Sound Transit expansion; and others as provided in Ordinance 127474. It authorizes a 0.3% sales and use tax for up to ten years to replace the current voter-approved 0.15% sales tax expiring March 31, 2027. Should this Proposition be approved?"
+          }
         }
       ],
       "absences": [],
       "coverageNotes": [
-        "Washington’s official current-election page lists U.S. Representative, state legislative offices, Supreme Court, Court of Appeals and local offices on the November 3 ballot. No U.S. Senate or statewide executive contest is listed for this election. Court of Appeals district contests and local offices are outside this statewide-office and legislative package."
+        "Washington’s official current-election page lists U.S. Representative, state legislative offices, Supreme Court, Court of Appeals and local offices on the November 3 ballot. No U.S. Senate or statewide executive contest is listed for this election. Verified King County and Seattle local offices are included. We're working on getting the remaining local contests and measures."
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:11:28.336677Z",
-    "reviewedBy": "BL-16 official-source conversion",
+    "reviewedAt": "2026-10-20T23:08:53.016007Z",
+    "reviewedBy": "ba01-pacific-source-replay",
     "sources": [
       {
         "requestedUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899",
@@ -7389,6 +8047,36 @@
         "publisher": "Washington Secretary of State, Elections Division",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official 2026 general election document acquired from links published by Washington Secretary of State."
+      },
+      {
+        "requestedUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+        "finalUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+        "publisher": "King County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:53:36.318832Z",
+        "httpStatus": 200,
+        "rawHash": "6739b1dc35c3a5f7ffbf2a3c8b69dd5ad822a392b823298ef22589b9450c2e9d",
+        "reviewedEvidence": "Official general-election list groups 153 candidate names in 97 contests; local nonpartisan names replayed from exact contest HTML."
+      },
+      {
+        "requestedUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102258&groupname=City",
+        "finalUrl": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102258&groupname=City",
+        "publisher": "King County Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:57:09.556164Z",
+        "httpStatus": 200,
+        "rawHash": "9445564aca9dfc7cd4515c83c228a914ee8886ce98601f74942f8e8ecdb5329a",
+        "reviewedEvidence": "Official Seattle Proposition No.1 ballot statement copied exactly through its approval question; advocacy arguments are excluded."
+      },
+      {
+        "requestedUrl": "https://voter.votewa.gov/CandidateList.aspx?ctl00_ContentPlaceHolder1_grdCandidatesChangePage=1_100&e=899",
+        "finalUrl": "https://voter.votewa.gov/CandidateList.aspx?ctl00_ContentPlaceHolder1_grdCandidatesChangePage=1_100&e=899",
+        "publisher": "Washington Secretary of State, Elections Division",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:08:53.016007Z",
+        "httpStatus": 200,
+        "rawHash": "90dff01a61b379f1afd4382ecb9922e6a9943414c7a0caac54cc6b819a4924e6",
+        "reviewedEvidence": "Official full native Export to CSV acquired by its public form post, with modern browser User-Agent and Accept headers; 887 rows across599 offices. All137 congressional/legislative/Supreme Court contests and255 name+party rows match the held file exactly. Mailing/contact fields are excluded from projections."
       }
     ]
   }

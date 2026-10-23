@@ -37,11 +37,11 @@ export function packetDue(input: {
 }): PacketDue {
   const { packet, last } = input;
   if (packet.blanks.length === 0) return { due: false, why: "every blank is held or not owed" };
-  if (last === null) return { due: true, role: "HUNTER", why: `first hunt: ${packet.blanks.length} open blank(s)` };
+  if (last === null) return { due: true, role: packet.sourceFailures?.length ? "DETECTIVE" : "HUNTER", why: `first hunt: ${packet.blanks.length} open blank(s)` };
   const since = Date.parse(last.recordedAt);
   const tried = new Set(last.blankDigests);
   const retried = packet.blanks.filter(blank => tried.has(blankDigest(blank))).length;
-  const role: HuntRole = retried * 2 >= packet.blanks.length ? "DETECTIVE" : "HUNTER";
+  const role: HuntRole = packet.sourceFailures?.length || retried * 2 >= packet.blanks.length ? "DETECTIVE" : "HUNTER";
   const shut = input.shutDoors.find(door => door.shutSince === null || Date.parse(door.shutSince) > since);
   if (shut) return { due: true, role: "DETECTIVE", why: `door ${shut.doorId} shut since the last hunt` };
   if (input.orderedAt !== null && Date.parse(input.orderedAt) > since) return { due: true, role, why: "a new order since the last hunt" };

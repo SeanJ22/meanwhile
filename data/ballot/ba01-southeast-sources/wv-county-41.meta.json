@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Randolph%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Randolph%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.057915+00:00",
+  "rawHash": "7ef392583d1a947963b7aecdfc64f8f41cef435579f686f371b5f28a2041995b",
+  "httpStatus": 200,
+  "bytes": 875001,
+  "extractedTextHash": "5de336abe7027ff011bd190348164bae6681712e01476d5b13841e33c283b3a1",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

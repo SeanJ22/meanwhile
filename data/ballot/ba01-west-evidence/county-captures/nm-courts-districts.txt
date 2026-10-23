@@ -1,0 +1,1624 @@
+
+ 
+ 
+ 
+ 
+
+ 
+     
+     
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-MGKZN4R');
+     
+     
+     
+     
+     
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-FK4K3XGHQG');
+     
+
+     
+     
+     
+     
+     
+     
+     
+
+	 
+	 Courts by District - New Mexico Courts 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 {"@context":"https:\/\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\/\/nmcourts.gov\/courts-by-district\/","url":"https:\/\/nmcourts.gov\/courts-by-district\/","name":"Courts by District - New Mexico Courts","isPartOf":{"@id":"https:\/\/nmcourts.gov\/#website"},"datePublished":"2023-09-26T18:56:26+00:00","dateModified":"2024-06-21T12:29:42+00:00","description":"Discover the district court system in detail. Learn about the various courts by district and how they function.","breadcrumb":{"@id":"https:\/\/nmcourts.gov\/courts-by-district\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\/\/nmcourts.gov\/courts-by-district\/"]}]},{"@type":"BreadcrumbList","@id":"https:\/\/nmcourts.gov\/courts-by-district\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\/\/nmcourts.gov\/"},{"@type":"ListItem","position":2,"name":"Courts by District"}]},{"@type":"WebSite","@id":"https:\/\/nmcourts.gov\/#website","url":"https:\/\/nmcourts.gov\/","name":"New Mexico Courts","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\/\/nmcourts.gov\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]} 
+	 
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+ 
+ 
+ 
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+ 
+ 
+
+ 
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+ 
+ 
+ 
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #FFFFFF;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--dark-gray: #28303D;--wp--preset--color--gray: #39414D;--wp--preset--color--green: #D1E4DD;--wp--preset--color--blue: #D1DFE4;--wp--preset--color--purple: #D1D1E4;--wp--preset--color--red: #E4D1D1;--wp--preset--color--orange: #E4DAD1;--wp--preset--color--yellow: #EEEADD;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--gradient--purple-to-yellow: linear-gradient(160deg, #D1D1E4 0%, #EEEADD 100%);--wp--preset--gradient--yellow-to-purple: linear-gradient(160deg, #EEEADD 0%, #D1D1E4 100%);--wp--preset--gradient--green-to-yellow: linear-gradient(160deg, #D1E4DD 0%, #EEEADD 100%);--wp--preset--gradient--yellow-to-green: linear-gradient(160deg, #EEEADD 0%, #D1E4DD 100%);--wp--preset--gradient--red-to-yellow: linear-gradient(160deg, #E4D1D1 0%, #EEEADD 100%);--wp--preset--gradient--yellow-to-red: linear-gradient(160deg, #EEEADD 0%, #E4D1D1 100%);--wp--preset--gradient--purple-to-red: linear-gradient(160deg, #D1D1E4 0%, #E4D1D1 100%);--wp--preset--gradient--red-to-purple: linear-gradient(160deg, #E4D1D1 0%, #D1D1E4 100%);--wp--preset--font-size--small: 18px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 24px;--wp--preset--font-size--x-large: 42px;--wp--preset--font-size--extra-small: 16px;--wp--preset--font-size--normal: 20px;--wp--preset--font-size--extra-large: 40px;--wp--preset--font-size--huge: 96px;--wp--preset--font-size--gigantic: 144px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+var wpml_cookies = {"wp-wpml_current_language":{"value":"en","expires":1,"path":"/"}};
+var wpml_cookies = {"wp-wpml_current_language":{"value":"en","expires":1,"path":"/"}};
+//# sourceURL=wpml-cookie-js-extra
+ 
+ 
+ 
+( Element.prototype.matches && Element.prototype.closest && window.NodeList && NodeList.prototype.forEach ) || document.write( '<script src="https://nmcourts.gov/wp-content/themes/twentytwentyone/assets/js/polyfills.js?ver=1.0.1"></scr' + 'ipt>' );
+//# sourceURL=twenty-twenty-one-ie11-polyfills-js-after
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+//# sourceURL=wp-i18n-js-after
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+     
+        #wp-admin-bar-my-sites-list .kodeala-msdd-divider{
+            height:5px;
+        }
+        #wp-admin-bar-my-sites-list .kodeala-msdd-divider > .ab-item {
+            pointer-events: none;
+            border-top: 1px solid rgba(255,255,255,.25);
+            margin: 6px 0;
+            height: 0;
+            padding: 0;
+        }
+
+        #wp-admin-bar-my-sites-list .kodeala-msdd-divider > .ab-item.ab-empty-item {
+            height: 0;
+            min-height: 0;
+            line-height: 0;
+        }
+
+        #wp-admin-bar-my-sites-list .kodeala-msdd-divider > .ab-item:before { content: ""; }
+
+        #wp-admin-bar-my-sites-list .kodeala-msdd-group-label > .ab-item {
+            pointer-events: none;
+            font-weight: 600;
+            opacity: 1;
+            cursor: default;
+            background: #2c3338;
+            color: #fff;
+            margin: 6px 0;
+            padding: 0 8px;
+        }
+
+     
+     
+ document.documentElement.className += " js"; 
+		 
+			.ipra-form-column {max-width: 1440px; margin: auto;gap: 5rem;}
+
+.ipra-form-column .frm_forms fieldset {border-radius: 10px;}
+
+.round-text-container {border-radius: 10px;}		 
+		     
+        var ajax_url_search = "https://nmcourts.gov/wp-admin/admin-ajax.php";
+     
+     
+        function stickyNav() {
+            var $window = jQuery(window);
+            var $masthead = jQuery(document).find("#masthead");
+            var $globalNav = jQuery(document).find(".global-nav");
+            var $placeholder = jQuery(document).find(".masthead-place-holder");
+            var $siteAlert = jQuery(document).find(".site-alert");
+            var $wpAdminBar = jQuery(document).find("#wpadminbar");
+            var isUserLoggedin = jQuery(document).find("body.logged-in").length
+
+            // ✅ Use outerHeight(false) to exclude margins
+            var mastHeight = $masthead.outerHeight(false);
+            var gnHeight = $globalNav.length ? $globalNav.outerHeight(false) : 0;
+            var saHeight = $siteAlert.length ? $siteAlert.outerHeight(false) : 0;
+            var wpAdminBarHeight = $wpAdminBar.length ? $wpAdminBar.outerHeight(false) : 0;
+            var navTop = jQuery(document).find(".top-header").position().top;
+
+            function handleSticky() {
+                var scroll = $window.scrollTop();
+
+                if (scroll >= navTop && jQuery(".has-children.current").length === 0) {
+
+                    if ($window.width() > 1023) {
+                        // ✅ Reserve exactly the combined height (no margin duplication)
+                        $placeholder.css("height", mastHeight + gnHeight + saHeight + "px");
+
+                        if ($siteAlert.length) {
+                            $siteAlert.css({
+                                position: "fixed",
+                                top: wpAdminBarHeight,
+                                width: "100%",
+                                zIndex: 999,
+                            });
+                        }
+
+                        $masthead.css({
+                            position: "fixed",
+                            top: $siteAlert.length ? saHeight + wpAdminBarHeight + "px" : wpAdminBarHeight,
+                            width: "100%",
+                            zIndex: 999,
+                        });
+
+                        $globalNav.css({
+                            position: "fixed",
+                            top: mastHeight + saHeight + wpAdminBarHeight + "px", // stacked under masthead
+                            width: "100%",
+                            zIndex: 998,
+                        });
+                    } else {
+                        reset();
+                    }
+                } else {
+                    reset();
+                }
+            }
+
+            function reset() {
+                $placeholder.css("height", 0);
+                if ($siteAlert.length) {
+                    $siteAlert.css({
+                        position: "relative",
+                        top: "auto"
+                    });
+                }
+                $masthead.css({
+                    position: "relative",
+                    top: "auto"
+                });
+                $globalNav.css({
+                    position: "relative",
+                    top: "auto"
+                });
+            }
+
+            if ($window.width() > 1023) {
+                $window.off("scroll.stickyNav").on("scroll.stickyNav", handleSticky);
+            }
+
+            // ✅ Run once on load/resize
+            handleSticky();
+        }
+     
+ 
+
+ 
+         
+     
+
+     
+
+     
+
+         
+            Skip to content         
+
+        
+
+
+
+ 
+ 
+
+	
+ 
+
+	 
+
+		
+			 
+				 
+					 
+						 
+					 
+				 
+			 
+
+		
+		 
+
+			 
+
+				 
+					 
+				 
+
+			 
+
+		 
+
+	 
+
+	
+		 
+
+			 
+
+				 
+																				 
+									 
+										Careers									 
+								 
+
+							
+																					 
+									 
+										News									 
+								 
+
+							
+																					 
+									 
+										Resources									 
+								 
+
+							
+																					 
+									 
+										Court Administration									 
+								 
+
+							
+													
+								
+							
+						
+						
+					
+					 
+						 ADA & Accommodations 						 
+							ADA & Accommodations						 
+													 
+								Ver el sitio en Español							 
+						
+						
+						
+					 
+
+				 
+
+			 
+
+			 
+
+				 
+					 
+					 
+					 
+				 
+
+				 
+					Menu				 
+
+			 
+
+		 
+
+		
+			 
+
+				 
+
+					 
+
+						 Menu
+							 						 
+
+						 Close							 						 
+
+					 
+
+				 
+
+			 
+
+		
+		
+	
+ 
+ 
+
+
+	
+	
+		
+		 
+
+			 
+
+				 
+
+					 
+
+													
+							 
+
+								 
+									Find Your Court								 
+
+								
+									 
+
+										 
+
+											 
+												Close											 
+
+											 
+												Find Your Court											 
+
+											 
+
+																									 
+															About the Courts														 
+													 
+
+																									 
+															Courts in New Mexico														 
+													 
+
+																									 
+															Courts by District														 
+													 
+
+																									 
+															Courts by County														 
+													 
+
+																									 
+															Search for Your Court														 
+													 
+
+												
+											 
+
+										 
+
+									 
+
+								
+							 
+
+													
+							 
+
+								 
+									Jury Duty								 
+
+								
+									 
+
+										 
+
+											 
+												Close											 
+
+											 
+												Jury Duty											 
+
+											 
+
+																									 
+															Jury Duty Portal														 
+													 
+
+																									 
+															About Jury Duty														 
+													 
+
+																									 
+															Jury Duty by District														 
+													 
+
+																									 
+															Frequently Asked Questions (FAQs)														 
+													 
+
+																									 
+															Tips for Coping After Jury Duty														 
+													 
+
+																									 
+															Jury Related Forms														 
+													 
+
+												
+											 
+
+										 
+
+									 
+
+								
+							 
+
+													
+							 
+
+								 
+									Self-Representation								 
+
+								
+									 
+
+										 
+
+											 
+												Close											 
+
+											 
+												Self-Representation											 
+
+											 
+
+																									 
+															Self-Representation by Court District														 
+													 
+
+																									 
+															Self-Representation Video Library														 
+													 
+
+																									 
+															Adult Guardianship & Conservatorship														 
+													 
+
+																									 
+															Appeals from District Court														 
+													 
+
+																									 
+															Divorce														 
+													 
+
+																									 
+															Domestic Violence														 
+													 
+
+																									 
+															Expungement of Records Involving Cannabis														 
+													 
+
+																									 
+															Extreme Risk Firearm Protection Order (ERFPO)														 
+													 
+
+																									 
+															Kinship Guardianship														 
+													 
+
+																									 
+															Landlord-Tenant														 
+													 
+
+																									 
+															Name Change														 
+													 
+
+																									 
+															Probate														 
+													 
+
+																									 
+															Supreme Court Law Library														 
+													 
+
+																									 
+															Resources														 
+													 
+
+																									 
+															New Mexico Courts HelpLine														 
+													 
+
+												
+											 
+
+										 
+
+									 
+
+								
+							 
+
+													
+							 
+
+								 
+									Pay Fines/Fees								 
+
+								
+							 
+
+													
+							 
+
+								 
+									Services & Programs								 
+
+								
+									 
+
+										 
+
+											 
+												Close											 
+
+											 
+												Services & Programs											 
+
+											 
+
+																									 
+															Adult Guardianship														 
+													 
+
+																									 
+															Alternative Dispute Resolution (ADR) Services														 
+													 
+
+																									 
+															Behavioral Health														 
+													 
+
+																									 
+															Bernalillo County Criminal Justice Coordinating Council (BCCJCC)														 
+													 
+
+																									 
+															Court Appointed Special Advocates (CASA)														 
+													 
+
+																									 
+															Court Improvement Project														 
+													 
+
+																									 
+															Department for Therapeutic Justice														 
+													 
+
+																									 
+															Domestic Violence														 
+													 
+
+																									 
+															Judicial Performance Evaluation														 
+													 
+
+																									 
+															NM AOC Pretrial Justice Program														 
+													 
+
+																									 
+															Rural Justice Initiative														 
+													 
+
+																									 
+															Safe Exchange & Supervised Visitation (SESV)														 
+													 
+
+																									 
+															Tribal-State Judicial Consortium														 
+													 
+
+												
+											 
+
+										 
+
+									 
+
+								
+							 
+
+													
+							 
+
+								 
+									Public Records								 
+
+								
+									 
+
+										 
+
+											 
+												Close											 
+
+											 
+												Public Records											 
+
+											 
+
+																									 
+															Inspection of Public Records Request (IPRA)														 
+													 
+
+																									 
+															Case Lookup														 
+													 
+
+																									 
+															Public Access and re:Search®NM														 
+													 
+
+												
+											 
+
+										 
+
+									 
+
+								
+							 
+
+													
+							 
+
+								 
+									Forms & Files								 
+
+								
+									 
+
+										 
+
+											 
+												Close											 
+
+											 
+												Forms & Files											 
+
+											 
+
+																									 
+															Accessibility														 
+													 
+
+																									 
+															Adult Guardianship														 
+													 
+
+																									 
+															Affidavits														 
+													 
+
+																									 
+															Appeals														 
+													 
+
+																									 
+															Child Support														 
+													 
+
+																									 
+															Children’s Court														 
+													 
+
+																									 
+															Civil														 
+													 
+
+																									 
+															Criminal														 
+													 
+
+																									 
+															Divorce & Family														 
+													 
+
+																									 
+															Domestic Violence														 
+													 
+
+																									 
+															Jury Duty														 
+													 
+
+																									 
+															Kinship Guardianship														 
+													 
+
+																									 
+															Landlord/Tenant														 
+													 
+
+																									 
+															Name Change														 
+													 
+
+																									 
+															Other Files														 
+													 
+
+																									 
+															Probate														 
+													 
+
+																									 
+															Self-Representation														 
+													 
+
+												
+											 
+
+										 
+
+									 
+
+								
+							 
+
+						
+					 
+
+					 
+
+						 
+							Search						 
+
+						 
+
+							 
+
+								 
+
+									 
+
+										 
+
+										 
+											Search										 
+
+									 
+
+								 
+
+							 
+
+							 
+
+								 
+									
+												 
+													 
+														Careers													 
+												 
+
+											
+										
+												 
+													 
+														News													 
+												 
+
+											
+										
+												 
+													 
+														Resources													 
+												 
+
+											
+										
+												 
+													 
+														Court Administration													 
+												 
+
+											
+										
+											
+										
+										
+
+									
+									 
+
+										 ADA & Accommodations 
+										 
+											ADA & Accommodations										 
+
+										
+											 
+
+												Ver el sitio en Español
+											 
+
+										
+										
+										
+									 
+
+								 
+
+							 
+
+						 
+
+						 
+
+							 
+
+							 Close 
+
+							 
+
+								 Search 
+
+								 
+
+									 
+
+										 
+
+											 Search 
+
+											 
+
+											 
+												Search											 
+
+										 
+
+									 
+
+								 
+
+							 
+
+						 
+
+						
+						 
+
+							 
+
+								 CLOSE 
+
+								 
+
+									 
+										About the Courts									 
+
+									 
+ Supreme Court 
+ 
+
+ 
+ The  Supreme Court  consists of five Justices and is located in Santa Fe. This is the court of last resort and has superintending control over all inferior courts and attorneys licensed in the state. 
+ 
+
+ 
+ This court has mandatory appellate jurisdiction over : criminal matters in which the sentence imposed is life in prison or the death penalty, appeals from the Public Regulation Commission, appeals from the granting of writs of habeas corpus, appeals in actions challenging nominations, and removal of public officials. 
+ 
+
+ 
+ Discretionary jurisdiction : denials of petitions for writ of habeas corpus, petitions for writ of certiorari to the Court of Appeals, other extraordinary writ matters, and certified questions either from the Court of Appeals or federal courts. 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ Court of Appeals 
+ 
+
+ 
+ Ten judges preside, sitting in panels of three. The  Court of Appeals  has offices in Santa Fe and Albuquerque. 
+ 
+
+ 
+ This court has mandatory jurisdiction in : civil, non-capital criminal, juvenile cases; Discretionary jurisdiction in interlocutory decision cases and administrative agency appeals. 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ District Court 
+ 
+
+ 
+ One-hundred-two judges preside. There are thirteen different districts. These are  District Courts  of general jurisdiction which hold jury trials. 
+ 
+
+ 
+ This court will hear these types of cases : Tort, contract, real property rights, and estate. Exclusive domestic relations, mental health, appeals for administrative agencies and lower courts, miscellaneous civil jurisdiction; Misdemeanor. Exclusive criminal appeals jurisdiction; Exclusive juvenile jurisdiction. 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ Magistrate Court 
+ 
+
+ 
+ Sixty-seven judges preside. There are 46 magistrate courts. These are courts of limited jurisdiction. Jury trials. 
+ 
+
+ 
+ This court will hear these types of cases : Tort, contract, landlord/tenant rights ($0-10,000); Felony preliminary hearings; Misdemeanor, DWI/DUI and other traffic violations. 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ Bernalillo County Metropolitan Court 
+ 
+
+ 
+ Nineteen judges preside.  Bernalillo County Metropolitan Court  is of limited jurisdiction. Jury trials. 
+ 
+
+ 
+ This court will hear these types of cases : Tort, contract, landlord/tenant rights ($0-10,000); Felony first appearances; Misdemeanor, DWI/DUI, Domestic Violence and other traffic violations. 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ Municipal Court 
+ 
+
+ 
+ Eighty-three judges preside. There are eighty-one  municipal courts . These are courts of limited jurisdiction. No jury trials. 
+ 
+
+ 
+ This court will hear these types of cases : Petty misdemeanors, DWI/DUI, traffic violations and other municipal ordinance violations. 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+ Probate Court 
+ 
+
+ 
+ Thirty-three judges. There are thirty-three counties. These are courts of limited jurisdiction. No jury trials. 
+ 
+
+ 
+ This court will hear these types of cases : Informal probate; Estate (Hears uncontested cases. Contested cases go to district court). 
+ 
+
+ 
+ 
+ 
+								 
+
+							 
+
+						 
+
+					 
+
+				 
+
+			 
+
+		 
+
+		
+	
+
+
+         
+                             
+                     
+                         
+                             Courts by District 
+                         
+                     
+                 
+            
+ 
+			 
+			 
+				 
+												 
+								 
+									 
+										 Supreme Court 
+										 This is the court of last resort and has superintending control over all inferior courts and attorneys licensed in the state. 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Fifth Judicial District 
+										 For Chaves County, Eddy County, and Lea County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 First Judicial District 
+										 For Los Alamos, Rio Arriba County and Santa Fe County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Second Judicial District 
+										 For Bernalillo County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Third Judicial District 
+										 For Doña Ana County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Fourth Judicial District 
+										 For Guadalupe County, Mora County, and San Miguel County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Sixth Judicial District 
+										 For Grant County, Hidalgo County, and Luna County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Seventh Judicial District 
+										 For Catron County, Socorro County, Sierra County, and Torrance County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Eighth Judicial District 
+										 For Taos County, Colfax County, and Union County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Ninth Judicial District 
+										 Serving Curry County and Roosevelt County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Tenth Judicial District 
+										 For DeBaca County, Harding County, and Quay County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Eleventh Judicial District 
+										 For McKinley County and San Juan County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Twelfth Judicial District 
+										 For Lincoln County and Otero County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Thirteenth Judicial District 
+										 For Cibola County, Sandoval County, and Valencia County 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Court of Appeals 
+										 Mandatory jurisdiction in: civil, non-capital criminal, juvenile cases; Discretionary jurisdiction in interlocutory decision cases and administrative agency appeals. 
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Municipal Courts 
+										 Petty misdemeanors, DWI/DUI, traffic violations and other municipal ordinance violations. These courts are of limited jurisdiction. No jury trials.  
+									 
+								 
+								 
+									 View More 
+								 
+							 
+												 
+								 
+									 
+										 Bernalillo County Metropolitan Court 
+										 Tort, contract, landlord/tenant rights ($0-10,000); Felony first appearances; Misdemeanor, DWI/DUI, Domestic Violence and other traffic violations. These courts are of limited jurisdiction. Jury trials.  
+									 
+								 
+								 
+									 View More 
+								 
+							 
+									 
+			 
+		 
+		 
+			 
+				 New Mexico Judicial Branch Website Disclaimer 
+				 
+					This website was created by the New Mexico Judicial Branch solely as a public service. The Judicial Branch does not warrant the accuracy of the information
+					displayed by this website nor is it responsible for any errors or omissions and assumes no liability for its use, availability or compatibility with website
+					users' software or computers. This information is by necessity general in nature and is not intended as legal advice, but rather information which may be useful in
+					understanding how courts in New Mexico operate. For legal advice, you should contact a lawyer.
+				 
+			 
+		 
+		 
+
+	 
+
+     
+
+     
+
+         
+
+             
+
+                 
+
+                     
+                        Are you looking for a specific court?                     
+
+                     
+                        The judicial branch of New Mexico consists of the Supreme Court, Court of Appeals, 34 district courts and 43 magistrate courts in 13 judicial districts, the Bernalillo County Metropolitan Court, 33 county probate courts, and 78 municipal courts serving the people of the state.                     
+
+                 
+
+                 
+
+                     
+
+                         
+
+                            About the Courts
+                         
+
+                         
+                            Search for Your Court                         
+
+                     
+
+                 
+
+             
+
+         
+
+     
+
+
+
+ 
+
+     You are now leaving the New Mexico Courts Website. 
+
+     Welcome to the  
+
+     By clicking 'Continue' you will be redirected to  
+
+     Welcome to the New Mexico Courts Main Website 
+
+     the New Mexico Courts Main Website 
+
+
+
+     Current Search Term:  
+
+     We found  
+
+      courts that match your search. 
+
+
+
+     Judicial District Court 
+
+     Appeals from District Court 
+
+     Court of Appeals 
+
+ 
+
+ 
+
+     
+
+     
+
+         
+
+         
+
+         
+
+         
+
+             No, Find My Court 
+
+             Yes, Continue 
+
+         
+
+         
+
+             
+
+                 
+
+                 Do not show this again 
+
+             
+
+         
+
+     
+
+ 
+
+ 
+
+     
+
+     
+
+         
+            You are now leaving            the New Mexico Courts Main Website. 
+
+         
+
+         By clicking 'Continue' you will be redirected to  
+
+         
+
+             No, Go Back 
+
+             Yes, Continue 
+
+         
+
+         
+
+             
+
+                 
+
+                 Do not show this again 
+
+             
+
+         
+
+     
+
+ 
+
+
+ 
+
+     
+
+         Protecting Rights and Ensuring Justice for All: New Mexico Judiciary's Promise.  New Mexico Courts HelpLine: (855) 268-7804 
+
+         
+
+             
+
+                
+                             ADA Accessibility 
+
+                
+                             Language Access Services 
+
+                
+                             ADA & Accommodations 
+
+                
+                             Careers 
+
+                
+                             Public Records Request (IPRA) 
+
+                
+                             Contact Us 
+
+                
+             
+
+         
+
+         
+
+             
+
+                
+                     
+                         
+                             
+ 
+ 
+                         
+                     
+
+                
+                     
+                         
+                             
+ 
+ 
+                         
+                     
+
+                
+                     
+                         
+                                .cls-1 { fill: #fff; stroke-width: 0px; }                            
+                     
+
+                
+             
+
+         
+
+         © 2026 New Mexico Judicial Branch. All rights reserved. 
+
+     
+
+ 
+
+ 
+    .subsite-court-search-layer.active article:not(:nth-child(3)),
+    .subsite-court-about-layer.active article:not(:nth-child(3)) {
+        display: none;
+    }
+ 
+
+ 
+
+ 
+
+ 
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/nmcourts/*","/wp-content/themes/twentytwentyone/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+ 
+ document.body.classList.remove("no-js"); 	 
+	if ( -1 !== navigator.userAgent.indexOf( 'MSIE' ) || -1 !== navigator.appVersion.indexOf( 'Trident/' ) ) {
+		document.body.classList.add( 'is-IE' );
+	}
+	 
+	 
+ 
+ 
+ 
+ 
+var alm_localize = {"pluginurl":"https://nmcourts.gov/wp-content/plugins/ajax-load-more","version":"7.8.4","adminurl":"https://nmcourts.gov/wp-admin/","ajaxurl":"https://nmcourts.gov/wp-admin/admin-ajax.php","alm_nonce":"b2a52946cb","rest_api_url":"","rest_api":"https://nmcourts.gov/wp-json/","rest_nonce":"aafdc4c8f7","trailing_slash":"true","is_front_page":"false","retain_querystring":"1","speed":"250","results_text":"Viewing {post_count} of {total_posts} results.","no_results_text":"No results found.","alm_debug":"","a11y_focus":"1","site_title":"New Mexico Courts","site_tagline":"","button_label":"Load More"};
+//# sourceURL=ajax-load-more-js-extra
+ 
+ 
+ 
+ 
+ 
+ 
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://nmcourts.gov/wp-includes/js/wp-emoji-release.min.js?ver=6da750d3788c99e2c15ff5efa209d6af"}}
+ 
+ 
+/*! This file is auto-generated */
+var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof HTMLScriptElement))throw new Error("Element missing: "+e);const r=JSON.parse(t.text),s=(window._wpemojiSettings=r,"wpEmojiSettingsSupports"),o=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(s,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const r=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===r[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,r){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!r(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,r){let a;const s=(a="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),o=(s.textBaseline="top",s.font="600 32px Arial",{});return e.forEach(e=>{o[e]=t(s,e,n,r)}),o}function a(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}r.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(s));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(o),u.toString(),c.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"});const a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=e=>{i(n=e.data),a.terminate(),t(n)})}catch(e){}i(n=f(o,u,c,p))}t(n)}).then(e=>{for(const n in e)r.supports[n]=e[n],r.supports.everything=r.supports.everything&&r.supports[n],"flag"!==n&&(r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&r.supports[n]);var t;r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&!r.supports.flag,r.supports.everything||((t=r.source||{}).concatemoji?a(t.concatemoji):t.wpemoji&&t.twemoji&&(a(t.twemoji),a(t.wpemoji)))});
+//# sourceURL=https://nmcourts.gov/wp-includes/js/wp-emoji-loader.min.js
+ 
+
+ 
+

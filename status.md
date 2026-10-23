@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 92 LIVE (/api/build 5f0e9de16 from 1:46 PM EDT; runner on 5f0e9de16 from 17:44 UTC); RELEASE 93 candidate river-next 01f39a1f6 (BL-01 + BL-21-FX on release 92) in pnpm gates from 1:35 PM EDT
+build_state: RELEASE 92 LIVE (/api/build 5f0e9de16 from 1:46 PM EDT; runner on 5f0e9de16 from 17:44 UTC); RELEASE 93 candidate river-next 5ddf41bb8 (BL-21-FX alone on release 92) in pnpm gates from 2:25 PM EDT; BL-01 returned
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -93,7 +93,8 @@ Queue (8:20 AM EDT):
 - Queue at 1:35 PM EDT (the stream watcher died with the container restart; these READYs were found by a fresh scan):
   - bl-01 a27c677e6 (BL-01, both proofs): folded, c59a05e6e. Three small clashes resolved in the fold: pick-control.tsx header keeps both descriptions; civic-data runner.ts and store.ts keep both failureStreak (river) and publishedScopeVersions (BL-01).
   - ballot-parity-fx 41f20be9a (BL-21-FX, FX-01's answer to returns/ballot-parity.md, both proofs): folded, 01f39a1f6. Seven files clashed with releases 89 to 92, all resolved keeping both sides (navigation and census geography both stream and both take the held promotion path; receipt check keeps the translation-state scope and the scoped manual contract scope; text-layer keeps the pdfjs guard and the doc base URL; the runner skip line keeps recordLaunchDecision on the publication target).
-  - tsc, eslint on the resolved files and knip are clean; pnpm gates running. Release 93 when they pass.
+  - First gates on 01f39a1f6 (BL-01 + BL-21-FX, 1:35 to 2:15 PM EDT): 8 of 9, test 9,636 pass, 10 fail. All 10 are BL-01's: they fail the same on its own READY a27c677e6 and on release 92 + BL-01 alone. BL-01 RETURNED (returns/bl-01.md): the ZIP Census read drops the district explainers and district people readers see today, a runner crash in routineTaskDue (runner.ts:692), Fargo 25 of 26 contests, the FEC "JR" suffix, BAL-41/43 ballot layout tests. CS-01 waits behind it.
+  - River-next rebuilt as release 92 + BL-21-FX alone (5ddf41bb8; only 4 files clash without BL-01, same resolutions). tsc and knip clean; pnpm gates from 2:25 PM EDT. Release 93 when they pass.
   - cs-01 39238a8be: REFUSED (returns/cs-01.md). Its message has the next-run proof but never says it is connected end to end. A READY that states it folds next, after bl-01, keeping both sides of app/ballot/page.tsx.
   - dg-01-fx 04dfa4caf (DG-01-FX): not folded, superseded. DG-01 286a2d791 already shipped inside DG-02 (release 90, live 10:24 AM EDT), which answered the same returns/dg-01.md. Merging DG-01-FX on top would re-resolve the same ingest.ts code a second way (15 clashing hunks with what is live). Nothing for FX-01 to do; dg-01 is closed.
   - Unchanged, still returned: rn-02 d04982090 (merge river), pb-02 85bf54e3d (READY message), lv-01 f786ce81f (READY message), src-01 66437c4f2 (EPA ECHO, OpenFEMA), pb-01 (withdrawn). eo-01: WIP only (waits on lv-01).

@@ -9,6 +9,10 @@ import { durableRoutineRunnerReceiptIssue, parseRoutineRunnerReceipt } from "../
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 import type { KnownRelease, KnownReleaseOptions } from "../lib/sources/known-release.ts";
+import { FEDERAL_DIRECTORY_STATES } from "../lib/officials/federal-directory-data-plane.ts";
+import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
+import { routineFailureDomainFrontier } from "../lib/civic-data/runner.ts";
+import { congressMemberResults, groupCongressReads } from "../lib/civic-data/congress-runs.ts";
 
 const NOW = "2026-10-09T21:30:00.000Z", SHA = "a".repeat(40);
 const files: Record<string, unknown> = {
@@ -31,7 +35,7 @@ function fixtureRelease(options: KnownReleaseOptions): KnownRelease {
   const bytes = new TextEncoder().encode(options.releaseId === "chamber-directory:house"
     ? '<MemberData><member><statedistrict>AZ01</statedistrict><bioguideID>A000001</bioguideID><official-name>Jane Example</official-name><office-room>100</office-room><office-building>CHOB</office-building><office-zip>20515</office-zip><phone>202-225-1000</phone></member></MemberData>'
     : options.releaseId === "chamber-directory:senate"
-      ? '<contact_information><member><state>WA</state><bioguide_id>B000002</bioguide_id><member_full>Sam Elsewhere</member_full></member></contact_information>'
+      ? '<contact_information><member><state>WA</state><bioguide_id>B000002</bioguide_id><member_full>Sam Elsewhere</member_full><first_name>Sam</first_name><last_name>Elsewhere</last_name></member></contact_information>'
       : JSON.stringify(files[name]));
   return { sourceId: options.sourceId, releaseId: options.releaseId, requestedUrl: options.url, finalUrl: options.url,
     bytes, sha256: createHash("sha256").update(bytes).digest("hex"), httpStatus: 200, retrievedAt: NOW,
@@ -40,6 +44,57 @@ function fixtureRelease(options: KnownReleaseOptions): KnownRelease {
 }
 const expected = { id: "congress-bulk-roster:AZ", sourceId: "congress-directory-project", recordClass: "FEDERAL_DIRECTORY" as const,
   scope: "US-AZ:current-congress-directory", contract: requiredManualProductionContract("congress-bulk-roster:AZ") };
+
+test("one national acquisition publishes every due Congress state in one memory turn", async t => {
+  const store = new MemoryRoutineDataStore(), lines: string[] = [], acquired = new Set<string>();
+  t.mock.method(console, "log", (line: string) => { lines.push(line); });
+  let revisions = 0;
+  const tasks = AUTOMATIC_REFRESH_TASKS.filter(task => task.recordClass === "FEDERAL_DIRECTORY");
+  const admitted = routineFailureDomainFrontier(tasks.map(task => ({ task, lastConsideredAt: null })));
+  assert.equal(admitted.length, FEDERAL_DIRECTORY_STATES.length);
+  const groups = groupCongressReads(admitted.map(({ task }) => ({ id: task.id, kind: "MANUAL" })));
+  assert.equal(groups.length, 1);
+  await refreshCongressDirectory({ states: FEDERAL_DIRECTORY_STATES, store, vault: new MemoryEvidenceStore(), now: () => NOW,
+    revision: async () => { revisions++; return revision(); }, acquire: async options => {
+      assert.equal(acquired.has(options.url), false, "each national file is read once across every place");
+      acquired.add(options.url); let held = fixtureRelease(options);
+      if (options.releaseId.endsWith("legislators-current")) {
+        const people = [...files["legislators-current"] as unknown[], ...FEDERAL_DIRECTORY_STATES.filter(state => !["AZ", "WA"].includes(state)).map((state, index) => ({
+          id: { bioguide: `C${String(index + 1).padStart(6, "0")}` }, name: { first: "Test", last: state },
+          terms: [{ type: "rep", state, district: 0, start: "2025-01-03", end: "2027-01-03" }],
+        }))];
+        const bytes = new TextEncoder().encode(JSON.stringify(people));
+        held = { ...held, bytes, sha256: createHash("sha256").update(bytes).digest("hex") };
+      }
+      if (options.releaseId === "chamber-directory:house") {
+        const members = FEDERAL_DIRECTORY_STATES.filter(state => !["AZ", "WA"].includes(state)).map((state, index) =>
+          `<member><statedistrict>${state}00</statedistrict><bioguideID>C${String(index + 1).padStart(6, "0")}</bioguideID><official-name>Test ${state}</official-name></member>`).join("");
+        const text = new TextDecoder().decode(held.bytes).replace("</MemberData>", members + "</MemberData>");
+        const bytes = new TextEncoder().encode(text);
+        held = { ...held, bytes, sha256: createHash("sha256").update(bytes).digest("hex") };
+      }
+      await options.validate?.(held.bytes, held); return held;
+    } });
+  assert.equal(revisions, 1); assert.equal(acquired.size, 7);
+  assert.equal(lines.filter(line => line.startsWith("RCD_RECEIPT=")).length, FEDERAL_DIRECTORY_STATES.length);
+  const run = { id: "congress-bulk-roster", stdout: lines.join("\n"), stderr: "", status: 0, signal: null,
+    termination: "EXITED" as const, errorMessage: null };
+  const members = congressMemberResults(run, tasks.map(task => task.id), true);
+  assert.equal(members.length, 56);
+  for (const member of members) {
+    const receipt = parseRoutineRunnerReceipt(member.run!.stdout);
+    assert.ok(receipt.ok, member.id);
+    if (receipt.ok) assert.equal(await durableRoutineRunnerReceiptIssue(receipt.receipt, tasks.find(task => task.id === member.id)!, store, "SUCCESS"), null, member.id);
+  }
+  const interrupted = congressMemberResults({ ...run, stdout: lines[0]!, termination: "TIMED_OUT", status: null }, tasks.map(task => task.id), true);
+  assert.equal(interrupted.filter(member => member.run).length, 1);
+  assert.equal(interrupted.filter(member => member.owed).length, 55, "unreached states remain due after a drain");
+  for (const state of FEDERAL_DIRECTORY_STATES) {
+    const read = await readStateFederalDirectory(state, { store, now: NOW, bypassCache: true });
+    assert.equal(read.kind, "PROMOTED", state);
+    if (read.kind === "PROMOTED") assert.ok(read.value.roster.officeholders.every(holder => holder.state === state), state);
+  }
+});
 
 test("the Congress runner publishes core first, attaches chamber contacts, and emits one supervisor receipt", async t => {
   const store = new MemoryRoutineDataStore(), lines: string[] = [], stages: string[] = [];

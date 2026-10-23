@@ -82,7 +82,7 @@ export interface LeaseWorkerConfig {
   readonly wallMs?: number;
 
   readonly nationalPlaces?: readonly NationalPlaceTask[];
-  readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
+  readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null; readonly deadlineMs?: number };
 }
 
 export function workerDispatchFailure(taskId: string, error: unknown, obligationId = taskId, beforeClaim = false): DispatchResult {

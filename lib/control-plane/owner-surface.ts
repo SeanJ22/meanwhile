@@ -294,6 +294,8 @@ export interface OwnerDigestRecord {
   readonly cycleOk: boolean | null;
   readonly testedSha: string | null;
   readonly huntSourceProgress?: HuntSourceProgress;
+  readonly routineDecisionState?: string;
+  readonly routineDecisions?: readonly import("../civic-data/launch-decisions.ts").RoutineLaunchDecision[];
   readonly publicationFlow?: import("../civic-data/publication-flow.ts").PublicationFlowReceipt;
   readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult & { readonly heldContestCount: number };
   readonly runtimeOutcome?:

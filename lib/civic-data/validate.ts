@@ -915,9 +915,11 @@ export function validateRoutineCandidate(
       ((candidate.sourceId === "plural-openstates-votes" && candidate.normalization.parserVersion === "plural-votes/2") ||
        (candidate.sourceId === "legiscan" && candidate.normalization.parserVersion === "legiscan-votes/1"))) {
     checks.push(result("ABSENCE_VALIDITY", "PASS", "NO_NEW_VOTES", "The source was checked successfully and added no votes. No absence is inferred."));
-  } else if (retirementAuthorized && lastKnownGood === null && !candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
-    checks.push(result("ABSENCE_VALIDITY", "PASS", "INITIAL_STATE_PARTITION_NO_ABSENCE_CLAIM",
-      "The pinned GOOD source has no held members for this initial state partition; no absence in the real world is asserted."));
+  } else if (retirementAuthorized && !candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0 &&
+      (lastKnownGood === null || (candidate.changeSet?.removed.length === 0 &&
+        (statePublicationPriorOf(lastKnownGood.candidate)?.members.size ?? civicRecordsFor(lastKnownGood.candidate.recordClass, lastKnownGood.candidate.readModel).length) === 0))) {
+    checks.push(result("ABSENCE_VALIDITY", "PASS", lastKnownGood === null ? "INITIAL_STATE_PARTITION_NO_ABSENCE_CLAIM" : "UNCHANGED_EMPTY_STATE_PARTITION_NO_ABSENCE_CLAIM",
+      "The pinned GOOD source has no held members to add to this empty state partition, and no held state fact is removed; no absence in the real world is asserted."));
   } else if (!candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
     checks.push(result("ABSENCE_VALIDITY", "CANNOT_TELL", "ZERO_IS_NOT_ABSENCE", "The query returned zero records but carries no competent bounded absence evidence."));
   } else if (!candidate.absence.claimsAbsence) {

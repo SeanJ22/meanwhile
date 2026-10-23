@@ -1,3 +1,5 @@
+import { repeatedFailureStreak } from "./failure-backoff.ts";
+import { readRetirementProgress, retirementProofTarget } from "./state-retirement-progress.ts";
 import type { Division } from "../registry/types.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
@@ -7,7 +9,7 @@ import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, heldStatePublication, heldStatePublicationHashes, statePublicationScope } from "./state-publication.ts";
 
-import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, inArray, like, or, sql } from "drizzle-orm";
 
 import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
@@ -113,6 +115,7 @@ export interface RoutineDataStore {
   /** A re-read whose values and refusal match this candidate, recorded on it in its own state instead of a new candidate. */
   readonly recordRecheck: (candidateId: string, at: string, detail: string) => Promise<CandidateEvent>;
   readonly readStateRetirementBaseline?: (recordClass: RoutineRecordClass, scope: string) => Promise<RoutineCandidate["normalization"]["stateRecordHashes"] | null>;
+  readonly hasStateRetirementProof?: (contractId: string, origin: NonNullable<RoutineCandidate["stateRetirement"]>["origin"]) => Promise<boolean>;
   readonly readStateRetirementOrigin?: (recordClass: string, scope: string) => Promise<{
     readonly versionId: string; readonly lastKnownGoodVersionId: string; readonly sourceId: string;
     readonly recordClass: string; readonly scope: string; readonly normalizedHash: string | null;
@@ -146,6 +149,7 @@ export interface RoutineDataStore {
 }
 
 export interface RoutineStoreClock {
+  readonly failureStreak?: number;
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
@@ -265,6 +269,10 @@ export function routineDataStoreCandidateAuthorityIssue(
   if (authority.capability === "STATE_CALENDARS") {
     return !hasAuthorityTransferMarker && contract.kind === "routine" && stateCalendarsCovers(authority.contract, contract.id)
       ? null : `${authority.contract ?? "a state calendar program"} cannot mutate ${contract.id}`;
+  }
+  if (authority.capability === "MANUAL_CONTRACT" && authority.contract === "congress-bulk-roster") {
+    return !hasAuthorityTransferMarker && contract.kind === "manual" && federalDirectoryStateOf(contract.id) !== null
+      ? null : `the national Congress read cannot mutate ${contract.id}`;
   }
   const expectedCapability = contract.kind === "manual" ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT";
   if (authority.capability !== expectedCapability) {
@@ -864,6 +872,21 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       ? selected?.normalization.stateRecordHashes ?? null : null;
   }
 
+  async hasStateRetirementProof(contractId: string, origin: NonNullable<RoutineCandidate["stateRetirement"]>["origin"]): Promise<boolean> {
+    const target = retirementProofTarget(contractId, origin);
+    const current = await this.readStateRetirementOrigin(target.record_class, target.scope);
+    if (!current?.promoted) return false;
+    return [...this.candidates.values()].some(row => {
+      const proof = row.candidate.stateRetirement;
+      return row.state === "PROMOTED" && row.acquisitionSucceeded && row.receipt?.decision === "GOOD" &&
+        row.promotedVersion === row.candidate.id && row.lastKnownGoodVersion === row.candidate.id &&
+        row.candidate.recordClass === target.record_class && row.candidate.scope === target.scope && row.candidate.sourceId === target.source_id &&
+        proof?.kind === "STATE_AUTHORITY_RETIREMENT" && proof.contractId === contractId && proof.state === target.state &&
+        proof.readModelHash === row.candidate.normalization.normalizedHash && proof.origin.versionId === origin.versionId &&
+        proof.origin.recordClass === origin.recordClass && proof.origin.scope === origin.scope && proof.origin.readModelHash === origin.readModelHash;
+    });
+  }
+
   async readStateRetirementOrigin(recordClass: string, scope: string) {
     const pointer = this.promotions.get(`${recordClass}:${scope}`);
     const row = pointer ? this.candidates.get(pointer.versionId) : null;
@@ -1045,12 +1068,13 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         (parserVersion === undefined || row.candidate.normalization.parserVersion === parserVersion) &&
         !isTrustedLkgImportCandidate(row.candidate)
       )
-      .flatMap((row) => {
-        const firstEvent = this.history.get(row.candidate.id)?.find((event) => event.sequence === 1);
-        const at = row.state === "PROMOTED" && row.acquisitionSucceeded
-          ? sourceCheckedAt(row.candidate.retrieval, firstEvent?.at) : firstEvent?.at;
-        return at && Number.isFinite(Date.parse(at)) ? [{ at }] : [];
-      })
+      .flatMap((row) => (this.history.get(row.candidate.id) ?? [])
+        .filter(event => event.sequence === 1 || event.detail.startsWith("RECHECKED_UNCHANGED:"))
+        .flatMap(event => {
+          const at = event.sequence === 1 && row.state === "PROMOTED" && row.acquisitionSucceeded
+            ? sourceCheckedAt(row.candidate.retrieval, event.at) : event.at;
+          return at && Number.isFinite(Date.parse(at)) ? [{ at, failureCode: row.failureCode, failureDetail: row.failureDetail }] : [];
+        }))
       .sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
         // The retry scheduler runs on the locally observed first event, so a far-future publisher timestamp cannot postpone it.
     const lastAttemptedAt = attempts[0]?.at;
@@ -1068,6 +1092,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const confirmation = pointedRow ? latestUnchangedConfirmation(pointedHistory, pointedRow.candidate.id) : null;
     return confirmedClock({
       lastAttemptedAt,
+      ...(repeatedFailureStreak(attempts) ? { failureStreak: repeatedFailureStreak(attempts) } : {}),
       lastSucceededAt: proofConsistentSuccess(pointedRecord, pointer),
       lastSucceededObservedAt: proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt),
       ...(recordClass === "FEDERAL_MONEY" && scope === `${sourceId}:US` && pointer?.sourceId === sourceId
@@ -1174,6 +1199,8 @@ function confirmedClock(
     : laterInstant(clock.lastSucceededObservedAt, confirmedAt);
   return {
     ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
+    ...(clock.failureStreak && (!lastSucceededObservedAt || Date.parse(lastSucceededObservedAt) < Date.parse(lastAttemptedAt ?? ""))
+      ? { failureStreak: clock.failureStreak } : {}),
     ...(lastSucceededAt ? { lastSucceededAt } : {}),
     ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
     ...(clock.lastSucceededParserVersion ? { lastSucceededParserVersion: clock.lastSucceededParserVersion } : {}),
@@ -1903,6 +1930,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return hashes ?? null;
   }
 
+  async hasStateRetirementProof(contractId: string, origin: NonNullable<RoutineCandidate["stateRetirement"]>["origin"]): Promise<boolean> {
+    const target = retirementProofTarget(contractId, origin);
+    const progress = await readRetirementProgress(async (text, params) => {
+      const [before, after] = text.split("$1");
+      return (await this.db.execute(sql`${sql.raw(before)}${params[0]}${sql.raw(after)}`)).rows as Record<string, unknown>[];
+    }, [target]);
+    return progress.get(origin.versionId)?.has(target.state) === true;
+  }
+
   async readStateRetirementOrigin(recordClass: string, scope: string) {
     const p = civicDataPromotions, c = civicDataCandidates;
     const [row] = await this.db.select({ versionId: p.currentVersionId, lastKnownGoodVersionId: p.lastKnownGoodVersionId,
@@ -2353,11 +2389,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       THEN LEAST((${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz, ${civicDataCandidateEvents.at})
       ELSE ${civicDataCandidateEvents.at} END`;
     const attemptQuery = this.db
-      .select({ attemptedAt: attemptAt })
+      .select({ attemptedAt: attemptAt, failureCode: civicDataCandidates.failureCode, failureDetail: civicDataCandidates.failureDetail })
       .from(civicDataCandidates)
       .innerJoin(civicDataCandidateEvents, and(
         eq(civicDataCandidateEvents.candidateId, civicDataCandidates.id),
-        eq(civicDataCandidateEvents.sequence, 1),
+        or(eq(civicDataCandidateEvents.sequence, 1), sql`left(${civicDataCandidateEvents.detail}, 20) = 'RECHECKED_UNCHANGED:'`),
       ))
       .where(and(
         eq(civicDataCandidates.sourceId, sourceId),
@@ -2367,8 +2403,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
                 // A frozen cutover import is not a publisher attempt, so the contract is due at once for its first live read.
         sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`,
       ))
-      .orderBy(desc(attemptAt))
-      .limit(1);
+      .orderBy(desc(attemptAt), desc(civicDataCandidates.id))
+      .limit(16);
     const pointerQuery = routineClockPointerRead(this.db, recordClass, scope);
     const observedQuery = routineClockPointedObservedRead(this.db, recordClass, scope);
     const confirmationQuery = routineClockConfirmationRead(this.db, recordClass, scope);
@@ -2419,6 +2455,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const confirmation = pointer && confirmationRow ? parseUnchangedConfirmation(confirmationRow.detail) : null;
     return confirmedClock({
       lastAttemptedAt,
+      ...(repeatedFailureStreak(rows) ? { failureStreak: repeatedFailureStreak(rows) } : {}),
       lastSucceededAt: canonicalLastSucceededAt,
       lastSucceededObservedAt,
       ...(recordClass === "FEDERAL_MONEY" && scope === `${sourceId}:US` && pointer?.sourceId === sourceId

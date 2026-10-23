@@ -183,12 +183,12 @@ test("AZ filing aliases remain exact and identity-only nominees become patches r
   assert.equal(retirementMemberKey(["officialCandidacies", "rows"], { holder: { id: "source-person" }, canonicalId: "canonical" }), "source-person");
 });
 
-test("retirement cursor fetches one row at a time and rolls back its read-only transaction", async () => {
+test("retirement cursor fetches bounded pages and rolls back its read-only transaction", async () => {
   const calls: string[] = [], seen: number[] = []; let fetches = 0;
-  await withRetirementSourceCursor({ query: async sql => { calls.push(sql); return { rows: sql.startsWith("FETCH") && fetches++ < 2 ? [{ value: fetches }] : [] }; } },
+  await withRetirementSourceCursor({ query: async sql => { calls.push(sql); return { rows: sql.startsWith("FETCH") && fetches++ < 2 ? [{ value: fetches * 2 - 1 }, { value: fetches * 2 }] : [] }; } },
     async source => { await source.streamRows("SELECT value FROM held", [], async row => { seen.push(Number(row.value)); }); });
-  assert.deepEqual(seen, [1, 2]); assert.equal(calls[0], "BEGIN READ ONLY"); assert.equal(calls.at(-1), "ROLLBACK");
-  assert.ok(calls.filter(sql => sql.startsWith("FETCH")).every(sql => sql.startsWith("FETCH FORWARD 1")));
+  assert.deepEqual(seen, [1, 2, 3, 4]); assert.equal(calls[0], "BEGIN READ ONLY"); assert.equal(calls.at(-1), "ROLLBACK");
+  assert.ok(calls.filter(sql => sql.startsWith("FETCH")).every(sql => sql.startsWith("FETCH FORWARD 128 ")));
 });
 
 test("inline retirement records reach the spool with their owned containers intact", async () => {

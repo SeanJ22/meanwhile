@@ -120,6 +120,7 @@ export async function refreshDuePageDoors(input: {
   readonly clock?: () => string;
   readonly limit?: number;
   readonly purge?: ReaderCachePurger;
+  readonly deadlineMs?: number;
 }): Promise<PageRefreshReport> {
   const clock = input.clock ?? (() => new Date().toISOString());
   const report = { looked: 0, confirmed: 0, restamped: 0, changed: 0, unreadable: 0, waiting: 0, failures: [] as string[] };
@@ -129,6 +130,7 @@ export async function refreshDuePageDoors(input: {
   });
   const cited = await liveFactsOn(input.facts.query, [...new Set(due.map((row) => row.url))]);
   for (const { door, url } of due.filter((row) => cited.has(row.url)).slice(0, input.limit ?? PAGE_REFRESH_PER_PASS)) {
+    if (Date.now() >= (input.deadlineMs ?? Infinity)) break;
     const facts = cited.get(url)!;
     try {
       let waited = false;

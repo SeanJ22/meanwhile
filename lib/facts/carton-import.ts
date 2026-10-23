@@ -1,4 +1,4 @@
-import { requireRegistryState, stateFromRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
+import { requireRegistryState, stateFromRegistryRuntimeScope, stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import { createHash } from "node:crypto";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -12,6 +12,22 @@ import { publishCommentFacts } from "./comment-facts.ts";
 import type { CommentAccess } from "../registry/comment-access-client.ts";
 import type { Body } from "../registry/types.ts";
 import { publishBodyOffice } from "../civic-data/worker-body-directory.ts";
+import { readPassCursor, writePassCursor } from "./db.ts";
+
+interface ImportSlice { readonly deadlineMs?: number; readonly clockMs?: () => number }
+/** Advance only after a complete record; an interrupted slice resumes that exact version next pass. */
+async function* cartonRows<T>(input: ImportSlice & { facts: { query: Query }; versionId: string }, source: string, rows: readonly T[], progress: { complete: boolean }): AsyncGenerator<T> {
+  const key = `import:${source}`, version = importHash(input.versionId);
+  const held = input.deadlineMs === undefined ? null : await readPassCursor(input.facts.query, key);
+  const cursor = held === null ? null : JSON.parse(held) as { version: string; index: number };
+  const start = cursor?.version === version && Number.isSafeInteger(cursor.index) && cursor.index >= 0 ? cursor.index : 0;
+  for (let index = start; index < rows.length; index++) {
+    if ((input.clockMs ?? Date.now)() >= (input.deadlineMs ?? Infinity)) return;
+    yield rows[index]!;
+    if (input.deadlineMs !== undefined) await writePassCursor(input.facts.query, key, JSON.stringify({ version, index: index + 1 }));
+  }
+  progress.complete = true;
+}
 
 interface CartonImportReport {
   readonly rosters: number;
@@ -26,14 +42,15 @@ const MEMBER_FIELDS = ["termNote", "termStart", "termEnd", "email", "phone", "we
 const importHash = (version:string) => createHash("sha256").update(`2:${version}`).digest("hex");
 
 /** The rosters readers saw before facts, each re-proved on a saved copy of its own page; what fails stays a blank with its reason. */
-export async function importCartonRosters(input: {
+export async function importCartonRosters(input: ImportSlice & {
   readonly rosters: readonly BodyRoster[]; readonly versionId: string; readonly state: string;
   readonly facts: FactDb & { readonly query: Query }; readonly clocks: Clocks;
   readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl">;
   readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly now: string;
 }): Promise<CartonImportReport> {
   const report = { rosters: 0, live: 0, confirmed: 0, blanks: 0, unreadable: [] as { url: string; reason: string }[] };
-  for (const roster of input.rosters) {
+  const progress = { complete: false };
+  for await (const roster of cartonRows(input, `${CARTON_ROSTERS}:${input.state}`, input.rosters, progress)) {
     const state = /\/state:([a-z]{2})/.exec(roster.bodyId)?.[1]?.toUpperCase() ?? null;
     const parentId = /^(ocd-division\/[^#]+)#/.exec(roster.bodyId)?.[1] ?? null;
     const bodyId = await ensureEntity(input.facts.query, { id: roster.bodyId, kind: "body", name: roster.bodyName, state, parentId });
@@ -64,6 +81,7 @@ export async function importCartonRosters(input: {
     }
     report.rosters++;
   }
+  if (!progress.complete) return report;
   await input.facts.query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
     ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [`${CARTON_ROSTERS}:${requireRegistryState(input.state)}`, importHash(input.versionId)]);
   return report;
@@ -101,14 +119,15 @@ export async function cartonComments(query: Query, readCandidate: (id: string) =
 }
 
 /** The comment rules readers saw before facts, each rule re-proved on a saved copy of its page. */
-export async function importCartonComments(input: {
+export async function importCartonComments(input: ImportSlice & {
   readonly records: readonly CommentAccess[]; readonly versionId: string;
   readonly facts: FactDb & { readonly query: Query }; readonly clocks: Clocks;
   readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl">;
   readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly now: string;
 }): Promise<CartonImportReport> {
   const report = { rosters: 0, live: 0, confirmed: 0, blanks: 0, unreadable: [] as { url: string; reason: string }[] };
-  for (const record of input.records) {
+  const progress = { complete: false };
+  for await (const record of cartonRows(input, CARTON_COMMENTS, input.records, progress)) {
     const state = /\/state:([a-z]{2})/.exec(record.bodyId)?.[1]?.toUpperCase() ?? /^curated:([a-z]{2})\//.exec(record.bodyId)?.[1]?.toUpperCase() ?? null;
     const body = { id: record.bodyId, name: record.bodyNames?.[0] ?? null, state, parentId: record.ocdId };
     const read = await receiptCapture({ url: record.sourceUrl, repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now, windowHours: input.clocks.windowHours("comment_rule") });
@@ -125,6 +144,7 @@ export async function importCartonComments(input: {
     report.confirmed += outcomes.filter(row => "decision" in row && row.decision === "CONFIRM").length;
     report.blanks += outcomes.filter(row => "blank" in row).length;
   }
+  if (!progress.complete) return report;
   await input.facts.query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
     ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [CARTON_COMMENTS, importHash(input.versionId)]);
   return report;
@@ -133,21 +153,27 @@ export async function importCartonComments(input: {
 const CARTON_OFFICES = "carton:office-contacts";
 
 /** The bodies whose office address or phone readers saw before facts, until they have been carried onto facts once. */
-export async function cartonOffices(query: Query, registry: { readonly versionId: string; readonly payload: { readonly registry: { readonly bodies: readonly Body[] } } } | null, state: string):
+export async function cartonOffices(query: Query, readRegistry: () => Promise<{ readonly versionId: string; readonly payload: { readonly registry: { readonly bodies: readonly Body[] } } } | null>, state: string):
   Promise<{ readonly versionId: string; readonly bodies: readonly Body[]; readonly state: string } | null> {
-  if (!registry || (await query("SELECT sha256 FROM fact_store_load WHERE source=$1",[`${CARTON_OFFICES}:${requireRegistryState(state)}`]))[0]?.sha256 === importHash(registry.versionId)) return null;
-  return { versionId: registry.versionId, state: requireRegistryState(state), bodies: registry.payload.registry.bodies.filter(row => (row.officeAddress || row.officePhone) && row.provenance.sourceUrl) };
+  const jurisdiction = requireRegistryState(state);
+  const [row] = await query("SELECT current_version_id AS id FROM civic_data_promotions WHERE key=$1",
+    [`REGISTRY_RUNTIME_BINDING:${stateRegistryRuntimeScope(jurisdiction)}`]);
+  if (!row || (await query("SELECT sha256 FROM fact_store_load WHERE source=$1", [`${CARTON_OFFICES}:${jurisdiction}`]))[0]?.sha256 === importHash(String(row.id))) return null;
+  const registry = await readRegistry();
+  if (!registry || registry.versionId !== row.id) throw new Error(`REGISTRY_OFFICES_CHANGED_DURING_READ:${jurisdiction}:${row.id}`);
+  return { versionId: registry.versionId, state: jurisdiction, bodies: registry.payload.registry.bodies.filter(row => (row.officeAddress || row.officePhone) && row.provenance.sourceUrl) };
 }
 
 /** The office addresses and phones readers saw on bodies before facts, each re-proved on a saved copy of the body's page. */
-export async function importCartonOffices(input: {
+export async function importCartonOffices(input: ImportSlice & {
   readonly bodies: readonly Body[]; readonly versionId: string; readonly state: string;
   readonly facts: FactDb & { readonly query: Query }; readonly clocks: Clocks;
   readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl">;
   readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly now: string;
 }): Promise<CartonImportReport> {
   const report = { rosters: 0, live: 0, confirmed: 0, blanks: 0, unreadable: [] as { url: string; reason: string }[] };
-  for (const body of input.bodies) {
+  const progress = { complete: false };
+  for await (const body of cartonRows(input, `${CARTON_OFFICES}:${input.state}`, input.bodies, progress)) {
     const url = body.provenance.sourceUrl!;
     const read = await receiptCapture({ url, repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now, windowHours: input.clocks.windowHours("contact") });
     if ("error" in read) {
@@ -167,6 +193,7 @@ export async function importCartonOffices(input: {
     report.blanks += outcomes.filter(row => "blank" in row).length;
     report.rosters++;
   }
+  if (!progress.complete) return report;
   await input.facts.query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
     ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [`${CARTON_OFFICES}:${requireRegistryState(input.state)}`, importHash(input.versionId)]);
   return report;

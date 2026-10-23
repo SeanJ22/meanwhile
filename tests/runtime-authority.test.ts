@@ -31,6 +31,7 @@ test("staging ordinary child carries readable exact mutation authority and keeps
   for (const [capability, contract, sourceId, recordClass, scope] of [
     ["MANUAL_CONTRACT", "voting-sites:AZ", "voting-sites", "VOTING_SITE", "US-AZ:voting-sites"],
     ["ROUTINE_CONTRACT", "fec-funding", "fec-open-api", "FEC_FUNDING", "federal-supported"],
+    ["MANUAL_CONTRACT", "congress-bulk-roster", "congress-directory-project", "FEDERAL_DIRECTORY", "US-AZ:current-congress-directory"],
   ] as const) {
     const child = admittedRuntimeChildEnvironment({ parentEnv, capability, contract });
     const authority = assertRoutineDataStoreMutationAuthority(child);
@@ -39,6 +40,12 @@ test("staging ordinary child carries readable exact mutation authority and keeps
     assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "staging-child", sourceId, recordClass, scope }, authority, "candidate"), null);
     assert.throws(() => assertRuntimeAuthority({ capabilities: [capability], contract: "wrong-contract" }, child), /does not match/);
   }
+  const national = assertRoutineDataStoreMutationAuthority(admittedRuntimeChildEnvironment({ parentEnv,
+    capability: "MANUAL_CONTRACT", contract: "congress-bulk-roster" }));
+  for (const scope of ["US-AL:current-congress-directory", "US-PR:current-congress-directory", "US-WY:current-congress-directory"]) {
+    assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "national", sourceId: "congress-directory-project", recordClass: "FEDERAL_DIRECTORY", scope }, national, "candidate"), null);
+  }
+  assert.notEqual(routineDataStoreCandidateAuthorityIssue({ id: "other", sourceId: "fec-open-api", recordClass: "FEC_FUNDING", scope: "federal-supported" }, national, "candidate"), null);
   assert.throws(() => admittedRuntimeChildEnvironment({ parentEnv: { ...parentEnv, WTP_DB_ROLE: "production" }, capability: "ROUTINE_SUPERVISOR" }), /local/);
   assert.throws(() => admittedRuntimeChildEnvironment({ parentEnv: { ...parentEnv, WTP_CONTROL_PLANE_DATABASE_URL: "" }, capability: "ROUTINE_SUPERVISOR" }), /staging database/);
 });

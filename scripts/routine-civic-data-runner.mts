@@ -123,7 +123,7 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import { PUBLISH_NOW_CURSOR, PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readPublicationAdmission, readPublishNowRetryIds, publishNowRetryItemIds, savePublishNowProgress, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_CURSOR, PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SCAN_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readPublicationAdmission, readPublishNowRetryIds, publishNowRetryItemIds, savePublishNowProgress, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { groupCalendarReadsByState, stateCalendarEnvironment, stateCalendarMemberResults, type StateCalendarGroup } from "../lib/civic-data/state-calendars.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
@@ -521,15 +521,17 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
       (recordClass, scopes) => pointers.readPromotionIdentities(recordClass, scopes))
       .catch((error: unknown) => { console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`); return null; });
     const retryIds = PUBLISH_NOW ? await readPublishNowRetryIds(facts.query, startedAt) : [];
-    const items = await readWorkerPublicationItems(query, selected, since === null ? null
-      : { at: since, sharedInputsMoved: shared === null || [shared.nationalAt, shared.registryAt, shared.routesAt].some(at => at !== null && at > since) }, retryIds);
+    const { items, through } = await readWorkerPublicationItems(query, selected, since === null ? null
+      : { at: since, until: startedAt, sharedInputsMoved: shared === null || [shared.nationalAt, shared.registryAt, shared.routesAt].some(at => at !== null && at > since) },
+      retryIds, Date.now() + PUBLISH_NOW_SCAN_BUDGET_MS);
+    if (through !== null && through < startedAt) console.log(`RCD_PUBLISH_NOW_SCAN read changes through ${through}; the next pass reads on from there`);
     const heldInputs = shared === null ? null : await readHeldInputs(query, shared, items).catch((error: unknown) => {
       console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`);
       return null;
     });
     const { owed, publication } = await readPublicationAdmission(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT, heldInputs);
     recordParentMemory(PUBLISH_NOW ? "publish-now" : "routine", "after-publication-inputs");
-    if (PUBLISH_NOW && ONLY === null) await savePublishNowProgress(facts, { startedAt, selectedItemIds: items.map(item => item.id),
+    if (PUBLISH_NOW && ONLY === null) await savePublishNowProgress(facts, { startedAt, scannedThrough: through ?? startedAt, selectedItemIds: items.map(item => item.id),
       owedItemIds: publishNowRetryItemIds(items, [...owed.rosters, ...owed.comments, ...publication.flatMap(task => task.ownerInvocation?.workItemIds ?? [])], heldInputs) });
     if (owed.rosters.length || owed.comments.length) try {
       const context = await workerPublicationContext(RUN_STARTED_AT, repos);

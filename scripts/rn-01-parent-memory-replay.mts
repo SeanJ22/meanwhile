@@ -47,7 +47,7 @@ if (lane === "routine") {
   const repos = await createPgRepositories(readFileSync(cpFile, "utf8").trim(), now, { skipBootstrap: true });
   const shared = await readHeldPointerTimes(cq, async (recordClass, scope) => (await store.readPromotionIdentity(recordClass, scope))?.promotedAt ?? null,
     REGISTRY_STATES, (recordClass, scopes) => store.readPromotionIdentities(recordClass, scopes));
-  const items = await readWorkerPublicationItems(cq), held = await readHeldInputs(cq, shared, items);
+  const { items } = await readWorkerPublicationItems(cq), held = await readHeldInputs(cq, shared, items);
   itemCount = items.length;
   const readCompleted = async (ids: readonly string[]) => { resultPages++; return readCompletedWorkerResultsOf(repos, ids); };
   await readPublicationAdmission(items, readCompleted, now, held);

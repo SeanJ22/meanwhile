@@ -112,7 +112,7 @@ test("publication admission filters and projects work-item metadata in the datab
   const rows = Array.from({ length: AGGREGATE_LIST_READ_PAGE + 1 }, (_, index) => ({ id: `work-${String(index).padStart(3, "0")}`,
     contract_id: "registry-runtime:AZ", record_class: "OFFICIAL_ROSTER", publication_outcome: null }));
   const parameters: unknown[][] = [];
-  const items = await readWorkerPublicationItems(async (query, values) => {
+  const { items } = await readWorkerPublicationItems(async (query, values) => {
     assert.match(query, /WHERE value #>> '\{autonomousPlan,publication,contractId\}' = ANY\(\$1::text\[\]\)/);
     const select = query.slice(0, query.indexOf("FROM cp_work_items"));
     assert.doesNotMatch(select, /SELECT\s+\*|SELECT\s+id,\s*value\s*(?:,|FROM)|transitions|targetUrls|observationArtifactIds/i);
@@ -187,8 +187,9 @@ test("a held roster or board is read again only once a page for its body is save
   assert.deepEqual((await readPublicationAdmission(held, async () => [], later, inputs)).publication.map(task => task.id.split(":").at(-1)), ["board"]);
 
   const seen: { query: string; values: readonly unknown[] }[] = [];
-  await readWorkerPublicationItems(async (query, values) => { seen.push({ query, values }); return []; }, ["registry-runtime:AZ"], { at: NOW, sharedInputsMoved: false });
+  const until = "2026-10-05T18:30:00.000Z";
+  await readWorkerPublicationItems(async (query, values) => { seen.push({ query, values }); return []; }, ["registry-runtime:AZ"], { at: NOW, until, sharedInputsMoved: false });
   assert.match(seen[0]!.query, /^WITH due\(id\) AS/);
-  assert.match(seen[0]!.query, /AND id IN \(SELECT id FROM due\)/);
-  assert.deepEqual(seen[0]!.values, [["registry-runtime:AZ"], NOW, false]);
+  assert.match(seen[0]!.query, /AND id = ANY\(ARRAY\(SELECT id FROM due\)\)/);
+  assert.deepEqual(seen[0]!.values, [["registry-runtime:AZ"], NOW, false, until, []]);
 });

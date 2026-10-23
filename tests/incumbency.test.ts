@@ -228,7 +228,7 @@ test("the ballot page reads incumbency from the contest resolution, not from the
   assert.ok(!/incumbent=\{holder !== null\}/.test(src), "the federal-only derivation is gone");
   assert.ok(src.includes("contestIncumbency("), "the contest resolution is what feeds the chip");
   assert.ok(
-    /record:\s*!officeholdersAvailable\s*\?[\s\S]*?:\s*recordHolder\s*\?/.test(src),
+    /record:\s*(?:!has\("record"\)\s*\?\s*null\s*:\s*)?!officeholdersAvailable\s*\?[\s\S]*?:\s*recordHolder\s*\?/.test(src),
     "the voting-record panel first names an unavailable canonical officeholder holding, then gates content on an exact record (Item 14)",
   );
 });

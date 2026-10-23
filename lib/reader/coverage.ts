@@ -16,11 +16,10 @@ import type { Body, Division } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { BodyTerritoryFile } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
-import { whiteHouseOfficeRank } from "../officials/white-house-offices.ts";
 
 type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
   "people" | "legislativePeople" | "federal" | "president" | "stateLegislatorAuthority">>;
-type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: CoverageState["federal"]; people: CoverageState["legislativePeople"]; president: CoverageState["president"]; version: string; officials: ReturnType<typeof indexByDivision>; presidents: ReturnType<typeof indexByDivision> };
+type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: CoverageState["federal"]; people: CoverageState["legislativePeople"]; version: string; officials: ReturnType<typeof indexByDivision> };
 const heldOfficials = serverReaderValue("state-official-index", () => new WeakMap<object, Officials>());
 
 /** The state and place responses use the same immutable people, even with different local facts. */
@@ -29,11 +28,8 @@ function stateOfficials(state: CoverageState): Officials {
   const photos = state.registry.officialPhotos;
   const key = people ?? state.federal ?? photos;
   const prior = heldOfficials.get(key);
-  if (prior && prior.photos === photos && prior.federal === state.federal && prior.people === people && prior.president === state.president && prior.version === state.version) return prior;
+  if (prior && prior.photos === photos && prior.federal === state.federal && prior.people === people && prior.version === state.version) return prior;
   const photoIndex = new Map(photos.photos.map(photo => [photo.officeholderId, photo.url]));
-  const presidents = indexByDivision(state.president ? [state.president] : [], photoIndex);
-  // The President leads, then the Vice President, then the Cabinet by name.
-  presidents.get("ocd-division/country:us")?.sort((a, b) => whiteHouseOfficeRank(a.officeTitle) - whiteHouseOfficeRank(b.officeTitle));
   const officials = indexByDivision([...(state.federal ? [state.federal.roster] : []), ...(people ? [people] : [])], photoIndex);
   const federalIds = new Map<string, Set<string>>();
   for (const person of state.federal?.roster.officeholders ?? []) for (const identity of personIdentityKeys(person)) {
@@ -49,7 +45,7 @@ function stateOfficials(state: CoverageState): Officials {
       reader: [...new Set([...(holder.nativeIds?.reader ?? []), holder.id, holder.personId ?? holder.id, canonical])],
     } };
   }));
-  const held = { photos, federal: state.federal, people, president: state.president, version: state.version, officials, presidents };
+  const held = { photos, federal: state.federal, people, version: state.version, officials };
   heldOfficials.set(key, held);
   return held;
 }
@@ -79,16 +75,14 @@ export function stateCoverage(
   const divisions = new Map([...runtime.registry.divisions, ...extraDivisions].map(division => [division.ocdId, division]));
   const resolved = divisionIds.flatMap(id => divisions.get(id) ?? []);
   const bodies = runtime.registry.bodies;
-  const { officials, presidents } = stateOfficials(state);
-  const president = presidents.get("ocd-division/country:us") ?? [];
+  const { officials } = stateOfficials(state);
   return withReaderSelection(undefined, () => withReaderAuthorityEdge(null, () => withRegistryRuntimeProjection(runtime, [state.state], () => {
     const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings);
-    const stateSeats = coverage.seats.map(seat => {
+    const seats = coverage.seats.map(seat => {
       const vacancy = !seat.representatives.length && [...state.federal?.vacancies ?? [], ...(state.legislativePeople ?? state.people)?.vacancies ?? []]
         .find(row => row.ocdId === seat.ocdId);
       return vacancy ? { ...seat, vacancy } : seat;
     });
-    const seats = president.length ? [...stateSeats, { ocdId: "ocd-division/country:us", label: "United States", divisionType: "country", tier: "national" as const, representatives: president }] : stateSeats;
     return {
       ...coverage,
       seats,

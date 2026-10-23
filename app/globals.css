@@ -682,6 +682,18 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   gap: 3px;
 }
 
+.national-link {
+  display: block;
+  padding: 10px 4px;
+  color: var(--text-dim);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.national-link:hover {
+  color: var(--link);
+}
+
 .view-btn {
   flex: 1;
   padding: 8px 10px;

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
-import { bodyNamed, ensureFactEntities, ensureGoverningBody, resolvePerson } from "../lib/facts/entities.ts";
+import { bodyNamed, ensureEntity, ensureFactEntities, ensureGoverningBody, resolvePerson } from "../lib/facts/entities.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -121,5 +121,38 @@ test("published local territory and merged board aliases survive registration re
     assert.deepEqual(await db.query("SELECT id FROM entity WHERE id=$1",[former]),[],"the former board does not reappear");
     assert.equal((await ensureGoverningBody(db.query,former))?.id,canonical);
     assert.deepEqual(await ensureFactEntities(db,ROOT,["az"]),[],"the next unchanged scheduled load keeps the same data");
+  } finally { await db.pg.close(); }
+});
+
+test("a board hangs on the registered government its id or door names, and one parked on the state moves there", async () => {
+  const db = await factDb();
+  try {
+    const or = "ocd-division/country:us/state:or", multnomah = `${or}/county:multnomah`, metro = "or:special:metro";
+    await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES ($1,'place','Oregon','OR',NULL),($2,'place','Multnomah County','OR',$1),
+      ($3,'government','Metro','OR',$2),('ocd-division/country:us/state:ca','place','California','CA',NULL)`, [or, multnomah, metro]);
+    await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES ($1,'census-pid6','155003')", [metro]);
+    const parent = async (id: string) => (await db.query("SELECT parent_id FROM entity WHERE id=$1", [id]))[0]?.parent_id;
+    // Held as the door's first, statewide reading left it.
+    const council = "government:US-OR:cog:155003#body:council-meeting";
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ($1,'body','Council meeting','OR',$2)", [council, or]);
+    await ensureEntity(db.query, { id: council, kind: "body", name: "Council meeting", state: "OR", parentId: multnomah });
+    assert.equal(await parent(council), metro, "the Census id the board is named under resolves to its government");
+    const tpac = `${multnomah}#body:transportation-policy-alternatives-committee-tpac`;
+    await ensureEntity(db.query, { id: tpac, kind: "body", name: "TPAC", state: "OR", parentId: multnomah, government: metro });
+    assert.equal(await parent(tpac), metro, "a new tenant board hangs on the government its door names, not on the door's county");
+    const unnamed = `${multnomah}#body:council-retreat`;
+    await ensureEntity(db.query, { id: unnamed, kind: "body", name: "Council retreat", state: "OR", parentId: multnomah, government: "or:special:not-held" });
+    assert.equal(await parent(unnamed), multnomah, "a government the store does not hold leaves the door's place");
+    // A board already on a local home keeps it; a later writer naming only the state never pulls it back.
+    await ensureEntity(db.query, { id: council, kind: "body", name: "Council meeting", state: "OR", parentId: or });
+    assert.equal(await parent(council), metro);
+    await db.query("UPDATE entity SET parent_id=$2 WHERE id=$1", [unnamed, or]);
+    await ensureEntity(db.query, { id: unnamed, kind: "body", name: "Council retreat", state: "OR", parentId: multnomah });
+    assert.equal(await parent(unnamed), multnomah, "a parked board moves to the local place a writer now names");
+    // Another state's board filed under this state is not moved across the state line.
+    const filed = `${or}#body:la-safe`;
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ($1,'body','LA SAFE','OR',$2)", [filed, or]);
+    await ensureEntity(db.query, { id: filed, kind: "body", name: "LA SAFE", state: "CA", parentId: "ocd-division/country:us/state:ca" });
+    assert.equal(await parent(filed), or);
   } finally { await db.pg.close(); }
 });

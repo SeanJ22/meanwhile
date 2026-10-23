@@ -14,7 +14,7 @@ Each state was read separately. The replay selected every local division establi
 
 The country passes exposed generated labels outside the initial repair set and newly created by the still-deployed importer. Admin receipts 207 and 208 corrected 294 additional labels, removed nine direct statewide board links, and removed two empty Census-placeholder boards. The importer now uses the existing Census-placeholder rule, repairs the old generated labels during reload and held-board publication, and derives fallback names from the real government. The Nevada follow-up repeated the full 56-state reader and tomorrow-clock passes. Receipts 209, 211 and 212 corrected 17 further generated labels and five state links from the still-running old importer. The final query was replayed in all 56 jurisdictions; Alabama, Arkansas and Georgia were rechecked after the last data correction. All source facts and identities remained intact.
 
-Counts cover every installed government row, including the state itself; boundary rows include `BOUNDARY_SOURCE` and `BOUNDARY_SOURCE_ONLY`. Local boards and facts come from actual production reader selections. Scheduled boards include held boards without local associations. Zero means no matching held rows, not complete acquisition. Every row below passed both the reader and the tomorrow-clock replay, with zero source-identity collisions. Production continues acquiring data, so reader and scheduler counts have separate snapshot times.
+Counts cover every installed government row, including the state itself; boundary rows include `BOUNDARY_SOURCE` and `BOUNDARY_SOURCE_ONLY`. Local boards and facts come from actual production reader selections. Scheduled boards include held boards without local associations. Zero means no matching held rows, not complete acquisition. Every row below except Oregon passed both the reader and the tomorrow-clock replay, with zero source-identity collisions. Production continues acquiring data, so reader and scheduler counts have separate snapshot times. Oregon is the exception: its 79 scheduled boards sat on the state record, which the place query never reaches (66 Los Angeles Metro boards filed under Oregon before their doors were corrected, and 13 Oregon Metro boards whose district had no territory). PB-03-FX gives Oregon Metro its RLIS boundary (`special_district:metro`, 60 Portland-area ZIPs) and lets a held board follow its door's government, so after the Oregon Metro members refresh 97204 and 97232 show Metro's 13 boards; Salem, Eugene and Bend have no registered meeting source yet.
 
 The full installed scan covers 93,753 government rows and 9,406 boundary rows. Nevada was the only repeated operational identity before correction; none remain. An independent read-only SQL aggregation over all 98,877 government listings in the 56 published production inventories also found zero repeated operational identities. No state was omitted or exempted.
 
@@ -60,7 +60,7 @@ The full installed scan covers 93,753 government rows and 9,406 boundary rows. N
 | NY | 3,502 | 216 | 128 | 340 | 128 | Pass / Pass |
 | OH | 3,937 | 19 | 71 | 85 | 71 | Pass / Pass |
 | OK | 1,894 | 33 | 33 | 237 | 33 | Pass / Pass |
-| OR | 1,541 | 145 | 0 | 0 | 79 | Pass / Pass |
+| OR | 1,541 | 145 | 0 | 0 | 79 | Gap / Gap |
 | PA | 4,851 | 107 | 15 | 28 | 15 | Pass / Pass |
 | PR | 79 | 0 | 0 | 0 | 0 | Pass / Pass |
 | RI | 159 | 28 | 0 | 0 | 0 | Pass / Pass |

@@ -75,7 +75,8 @@ export function stateCoverage(
     if (known.has(fact.id) || !fields.name || !fields.provenance?.sourceUrl) return [];
     return [{ id: fact.id, ocdId: fact.division, name: fields.name, bodyClass: "UNCLASSIFIED", bodyOrigin: "SOURCED",
       coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE", agendaSourceRef: null, meetingCadence: null,
-      homepageUrl: null, demandCount: 0, sourceDataset: "GOV_DIRECTORY", ...fields, provenance: fields.provenance }];
+      homepageUrl: null, demandCount: 0, sourceDataset: "GOV_DIRECTORY", ...fields, provenance: fields.provenance,
+      ...(fact.government ? { governmentName: fact.government } : {}) }];
   });
   const runtime = withStateRegistryFacts({ ...state.registry, registry: { ...state.registry.registry,
     bodies: [...state.registry.registry.bodies, ...acquired] } }, bodyFacts);

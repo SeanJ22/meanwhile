@@ -1,0 +1,136 @@
+{
+  "checkedAt": "2026-10-23T10:36:29.559Z",
+  "productionWrites": 0,
+  "reports": [
+    {
+      "state": "AZ",
+      "zip": "85321",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "questionCount": 13,
+      "pickControlCount": 96,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/az-1280.png",
+      "horizontalOverflow": false
+    },
+    {
+      "state": "AZ",
+      "zip": "85321",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "questionCount": 13,
+      "pickControlCount": 96,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/az-390.png",
+      "horizontalOverflow": false
+    },
+    {
+      "state": "SC",
+      "zip": "29456",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "questionCount": 0,
+      "pickControlCount": 27,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/sc-1280.png",
+      "horizontalOverflow": false
+    },
+    {
+      "state": "SC",
+      "zip": "29456",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "questionCount": 0,
+      "pickControlCount": 27,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/sc-390.png",
+      "horizontalOverflow": false
+    },
+    {
+      "state": "AS",
+      "zip": "96799",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "questionCount": 0,
+      "pickControlCount": 18,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/as-1280.png",
+      "horizontalOverflow": false
+    },
+    {
+      "state": "AS",
+      "zip": "96799",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "questionCount": 0,
+      "pickControlCount": 18,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/as-390.png",
+      "horizontalOverflow": false
+    },
+    {
+      "state": "GU",
+      "zip": "96910",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "questionCount": 0,
+      "pickControlCount": 6,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/gu-1280.png",
+      "horizontalOverflow": false
+    },
+    {
+      "state": "GU",
+      "zip": "96910",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "questionCount": 0,
+      "pickControlCount": 6,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/gu-390.png",
+      "horizontalOverflow": false
+    },
+    {
+      "state": "PR",
+      "zip": "00901",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "questionCount": 0,
+      "pickControlCount": 0,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/pr-1280.png",
+      "horizontalOverflow": false
+    },
+    {
+      "state": "PR",
+      "zip": "00901",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "questionCount": 0,
+      "pickControlCount": 0,
+      "source": "Actual app/ballot/page.tsx route after ordinary publication into isolated memory; materialized HTML, compiled application CSS, real React PickControl SSR. Client event hydration is not part of this visual check.",
+      "screenshot": ".scratch/ba02-pages/pr-390.png",
+      "horizontalOverflow": false
+    }
+  ]
+}

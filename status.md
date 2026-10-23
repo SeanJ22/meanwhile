@@ -17,6 +17,8 @@ Items 1 (Vice President) and 2 (planning round) are answered above and shipped o
 NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 vs unified-school GEOID 3416500, both named "Union Township School District". Registration file identical on release 88 and release 90. Owner: the registration identity lane (to disambiguate the two districts). Not an observed live runner failure yet.
 
 ## Release 91 live checks (Oct 23, from 12:33 PM EDT)
+- RN-01-FX planning round (1:41 to 1:55 PM EDT, control plane read-only): FAILED, returned (returns/rn-01.md). Both rounds on release 91 (16:48 to 17:02 and 17:04 to 17:21 UTC) finished 0 of 57 states, STATE_PLANNING_FAILED everywhere; before RN-01-FX rounds finished 1 to 20 states. No per-state digest written since d8013db; rounds last ~15 min (~16 s a state), so the state children die rather than hit the cap. The runner heartbeat shows the system planner at 1.75 GB with its event loop pinned at 1, and cp_work_items.coordinatorItems (pg-store.ts:1535) timing out at 56 s against its 25 s bound. Round order PASS (opens la, ma, md ..., ends al, ar, as, az, ak). STATE_POINTER_RETIREMENT_FAILED: 0 since release 91, PASS. 2-minute cap: no state lived long enough to test it.
+- Calendar doors (1:50 PM EDT recheck, still with cal-01): 106 of 10,517 doors succeeded since release 91 (16:33 UTC): NJ 26/101, NH 19/151, CT 8/220, DC 3/8, DE 2/197, SC 2/37, one each in FL, TX, MO, IL, WA, MA, VA, NC, MI, NY, OH, PA, ID; CA and AZ 0.
 
 Live from 12:33 PM EDT (/api/build d8013db). The sidebar link reads "National government".
 

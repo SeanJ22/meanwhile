@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 91 LIVE (/api/build d8013db from 12:33 PM EDT): SP-01-FX, RN-01-FX, National label; RELEASE 92 (VS-07-FX + PB-03-FX) IN GATES on river-next cd82fdc4a
+build_state: RELEASE 91 LIVE (/api/build d8013db from 12:33 PM EDT); RELEASE 92 (VS-07-FX + PB-03-FX) PR #802 OPEN, gates 9 of 9 on cd82fdc4a (9,596 pass), river dfae00f3c (main merged, tree identical), run-full-ci + auto-merge
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS

@@ -262,8 +262,6 @@ function pageOf(raw: unknown): SectionPage | null {
   };
 }
 
-export const WAITING_DEP_SUFFIX = " This part turns on by itself as soon as the backend offers it. You don’t need to reload or change anything.";
-
 export function toSourced<T>(state: SectionState, dep: Dependency, fallback: T | null = null): Sourced<T> {
   switch (state.phase) {
     case "live":

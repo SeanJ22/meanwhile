@@ -13,7 +13,7 @@ import {
   MEETING_READER_SERVING_WINDOW_CONTRACT,
   MEETING_READER_SERVING_WINDOW_CONTRACT_V1,
   meetingLegacyServingWindowAt,
-  meetingReaderServingWindowAt,
+  meetingHeldWindowAt,
 } from "../meetings/constants.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
@@ -378,7 +378,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
   const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence | MovedToFactStoreRemovalEvidence | FederalRepartitionRemovalEvidence>>();
-  const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
+  const registeredWindow = meetingHeldWindowAt(candidate.retrieval.retrievedAt);
     // A `V1` row (the old shown window) is still accepted.
   const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
   let currentMembers: ReadonlyMap<string, unknown> | null = null;

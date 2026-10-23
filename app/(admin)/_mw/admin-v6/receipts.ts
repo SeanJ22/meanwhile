@@ -205,15 +205,6 @@ export function applyGatewayReply(prev: UiReceipt, def: ActionDef, httpStatus: n
   return { ...prev, status: "unknown", statusWords: STATUS_WORDS.unknown, steps: step("No clear answer"), says: UNKNOWN_SAYS };
 }
 
-export const HISTORY_FILTERS: readonly { readonly id: string; readonly label: string; readonly statuses: readonly ReceiptStatus[] | null }[] = [
-  { id: "all", label: "All", statuses: null },
-  { id: "open", label: "In progress", statuses: ["queued", "read", "running"] },
-  { id: "done", label: "Done", statuses: ["done"] },
-  { id: "partial", label: "Partly done", statuses: ["partial"] },
-  { id: "bad", label: "Refused or failed", statuses: ["refused", "failed"] },
-  { id: "unknown", label: "Result unknown", statuses: ["unknown"] },
-];
-
 export const ORDER_STEPS = ["Received", "Accepted", "Scheduled", "In progress", "Done"] as const;
 
 /**

@@ -6,16 +6,6 @@ import type { CandidateContact as FilingContact } from "@/lib/ballot/candidate-c
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { candidateOwnKind } from "@/lib/officials/verification";
 
-/**
- * What the Sources section says about the line a reader saw on the ballot.
- *
- * LEVEL register — a claim surface, about where a real person's words came
- * from. It attributes without characterising: it says the campaign published
- * it, and it does not say whether it is true.
- */
-export const TAGLINE_SOURCE_NOTE =
-  "The line beside this candidate's name on the ballot page is quoted from the campaign's own website, with its published source retained under Sources.";
-
 export function CandidateContact({
   card,
   links,

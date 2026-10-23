@@ -3,10 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import { loadMemberDirectory } from "./use-member-directory";
-import { officePointFor } from "@/lib/map/office-geocode";
 import {
   directoryOffices, officeOwners, officePinSet,
-  type MapBounds, type NamedOffice, type OfficePin, type OfficePinSet, type VenuePoint,
+  type MapBounds, type OfficePin, type OfficePinSet, type VenuePoint,
 } from "@/lib/map/office-pins";
 
 /**
@@ -28,13 +27,6 @@ export function useOfficePins(
   useEffect(() => {
     let active = true;
     const owners = JSON.parse(key) as ReturnType<typeof officeOwners>;
-    const locate = async (offices: readonly NamedOffice[]) => {
-      const rows = await Promise.all(offices.map(async office => {
-        const point = office.point ?? await officePointFor(office.address);
-        return point ? { ...office, ...point } : null;
-      }));
-      return rows.filter((row): row is OfficePin => row !== null);
-    };
     const byId = new Map<string, OfficePin>();
     const publish = (pins: OfficePin[]) => {
       if (!active || pins.length === 0) return;
@@ -42,7 +34,8 @@ export function useOfficePins(
       setResolved({ key, pins: [...byId.values()] });
     };
     for (const owner of owners) {
-      void loadMemberDirectory(owner.holder.id, owner.holder.state).then(directory => locate(directoryOffices(owner, directory)))
+      void loadMemberDirectory(owner.holder.id, owner.holder.state).then(directory =>
+        directoryOffices(owner, directory).flatMap(office => office.point ? [{ ...office, ...office.point }] : []))
         .then(publish).catch(() => { /* Failed directory reads are retried on the next open, never counted as no offices. */ });
     }
     return () => { active = false; };

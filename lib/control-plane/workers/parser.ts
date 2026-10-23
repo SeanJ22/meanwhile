@@ -327,8 +327,6 @@ export function parseLegistarEvents(input: ParserWorkerInput): ParserResult {
 }
 
 /** Record-class dispatch over the two implemented publisher profiles. */
-export const parseCivicEvents = parseLegistarEvents;
-export const parseCivicRecords = parseLegistarEvents;
 
 /** Execution identities vary across replay; civic content and evidence may not. */
 export function normalizedParserResult(

@@ -10,6 +10,7 @@ import type { OfficeholderSet, SeatVacancy } from "./types.ts";
 import type { DirectoryFile } from "./directory.ts";
 import { CHAMBER_DIRECTORY_URLS } from "./chamber-directory.ts";
 import type { RosterChange } from "./roster-changes.ts";
+import { publishFederalDirectoryOfficePoints, type OfficePointResolver } from "./office-points-publication.ts";
 
 export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
 export type FederalDirectoryState = typeof REGISTRY_STATES[number];
@@ -138,12 +139,15 @@ export async function federalDirectoryCandidate(input: {
   readonly projection: FederalDirectoryReadModel;
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
   readonly changes?: readonly RosterChange[];
+  readonly prior?: FederalDirectoryReadModel | null;
+  readonly resolveOfficePoint?: OfficePointResolver;
 }): Promise<RoutineCandidate> {
   const captures = await Promise.all(input.acquisitions.map(async ({ body, ...row }): Promise<FederalDirectoryCapture> => {
     const raw = await holdRawCapture(input.vault, FEDERAL_DIRECTORY_SOURCE_ID, body, "text/plain");
     return { ...row, raw };
   }));
-  return heldDirectoryCandidate({ ...input, acquisitions: captures });
+  const projection = await publishFederalDirectoryOfficePoints(input.projection, input.prior, input.resolveOfficePoint);
+  return heldDirectoryCandidate({ ...input, acquisitions: captures, projection });
 }
 
 /** A place's candidate over captures already held in the vault. */

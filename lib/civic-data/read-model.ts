@@ -1391,12 +1391,6 @@ export function promotedVersionOrThrow<T>(result: CivicDataReadResult<T>): strin
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 
-/** Lets go of one pointer's proof once a caller holds what it needs of it, so a long publication holds one candidate at a time. */
-export function forgetPromotedProof(store: CivicDataReadStore | undefined, recordClass: RoutineRecordClass, scope: string, versionId: string): void {
-  provenByVersion.delete(versionId);
-  provenPointersOf(store, scope).delete(projectionKey(recordClass, scope));
-}
-
 export function clearPromotedReadModelCache(): void {
   cache.clear();
   provenByVersion.clear();
@@ -1473,7 +1467,6 @@ export function primeReaderProjection(recordClass: RoutineRecordClass, scope: st
   void read.catch(() => undefined);
   return read;
 }
-
 
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
   let held = readerProjectionReads.get(selection);

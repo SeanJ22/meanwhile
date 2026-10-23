@@ -1,4 +1,4 @@
-import { readGovernmentBudgets, type GovernmentBudgetFact } from "../civic-data/government-budgets.ts";
+import { readGovernmentBudgets } from "../civic-data/government-budgets.ts";
 import { governmentMoneyView, governmentMoneyText } from "../funding/government-money.ts";
 import { currentReaderAuthorityEdge,ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import { scopedManualContractScope } from "../civic-data/scoped-manual-contracts.ts";
@@ -38,4 +38,4 @@ export function composeGovernmentFinanceAnswer(input:{subject:EvidenceSubject|nu
   }
   return answer ? {answer,citedUrls:[...new Set(selected.map(row=>row.sourceUrl).filter((url):url is string=>Boolean(url)))]} : null;
 }
-export type { GovernmentBudgetFact };
+;

@@ -8,14 +8,7 @@ import {
   isIsoDate,
   validateClaims,
 } from "./claims.ts";
-import {
-  type Applicability,
-  type Jurisdiction,
-  appliesTo,
-  overGeneralized,
-  unknownApplicability,
-  type PortabilityClass,
-} from "./portability.ts";
+import { type Applicability, type Jurisdiction, appliesTo, overGeneralized, unknownApplicability } from "./portability.ts";
 
 /** Routes entering or amended after this version must declare claim classes; earlier ones report as unclassified. */
 export const CLAIM_CLASS_REQUIRED_FROM_VERSION = 55;
@@ -169,106 +162,6 @@ export function recordRouteOutcome(
     recorded: true,
     reason: `recorded ${outcome.outcome} for ${routeId} in ${outcome.jurisdiction}`,
   };
-}
-
-/**
- * A jurisdictional failure: evidence that a route cannot work here, not that this attempt failed. Narrowing requires
- * the caller to say so and why; a transport, permission or tooling failure never narrows.
- */
-export interface JurisdictionalFailure {
-  jurisdiction: string;
-  why: string;
-}
-
-export interface EarnedPortability {
-  portability: PortabilityClass;
-  states: string[];
-  /** Why this class, from the evidence. Always stated. */
-  because: string;
-  changed: boolean;
-}
-
-/**
- * The portability a route has earned from its outcomes, conservatively: one success never narrows; `NATIONWIDE` needs
- * three states and `STATE_FAMILY` two, the same bars `overGeneralized` refuses; `ZERO`, `FAILED` and `BLOCKED` never
- * narrow; `UNKNOWN` is a valid resting state.
- */
-export function earnedPortability(
-  route: MethodRoute,
-  jurisdictionalFailures: readonly JurisdictionalFailure[] = [],
-): EarnedPortability {
-  const current = route.applicability.portability;
-  const proven = [
-    ...new Set(route.outcomes.filter((o) => o.outcome === "YIELDED").map((o) => o.jurisdiction)),
-  ].sort();
-
-  if (proven.length >= 3) {
-    return {
-      portability: "NATIONWIDE",
-      states: proven,
-      because: `YIELDED in ${proven.length} distinct jurisdictions: ${proven.join(", ")}`,
-      changed: current !== "NATIONWIDE",
-    };
-  }
-  if (proven.length === 2) {
-    return {
-      portability: "STATE_FAMILY",
-      states: proven,
-      because: `YIELDED in 2 distinct jurisdictions: ${proven.join(", ")}`,
-      changed: current !== "STATE_FAMILY",
-    };
-  }
-
-  // Narrowing happens ONLY on declared jurisdictional failure, never on a
-  // transport, permission or tooling failure.
-  const failedHere = jurisdictionalFailures.map((f) => f.jurisdiction);
-  if (proven.length === 1 && failedHere.length > 0) {
-    return {
-      portability: "STATE_SPECIFIC",
-      states: proven,
-      because:
-        `YIELDED in ${proven[0]} and declared jurisdictionally inapplicable in ` +
-        `${failedHere.join(", ")}: ${jurisdictionalFailures.map((f) => f.why).join("; ")}`,
-      changed: current !== "STATE_SPECIFIC",
-    };
-  }
-
-  return {
-    portability: "UNKNOWN",
-    states: proven,
-    because:
-      proven.length === 1
-        ? `YIELDED in ${proven[0]} only — one success does not prove it fails elsewhere, so it keeps inheriting`
-        : `${route.outcomes.length} outcome(s) recorded, none establishing reach`,
-    changed: false,
-  };
-}
-
-/** Apply earned portability to the whole store. Returns what actually moved. */
-export function applyEarnedPortability(
-  k: MethodKnowledge,
-  failures: Record<string, JurisdictionalFailure[]> = {},
-): { knowledge: MethodKnowledge; moved: Array<{ id: string; from: PortabilityClass; to: PortabilityClass; because: string }> } {
-  const moved: Array<{ id: string; from: PortabilityClass; to: PortabilityClass; because: string }> = [];
-  const routes = k.routes.map((r) => {
-    const earned = earnedPortability(r, failures[r.id] ?? []);
-    if (!earned.changed) return r;
-    moved.push({
-      id: r.id,
-      from: r.applicability.portability,
-      to: earned.portability,
-      because: earned.because,
-    });
-    return {
-      ...r,
-      applicability: {
-        ...r.applicability,
-        portability: earned.portability,
-        states: earned.states,
-      },
-    };
-  });
-  return { knowledge: { ...k, routes }, moved };
 }
 
 /**
@@ -504,24 +397,24 @@ export function routeCount(k: MethodKnowledge): number {
 export { appliesTo, unknownApplicability, type Applicability, type Jurisdiction };
 
 export {
-  CLAIM_CLASSES,
-  CLAIM_CLASS_LETTER,
-  PROVENANCE_REQUIRED_CLASSES,
-  allClaims,
-  attachClaims,
-  classificationCoverage,
-  currentTruthFor,
-  findClaim,
-  findDependencyFlags,
-  isIsoDate,
-  readCurrentMethod,
-  retractClaim,
-  staleDependents,
-  validateClaims,
-  type ClaimClass,
-  type ClaimProvenance,
-  type ClaimRetraction,
-  type ClaimValidation,
-  type DependencyFlag,
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   type MethodClaim,
 } from "./claims.ts";

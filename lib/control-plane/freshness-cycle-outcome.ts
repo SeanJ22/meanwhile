@@ -363,12 +363,6 @@ export async function readLatestFreshnessCycleOutcome(
   return null;
 }
 
-export function freshnessCycleOutcomes(
-  rows: readonly OwnerDigestRecord[],
-): readonly FreshnessCycleOutcome[] {
-  return rows.flatMap((row) => row.runtimeOutcome?.kind === "FRESHNESS_CYCLE" ? [row.runtimeOutcome] : []);
-}
-
 export function mapTilerUsageCollectionOutcomes(
   rows: readonly OwnerDigestRecord[],
 ): readonly MapTilerUsageCollectionOutcome[] {

@@ -13,8 +13,6 @@
 
 import type { Provenance } from "../sources/types.ts";
 
-export type FundingDataClass = "FEC_COMMITTEE" | "FEC_CONTRIBUTOR";
-
 /** One itemized receipt, exactly as filed — never characterized. */
 export interface ContributionRow {
   dataClass: "FEC_CONTRIBUTOR";

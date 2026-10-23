@@ -2,7 +2,6 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import { CivicDataStoreUnavailableError, civicDataReadNotInitialized, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { readStateAuthorityProjection } from "../civic-data/state-reader.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
-import type { BodyRoster } from "./body-rosters.ts";
 import type { RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
 import { currentReaderAuthorityEdge, reportReaderStateFailure } from "./runtime-edge.ts";
 import { readStateRegistryRuntimeProjection } from "../civic-data/read-model.ts";
@@ -94,8 +93,4 @@ export function getRegistryRuntimeReadModel(): RegistryRuntimeReadModel {
   const state = registryRuntimeReadState();
   if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value;
   throw new Error(`The requested registry records are ${state.kind}.`);
-}
-
-export function getRuntimeBodyRosters(): readonly BodyRoster[] {
-  return getRegistryRuntimeReadModel().bodyRosters;
 }

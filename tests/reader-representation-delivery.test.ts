@@ -20,7 +20,7 @@ async function answer(ocdId: string): Promise<SeatHolder[]> {
     assert.ok(payload.label, `${ocdId} carries its held jurisdiction label`);
     assert.equal(payload.tier, "state");
     assert.equal(payload.metadataStatus, "HELD");
-    assert.match(response.headers.get("Netlify-CDN-Cache-Control") ?? "", /durable, max-age=60/);
+    assert.match(response.headers.get("Netlify-CDN-Cache-Control") ?? "", /durable, max-age=900, stale-while-revalidate=900/);
     assert.match(response.headers.get("Netlify-Cache-Tag") ?? "", /reader-state:/);
   }
   return payload.holders;

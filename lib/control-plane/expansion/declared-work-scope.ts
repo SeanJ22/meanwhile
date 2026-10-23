@@ -1,6 +1,6 @@
 import type { CensusGeographyLookup } from "../../census-geography/contract.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
-export { censusWorkDivision } from "../../census-geography/division-id.ts";
+;
 import type { ResolvedScope } from "./membership.ts";
 import { certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 

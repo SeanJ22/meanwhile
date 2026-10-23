@@ -248,19 +248,6 @@ export const VERIFICATION_TIERS: VerificationTier[] = [
   "VOTER_MATCHED",
 ];
 
-/** What the client sends. Everything else about the row is server-derived. */
-export interface ReactionSubmission {
-  targetType: ReactionTargetType;
-  targetId: string;
-  reaction: ReactionValue;
-  /** The browser's random continuity key — hashed before storage. */
-  reactionKey: string;
-  /** Orientation only, same basis as the search log. All optional. */
-  zip?: string | null;
-  lat?: number | null;
-  lng?: number | null;
-}
-
 export function isValidTargetType(value: unknown): value is ReactionTargetType {
   return typeof value === "string" && (REACTION_TARGET_TYPES as string[]).includes(value);
 }

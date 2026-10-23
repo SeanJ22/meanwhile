@@ -121,16 +121,6 @@ export const STATE_WORDS: Readonly<Record<AssignmentState, { readonly label: str
 
 export type NextStepOwner = "RUNNER" | "SCOUT_LANE" | "FLEET" | "ENGINEERING" | "OWNER" | "SOURCE" | "NOBODY";
 
-export const OWNER_WORDS: Readonly<Record<NextStepOwner, string>> = {
-  RUNNER: "The runner (automatic)",
-  SCOUT_LANE: "The Scout lane (automatic, paid model)",
-  FLEET: "The fleet's next worker (automatic)",
-  ENGINEERING: "Engineering",
-  OWNER: "You",
-  SOURCE: "The publisher",
-  NOBODY: "Nobody — nothing is owed",
-};
-
 export type WorkerModel =
   | { readonly kind: "MODEL"; readonly id: string }
   | { readonly kind: "PLAIN_CODE"; readonly tool: string }
@@ -505,8 +495,6 @@ function clip(text: string | null | undefined, max: number): string {
   if (raw.length <= max) return raw;
   return `${raw.slice(0, Math.max(0, max - 1)).trimEnd()}…`;
 }
-
-export const clipText = clip;
 
 function plural(n: number, one: string, many = `${one}s`): string {
   return `${n.toLocaleString("en-US")} ${n === 1 ? one : many}`;
@@ -3103,11 +3091,4 @@ export function assignmentCountClaims(view: AssignmentView): CountClaim[] {
       ? [{ label: "open Ask gaps by code", stated: view.summary.askGaps.value.open, rendered: view.summary.askGaps.value.byCode.reduce((n, c) => n + c.count.value, 0) }]
       : []),
   ];
-}
-
-export function waitingHours(row: { readonly waiting: { readonly since: string | null } }, nowIso: string): number | null {
-  const since = ms(row.waiting.since);
-  const now = ms(nowIso);
-  if (!Number.isFinite(since) || !Number.isFinite(now)) return null;
-  return Math.max(0, (now - since) / HOUR_MS);
 }

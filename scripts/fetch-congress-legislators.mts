@@ -4,6 +4,7 @@ import { pathToFileURL } from "node:url";
 import { failedFederalDirectoryCandidate, heldDirectoryCandidate, federalDirectoryContractId, federalDirectoryForState, federalDirectoryStateOf,
   FEDERAL_DIRECTORY_PARSER_VERSION, type FederalDirectoryCapture } from "../lib/officials/federal-directory-data-plane.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
+import { publishFederalDirectoryOfficePoints } from "../lib/officials/office-points-publication.ts";
 import { readStateFederalDirectory } from "../lib/officials/federal-directory-read-model.ts";
 import { requiredAssignment } from "./cli-args.mts";
 import { readContractHandoff } from "../lib/civic-data/contract-handoff.ts";
@@ -45,11 +46,13 @@ export async function refreshCongressDirectory(input: {
   const publish = async (state: string, acquisitions: readonly FederalDirectoryCapture[], projection: FederalDirectoryReadModel, retrievedAt: string) => {
     if (Date.now() >= deadline) return;
     try {
-      const candidate = heldDirectoryCandidate({ state, acquisitions, retrievedAt, projection, changes: changesFrom(priors.get(state) ?? null, projection) });
+      // Office points found while publishing are saved with the state's directory and reused by its next publication.
+      const pointed = await publishFederalDirectoryOfficePoints(projection, latest.get(state) ?? priors.get(state) ?? null);
+      const candidate = heldDirectoryCandidate({ state, acquisitions, retrievedAt, projection: pointed, changes: changesFrom(priors.get(state) ?? null, pointed) });
       const outcome = await processRegisteredManualCandidate(store, federalDirectoryContractId(state), candidate, clock());
       receipts.set(state, { candidate, outcome });
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
-      latest.set(state, projection);
+      latest.set(state, candidate.readModel as FederalDirectoryReadModel);
     } catch (error) { failures.push(error); console.error(`${state}: ${String(error)}`); }
   };
   try {

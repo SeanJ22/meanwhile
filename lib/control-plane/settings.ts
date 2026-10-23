@@ -78,9 +78,6 @@ export function readSetting<T extends SettingValue>(config: Pick<AdminConfig, "s
   const value = config?.settings?.[key];
   return definition && value !== undefined && definition.validate(value) ? value as T : fallback;
 }
-export function settingReader(config: AdminConfig | null) {
-  return <T extends SettingValue>(key: string, fallback: T): T => readSetting(config, key, fallback);
-}
 
 /** Every change to one key, newest first. */
 export function settingLog(config: AdminConfig | null, key: string): readonly SettingChange[] {

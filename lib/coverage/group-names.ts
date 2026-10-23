@@ -7,6 +7,4 @@ const names = (keep: (group: string) => boolean): Readonly<Record<string, string
 /** The groups with at least one item a place owes: those whose items are not system-level. */
 export const PLACE_GROUPS: ReadonlySet<string> = new Set(Object.entries(CHECKLIST_ITEMS)
   .filter(([, item]) => item?.unit !== "system").map(([id]) => id.slice(0, id.indexOf("-"))));
-
-export const PLACE_GROUP_NAMES: Readonly<Record<string, string>> = names((group) => PLACE_GROUPS.has(group));
 export const GROUP_NAMES: Readonly<Record<string, string>> = names(() => true);

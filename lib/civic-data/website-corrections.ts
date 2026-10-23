@@ -1,8 +1,4 @@
-/** Establishes which site is a government's; it never attributes a calendar on that site to a board. */
 
-/** Byte-identical to the citation already stored on corrected rows. */
-export const WEBSITE_CORRECTION_AUTHORIZATION =
-  "Owner decision C15, recorded 2026-09-24T22:43Z in the session closeout list: authorize the additional evidence for the website field only; the official homepage and federal .gov registry must identify the same government; record the evidence and the actual reviewer.";
 
 export const WEBSITE_CORRECTION_CITATION = "C15: owner decision recorded 2026-09-24T22:43Z (website field only)" as const;
 

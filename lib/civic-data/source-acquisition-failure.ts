@@ -15,12 +15,12 @@ export {
   isSourceAcquisitionFailure,
   readPublisherBody,
   requestPublisher,
-  publisherDeadlineFailure,
+  
   sourceAcquisitionFailure,
   SourceAcquisitionFailure,
   withPublisherAcquisitionDeadline,
 } from "./source-acquisition-error.ts";
-export type { SourceAcquisitionFailureCode } from "./source-acquisition-error.ts";
+;
 
 export interface RegisteredSourceFailureRecord {
   readonly outcome: PromotionOutcome;

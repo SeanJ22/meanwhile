@@ -16,9 +16,10 @@ import { verifiedWhiteHouseOfficial, ADMINISTRATION_URL } from "../sources/white
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 import { rosterChanges, type RosterChange } from "../officials/roster-changes.ts";
+import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
-export { peopleJurisdiction, readPeopleSourceProjection, type PeopleSourceReadModel } from "./people-source-read.ts";
+export {  readPeopleSourceProjection,  } from "./people-source-read.ts";
 import { peopleJurisdiction, readPeopleSourceProjection, type PeopleSourceReadModel } from "./people-source-read.ts";
 interface PublishPeopleSourceInput {
   readonly store: RoutineDataStore;
@@ -34,6 +35,7 @@ interface PublishPeopleSourceInput {
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
   readonly derivedInputs?: readonly DerivedInputRef[];
   readonly confirmUnchanged?: boolean;
+  readonly resolveOfficePoint?: OfficePointResolver;
 }
 type PeopleCandidateInput = Omit<PublishPeopleSourceInput,"store"|"vault"|"acquisitions"> & {
   readonly captures: readonly StatePeopleCapture[];
@@ -212,6 +214,7 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   }
   const violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,verifyNationalCurrent:!national});
   if (national && !roster.officeholders.length) violations.push("NATIONAL_OFFICIAL_NONE_VERIFIED");
+  roster = await publishRosterOfficePoints(roster, held, input.resolveOfficePoint);
   const candidate = peopleSourceCandidate({...input,roster,captures,violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"

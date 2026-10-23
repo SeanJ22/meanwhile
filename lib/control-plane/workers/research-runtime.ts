@@ -1,5 +1,5 @@
 import { durableResearchTools, type ResearchRuntimeTools } from "./durable-research-tools.ts";
-export { durableResearchTools, type ResearchRuntimeTools } from "./durable-research-tools.ts";
+export {  type ResearchRuntimeTools } from "./durable-research-tools.ts";
 import { readSourceReliability } from "../scheduler/scout-reliability.ts";
 import { writeFieldManual, newFieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
 import { performance } from "node:perf_hooks";

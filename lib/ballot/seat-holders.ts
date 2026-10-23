@@ -78,13 +78,3 @@ export function nhLegislativeHolders(contestTitle: string): SeatHolderRef[] {
       source: `New Hampshire General Court — ${readState.kind.toLowerCase()} Members.txt, source through ${readState.metadata.sourceThrough ?? "not recorded"}; version ${readState.metadata.version ?? readState.metadata.versionId ?? "not recorded"}; ${readState.metadata.stale.toLowerCase()}`,
     }));
 }
-
-export function nhCorpusStanding(): { members: number; sitting: number; collectedAt: string } | null {
-  const c = heldRoster();
-  if (c === null) return null;
-  return {
-    members: c.members.length,
-    sitting: c.members.filter((m) => sits(m.electedStatus)).length,
-    collectedAt: readState.metadata.sourceThrough ?? readState.metadata.retrievedAt ?? "not recorded",
-  };
-}

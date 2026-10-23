@@ -1,8 +1,4 @@
-import {
-  isSourceAcquisitionDeadlineError,
-  runInSourceAcquisitionDomain,
-  type SourceAcquisitionDomain,
-} from "../sources/acquisition-deadline.ts";
+import { isSourceAcquisitionDeadlineError, runInSourceAcquisitionDomain } from "../sources/acquisition-deadline.ts";
 
 export const SOURCE_ACQUISITION_FAILURE_CODES = [
   "PUBLISHER_UNAVAILABLE",
@@ -89,18 +85,4 @@ export async function withPublisherAcquisitionDeadline<T>(
       `${sourceLabel}: the publisher acquisition exceeded its ${timeoutMs}ms deadline.`,
     );
   }
-}
-
-export function publisherDeadlineFailure(
-  sourceLabel: string,
-  domain: Pick<SourceAcquisitionDomain, "signal">,
-): SourceAcquisitionFailure | null {
-  if (!domain.signal.aborted) return null;
-  const reason = domain.signal.reason;
-  if (isSourceAcquisitionFailure(reason)) return reason;
-  if (!isSourceAcquisitionDeadlineError(reason)) throw reason;
-  return sourceAcquisitionFailure(
-    "PUBLISHER_UNAVAILABLE",
-    `${sourceLabel}: the publisher acquisition exceeded its ${reason.timeoutMs}ms deadline.`,
-  );
 }

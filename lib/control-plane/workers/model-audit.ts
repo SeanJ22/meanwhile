@@ -8,7 +8,7 @@ import { assertStepMayInvokeModel, MODEL_FOR_CLASS } from "../scheduler/model-ro
 import { readCompletedWorkerResult } from "../repository/worker-completion.ts";
 import { nextAuditEscalation } from "./audit-escalation.ts";
 import { ceilingPermits, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
-import { anthropicTransport, modelRequestAccounting, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
+import { modelRequestAccounting, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
 import type { FleetRuntime } from "./runtime.ts";
 import type { IndependentAuditContext, WorkerEvidence, WorkerResultRecord, RecordExtractionShape } from "./types.ts";
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
@@ -34,11 +34,6 @@ const RECORD_AUDIT = {
   },
   cache_control: { type: "ephemeral" as const, ttl: "1h" as const },
 };
-
-/** The provider call ends on its response or failure, without an attempt clock. */
-export function boundedAuditTransport(apiKey: string): ModelTransport {
-  return anthropicTransport(apiKey);
-}
 
 function object(value: unknown): value is Record<string, unknown> { return value !== null && typeof value === "object" && !Array.isArray(value); }
 function fit(text: string, budget: number): string {

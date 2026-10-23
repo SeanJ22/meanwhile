@@ -68,8 +68,6 @@ export interface BudgetLines {
   readonly areas: readonly BudgetLine[];
 }
 
-export const NO_BUDGET_LINES: BudgetLines = { sends: [], areas: [] };
-
 export const hasBudgetLines = (lines: BudgetLines): boolean => lines.sends.length + lines.areas.length > 0;
 
 export type HoldDecision =

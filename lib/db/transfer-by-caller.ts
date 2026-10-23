@@ -131,9 +131,6 @@ export function installDatabaseClientAccounting(config: typeof neonConfig, insta
   config.webSocketConstructor = CallerSocket;
 }
 
-/** Capture before an await or stream callback loses the stack that requested the read. */
-export function activeQueryCaller(): string | undefined { return scope.getStore(); }
-
 function namedSite(): string {
   const site = pinnedSite.getStore() ?? callSite();
   if (site !== "unknown") return site;

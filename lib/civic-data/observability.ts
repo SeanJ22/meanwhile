@@ -91,10 +91,6 @@ export type Observation<T> =
   | { readonly kind: "UNKNOWN"; readonly detail: string }
   | { readonly kind: "NOT_APPLICABLE"; readonly detail: string };
 
-export function observationNeedsEvidence<T>(observation: Observation<T>): boolean {
-  return observation.kind !== "MEASURED" && observation.kind !== "NOT_APPLICABLE";
-}
-
 export type DrilldownCount<T> =
   | { readonly kind: "MEASURED"; readonly value: number; readonly members: readonly T[] }
   | { readonly kind: "NOT_RECORDED"; readonly detail: string; readonly members: readonly T[] }

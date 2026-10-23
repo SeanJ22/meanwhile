@@ -97,12 +97,6 @@ function meetingsUnreachable(detail: string): MeetingsProjectionReadResult {
   return { kind: "STORE_UNREACHABLE", value: null, metadata: NOT_A_PLACE.metadata, code: "STORE_READ_FAILED", detail };
 }
 
-/** A place whose government could not be resolved holds no meetings; the answer says so rather than naming a stand-in. */
-export function emptyMeetingsRead(now: string = new Date().toISOString()): MeetingsProjectionReadResult {
-  return { kind: "PROMOTED", detail: "The place resolved to no government.", metadata: { ...NOT_A_PLACE.metadata, stale: "UNKNOWN" },
-    value: { formatVersion: 1, generatedAt: now, counts: snapshotCounts([], 0), sources: [], meetings: [], agendaDocuments: [] } };
-}
-
 export interface StateMeetingBody {
   readonly state: string;
   readonly bodyId: string;

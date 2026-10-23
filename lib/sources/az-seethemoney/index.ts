@@ -24,22 +24,12 @@
  * and it returns numbers only.
  */
 
-import {
-  judgeMatch,
-  namesAgree,
-  type MatchBasis,
-} from "../../funding/state-money.ts";
+import { namesAgree } from "../../funding/state-money.ts";
 import { OUTBOUND_CONTACT } from "../../geo/outbound-agent.ts";
-import type { Provenance } from "../types.ts";
 
 export const AGENCY = "Arizona Secretary of State — See The Money";
-export const PUBLIC_PAGE = "https://seethemoney.az.gov/";
 export const BASE = "https://seethemoney.az.gov";
 export const SUMMARY_PATH = "/Reporting/GetNEWTableData/";
-export const DETAIL_PATH = "/Reporting/GetNEWDetailedTableData/";
-export const COMMITTEE_INFO_PATH = "/Reporting/GetDetailedInformation";
-export const FTP_HOST = "ftp.azsos.gov";
-export const FTP_DIR = "/cfsdata2";
 
 /**
  * The jurisdiction whose filing officer is the Secretary of State.
@@ -71,16 +61,6 @@ export const SUMMARY_COLUMNS = [
   "CashBalance",
   "IESupport",
   "IEOpposition",
-] as const;
-
-/** The projection the detail action builds its result from. */
-export const DETAIL_COLUMNS = [
-  "",
-  "TransactionId",
-  "TransactionDate",
-  "TransactionLastName",
-  "Amount",
-  "TransactionType",
 ] as const;
 
 /** Which detail table. 20 income, 21 expense, 24 every transaction. */
@@ -430,88 +410,6 @@ export interface DetailAggregate {
   sum: number;
 }
 
-/**
- * The only function that sees an itemised transaction, and it returns numbers. Nothing downstream is
- * given the rows, so nothing downstream can persist them.
- */
-export function aggregateDetail(rows: readonly { Amount?: number | null }[]): DetailAggregate {
-  let sum = 0;
-  for (const r of rows) sum += r.Amount ?? 0;
-  return { count: rows.length, sum: Math.round(sum * 100) / 100 };
-}
-
-/**
- * The Arizona guard, which only ever narrows `judgeMatch`, the shared bar:
- * - The exact seat: both sides key to one canonical seat and the keys must be equal.
- * - The cycle: a committee the register shows terminated before the cycle opened belongs to a different
- *   election.
- */
-export interface AzMatchInput {
-  registeredName: string;
-  candidateNameAsFiled: string;
-  ballotName: string;
-  officeAsFiled: string | null;
-  officeOnBallot: string;
-  electionYearAsFiled: number | null;
-  electionYearOnBallot: number;
-}
-
-export interface AzMatchResult {
-  basis: MatchBasis;
-  /** True only when the shared bar AND both Arizona guards agree. */
-  agrees: boolean;
-  seatKeyAsFiled: string | null;
-  seatKeyOnBallot: string | null;
-  /** Why, when it did not. Empty when it did. */
-  refusals: string[];
-}
-
-export function judgeAzMatch(input: AzMatchInput): AzMatchResult {
-  // A ballot name carrying a quoted alternate is two names written as one, so the agreeing variant pair
-  // is resolved first and `judgeMatch` receives that. When no pair agrees, the originals go in.
-  let filedName = input.candidateNameAsFiled;
-  let ballotNameForBar = input.ballotName;
-  outer: for (const x of nameVariants(input.candidateNameAsFiled)) {
-    for (const y of nameVariants(input.ballotName)) {
-      if (namesAgree(x, y)) {
-        filedName = x;
-        ballotNameForBar = y;
-        break outer;
-      }
-    }
-  }
-  const basis = judgeMatch({ ...input, candidateNameAsFiled: filedName, ballotName: ballotNameForBar });
-  const filed = azOfficeKey(input.officeAsFiled);
-  const ballot = azOfficeKey(input.officeOnBallot);
-  const refusals: string[] = [];
-  if (!basis.allThreeAgree) refusals.push(basis.note.replace(/^LEAD — /, ""));
-  if (ballot === null) {
-    refusals.push(`the ballot office '${input.officeOnBallot}' does not key to an Arizona seat`);
-  } else if (filed === null) {
-    refusals.push(
-      input.officeAsFiled
-        ? `the filed office '${input.officeAsFiled}' does not key to an Arizona seat`
-        : "the agency states no office for this committee",
-    );
-  } else if (filed !== ballot) {
-    refusals.push(`the filed seat ${filed} is not the ballot seat ${ballot}`);
-  }
-  const agrees = refusals.length === 0;
-  return {
-    basis: {
-      ...basis,
-      allThreeAgree: agrees,
-      note: agrees
-        ? "name, exact Arizona seat and election cycle all agree with the certified-ballot row"
-        : `LEAD — ${refusals.join("; ")}`,
-    },
-    agrees,
-    seatKeyAsFiled: filed,
-    seatKeyOnBallot: ballot,
-    refusals,
-  };
-}
-
 /** Committee types in the register that are a CANDIDATE'S own committee. */
 const CANDIDATE_COMMITTEE_TYPES = /^(candidate|\$500 threshold \(candidate\))/i;
 
@@ -548,15 +446,6 @@ export function terminatedBeforeCycle(row: RegisterRow | undefined, cycleOpensOn
   const t = (row.TerminationDate ?? "").slice(0, 10);
   if (!t) return false;
   return t < cycleOpensOn;
-}
-
-export function provenanceFor(sourceUrl: string, collectedAt: string): Provenance {
-  return {
-    sourceUrl,
-    sourceOrg: AGENCY,
-    collectedAt,
-    verifiedAt: collectedAt,
-  };
 }
 
 /**

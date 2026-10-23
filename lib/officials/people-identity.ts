@@ -12,10 +12,6 @@ export function statePeopleScopeForDivision(divisionId: string): StatePeopleJuri
   return scope && STATE_PEOPLE_JURISDICTIONS.includes(scope) ? scope : null;
 }
 
-export function statePeopleSourceScopes(jurisdiction: string): readonly string[] {
-  return statePeopleSourcePointers(jurisdiction).filter(row=>row.recordClass === "STATE_LEGISLATOR").map(row=>row.scope);
-}
-
 export function statePeopleSourcePointers(jurisdiction: string) {
   return [{recordClass:"STATE_LEGISLATOR" as const,scope:jurisdiction}, {recordClass:"STATE_LEGISLATOR" as const,scope:`${jurisdiction}:openstates-people:v1`},
     ...PEOPLE_SOURCE_IDS.map(sourceId=>({recordClass:peopleSourceRecordClass(sourceId),scope:peopleSourceScope(jurisdiction,sourceId)}))];

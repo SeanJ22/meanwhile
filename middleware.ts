@@ -32,6 +32,7 @@ import {
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
 import { movedAdminPage } from "@/lib/control-plane/moved-pages.ts";
+import { ballotCacheHeaders } from "@/lib/reader/ballot-cache.ts";
 
 /** The command center and its authenticated API. */
 const ADMIN_PATH_PREFIXES = ["/admin", "/api/admin"] as const;
@@ -77,7 +78,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
    * public, so a misconfiguration never opens the control centre.
    * ---------------------------------------------------------------- */
   if (!onAdminHost) {
-    return isAdminPath(pathname) ? notFound() : NextResponse.next();
+    if (isAdminPath(pathname)) return notFound();
+    return NextResponse.next({ headers: pathname === "/ballot" ? ballotCacheHeaders(request) : undefined });
   }
 
   /* ---------------------------------------------------------------- *

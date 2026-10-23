@@ -17,11 +17,11 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
 const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
-/** RN-02: New York's cold native repair peaked at 1,062,305,792 bytes on 2026-10-23,
+/** RN-02: New York's cold native repair peaked at 1,103,515,648 bytes on 2026-10-23,
  * with 64-part reads and two typed checks together. Summed process-tree /proc VmHWM sampled every
- * 100 ms on the execution host during an 11,371-contract replay using production SELECT-only roles
+ * 100 ms on the execution host during an 11,451-contract replay using production SELECT-only roles
  * (Node 24.19). Retain that peak plus 5%, rounded up to MiB, even after small CURRENT-only batches. */
-export const READER_REPAIR_PEAK_MIB = 1064;
+export const READER_REPAIR_PEAK_MIB = 1106;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // RH-01 complete native publication peaks: 3,403 MiB Open States and

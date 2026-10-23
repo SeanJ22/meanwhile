@@ -5,10 +5,11 @@ import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import type { PostalTable } from "../lib/geo/postal-core.ts";
 import { launchGuarded } from "./browser.mts";
 import { isLocalBase } from "../lib/ops/live-write-guard.ts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 const readonly = process.argv.includes("--read-only");
 const national = process.argv.includes("--all-states");
-const base = process.env.PK01_BASE_URL ?? "https://meanwhileusa.com";
+const base = process.env.PK01_BASE_URL ?? PUBLIC_SITE_ORIGIN;
 const zip = process.env.PK01_TEST_ZIP ?? "85701";
 const picksApi = process.env.PK01_PICKS_API_ORIGIN;
 if (picksApi) assert.ok(isLocalBase(base) && isLocalBase(picksApi), "a split-store replay is confined to local servers");

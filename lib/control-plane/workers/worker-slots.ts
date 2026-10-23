@@ -17,11 +17,11 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
 const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
-/** RN-02: largest child maxRSS in a cold replay of all 6,860 production reader contracts (163 native
- * children, 2026-10-23) was 957,120,512 bytes, in New York. Process trees were sampled every 100 ms;
- * child getrusage corroborated the peak. Two typed checks run together, with GC after decoded payloads.
- * Keep that full-country peak plus 5%, rounded up, even after five small CURRENT-only batches. */
-export const READER_REPAIR_PEAK_MIB = 959;
+/** RN-02: New York's cold native repair peaked at 1,043,767,296 bytes on 2026-10-23,
+ * with 64-part reads and two typed checks together. Summed process-tree /proc VmHWM sampled every
+ * 100 ms against a production-data copy (Node 24.19). Retain that peak plus 5%, rounded up to MiB,
+ * even after five small CURRENT-only batches; earlier eight-part national replay peaked at 957,120,512. */
+export const READER_REPAIR_PEAK_MIB = 1046;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // RH-01 complete native publication peaks: 3,403 MiB Open States and
@@ -51,14 +51,16 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "retire-state-authorities.mts": STATE_PUBLICATION_PEAK_MIB,
 };
 /**
- * RN-02: 1,136,578,560-byte native California state-program peak, 2026-10-23.
- * Measured against a production data copy with all 1,402 state contracts handed to scripts/ingest.ts;
- * summed /proc VmHWM across its process tree every 100 ms until the scheduled pass deadline, including
- * agenda extraction and native publication. Poppler releases PDF buffers between documents; fixed glibc
- * thresholds are in CIVIC_DATA_PROCESS_ENV. Reservation is the measured peak plus 5%, rounded up to MiB.
- * Finished programs retain the largest of their last five host measurements, also with 5% headroom.
+ * RN-02: 1,444,548,608-byte native calendar-program peak, 2026-10-23, Node 24.19.
+ * Measured against a production-data copy by summing /proc VmHWM over the process tree every 100 ms
+ * through the actual 20m 50s launch window. San Diego Granicus's next read held 867 meetings and
+ * 795 agenda versions; its confirmed calendar, typed proof and native fact publication are included.
+ * The full 1,432-contract California program peaked at 678,588,416 bytes. Poppler, anonymous agenda
+ * spooling, bounded payload parts, streamed hashes and CIVIC_DATA_PROCESS_ENV were active.
+ * Keep the larger observed program plus 5%, rounded up to MiB. It waits when real headroom is smaller;
+ * measured tenant/federal job reservations release their former guesses instead of weakening this bound.
  */
-export const CALENDAR_READ_PEAK_MIB = 1139;
+export const CALENDAR_READ_PEAK_MIB = 1447;
 export const CALENDAR_READ_JOB = "calendar-read";
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
@@ -178,7 +180,7 @@ const PEAK_SAMPLE_MS = 100;
 const MEASURED_PEAK_RUNS = 5;
 /**
  * The job an entry ("<task id>/<script>") runs, which its measured memory is filed under: every calendar read is one
- * job, whatever script reads it; a statewide job is its family, the task id with its two-letter state segment set
+ * job, whatever script reads it; tenant, readback and ZIP observations pool by family; a statewide job is its family, the task id with its two-letter state segment set
  * aside; a job with no task id is its script. Entries that name no script keep their table peak.
  */
 export function workerJobType(entry: string): string | null {

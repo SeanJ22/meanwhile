@@ -436,6 +436,7 @@ import {
   ROUTINE_READER_SINGLE_TIMEOUT_MS,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
+  planRoutineReaderRepair,
   readerRepairDomainPhases,
   selectedReaderRepairContracts,
 } from "../lib/civic-data/reader-repair-protocol.ts";
@@ -1541,7 +1542,7 @@ test("the standing authority envelope is narrowed independently for every runtim
     assert.match(pilot, new RegExp(`standingChildEnvironment\\(\\s*"${capability}"`));
   }
   assert.match(runner, /capability:\s*"ROUTINE_CONTRACT",[\s\S]*contract:\s*pending\.task\.id/);
-  assert.match(runner, /launch\.map[\s\S]*capability:\s*"ROUTINE_SUPERVISOR"/);
+  assert.match(runner, /active\.map[\s\S]*capability:\s*"ROUTINE_SUPERVISOR"/);
   assert.match(runner, /parentPid:\s*process\.pid/);
 });
 
@@ -1613,7 +1614,7 @@ test("Reader readback repair covers the observable registry independently of sou
   const protocol = readFileSync("lib/civic-data/reader-repair-protocol.ts", "utf8");
   assert.match(runner, /const readerContracts = selectedReaderRepairContracts\(/);
   assert.match(runner, /const readerDomains = routineReaderRepairDomains\(readerContracts\)/);
-  assert.match(runner, /runBoundedChildPass\([\s\S]*launch\.map[\s\S]*scripts\/routine-civic-data-reader-repair\.mts/);
+  assert.match(runner, /runBoundedChildPass\([\s\S]*active\.map[\s\S]*scripts\/routine-civic-data-reader-repair\.mts/);
   assert.match(runner, /timeoutMs: domain\.timeoutMs/);
   assert.match(runner, /concurrency: ROUTINE_READER_CHILD_CONCURRENCY/);
   assert.match(runner, /reconcileRoutineReaderRepairDomain/);
@@ -2473,4 +2474,33 @@ test("every routine task's real child command runs a scripts/ script right after
   assert.deepEqual(offenders, [], "the runner already supplies node and --experimental-strip-types");
   const legistar = commandFor({ id: "legistar-members:pima", kind: "SOURCE", task: legistarMemberTasks(["pima"])[0], command: legistarMemberTasks(["pima"])[0].command });
   assert.deepEqual(legistar.args, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/legistar-members-refresh.mts", "--legistar-client=pima"]);
+});
+
+
+test("unpublished reader contracts finish from exact scalar identities without starting children", async () => {
+  const store = new MemoryRoutineDataStore();
+  const selected = [observableRoutineContracts().find(contract => contract.id === "fec-funding")!,
+    observableRoutineContracts().find(contract => contract.id === "dotgov")!, ...MEETING_PARTITION_CONTRACTS.slice(0, 3)];
+  const domains = routineReaderRepairDomains(selected);
+  const missing = await planRoutineReaderRepair(store, domains);
+  assert.deepEqual(missing.domains, []);
+  assert.deepEqual(new Set(missing.noPromotion.map(row => row.contractId)), new Set(selected.map(row => row.id)));
+  assert.ok(missing.noPromotion.every(row => row.disposition === "NO_PROMOTION" && row.receipt === null));
+  await processRegisteredRoutineCandidate(store, "fec-funding", sourceGoodCandidate(), T0);
+  const next = await planRoutineReaderRepair(store, domains);
+  assert.deepEqual(next.domains.flatMap(domain => domain.contracts.map(row => row.id)), ["fec-funding"]);
+  assert.equal(next.noPromotion.length, selected.length - 1, "a later promotion is picked up without a permanent absence cache");
+});
+
+test("an unread or contradictory promotion inventory never turns contracts into absence", async () => {
+  const selected = [observableRoutineContracts().find(contract => contract.id === "fec-funding")!];
+  const domains = routineReaderRepairDomains(selected);
+  for (const readPromotionIdentities of [async () => { throw new Error("database unavailable"); },
+    async () => [{ key: "wrong", recordClass: "FEC_FUNDING", scope: selected[0]!.scope }] as never]) {
+    const planned = await planRoutineReaderRepair({ readPromotionIdentities }, domains);
+    assert.deepEqual(planned.domains, domains);
+    assert.deepEqual(planned.noPromotion, []);
+  }
+  const duplicate = [...domains, ...domains];
+  await assert.rejects(planRoutineReaderRepair(new MemoryRoutineDataStore(), duplicate), /CONTRACT_ID_DUPLICATE/);
 });

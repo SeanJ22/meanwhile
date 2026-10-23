@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
 import ts from "typescript";
-import { CALENDAR_READ_PEAK_MIB, memoryReading, RESEARCH_PARENT_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, routineProcessSlots,
+import { READER_REPAIR_PEAK_MIB, CALENDAR_READ_PEAK_MIB, memoryReading, RESEARCH_PARENT_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, routineProcessSlots,
   WORKER_ENTRY_PEAK_MIB, workerJobType, workerMemoryHost, workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 
 const mib = 1024 ** 2;
@@ -153,7 +153,7 @@ test("memory samples survive a stopped service and pool a new tenant, readback a
     const slots = routineProcessSlots({ host: restarted, availableBytes: () => 10000 * mib });
     for (const [entry, expected] of [
       ["legistar-members:new/legistar-members-refresh.mts", 179],
-      ["reader-readback:new/routine-civic-data-reader-repair.mts", 959],
+      ["reader-readback:new/routine-civic-data-reader-repair.mts", READER_REPAIR_PEAK_MIB],
       ["national-place:90210/promote-registry-runtime.mts", 1229],
     ] as const) {
       const release = await slots.acquire(entry);
@@ -222,4 +222,18 @@ test("the runner admits its door-publication and federal-split children through 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.ok(runner.indexOf("const routineMemorySlots = routineProcessSlots();") < runner.indexOf('"scripts/publish-meeting-doors.mts"'));
   assert.equal((runner.match(/onStarting: command => acquireChildMemory\(command(?:, \[\], deadlineMs)?\), onSettled: run => releaseChildMemory\(run\.id\)/g) ?? []).length, 2);
+});
+
+
+test("the measured reader fits 2,036 MiB while a calendar waits for its complete observed peak", async () => {
+  const host = workerMemoryHost({ processes: () => [] });
+  const slots = routineProcessSlots({ host, availableBytes: () => 2036 * mib });
+  const reader = await slots.acquire("reader-readback:next/routine-civic-data-reader-repair.mts", Date.now() + 1000);
+  host.transact(state => assert.equal(state.reservations[0].peak, READER_REPAIR_PEAK_MIB * mib), false);
+  reader();
+  await assert.rejects(slots.acquire("meetings-state:CA/ingest.ts", Date.now() + 40), /WORKER_MEMORY_DEADLINE/);
+  const room = routineProcessSlots({ host, availableBytes: () => 3000 * mib });
+  const calendar = await room.acquire("meetings-state:CA/ingest.ts", Date.now() + 1000);
+  host.transact(state => assert.equal(state.reservations[0].peak, CALENDAR_READ_PEAK_MIB * mib), false);
+  calendar();
 });

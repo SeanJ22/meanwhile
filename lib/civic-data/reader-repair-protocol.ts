@@ -1,3 +1,4 @@
+import type { RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionSourceContract } from "./manual-contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, meetingPartitionOfId, observableRoutineContracts, type MeetingPartitionContract } from "./meeting-partitions.ts";
@@ -130,6 +131,39 @@ export function routineReaderRepairDomains(
     throw new Error("ROUTINE_READER_DOMAIN_DENOMINATOR_INVALID");
   }
   return domains;
+}
+
+/** No source publication means there is no payload to decode in a child. Inspect those identities in bulk
+ * after the phase's sources settle; a failed or malformed read leaves the full selection for the child. */
+export async function planRoutineReaderRepair(
+  store: Pick<RoutineDataStore, "readPromotionIdentities">,
+  domains: readonly RoutineReaderRepairDomain[],
+): Promise<{ readonly domains: readonly RoutineReaderRepairDomain[]; readonly noPromotion: readonly RoutineCivicDataReaderReadbackReference[] }> {
+  const contracts = domains.flatMap(domain => domain.contracts);
+  if (new Set(contracts.map(contract => contract.id)).size !== contracts.length) throw new Error("ROUTINE_READER_CONTRACT_ID_DUPLICATE");
+  const groups = new Map<ReaderRepairContract["recordClass"], Set<string>>();
+  for (const contract of contracts) {
+    const scopes = groups.get(contract.recordClass) ?? new Set<string>();
+    scopes.add(contract.scope); groups.set(contract.recordClass, scopes);
+  }
+  const absent = new Set<string>();
+  for (const [recordClass, scopes] of groups) {
+    try {
+      const rows = await store.readPromotionIdentities(recordClass, [...scopes]);
+      if (rows.some(row => row.recordClass !== recordClass || !scopes.has(row.scope) || row.key !== `${recordClass}:${row.scope}`) ||
+        new Set(rows.map(row => row.key)).size !== rows.length) continue;
+      const held = new Set(rows.map(row => row.scope));
+      for (const scope of scopes) if (!held.has(scope)) absent.add(`${recordClass}:${scope}`);
+    } catch { /* The child retains the exact contract and produces its own diagnostic; an outage is never absence. */ }
+  }
+  const noPromotion = contracts.filter(contract => absent.has(`${contract.recordClass}:${contract.scope}`)).map(contract => ({
+    contractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+    projectionId: contract.readerProjection!.id, disposition: "NO_PROMOTION" as const, receipt: null,
+  }));
+  return { noPromotion, domains: domains.flatMap(domain => {
+    const selected = domain.contracts.filter(contract => !absent.has(`${contract.recordClass}:${contract.scope}`));
+    return selected.length ? [{ ...domain, contracts: selected }] : [];
+  }) };
 }
 
 export interface RoutineReaderRepairRecord {

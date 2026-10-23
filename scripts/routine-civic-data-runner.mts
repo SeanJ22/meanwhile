@@ -148,6 +148,7 @@ import {
   parseRoutineReaderRepairRecords,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
+  planRoutineReaderRepair,
   readerRepairDomainPhases,
   selectedReaderRepairContracts,
   type RoutineReaderRepairDomain,
@@ -1554,8 +1555,13 @@ function startReaderRepair(
     for (const contract of domain.contracts) repairingContractIds.add(contract.id);
   }
   const handoffs = new Map<string, ReturnType<typeof writeContractHandoff>>();
-  const readerPass = runBoundedChildPass(
-    launch.map((domain) => {
+  const readerPass = (async () => {
+    const planned = await planRoutineReaderRepair(store, launch);
+    readerReadbackReferences.push(...planned.noPromotion);
+    for (const reference of planned.noPromotion) repairingContractIds.delete(reference.contractId);
+    const active = planned.domains;
+    return runBoundedChildPass(
+    active.map((domain) => {
       const handoff = domain.mode === "MEETING_AGGREGATE" ? writeContractHandoff(domain.contracts)
         : writeContractHandoff(domain.contracts.map(contract => contract.id));
       if (handoff) handoffs.set(domain.id, handoff);
@@ -1589,7 +1595,7 @@ function startReaderRepair(
         await acquireChildMemory(command, [command.id], { priority: -1 });
       },
       onSettled: (run, index) => {
-        const domain = launch[index]!;
+        const domain = active[index]!;
         try {
           settleReaderDomain(domain, run);
         } finally {
@@ -1600,7 +1606,8 @@ function startReaderRepair(
       },
       discardOutputAfterSettlement: true,
     },
-  ).finally(() => {
+    );
+  })().finally(() => {
     for (const handoff of handoffs.values()) handoff.cleanup();
     for (const domain of launch) for (const contract of domain.contracts) repairingContractIds.delete(contract.id);
   });

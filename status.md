@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 91 LIVE (/api/build d8013db from 12:33 PM EDT); RELEASE 92 (VS-07-FX + PB-03-FX) PR #802 OPEN, gates 9 of 9 on cd82fdc4a (9,596 pass), river dfae00f3c (main merged, tree identical), run-full-ci + auto-merge
+build_state: RELEASE 91 LIVE (/api/build d8013db from 12:33 PM EDT); RELEASE 92 (VS-07-FX + PB-03-FX) PR #802 full CI running (admission, verify, both builds green 1:27 PM EDT; 4 test shards running), auto-merge on; RELEASE 93 candidate river-next 01f39a1f6 (BL-01 + BL-21-FX on release 92) in pnpm gates from 1:35 PM EDT
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -81,7 +81,16 @@ Queue (8:20 AM EDT):
 - NX-02-FX live check (when shipped): /national lists the President, JD Vance and the Cabinet, each with its whitehouse.gov page in Sources; 85016, 75201, 94110 and 10+ other states' ZIPs keep no White House holder in Who governs here.
 - PB-03 live check (when shipped): 99559 REAA, 36602 Mobile Housing, 85641 Vail, 35801 Huntsville, Washoe Rural once in its five NV ZIPs plus 89506; reader boards by state in 10+ states. To investigate there: its own table shows OR with 79 boards held tomorrow but 0 reader boards and 0 live facts.
 - Returned: pb-02 (85bf54e3d has the national sample in docs/pb-02.md but a one-line READY message without the proofs; a new READY that states them folds next), lv-01 and vs-07 (empty READY messages; vs-07 also adds 39 MB of county PDFs to tests/fixtures), nx-02 (answered by FX-01: nx-02-fx shows every current executive with seat, name and source under §3; read-only production render gives 23 cards with JD Vance). eo-01 waits behind lv-01.
-- Not posted yet: rn-02, bl-01, cs-01, eo-01 (WIP only).
+- Queue at 1:35 PM EDT (the stream watcher died with the container restart; these READYs were found by a fresh scan):
+  - bl-01 a27c677e6 (BL-01, both proofs): folded, c59a05e6e. Three small clashes resolved in the fold: pick-control.tsx header keeps both descriptions; civic-data runner.ts and store.ts keep both failureStreak (river) and publishedScopeVersions (BL-01).
+  - ballot-parity-fx 41f20be9a (BL-21-FX, FX-01's answer to returns/ballot-parity.md, both proofs): folded, 01f39a1f6. Seven files clashed with releases 89 to 92, all resolved keeping both sides (navigation and census geography both stream and both take the held promotion path; receipt check keeps the translation-state scope and the scoped manual contract scope; text-layer keeps the pdfjs guard and the doc base URL; the runner skip line keeps recordLaunchDecision on the publication target).
+  - tsc, eslint on the resolved files and knip are clean; pnpm gates running. Release 93 when they pass.
+  - cs-01 39238a8be: REFUSED (returns/cs-01.md). Its message has the next-run proof but never says it is connected end to end. A READY that states it folds next, after bl-01, keeping both sides of app/ballot/page.tsx.
+  - dg-01-fx 04dfa4caf (DG-01-FX): not folded, superseded. DG-01 286a2d791 already shipped inside DG-02 (release 90, live 10:24 AM EDT), which answered the same returns/dg-01.md. Merging DG-01-FX on top would re-resolve the same ingest.ts code a second way (15 clashing hunks with what is live). Nothing for FX-01 to do; dg-01 is closed.
+  - Unchanged, still returned: rn-02 d04982090 (merge river), pb-02 85bf54e3d (READY message), lv-01 f786ce81f (READY message), src-01 66437c4f2 (EPA ECHO, OpenFEMA), pb-01 (withdrawn). eo-01: WIP only (waits on lv-01).
+- Live checks owed when release 93 is live (plus real places in 10+ states, counts by state):
+  - BL-01: /ballot on real ZIPs in every state shows the same contests today and tomorrow; 58501 (Bismarck ND) keeps its at-large House race; Maryland's Supreme Court label is county-scoped; PR and GU stay empty until BA-01 publishes their ballots (no BALLOT_CANDIDACY pointer at their state scope).
+  - BL-21-FX: /ballot?zip=85653 (Marana) shows the Arizona card with Secretary of State 602-542-8683, Pima County Recorder 520-724-4330 and Marana Town Clerk 520-382-1961; 85701 the same card; every state's card renders with no false gap; navigation tasks publish on their next pass (51 due).
 
 Baseline before this release (live, release 88, 4:56 AM EDT; first visit, 16 places fetched in parallel), /api/meetings by ZIP: boards shown / with members / empty / ms
 - WI 53703 Madison 0/0/0 618 ms; WI 53202 Milwaukee 342/117/225 (184 all-caps names, 3.07 MB) 659 ms; AZ 85701 136/9/127 5.3 s; TX 77002 2/1/1; MO 64106 2/2/0; FL 33130 1/0/1.

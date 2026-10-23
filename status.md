@@ -1,11 +1,32 @@
 # River status
 
-build_state: HANDED OFF AT SEAN'S REQUEST (Oct 23, 07:02 UTC); RELEASES 72 TO 88 LIVE (/api/build 825ff1c); LOCK RELEASED; NOTHING IN GATES OR CI
+build_state: FOLDING (Oct 23, 4:55 AM EDT): river-next = pb-01 + sp-01 + ex-03 + River dead-code gate, pnpm gates running; production still release 88 (/api/build 825ff1c)
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
 lock: session_012UDbgz3sjA8QN2m7CY78QS
-heartbeat: 2026-10-23T08:04:49Z
+heartbeat: 2026-10-23T08:55:00Z
+
+## River session claude/river-fold-ship-ysodir (Oct 23, from 4:15 AM EDT)
+
+Sean's orders for this session (Oct 23, ~4:15 to 5:00 AM EDT):
+- Fold READYs as they post, smallest and reader-facing first: pb-01, pb-02, rn-01, rn-02, then vs-07, lv-01, sp-01, bl-01, ex-03, pb-03, pk-01, src-01, nx-02, nb-02, dg-02; plus cs-01 (after bl-01; where both touch app/ballot/page.tsx keep both sides) and eo-01 (after lv-01, it builds on lv-01).
+- Every fold deletes the code the lane replaced and left behind. `pnpm gates` now runs knip (dead-code gate) on every combination.
+- A READY without both connection proofs (connected end to end; still working on the next scheduled run) is refused and returned.
+- A release is live only when https://meanwhileusa.com/api/build shows its merge commit. Then each lane's live check runs at national scale: the named examples plus real places in at least 10 states, counts by state posted here.
+- Hold pb-02 until it posts a new READY with a national sample (returns/pb-02.md).
+
+Queue:
+- In gates now: pb-01 (PB-01), sp-01 (SP-01), ex-03 (EX-03) and River's dead-code gate on river-next 6d2f648d5. River fixed in the fold: SP-01's geocode route import (preflight stopped on `@/lib` under plain Node, on stream/sp-01 alone too).
+- Next fold: src-01 (SRC-01, ready, proofs present).
+- Held: pb-02 (national sample). Returned: pk-01 (READY message empty, no connection proofs).
+- Not posted yet: rn-01, rn-02, vs-07, lv-01 (WIP only), bl-01, pb-03, nx-02, nb-02, dg-02, cs-01, eo-01.
+
+Live checks owed once the release is live (each also on real places in 10+ states, counts by state here):
+- PB-01: Dane County #governing 37 members, Henry Fries once with its source link; Milwaukee 171 boards, 0 empty; WI, AZ, WA, CO, CA Legistar board names; plus 10+ states: boards shown, boards with members, empty boards.
+- SP-01: ten-ZIP first-visit and five-minute repeat speed; office pins on place pages (03301 13 points, 07102 9 points) and pins by state in 10+ states; database_transfer_daily on comparable traffic. Sean's cache check: load /ballot?zip=85701 twice, five minutes apart; the second Cache-Status is a Netlify edge hit and its ttl is no longer than the seconds left to midnight Phoenix time; /ballot?zip=00000 is never cached. A ttl past midnight sends SP-01 back with the headers seen.
+- EX-03 (Sean's change): once EX-03, RN-01 and RN-02 are all live, every state whose ballot file has measures shows explainers on a real ZIP ballot page within 24 hours. Any state that doesn't gets a line here with its reason from cp_attempts, and the reason goes back to the lane that owns it.
+- SRC-01 (when shipped): a new PROMOTED candidate for each source within its next scheduled run; a live CT card's own money reason; SAM real-data replay after 8 PM EDT Oct 23.
 
 ## Hand-off to the next River session (Oct 23, 12:02 AM Phoenix / 3:02 AM EDT)
 

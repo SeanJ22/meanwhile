@@ -588,6 +588,15 @@ export const ROW_KEYED_CIVIC_CHANGE_CONTRACT: CivicChangeContract = {
   facts: (_recordClass, member) => member.record,
 };
 
+export function heldCivicRecords(candidate: RoutineCandidate): RoutineChangeSet["held"] {
+  return (candidate.excludedFacts ?? []).map((fact) => ({
+    key: fact.key ?? null,
+    code: fact.code,
+    detail: fact.detail,
+    ...(Object.hasOwn(fact, "record") ? { record: fact.record } : {}),
+  }));
+}
+
 export function candidateChangeSet(
   candidate: RoutineCandidate,
   previousPayload: unknown | null,
@@ -622,12 +631,7 @@ export function candidateChangeSet(
     }
     for (const member of priorIndex.members.values()) delete member.record;
   }
-  const held = (candidate.excludedFacts ?? []).map((fact) => ({
-    key: fact.key ?? null,
-    code: fact.code,
-    detail: fact.detail,
-    ...(Object.hasOwn(fact, "record") ? { record: fact.record } : {}),
-  }));
+  const held = heldCivicRecords(candidate);
   return {
     outcome: added.length + changed.length + removed.length > 0 ? "CHANGED" : "UNCHANGED",
     added,

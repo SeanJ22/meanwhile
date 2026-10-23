@@ -9,7 +9,7 @@ import { answerVotingSites } from "../lib/ballot/voting-answer.ts";
 import { votingPlaceFromZip } from "../lib/ballot/voting-answer-geography.ts";
 import type { VotingFallbackReason, VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 
-const empty: VotingSitesAnswer = { match: true, point: null, jurisdictions: [], outsideCoverage: true, pollingPlaceLinks: [] };
+const empty: VotingSitesAnswer = { match: true, point: null, jurisdictions: [], outsideCoverage: true };
 const place = { ...votingPlaceFromZip(["ocd-division/country:us/state:mi/county:ingham"]), precision: "ADDRESS" as const };
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/google-civic/${name}.json`, import.meta.url), "utf8");
 const options = { apiKey: "private-test-key", fetchImpl: (async (input: URL) =>

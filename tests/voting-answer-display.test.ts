@@ -18,7 +18,7 @@ test("VS-01 official HTML tables become in-page hours, return rules, clerk conta
   const j: VotingJurisdiction = { ocdId: door.scope.ocdId, state: "ND", name: "North Dakota", model: "UNKNOWN", election: "November 3, 2026", sites: parsed.sites,
     sourceUrl: source.url, sourceOrg: source.publisher, collectedAt: source.checkedAt, refusal: null };
   const place: VotingReaderPlace = { precision: "ZIP", point: null, divisionIds: [j.ocdId], states: ["ND"], countyFips: [], countyNames: ["Adams", "Barnes"], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
-  const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(j, place)], outsideCoverage: false, pollingPlaceLinks: [] };
+  const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(j, place)], outsideCoverage: false };
   const markup = await renderCardWithSources({ modulePath: "./components/map/voting-sites-panel.tsx", exportName: "VotingJurisdictionRecords",
     props: { answer, selectedSiteId: null }, sourceUrls: [source.url] });
   assert.match(markup, /Adams County Courthouse/);
@@ -46,7 +46,7 @@ test("VS-01 native primary CSV stays visible with its published election, file d
   assert.ok(projected.sites.length > 0);
   assert.ok(projected.sites.every(site => site.election === "03/03/2026" && !site.electionDate));
   const render = (jurisdiction: typeof projected) => renderCardWithSources({ modulePath: "./components/map/voting-sites-panel.tsx", exportName: "VotingJurisdictionRecords",
-    props: { answer: { match: true, point: null, jurisdictions: [jurisdiction], outsideCoverage: false, pollingPlaceLinks: [] }, selectedSiteId: null }, sourceUrls: [door.url] });
+    props: { answer: { match: true, point: null, jurisdictions: [jurisdiction], outsideCoverage: false }, selectedSiteId: null }, sourceUrls: [door.url] });
   const markup = await render(projected);
   assert.equal((markup.match(/data-voting-site=/g) ?? []).length, projected.sites.length, "archive rows must remain visible");
   assert.match(markup, /Publisher(?:&#x27;|’|&#x2019;)s election label: 03\/03\/2026/);

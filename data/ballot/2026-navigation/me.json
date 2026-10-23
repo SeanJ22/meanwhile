@@ -1,0 +1,304 @@
+{
+  "state": "ME",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.maine.gov/sos/elections-voting/upcoming-elections",
+      "finalUrl": "https://www.maine.gov/sos/elections-voting/upcoming-elections",
+      "publisher": "Maine Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.maine.gov/portal/government/edemocracy/voter_lookup.php",
+      "finalUrl": "https://www.maine.gov/portal/government/edemocracy/voter_lookup.php",
+      "publisher": "Maine Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+      "finalUrl": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+      "publisher": "Maine Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.maine.gov/sos/news/general-election-two-months-away-secretary-states-office-provides-update-maine-election-1",
+      "finalUrl": "https://www.maine.gov/sos/news/general-election-two-months-away-secretary-states-office-provides-update-maine-election-1",
+      "publisher": "Maine Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.maine.gov/sos/elections-voting/find-a-municipal-clerk-or-registrar",
+      "finalUrl": "https://www.maine.gov/sos/elections-voting/find-a-municipal-clerk-or-registrar",
+      "publisher": "Maine Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.maine.gov/sos/elections-voting/find-a-municipal-clerk-or-registrar",
+          "finalUrl": "https://www.maine.gov/sos/elections-voting/find-a-municipal-clerk-or-registrar",
+          "publisher": "Maine Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:46:18.722951+00:00",
+          "httpStatus": 200,
+          "rawHash": "de062628773007a0e4bf0e729f8aa3981b8abc7a83eceb30a29093c898d2a0cb",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+          "finalUrl": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+          "publisher": "Maine Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:09.138331+00:00",
+          "httpStatus": 200,
+          "rawHash": "25a6f477af0210ea9fa162ef7822b315070e739af0fc4e92e5553c532c0f24d7",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.maine.gov/sos/elections-voting/upcoming-elections",
+          "finalUrl": "https://www.maine.gov/sos/elections-voting/upcoming-elections",
+          "publisher": "Maine Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:09.291733+00:00",
+          "httpStatus": 200,
+          "rawHash": "3ae1f17ab88af67e4eec6efd96fc0a967d42e36332de5fcfda308e766f746cd5",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.maine.gov/sos/news/general-election-two-months-away-secretary-states-office-provides-update-maine-election-1",
+          "finalUrl": "https://www.maine.gov/sos/news/general-election-two-months-away-secretary-states-office-provides-update-maine-election-1",
+          "publisher": "Maine Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:39:00.883478+00:00",
+          "httpStatus": 200,
+          "rawHash": "74aceab27f54247353fcd8db59a712917de668f2f5ae2a4dc3ec6a6092c42909",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:00155a1823af325a5f86a063e38581fb",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Voters may also contact their town hall to request a ballot or submit a paper application for an absentee ballot, and the request must be received at least three business days before Election Day (October 29), unless special circumstances exist.",
+            "quote": "Voters may also contact their town hall to request a ballot or submit a paper application for an absentee ballot, and the request must be received at least three business days before Election Day (October 29), unless special circumstances exist.",
+            "dates": [
+              "2026-10-29"
+            ],
+            "url": "https://www.maine.gov/sos/news/general-election-two-months-away-secretary-states-office-provides-update-maine-election-1",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:39:00.883478+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:191b953ef53ed32a891b3a11b857b407",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "registration_deadline",
+            "text": "Registration through the BMV: On the 7th day before Election Day. (For June Primary: June 2, 2026; for November General Election: October 27, 2026)",
+            "quote": "Registration through the BMV: On the 7th day before Election Day. (For June Primary: June 2, 2026; for November General Election: October 27, 2026)",
+            "dates": [
+              "2026-10-27"
+            ],
+            "url": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.138331+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:70b670c1d8fd088a23f330e9308332ca",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "registration_deadline",
+            "text": "Registering in person: Close of the polls on Election Day.",
+            "quote": "Registering in person: Close of the polls on Election Day.",
+            "dates": [
+              "2026-11-03"
+            ],
+            "url": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.138331+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:806544e4350d5b6c32f5db7deb274aaa",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "registration_deadline",
+            "text": "Registering by mail or 3rd person: received by the voter’s town or city by close of business 21 days before election day. (for june primary: may 19, 2026; for november general election: october 13, 2026 )",
+            "quote": "registering by mail or 3rd person: received by the voter’s town or city by close of business 21 days before election day. (for june primary: may 19, 2026; for november general election: october 13, 2026 )",
+            "dates": [
+              "2026-10-13"
+            ],
+            "url": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.138331+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:949b70417735a643f89084128df6aa0d",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "registration_page",
+            "text": "https://www.maine.gov/sos/elections-voting/registering-to-vote",
+            "quote": "Registering to Vote",
+            "dates": [],
+            "url": "https://www.maine.gov/sos/elections-voting/upcoming-elections",
+            "navigationUrl": "https://www.maine.gov/sos/elections-voting/registering-to-vote",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.291733+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:9c6dfb3abfc149ddf02a7d115e4e5e60",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "early_voting",
+            "text": "October 4 (30 days before Election Day) - In-person, no-excuse absentee voting period begins (goes through close of business in a voter's town on Thurs., October 29)",
+            "quote": "October 4 (30 days before Election Day) - In-person, no-excuse absentee voting period begins (goes through close of business in a voter's town on Thurs., October 29)",
+            "dates": [
+              "2026-10-04",
+              "2026-10-29"
+            ],
+            "url": "https://www.maine.gov/sos/news/general-election-two-months-away-secretary-states-office-provides-update-maine-election-1",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:39:00.883478+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:9e6612568f8f7bbc2eb21eba9751a40c",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "election_office",
+            "text": "Elections Division",
+            "quote": "Contact the Elections Division 207-624-7650",
+            "dates": [],
+            "url": "https://www.maine.gov/sos/elections-voting/upcoming-elections",
+            "navigationUrl": "https://www.maine.gov/sos/elections-voting",
+            "electionDate": "2026-11-03",
+            "phone": "207-624-7650",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.291733+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:a1dbc96e4c6a4c5642dfb16d39a1b663",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "polling_lookup",
+            "text": "https://www.maine.gov/portal/government/edemocracy/voter_lookup.php",
+            "quote": "Voter Information Lookup Service",
+            "dates": [],
+            "url": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+            "navigationUrl": "https://www.maine.gov/portal/government/edemocracy/voter_lookup.php",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.138331+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:a665309457f44cabfdf00dbc89629a19",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "registration_lookup",
+            "text": "https://www.maine.gov/sos/elections-voting/find-a-municipal-clerk-or-registrar",
+            "quote": "To check whether or not you are registered to vote, you should contact your municipal clerk.",
+            "dates": [],
+            "url": "https://www.maine.gov/sos/elections-voting/find-a-municipal-clerk-or-registrar",
+            "navigationUrl": "https://www.maine.gov/sos/elections-voting/find-a-municipal-clerk-or-registrar",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:46:18.722951+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:a76d189888b67ba1c9fdb9a338a20c81",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "registration_deadline",
+            "text": "Registering online: 5 pm on the 21st day before election day. (for june primary: may 19, 2026; for november general election: october 13, 2026 )",
+            "quote": "registering online: 5 pm on the 21st day before election day. (for june primary: may 19, 2026; for november general election: october 13, 2026 )",
+            "dates": [
+              "2026-10-13"
+            ],
+            "url": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.138331+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:f7f3144bc5e1b9e82db70e8dbd2068f7",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ME",
+            "divisionId": "ocd-division/country:us/state:me",
+            "fieldKind": "ballot_lookup",
+            "text": "https://www.maine.gov/portal/government/edemocracy/voter_lookup.php",
+            "quote": "Voter Information Lookup Service",
+            "dates": [],
+            "url": "https://www.maine.gov/sos/elections-voting/state-of-maine-voter-guide",
+            "navigationUrl": "https://www.maine.gov/portal/government/edemocracy/voter_lookup.php",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.138331+00:00",
+            "sourceOrg": "Maine Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

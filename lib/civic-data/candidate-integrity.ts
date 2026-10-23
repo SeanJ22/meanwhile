@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { durableStateHash, statePublicationScope } from "./state-publication.ts";
+import { durableStateHash, largePayloadScope } from "./state-publication.ts";
 import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
 import { VOTING_SOURCE_REPLACEMENT_VERIFIER, votingSourceReplacement, votingSourceReplacementVerifier } from "../ballot/voting-source-replacement-contract.ts";
 
@@ -179,7 +179,7 @@ export async function verifySourceScopedCandidateProjection(
   // JSONB is the durable authority. Reject values whose in-memory meaning
   // would change or disappear when persisted before any typed Reader sees it.
   try {
-    const scoped = statePublicationScope(candidate.scope);
+    const scoped = largePayloadScope(candidate.scope);
     const readModelCanonical = scoped ? durableStateHash(candidate.readModel) : canonicalCivicDataJson(candidate.readModel);
     const normalizedPayloadCanonical = candidate.normalizedPayload === candidate.readModel ? readModelCanonical :
       scoped ? durableStateHash(candidate.normalizedPayload) : canonicalCivicDataJson(candidate.normalizedPayload);

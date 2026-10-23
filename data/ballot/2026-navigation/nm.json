@@ -1,0 +1,300 @@
+{
+  "state": "NM",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting/",
+      "finalUrl": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting/",
+      "publisher": "New Mexico Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.nm.gov/wp-content/uploads/2025/12/2026-Primary-Candidate-Guide_Final.pdf",
+      "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2025/12/2026-Primary-Candidate-Guide_Final.pdf",
+      "publisher": "New Mexico Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.nm.gov/good-questions/",
+      "finalUrl": "https://www.sos.nm.gov/good-questions/",
+      "publisher": "New Mexico Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+      "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+      "publisher": "New Mexico Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.sos.nm.gov/good-questions/",
+          "finalUrl": "https://www.sos.nm.gov/good-questions/",
+          "publisher": "New Mexico Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:09.602820+00:00",
+          "httpStatus": 200,
+          "rawHash": "368d5841dd412cfbb038fb11ff3c47c07faed08e1a702ddb826f30abb0eb7aff",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting/",
+          "finalUrl": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting/",
+          "publisher": "New Mexico Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:35:56.099836+00:00",
+          "httpStatus": 200,
+          "rawHash": "1c3695a203d70b2563c33e4ce0043dc8a77996a13bea5f641e575f39142f0714",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.nm.gov/wp-content/uploads/2025/12/2026-Primary-Candidate-Guide_Final.pdf",
+          "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2025/12/2026-Primary-Candidate-Guide_Final.pdf",
+          "publisher": "New Mexico Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:40.480393+00:00",
+          "httpStatus": 200,
+          "rawHash": "705d303a7ad4ef31dcf4a7fa30c8356023bb54c847e97db87684b9c347d78159",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+          "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+          "publisher": "New Mexico Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:40.366356+00:00",
+          "httpStatus": 200,
+          "rawHash": "eaef55e594e579f4e71b28575936ea5f8b99ab3d3f7107b7620faad50f87259c",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:06704a48d8ebc428419ee3960af6ea25",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "October 20, 2026: MAILED BALLOT APPLICATION DEADLINE (TIMELY RECEIVED)",
+            "quote": "October 20, 2026: MAILED BALLOT APPLICATION DEADLINE (TIMELY RECEIVED)",
+            "dates": [
+              "2026-10-20"
+            ],
+            "url": "https://www.sos.nm.gov/wp-content/uploads/2025/12/2026-Primary-Candidate-Guide_Final.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:40.480393+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:0aacbb8468942436ebe12e3338cd5e1e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "early_voting",
+            "text": "October 31, 2026: EARLY VOTING ENDS",
+            "quote": "October 6, 2026:\nEARLY IN-PERSON VOTING BEGINS (OFFICES OF THE CLERKS)\nOctober 17, 2026: EXPANDED EARLY VOTING BEGINS (ALTERNATE SITES)\nOctober 31, 2026: EARLY VOTING ENDS",
+            "dates": [
+              "2026-10-06",
+              "2026-10-17",
+              "2026-10-31"
+            ],
+            "url": "https://www.sos.nm.gov/wp-content/uploads/2025/12/2026-Primary-Candidate-Guide_Final.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:40.480393+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:1ae6a9ae1e5fb8b40489b3d9ccc28565",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "registration_page",
+            "text": "https://www.sos.nm.gov/voting-and-elections/voter-registration-information/",
+            "quote": "Voter Registration Information",
+            "dates": [],
+            "url": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting/",
+            "navigationUrl": "https://www.sos.nm.gov/voting-and-elections/voter-registration-information/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.099836+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:36795834cc6d441ae317a2f59652f727",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "early_voting",
+            "text": "October 17, 2026: EXPANDED EARLY VOTING BEGINS (ALTERNATE SITES)",
+            "quote": "October 17, 2026: EXPANDED EARLY VOTING BEGINS (ALTERNATE SITES)",
+            "dates": [
+              "2026-10-17"
+            ],
+            "url": "https://www.sos.nm.gov/wp-content/uploads/2025/12/2026-Primary-Candidate-Guide_Final.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:40.480393+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:4ec4e9e831a1c21372b8e58b320ae411",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "polling_lookup",
+            "text": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+            "quote": "Find a polling location",
+            "dates": [],
+            "url": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting/",
+            "navigationUrl": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.099836+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:7a2ef37fa2c5cabea00e53d2cfe11021",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "registration_lookup",
+            "text": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+            "quote": "View your voter registration",
+            "dates": [],
+            "url": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting/",
+            "navigationUrl": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.099836+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:7a6d3089bc8e0fa01b25ac3ac91e93ec",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "registration_deadline",
+            "text": "You can register or update your voter registration and vote the same day",
+            "quote": "You can register or update your voter registration and vote the same day\nearly voting location or at a polling location on Election Day",
+            "dates": [
+              "2026-11-03"
+            ],
+            "url": "https://www.sos.nm.gov/good-questions/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.602820+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:adf439bf1568db26adc7f5c73033e8ae",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "ballot_lookup",
+            "text": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+            "quote": "View your sample ballot",
+            "dates": [],
+            "url": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting/",
+            "navigationUrl": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.099836+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:be08d319f2ed44f6a30dc41fe0c76130",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "early_voting",
+            "text": "Early Voting begins Oct. 6, 2026",
+            "quote": "Early Voting begins Oct. 6, 2026",
+            "dates": [
+              "2026-10-06"
+            ],
+            "url": "https://www.sos.nm.gov/wp-content/uploads/2026/09/2026-Voter-Guide-English.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:40.366356+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:eaea6803dfaff6ec49b83e9ac9b7d90e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "election_office",
+            "text": "New Mexico Secretary of State",
+            "quote": "New Mexico Secretary of State",
+            "dates": [],
+            "url": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting/",
+            "navigationUrl": "https://www.sos.nm.gov/voting-and-elections/",
+            "electionDate": "2026-11-03",
+            "phone": "505-827-3600",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.099836+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:ff45a29a31792657b7f53ab0f43055fd",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NM",
+            "divisionId": "ocd-division/country:us/state:nm",
+            "fieldKind": "registration_deadline",
+            "text": "October 6, 2026: • VOTER REGISTRATION BY MAIL, BY VOTER REGISTRATION AGENT, AND ONLINE CLOSES",
+            "quote": "October 6, 2026:\nVOTER REGISTRATION BY MAIL, BY VOTER REGISTRATION AGENT, AND ONLINE CLOSES\nVoter registration is available prior to voting.",
+            "dates": [
+              "2026-10-06"
+            ],
+            "url": "https://www.sos.nm.gov/wp-content/uploads/2025/12/2026-Primary-Candidate-Guide_Final.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:40.480393+00:00",
+            "sourceOrg": "New Mexico Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

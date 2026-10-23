@@ -9,6 +9,8 @@ import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-pla
 import type { Division } from "../registry/types.ts";
 import type { VotingDoorScope, VotingSourceBlank, VotingSourceDoor, VotingSourceRead } from "./voting-source-types.ts";
 import type { SiteKind, VotingJurisdiction, VotingSite } from "./voting-sites.ts";
+import { votingSourcePlaceOrder } from "./voting-source-population.ts";
+import type { CountyCivicCoverageMap } from "../sources/google-civic/coverage.ts";
 
 const unique = <T>(values: readonly T[]): T[] => [...new Set(values)];
 const words = (value: string): string => value.toLowerCase().replace(/\s+/g, " ").trim();
@@ -20,6 +22,7 @@ export function votingSourcePlaces(input: {
   divisions: readonly Pick<Division, "ocdId" | "divisionType" | "label" | "state" | "geoid" | "parentOcdId">[];
   delegation: "state" | "county" | "town";
   populations?: ReadonlyMap<string, number>;
+  coverage?: CountyCivicCoverageMap;
 }): VotingDoorScope[] {
   if (input.delegation === "state") return [input.state];
   const candidates = input.divisions.filter(division => division.state.toUpperCase() === input.state.state.toUpperCase() &&
@@ -35,7 +38,7 @@ export function votingSourcePlaces(input: {
     ...(input.populations?.has(division.ocdId) ? { population: input.populations.get(division.ocdId)! } : {}),
   }));
   // An unavailable registry leaves a named state obligation to enumerate its local election offices.
-  return (places.length ? places : [input.state]).sort((a, b) => population(b) - population(a) || a.ocdId.localeCompare(b.ocdId));
+  return (places.length ? places : [input.state]).sort(votingSourcePlaceOrder(input.coverage));
 }
 
 function applies(scope: VotingDoorScope, place: VotingDoorScope): boolean {
@@ -69,6 +72,7 @@ export function planVotingSourceBlanks(input: {
   doors: readonly VotingSourceDoor[];
   reads: readonly VotingSourceRead[];
   jurisdictions?: readonly VotingJurisdiction[];
+  coverage?: CountyCivicCoverageMap;
 }): VotingSourceBlank[] {
   const readsByDoor = new Map(input.reads.map(read => [read.doorId, read]));
   const result: VotingSourceBlank[] = [];
@@ -110,6 +114,7 @@ export function planVotingSourceBlanks(input: {
       reads.some(({ read }) => read.contacts?.some(contact => contact.scope.ocdId === place.ocdId && !!(contact.office.phone || contact.office.email))) ||
       held.some(jurisdiction => jurisdiction.ocdId === place.ocdId && !!(jurisdiction.office?.phone || jurisdiction.office?.email));
     if (!office) owed.push(`Local election office contact for ${place.name}`);
+    if (place.countyFips && !input.coverage?.has(place.countyFips)) owed.push(`Find the county election office's street address and check live voting information coverage for ${place.name}`);
     const inherited = reads.flatMap(({ read }) => read.blanks.filter(blank => applies(blank.scope, place)));
     owed.push(...inherited.map(blank => blank.owed));
     const later = unique([...doors.flatMap(door => door.publicationMessage ? [door.publicationMessage] : []),
@@ -123,26 +128,28 @@ export function planVotingSourceBlanks(input: {
       .filter(door => door.shape !== "identity-locked-lookup" && door.access?.status !== "identity-locked")
       .map(door => door.url), ...doors.map(door => door.electionPageUrl),
       `Follow the chief election office's directory to ${place.name}'s local election office; read its files, lists and public map data`,
-      "Start with the chief election office and follow its official links; never use a search engine or Google Civic for a background hunt",
+      "Use Brave first and Exa second to find election-office pages; follow official links to their current lists and public map data",
       "Record what robots.txt says as evidence and read the public page anyway; use the existing browser-UA rung only if it passes without a challenge; never log in, solve a CAPTCHA, or ask for identity details"]);
     result.push({ id: `voting-sites:${input.electionDate}:${place.ocdId}`, doorId: doors[0]?.id ?? `voting-office:${place.ocdId}`,
       scope: place, owed: unique(owed).join("; "), tried, next, status: "open",
       reason: !sites.length ? "missing-sites" : later.length ? "unpublished" : inherited[0]?.reason ?? (ungeocoded.length ? "geocode" : "missing-sites") });
   }
-  return result.sort((a, b) => population(b.scope) - population(a.scope) || a.scope.ocdId.localeCompare(b.scope.ocdId));
+  return result.sort((a, b) => votingSourcePlaceOrder(input.coverage)(a.scope, b.scope));
 }
 
-function blankPlan(blank: VotingSourceBlank, electionDate: string): AutonomousWorkPlan {
+function blankPlan(blank: VotingSourceBlank, electionDate: string, coverage?: CountyCivicCoverageMap): AutonomousWorkPlan {
   const seedUrls = unique(blank.next.flatMap(value => {
     try { const url = new URL(value); return url.protocol === "https:" && !url.username && !url.password ? [url.href] : []; }
     catch { return []; }
   }));
   const instructions = [`Owed: ${blank.owed}`, ...blank.tried.map(tried => `Tried: ${tried}`), ...blank.next.map(next => `Next: ${next}`)];
+  const sampled = blank.scope.countyFips ? coverage?.get(blank.scope.countyFips) : undefined;
   return {
     version: 1, capability: "voting-source-blanks", jurisdiction: blank.scope.state.toUpperCase(), missionPart: "ballot",
     ...(population(blank.scope) >= 0 ? { subjectPopulation: population(blank.scope) } : {}),
+    ...(sampled ? { votingGoogleAvailable: sampled.available } : {}),
     sourceRegistryReferences: [blank.doorId, blank.scope.ocdId], seedUrls, sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE",
-    publication: { contractId: stateBallotContractId("voting-sites", blank.scope.state), bodyId: blank.scope.ocdId }, ownerInstructions: ["VS-01"],
+    publication: { contractId: stateBallotContractId("voting-sites", blank.scope.state), bodyId: blank.scope.ocdId }, ownerInstructions: ["VS-07"],
     contract: { schemaVersion: 2, recordClass: "VOTING_SITE", subjectId: blank.scope.ocdId,
       requiredFields: ["jurisdictionName", "model", "name", "address", "kind"],
       identity: { namespace: blank.id, keyFields: ["name", "address", "kind"] },
@@ -158,7 +165,7 @@ function blankPlan(blank: VotingSourceBlank, electionDate: string): AutonomousWo
 
 /** Existing obligations/occurrences put every blank in Admin and the standing hunter queue. */
 export async function persistVotingSourceBlanks(input: {
-  repos: ControlPlaneRepositories; blanks: readonly VotingSourceBlank[]; electionDate: string; now: string;
+  repos: ControlPlaneRepositories; blanks: readonly VotingSourceBlank[]; electionDate: string; now: string; coverage?: CountyCivicCoverageMap;
 }): Promise<{ obligationIds: string[]; workItemIds: string[] }> {
   const obligationIds: string[] = [], workItemIds: string[] = [];
   const grouped = new Map<string, VotingSourceBlank>();
@@ -169,8 +176,8 @@ export async function persistVotingSourceBlanks(input: {
       owed: unique([prior.owed, blank.owed]).join("; "), tried: unique([...prior.tried, ...blank.tried]), next: unique([...prior.next, ...blank.next]),
     } : blank);
   }
-  for (const blank of [...grouped.values()].sort((a, b) => population(b.scope) - population(a.scope) || a.id.localeCompare(b.id))) {
-    const plan = blankPlan(blank, input.electionDate);
+  for (const blank of [...grouped.values()].sort((a, b) => votingSourcePlaceOrder(input.coverage)(a.scope, b.scope))) {
+    const plan = blankPlan(blank, input.electionDate, input.coverage);
     const id = `voting-source-blank:${fingerprint([input.electionDate, blank.scope.ocdId])}`;
     const synced = await syncObligations(input.repos, [{ id, recordClass: "VOTING_SITE", subjectId: blank.scope.ocdId,
       scopeDivisions: [blank.scope.ocdId], routeId: `voting-source-discovery:${blank.scope.ocdId}`, active: true,
@@ -178,7 +185,7 @@ export async function persistVotingSourceBlanks(input: {
       lastWorkedAt: null, autonomousPlan: plan }], input.now, { exactReads: true });
     let row = synced.all[0];
     // Retain repaired mappings and evidence; refresh just the locality's outstanding instructions.
-    const refreshed = { ...row.autonomousPlan!, ownerInstructions: plan.ownerInstructions, subjectPopulation: plan.subjectPopulation,
+    const refreshed = { ...row.autonomousPlan!, ownerInstructions: plan.ownerInstructions, subjectPopulation: plan.subjectPopulation, votingGoogleAvailable: plan.votingGoogleAvailable,
       ...(row.autonomousPlan?.contract.schemaVersion === 2 && plan.contract.schemaVersion === 2
         ? { contract: { ...row.autonomousPlan.contract, completenessScope: plan.contract.completenessScope } } : {}) };
     if (canonicalJson(refreshed) !== canonicalJson(row.autonomousPlan)) {
@@ -201,7 +208,7 @@ export async function persistVotingSourceBlanks(input: {
           why: blank.owed, now: input.now });
       }
       if (item.value.autonomousPlan) {
-        const next = { ...item.value.autonomousPlan, ownerInstructions: plan.ownerInstructions, subjectPopulation: plan.subjectPopulation,
+        const next = { ...item.value.autonomousPlan, ownerInstructions: plan.ownerInstructions, subjectPopulation: plan.subjectPopulation, votingGoogleAvailable: plan.votingGoogleAvailable,
           ...(item.value.autonomousPlan.contract.schemaVersion === 2 && plan.contract.schemaVersion === 2
             ? { contract: { ...item.value.autonomousPlan.contract, completenessScope: plan.contract.completenessScope } } : {}) };
         if (canonicalJson(next) !== canonicalJson(item.value.autonomousPlan) || item.value.why !== blank.owed) {

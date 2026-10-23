@@ -8,10 +8,12 @@ import type { VotingRawCapture } from "./voting-sites-data-plane.ts";
 import { mergeVotingSiteRows, type VotingJurisdiction, type VotingSitesFile, type VotingSource, type VotingSite } from "./voting-sites.ts";
 import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
 import { assertVotingEvidenceCanPublish } from "./voting-source-evidence.ts";
+import { sourceTextWithoutNuls } from "../doors/source-text.ts";
 
 export const VOTING_SOURCE_DOOR_KIND = "official-voting-source";
 
 export async function saveVotingSourceDoor(repo: DoorRepository, door: VotingSourceDoor, now: string): Promise<void> {
+  door = sourceTextWithoutNuls(door);
   const address = pageAddress(door.url);
   if (!address) throw new Error("Voting source has no public URL");
   const heldPages = await repo.listWhere(["config", "url"], address.url);
@@ -44,6 +46,18 @@ export async function registeredVotingSourceDoors(repo: DoorRepository, state: s
   });
 }
 
+/** A bounded pass resumes at untried/oldest lists on its next scheduled run. */
+export async function votingSourceReadOrder(repo: DoorRepository, state: string, doors: readonly VotingSourceDoor[]): Promise<VotingSourceDoor[]> {
+  const checked = new Map<string, number>();
+  for (const { value } of await repo.listWhere(["config", `votingState_${requireBallotState(state)}`], "true")) {
+    const at = Math.max(Date.parse(value.lastSuccessAt ?? "") || 0, Date.parse(value.lastFailureAt ?? "") || 0);
+    checked.set(String(value.config.url), at);
+  }
+  return [...doors].sort((a, b) => (checked.get(pageAddress(a.url)?.url ?? a.url) ?? 0) - (checked.get(pageAddress(b.url)?.url ?? b.url) ?? 0) ||
+    Number(/\/(?:state|district|territory):[a-z]{2}$/.test(b.scope.ocdId)) - Number(/\/(?:state|district|territory):[a-z]{2}$/.test(a.scope.ocdId)) ||
+    Number(Boolean(b.supersedes?.length)) - Number(Boolean(a.supersedes?.length)) || a.id.localeCompare(b.id));
+}
+
 const unique = <T>(rows: readonly T[], key: (row: T) => string): T[] => [...new Map(rows.map(row => [key(row), row])).values()];
 const sourceKey = (source: VotingSource) => source.url;
 const complete = (read: VotingSourceRead) => !read.blanks.some(blank => ["access", "extraction", "missing-sites"].includes(blank.reason));
@@ -58,7 +72,7 @@ function numberedStreet(address: string): string | null {
 /** A publisher's spelling change must not turn one unambiguous existing facility into a deletion. */
 function retainVotingSourceSiteIds(prior: VotingJurisdiction, door: VotingSourceDoor, read: VotingSourceRead): VotingSite[] {
   if (prior.ocdId !== door.scope.ocdId) return read.sites;
-  const urls = new Set([door.url, ...read.sources.map(sourceKey)]);
+  const urls = new Set([door.url, ...read.sources.map(sourceKey), ...(door.supersedes ?? [])]);
   const byId = new Map(prior.sites.map(site => [site.id, site]));
   const same = (old: VotingSite, next: VotingSite) => {
     const street = numberedStreet(next.address);
@@ -89,7 +103,7 @@ export function combineVotingSourceReads(reads: readonly VotingSourceRead[]): Vo
     const prior = sites.get(site.id);
     sites.set(site.id, prior ? mergeVotingSiteRows(prior, site) : site);
   }
-  return { ...reads[0]!, sites: [...sites.values()],
+  return sourceTextWithoutNuls({ ...reads[0]!, doorIds: [...new Set(reads.flatMap(read => read.doorIds ?? [read.doorId]))], sites: [...sites.values()],
     office: reads.find(read => read.office)?.office,
     contacts: reads.flatMap(read => read.contacts ?? []),
     boundaries: reads.some(read => read.boundaries) ? reads.flatMap(read => read.boundaries ?? []) : undefined,
@@ -98,13 +112,15 @@ export function combineVotingSourceReads(reads: readonly VotingSourceRead[]): Vo
     blanks: unique(reads.flatMap(read => read.blanks), blank => blank.id),
     attempts: reads.flatMap(read => read.attempts),
     rawBodies: unique(reads.flatMap(read => read.rawBodies), body => `${body.url}#${createHash("sha256").update(body.bytes).digest("hex")}`),
-  };
+  });
 }
 
 /** Replace a successfully re-read source only. A failed sibling door cannot hide a new fact. */
 export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, door: VotingSourceDoor, read: VotingSourceRead, now: string): VotingJurisdiction {
+  door = sourceTextWithoutNuls(door);
+  read = sourceTextWithoutNuls(read);
   if (prior) read = { ...read, sites: retainVotingSourceSiteIds(prior, door, read) };
-  const currentUrls = new Set([door.url, ...read.sources.map(sourceKey)]);
+  const currentUrls = new Set([door.url, ...read.sources.map(sourceKey), ...(door.supersedes ?? [])]);
   const sourceSucceeded = read.rawBodies.length > 0 && !read.blanks.some(blank => blank.reason === "access" || blank.reason === "extraction");
   const previousSites = (prior?.sites ?? []).flatMap(previous => {
     const site = previous.sources?.length || !prior ? previous : { ...previous,
@@ -132,7 +148,8 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
   const sites = [...locations.values()];
   const sources = unique([...(prior?.sources ?? []), ...read.sources], sourceKey);
   const rules = unique([...(prior?.rules ?? []).filter(rule => !sourceSucceeded || !currentUrls.has(rule.source.url)), ...read.rules], rule => `${rule.source.url}\n${rule.text}`);
-  const blanks = unique([...(prior?.blanks ?? []).filter(blank => blank.doorId !== door.id), ...read.blanks], blank => blank.id);
+  const readDoors = new Set(read.doorIds ?? [door.id]);
+  const blanks = unique([...(prior?.blanks ?? []).filter(blank => !readDoors.has(blank.doorId)), ...read.blanks], blank => blank.id);
   const lookups = unique([...(prior?.addressLookups ?? []), ...(door.shape === "address-lookup" ? [door] : [])], lookup => lookup.id);
   const publication = sourceSucceeded ? door.publication ?? (read.publicationMessage ? {
     status: "POSTED_LATER" as const, text: read.publicationMessage,
@@ -163,12 +180,14 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
 /** Save original bytes with the publication, atomically, in the standing data system. */
 export async function holdVotingRawEvidence(read: Pick<VotingSourceRead, "rawBodies">): Promise<VotingRawCapture[]> {
   assertVotingEvidenceCanPublish(read.rawBodies);
-  return read.rawBodies.map(body => ({ url: body.url, contentType: body.contentType,
+  return read.rawBodies.map(body => ({ url: body.url, ...(body.requestedUrl ? { requestedUrl: body.requestedUrl } : {}), contentType: body.contentType,
     rawHash: createHash("sha256").update(body.bytes).digest("hex"), byteLength: body.bytes.byteLength,
+    ...(body.derivation ? { derivation: body.derivation } : {}),
     savedDocument: { encoding: "gzip-base64", body: gzipSync(body.bytes).toString("base64") } }));
 }
 
 export async function recordVotingSourceRead(repo: DoorRepository, door: VotingSourceDoor, read: VotingSourceRead, now: string): Promise<void> {
+  read = sourceTextWithoutNuls(read);
   const hash = createHash("sha256").update(read.rawBodies.map(body => createHash("sha256").update(body.bytes).digest("hex")).join("\n")).digest("hex");
   const address = pageAddress(door.url)!;
   const old = (await repo.listWhere(["config", "url"], address.url)).find(row => row.value.kind === VOTING_SOURCE_DOOR_KIND && row.value.status !== "SUSPENDED" &&

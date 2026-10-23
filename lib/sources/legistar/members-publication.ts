@@ -73,7 +73,7 @@ export async function publishLegistarMembers(input: {
   if (!unchanged || fullEvidenceMoved) {
     const offices = new Map(input.raw.offices.map(office => [office.OfficeRecordId, office]));
     const bodyFor = (owner: BodySourceWiring) => ({ id: owner.bodyId, name: owner.config.bodyName ?? owner.bodyId,
-      state: /\/state:([a-z]{2})/.exec(owner.ocdId ?? "")?.[1]?.toUpperCase() ?? null, parentId: owner.ocdId });
+      state: /\/state:([a-z]{2})/.exec(owner.ocdId ?? "")?.[1]?.toUpperCase() ?? null, parentId: owner.ocdId, government: owner.config.governmentId });
     for (const owner of prepared.bound) {
       const body = bodyFor(owner);
       await ensureEntity(input.facts.query, { ...body, kind: "body" });

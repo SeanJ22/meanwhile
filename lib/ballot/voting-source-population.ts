@@ -1,13 +1,27 @@
 import { createReadStream } from "node:fs";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
-import type { Body } from "../registry/types.ts";
+import type { Body, Division } from "../registry/types.ts";
 import { publisherHostname, type PublisherSizeHolding } from "../sources/publisher-size.ts";
+import type { VotingDoorScope } from "./voting-source-types.ts";
+import type { CountyCivicCoverageMap } from "../sources/google-civic/coverage.ts";
+
+/** An observed Google gap leads unknown/covered counties; population orders each group. */
+export function votingSourcePlaceOrder(coverage?: CountyCivicCoverageMap): (a: VotingDoorScope, b: VotingDoorScope) => number {
+  const rank = (scope: VotingDoorScope) => {
+    const row = scope.countyFips ? coverage?.get(scope.countyFips) : undefined;
+    return row ? row.available ? 2 : 0 : 1;
+  };
+  const population = (scope: VotingDoorScope) => Number.isFinite(scope.population) && scope.population! >= 0 ? scope.population! : -1;
+  return (a, b) => rank(a) - rank(b) || population(b) - population(a) || a.ocdId.localeCompare(b.ocdId);
+}
 
 /** Read one state's existing Census population holding; join exact government IDs or unambiguous official hosts. */
 export async function votingSourcePopulations(input: {
   state: string;
   bodies: readonly Pick<Body, "ocdId" | "censusId" | "homepageUrl">[];
+  divisions?: readonly Pick<Division, "ocdId" | "geoid" | "divisionType">[];
+  coverage?: CountyCivicCoverageMap;
   root?: string;
 }): Promise<ReadonlyMap<string, number>> {
   const state = input.state.toLowerCase();
@@ -48,5 +62,11 @@ export async function votingSourcePopulations(input: {
     if (only.population === null || only.conflicted) continue;
     for (const id of hosts.get(host) ?? []) if (!byPlace.has(id)) add(id, only.population);
   }
-  return new Map([...byPlace].flatMap(([id, counts]) => counts.size === 1 ? [[id, [...counts][0]] as const] : []));
+  const countyFips = new Map((input.divisions ?? []).filter(row => row.divisionType === "county" && row.geoid?.length === 5)
+    .map(row => [row.ocdId, row.geoid!]));
+  const order = votingSourcePlaceOrder(input.coverage);
+  return new Map([...byPlace].flatMap(([id, counts]) => counts.size === 1 ? [[id, [...counts][0]] as const] : [])
+    .sort(([a, left], [b, right]) => order(
+      { state, name: a, ocdId: a, countyFips: countyFips.get(a), population: left },
+      { state, name: b, ocdId: b, countyFips: countyFips.get(b), population: right })));
 }

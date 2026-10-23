@@ -14,7 +14,7 @@
  * of the caller's divisions or a child of one.
  */
 import { ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS, type RoutineDueRequest } from "../civic-data/routine-due-request.ts";
-import { isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { DOOR_STATUSES, isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
 
 const MARK_FIELDS = { formatVersion: true, doorId: true, kind: true, bodyIds: true, hosts: true,
   status: true, updatedAt: true, ocdId: true, readNow: true } as const;
@@ -52,7 +52,9 @@ export async function markDoorsReadNow(
   const wanted = divisions.filter((division) => division.startsWith("ocd-division/"));
   const counts = { inPlace: 0, marked: 0, alreadyMarked: 0, notRead: 0, raced: 0 };
   if (wanted.length === 0) return counts;
-  for (const row of await repo.listNarrowed(MARK_FIELDS)) {
+  const selectors = (await Promise.all(DOOR_STATUSES.map(status => repo.listWhereNarrowed(["status"], status, MARK_FIELDS)))).flat()
+    .sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+  for (const row of selectors) {
     const door = row.value;
     if (!isDoorRecord(door) || !doorInDivisions(door, wanted)) continue;
     counts.inPlace += 1;

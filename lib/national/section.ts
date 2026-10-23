@@ -1,7 +1,6 @@
-import type { CardSource } from "@/lib/officials/card-sources";
-
-export const NATIONAL_PATH = "/national";
-export const NATIONAL_LINK_LABEL = "National government, coming soon";
+import { personCardSources, type CardSource } from "@/lib/officials/card-sources";
+import { indexByOfficeholderId } from "@/lib/officials/lookup";
+import { completeNationalExecutiveRoster, readNationalPresident } from "@/lib/reader/national";
 
 export interface NationalCard {
   readonly id: string;
@@ -16,7 +15,17 @@ export interface NationalCard {
 /** The National section shows a card only when its data marks it complete. */
 export const completeNationalCards = (cards: readonly NationalCard[]): readonly NationalCard[] => cards.filter(card => card.complete === true);
 
-/** The cards the national executive data has marked complete; the data connects here. */
+/** Recheck the resident national roster's sourced floor before listing each card. */
 export async function readNationalCards(): Promise<readonly NationalCard[]> {
-  return [];
+  const roster = completeNationalExecutiveRoster(await readNationalPresident());
+  if (!roster) return [];
+  const holders = indexByOfficeholderId([roster]);
+  return roster.officeholders.map(person => ({
+    id: person.id,
+    office: "National government",
+    title: person.officeTitle,
+    holder: person.name,
+    sources: personCardSources({ ...holders.get(person.id)!, executive: person.executive }),
+    complete: true,
+  }));
 }

@@ -1,11 +1,18 @@
 # River status
 
-build_state: RELEASES 72 TO 84 LIVE (main c88037bb9); RUNNER STILL ON RELEASE 82; VICE PRESIDENT AND LEGISTAR NAMES NOT YET VERIFIED LIVE; CAL-01 RETURNED TO MERGE MAIN
+build_state: PRODUCTION IS STILL SERVING RELEASE 82 (f44f9a1); RELEASES 83 AND 84 ARE IN MAIN BUT NOT DEPLOYED; RELEASE 85 (CAL-02) IN GATES AND HELD FROM MERGE UNTIL SEAN LOOKS AT NETLIFY
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
-heartbeat: 2026-10-23T01:22:00Z
+heartbeat: 2026-10-23T01:58:00Z
+
+## Releases 83 and 84 are in main but not on the live site (Oct 22, 6:58 PM Phoenix / 9:58 PM EDT)
+
+- https://meanwhileusa.com/api/build reports commit f44f9a18f (release 82), deployId 6ada90f662bf25a5c9dcf4c2, at 1:49 AM UTC and again at 1:55 AM UTC. Main is c88037bb9 (release 84). Release 83 (035a48044) merged at 00:13 UTC; release 84 (c88037bb9) at 01:08 UTC. Neither is being served, 105 and 50 minutes later. Earlier releases showed on the site within a few minutes.
+- This is why the runner is still on f44f9a1: it follows the commit the site serves (lib/ops/runtime-release-handoff.ts), not main. So the Vice President (NE-01, release 83) and the Legistar board names (release 84) cannot appear, and nothing about them is verified.
+- What I can see: GitHub shows the Build check, gates, admission and the post-deploy "observe" check green on 035a48044 and c88037bb9. The GitHub commit status for both is "pending" with no Netlify entry. What I cannot see: Netlify's deploy list and build log (no Netlify access from this session; the Netlify tool here only reads request analytics). The post-deploy observer passed for both while the site served the older commit, so it does not check that the new commit is the one being served.
+- Needs Sean: open Netlify > Deploys for meanwhileusa.com and look at the builds for 035a48044 and c88037bb9 (failed? stuck queued? auto-publishing locked or a deploy pinned to 6ada90f6?). River's step after that: I hold release 85 (cal-01 CAL-02, gates running) from merging, so nothing more stacks up behind an undeployed commit and a failing build can be bisected between 82 and 83.
 
 ## Releases 83 and 84 shipped (Oct 22, 9:25 PM Phoenix / 12:25 AM EDT Oct 23)
 

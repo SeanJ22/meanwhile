@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 89 (SP-01, EX-03, River dead-code gate) PR #799 OPEN, auto-merge on, CI running; NEXT FOLD (7 lanes) IN GATES; production still release 88 (/api/build 825ff1c)
+build_state: RELEASE 89 MERGED (main 1e353d428, 8:34 AM EDT), waiting for /api/build to serve it; NEXT FOLD (7 lanes) IN GATES; production still release 88 until /api/build shows 1e353d4
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS

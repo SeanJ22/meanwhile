@@ -94,8 +94,11 @@ export function routineReaderRepairDomains(
   const singlesByState = new Map<string, ReaderRepairContract[]>();
   for (const contract of singles) {
     const states = statesForRegistryDivisions([contract.scope]);
-    // A state child reuses its modules and database connection. Unscoped contracts keep their own child.
-    const key = states.length === 1 ? states[0]! : `unscoped:${contract.id}`;
+    const national = states.length === 0 &&
+      (/^US(?::|$)/.test(contract.scope) || /^[a-z0-9-]+:national$/.test(contract.scope)) &&
+      !/(?:^|:)\d{5}(?::|$)/.test(contract.scope) && !/^national-place:\d{5}/.test(contract.id);
+    // Explicit national programs share startup too. ZIPs and ambiguous state scopes stay isolated.
+    const key = states.length === 1 ? states[0]! : national ? "US" : `unscoped:${contract.id}`;
     const selected = singlesByState.get(key) ?? [];
     selected.push(contract); singlesByState.set(key, selected);
   }

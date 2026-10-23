@@ -244,7 +244,7 @@ test("coordinator selection hands out canonical tasks without running tools or o
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
-test("memory wait rechecks the emptied wave before forking queued lease workers", async () => {
+test("memory wait ends when the wave empties even if no queued worker can fit", { timeout: 10_000 }, async () => {
   const root = await mkdtemp(join(tmpdir(), "s18-process-queue-"));
   try {
     await mkdir(join(root, "scripts"));
@@ -252,12 +252,12 @@ test("memory wait rechecks the emptied wave before forking queued lease workers"
     await writeFile(join(root, "worker.mjs"), `process.on('message', config => {
       process.send({ kind: 'finished', body: config.taskIds }); process.disconnect();
     });`);
-    let forks = 0;
+    let forks = 0, available = 1000;
     await runLeaseWorkerProcesses({ entry: "worker.mjs", config: { root, postgres: false,
       taskIds: Array.from({ length: 40 }, (_, i) => `task:${i}`), modelEnabled: false, searchEnabled: false,
       ceilingUsd: 0, fundedSubjects: [] }, capacity: () => 40,
-      slots: workerProcessSlots(() => 1, { availableBytes: () => 1000, headroomBytes: 0, peakBytes: () => 1 }),
-      onStarted: () => { forks++; }, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
+      slots: workerProcessSlots(() => 1, { availableBytes: () => available, headroomBytes: 0, peakBytes: () => 1 }),
+      onStarted: () => { forks++; available = 0; }, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
     assert.equal(forks, 1, "queued admissions release without spawning after the first child drains all tasks");
   } finally { await rm(root, { recursive: true, force: true }); }
 });

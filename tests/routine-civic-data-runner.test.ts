@@ -1359,6 +1359,18 @@ test("one timed-out canonical clock is isolated while ordered sibling clocks set
   assert.equal(activeHungReads, 0, "clock cancellation leaves no request for a later pass");
 });
 
+test("explicit national reader contracts share a bounded child while ZIPs and ambiguous states stay isolated", () => {
+  const all = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS];
+  const national = ["govinfo", "congress-api", "legiscan-bulk"].map(id => all.find(contract => contract.id === id)!);
+  const zip = { ...national[0]!, id: "national-place:92101", scope: "US:zip:92101" };
+  const ambiguous = all.find(contract => contract.id === "venue-resolutions")!;
+  const domains = routineReaderRepairDomains([...national, zip, ambiguous]);
+  const batch = domains.find(domain => domain.contracts.some(contract => contract.id === "govinfo"))!;
+  assert.deepEqual(new Set(batch.contracts.map(contract => contract.id)), new Set(national.map(contract => contract.id)));
+  assert.ok(domains.some(domain => domain.contracts.length === 1 && domain.contracts[0]?.id === zip.id));
+  assert.ok(domains.some(domain => domain.contracts.length === 1 && domain.contracts[0]?.id === ambiguous.id));
+});
+
 test("a killed Reader child is an exact delivery repair fault and cannot mutate source or LKG", async () => {
   const store = new MemoryRoutineDataStore();
   const domain = routineReaderRepairDomains().find(({ contracts }) =>

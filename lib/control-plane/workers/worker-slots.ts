@@ -17,11 +17,11 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
 const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
-/** RN-02: New York's cold native repair peaked at 1,043,767,296 bytes on 2026-10-23,
+/** RN-02: New York's cold native repair peaked at 1,062,305,792 bytes on 2026-10-23,
  * with 64-part reads and two typed checks together. Summed process-tree /proc VmHWM sampled every
- * 100 ms against a production-data copy (Node 24.19). Retain that peak plus 5%, rounded up to MiB,
- * even after five small CURRENT-only batches; earlier eight-part national replay peaked at 957,120,512. */
-export const READER_REPAIR_PEAK_MIB = 1046;
+ * 100 ms on the execution host during an 11,371-contract replay using production SELECT-only roles
+ * (Node 24.19). Retain that peak plus 5%, rounded up to MiB, even after small CURRENT-only batches. */
+export const READER_REPAIR_PEAK_MIB = 1064;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // RH-01 complete native publication peaks: 3,403 MiB Open States and
@@ -299,7 +299,11 @@ export interface WorkerProcessSlots {
 
 /** A lower priority is offered memory first; equal priorities keep their arrival order. A held waiter that does not
  * fit keeps later waiters out for up to MEMORY_HOLD_MS, so the memory a finishing child frees is not taken first. */
-export interface WorkerMemoryOrder { readonly priority: number; readonly hold?: boolean }
+export interface WorkerMemoryOrder {
+  readonly priority: number;
+  readonly hold?: boolean;
+  readonly stillNeeded?: () => boolean;
+}
 export const MEMORY_HOLD_MS = 5 * 60_000;
 
 function statePublicationPeakBytes(entry: string): number {
@@ -340,7 +344,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     const kind = /(?:^|\/|\\)(route|scout|lease|national)-worker[.]ts$/.exec(entry)?.[1] ?? "lease";
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
-  const waiting: { entry: string; deadline: number; priority: number; holdUntil: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
+  const waiting: { entry: string; deadline: number; priority: number; holdUntil: number; stillNeeded?: () => boolean; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
   const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
     try {
       void Promise.resolve(host.transact(operation, false)).then(applied => {
@@ -356,7 +360,10 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
   const expire = (): void => {
     const now = Date.now();
     for (let index = waiting.length - 1; index >= 0; index--) {
-      if (memory.admissionsOpen?.() === false || now >= waiting[index]!.deadline) {
+      if (waiting[index]!.stillNeeded?.() === false) {
+        const [item] = waiting.splice(index, 1);
+        item!.reject(new Error("WORKER_ADMISSION_NOT_NEEDED: queued work has already finished"));
+      } else if (memory.admissionsOpen?.() === false || now >= waiting[index]!.deadline) {
         const [item] = waiting.splice(index, 1);
         item!.reject(new Error(memory.admissionsOpen?.() === false ? "RUNTIME_RELEASE_DRAINED: queued work remains owed" : "WORKER_MEMORY_DEADLINE: memory wait deferred; work remains owed"));
       }
@@ -467,7 +474,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
       const priority = order?.priority ?? Number.POSITIVE_INFINITY;
       const at = waiting.findIndex(item => item.priority > priority);
       waiting.splice(at < 0 ? waiting.length : at, 0,
-        { entry, deadline: deadlineMs, priority, holdUntil: order?.hold ? Date.now() + MEMORY_HOLD_MS : 0, resolve, reject });
+        { entry, deadline: deadlineMs, priority, holdUntil: order?.hold ? Date.now() + MEMORY_HOLD_MS : 0, stillNeeded: order?.stillNeeded, resolve, reject });
       requestDrain();
     }) };
 }

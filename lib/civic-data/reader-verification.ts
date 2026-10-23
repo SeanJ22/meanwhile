@@ -721,28 +721,29 @@ export async function repairRoutineReaderProjectionReadback(
 async function repairInspectedReaderReadback(
   store: RoutineDataStore, contract: ReaderContract, inspection: ReaderReadbackInspection, now: string,
   normalizedVerifierCodeSha: string | null, options: { readonly attestor?: ReaderVerifierClosureAttestor },
+  remainingPointerRetry = 1,
 ): Promise<ReaderReadbackRepairOutcome> {
   if (inspection.outcome !== null) return inspection.outcome;
   if (inspection.promotion === null) throw new Error(`READER_REPAIR_PROMOTION_MISSING:${contract.id}`);
-  if (inspection.attestFrom !== undefined) {
-    const attested = await attestReaderProjectionReadback(
-      store,
-      contract,
-      inspection.promotion,
-      inspection.attestFrom,
-      now,
-      normalizedVerifierCodeSha,
-      options.attestor,
-    );
-    if (attested !== null) return { kind: "RECORDED", receipt: attested };
+  let receipt: ReaderProjectionReadbackReceipt | null = null;
+  let failed: { readonly error: unknown } | null = null;
+  try {
+    if (inspection.attestFrom !== undefined) {
+      receipt = await attestReaderProjectionReadback(store, contract, inspection.promotion, inspection.attestFrom,
+        now, normalizedVerifierCodeSha, options.attestor);
+    }
+    receipt ??= await recordRoutineReaderProjectionReadback(store, contract, inspection.promotion, now, normalizedVerifierCodeSha);
+  } catch (error) { failed = { error }; }
+  if (remainingPointerRetry > 0 && (failed !== null || receipt?.status === "FAIL")) {
+    // A concurrent publication is not evidence that either source version is invalid.
+    // Re-inspect once, and let the exact typed Reader and append guard verify the new pointer.
+    const current = await store.readPromotionIdentity(contract.recordClass, inspection.promotion.scope);
+    if (current?.versionId !== inspection.promotion.versionId) {
+      const latest = await inspectReaderReadback(store, contract, now, normalizedVerifierCodeSha);
+      return repairInspectedReaderReadback(store, contract, latest, now, normalizedVerifierCodeSha, options, remainingPointerRetry - 1);
+    }
   }
-  const receipt = await recordRoutineReaderProjectionReadback(
-    store,
-    contract,
-    inspection.promotion,
-    now,
-    normalizedVerifierCodeSha,
-  );
+  if (failed !== null) throw failed.error;
   if (receipt === null) return { kind: "NOT_APPLICABLE", receipt: null };
   return { kind: "RECORDED", receipt };
 }

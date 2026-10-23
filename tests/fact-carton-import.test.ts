@@ -158,6 +158,7 @@ test("office addresses and phones readers saw go live on the body's saved page; 
   const live = await s.facts.query(`SELECT f.entity_id, f.field, f.value, s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
     WHERE f.status = 'live' ORDER BY f.field`);
   assert.deepEqual(live, [
+    { entity_id: AGENDA, field: "name", value: "Agenda Committee", url: agendaUrl },
     { entity_id: AGENDA, field: "office_address", value: "255 W. Alameda St., Tucson, AZ 85701", url: agendaUrl },
     { entity_id: AGENDA, field: "office_phone", value: "(520) 791-4213", url: agendaUrl }]);
   assert.deepEqual(await s.facts.query("SELECT entity_id, field, stage, reason FROM blank ORDER BY entity_id"), [

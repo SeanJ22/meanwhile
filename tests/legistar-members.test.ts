@@ -113,8 +113,8 @@ test("tenant facts retain dates, leave an unchanged roster intact, and remove ev
   const first = await publishLegistarMembers(input);
   assert.equal(first.members, 15);
   assert.equal(first.unchanged, false);
-  assert.equal(copies, 1);
-  assert.equal((await db.query("SELECT blob_key FROM source_copy"))[0]!.blob_key, `artifact:${raw.readings.find(officePage)!.artifact.id}`);
+  assert.equal(copies, 2, "one saved copy for the bodies page and one for the office page, however many bodies and members they carry");
+  assert.ok((await db.query("SELECT blob_key FROM source_copy")).some(row => row.blob_key === `artifact:${raw.readings.find(officePage)!.artifact.id}`));
   const before = await db.query("SELECT id, checked_at FROM fact ORDER BY id");
   const live = await readFactRosters(db.query, rows.map(row => row.bodyId));
   const rex = live.rosters.flatMap(row => row.members).find(row => row.name === "Rex Scott")!;
@@ -253,6 +253,7 @@ test("a person with two current records on one body is one member, spoken for by
   const earlier = { ...seat, OfficeRecordStartDate: "2019-01-01T00:00:00", OfficeRecordEndDate: "2099-01-01T00:00:00", OfficeRecordTitle: "District 2 - First Deputy" };
   const later = { ...seat, OfficeRecordId: seat.OfficeRecordId + 5000, OfficeRecordStartDate: "2026-06-23T00:00:00", OfficeRecordEndDate: "2099-07-31T00:00:00", OfficeRecordTitle: "District 2 - Second Deputy" };
   const vault = new MemoryEvidenceStore(), page = source.readings.find(officePage)!, offices = [earlier, later];
+  await storeMemberFixtures(vault, source);
   const reading = await saveLegistarReading(vault, "pima", { url: page.artifact.canonicalUrl, text: JSON.stringify(offices), body: offices, retrievedAt: page.artifact.retrievedAt });
   const raw = { ...source, offices, readings: [...source.readings.filter(read => read !== page), reading] };
   const members = [...legistarMemberRosters(raw, rows, NOW)].flatMap(roster => roster.members);
@@ -267,10 +268,43 @@ test("a seat with no title still lists its holder, and a record with no name is 
   const untitled = { ...seat, OfficeRecordTitle: null, OfficeRecordMemberType: null };
   const nameless = { ...seat, OfficeRecordId: seat.OfficeRecordId + 7000, OfficeRecordPersonId: seat.OfficeRecordPersonId + 7000, OfficeRecordFullName: " " };
   const vault = new MemoryEvidenceStore(), page = source.readings.find(officePage)!, offices = [untitled, nameless];
+  await storeMemberFixtures(vault, source);
   const reading = await saveLegistarReading(vault, "pima", { url: page.artifact.canonicalUrl, text: JSON.stringify(offices), body: offices, retrievedAt: page.artifact.retrievedAt });
   const raw = { ...source, offices, readings: [...source.readings.filter(read => read !== page), reading] };
   const report = await publishLegistarMembers({ facts: db, vault, raw, rows, clocks: factClocks(null), now: NOW, purge: async () => ({ purged: true }) });
   assert.equal(report.members, 1);
   const live = (await readFactRosters(db.query, rows.map(row => row.bodyId))).rosters.flatMap(roster => roster.members);
   assert.deepEqual(live.map(member => member.name), [seat.OfficeRecordFullName.trim()]);
+});
+
+test("each Legistar body is published with its name, quoted from the saved bodies reading, so the board shows on the page", async t => {
+  const { readBodyFacts } = await import("../lib/facts/registry-overlay.ts");
+  const db = await factDb(); t.after(() => db.pg.close());
+  const raw = rawFor("pima"), rows = wiring(raw, "AZ", "America/Phoenix"), vault = new MemoryEvidenceStore();
+  await storeMemberFixtures(vault, raw);
+  await publishLegistarMembers({ facts: db, raw, rows, vault, clocks: factClocks(null), now: NOW, purge: async () => ({ purged: true }) });
+  const facts = await readBodyFacts(db.query, rows.map(row => row.bodyId));
+  assert.equal(facts.filter(fact => fact.fields.name && fact.fields.provenance?.sourceUrl).length, raw.bodies.length, "every body has a verified, sourced name");
+  for (const body of raw.bodies) {
+    const fact = facts.find(row => row.id === rows.find(wired => Number(wired.config.eventBodyId) === body.BodyId)!.bodyId)!;
+    assert.equal(fact.fields.name, body.BodyName.trim());
+    assert.match(String(fact.fields.provenance!.sourceUrl), /^https:\/\/webapi\.legistar\.com\/v1\/pima\/bodies\?/);
+  }
+  assert.deepEqual(await db.query("SELECT 1 FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.kind = 'body' AND f.status = 'live' GROUP BY e.id HAVING bool_or(f.field = 'name') = false"), [],
+    "no body holds verified facts without a verified name");
+});
+
+test("pages saved after the pass began publish on the first pass", async t => {
+  const { refreshLegistarMembers } = await import("../lib/sources/legistar/members-refresh.ts");
+  const { doorsFromWiringRow } = await import("../lib/doors/seed-meetings.ts");
+  const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
+  const db = await factDb(); t.after(() => db.pg.close());
+  const raw = rawFor("pima"), rows = wiring(raw, "AZ", "America/Phoenix");
+  const doors = async () => rows.map(row => ({ value: doorsFromWiringRow(row)[0] }));
+  const started = new Date(Date.now() - 60_000).toISOString();
+  const report = await refreshLegistarMembers({ facts: db, clocks: factClocks(null), now: started, slug: "pima", doors: doors as never,
+    vault: new MemoryEvidenceStore(), fetchImpl: recordedMemberFetch(() => raw, []) });
+  assert.ok(report.members > 0);
+  assert.ok(Date.parse(report.checkedAt) > Date.parse(started), "the facts are dated after the download, not at the pass start");
+  assert.ok((await db.query("SELECT 1 FROM fact WHERE field LIKE 'member:%' AND status = 'live'")).length > 0);
 });

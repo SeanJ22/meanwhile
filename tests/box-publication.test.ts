@@ -815,3 +815,32 @@ test("a member already live with a title inside the name is renamed to the name,
     [{ field: "name", value_text: "Priscilla Alderete" }, { field: `office:${BOARD}`, value_text: "President" }]);
   assert.equal((await run()).labels.renamed, 0, "a member is read once");
 });
+
+test("governing boards holding facts but no name are named from the page that supplied a fact, once a pass; a page that does not name the board is left open for five days", async () => {
+  const { facts, repos, vault } = await setup();
+  const NAMED = "az:city:town-of-clifton", PLAIN = "az:city:city-of-tucson";
+  const pages = new Map([["https://www.cliftonaz.gov/council", "<html><body><h1>Clifton, AZ</h1><p>The Town Council meets the first Monday.</p><p>Town Council office (928) 865-4146</p></body></html>"],
+    ["https://www.tucsonaz.gov/leaders", "<html><body><h1>Tucson, AZ</h1><p>Mayor Regina Romero and ward representatives.</p></body></html>"]]);
+  const requested: string[] = [];
+  const fetch: ProbeFetch = async url => {
+    requested.push(String(url));
+    const body = new TextEncoder().encode(pages.get(String(url)) ?? "");
+    return { status: 200, headers: new Headers({ "content-type": "text/html" }), bytes: async () => body };
+  };
+  const bodies: string[] = [];
+  for (const [government, url] of [[NAMED, "https://www.cliftonaz.gov/council"], [PLAIN, "https://www.tucsonaz.gov/leaders"]] as const) {
+    const body = (await ensureGoverningBody(facts.query, government))!;
+    bodies.push(body.id);
+    await facts.query("INSERT INTO source_copy(url, final_url, fetched_at, sha256, blob_key) VALUES($1, $1, $2, $3, $4)", [url, NOW, "d".repeat(64), `held:${government}`]);
+    await facts.query(`INSERT INTO fact(entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, checked_at, live_at, produced_by)
+      SELECT $1, 'office_phone', '"(928) 865-4146"'::jsonb, '(928) 865-4146', 'live', 'OFFICIAL', max(id), '(928) 865-4146', $2, $2, 'box' FROM source_copy WHERE url = $3`, [body.id, NOW, url]);
+  }
+  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 };
+  await publishBoxFindings(input);
+  const names = await facts.query("SELECT entity_id, value_text, produced_by FROM fact WHERE field = 'name' AND status = 'live'");
+  assert.deepEqual(names.map(row => [row.entity_id, row.value_text, row.produced_by]), [[bodies[0], "Town Council", "box"]]);
+  assert.deepEqual((await facts.query("SELECT entity_id, reason FROM blank WHERE field = 'name'")).map(row => [row.entity_id, row.reason]), [[bodies[1], "NAME_NOT_ON_PAGE"]]);
+  requested.length = 0;
+  await publishBoxFindings(input);
+  assert.deepEqual(requested, [], "a named board and a board waiting out its five days are not read again");
+});

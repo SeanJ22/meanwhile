@@ -22,5 +22,7 @@ export async function refreshLegistarMembers(input: {
   const read = makeLegistarMembersReader(vault, input.fetchImpl, prior);
   const raw = await runInSourceAcquisitionDomain({ sourceLabel: `legistar-members:${input.slug}`, timeoutMs: ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS }, signal => read(input.slug, signal));
   await saveLegistarMembers(vault, raw, input.now);
-  return publishLegistarMembers({ facts: input.facts, clocks: input.clocks, vault, raw, rows, now: input.now });
+  // The pages were saved after the pass began; checking them against the start time refuses every fresh read.
+  const publishedAt = new Date(Math.max(Date.now(), Date.parse(raw.collectedAt), Date.parse(input.now))).toISOString();
+  return publishLegistarMembers({ facts: input.facts, clocks: input.clocks, vault, raw, rows, now: publishedAt });
 }

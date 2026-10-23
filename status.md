@@ -16,11 +16,16 @@ Sean's orders for this session (Oct 23, ~4:15 to 5:00 AM EDT):
 - A release is live only when https://meanwhileusa.com/api/build shows its merge commit. Then each lane's live check runs at national scale: the named examples plus real places in at least 10 states, counts by state posted here.
 - Hold pb-02 until it posts a new READY with a national sample (returns/pb-02.md).
 
-Queue:
-- In gates now: pb-01 (PB-01), sp-01 (SP-01), ex-03 (EX-03) and River's dead-code gate on river-next 6d2f648d5. River fixed in the fold: SP-01's geocode route import (preflight stopped on `@/lib` under plain Node, on stream/sp-01 alone too).
-- Next fold: src-01 (SRC-01, ready, proofs present).
-- Held: pb-02 (national sample). Returned: pk-01 (READY message empty, no connection proofs).
-- Not posted yet: rn-01, rn-02, vs-07, lv-01 (WIP only), bl-01, pb-03, nx-02, nb-02, dg-02, cs-01, eo-01.
+Queue (5:45 AM EDT):
+- In gates now: pb-01 (PB-01), sp-01 (SP-01), ex-03 (EX-03) and River's dead-code gate on river-next 6d2f648d5. Preflight, lint, tsc, dead-code, assert:browser pass; the suite is running (the first run was cut off by the session's 30-minute background limit, not by a failure; rerun from 5:40 AM EDT). River fixed in the fold: SP-01's geocode route import (preflight stopped on `@/lib` under plain Node, on stream/sp-01 alone too).
+- Next fold: src-01 (SRC-01 READY 7b05903de, adds the SAM quota hold; proofs present).
+- Held: pb-02 (national sample, returns/pb-02.md). Returned for missing connection proofs (empty READY messages): pk-01, lv-01. eo-01 waits behind lv-01.
+- Not posted yet: rn-01, rn-02, vs-07, bl-01, pb-03, nx-02, nb-02, dg-02, cs-01, eo-01.
+
+Baseline before this release (live, release 88, 4:56 AM EDT; first visit, 16 places fetched in parallel), /api/meetings by ZIP: boards shown / with members / empty / ms
+- WI 53703 Madison 0/0/0 618 ms; WI 53202 Milwaukee 342/117/225 (184 all-caps names, 3.07 MB) 659 ms; AZ 85701 136/9/127 5.3 s; TX 77002 2/1/1; MO 64106 2/2/0; FL 33130 1/0/1.
+- 0 boards: CA 94102, CO 80203, GA 30303, IL 60602, MA 02108, MN 55401, NY 10007, OR 97204, TN 37201, WA 98101.
+- 12 of 16 answers took 3.4 to 5.5 s (over the 3-second rule). /ballot?zip=85701: edge miss, no-store, 3.1 s.
 
 Sean's decisions on returns/sean.md (relayed Oct 23, ~5:15 AM EDT; FX-01 closes both):
 1. Vice President: option (a). Release 88 stays. NX-02 feeds the National section, and the Vice President shows on /national. Live check when NX-02 ships: /national shows the Vice President (and the President and Cabinet) with sources; place pages keep only place-specific officials.

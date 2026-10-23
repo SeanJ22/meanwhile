@@ -13,7 +13,7 @@ import { readCanonicalShelf } from "../lib/reader/canonical.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { readerStateResponse } from "../lib/reader/state-response.ts";
 import { readerCacheScopeForPublication, readerCacheTags, invalidateReaderCache } from "../lib/reader/cache.ts";
-import { ballotCacheHeaders } from "../lib/reader/ballot-cache.ts";
+import { ballotCacheValue } from "../lib/reader/ballot-cache.ts";
 import type { ReaderStateResponse } from "../lib/reader/client.ts";
 import { zipMemberDirectories } from "../lib/reader/member-directories.ts";
 import { directoryOffices, officeOwners } from "../lib/map/office-pins.ts";
@@ -142,7 +142,7 @@ for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
   assert.deepEqual(purges,[[`reader-state:${state}`]]);
   const presidentTags=readerCacheTags(readerCacheScopeForPublication("US:people:statewide-executive-sources:v1"));
   assert.ok(presidentTags.some(tag=>response.headers.get("Netlify-Cache-Tag")!.split(",").includes(tag)));
-  for(const day of [today,tomorrow])assert.ok(ballotCacheHeaders(new Request(`${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`),Date.parse(day))["Netlify-Cache-Tag"].includes(`reader-state:${state}`));
+  for(const day of [today,tomorrow])assert.ok(ballotCacheValue(new Request(`${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`),Date.parse(day))?.endsWith(`;${state}`));
   results.push({state,zip,productionVersion:original.metadata.versionId,replayedVersion:read.metadata.versionId,
     directoryCards:cards.length,rendered,savedNativePoints,nativeOfficePublicationVersion,nativeOfficeNextConfirmed,scheduledNow:today,scheduledNext:tomorrow,nextRunDue:true,nextPublicationConfirmed:!!nextOutcome.confirmed,
     nextReaderVersion:nextRead.metadata.versionId,freshLookupsForPreviouslyMissingPoints:freshLookups,

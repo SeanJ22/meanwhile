@@ -331,7 +331,7 @@ test("reads stay bounded: no list, no whole-log read, no filtered scan", async (
   const wrapped = Object.fromEntries(Object.entries(repos).map(([k, v]) => [k, v && typeof v === "object" ? guard(k, v) : v])) as unknown as ControlPlaneRepositories;
   ok(await section("us", wrapped));
   assert.ok(calls.filter(c => c.startsWith("attempts.")).length <= 16);
-  assert.deepEqual(calls.filter(c => c.startsWith("ownerDigests.")), ["ownerDigests.readRecent", "ownerDigests.readRecentWhere", "ownerDigests.readRecentWhere", "ownerDigests.readRecentWhere"]);
+  assert.deepEqual(calls.filter(c => c.startsWith("ownerDigests.")), ["ownerDigests.readRecent", "ownerDigests.readRecentWhere", "ownerDigests.readRecentWhere", "ownerDigests.readRecentWhere", "ownerDigests.readRecent"]);
 });
 
 test("automatic migration outcomes use the existing deploy card and do not become source delivery", async () => {
@@ -603,4 +603,24 @@ test("only paid jobs the safety checks refused are counted (other deferrals are 
     { work: "a", code: "UNMEASURED_MODEL_SPEND", why: "rolling-24-hour model spend is unmeasured" }, { work: "b", code: "UNMEASURED_MODEL_SPEND", why: "x" }, { work: "c", code: "OWNER_PAUSED", why: "y" }, { work: "d", code: "awaiting adapter", why: "z" }, { work: "e", code: "lane disabled", why: "z" }] } } }))).data.status;
   assert.deepEqual(some.refused, { count: 3, why: "the spending total is unknown; paid research is paused" });
   assert.equal(ok(await section("us", await world())).data.status.refused, null, "nothing deferred is no line at all");
+});
+
+test("every launch decision is retained and the command center explains skipped and deferred source work", async () => {
+  const { appendRoutineLaunchDecisions, routineLaunchDecision, ROUTINE_DECISIONS_LOG_KEY } = await import("../lib/civic-data/launch-decisions.ts");
+  const repos = await world({ scouts: [] });
+  const decisions = Array.from({ length: 56 }, (_, index) => routineLaunchDecision({ id: `voting-sites:${index}:AZ`, sourceId: "voting-sites", scope: "US-AZ:voting-sites" },
+    index === 55 ? "DEFER" : "SKIP", index === 55 ? "Waiting for a worker slot" : "Next check is not due", "recorded reason", NOW));
+  const calendar = routineLaunchDecision({ id: "calendar:AZ", sourceId: "meetings-public-bodies", scope: "source:calendar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fplace%3Atucson" },
+    "DEFER", "Too little time remains to finish this read", "This read remains due", NOW);
+  assert.equal(calendar.state, "az");
+  await appendRoutineLaunchDecisions(repos, [...decisions, calendar], "routine:today", "a".repeat(40), 0);
+  const saved = await repos.ownerDigests.read(ROUTINE_DECISIONS_LOG_KEY);
+  assert.equal(saved.flatMap(row => row.routineDecisions ?? []).length, 57);
+  const view = ok(await section("us", repos)).data;
+  assert.ok(view.waiting?.some(row => row.why === "Waiting for a worker slot"));
+  assert.ok(view.events?.some(row => row.text.includes("Too little time remains to finish this read")));
+  const next = new Date(Date.parse(NOW) + 86_400_000).toISOString();
+  await appendRoutineLaunchDecisions(repos, [routineLaunchDecision({ id: "calendar:AZ", sourceId: "meetings-public-bodies", scope: "US-AZ:calendar" },
+    "SKIP", "Next check is not due", "Tomorrow's independent decision", next)], "routine:tomorrow", "a".repeat(40), 0);
+  assert.equal((await repos.ownerDigests.read(ROUTINE_DECISIONS_LOG_KEY)).flatMap(row => row.routineDecisions ?? []).length, 58);
 });

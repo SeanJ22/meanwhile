@@ -26,6 +26,7 @@ import {
   pendingReady,
   planMigrationNumbers,
   releaseContents,
+  riverIsTested,
   setStatusFields,
   slugOf,
   stepIds,
@@ -85,6 +86,17 @@ test("plan step ids from R, platform and source lanes count as steps", () => {
   assert.deepEqual(stepIds("READY: SRC-AC"), ["SRC-AC"]);
   assert.deepEqual(stepIds("READY: R2B, SRC-LS and DB-09"), ["R2B", "SRC-LS", "DB-09"]);
   assert.deepEqual(stepIds("WIP: still working"), []);
+});
+
+test("river is tested when it is the tested SHA, main, or the tested tree byte for byte", () => {
+  const trees: Record<string, string> = { tested: "t1", merged: "t1", changed: "t2", main: "t0" };
+  const treeOf = (sha: string) => trees[sha] ?? null;
+  assert.equal(riverIsTested({ tested: "tested", river: "tested", main: "main", treeOf }), true);
+  assert.equal(riverIsTested({ tested: "tested", river: "main", main: "main", treeOf }), true);
+  assert.equal(riverIsTested({ tested: "tested", river: "merged", main: "main", treeOf }), true, "main merged in without changing a file");
+  assert.equal(riverIsTested({ tested: "tested", river: "changed", main: "main", treeOf }), false);
+  assert.equal(riverIsTested({ tested: null, river: "changed", main: "main", treeOf }), false);
+  assert.equal(riverIsTested({ tested: "gone", river: "changed", main: "main", treeOf }), false, "an unreadable tree is not a match");
 });
 
 test("a READY message carries both connection proofs or names the ones it lacks", () => {

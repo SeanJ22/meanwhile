@@ -1,14 +1,98 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
+import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import { PGlite } from "@electric-sql/pglite";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
-import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
-import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
-import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
-import { STATE_BALLOT_FAMILIES, stateBallotContractId, stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
+import { reconcileNationalStatePointers, retireNationalStatePointers, RETIRED_STATE_POINTERS } from "../lib/civic-data/state-pointer-retirement.ts";
+import { readRetirementProgress, retirementProofTarget } from "../lib/civic-data/state-retirement-progress.ts";
+
+const fixtureEnv = { NODE_ENV: "test" as const, DATABASE_URL: "postgres://fixture/retirement",
+  WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40) };
+
+test("the production progress SQL reads partitioned proof metadata and survives a later ordinary publication", async () => {
+  const db = new PGlite();
+  try {
+    await db.exec(`CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
+      CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,
+        acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,validation_receipt jsonb,normalized_hash text,candidate jsonb);
+      CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,current_version_id text,last_known_good_version_id text,validation_receipt jsonb,payload jsonb);`);
+    const migration = await readFile("lib/db/migrations/0036_ne01.sql", "utf8"), start = migration.indexOf("CREATE FUNCTION reader_payload_node(");
+    await db.exec(migration.slice(start, migration.indexOf("--> statement-breakpoint", start)));
+    const origin = { versionId: "old-national", recordClass: "CANDIDATE_PROFILE", scope: "US-AZ+US-NH+US-NJ:2026-supported-candidates", readModelHash: "a".repeat(64) };
+    const target = retirementProofTarget("candidate-profiles:NH", origin);
+    const receipt = (id: string) => ({ decision: "GOOD", candidateId: id, sourceId: target.source_id, recordClass: target.record_class, scope: target.scope });
+    await db.query("INSERT INTO civic_data_payload_parts VALUES('proof', $1)", [JSON.stringify({ kind: "object", value: {
+      kind: "STATE_AUTHORITY_RETIREMENT", contractId: target.contract_id, state: "NH", origin, readModelHash: "b".repeat(64),
+    } })]);
+    for (const id of ["proof-version", "ordinary-version"]) await db.query(`INSERT INTO civic_data_candidates VALUES
+      ($1,$2,$3,$4,'PROMOTED',true,$1,$1,$5,$6,$7)`, [id,target.source_id,target.record_class,target.scope,JSON.stringify(receipt(id)),"b".repeat(64),
+      JSON.stringify({ readModel: {}, ...(id === "proof-version" ? { stateRetirement: { $civicPayloadPart: "proof" } } : {}) })]);
+    await db.query("INSERT INTO civic_data_promotions VALUES($1,$2,'ordinary-version','ordinary-version',$3,'{}')", [`${target.record_class}:${target.scope}`,target.source_id,JSON.stringify(receipt("ordinary-version"))]);
+    const query = async (sql: string, params: readonly unknown[]) => (await db.query<Record<string, unknown>>(sql,[...params])).rows;
+    assert.equal((await readRetirementProgress(query, [target])).get(origin.versionId)?.has("NH"), true);
+    await db.query("UPDATE civic_data_candidates SET normalized_hash='different' WHERE id='proof-version'");
+    assert.equal((await readRetirementProgress(query, [target])).get(origin.versionId)?.has("NH") ?? false, false);
+  } finally { await db.close(); }
+});
+
+test("a pass with too little time skips the actual cleanup block and still saves its results", async () => {
+  const source = await readFile("scripts/routine-civic-data-runner.mts", "utf8");
+  const operation = source.indexOf("    const deadlineMs = PASS_DEADLINE_MS - 30_000, sql = neon(");
+  const start = source.lastIndexOf("if (!PUBLISH_NOW", operation), end = source.indexOf("for (const run of readerRuns)", operation);
+  let saved = false;
+  const code = transpileModule(`(async () => { ${source.slice(start, end)} await saveResults(); })()`, {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText;
+  await runInNewContext(code, { PUBLISH_NOW: false, ONLY: null, PASS_DEADLINE_MS: 1_000_000,
+    Date: { now: () => 980_000 }, supervisorFailures: [],
+    neon: () => { throw Error("cleanup must not open the database"); },
+    saveResults: async () => { saved = true; } });
+  assert.equal(saved, true);
+  assert.deepEqual(await reconcileNationalStatePointers({ env: fixtureEnv, deadlineMs: Date.now() - 1,
+    query: async () => { throw Error("expired cleanup must perform no read"); } }), []);
+});
+
+test("nine pointers finish in nine ordinary passes within one day, then cleanup stays quiet", async () => {
+  let active = RETIRED_STATE_POINTERS.map(([, recordClass, scope], index) => ({ key: `${recordClass}:${scope}`, recordClass, scope,
+    current_version_id: `origin-${index}`, promoted_at: "2026-10-15T12:00:00Z", normalized_hash: "a".repeat(64) }));
+  const done = new Set<string>(), prepared: string[] = [];
+  const query = async (sql: string, params: readonly unknown[]): Promise<readonly Record<string, unknown>[]> => {
+    if (sql.startsWith("SELECT p.key")) return active;
+    if (sql.includes("AS complete FROM expected")) return JSON.parse(params[0] as string).map((row: { origin_version: string; state: string }) => ({ ...row, complete: done.has(`${row.origin_version}:${row.state}`) }));
+    assert.match(sql, /DELETE FROM civic_data_promotions/);
+    assert.equal(done.size, 339, "all nine origins' state proofs must be durable before retirement");
+    const retired = active.map(row => ({ key: row.key })); active = []; return retired;
+  };
+  const input: Parameters<typeof reconcileNationalStatePointers>[0] = { query, env: fixtureEnv, deadlineMs: Date.now() + 300_000,
+    slots: { acquire: async () => () => {} }, launch: async command => {
+      const arg = (name: string) => command.args.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
+      let stdout: string;
+      if (arg("prepare")) {
+        const origins = JSON.parse(await readFile(arg("origins")!, "utf8")); assert.equal(origins.length, 1);
+        const origin = origins[0]; prepared.push(origin.versionId);
+        const units = arg("states")!.split(",").map(state => ({ family: origin.family, state,
+          contractId: `${origin.family}:${state}`, originVersionId: origin.versionId,
+          inputFile: join(arg("prepare")!, `${state}.json`), fileSha256: "b".repeat(64) }));
+        const manifestPath = join(arg("prepare")!, "manifest.json"); await writeFile(manifestPath, JSON.stringify({ units, unassigned: [] }));
+        stdout = "STATE_RETIREMENT_PREPARED=" + JSON.stringify({ manifestPath });
+      } else {
+        const [family, state] = arg("contract")!.split(":"); const origin = command.id.split(":retirement:")[1];
+        assert.equal(done.has(`${origin}:${state}`), false); done.add(`${origin}:${state}`);
+        stdout = "STATE_RETIREMENT_UNIT=" + JSON.stringify({ family, state, status: "PUBLISHED" });
+      }
+      return { id: command.id, status: 0, signal: null, termination: "EXITED", errorMessage: null, stdout, stderr: "" };
+    } };
+  let passes = 0, retired = 0;
+  while (active.length && passes < 48) {
+    passes++; retired += await retireNationalStatePointers(query, await reconcileNationalStatePointers(input));
+  }
+  assert.equal(retired, 9); assert.equal(passes, 9); assert.ok(passes * 30 * 60_000 < 86_400_000);
+  assert.equal(new Set(prepared).size, 9);
+  assert.deepEqual(await reconcileNationalStatePointers(input), []); assert.equal(prepared.length, 9);
+});
 
 test("national retirement requires every exact GOOD state replacement and keeps ordinary deletion forbidden", async () => {
   const db = new PGlite();
@@ -67,57 +151,63 @@ test("national retirement requires every exact GOOD state replacement and keeps 
 });
 
 
-test("terminal preparation stays scalar and serializes same-state origins before releasing exact pins", async t => {
-  const directory = await mkdtemp(join(tmpdir(), "retirement-dispatch-"));
-  t.after(() => rm(directory, { recursive: true, force: true }));
+test("cleanup resumes one unfinished origin per pass, skips durable state proofs, and caps memory at the pass deadline", async () => {
   const origins = [
     { key: "BALLOT_CANDIDACY:US:state-election-ballots", current_version_id: "national-after-A", promoted_at: "2026-10-15T12:00:00Z", normalized_hash: "a".repeat(64) },
     { key: "BALLOT_CANDIDACY:US-NH:merrimack:2026-general", current_version_id: "nh-after-A", promoted_at: "2026-10-15T13:00:00Z", normalized_hash: "b".repeat(64) },
   ];
-  const running = new Set<string>(), settled: string[] = [];
-  const actual = await reconcileNationalStatePointers({ query: async sql => { assert.ok(!sql.includes("p.payload")); return origins; },
-    env: { NODE_ENV: "test", DATABASE_URL: "postgres://fixture/retirement", WTP_CONTROL_PLANE_READS_DIR: "/var/lib/meanwhile/control-plane-reads",
-      WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40) },
-    slots: { async acquire(id) { assert.ok(!running.has(id!)); running.add(id!); return () => { running.delete(id!); }; } },
-    launch: async command => {
+  const completed = new Set<string>(), prepared: string[] = [], running = new Set<string>();
+  const deferred: string[] = []; let refuseFirst = true;
+  const deadlineMs = Date.now() + 60_000;
+  const input: Parameters<typeof reconcileNationalStatePointers>[0] = { deadlineMs,
+    query: async (sql, params) => {
+      if (sql.startsWith("SELECT p.key")) return origins;
+      return (JSON.parse(params[0] as string) as { origin_version: string; state: string }[]).map(target => ({ ...target,
+        complete: completed.has(`${target.origin_version}:${target.state}`) }));
+    },
+    env: { NODE_ENV: "test", DATABASE_URL: "postgres://fixture/retirement", WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40) },
+    onDeferred: (id, scope, detail) => { assert.match(id, /ballot-contests:AL/); assert.equal(scope, "US-AL:state-election-ballots"); assert.match(detail, /^WORKER_MEMORY_DEADLINE:/); deferred.push(id); },
+    slots: { async acquire(id, deadline) {
+      assert.equal(deadline, deadlineMs);
+      if (refuseFirst && id!.startsWith("ballot-contests:AL:")) { refuseFirst = false; throw Error("WORKER_MEMORY_DEADLINE: memory remains owed"); }
+      assert.ok(!running.has(id!)); running.add(id!); return () => { running.delete(id!); };
+    } },
+    launch: async (command, options) => {
+      assert.equal(options.deadlineMs, deadlineMs);
       const value = (key: string) => command.args.find(arg => arg.startsWith(`--${key}=`))?.slice(key.length + 3);
       let stdout: string;
       if (value("prepare")) {
+        const selected = JSON.parse(await readFile(value("origins")!, "utf8"));
+        assert.equal(selected.length, 1); prepared.push(selected[0].versionId);
         const manifestPath = join(value("prepare")!, "manifest.json");
-        const units = origins.map((origin, index) => ({ family: "ballot-contests", state: "NH", contractId: "ballot-contests:NH",
-          originVersionId: origin.current_version_id, inputFile: join(value("prepare")!, `${index}.json`), fileSha256: "c".repeat(64) }));
+        const units = value("states")!.split(",").map(state => ({ family: "ballot-contests", state, contractId: `ballot-contests:${state}`,
+          originVersionId: selected[0].versionId, inputFile: join(value("prepare")!, `${selected[0].versionId}-${state}.json`), fileSha256: "c".repeat(64) }));
         await writeFile(manifestPath, JSON.stringify({ units, unassigned: [] }));
         stdout = "STATE_RETIREMENT_PREPARED=" + JSON.stringify({ manifestPath });
       } else {
-        assert.equal(command.env?.WTP_RUNTIME_AUTHORITY_CONTRACT, "ballot-contests:NH");
-        assert.equal(running.size, 1, "two origins for one state never publish concurrently");
-        settled.push(command.id);
-        stdout = 'STATE_RETIREMENT_UNIT={"family":"ballot-contests","state":"NH","status":"PUBLISHED"}';
+        const state = value("contract")!.split(":")[1], origin = command.id.split(":retirement:")[1];
+        assert.ok(!completed.has(`${origin}:${state}`), "completed state units never run again");
+        completed.add(`${origin}:${state}`);
+        stdout = "STATE_RETIREMENT_UNIT=" + JSON.stringify({ family: "ballot-contests", state, status: "PUBLISHED" });
       }
       return { id: command.id, status: 0, signal: null, termination: "EXITED", errorMessage: null, stdout, stderr: "" };
-    } });
-  assert.deepEqual(actual.map(row => row.versionId), ["national-after-A", "nh-after-A"]);
-  assert.deepEqual(settled, ["ballot-contests:NH:retirement:national-after-A", "ballot-contests:NH:retirement:nh-after-A"]);
+    } };
+  assert.deepEqual(await reconcileNationalStatePointers(input), [], "the second national origin is still owed");
+  assert.equal(completed.size, 55); assert.equal(deferred.length, 1);
+  assert.deepEqual(await reconcileNationalStatePointers(input), [], "only the unfinished AL copy is prepared before moving to the next origin");
+  const done = await reconcileNationalStatePointers(input);
+  assert.equal(done.length, 2);
+  assert.deepEqual(prepared, ["national-after-A", "national-after-A", "nh-after-A"]);
+  await reconcileNationalStatePointers(input);
+  assert.equal(prepared.length, 3, "all completed copies skip preparation entirely");
   assert.equal(running.size, 0);
 });
 
 test("retirement uses canonical state replacements and atomically refuses a moved original", async () => {
-  const rows = new Map<string, Record<string, unknown>>();
-  for (const state of REGISTRY_STATES) {
-    const descriptors = [{ family: "registry-runtime", contract: requiredManualProductionContract(stateRegistryRuntimeContractId(state)) },
-      ...STATE_BALLOT_FAMILIES.map(family => ({
-        family: family === "candidate-corpus" ? "candidate-publications" : family,
-        contract: family === "candidate-campaign-sites-derived" ? requiredRoutineContract(stateBallotContractId(family, state)) : requiredManualProductionContract(stateBallotContractId(family, state)),
-      }))];
-    for (const { family, contract } of descriptors) {
-      const key = `${contract.recordClass}:${contract.scope}`, version = `${family}-${state}`;
-      rows.set(key, { key, source_id: contract.sourceId, current_version_id: version, last_known_good_version_id: version, decision: "GOOD" });
-    }
-  }
   const origins = [{ family: "ballot-contests" as const, recordClass: "BALLOT_CANDIDACY" as const, scope: "US-NH:merrimack:2026-general", versionId: "pinned-NH", promotedAt: "2026-10-15T12:00:00Z", hash: "a".repeat(64) }];
   let changed = false;
   const query = async (sql: string, params: readonly unknown[]): Promise<readonly Record<string, unknown>[]> => {
-    if (sql.startsWith("SELECT key")) return (params[0] as string[]).flatMap(key => { const row = rows.get(key); return row ? [row] : []; });
+    if (sql.includes("AS complete FROM expected")) return JSON.parse(params[0] as string).map((target: { origin_version: string; state: string }) => ({ ...target, complete: true }));
     assert.match(sql, /FOR UPDATE OF p/);
     assert.match(sql, /LEFT JOIN locked/);
     assert.deepEqual(JSON.parse(params[0] as string), [{ key: "BALLOT_CANDIDACY:US-NH:merrimack:2026-general", current_version_id: "pinned-NH" }]);
@@ -126,39 +216,4 @@ test("retirement uses canonical state replacements and atomically refuses a move
   assert.equal(await retireNationalStatePointers(query, origins), 1);
   changed = true;
   await assert.rejects(retireNationalStatePointers(query, origins), /ORIGIN_MOVED/);
-});
-
-test("retirement stops at the pass deadline: units it reconciled stay done, the rest wait for the next pass, nothing is a failure", async t => {
-  const directory = await mkdtemp(join(tmpdir(), "retirement-deadline-"));
-  t.after(() => rm(directory, { recursive: true, force: true }));
-  const origins = ["US-NH:merrimack:2026-general", "US-AZ:2026-general:supported-ballot"].map((scope, index) => ({ key: `BALLOT_CANDIDACY:${scope}`, current_version_id: `${index ? "AZ" : "NH"}-v`,
-    promoted_at: "2026-10-15T12:00:00Z", normalized_hash: String(index).repeat(64) }));
-  const env: NodeJS.ProcessEnv = { NODE_ENV: "test", DATABASE_URL: "postgres://fixture/retirement", WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40) };
-  const slots = { async acquire() { return () => undefined; } };
-  const started: string[] = [];
-  let clock = 0;
-  const launch = async (command: { id: string; args: readonly string[] }) => {
-    started.push(command.id);
-    const prepare = command.args.find(arg => arg.startsWith("--prepare="))?.slice("--prepare=".length);
-    let stdout: string;
-    if (prepare) {
-      const units = origins.map((origin, index) => ({ family: "ballot-contests", state: index ? "AZ" : "NH", contractId: `ballot-contests:${index ? "AZ" : "NH"}`,
-        originVersionId: origin.current_version_id, inputFile: join(prepare, `${index}.json`), fileSha256: "c".repeat(64) }));
-      await writeFile(join(prepare, "manifest.json"), JSON.stringify({ units: [units[0], { ...units[1], contractId: units[0]!.contractId }], unassigned: [] }));
-      stdout = "STATE_RETIREMENT_PREPARED=" + JSON.stringify({ manifestPath: join(prepare, "manifest.json") });
-    } else {
-      stdout = 'STATE_RETIREMENT_UNIT={"family":"ballot-contests","state":"NH","status":"PUBLISHED"}';
-      clock = 2_000; // the first unit used up the pass's remaining time
-    }
-    return { id: command.id, status: 0, signal: null, termination: "EXITED" as const, errorMessage: null, stdout, stderr: "" };
-  };
-  const realNow = Date.now;
-  Date.now = () => 1_000_000 + clock;
-  t.after(() => { Date.now = realNow; });
-  await assert.rejects(reconcileNationalStatePointers({ query: async () => origins, env, slots, launch, deadlineMs: 1_001_000 }), /^Error: PASS_TIME_BUDGET:/);
-  assert.deepEqual(started, ["state-retirement:prepare", "ballot-contests:NH:retirement:NH-v"], "the second unit for the state waits for the next pass");
-
-  started.length = 0; clock = 0;
-  await assert.rejects(reconcileNationalStatePointers({ query: async () => origins, env, slots, launch, deadlineMs: 999_000 }), /^Error: PASS_TIME_BUDGET:/);
-  assert.deepEqual(started, [], "past the deadline nothing starts");
 });

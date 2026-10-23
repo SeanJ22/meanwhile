@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { PUBLISH_NOW_RETRY_MS, PUBLISH_NOW_SCAN_SLICE_MS, publishNowRetryItemIds, readPublishNowRetryIds, readPublishNowWorkerTasks, readWorkerPublicationItems, savePublishNowProgress } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_RETRY_MS, PUBLISH_NOW_SCAN_SLICE_MS, publishNowRetryItemIds, readPublishNowRetryIds, readPublicationAdmission, readWorkerPublicationItems, savePublishNowProgress } from "../lib/civic-data/publish-now.ts";
 import { readPassCursor } from "../lib/facts/db.ts";
 import type { FactDb } from "../lib/facts/publish.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -12,11 +12,11 @@ test("held inputs that cannot be read keep their future fallback even while its 
   const item = { id: "held-board", autonomousPlan: { publication: { contractId: "registry-runtime:AZ" as const }, contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" } },
     publicationOutcome: { workerResultId: "none", status: "HELD" as const, recovery: "WORKER" as const, at: NOW } };
   const minute = later(60_000);
-  assert.deepEqual(await readPublishNowWorkerTasks([item], async () => [], minute, null), [], "the hourly fallback is not due yet");
+  assert.deepEqual((await readPublicationAdmission([item], async () => [], minute, null)).publication, [], "the hourly fallback is not due yet");
   assert.deepEqual(publishNowRetryItemIds([item], [], null), [item.id], "advancing the window must retain the future retry");
   assert.deepEqual(publishNowRetryItemIds([item], [], { pagesAt: new Map(), bodyPagesAt: new Map(), nationalAt: null, registryAt: null, routesAt: null }), [],
     "known unchanged inputs wait for changed source evidence");
-  assert.deepEqual((await readPublishNowWorkerTasks([item], async () => [], later(3_600_000), null)).flatMap(task => task.ownerInvocation?.workItemIds ?? []), [item.id]);
+  assert.deepEqual(((await readPublicationAdmission([item], async () => [], later(3_600_000), null)).publication).flatMap(task => task.ownerInvocation?.workItemIds ?? []), [item.id]);
 });
 
 test("a stuck item retries across restart without pinning the publication window or rereading unrelated old work", async () => {

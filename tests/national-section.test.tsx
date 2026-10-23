@@ -17,11 +17,11 @@ const { readNationalCards } = await import("../lib/national/section.ts");
 const card = (id: string): NationalCard => ({ id, office: "Cabinet", title: `Secretary ${id}`, holder: `Holder ${id}`,
   sources: [{ what: "the department head", provenance: { sourceUrl: "https://www.whitehouse.gov/administration/cabinet/", sourceOrg: "whitehouse.gov", collectedAt: "2026-10-22", verifiedAt: null } }] });
 
-test("the link reads 'National government, coming soon' and goes to the National section", () => {
+test("the link reads 'National government' and goes to the National section", () => {
   const html = renderToStaticMarkup(<NationalLink />);
   assert.match(html, new RegExp(`href="${NATIONAL_PATH}"`));
   assert.ok(html.includes(NATIONAL_LINK_LABEL));
-  assert.equal(NATIONAL_LINK_LABEL, "National government, coming soon");
+  assert.equal(NATIONAL_LINK_LABEL, "National government");
 });
 
 test("with no verified national executive the National section says it is coming soon, with the sooner link, and lists no card", async () => {

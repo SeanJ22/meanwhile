@@ -350,6 +350,12 @@ export function assertRegisteredRuntimeContract(
     assertRuntimeAuthority({ capabilities: ["FEDERAL_PEOPLE_SPLIT"] }, env);
     return;
   }
+  // One admitted national Congress read publishes its registered place projections.
+  if (kind === "manual" && runtimeAuthorityEnvelope(env)?.contract === "congress-bulk-roster" &&
+      /^congress-bulk-roster:[A-Z]{2}$/.test(contractId)) {
+    assertRuntimeAuthority({ capabilities: ["MANUAL_CONTRACT"], contract: "congress-bulk-roster" }, env);
+    return;
+  }
   assertRuntimeAuthority({
     capabilities: [kind === "routine" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT"],
     contract: contractId,

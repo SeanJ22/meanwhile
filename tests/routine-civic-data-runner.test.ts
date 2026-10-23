@@ -89,6 +89,7 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
   const failures: unknown[] = [];
   const lines: string[] = [];
   const context = {
+    recordLaunchDecision: (task: { id: string }, action: string, reason: string, detail = reason) => lines.push(`RCD_${action} ${task.id}: ${detail}`),
     laneLastEndedMs: new Map(), unsettledSourceRuns: new Set<string>(),
     startedSourceChildren: new Set(), attempted: 1, notStarted: [] as string[],
     supervisorFailures: failures,
@@ -133,6 +134,7 @@ test("a single calendar child explicitly deferred before acquisition stays owed 
   const id = "meeting-partition:deferred-calendar";
   const failures: unknown[] = [], lines: string[] = [];
   const context = {
+    recordLaunchDecision: (task: { id: string }, action: string, reason: string, detail = reason) => lines.push(`RCD_${action} ${task.id}: ${detail}`),
     laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([id]), startedSourceChildren: new Set([id]),
     notStarted: [] as string[],
     routineDeferral, stateCalendarMemberResults, attempted: 1, supervisorFailures: failures,
@@ -161,7 +163,7 @@ test("a missing ballot file with no canonical state records an owed publication,
   const report: BallotPublicationResult = { kind: "BALLOT_PUBLICATION", state: "GU", inputHash: "a".repeat(64),
     at: "2026-10-21T08:00:00.000Z", status: "HELD", versionId: null, merged: [], skipped: [{ file: "gu.json", reason }], reason };
   let pointer: unknown = null;
-  const context = { laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([task.id]), startedSourceChildren: new Set([task.id]),
+  const context = { recordLaunchDecision: (task: { id: string }, action: string, reason: string, detail = reason) => lines.push(`RCD_${action} ${task.id}: ${detail}`), laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([task.id]), startedSourceChildren: new Set([task.id]),
     routineDeferral, childCrash, boundedExecutionFailure: () => null, supervisorFailures: failures, attempted: 1,
     parseStateBallotContractId, parseBallotPublicationResult, ballotPublicationHasNoInput,
     parseRoutineRunnerReceipt: () => { throw Error("source receipt check reached"); },
@@ -268,6 +270,7 @@ test("deferred Reader repairs retain completed records and account for every unf
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\nsettleReaderDomain", {
     routineDeferral, parseRoutineReaderRepairRecords, reconcileRoutineReaderRepairDomain,
+    recordLaunchDecision: () => {},
     readerReadbackReferences: references, supervisorFailures: failures, safeFailure: (value: string) => value,
     readerDomainExecutionFailure: () => ({ taskId: "domain", code: "CHILD_FAILED", detail: "reader failed" }),
     console: { log: () => {} },
@@ -342,6 +345,7 @@ test("a crashed source child is logged by name, leaves its work owed and does no
   const crashedTasks: { taskId: string; detail: string }[] = [];
   const id = "people-wikidata-people-ca";
   const context = {
+    recordLaunchDecision: (task: { id: string }, action: string, reason: string, detail = reason) => lines.push(`RCD_${action} ${task.id}: ${detail}`),
     laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([id]), startedSourceChildren: new Set([id]), attempted: 1,
     supervisorFailures: failures, crashedTasks,
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
@@ -1561,7 +1565,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
 
-  assert.match(runner, /for \(const \{ task \} of routineSerialLanesFirst\(ballotPublicationLaunchOrder\(placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of routinePassLaunchOrder\(routineSerialLanesFirst\(ballotPublicationLaunchOrder\(placeSourceLaunchOrder\(admitted\)\)\), admissionNowMs\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);

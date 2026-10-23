@@ -8,7 +8,7 @@ import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts"
 
 import { publishHeldElectionOffices, readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
 import { HELD_BALLOT_BATCH, workerPublicationTasks, type HeldInputs, type WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
-import { readPublishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
+import { readPublicationAdmission } from "../lib/civic-data/publish-now.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
@@ -116,7 +116,7 @@ test("a held ballot route is read again only when its saved pages or inputs chan
 });
 
 test("routes read in pages still share batches across pages", async () => {
-  const tasks = await readPublishNowWorkerTasks(sweep, async () => [], NEXT_HOUR, { ...unchanged, nationalAt: AFTER });
+  const tasks = (await readPublicationAdmission(sweep, async () => [], NEXT_HOUR, { ...unchanged, nationalAt: AFTER })).publication;
   assert.equal(tasks.length, Math.ceil(1809 / HELD_BALLOT_BATCH));
 });
 

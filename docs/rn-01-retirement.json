@@ -1,0 +1,934 @@
+{
+  "checkedAt": "2026-10-23T10:17:21.078784+00:00",
+  "mode": "production-readonly-prepare-merge-typed-reader-validation; no production writes",
+  "originalPointers": 9,
+  "stateUnits": 339,
+  "goodUnits": 339,
+  "failedUnits": 0,
+  "byState": [
+    {
+      "state": "AL",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 455,
+        "4": 0,
+        "5": 1,
+        "6": 80,
+        "7": 0,
+        "8": 25
+      },
+      "maxUnitElapsedMs": 1999.827854999996
+    },
+    {
+      "state": "AK",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 231,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 2,
+        "8": 7
+      },
+      "maxUnitElapsedMs": 1191.699679000012
+    },
+    {
+      "state": "AZ",
+      "expectedUnits": 7,
+      "goodUnits": 7,
+      "recordsByOrigin": {
+        "0": 638,
+        "1": 638,
+        "4": 184,
+        "5": 61,
+        "6": 346,
+        "7": 12,
+        "8": 1615
+      },
+      "maxUnitElapsedMs": 25676.101766000007
+    },
+    {
+      "state": "AR",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 453,
+        "4": 0,
+        "5": 1,
+        "6": 1,
+        "7": 0,
+        "8": 16
+      },
+      "maxUnitElapsedMs": 1661.3671310000063
+    },
+    {
+      "state": "CA",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 886,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 159
+      },
+      "maxUnitElapsedMs": 1671.7988069999992
+    },
+    {
+      "state": "CO",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 513,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 28
+      },
+      "maxUnitElapsedMs": 1693.0905429999984
+    },
+    {
+      "state": "CT",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 741,
+        "4": 0,
+        "5": 1,
+        "6": 1,
+        "7": 0,
+        "8": 19
+      },
+      "maxUnitElapsedMs": 1575.4026100000046
+    },
+    {
+      "state": "DE",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 207,
+        "4": 0,
+        "5": 1,
+        "6": 298,
+        "7": 5,
+        "8": 7
+      },
+      "maxUnitElapsedMs": 1322.4251890000014
+    },
+    {
+      "state": "DC",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 68,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 3
+      },
+      "maxUnitElapsedMs": 885.7584600000118
+    },
+    {
+      "state": "FL",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 883,
+        "4": 0,
+        "5": 1,
+        "6": 2,
+        "7": 0,
+        "8": 86
+      },
+      "maxUnitElapsedMs": 1642.8530730000057
+    },
+    {
+      "state": "GA",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 764,
+        "4": 0,
+        "5": 1,
+        "6": 133,
+        "7": 0,
+        "8": 45
+      },
+      "maxUnitElapsedMs": 1479.1594130000012
+    },
+    {
+      "state": "HI",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 292,
+        "4": 0,
+        "5": 1,
+        "6": 64,
+        "7": 0,
+        "8": 10
+      },
+      "maxUnitElapsedMs": 6360.759120000002
+    },
+    {
+      "state": "ID",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 1001,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 10
+      },
+      "maxUnitElapsedMs": 2369.570768000005
+    },
+    {
+      "state": "IL",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 426,
+        "4": 0,
+        "5": 1,
+        "6": 25,
+        "7": 0,
+        "8": 55
+      },
+      "maxUnitElapsedMs": 1482.5931160000036
+    },
+    {
+      "state": "IN",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 418,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 31
+      },
+      "maxUnitElapsedMs": 1169.450926000005
+    },
+    {
+      "state": "IA",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 387,
+        "4": 0,
+        "5": 1,
+        "6": 65,
+        "7": 0,
+        "8": 16
+      },
+      "maxUnitElapsedMs": 4280.632794000005
+    },
+    {
+      "state": "KS",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 611,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 16
+      },
+      "maxUnitElapsedMs": 5745.98393799999
+    },
+    {
+      "state": "KY",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 334,
+        "4": 0,
+        "5": 1,
+        "6": 1691,
+        "7": 0,
+        "8": 22
+      },
+      "maxUnitElapsedMs": 2588.550792000009
+    },
+    {
+      "state": "LA",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 72,
+        "4": 0,
+        "5": 1,
+        "6": 1,
+        "7": 0,
+        "8": 22
+      },
+      "maxUnitElapsedMs": 1062.2877390000067
+    },
+    {
+      "state": "ME",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 748,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 10
+      },
+      "maxUnitElapsedMs": 2356.8243590000056
+    },
+    {
+      "state": "MD",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 1058,
+        "4": 0,
+        "5": 1,
+        "6": 126,
+        "7": 0,
+        "8": 28
+      },
+      "maxUnitElapsedMs": 2936.53564300001
+    },
+    {
+      "state": "MA",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 545,
+        "4": 0,
+        "5": 1,
+        "6": 165,
+        "7": 0,
+        "8": 31
+      },
+      "maxUnitElapsedMs": 2160.7594709999976
+    },
+    {
+      "state": "MI",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 1049,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 43
+      },
+      "maxUnitElapsedMs": 2074.2003280000063
+    },
+    {
+      "state": "MN",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 1076,
+        "4": 0,
+        "5": 1,
+        "6": 1,
+        "7": 0,
+        "8": 28
+      },
+      "maxUnitElapsedMs": 1415.3298399999912
+    },
+    {
+      "state": "MS",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 250,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 16
+      },
+      "maxUnitElapsedMs": 950.3662000000186
+    },
+    {
+      "state": "MO",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 567,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 28
+      },
+      "maxUnitElapsedMs": 1241.0031319999835
+    },
+    {
+      "state": "MT",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 418,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 10
+      },
+      "maxUnitElapsedMs": 1367.0801079999947
+    },
+    {
+      "state": "NE",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 146,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 13
+      },
+      "maxUnitElapsedMs": 1040.2863319999888
+    },
+    {
+      "state": "NV",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 232,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 16
+      },
+      "maxUnitElapsedMs": 1234.2679580000113
+    },
+    {
+      "state": "NH",
+      "expectedUnits": 7,
+      "goodUnits": 7,
+      "recordsByOrigin": {
+        "0": 318,
+        "2": 319,
+        "4": 265,
+        "5": 22,
+        "6": 5,
+        "7": 5,
+        "8": 1681
+      },
+      "maxUnitElapsedMs": 2334.8691340000078
+    },
+    {
+      "state": "NJ",
+      "expectedUnits": 7,
+      "goodUnits": 7,
+      "recordsByOrigin": {
+        "0": 697,
+        "3": 697,
+        "4": 174,
+        "5": 18,
+        "6": 195,
+        "7": 4,
+        "8": 1955
+      },
+      "maxUnitElapsedMs": 2548.416997000022
+    },
+    {
+      "state": "NM",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 595,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 13
+      },
+      "maxUnitElapsedMs": 1316.4522130000114
+    },
+    {
+      "state": "NY",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 797,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 82
+      },
+      "maxUnitElapsedMs": 1712.6092209999915
+    },
+    {
+      "state": "NC",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 1566,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 46
+      },
+      "maxUnitElapsedMs": 2101.5133220000134
+    },
+    {
+      "state": "ND",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 1031,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 7
+      },
+      "maxUnitElapsedMs": 1710.3754830000107
+    },
+    {
+      "state": "OH",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 665,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 48
+      },
+      "maxUnitElapsedMs": 1865.3718270000245
+    },
+    {
+      "state": "OK",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 289,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 18
+      },
+      "maxUnitElapsedMs": 3798.3061529999977
+    },
+    {
+      "state": "OR",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 382,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 22
+      },
+      "maxUnitElapsedMs": 1180.8804300000047
+    },
+    {
+      "state": "PA",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 509,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 55
+      },
+      "maxUnitElapsedMs": 1690.9740040000033
+    },
+    {
+      "state": "RI",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 292,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 10
+      },
+      "maxUnitElapsedMs": 1069.5017890000017
+    },
+    {
+      "state": "SC",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 799,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 24
+      },
+      "maxUnitElapsedMs": 1359.2142160000221
+    },
+    {
+      "state": "SD",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 280,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 7
+      },
+      "maxUnitElapsedMs": 1141.0888660000055
+    },
+    {
+      "state": "TN",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 399,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 31
+      },
+      "maxUnitElapsedMs": 1346.8644809999969
+    },
+    {
+      "state": "TX",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 3910,
+        "4": 0,
+        "5": 1,
+        "6": 1,
+        "7": 0,
+        "8": 116
+      },
+      "maxUnitElapsedMs": 3390.0693290000054
+    },
+    {
+      "state": "UT",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 413,
+        "4": 0,
+        "5": 1,
+        "6": 1,
+        "7": 0,
+        "8": 16
+      },
+      "maxUnitElapsedMs": 2610.1284749999904
+    },
+    {
+      "state": "VT",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 511,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 7
+      },
+      "maxUnitElapsedMs": 3170.9963270000007
+    },
+    {
+      "state": "VA",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 1559,
+        "4": 0,
+        "5": 1,
+        "6": 1,
+        "7": 0,
+        "8": 37
+      },
+      "maxUnitElapsedMs": 2555.545644999991
+    },
+    {
+      "state": "WA",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 435,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 34
+      },
+      "maxUnitElapsedMs": 1424.5118609999918
+    },
+    {
+      "state": "WV",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 559,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 10
+      },
+      "maxUnitElapsedMs": 2397.748721000011
+    },
+    {
+      "state": "WI",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 521,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 28
+      },
+      "maxUnitElapsedMs": 2142.145560999983
+    },
+    {
+      "state": "WY",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 245,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 7
+      },
+      "maxUnitElapsedMs": 1176.7121460000053
+    },
+    {
+      "state": "PR",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 0,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 3
+      },
+      "maxUnitElapsedMs": 2767.7493280000053
+    },
+    {
+      "state": "VI",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 80,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 3
+      },
+      "maxUnitElapsedMs": 1028.7377319999941
+    },
+    {
+      "state": "AS",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 62,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 3
+      },
+      "maxUnitElapsedMs": 2132.2405619999918
+    },
+    {
+      "state": "GU",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 0,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 3
+      },
+      "maxUnitElapsedMs": 922.6768460000021
+    },
+    {
+      "state": "MP",
+      "expectedUnits": 6,
+      "goodUnits": 6,
+      "recordsByOrigin": {
+        "0": 93,
+        "4": 0,
+        "5": 1,
+        "6": 0,
+        "7": 0,
+        "8": 3
+      },
+      "maxUnitElapsedMs": 2039.1423670000077
+    }
+  ],
+  "origins": [
+    {
+      "index": 0,
+      "family": "ballot-contests",
+      "recordClass": "BALLOT_CANDIDACY",
+      "scope": "US:state-election-ballots",
+      "sourceVersion": "official-ballot-authorities:57a1e9c8bd4ef31c72af505bcd1f6880",
+      "sourceHash": "129c18ec075013200f7ffdcdb157eef52847350b1d62eb5d017ecf1e05845cb1",
+      "prepareMs": 38608.483395999996,
+      "fullSequentialReplayMs": 135933.72448,
+      "peakRssBytes": 411074560,
+      "goodUnits": 56,
+      "verifiers": [
+        "lib/civic-data/read-model.ts#readPromotedCivicData"
+      ]
+    },
+    {
+      "index": 1,
+      "family": "ballot-contests",
+      "recordClass": "BALLOT_CANDIDACY",
+      "scope": "US-AZ:2026-general:supported-ballot",
+      "sourceVersion": "az-election-authorities:trusted-lkg-reattested:69b0ac533b8b46e8029701bc1bf01e7c",
+      "sourceHash": "57bf9359219566115b5f87f683d2fdcb6236630603b14f2b4530a7971d86cdde",
+      "prepareMs": 12398.485759,
+      "fullSequentialReplayMs": 14793.251909999999,
+      "peakRssBytes": 321675264,
+      "goodUnits": 1,
+      "verifiers": [
+        "lib/civic-data/read-model.ts#readPromotedCivicData"
+      ]
+    },
+    {
+      "index": 2,
+      "family": "ballot-contests",
+      "recordClass": "BALLOT_CANDIDACY",
+      "scope": "US-NH:merrimack:2026-general",
+      "sourceVersion": "nh-election-authorities:trusted-lkg-reattested:be36ccf6eba3efead342ab06fe78784a",
+      "sourceHash": "5cb583d9d767a68b891c3ed1feabbb9756a26314e39ad00697e1e21aeb55b106",
+      "prepareMs": 10496.453635000002,
+      "fullSequentialReplayMs": 13002.162186000001,
+      "peakRssBytes": 289996800,
+      "goodUnits": 1,
+      "verifiers": [
+        "lib/civic-data/read-model.ts#readPromotedCivicData"
+      ]
+    },
+    {
+      "index": 3,
+      "family": "ballot-contests",
+      "recordClass": "BALLOT_FILING",
+      "scope": "US-NJ:county:morris:2026-general",
+      "sourceVersion": "cv-6b34ecf034982a30594c3aca512cb61a",
+      "sourceHash": "204873260035e0b0ff0b56860e24b5c326213afd5b0f41996751d39d1b85b50d",
+      "prepareMs": 12859.668407000001,
+      "fullSequentialReplayMs": 15109.832996000001,
+      "peakRssBytes": 299483136,
+      "goodUnits": 1,
+      "verifiers": [
+        "lib/civic-data/read-model.ts#readPromotedCivicData"
+      ]
+    },
+    {
+      "index": 4,
+      "family": "candidate-profiles",
+      "recordClass": "CANDIDATE_PROFILE",
+      "scope": "US-AZ+US-NH+US-NJ:2026-supported-candidates",
+      "sourceVersion": "candidate-primary-publications:trusted-lkg:ae9d4c17cc82ffd5adbc5002f259ea71",
+      "sourceHash": "16f7bb895abd6ed0d12d40e5795373efd21a97d2069daf8bfbd1c1a54230f4f7",
+      "prepareMs": 22136.787192999996,
+      "fullSequentialReplayMs": 77652.17084499999,
+      "peakRssBytes": 280055808,
+      "goodUnits": 56,
+      "verifiers": [
+        "lib/civic-data/read-model.ts#readPromotedCivicData"
+      ]
+    },
+    {
+      "index": 5,
+      "family": "candidate-corpus",
+      "recordClass": "CANDIDATE_PUBLICATION",
+      "scope": "US-AZ+US-NH+US-NJ:2026-supported-candidates",
+      "sourceVersion": "candidate-primary-publications:trusted-lkg:14c9b355ba991ed29b399055b6be4e79",
+      "sourceHash": "8952171e97341e37cee451a10ec7134c087cbf4be5ac28ce499d021edff1a402",
+      "prepareMs": 12522.96106,
+      "fullSequentialReplayMs": 55133.302743,
+      "peakRssBytes": 292143104,
+      "goodUnits": 56,
+      "verifiers": [
+        "lib/civic-data/read-model.ts#readPromotedCivicData"
+      ]
+    },
+    {
+      "index": 6,
+      "family": "voting-sites",
+      "recordClass": "VOTING_SITE",
+      "scope": "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions",
+      "sourceVersion": "cv-018510f253fab5e40b4728a5a72d6de5",
+      "sourceHash": "66603abc8d6b41ba104d45ebd4007288372d707b7e49021b977380d5c1a7a594",
+      "prepareMs": 19542.774684000004,
+      "fullSequentialReplayMs": 81572.15693600001,
+      "peakRssBytes": 345382912,
+      "goodUnits": 56,
+      "verifiers": [
+        "lib/civic-data/read-model.ts#readPromotedCivicData"
+      ]
+    },
+    {
+      "index": 7,
+      "family": "candidate-campaign-sites-derived",
+      "recordClass": "CURATED_READER_RECORD",
+      "scope": "US:candidate-campaign-sites-derived",
+      "sourceVersion": "cv-eb23c55ec3361d5a437d52178dbf3fc3",
+      "sourceHash": "a6f9604ff0dee7fb071e5a097794ec9752e10a351571750e55e33aa2fc39678c",
+      "prepareMs": 14049.642004,
+      "fullSequentialReplayMs": 56159.776803,
+      "peakRssBytes": 300490752,
+      "goodUnits": 56,
+      "verifiers": [
+        "lib/civic-data/read-model.ts#readPromotedCivicData"
+      ]
+    },
+    {
+      "index": 8,
+      "family": "registry-runtime",
+      "recordClass": "REGISTRY_RUNTIME_BINDING",
+      "scope": "US:reader-registry-runtime-bindings",
+      "sourceVersion": "cv-8f0c9e9120adbba93ef3584a727c6fc0",
+      "sourceHash": "38d5032877c5229af47fd8567f5472ff3bdbd71824ed0d6c1e65b217e82566a7",
+      "prepareMs": 99283.454688,
+      "fullSequentialReplayMs": 181872.276247,
+      "peakRssBytes": 345640960,
+      "goodUnits": 56,
+      "verifiers": [
+        "lib/civic-data/read-model.ts#readStateRegistryRuntimeProjection"
+      ]
+    }
+  ]
+}

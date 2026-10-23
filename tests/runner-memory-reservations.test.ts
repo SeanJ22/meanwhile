@@ -134,5 +134,5 @@ test("a state's calendar program is reserved from measured calendar reads, not t
 test("the runner admits its door-publication and federal-split children through host memory like every source child", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.ok(runner.indexOf("const routineMemorySlots = routineProcessSlots();") < runner.indexOf('"scripts/publish-meeting-doors.mts"'));
-  assert.equal((runner.match(/onStarting: command => acquireChildMemory\(command\), onSettled: run => releaseChildMemory\(run\.id\)/g) ?? []).length, 2);
+  assert.equal((runner.match(/onStarting: command => acquireChildMemory\(command(?:, \[\], deadlineMs)?\), onSettled: run => releaseChildMemory\(run\.id\)/g) ?? []).length, 2);
 });

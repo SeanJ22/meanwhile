@@ -11,7 +11,7 @@ export function readerFactDb(url: string | undefined = process.env.DATABASE_URL)
   installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   if (!neonConfig.webSocketConstructor) neonConfig.webSocketConstructor = globalThis.WebSocket;
   let held = pools.get(url);
-  if (!held) pools.set(url, held = new Pool({ connectionString: url, max: 4, allowExitOnIdle: true }));
+  if (!held) pools.set(url, held = new Pool({ connectionString: url, max: 4, allowExitOnIdle: true, connectionTimeoutMillis: 10_000, statement_timeout: 30_000, query_timeout: 31_000 }));
   const pool = held;
   return {
     query: (text, params = []) => withDatabaseQuery(text, async () => {

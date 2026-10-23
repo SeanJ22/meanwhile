@@ -28,7 +28,10 @@ test('store outage buffers the error and saves it on the next successful write',
   let down = true;
   const wrapped = { fieldManual: { ...repos.fieldManual,
     read: async (id: string) => { if (down) throw new Error('store unavailable'); return repos.fieldManual.read(id); },
-    readMany: async (ids: readonly string[]) => { if (down) throw new Error('store unavailable'); return repos.fieldManual.readMany(ids); } } };
+    readMany: async (ids: readonly string[]) => { if (down) throw new Error('store unavailable'); return repos.fieldManual.readMany(ids); },
+    readManyNarrowed: async (...args: Parameters<NonNullable<typeof repos.fieldManual.readManyNarrowed>>) => {
+      if (down) throw new Error('store unavailable'); return repos.fieldManual.readManyNarrowed!(...args);
+    } } };
   assert.equal((await writeFieldManual(wrapped, [entry], '2026-10-04T00:00:00Z')).error, 'store unavailable');
   down = false;
   await writeFieldManual(wrapped, [entry], '2026-10-04T00:01:00Z');

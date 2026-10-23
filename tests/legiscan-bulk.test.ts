@@ -3,7 +3,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { zip } from "../scripts/xlsx.mjs";
-import { normalizeSession,parseDatasetList,billScope,LEGISCAN_BULK_SCOPE,joinSponsor,type Dataset } from "../lib/sources/legiscan/bills.ts";
+import { normalizeSession,parseDatasetList,billScope,LEGISCAN_BULK_SCOPE,joinSponsor,stateOfDataset,type Dataset } from "../lib/sources/legiscan/bills.ts";
 import { bulkCandidate,publishBulkCandidate } from "../lib/sources/legiscan/publication.ts";
 import { readBulkProjection,readBillsForState,billsForPerson } from "../lib/sources/legiscan/reader.ts";
 import { refreshLegiscan } from "../scripts/legiscan-bulk.mts";
@@ -50,6 +50,33 @@ test("one national routine uses the publisher weekly clock and installs a keyed 
   assert.equal(feedDoorDrafts().find(row=>row.config?.contractId==="legiscan-bulk")?.config?.keyRef,"LEGISCAN_API_KEY");
   assert.equal(parseDatasetList({status:"OK",datasetlist:datasets}).length,2);
   assert.throws(()=>parseDatasetList({status:"OK",datasetlist:[]}),/LIST_INVALID/);
+  const national=parseDatasetList({status:"OK",datasetlist:[
+    {...datasets[0],state_id:51,session_id:2198,session_name:"26th Council"},
+    {...datasets[0],state_id:52,session_id:2199,session_name:"119th Congress"},
+  ]});
+  assert.deepEqual(national.map(stateOfDataset),["DC","US"]);
+  for(const [index,state] of ["DC","US"].entries()) {
+    const bill=JSON.parse(ak[0]);
+    Object.assign(bill.bill,{state,state_id:national[index].state_id,session_id:national[index].session_id,url:`https://legiscan.com/${state}/bill/HB1/2026`});
+    const session=normalizeSession(national[index],[JSON.stringify(bill)],at);
+    assert.equal(session.state,state);
+    assert.equal(session.bills[0].ocdId,state==="US"?"ocd-division/country:us":"ocd-division/country:us/state:dc");
+  }
+});
+test("bulk sponsors reuse the saved-profile identity join used by state votes",async()=>{
+  const native="ocd-person/11111111-1111-4111-8111-111111111111";
+  const holder={id:"plural:ak:11111111-1111-4111-8111-111111111111",personId:native,nativeIds:{"ocd-person":[native]},level:"STATE" as const,
+    profileUrls:["https://ballotpedia.org/Carl_Gatto"],
+    provenance:{sourceUrl:"https://example.gov/member/1",sourceOrg:"State legislature",collectedAt:at,verifiedAt:at}};
+  const input={...source(datasets[0],ak),people:[holder]};
+  const store=new MemoryRoutineDataStore(),published=await publishBulkCandidate(store,input,at);
+  assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
+  const read=await readBulkProjection(billScope(datasets[0].session_id),{store,now:at,bypassCache:true});
+  assert.equal(read.kind,"PROMOTED");
+  if(read.kind!=="PROMOTED"||read.value.kind!=="SESSION") return;
+  assert.equal(billsForPerson(read.value.bills,holder).length,2);
+  assert.equal(read.value.bills[0].sponsors[0].officeholderId,holder.id);
+  assert.equal(normalizeSession(datasets[0],ak,at,[holder,{...holder,id:"ambiguous",personId:"ocd-person/22222222-2222-4222-8222-222222222222",nativeIds:{}}]).counts.joined,0);
 });
 test("saved source bytes publish to state readers and Ask; a forged title cannot pass",async()=>{
   const store=new MemoryRoutineDataStore();
@@ -84,7 +111,7 @@ test("bulk refresh downloads archives once and unchanged hashes confirm success 
     assert.equal(op,"getDataset");
     const index=datasets.findIndex(row=>row.session_id===Number(url.searchParams.get("id"))),dataset=datasets[index];
     const archive=zip(nativeBodies[index].map((body,i)=>({name:`${dataset.session_id}/bill/${i}.json`,data:Buffer.from(body)})),"2026-10-12");
-    return Response.json({status:"OK",dataset:{...dataset,mime:"application/zip",zip:archive.toString("base64")}});
+    return Response.json({status:"OK",dataset:{...dataset,mime_type:"application/zip",zip:archive.toString("base64")}});
   };
   const options={key:"fixture-key",fetchImpl,now:()=>now,peopleForState:async()=>[person]};
   const first=await refreshLegiscan(store,AbortSignal.timeout(10000),options);
@@ -98,4 +125,20 @@ test("bulk refresh downloads archives once and unchanged hashes confirm success 
   const failed=await recordRegisteredSourceAcquisitionFailure({store,contractId:"legiscan-bulk",failure:sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE","LegiScan HTTP 403"),attemptedAt:later});
   assert.equal(failed.outcome.candidate.state,"SOURCE_BLOCKED");assert.equal(failed.outcome.promoted,null);
   assert.equal((await store.readPromotion("STATE_BILL",LEGISCAN_BULK_SCOPE))?.versionId,held?.versionId);
+});
+test("later publisher editions promote when the archive hash sorts before the held hash",async()=>{
+  const store=new MemoryRoutineDataStore();
+  for(const [i,dataset_hash] of ["ffffffffffffffffffffffffffffffff","00000000000000000000000000000000"].entries()) {
+    const now=i?later:at,dataset={...datasets[0],dataset_hash,dataset_date:i?"2013-01-06":"2012-12-30"};
+    const index=[(({access_key:_access,...row})=>row)(dataset)];
+    const marker=await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:index}),now,"getDatasetList"),datasets:[dataset]},now);
+    assert.ok(marker.outcome.promoted,JSON.stringify(marker.outcome.candidate.receipt));
+    const input=source(dataset,ak);input.capture.retrievedAt=now;
+    const published=await publishBulkCandidate(store,input,now);
+    assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
+    assert.equal(published.candidate.temporal.version,dataset.dataset_date);
+  }
+  const read=await readBulkProjection(billScope(datasets[0].session_id),{store,now:later,bypassCache:true});
+  assert.equal(read.kind,"PROMOTED");
+  if(read.kind==="PROMOTED"&&read.value.kind==="SESSION") assert.equal(read.value.dataset.dataset_hash,"00000000000000000000000000000000");
 });

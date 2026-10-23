@@ -23,7 +23,7 @@ export interface NamedOffice extends OfficeLocation {
   readonly tier: OfficeTier;
   readonly role: OfficeRole;
   readonly seatLabel: string | null;
-  /** The directory's own coordinate, when it publishes one. */
+  /** The published directory coordinate or saved Census point for this exact public address. */
   readonly point?: { readonly lat: number; readonly lng: number };
 }
 export interface OfficePin extends NamedOffice { readonly lat: number; readonly lng: number }
@@ -79,8 +79,11 @@ export function directoryOffices(owner: OfficeOwner, directory: MemberDirectory)
       officeKind: "DISTRICT", office, official: detail?.official ?? false,
       sourceUrl: detail?.sourceUrl ?? directory.source?.repoUrl ?? "", sourceOrg: source.sourceOrg, collectedAt: source.collectedAt });
     if (!location || WASHINGTON.test(location.address)) return [];
-    const point = office.lat !== null && office.lng !== null && Number.isFinite(office.lat) && Number.isFinite(office.lng)
-      && Math.abs(office.lat) <= 90 && Math.abs(office.lng) <= 180 ? { point: { lat: office.lat, lng: office.lng } } : {};
+    const coordinate = office.lat !== null && office.lng !== null && Number.isFinite(office.lat) && Number.isFinite(office.lng)
+      && Math.abs(office.lat) <= 90 && Math.abs(office.lng) <= 180 ? { lat: office.lat, lng: office.lng }
+      : office.geocodedPoint?.address === location.address ? office.geocodedPoint : null;
+    const point = coordinate && Number.isFinite(coordinate.lat) && Number.isFinite(coordinate.lng)
+      && Math.abs(coordinate.lat) <= 90 && Math.abs(coordinate.lng) <= 180 ? { point: { lat: coordinate.lat, lng: coordinate.lng } } : {};
     return [{ ...location, id: officeId(location), name: owner.holder.name, tier: owner.tier, role: owner.role, seatLabel: owner.seatLabel, ...point }];
   });
 }

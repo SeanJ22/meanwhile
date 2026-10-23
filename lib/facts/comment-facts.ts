@@ -21,8 +21,8 @@ export async function publishCommentFacts(db: FactDb & { readonly query: Query }
   readonly body: { readonly id: string; readonly name: string | null; readonly state: string | null; readonly parentId: string | null };
   readonly capture: WorkerPublicationCapture; readonly reading: CommentReading; readonly producedBy: string;
 }, clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
-  await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId });
-  const entity = (await readCheckEntity(db.query, input.body.id))!;
+  const bodyId = await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId });
+  const entity = (await readCheckEntity(db.query, bodyId))!;
   const copy = await db.transaction(query => saveCaptureCopy(query, input.capture));
   const provenance = captureProvenance(input.capture, entity.hosts);
   const out: PublishOutcome[] = [];

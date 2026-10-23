@@ -5,6 +5,7 @@ import { titleFor } from "@/lib/brand";
 import { readNationalCards } from "@/lib/national/section";
 
 export const metadata = { title: titleFor("National government") };
+export const dynamic = "force-dynamic";
 
 export default async function NationalPage() {
   const cards = await readNationalCards();

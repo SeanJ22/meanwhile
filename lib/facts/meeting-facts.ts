@@ -65,10 +65,11 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
 }, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
   const { meeting, capture } = input;
   const id = meetingEntityId(meeting.id);
-  const state = /\/(?:state|district|territory):([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null;
-  const owner = meeting.bodyId ?? meeting.ocdId;
+  let state = /\/(?:state|district|territory):([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null;
+  let owner = meeting.bodyId ?? meeting.ocdId;
   if (owner) {
-    await ensureEntity(db.query, { id: owner, kind: meeting.bodyId ? "body" : "place", name: meeting.bodyName, state, parentId: meeting.bodyId ? meeting.ocdId : null });
+    owner = await ensureEntity(db.query, { id: owner, kind: meeting.bodyId ? "body" : "place", name: meeting.bodyName, state, parentId: meeting.bodyId ? meeting.ocdId : null });
+    if (owner !== (meeting.bodyId ?? meeting.ocdId)) state = (await db.query("SELECT state FROM entity WHERE id = $1", [owner]))[0]?.state as string | null;
     await learnDoorChannel(db.query, owner, capture.evidence.canonicalUrl);
   }
   await ensureEntity(db.query, { id, kind: "meeting", name: meeting.bodyName, state, parentId: owner ?? null });

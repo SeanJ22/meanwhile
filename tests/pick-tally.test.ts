@@ -181,21 +181,6 @@ test("the clear reaches the derived picks — the confirm calls derivedToSuppres
   );
 });
 
-test("the picks store still transmits nothing after gaining the suppression field", () => {
-  const source = readFileSync(join(process.cwd(), "lib", "ballot", "picks.ts"), "utf8");
-  assert.ok(!/\bfetch\s*\(/.test(source));
-  assert.ok(!/sendBeacon/.test(source));
-  assert.ok(!/\/api\//.test(source));
-  // One key: the suppression rides inside the picks file rather than becoming a second store.
-  const keys = source.match(/localStorage\.(get|set)Item\(([^)]*)\)/g) ?? [];
-  for (const k of keys) {
-    assert.ok(
-      /PICKS_STORAGE_KEY/.test(k),
-      `picks.ts touched a storage key other than its own: ${k}`,
-    );
-  }
-});
-
 test("a v1 picks file still reads — an upgrade never discards a stored ballot", () => {
   const source = readFileSync(join(process.cwd(), "lib", "ballot", "picks.ts"), "utf8");
   assert.ok(

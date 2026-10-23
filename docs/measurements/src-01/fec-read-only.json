@@ -1,0 +1,135 @@
+{
+  "kind": "production-read-only-normalized-projection-replay",
+  "productionWrites": 0,
+  "scope": "AZ sample; national candidate source metadata retained; second-hop rows omitted from export",
+  "limitation": "No archived FEC HTTP body replay or live deployment claim. Future source checks are not fabricated; stored source observations retain their production dates.",
+  "inputs": {
+    "failedCandidate": "cv-5557822ce8f71240a9df9554d31a1a95",
+    "priorCandidate": "cv-e65b24eba8737733c2a1ea1bac7e5a7e",
+    "directoryVersion": "cv-172d8ec074c1b421b2f418c2175e2eb0",
+    "snapshotsSha256": "42e4b1e3a710e91224422cc86317c224496b05f08a30a66d7b7eccbaa83b6b87",
+    "rosterSha256": "b6bd9ff6de4ff135d4e95b937dfd87582a5b95319e120aaaf982367f82d845d9"
+  },
+  "upstream": "FEC current-election registrations and filed totals, plus exact native FEC IDs from the production Congressional directory",
+  "downstream": "fecFundingCandidate → registered routine publisher → readFundingSnapshot → fundingAnswerForTarget → FundingDisplay",
+  "originalFailureReproduced": "INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED",
+  "schedule": {
+    "cadenceDays": 7,
+    "tomorrowDue": false,
+    "nextScheduledDue": true,
+    "tomorrowReplayWasControlled": true
+  },
+  "runs": [
+    {
+      "at": "2026-10-23T09:00:00.000Z",
+      "state": "PROMOTED",
+      "version": "cv-b8da0543b22a5851a8105363a63226e7",
+      "confirmed": false,
+      "records": 92,
+      "removed": 0,
+      "readerReadback": "PASS",
+      "cards": [
+        {
+          "id": "S4AZ00139",
+          "personKey": "congress:G000574",
+          "receipts": 4345411.03,
+          "sourceDate": "2026-10-09",
+          "sentences": [
+            "This campaign has raised $4.3 million and spent $2.5 million in the 2025–26 election cycle.",
+            "It has $2.1 million on hand.",
+            "Individual contributions totaled $3.5 million.",
+            "$1,787,635.94 (51%) of individual money came from donors giving $200 or less in the cycle."
+          ],
+          "htmlSha256": "475b066daca2c70a2e6bab71cf7159a9dd3731678d0ad2ef97ee4bca2719522b"
+        },
+        {
+          "id": "S0AZ00350",
+          "personKey": "congress:K000377",
+          "receipts": 40775022.69,
+          "sourceDate": "2026-10-09",
+          "sentences": [
+            "This campaign has raised $41 million and spent $21 million in the 2025–26 election cycle.",
+            "It has $24 million on hand.",
+            "Individual contributions totaled $40 million.",
+            "$26,447,634.55 (65%) of individual money came from donors giving $200 or less in the cycle."
+          ],
+          "htmlSha256": "6d32fad1f6dc3ec7768297d71159343574223d184d09bb44572da8af1d318b9b"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-24T09:00:00.000Z",
+      "state": "PROMOTED",
+      "version": "cv-cdc63a7d154bba7ed2c10487367937f4",
+      "confirmed": false,
+      "records": 92,
+      "removed": 0,
+      "readerReadback": "PASS",
+      "cards": [
+        {
+          "id": "S4AZ00139",
+          "personKey": "congress:G000574",
+          "receipts": 4345411.03,
+          "sourceDate": "2026-10-09",
+          "sentences": [
+            "This campaign has raised $4.3 million and spent $2.5 million in the 2025–26 election cycle.",
+            "It has $2.1 million on hand.",
+            "Individual contributions totaled $3.5 million.",
+            "$1,787,635.94 (51%) of individual money came from donors giving $200 or less in the cycle."
+          ],
+          "htmlSha256": "475b066daca2c70a2e6bab71cf7159a9dd3731678d0ad2ef97ee4bca2719522b"
+        },
+        {
+          "id": "S0AZ00350",
+          "personKey": "congress:K000377",
+          "receipts": 40775022.69,
+          "sourceDate": "2026-10-09",
+          "sentences": [
+            "This campaign has raised $41 million and spent $21 million in the 2025–26 election cycle.",
+            "It has $24 million on hand.",
+            "Individual contributions totaled $40 million.",
+            "$26,447,634.55 (65%) of individual money came from donors giving $200 or less in the cycle."
+          ],
+          "htmlSha256": "6d32fad1f6dc3ec7768297d71159343574223d184d09bb44572da8af1d318b9b"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-30T09:00:00.000Z",
+      "state": "PROMOTED",
+      "version": "cv-cdc63a7d154bba7ed2c10487367937f4",
+      "confirmed": true,
+      "records": 92,
+      "removed": 0,
+      "readerReadback": "unchanged-version-confirmed",
+      "cards": [
+        {
+          "id": "S4AZ00139",
+          "personKey": "congress:G000574",
+          "receipts": 4345411.03,
+          "sourceDate": "2026-10-09",
+          "sentences": [
+            "This campaign has raised $4.3 million and spent $2.5 million in the 2025–26 election cycle.",
+            "It has $2.1 million on hand.",
+            "Individual contributions totaled $3.5 million.",
+            "$1,787,635.94 (51%) of individual money came from donors giving $200 or less in the cycle."
+          ],
+          "htmlSha256": "475b066daca2c70a2e6bab71cf7159a9dd3731678d0ad2ef97ee4bca2719522b"
+        },
+        {
+          "id": "S0AZ00350",
+          "personKey": "congress:K000377",
+          "receipts": 40775022.69,
+          "sourceDate": "2026-10-09",
+          "sentences": [
+            "This campaign has raised $41 million and spent $21 million in the 2025–26 election cycle.",
+            "It has $24 million on hand.",
+            "Individual contributions totaled $40 million.",
+            "$26,447,634.55 (65%) of individual money came from donors giving $200 or less in the cycle."
+          ],
+          "htmlSha256": "6d32fad1f6dc3ec7768297d71159343574223d184d09bb44572da8af1d318b9b"
+        }
+      ]
+    }
+  ]
+}

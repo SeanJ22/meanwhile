@@ -103,6 +103,14 @@ export class RecipeShapeError extends Error {}
 export function leavable(body: ResultBody, promised: ResultBody["shape"]): ResultBody {
   if (body.shape !== promised) throw new RecipeShapeError(`the recipe promised ${promised} and returned ${body.shape}`);
   const day = (v: unknown): string => { if (typeof v !== "string" || !DAY.test(v)) throw new RecipeShapeError("a day is not YYYY-MM-DD"); return v; };
+  if (body.shape === "picks") {
+    return { shape: "picks", rows: body.rows.map(r => {
+      if (!wholeNumber(r.value) || !wholeNumber(r.readers)) throw new RecipeShapeError("a pick count is not a whole number");
+      return { period: day(r.period), race: text(r.race, 200), candidate: text(r.candidate, 200),
+        zip: orNull(r.zip, v => { const zip = text(v, 5); if (!/^\d{5}$/.test(zip)) throw new RecipeShapeError("invalid ZIP"); return zip; }),
+        district: orNull(r.district, v => text(v, 200)), value: r.value, readers: r.readers };
+    }) };
+  }
   if (body.shape === "totals") {
     return { shape: "totals", rows: body.rows.map((r) => {
       const percent = orNull(r.percent, (v) => { if (typeof v !== "number" || !Number.isFinite(v) || v < 0 || v > 100) throw new RecipeShapeError("a percent is not 0 to 100"); return v; });

@@ -261,11 +261,12 @@ test("one run reads every link once, new links first and the shared notice page 
     );
   }
 
-  // Every sitting now holds its own link: the second run re-reads every
-  // distinct link once, nearest today first, and the notice page once for all
-  // eight sittings that share it.
+  // The immediate pass consumes the saved evidence while its check is fresh.
   requested.length = 0;
   await retrieveAgendas(meetings);
+  assert.equal(requested.length, 0, "fresh saved agendas were requested again");
+  // Once even the general twelve-hour clock is due, each link is read once.
+  await retrieveAgendas(meetings, agendaDocumentStore, Date.now() + 13 * 3_600_000);
   assert.equal(new Set(requested).size, requested.length, "one run read a link twice");
   assert.deepEqual(
     [...requested].sort(),

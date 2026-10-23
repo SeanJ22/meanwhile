@@ -15,8 +15,6 @@ export interface ReaderStateResponse {
   zipPlaces: Record<string, ZipDivisionEntry>;
   directory: DirectoryFile | null;
   memberDirectories?: readonly StateMemberDirectory[];
-  /** Census points for these public offices; directory-supplied coordinates remain distinct. */
-  officePoints?: Readonly<Record<string, import("../map/office-locator.ts").OfficePoint>>;
   boundaryUrl: string;
   /** A ZIP response covers its named divisions; other districts load when opened. */
   zip?: string;

@@ -14,8 +14,10 @@ import { derivedRequestedUrl } from "./derived-door.ts";
 import { statewidePageText, verifyStatewideOfficialPage } from "../sources/statewide/parse.ts";
 import { verifiedWhiteHouseOfficial, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
+import { withExecutiveCompleteness, executiveEvidenceReferences } from "../officials/national-executive.ts";
 import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 import { rosterChanges, type RosterChange } from "../officials/roster-changes.ts";
+import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 export {  readPeopleSourceProjection,  } from "./people-source-read.ts";
@@ -34,6 +36,7 @@ interface PublishPeopleSourceInput {
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
   readonly derivedInputs?: readonly DerivedInputRef[];
   readonly confirmUnchanged?: boolean;
+  readonly resolveOfficePoint?: OfficePointResolver;
 }
 type PeopleCandidateInput = Omit<PublishPeopleSourceInput,"store"|"vault"|"acquisitions"> & {
   readonly captures: readonly StatePeopleCapture[];
@@ -190,8 +193,10 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const carriedPrior = priorRoster ? { ...priorRoster, vacancies: (priorRoster.vacancies ?? []).filter(row=>!reread.has(row.sourceUrl)) } : null;
   let roster = mergePeopleSets([...(carriedPrior ? [carriedPrior] : []),incoming])!;
   if (national) {
+    roster = { ...roster, officeholders: roster.officeholders.map(withExecutiveCompleteness) };
     const referenced = new Set(roster.officeholders.flatMap(person=>[person.provenance,...Object.values(person.fieldSources ?? {})])
       .map(source=>`${source.sourceUrl}|${source.collectedAt}`));
+    for (const person of roster.officeholders) for (const key of executiveEvidenceReferences(person.executive)) referenced.add(key);
     const fresh = new Set(read.map(row=>`${row.finalUrl}|${row.retrievedAt}`));
     captures = captures.filter(row=>referenced.has(`${row.finalUrl}|${row.retrievedAt}`) || fresh.has(`${row.finalUrl}|${row.retrievedAt}`));
   }
@@ -212,6 +217,7 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   }
   const violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,verifyNationalCurrent:!national});
   if (national && !roster.officeholders.length) violations.push("NATIONAL_OFFICIAL_NONE_VERIFIED");
+  roster = await publishRosterOfficePoints(roster, held, input.resolveOfficePoint);
   const candidate = peopleSourceCandidate({...input,roster,captures,violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"

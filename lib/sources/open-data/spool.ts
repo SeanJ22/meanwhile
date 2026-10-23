@@ -26,7 +26,7 @@ export const OpenDataSpool={async create() {
       const key=JSON.stringify([row.state,partition]);
       if(!sinks.has(key))sinks.set(key,{partition,state:row.state,sink:await temporaryPartition()});
       const {sourceRows:_sourceRows,...metadata}=capture as OpenDataCapture;
-      const line=JSON.stringify({row,capture:metadata})+"\n",lines=pending.get(key)??[];
+      const line=JSON.stringify({row,capture:metadata}).replaceAll("\u2028","\\u2028").replaceAll("\u2029","\\u2029")+"\n",lines=pending.get(key)??[];
       lines.push(line);pending.set(key,lines);pendingBytes+=Buffer.byteLength(line);
       if(pendingBytes>=8*1024*1024)await flush();
     },

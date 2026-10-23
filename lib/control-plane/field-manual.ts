@@ -5,7 +5,7 @@ import { recordAttempts, type MethodAttempt } from "../method/fix-map-record.ts"
 import { methodPlaceOf } from "../method/method-places.ts";
 import { hereNote, mergePlaceResults, placeResultsOf, type MethodHere, type PlaceResult } from "./field-manual-places.ts";
 import { recordAttemptsKeepingHistory } from "./fix-history.ts";
-import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "./repository/types.ts";
+import { canonicalJson, projectRecord, ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted, type RecordProjection } from "./repository/types.ts";
 import { flushBankWriteFailures, recordBankWriteFailure } from "./bank-write-health.ts";
 import type { FieldManualSourceHint,FieldManualSourceScope } from "./field-manual-sources.ts";
 
@@ -434,7 +434,7 @@ export async function readFieldManualRows(repos: FieldManualRepos, query: FieldM
   }
 }
 
-async function sharedManualRequest<T>(kind:string,body:unknown,local:()=>Promise<T>):Promise<T> {
+export async function sharedManualRequest<T>(kind:string,body:unknown,local:()=>Promise<T>):Promise<T> {
   if (!process.env.WTP_WORKER_TOOLS_URL) return local();
   const response = await fetch(process.env.WTP_WORKER_TOOLS_URL, { method: "POST",
     headers: { "content-type": "application/json", authorization: process.env.WTP_WORKER_TOOLS_TOKEN ?? "" },
@@ -481,15 +481,26 @@ export function newFieldManualEntry(
 
 const MERGE_ATTEMPTS = 32;
 
-async function saveEntry(repos: FieldManualRepos, entry: FieldManualEntry, held: Persisted<FieldManualEntry> | null, now: string): Promise<void> {
+/** A newer observation replaces the payload, except for these method/parse unions. */
+export const MANUAL_SAVE_FIELDS = {
+  id: true, role: true, kind: true, title: true, summary: true, states: true, recordClasses: true,
+  platforms: true, ocdIds: true, bodyIds: true, portable: true, reach: true, foundBy: true,
+  outcome: true, placeResults: true, url: true, source: true, observedAt: true, tier: true,
+  payload: ["places", "doorEntryIds", "fieldNames"],
+} as const satisfies RecordProjection;
+
+// Remember identities, never page bodies. A revision check still observes every other writer.
+const savedInputs = new WeakMap<FieldManualRepos["fieldManual"], Map<string, { revision: number; hash: string }>>();
+const inputHash = (entry: FieldManualEntry) => createHash("sha256").update(canonicalJson(entry)).digest("hex");
+
+async function saveEntry(repos: FieldManualRepos, entry: FieldManualEntry, held: Persisted<FieldManualEntry> | null, now: string): Promise<Persisted<FieldManualEntry>> {
   let current = held;
   for (let attempt = 0; ; attempt += 1) {
     const next = mergeEntry(current?.value ?? null, entry);
-    if (current !== null && JSON.stringify(next) === JSON.stringify(current.value)) return;
+    if (current !== null && canonicalJson(next) === canonicalJson(current.value)) return current;
     try {
-      if (current === null) await repos.fieldManual.put(entry.id, next, now);
-      else await repos.fieldManual.compareAndSet(entry.id, current.revision, next, now);
-      return;
+      if (current === null) return (await repos.fieldManual.put(entry.id, next, now)).persisted;
+      return await repos.fieldManual.compareAndSet(entry.id, current.revision, next, now);
     } catch (error) {
       if (attempt + 1 >= MERGE_ATTEMPTS || !(error instanceof ConcurrentModification || error instanceof IdentityCollision)) throw error;
       await new Promise((resolve) => setTimeout(resolve, Math.random() * Math.min(attempt, 8) * 5));
@@ -500,12 +511,29 @@ async function saveEntry(repos: FieldManualRepos, entry: FieldManualEntry, held:
 
 export async function saveFieldManualEntries(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string): Promise<{ written: number; error?: string }> {
   const folded = foldEntries(entries);
-  const held = new Map((await repos.fieldManual.readMany(folded.map((e) => e.id))).map((row) => [row.id, row] as const));
+  const narrowed = repos.fieldManual.readManyNarrowed !== undefined;
+  const rows = narrowed ? await repos.fieldManual.readManyNarrowed!(folded.map(e => e.id), MANUAL_SAVE_FIELDS)
+    : await repos.fieldManual.readMany(folded.map(e => e.id));
+  const held = new Map(rows.map(row => [row.id, row as Persisted<FieldManualEntry>]));
+  let remembered = savedInputs.get(repos.fieldManual);
+  if (!remembered) savedInputs.set(repos.fieldManual, remembered = new Map());
   let written = 0;
   let error: string | undefined;
   for (const entry of folded) {
     try {
-      await saveEntry(repos, entry, held.get(entry.id) ?? null, now);
+      let current = held.get(entry.id) ?? null;
+      const hash = inputHash(entry), known = remembered.get(entry.id);
+      if (current && known?.revision === current.revision && known.hash === hash) { written += 1; continue; }
+      if (narrowed && current && ((entry.observedAt ?? "") < (current.value.observedAt ?? "") ||
+        canonicalJson(projectRecord(mergeEntry(current.value, entry), MANUAL_SAVE_FIELDS)) === canonicalJson(current.value))) {
+        // A stale observation keeps the full prior payload. An apparent no-op must compare it too.
+        current = await repos.fieldManual.read(entry.id);
+      }
+      const saved = await saveEntry(repos, entry, current, now);
+      if (canonicalJson(mergeEntry(saved.value, entry)) === canonicalJson(saved.value)) {
+        if (remembered.size >= 1024) remembered.delete(remembered.keys().next().value!);
+        remembered.set(entry.id, { revision: saved.revision, hash });
+      } else remembered.delete(entry.id);
       written += 1;
     } catch (failure) {
       error ??= failure instanceof Error ? failure.message : String(failure);

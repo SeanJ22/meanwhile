@@ -1,0 +1,40 @@
+{
+  "source": "sam-gov-entities",
+  "production": {
+    "projectId": "tiny-hill-13996172",
+    "branchId": "br-delicate-lab-ax02xuo5",
+    "role": "readonly",
+    "query": "select scope, state, count(*) as rows, max(retrieved_at) as latest from civic_data_candidates where source_id='sam-gov-entities' group by scope,state order by scope,state limit 25",
+    "result": [{ "scope": "sam-gov-entities:US", "state": "SOURCE_BLOCKED", "rows": 2, "latest": "2026-10-17T04:03:30.462Z" }],
+    "latestFailure": "PUBLISHER_UNAVAILABLE: DE: SyntaxError: Unexpected token 'E', \"Extract Fi\"... is not valid JSON",
+    "savedRecordsAvailable": false,
+    "credentialParameterInSavedFailure": false,
+    "credentialParameterInSavedEnvelope": false
+  },
+  "liveRead": {
+    "date": "2026-10-23",
+    "method": "GET",
+    "url": "https://api.sam.gov/entity-information/v3/entities?physicalAddressProvinceOrStateCode=CT&samRegistered=Yes&includeSections=entityRegistration%2CcoreData&format=json",
+    "status": 429,
+    "contentType": "application/json; charset=UTF-8",
+    "retryAfter": "Sat, 24 Oct 2026 00:00:00 GMT",
+    "body": {
+      "code": "900804",
+      "message": "Message throttled out",
+      "description": "You have exceeded your quota .You can access API after 2026-Oct-24 00:00:00+0000 UTC",
+      "nextAccessTime": "2026-Oct-24 00:00:00+0000 UTC"
+    }
+  },
+  "officialFormatReference": "https://open.gsa.gov/api/entity-api/",
+  "officialOpenApiReference": "https://open.gsa.gov/api/entity-api/v1/openapi.yaml",
+  "documentedDownloadOperations": {
+    "/entity-information/v3/download-entities": {
+      "GET": "getFileFromS3UsingGET",
+      "POST": "getFileFromS3UsingPOST",
+      "parameters": ["token", "api_key"]
+    }
+  },
+  "officialNoticeExample": "Extract File will be available for download with POST url: https://api.sam.gov/entity-information/v3/download-entities?token=< value > in some time. If you have provided an email id, you will get a notification email once file is ready for download. Requests for Larger Set of Data may take longer time to process.",
+  "downloadMethod": "The official notice declares POST. Acquisition and readiness polls honor POST or GET as declared by the notice; structured downloadURL responses without a declared verb retain GET. Both notice verbs have deterministic tests; the two-day reader-card replay uses the documented POST notice.",
+  "replayStatus": "BLOCKED: real SAM entity data has not been downloaded; deterministic notice/poll/privacy tests are not a production-data publication proof."
+}

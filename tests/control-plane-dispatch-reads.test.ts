@@ -90,7 +90,7 @@ test("archived publication work is selected when its result or saved body page c
   const before = "2026-10-01T11:00:00.000Z", after = "2026-10-01T13:00:00.000Z";
   await f.db.query("UPDATE cp_work_items_archive SET value = value || $2::jsonb, changed_at = $3 WHERE id = $1", [opened.workItem.id,
     JSON.stringify({ subject: "place", autonomousPlan: { publication: { contractId: "ballot-navigation", bodyId: "body" }, contract: { recordClass: "VOTER_ACCESS_ROUTE" } } }), before]);
-  const read = (sharedInputsMoved = false) => readWorkerPublicationItems(f.sql.query, ["ballot-navigation"], { at: NOW, sharedInputsMoved });
+  const read = async (sharedInputsMoved = false) => (await readWorkerPublicationItems(f.sql.query, ["ballot-navigation"], { at: NOW, until: "2026-10-01T14:00:00.000Z", sharedInputsMoved })).items;
   const ids = async (shared = false) => (await read(shared)).map(row => row.id);
   assert.deepEqual(await ids(), []);
   assert.deepEqual(await ids(true), [opened.workItem.id]);
@@ -110,8 +110,10 @@ test("archived publication work is selected when its result or saved body page c
   await f.db.exec(CHANGED_AT_TOUCH_FUNCTION_DDL);
   await f.db.exec(changedAtColumnDdl("cp_work_items_archive"));
   const held = await f.repos.workItems.mustRead(opened.workItem.id);
+  const touched = Date.now();
   await f.repos.workItems.compareAndSet(held.id, held.revision, { ...held.value, why: "publication updated after archival" }, NOW);
-  assert.deepEqual(await ids(), [opened.workItem.id]);
+  const window = { at: new Date(touched - 60_000).toISOString(), until: new Date(Date.now() + 60_000).toISOString(), sharedInputsMoved: false };
+  assert.deepEqual((await readWorkerPublicationItems(f.sql.query, ["ballot-navigation"], window)).items.map(row => row.id), [opened.workItem.id]);
 });
 
 test("dispatch reuses one open snapshot; settled and abandoned results do not point-read each row", async () => {

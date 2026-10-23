@@ -1,0 +1,215 @@
+{
+  "production": {
+    "project": "tiny-hill-13996172",
+    "branch": "br-delicate-lab-ax02xuo5",
+    "role": "readonly",
+    "registration": "cv-4af917f7494b60d6c16439818bf0151d",
+    "governments": 821,
+    "stateDivisionHeldAsCountyParent": "ocd-division/country:us/state:ct"
+  },
+  "sources": [
+    {
+      "source": "epa-echo",
+      "rawHash": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+      "rawBytes": 445388175,
+      "scope": "3 captured CT export rows",
+      "tomorrowDue": false,
+      "nextAt": "2026-10-30T08:15:42.992Z",
+      "nextDue": true,
+      "results": [
+        {
+          "at": "2026-10-23T08:15:42.992Z",
+          "promoted": true,
+          "confirmed": false,
+          "readerStatus": "PASS",
+          "rows": 1,
+          "readerEvidence": {
+            "kind": "REGULATED_FACILITY",
+            "id": "epa-echo:110008308679",
+            "text": "NEWMET KREBSOGE INC, ZIP 06786. No Violation Identified Inspections in the past five years: 0; last inspection: 1993-03-23T00:00:00.000Z; quarters with noncompliance: 0; significant noncompliance: N. Program compliance: air not supplied; water not supplied; hazardous waste No Violation Identified; drinking water not supplied. Published 2026-10-18; updated 2026-10-18; checked 2026-10-23.",
+            "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110008308679",
+            "sourceOrg": "U.S. Environmental Protection Agency",
+            "retrievedAt": "2026-10-23T08:15:05.454Z",
+            "occurredAt": "2026-10-18T06:44:46.000Z",
+            "openData": {
+              "nativeIds": {
+                "county_fips": "09005",
+                "rcra_ids": "CTD983895715",
+                "registry_id": "110008308679",
+                "state_fips": "09"
+              },
+              "official": true,
+              "publishedAt": "2026-10-18T06:44:46.000Z",
+              "updatedAt": "2026-10-18T06:44:46.000Z",
+              "zip": "06786"
+            }
+          },
+          "rendered": {
+            "component": "components/map/open-data.tsx#OpenDataFacts",
+            "file": "docs/measurements/src-01/src01-epa-echo-2026-10-23-reader.html",
+            "bytes": 627,
+            "sourceLinks": [
+              "https://echo.epa.gov/detailed-facility-report?fid=110008308679"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-30T08:15:42.992Z",
+          "promoted": true,
+          "confirmed": true,
+          "readerStatus": "PASS",
+          "rows": 1,
+          "readerEvidence": {
+            "kind": "REGULATED_FACILITY",
+            "id": "epa-echo:110008308679",
+            "text": "NEWMET KREBSOGE INC, ZIP 06786. No Violation Identified Inspections in the past five years: 0; last inspection: 1993-03-23T00:00:00.000Z; quarters with noncompliance: 0; significant noncompliance: N. Program compliance: air not supplied; water not supplied; hazardous waste No Violation Identified; drinking water not supplied. Published 2026-10-18; updated 2026-10-18; checked 2026-10-23.",
+            "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110008308679",
+            "sourceOrg": "U.S. Environmental Protection Agency",
+            "retrievedAt": "2026-10-23T08:15:05.454Z",
+            "occurredAt": "2026-10-18T06:44:46.000Z",
+            "openData": {
+              "nativeIds": {
+                "county_fips": "09005",
+                "rcra_ids": "CTD983895715",
+                "registry_id": "110008308679",
+                "state_fips": "09"
+              },
+              "official": true,
+              "publishedAt": "2026-10-18T06:44:46.000Z",
+              "updatedAt": "2026-10-18T06:44:46.000Z",
+              "zip": "06786"
+            }
+          },
+          "rendered": {
+            "component": "components/map/open-data.tsx#OpenDataFacts",
+            "file": "docs/measurements/src-01/src01-epa-echo-2026-10-30-reader.html",
+            "bytes": 627,
+            "sourceLinks": [
+              "https://echo.epa.gov/detailed-facility-report?fid=110008308679"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source": "socrata-discovery",
+      "rawHash": "6bef10a69da408ab3b6fe3c2842f84fc1698c2ee7dd77b5fc1db38395ce945ac",
+      "rawBytes": 16250,
+      "scope": "3 data.ct.gov catalog rows",
+      "tomorrowDue": true,
+      "nextAt": "2026-10-24T08:15:42.992Z",
+      "nextDue": true,
+      "results": [
+        {
+          "at": "2026-10-23T08:15:42.992Z",
+          "promoted": true,
+          "confirmed": false,
+          "readerStatus": "PASS",
+          "publications": 2,
+          "rows": 3,
+          "readerEvidence": {
+            "kind": "DATASET",
+            "id": "socrata:data.ct.gov:q5as-kyim",
+            "text": "COVID-19 Report. The CT DPH COVID-19 Report. Published 2020-08-26; updated 2024-07-31; checked 2026-10-23. Dataset metadata: {\"category\":\"Health and Human Services\",\"columns\":[],\"createdAt\":\"2020-08-26T16:42:44.000Z\",\"metadata\":[{\"key\":\"Agency_Agency\",\"value\":\"Department of Public Health\"},{\"key\":\"Details_Geographic-Unit\",\"value\":\"State\"},{\"key\":\"Details_Update-Frequency\",\"value\":\"Not updated (historical data)\"}],\"metadataUpdatedAt\":\"2023-06-30T17:07:32.000Z\",\"tags\":[\"ct\",\"covid-19\",\"ct dph\"],\"type\":\"story\"}. This is the publisher's catalog entry; values in dataset rows have not been extracted by this catalog record.",
+            "sourceUrl": "https://data.ct.gov/stories/s/q5as-kyim",
+            "sourceOrg": "CT Department of Public Health",
+            "retrievedAt": "2026-10-23T08:14:22.881Z",
+            "occurredAt": "2020-08-26T16:47:16.000Z",
+            "openData": {
+              "nativeIds": {
+                "domain": "data.ct.gov",
+                "socrata_id": "q5as-kyim"
+              },
+              "official": true,
+              "publishedAt": "2020-08-26T16:47:16.000Z",
+              "updatedAt": "2024-07-31T15:14:53.968Z",
+              "zip": null
+            }
+          },
+          "rendered": {
+            "component": "components/map/open-data.tsx#OpenDataFacts",
+            "file": "docs/measurements/src-01/src01-socrata-discovery-2026-10-23-reader.html",
+            "bytes": 5101,
+            "sourceLinks": [
+              "https://data.ct.gov/stories/s/q5as-kyim",
+              "https://data.ct.gov/stories/s/wa3g-tfvc",
+              "https://data.ct.gov/d/28fr-iqnx"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-24T08:15:42.992Z",
+          "promoted": true,
+          "confirmed": false,
+          "readerStatus": "PASS",
+          "publications": 2,
+          "rows": 3,
+          "readerEvidence": {
+            "kind": "DATASET",
+            "id": "socrata:data.ct.gov:q5as-kyim",
+            "text": "COVID-19 Report. The CT DPH COVID-19 Report. Published 2020-08-26; updated 2024-07-31; checked 2026-10-23. Dataset metadata: {\"category\":\"Health and Human Services\",\"columns\":[],\"createdAt\":\"2020-08-26T16:42:44.000Z\",\"metadata\":[{\"key\":\"Agency_Agency\",\"value\":\"Department of Public Health\"},{\"key\":\"Details_Geographic-Unit\",\"value\":\"State\"},{\"key\":\"Details_Update-Frequency\",\"value\":\"Not updated (historical data)\"}],\"metadataUpdatedAt\":\"2023-06-30T17:07:32.000Z\",\"tags\":[\"ct\",\"covid-19\",\"ct dph\"],\"type\":\"story\"}. This is the publisher's catalog entry; values in dataset rows have not been extracted by this catalog record.",
+            "sourceUrl": "https://data.ct.gov/stories/s/q5as-kyim",
+            "sourceOrg": "CT Department of Public Health",
+            "retrievedAt": "2026-10-23T08:14:22.881Z",
+            "occurredAt": "2020-08-26T16:47:16.000Z",
+            "openData": {
+              "nativeIds": {
+                "domain": "data.ct.gov",
+                "socrata_id": "q5as-kyim"
+              },
+              "official": true,
+              "publishedAt": "2020-08-26T16:47:16.000Z",
+              "updatedAt": "2024-07-31T15:14:53.968Z",
+              "zip": null
+            }
+          },
+          "rendered": {
+            "component": "components/map/open-data.tsx#OpenDataFacts",
+            "file": "docs/measurements/src-01/src01-socrata-discovery-2026-10-24-reader.html",
+            "bytes": 5101,
+            "sourceLinks": [
+              "https://data.ct.gov/stories/s/q5as-kyim",
+              "https://data.ct.gov/stories/s/wa3g-tfvc",
+              "https://data.ct.gov/d/28fr-iqnx"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "nationalCatalog": {
+    "catalogMs": 186114,
+    "completeSpoolMs": 203313,
+    "requests": 181,
+    "rows": 179938,
+    "bytes": 1031660859,
+    "partitions": 614,
+    "terminalPage": {
+      "url": "https://api.us.socrata.com/api/catalog/v1?limit=1000&scroll_id=zzan-2jsq",
+      "retrievedAt": "2026-10-23T08:30:28.087Z",
+      "rawHash": "a4d4d18acb59542fe7bf847b4815a61619085906449dced3315bb51b3f437591",
+      "sourceRows": [],
+      "sourceCheck": {
+        "requestedUrl": "https://api.us.socrata.com/api/catalog/v1?limit=1000&scroll_id=zzan-2jsq",
+        "finalUrl": "https://api.us.socrata.com/api/catalog/v1?limit=1000&scroll_id=zzan-2jsq",
+        "httpStatus": 200,
+        "rawHash": "a4d4d18acb59542fe7bf847b4815a61619085906449dced3315bb51b3f437591",
+        "checkedAt": "2026-10-23T08:30:28.087Z"
+      }
+    },
+    "scope": "Full current catalog through socrataPages, normalizeSocrata and OpenDataSpool; acquisition injects direct public HTTP to avoid production cache writes. All partitions parsed back after the Unicode fix. Timings exclude remote vault publication and field-manual writes."
+  },
+  "productionRegistrationRead": {
+    "states": 56,
+    "allPromoted": true,
+    "totalMs": 122197
+  },
+  "readAndSpoolTotalMs": 325510,
+  "scope": "Production is read only. Source rows, source URLs and captured dates are real. Canonical publication and reader writes run in memory and a local evidence vault. Future scheduler checks use a controlled clock and held real source bytes; they do not claim a future HTTP observation.",
+  "firstFailure": {
+    "stage": "OpenDataSpool.partitions",
+    "source": "https://api.us.socrata.com/api/catalog/v1?ids=25ut-iey2",
+    "error": "SyntaxError: Unterminated string in JSON at position 1478",
+    "cause": "Literal U+2028 in the real dataset description split the JSONL record. Both Unicode separators are now escaped on disk and decode exactly."
+  }
+}

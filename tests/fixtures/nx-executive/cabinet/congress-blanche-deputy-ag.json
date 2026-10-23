@@ -1,0 +1,46 @@
+{
+    "nomination": {
+        "actions": {
+            "count": 11,
+            "url": "https://api.congress.gov/v3/nomination/119/12-5/actions?format=json"
+        },
+        "authorityDate": "2026-09-02",
+        "citation": "PN12-5",
+        "committees": {
+            "count": 1,
+            "url": "https://api.congress.gov/v3/nomination/119/12-5/committees?format=json"
+        },
+        "congress": 119,
+        "description": "Todd Blanche, of Florida, to be Deputy Attorney General, vice Lisa O. Monaco, resigned.",
+        "hearings": {
+            "count": 1,
+            "url": "https://api.congress.gov/v3/nomination/119/12-5/hearings?format=json"
+        },
+        "latestAction": {
+            "actionDate": "2025-03-05",
+            "text": "Confirmed by the Senate by Yea-Nay Vote. 52 - 46. Record Vote Number: 105."
+        },
+        "nominationType": {
+            "isCivilian": true
+        },
+        "nominees": [
+            {
+                "nomineeCount": 1,
+                "ordinal": 1,
+                "organization": "Department of Justice",
+                "positionTitle": "Deputy Attorney General",
+                "url": "https://api.congress.gov/v3/nomination/119/12-5/1?format=json"
+            }
+        ],
+        "number": 12,
+        "partNumber": "05",
+        "receivedDate": "2025-01-20",
+        "updateDate": "2026-09-03T11:00:22Z"
+    },
+    "request": {
+        "congress": "119",
+        "contentType": "application/json",
+        "format": "json",
+        "number": "12-5"
+    }
+}

@@ -19,7 +19,7 @@ export function bulkCandidate(input:{capture:BulkCapture;dataset?:Dataset;bodies
   return {id:`cv-${hash(`${scope}|${hash(payload)}`).slice(0,32)}`,sourceId,recordClass,scope,
     retrieval:{succeeded:true,requestedUrl:capture.requestedUrl,finalUrl:capture.finalUrl,httpStatus:capture.httpStatus,retrievedAt:capture.retrievedAt,rawHash:capture.rawHash},
     normalization:{succeeded:true,parserVersion:LEGISCAN_BULK_PARSER,schemaVersion:"legiscan-bills/1",normalizedHash:hash(readModel),normalizedPayloadHash:hash(payload),inputRecords:rows.length,outputRecords:rows.length,droppedRecords:0,missingRequiredFields:[]},
-    identities,temporal:{version:input.dataset?.dataset_hash??hash(datasets),expectedVersion:input.dataset?.dataset_hash??hash(datasets),sourceThrough:capture.retrievedAt,staleAtRetrieval:false},
+    identities,temporal:{version:input.dataset?.dataset_date??capture.retrievedAt,expectedVersion:input.dataset?.dataset_date??capture.retrievedAt,sourceThrough:capture.retrievedAt,staleAtRetrieval:false},
     semantics:{factKind:"LegiScan attributed bills, statuses, sponsors and text links",violations:[]},
     horizon:{kind:"BOUNDED",query:scope,returnedRecords:rows.length,declaredTotal:rows.length,paginationComplete:true,claimsComplete:true},
     absence:{claimsAbsence:false,basis:"NONE",exactSubject:null,exactHorizon:null},

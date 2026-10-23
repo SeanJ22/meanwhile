@@ -1,5 +1,5 @@
 import { jurisdictionFromOcdId,US_JURISDICTIONS } from "../coverage/states.ts";
-import { CAMPAIGN_PEOPLE_SQL } from "./state-people.ts";
+import { CAMPAIGN_PEOPLE_SQL, CAMPAIGN_MONEY_MISSING_REASONS } from "./state-people.ts";
 import { factReader } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
 import type { CampaignSourceCapture } from "./state-source-records.ts";
@@ -24,6 +24,7 @@ export interface CampaignFinancePlaceRead {
   readonly records: readonly CampaignMoneyCycle[];
   readonly count: number | null;
   readonly nextCursor: string | null;
+  readonly missingReason?: string;
 }
 interface Options { readonly query?: Query | null; readonly cursor?: string | null; readonly personId?: string }
 
@@ -65,7 +66,18 @@ export async function readCampaignFinanceForPlace(division: string, options: Opt
       AND EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=e.id AND f.field LIKE 'campaign-cycle:%' AND f.status='live')
       ORDER BY e.id LIMIT 2`,[division,state,cursor,options.personId??null,`US-${state}`,!!donorCursor]);
   const committee=committees[0];
-  if(!committee)return empty("NOT_HELD");
+  if(!committee){
+    if(!options.personId)return empty("NOT_HELD");
+    const [missing]=await query(`WITH published AS MATERIALIZED (${CAMPAIGN_PEOPLE_SQL})
+      SELECT b.detail FROM blank b JOIN entity e ON e.id=b.entity_id JOIN published p ON p.name=e.name
+        AND (p.id=e.id OR p.aliases ? e.id) AND b.field='campaign-money:'||p.seat
+      WHERE e.state=$2 AND b.reason='MONEY_NOT_YET_JOINED'
+        AND (p.id=$3 OR p.aliases ? $3 OR e.id=$3 OR EXISTS(SELECT 1 FROM entity_external_id x
+          WHERE x.entity_id=e.id AND x.scheme='campaign-person:'||$2 AND x.value=$3))
+        AND (p.division=$4 OR $4=$5) ORDER BY b.updated_at DESC LIMIT 1`,[`US-${state}`,state,options.personId,division,`ocd-division/country:us/${identity.prefix}:${identity.slug}`]);
+    const reason=missing?.detail;
+    return {...empty("NOT_HELD"),...(typeof reason==="string" && (Object.values(CAMPAIGN_MONEY_MISSING_REASONS) as readonly string[]).includes(reason)?{missingReason:reason}:{})};
+  }
   const rows=await query(`SELECT value,checked_at FROM fact WHERE entity_id=$1 AND field LIKE 'campaign-cycle:%' AND status='live'
     AND value#>>'{person,name}'=(SELECT name FROM entity WHERE id=$1) ORDER BY (value->>'cycle')::int DESC,field`,[committee.id]);
   const donors=await query(`SELECT field,value FROM fact WHERE entity_id=$1 AND field LIKE 'campaign-donor:%' AND status='live' AND field>$2

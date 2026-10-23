@@ -333,8 +333,7 @@ export async function artifactsForAttempt(
   workItemId: string,
   attemptId: string,
 ): Promise<readonly ArtifactRecord[]> {
-  const all = await repos.artifacts.read(workItemId);
-  return all.filter((record) => record.attemptId === attemptId);
+  return repos.artifacts.readWhere(workItemId, ["attemptId"], attemptId);
 }
 
 export interface ReclaimOutcome {

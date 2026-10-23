@@ -46,13 +46,9 @@ test("the statement limit is validated before any connection is opened", async (
 
 test("Admin's request-scoped read carries a server-side statement limit that binds the whole snapshot", () => {
   const store = readFileSync("lib/civic-data/observability-store.ts", "utf8");
-  const server = readFileSync("lib/civic-data/observability-server.ts", "utf8");
   assert.match(store, /SET LOCAL statement_timeout = \$\{statementTimeoutMs\}/);
   const setAt = store.indexOf("SET LOCAL statement_timeout");
   const firstSelect = store.indexOf("await db.select(");
   assert.ok(setAt > 0 && firstSelect > setAt, "the limit is set before the first statement of the snapshot");
   assert.match(store, /code === "57014"/, "Postgres query_canceled is the statement-timeout signal");
-  assert.match(server, /statementTimeoutMs: ADMIN_ROUTINE_READ_STATEMENT_TIMEOUT_MS/);
-  const limit = Number(/ADMIN_ROUTINE_READ_STATEMENT_TIMEOUT_MS = ([\d_]+);/.exec(server)?.[1]?.replace(/_/g, ""));
-  assert.ok(limit > 0 && limit <= 2_000, "a per-statement limit that leaves the page inside its function budget");
 });

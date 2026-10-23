@@ -102,6 +102,45 @@ test("real OpenFEMA sample publishes through registered fanout, native join and 
   if (checkpoint.kind === "PROMOTED") assert.equal("records" in checkpoint.value, false);
 });
 
+for (const source of ["openfema", "federal-audit-clearinghouse"] as const) test(`${source} initial paginated acquisition hashes the durable pending checkpoint and resumes next run`, async context => {
+  const store = new MemoryRoutineDataStore();
+  let clock = now;
+  context.mock.method(Date, "now", () => Date.parse(clock));
+  const body = source === "openfema" ? sourceBody
+    : JSON.stringify([{ report_id: "2025-AR-001", audit_year: 2025, auditee_uei: "GSA_MIGRATION", auditee_name: "County Government", auditee_state: "AR" }]);
+  const requests: URL[] = [];
+  const input = { source, store, states: ["AR"], identities: async () => identities, maxRounds: 1,
+    acquireOptions: { evidenceStore, dataGovApiKey: "test-key", fetch: async (value: string | URL | Request) => {
+      requests.push(new URL(String(value)));
+      if (source === "openfema") return Response.json({ ...JSON.parse(body), metadata: { count: 2 } });
+      return new Response(requests.at(-1)!.pathname === "/general" ? body : "[]", { headers: { "content-range": "0-0/1" } });
+    } } };
+  const first = await refreshFederalMoney({ ...input, now: () => clock });
+  assert.equal(first.outcome.candidate.state, "PROMOTED", first.outcome.candidate.failureDetail ?? "not published");
+  assert.equal(first.projection.counts.loaded, 1);
+  const checkpoint = await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", `${source}:AR`);
+  assert.ok(checkpoint?.payload.checkpoint.cursor);
+  assert.equal(Object.hasOwn(checkpoint!.payload.checkpoint.cursor!, "since"), false, "optional cursor fields are absent in the persisted projection");
+  clock = "2026-10-13T23:45:00.000Z";
+  const next = await refreshFederalMoney({ ...input, now: () => clock });
+  assert.equal(next.outcome.candidate.state, "PROMOTED", next.outcome.candidate.failureDetail ?? "not published");
+  assert.equal(next.projection.counts.loaded, 1);
+  assert.equal(requests[1].searchParams.get(source === "openfema" ? "$skip" : "report_id"), source === "openfema" ? "1" : "in.(2025-AR-001)");
+});
+
+test("FAC migrated reports retain native report identity without treating the legacy migration marker as a UEI", async () => {
+  const body = JSON.stringify([{ report_id: "2016-01-CENSUS-0000029516", audit_year: 2016, auditee_uei: "GSA_MIGRATION", auditee_duns: "123456789", auditee_ein: "123456789", auditee_name: "Audited entity", auditee_state: "DE" }]);
+  const capture = await saveFederalMoneyCapture({ url: "https://api.fac.gov/general?auditee_state=eq.DE", body, retrievedAt: now, publicationDate: null }, evidenceStore);
+  const facts = parseFederalMoney("federal-audit-clearinghouse", capture, "DE", body);
+  assert.equal(facts[0].uei, null);
+  assert.equal(facts[0].identifiers.uei, undefined);
+  assert.equal(facts[0].identifiers.reportId, "2016-01-CENSUS-0000029516");
+  assert.equal(facts[0].identifiers.duns, "123456789");
+  assert.equal(facts[0].identifiers.ein, "123456789");
+  const malformed = parseFederalMoney("federal-audit-clearinghouse", capture, "DE", body.replace("GSA_MIGRATION", "BROKEN"));
+  assert.equal(malformed[0].uei, "BROKEN", "unrecognized malformed source identities still reach validation");
+});
+
 test("same saved source is a successful unchanged check; outages preserve its state rows and save their actual door reason", async () => {
   const store = new MemoryRoutineDataStore(), repos = createMemoryRepositories();
   let checked = now;
@@ -596,9 +635,12 @@ test("500 FAC recipient partitions share one page capture read and the next refr
   const scopes = new Set<string>();
   const input = { source: "federal-audit-clearinghouse" as const, acquireOptions: { evidenceStore: counted }, states: ["AR"], maxRounds: 1,
     acquire: async () => page, identities: async () => ({ divisions: [], bodies: [], governments: [] }), now: () => now,
-    onPartition: async (change: FederalMoneyPartitionChange) => { scopes.add(federalMoneyPartitionScope("federal-audit-clearinghouse", "AR", change.projection.partition)); } };
+    onPartition: async (change: FederalMoneyPartitionChange) => {
+      scopes.add(federalMoneyPartitionScope("federal-audit-clearinghouse", "AR", change.projection.partition));
+      assert.ok(change.projection.records.every(row => row.bodyIds.length === 0 && row.divisionIds.includes("ocd-division/country:us/state:ar")));
+    } };
   const result = await refreshFederalMoney({ ...input, store: new MemoryRoutineDataStore() });
-  assert.deepEqual(result.projection.counts, { loaded: 500, joined: 0, unjoined: 500 });
+  assert.deepEqual(result.projection.counts, { loaded: 500, joined: 500, unjoined: 0 });
   assert.equal(scopes.size, 500);
   assert.ok(reads > 0 && reads <= 2, `a page's shared capture was read ${reads} times`);
   const initialReads = reads;

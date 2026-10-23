@@ -1,3 +1,5 @@
+import { MEETING_PARTITION_CONTRACTS, onMeetingPartitionsRefreshed, type MeetingPartitionContract } from "../../civic-data/meeting-partitions.ts";
+import { askGapSourceUrl } from "../scheduler/providers/ask-gaps.ts";
 import { join } from "node:path";
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
@@ -8,7 +10,7 @@ import { modelParseReasoner } from "./model-parser.ts";
 import { createModelAuditSampler } from "./audit-sampling.ts";
 import { workerVaultResolver } from "./vault.ts";
 import { enqueueWorkerTask, evidenceProjection, type FleetRuntime } from "./runtime.ts";
-import type { GeneralizedCivicExtractionContract, LegacyCivicExtractionContract, IndependentAuditContext, OfficialRouteExpectation } from "./types.ts";
+import type { GeneralizedCivicExtractionContract, IndependentAuditContext, OfficialRouteExpectation } from "./types.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { MethodKnowledge } from "../../method/knowledge.ts";
 import { computeRouteFloor } from "../preflight.ts";
@@ -17,70 +19,49 @@ import { workerTaskAdmission } from "./scheduling.ts";
 import type { WorkerEvidence } from "./types.ts";
 import { requiredOperationalJurisdictionRegistry } from "../../civic-data/operational-references.ts";
 import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
-import { registeredHeldMeetingContract } from "./held-meeting-contract.ts";
 import { authorizeInheritedHeldArtifact, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { readAuditHistory } from "./scoped-history.ts";
-
-const SUBJECT = "az:city:city-of-avondale";
-const API_HOST = "avondaleaz.api.civicclerk.com";
-const PORTAL_HOST = "avondaleaz.portal.civicclerk.com";
+import { hasOwedHeldDiggers, planHeldDiggers } from "./held-digger-plan.ts";
 
 export const HELD_AUDIT_CONTEXT_MAX_BYTES = 1_800_000;
 export const HELD_AUDIT_MAX_ARTIFACTS = 64;
 
-function publicUrl(value: string): URL | null {
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" && !url.username && !url.password && (!url.port || url.port === "443") ? url : null;
-  } catch { return null; }
+/** The saved-page lookup narrows to the addresses of registered body readers. */
+function heldEventRegistrations() {
+  return MEETING_PARTITION_CONTRACTS.flatMap(partition => {
+    if (partition.derivedFamily !== null || !partition.wiring) return [];
+    const config = partition.wiring.config;
+    const address = partition.meetingSource === "legistar" && config.slug
+      ? `https://webapi.legistar.com/v1/${config.slug}/events`
+      : partition.meetingSource === "civicclerk" && config.apiBase
+        ? `${config.apiBase.replace(/\/$/, "")}/v1/Events`
+        : askGapSourceUrl(partition.bodyId, [partition.id], Date.now());
+    if (!address) return [];
+    const url = new URL(address);
+    url.search = ""; url.hash = "";
+    return [{ partition, prefix: url.href }];
+  });
 }
 
-function relevantPublisherSurface(artifact: ArtifactRecord): boolean {
-  const url = publicUrl(artifact.canonicalUrl);
-  if (!url) return false;
-  if (url.hostname === PORTAL_HOST) return url.pathname !== "/robots.txt";
-  if (url.hostname === API_HOST) return /^\/v1\/(?:Event|Categor|Agenda|Minutes|File)/i.test(url.pathname) && url.pathname !== "/v1/Events";
-  if (url.hostname !== "avondaleaz.gov") return false;
-  return url.pathname.startsWith("/government/public-meetings/") ||
-    url.pathname.startsWith("/government/mayor-council/council-meeting-agendas/") ||
-    (url.pathname === "/wp-json/wp/v2/pages" && /meeting|agenda|minutes/i.test(url.searchParams.get("search") ?? "")) ||
-    (url.pathname === "/" && /meeting|agenda|minutes/i.test(url.searchParams.get("s") ?? ""));
+export const HELD_EVENT_URL_PREFIXES: readonly string[] = [];
+const heldEventByAddress = new Map<string, MeetingPartitionContract>();
+function refreshHeldEventAddresses(): void {
+  const registrations = heldEventRegistrations();
+  heldEventByAddress.clear();
+  for (const row of registrations) heldEventByAddress.set(row.prefix.toLowerCase(), row.partition);
+  (HELD_EVENT_URL_PREFIXES as string[]).splice(0, HELD_EVENT_URL_PREFIXES.length, ...new Set(registrations.map(row => row.prefix)));
 }
+onMeetingPartitionsRefreshed(refreshHeldEventAddresses);
+refreshHeldEventAddresses();
 
-function linksOfficialPortal(evidence: WorkerEvidence): boolean {
-  if (publicUrl(evidence.canonicalUrl)?.hostname !== "avondaleaz.gov") return false;
-  let text = evidence.text;
-  if (publicUrl(evidence.canonicalUrl)?.pathname === "/wp-json/wp/v2/pages") {
-    try {
-      const pages: unknown = JSON.parse(text);
-      if (!Array.isArray(pages)) return false;
-      text = pages.map(p => typeof p?.content?.rendered === "string" ? p.content.rendered : "").join("\n");
-    } catch { return false; }
-  }
-  return /(?:href|src)\s*=\s*["']https:\/\/avondaleaz\.portal\.civicclerk\.com(?::443)?(?:\/|["'])/i.test(text);
-}
-
-const HELD_EVENT_FIELDS = { artifactId: true, workItemId: true, partial: true, canonicalUrl: true } as const;
-type HeldEventCapture = Pick<ArtifactRecord, keyof typeof HELD_EVENT_FIELDS>;
-
-/** Every address heldEventContract can accept starts with one of these (case aside), so a store can narrow by them first. */
-export const HELD_EVENT_URL_PREFIXES: readonly string[] = ["https://webapi.legistar.com/v1/pima/events", `https://${API_HOST}/v1/Events`];
-
-export function heldEventContract(root: string, artifact: Pick<ArtifactRecord, "partial" | "canonicalUrl">): LegacyCivicExtractionContract | null {
-  if (!artifact.partial) {
-    const registered = registeredHeldMeetingContract(artifact.canonicalUrl);
-    if (registered) return registered;
-  }
-  const url = publicUrl(artifact.canonicalUrl);
-  if (!url || url.hostname !== API_HOST || url.pathname !== "/v1/Events" || artifact.partial) return null;
-  const registry = requiredOperationalJurisdictionRegistry("az");
-  const subject = registry.jurisdictions.find((j: { id: string }) => j.id === SUBJECT);
-  if (!subject || !subject.sourceIds.some((id: string) => id.startsWith("MEETINGS:"))) throw new Error("WORKER_CANONICAL_OBLIGATION_MISSING");
-  return { recordClass: "CIVICCLERK_EVENTS", schemaVersion: 1, subjectId: subject.id, sourceBodyId: null, sourceBodyName: null,
-    publisherSlug: "avondaleaz", requiredFields: ["id", "eventName", "startDateTime", "eventDate", "categoryId", "eventCategoryName", "isPublished"],
-    completenessScope: "All scalar Event rows in this immutable OData response, preserving each category. No claim to complete municipality history, subresources, or actual meeting occurrence.",
-    expectedSourceDate: null };
+export function heldEventContract(_root: string, artifact: Pick<ArtifactRecord, "partial" | "canonicalUrl">): MeetingPartitionContract | null {
+  if (artifact.partial) return null;
+  let url: URL;
+  try { url = new URL(artifact.canonicalUrl); } catch { return null; }
+  if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) return null;
+  url.search = ""; url.hash = "";
+  return heldEventByAddress.get(url.href.toLowerCase()) ?? null;
 }
 
 interface RegistrySubject {
@@ -320,110 +301,15 @@ export function standingFleetRuntime(input: { root: string;  method: MethodKnowl
     })() : {}),
     independentContext: async ({ artifactId, contract, auditScope, methodVersion, workItemId }): Promise<IndependentAuditContext> => {
       if (methodVersion !== method.version) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
-      if (contract.schemaVersion === 2) return generalizedIndependentContext({ ...input, method, readEvidence, artifactId, contract, auditScope, methodVersion, workItemId });
-      const history = await readAuditHistory(input.repos,{workItemId,subjectId:contract.subjectId,requiredArtifactIds:[artifactId]});
-      const primaryRow = history.artifacts.find(artifact => artifact.artifactId === artifactId);
-      const permanentContract = primaryRow && registeredHeldMeetingContract(primaryRow.canonicalUrl, contract.subjectId);
-      if (permanentContract) {
-        if (auditScope !== "CAPTURED_ARTIFACT") throw new Error("AUDIT_SOURCE_UNIVERSE_NOT_ESTABLISHED");
-        if (canonicalJson(permanentContract) !== canonicalJson(contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
-        const owner = (await input.repos.workItems.mustRead(primaryRow!.workItemId)).value;
-        if (owner.subject !== contract.subjectId) throw new Error("AUDIT_ARTIFACT_SUBJECT_MISMATCH");
-        const captures = history.artifacts.filter(artifact => artifact.artifactId === artifactId && artifact.workItemId === owner.id &&
-          !artifact.partial && registeredHeldMeetingContract(artifact.canonicalUrl, owner.subject));
-        if (captures.length > HELD_AUDIT_MAX_ARTIFACTS || captures.reduce((sum, artifact) => sum + artifact.byteLength, 0) > HELD_AUDIT_CONTEXT_MAX_BYTES) throw new Error("AUDIT_EVIDENCE_UNIVERSE_BOUND_EXCEEDED");
-        const evidence = await Promise.all(captures.map(async artifact => evidenceProjection(await readEvidence(artifact.artifactId))));
-        const routes: OfficialRouteExpectation[] = evidence.map(held => ({ routeId: held.methodRouteId, canonicalUrl: held.canonicalUrl,
-          applicable: true, status: "HELD", artifactIds: [held.artifactId],
-          reason: "Exact registered permanent meeting source/body capture, independently read from the evidence vault." }));
-        const floor = computeRouteFloor({ knowledge: method, jurisdiction: { state: "az", governmentType: "county", platform: "legistar", publisher: "webapi.legistar.com" },
-          fields: ["meeting", "agenda"], adapterRoutes: routes.map(route => ({ routeId: route.routeId, label: route.reason, target: route.canonicalUrl })) });
-        for (const route of floor.routes) if (!routes.some(held => held.routeId === route.routeId && held.canonicalUrl === route.target)) {
-          routes.push({ routeId: route.routeId, canonicalUrl: route.target, applicable: route.obligation === "REQUIRED", status: "OPEN", artifactIds: [],
-            reason: `Inherited method route remains open outside this captured-artifact audit: ${route.label}` });
-        }
-        return { subjectId: owner.subject, contract, methodVersion, scope: auditScope,
-          publisherSurfaces: [...new Set(captures.map(artifact => artifact.canonicalUrl))],
-          routes,
-          evidence, startedFrom: ["CANONICAL_SUBJECT_IDENTITY", "PUBLISHER_SOURCE_UNIVERSE", "METHOD_REGISTRY", "EVIDENCE_VAULT"] };
-      }
-      const artifacts = history.artifacts;
-      const primary = artifacts.find(a => a.artifactId === artifactId);
-      if (!primary) throw new Error("AUDIT_ARTIFACT_MISSING");
-      const canonical = heldEventContract(input.root, primary);
-      if (!canonical || canonicalJson(canonical) !== canonicalJson(contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
-      const subjectItems = new Set(history.items.filter(item => item.subject === canonical.subjectId).map(item => item.id));
-      if (!subjectItems.has(primary.workItemId)) throw new Error("AUDIT_ARTIFACT_SUBJECT_MISMATCH");
-      const sameSubject = artifacts.filter(a => subjectItems.has(a.workItemId));
-      const heldFeeds = sameSubject.filter(a => heldEventContract(input.root, a));
-      const heldSurfaces = sameSubject.filter(relevantPublisherSurface);
-      const relevant = new Map([...heldFeeds, ...heldSurfaces].map(a => [a.artifactId, a]));
-      if (relevant.size > HELD_AUDIT_MAX_ARTIFACTS) {
-        throw new Error(`AUDIT_EVIDENCE_UNIVERSE_BOUND_EXCEEDED: ${relevant.size} relevant held artifacts; maximum ${HELD_AUDIT_MAX_ARTIFACTS}; no inventory was truncated`);
-      }
-      const rawBytes = [...relevant.values()].reduce((sum, a) => sum + a.byteLength, 0);
-      if (rawBytes > HELD_AUDIT_CONTEXT_MAX_BYTES) {
-        throw new Error(`AUDIT_EVIDENCE_UNIVERSE_BOUND_EXCEEDED: ${rawBytes} relevant held bytes; maximum context ${HELD_AUDIT_CONTEXT_MAX_BYTES}; no evidence was truncated`);
-      }
-      const feed = evidenceProjection(await readEvidence(artifactId));
-      const feeds = [feed];
-      for (const other of [...new Map(heldFeeds.map(a => [a.artifactId, a])).values()]) {
-        if (other.artifactId !== feed.artifactId) feeds.push(evidenceProjection(await readEvidence(other.artifactId)));
-      }
-
-      const surfaceEvidence: WorkerEvidence[] = [];
-      for (const page of [...new Map(heldSurfaces.filter(a => !a.partial).map(a => [a.artifactId, a])).values()]) {
-        surfaceEvidence.push(evidenceProjection(await readEvidence(page.artifactId)));
-      }
-      const publisherPage = surfaceEvidence.find(e => linksOfficialPortal(e) && publicUrl(e.canonicalUrl)?.pathname === "/wp-json/wp/v2/pages") ??
-        surfaceEvidence.find(linksOfficialPortal);
-      if (!publisherPage) throw new Error("AUDIT_FIRST_PARTY_PUBLISHER_BINDING_MISSING");
-      const routes: OfficialRouteExpectation[] = [
-        { routeId: "CIVICCLERK_EVENTS_CAPTURE", canonicalUrl: feed.canonicalUrl, applicable: true, status: "HELD", artifactIds: [feed.artifactId],
-          reason: "Machine-held OData response, inventoried independently by artifact identity; captures only its stated query scope." },
-        { routeId: "OFFICIAL_PUBLIC_MEETINGS_PAGE", canonicalUrl: publisherPage.canonicalUrl, applicable: true, status: "HELD", artifactIds: [publisherPage.artifactId],
-          reason: "The city's held first-party WordPress page links its CivicClerk portal. This route is publisher evidence, not a producer summary." },
-        { routeId: "CIVICCLERK_PORTAL_DOCUMENTS", canonicalUrl: `https://${PORTAL_HOST}/`, applicable: true, status: "OPEN", artifactIds: [],
-          reason: "The official publisher's portal and per-event documents remain applicable; a captured Events page cannot discharge them." },
-      ];
-      for (const artifact of [...relevant.values()]) {
-        const existing = routes.find(r => r.canonicalUrl === artifact.canonicalUrl);
-        if (existing) {
-          if (!existing.artifactIds.includes(artifact.artifactId)) {
-            routes[routes.indexOf(existing)] = { ...existing, status: artifact.partial ? existing.status : "HELD",
-              artifactIds: [...existing.artifactIds, artifact.artifactId] };
-          }
-          continue;
-        }
-        routes.push({ routeId: `HELD_PUBLISHER_SURFACE:${fingerprint([artifact.canonicalUrl])}`, canonicalUrl: artifact.canonicalUrl,
-          applicable: true, status: artifact.partial ? "OPEN" : "HELD", artifactIds: [artifact.artifactId],
-          reason: artifact.partial ? "An incomplete capture remains open; it cannot supply a complete evidence reading."
-            : "A same-subject first-party representation is held and independently read. Holding bytes does not prove a successful route, an event, or a civic absence." });
-      }
-      const floor = computeRouteFloor({ knowledge: method,
-        jurisdiction: { state: "az", governmentType: "city", platform: "civicclerk", publisher: API_HOST },
-        fields: ["meeting", "agenda"], adapterRoutes: routes.filter(r => r.applicable).map(r => ({ routeId: r.routeId, label: r.reason, target: r.canonicalUrl })) });
-      for (const route of floor.routes) {
-        if (routes.some(r => r.routeId === route.routeId)) continue;
-
-        routes.push({ routeId: route.routeId, canonicalUrl: route.target,
-          applicable: route.obligation === "REQUIRED", status: "OPEN", artifactIds: [],
-          reason: `Current method projection: ${route.obligation}; ${route.proof}; ${route.label}. Applicability grade ${route.grade}; matched fields ${route.matchedFields.join(",")}; matched dimensions ${route.matchedDimensions.join(",") || "none"}. Target is the inherited publisher/tenant target, not a discovered endpoint. No inherited outcome is inferred from an unwalked route.` });
-      }
-      const context: IndependentAuditContext = { subjectId: canonical.subjectId, contract: canonical, publisherSurfaces: ["https://avondaleaz.gov/", `https://${API_HOST}/`, `https://${PORTAL_HOST}/`],
-        methodVersion, routes, evidence: feeds, surfaceEvidence, scope: auditScope,
-        startedFrom: ["CANONICAL_SUBJECT_IDENTITY", "PUBLISHER_SOURCE_UNIVERSE", "METHOD_REGISTRY", "EVIDENCE_VAULT"] };
-      const contextBytes = Buffer.byteLength(canonicalJson(context));
-      if (contextBytes > HELD_AUDIT_CONTEXT_MAX_BYTES) {
-        throw new Error(`AUDIT_EVIDENCE_UNIVERSE_BOUND_EXCEEDED: ${contextBytes} serialized context bytes; maximum ${HELD_AUDIT_CONTEXT_MAX_BYTES}; no evidence was truncated`);
-      }
-      return context;
+      if (contract.schemaVersion !== 2) throw new Error("GENERALIZED_EXTRACTION_CONTRACT_REQUIRED");
+      return generalizedIndependentContext({ ...input, method, readEvidence, artifactId, contract, auditScope, methodVersion, workItemId });
     },
   };
 }
 
-export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime, maximumArtifacts = Infinity, legacyOnly = false): Promise<void> {
+export async function advanceHeldWorkerFleet(_root: string, runtime: FleetRuntime, maximumArtifacts = Infinity, legacyOnly = false): Promise<void> {
   if (maximumArtifacts <= 0) return;
+  if (legacyOnly) { await planHeldDiggers(runtime); return; }
   const records = await runtime.repos.workerResults.readAll();
   const attempts = (await runtime.repos.attempts.list()).map(a => a.value);
   let admitted = 0;
@@ -433,13 +319,13 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
     ? record.result.artifacts.filter(artifact => artifact.completeness === "COMPLETE" && artifact.byteCount > 0).map(artifact => [`${record.workItemId}\u0000${artifact.artifactId}`, artifact] as const) : []));
   for (const artifact of [...await runtime.repos.artifacts.readAll()].sort((a, b) => a.recordedAt.localeCompare(b.recordedAt))) {
     const item = items.get(artifact.workItemId);
-    if (!item) continue;
-    if (item.autonomousPlan?.contract.schemaVersion === 2 && legacyOnly) continue;
+    if (!item || item.autonomousPlan?.contract.recordClass === "HELD_MEETING_DETAILS" ||
+        item.autonomousPlan?.contract.recordClass === "HELD_SUBJECT_DETAILS") continue;
     const acquired = successfulAcquisitions.get(`${item.id}\u0000${artifact.artifactId}`);
     const acquisitionMatches = acquired && acquired.contentHash === artifact.contentHash && acquired.canonicalUrl === artifact.canonicalUrl &&
       acquired.byteCount === artifact.byteLength && acquired.acquisitionAttemptId === artifact.attemptId;
     const generalized = acquisitionMatches ? await heldGeneralizedContract(artifact, item) : null;
-    const contract = generalized ?? heldEventContract(root, artifact);
+    const contract = generalized;
     if (!contract) continue;
     if (item.subject !== contract.subjectId) continue;
     const now = (runtime.now ?? (() => new Date().toISOString()))();
@@ -463,23 +349,7 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
   }
 }
 
-export async function legacyHeldWorkOwed(root: string, runtime: FleetRuntime): Promise<boolean> {
-  const candidates = (await runtime.repos.artifacts.readAllNarrowed(HELD_EVENT_FIELDS) as HeldEventCapture[])
-    .filter(artifact => !artifact.partial && heldEventContract(root, artifact) !== null);
-  if (candidates.length === 0) return false;
-  const [itemRows, records] = await Promise.all([runtime.repos.workItems.list(), runtime.repos.workerResults.readAll()]);
-  const items = new Map(itemRows.map(row => [row.id, row.value]));
-  for (const artifact of candidates) {
-    const item = items.get(artifact.workItemId);
-    if (!item || item.autonomousPlan?.contract.schemaVersion === 2 || item.subject !== heldEventContract(root, artifact)!.subjectId) continue;
-    const chain = records.filter(r => r.workItemId === item.id && r.completion.completedTask.workerTask?.artifactId === artifact.artifactId);
-    const parser = chain.find(r => r.result.role === "PARSER");
-    if (!parser) return true;
-    if (parser.result.verdict !== "EXTRACTED") continue;
-    const validator = chain.find(r => r.result.role === "VALIDATOR");
-    if (!validator) return true;
-    if (validator.result.verdict !== "PASS") continue;
-    if (!chain.some(r => r.result.role === "ADVERSARIAL_AUDITOR")) return true;
-  }
-  return false;
+/** Compatibility for the standing runner's existing signal; held work now uses native per-fact workers. */
+export async function legacyHeldWorkOwed(_root: string, runtime: FleetRuntime): Promise<boolean> {
+  return hasOwedHeldDiggers(runtime);
 }

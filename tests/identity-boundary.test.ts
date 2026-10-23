@@ -228,6 +228,8 @@ test("A-001 · every digest column is in a different digest space from every oth
       "reactions.reaction_key_hash",
       "reader_event_batches.batch_id",
       "reader_event_members.reader_hash",
+      // Its own prefix, "private-ballot:".
+      "saved_ballot_picks.secret_hash",
       "speak_your_mind.speak_key_hash",
     ],
     "a digest column appeared or moved — say which space it is in",

@@ -127,7 +127,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "everyday-routing": return "lib/routing/everyday-data-plane.ts#readEverydayRoutingProjection";
     default:
       if (contract.recordClass === "REGISTRATION") return "lib/registration/reader.ts#readRegistrationProjection";
-      if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") return "lib/outcomes/store.ts#readDoorOutcomeProjection";
+      if (contract.recordClass === "MEETING_OUTCOME" && ["door-outcomes", "door-minutes-outcomes"].includes(contract.sourceId)) return "lib/outcomes/store.ts#readDoorOutcomeProjection";
       return contract.recordClass === "MEETING"
         ? "lib/meetings/snapshot.ts#readMeetingPartitionProjection"
         : `unavailable:${contract.id}`;
@@ -446,7 +446,7 @@ export async function verifyRoutineReaderProjection(
           }
           return pass(verifierId, `The typed meetings Reader read partition ${contract.id} at canonical version ${options.expectedVersionId}.`);
         }
-        if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") {
+        if (contract.recordClass === "MEETING_OUTCOME" && ["door-outcomes", "door-minutes-outcomes"].includes(contract.sourceId)) {
                     // A door's own scope, read as the Reader reads it (its tenant and meeting-id namespace checked).
           const { readDoorOutcomeProjection } = await import("../outcomes/store.ts");
           return verifyExactVersion(verifierId, await readDoorOutcomeProjection(options.scope ?? contract.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${contract.id} door outcomes`);

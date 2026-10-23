@@ -101,7 +101,7 @@ export function DirectoryRecordsContent({ holderId, state, only, directory, fail
           <>
             <p className="mb-1.5 t-caption leading-relaxed text-voice">
               {details
-                ? <>Office contacts at the capitol and in the district, as Open States lists them.{details.some((d) => !d.official) ? " Not yet checked against the legislature’s own site." : ""}</>
+                ? <>Office contacts at the capitol and in the district.{details.some((d) => !d.official) ? " Some contacts have not yet been confirmed against the office’s own site." : ""}</>
                 : <>These are the member&apos;s offices in the district, not the one in Washington. They are usually the ones that answer.</>}
             </p>
             <ul>

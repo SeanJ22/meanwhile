@@ -7,11 +7,16 @@ import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
 import { planExpansion, type TerritoryIndex } from "../lib/control-plane/expansion/membership.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
-import { ModelTransportError, type ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { anthropicTransport, ModelTransportError, type ModelRequest } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { modelRequestWorstCaseUsd } from "../lib/control-plane/fleet-safety.ts";
 import type { InProcessSpendHoldStore } from "../lib/control-plane/expansion/spend-holds.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { routineTaskDue } from "../lib/civic-data/runner.ts";
+import { measureTranslationRoutineReceipt } from "../lib/translate/routine-receipt.ts";
+import { measureTranslationRoutineTask } from "../lib/translate/routine-contract.ts";
 import { MODELS } from "../lib/models.ts";
+import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts";
 import { armRoutineTranslationPaidWork, ROUTINE_TRANSLATION_FLEET_BUDGET_KEY } from "../lib/translate/routine-paid-work.ts";
 
 const now = "2026-10-20T18:00:00.000Z", ocdId = "ocd-division/country:us/state:oh";
@@ -143,4 +148,65 @@ test("concurrent routine children reserve the same remaining Admin model allowan
   } finally { release(); }
   await first;
   assert.equal(f.sent.length, 1, "the other child's hold prevented a second paid request");
+});
+
+
+test("the workspace API usage-limit response closes the lane with its exact reason and removes paid capacity", async () => {
+  const f = await fixture(), reason = "You have reached your specified workspace API usage limits. You will regain access on 2026-11-01 at 00:00 UTC.";
+  const conditions: string[] = [];
+  let calls = 0;
+  const gate = await armRoutineTranslationPaidWork({ ...f.input, onCondition: reason => conditions.push(reason), messages: anthropicTransport("test-key", async () => {
+    calls++;
+    return new Response(JSON.stringify({ type: "error", error: { type: "invalid_request_error", message: reason } }), { status: 400 });
+  }) });
+  await assert.rejects(gate.guardedTransportFor(subject)(request), /specified workspace API usage limits/);
+  assert.equal(gate.closed?.reason, reason);
+  assert.equal(gate.paidWorkerCapacity(2), 0);
+  assert.ok(conditions.includes(reason));
+  await assert.rejects(gate.guardedTransportFor(subject)(request), /specified workspace API usage limits/);
+  assert.equal(calls, 1);
+  const store = new MemoryRoutineDataStore(), task = measureTranslationRoutineTask("OH");
+  const result = await measureTranslationRoutineReceipt({ store, ballots: [], state: "OH", now, holdReason: gate.closed!.reason });
+  const held = await store.readCandidate(result.receipt.candidateId);
+  assert.match(held!.failureDetail!, /You have reached your specified workspace API usage limits/);
+  const clock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
+  assert.equal(routineTaskDue(task, clock, Date.parse(now) + 1), false, "the held state releases the pass slot until its normal retry");
+});
+
+
+test("an in-flight success cannot reopen the lane after another request hits the workspace limit", async () => {
+  const f = await fixture();
+  let began!: () => void, fail!: () => void, succeed!: () => void;
+  const both = new Promise<void>(resolve => { began = resolve; });
+  const failure = new Promise<void>(resolve => { fail = resolve; });
+  const success = new Promise<void>(resolve => { succeed = resolve; });
+  let calls = 0;
+  const reason = "You have reached your specified workspace API usage limits.";
+  const gate = await armRoutineTranslationPaidWork({ ...f.input, providerQueue: new ModelProviderQueue({ requestsPerMinute: 1000 }), messages: async request => {
+    if (++calls === 1) { await failure; throw new ModelTransportError(reason, 400); }
+    began(); await success; return f.input.messages(request);
+  } });
+  const first = gate.guardedTransportFor(subject)(request), second = gate.guardedTransportFor(subject)(request);
+  await both;
+  fail();
+  await assert.rejects(first, /specified workspace/);
+  assert.equal(gate.closed?.reason, reason);
+  assert.equal(gate.paidWorkerCapacity(), 0);
+  succeed();
+  await second;
+  assert.equal(gate.closed?.reason, reason);
+  assert.equal(gate.paidWorkerCapacity(), 0);
+});
+
+
+test("a request already waiting for provider capacity stops when the workspace limit closes the lane", async () => {
+  const f = await fixture();
+  let calls = 0;
+  const gate = await armRoutineTranslationPaidWork({ ...f.input, messages: async () => {
+    calls++; throw new ModelTransportError("You have reached your specified workspace API usage limits.", 400);
+  } });
+  const results = await Promise.allSettled([gate.guardedTransportFor(subject)(request), gate.guardedTransportFor(subject)(request)]);
+  assert.ok(results.every(result => result.status === "rejected"));
+  assert.equal(calls, 1);
+  assert.equal(gate.paidWorkerCapacity(), 0);
 });

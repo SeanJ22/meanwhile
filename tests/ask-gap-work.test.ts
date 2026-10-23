@@ -8,8 +8,8 @@ import { synthesisContextPayload } from "../lib/ask/synthesize.ts";
 import { agendaTopicFor, type AgendaDocumentLike } from "../lib/routing/agenda-search.ts";
 import type { PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
-import { MEETING_PARTITION_CONTRACTS, meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
-import { askGapNoteParts, parseAskGapObligationId } from "../lib/control-plane/ask-gap-id.ts";
+import { meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
+import { parseAskGapObligationId } from "../lib/control-plane/ask-gap-id.ts";
 import {
   askGapCarriers,
   askGapsProvider,
@@ -202,80 +202,74 @@ test("an unreadable outcome store is coded OUTCOMES_UNREADABLE, and OUTCOME_NOT_
   assert.equal(store?.recordClass, "MEETING_OUTCOME");
 });
 
-test("PIMA: a concluded sitting with no outcome read is the RUNNER's routine outcomes re-read, carried and never re-fetched", () => {
+test("held agendas and outcomes open the registered publisher without spending a model", () => {
   const pass = enumerate(holdings());
-  const unit = unitOf(pass, PIMA, "OUTCOME_NOT_READ");
-  assert.equal(unit.providerId, "ask-gaps");
-  assert.equal(unit.obligation.recordClass, "ask-gap");
-  assert.equal(unit.obligation.subjectId, PIMA);
-  assert.equal(unit.obligation.routeId, "OUTCOME_NOT_READ");
-  assert.deepEqual(parseAskGapObligationId(unit.obligation.id), { bodyId: PIMA, code: "OUTCOME_NOT_READ" });
-  assert.equal(unit.route.open.kind, "ROUTINE_READ");
-  if (unit.route.open.kind !== "ROUTINE_READ") return;
-  assert.deepEqual(unit.route.open.contractIds, ["pima-legistar-outcomes"], "the outcomes contract that follows the Board's partitions carries it");
-  assert.equal(unit.route.open.cadenceFailure, null, "its read is on cadence");
-  assert.match(unit.route.open.reason, /legistar:pima:1900/, "the evidence names the sitting");
-  assert.match(unit.route.open.reason, /outstanding since 2026-09-15T09:00:00-07:00/);
-  assert.match(unit.route.open.reason, /NEXT READ: owed by 2026-09-24T12:30:00.000Z, by pima-legistar-outcomes$/);
-  assert.equal(unit.route.executorClass, "DETERMINISTIC");
-  assert.equal(decideExecutor({ routeId: unit.route.routeId, descriptor: unit.route, maturity: () => "UNGRADUATED" }).kind, "DETERMINISTIC", "never a model, never the paid lane");
-  assert.equal(decideExecutor({ routeId: unit.route.routeId, descriptor: unit.route, maturity: () => "UNGRADUATED" }).disagreement, null);
-
-  const agenda = unitOf(pass, PIMA, "AGENDA_NOT_HELD");
-  assert.equal(agenda.route.open.kind, "ROUTINE_READ");
-  if (agenda.route.open.kind === "ROUTINE_READ") {
-    assert.deepEqual(agenda.route.open.contractIds, MEETING_PARTITION_CONTRACTS.filter((p) => p.bodyId === PIMA).map((p) => p.id).sort());
-    assert.match(agenda.route.open.reason, /2026-10-06 \(legistar:pima:1901; upcoming, no agenda link listed\)/);
+  for (const code of ["OUTCOME_NOT_READ", "AGENDA_NOT_HELD"] as const) {
+    const unit = unitOf(pass, PIMA, code);
+    assert.equal(unit.providerId, "ask-gaps");
+    assert.deepEqual(parseAskGapObligationId(unit.obligation.id), { bodyId: PIMA, code });
+    assert.equal(unit.route.open.kind, "HTTP_GET");
+    if (unit.route.open.kind !== "HTTP_GET") throw new Error("source read missing");
+    assert.match(unit.route.open.url, /pima/);
+    assert.match(unit.route.citation, /legistar:pima:/);
+    assert.equal(decideExecutor({ routeId: unit.route.routeId, descriptor: unit.route, maturity: () => "UNGRADUATED" }).kind, "DETERMINISTIC");
   }
-  assert.equal(agenda.obligation.readerImpactAt, "2026-10-06T09:00:00-07:00", "a reader is hurt when the sitting arrives with its agenda unheld");
-  assert.equal(pass.units.some((u) => u.obligation.id.endsWith(`${PIMA}#CALENDAR_STALE`)), false, "Pima's calendar was read two hours ago");
+  assert.equal(unitOf(pass, PIMA, "AGENDA_NOT_HELD").obligation.readerImpactAt, "2026-10-06T09:00:00-07:00");
 });
 
-test("MESA: a concluded sitting with no decision and no outcomes route is ENGINEERING's, awaiting a named adapter — and the RUNNER's once Mesa's minutes reader is registered", () => {
-  const pass = enumerate(holdings(), WITHOUT_MESA_MINUTES);
-  const unit = unitOf(pass, MESA, "OUTCOME_NOT_READ");
-  assert.equal(unit.route.open.kind, "NOT_MACHINE_EXECUTABLE");
-  assert.equal(unit.route.awaitingAdapter, "Mesa: minutes reader");
-  assert.equal(unit.route.executorClass, "DETERMINISTIC", "no model is spent standing in for an adapter");
-  if (unit.route.open.kind === "NOT_MACHINE_EXECUTABLE") {
-    assert.match(unit.route.open.reason, /No routine contract reads recorded outcomes/);
-    assert.match(unit.route.open.reason, /legistar-insite:mesa:2000/);
-  }
-
-  // Mesa's minutes-outcomes contract follows its partition, and that is all it takes: no edit to the provider.
-  assert.deepEqual(askGapCarriers(MESA, "MEETING_OUTCOME", { contracts: ROUTINE_SOURCE_CONTRACTS }), ["mesa-legistar-minutes-outcomes"]);
-  const after = unitOf(enumerate(holdings()), MESA, "OUTCOME_NOT_READ");
-  assert.equal(after.obligation.id, unit.obligation.id, "the same obligation, re-routed");
-  assert.equal(after.route.open.kind, "ROUTINE_READ");
-  if (after.route.open.kind === "ROUTINE_READ") assert.deepEqual(after.route.open.contractIds, ["mesa-legistar-minutes-outcomes"]);
+test("an existing publisher remains readable when an outcomes contract is missing", () => {
+  const unit = unitOf(enumerate(holdings(), WITHOUT_MESA_MINUTES), MESA, "OUTCOME_NOT_READ");
+  assert.equal(unit.route.open.kind, "HTTP_GET");
+  if (unit.route.open.kind !== "HTTP_GET") throw new Error("source read missing");
+  assert.equal(unit.route.open.url, "https://mesa.legistar.com/Calendar.aspx");
+  assert.match(unit.route.citation, /legistar-insite:mesa:2000/);
 });
 
-test("a stale calendar is the RUNNER's, and a carrying read behind the owner's cadence is a named CADENCE_BROKEN failure", async () => {
+test("a stale calendar sends a request and saves evidence; a failed source stays owed", async () => {
   const unit = unitOf(enumerate(holdings()), MESA, "CALENDAR_STALE");
-  assert.equal(unit.route.open.kind, "ROUTINE_READ");
-  if (unit.route.open.kind !== "ROUTINE_READ") return;
-  assert.deepEqual(unit.route.open.contractIds, [MESA_PARTITION]);
-  assert.match(unit.route.open.reason, /last read 2026-09-20T12:00:00.000Z, 96.0 hours before this reading/);
-  assert.equal(
-    unit.route.open.cadenceFailure,
-    `${MESA_PARTITION} last succeeded 2026-09-24T09:00:00.000Z, 3.0 hours before this reading, and the owner's cadence requires a read hourly while a sitting is within seven days; its last attempt, 2026-09-24T11:30:00.000Z, did not succeed.`,
-  );
-
-  // The executor sends nothing, closes the round DISCOVERED (still owed), and the note carries the named failure.
+  assert.equal(unit.route.open.kind, "HTTP_GET");
+  assert.match(unit.route.citation, /CADENCE_BROKEN/);
+  const urls: string[] = [];
+  const saved: string[] = [];
+  const body = "<html><title>Mesa City Council calendar</title>September 29, 2026</html>";
   const executor = routeExecutor({
     routeFor: () => unit.route,
-    openOne: async () => { throw new Error("a routine-carried route must never be fetched by this process"); },
+    openOne: async ({ url }) => {
+      urls.push(url);
+      return { status: 200, bytes: Buffer.byteLength(body), contentType: "text/html", body, durationMs: 1, transportError: null };
+    },
+    vault: async artifact => { saved.push(artifact.id); return { stored: true, where: "test vault", why: "saved" }; },
     now: () => NOW_ISO,
   });
   const row = scheduleObligation(unit.obligation, NOW);
   assert.ok(isScheduled(row));
-  const outcome = await executor({ obligation: row, routeTaskId: "rt-1", workItemId: "wi-1", attemptId: "at-1", ...LANE });
+  const input = { obligation: row, routeTaskId: "rt-1", workItemId: "wi-1", attemptId: "at-1", ...LANE };
+  const outcome = await executor(input);
   assert.equal(outcome.kind, "DISPOSED");
-  assert.equal(outcome.disposition?.disposition, "DISCOVERED", "non-discharging: the record is still owed");
-  assert.equal(outcome.cost?.requestCount, 0);
-  const parts = askGapNoteParts(outcome.disposition!.note);
-  assert.equal(parts.cadenceFailure, unit.route.open.cadenceFailure);
-  assert.equal(parts.nextRead, `owed by 2026-09-24T12:30:00.000Z, by ${MESA_PARTITION}`);
+  assert.equal(outcome.disposition?.disposition, "INGESTED");
+  assert.deepEqual(urls, ["https://mesa.legistar.com/Calendar.aspx"]);
+  assert.equal(outcome.cost?.requestCount, 1);
+  assert.ok(saved.length > 0);
+  assert.ok(outcome.artifacts?.length);
+  assert.equal(outcome.ranAs, "DETERMINISTIC");
+
+  const failed = await routeExecutor({ routeFor: () => unit.route, openOne: async () => ({ status: 503, bytes: 0, contentType: "text/plain", body: "", durationMs: 1, transportError: null }) })(input);
+  assert.notEqual(failed.disposition?.disposition, "INGESTED");
+  assert.equal(failed.artifacts?.length ?? 0, 0);
+  assert.ok(enumerate(holdings()).units.some(row => row.obligation.id === unit.obligation.id));
+});
+
+test("follow-up reads use each body's installed hot or ordinary meeting cadence", () => {
+  const required = (requiredEveryMs: number) => enumerate({ ...holdings(), clockOf: () => ({
+    kind: "READ", lastSucceededAt: NOW_ISO, lastAttemptedAt: NOW_ISO,
+    nextReadDueAt: null, requiredEveryMs,
+  }) });
+  for (const hours of [0.5, 1, 12]) {
+    const pass = required(hours * 3_600_000);
+    assert.ok(pass.units.length > 0);
+    assert.ok(pass.units.every(unit => unit.obligation.declaredCycleHours === hours));
+    assert.ok(pass.units.every(unit => unit.obligation.scopeDivisions?.every(id => id.startsWith("ocd-division/"))));
+  }
 });
 
 test("gap gone: when a read holds the decision, the provider stops emitting it and the superseded path retires it by name", () => {
@@ -392,7 +386,8 @@ test("the runner's reading: the sitting window decides the cadence a carrying re
 
 /** One dispatched round of an Ask-gap obligation, its disposition produced by the real route executor from the provider's route. */
 async function dispatchedRound(unit: ReturnType<typeof unitOf>, n: number): Promise<Partial<AssignmentSources>> {
-  const executor = routeExecutor({ routeFor: () => unit.route, openOne: async () => { throw new Error("never fetched"); }, now: () => NOW_ISO });
+  const executor = routeExecutor({ routeFor: () => unit.route,
+    openOne: async () => ({ status: 403, bytes: 6, contentType: "text/plain", body: "denied", durationMs: 1, transportError: null }), now: () => NOW_ISO });
   const row = scheduleObligation(unit.obligation, NOW);
   assert.ok(isScheduled(row));
   const [wi, rt, at] = [`wi-${n}`, `rt-${n}`, `at-${n}`];
@@ -451,21 +446,12 @@ test("ADMIN: an Ask-gap obligation reads as an Ask gap, with the owner and the n
 
   const mesaOutcome = row(`freshness:ask-gap:${MESA}#OUTCOME_NOT_READ`);
   assert.equal(mesaOutcome.what.title, "Ask gap: outcome not read — Mesa — Governing");
-  assert.equal(mesaOutcome.state, "BLOCKED");
-  assert.equal(mesaOutcome.waiting.owner, "ENGINEERING");
-  assert.match(mesaOutcome.waiting.nextAction, /^Build the adapter owed: Mesa: minutes reader\./);
-
-  const mesaCalendar = row(`freshness:ask-gap:${MESA}#CALENDAR_STALE`);
-  assert.equal(mesaCalendar.what.title, "Ask gap: calendar read is stale — Mesa — Governing");
-  assert.equal(mesaCalendar.waiting.owner, "RUNNER");
-  assert.match(mesaCalendar.waiting.nextAction, /^Named failure, CADENCE_BROKEN as of 2026-09-24T11:59:00.000Z: meetings:legistar-insite:\S+ last succeeded 2026-09-24T09:00:00.000Z, 3.0 hours before this reading/);
-
-  const pimaOutcome = row(`freshness:ask-gap:${PIMA}#OUTCOME_NOT_READ`);
-  assert.equal(pimaOutcome.waiting.owner, "RUNNER");
-  assert.equal(
-    pimaOutcome.waiting.nextAction,
-    "The routine read closes it — its next read is owed by 2026-09-24T12:30:00.000Z, by pima-legistar-outcomes (as of 2026-09-24T11:59:00.000Z); nothing is owed by anyone else.",
-  );
+  assert.equal(mesaOutcome.waiting.owner, "RUNNER");
+  assert.doesNotMatch(mesaOutcome.waiting.nextAction, /nothing is owed|routine read closes|Build the adapter/);
+  for (const id of [`freshness:ask-gap:${MESA}#CALENDAR_STALE`, `freshness:ask-gap:${PIMA}#OUTCOME_NOT_READ`]) {
+    assert.equal(row(id).waiting.owner, "RUNNER");
+    assert.doesNotMatch(row(id).waiting.nextAction, /nothing is owed|routine read closes/);
+  }
 });
 
 test("ADMIN: open Ask gaps are counted by code, drawn with their denominators, and unknown is never zero", () => {

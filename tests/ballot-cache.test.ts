@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import test from "node:test";
 import { NextRequest } from "next/server";
 import nextConfig from "../next.config.ts";
@@ -19,7 +20,7 @@ test("ballot cache configuration varies by ZIP and preserves Next's RSC discrimi
 test("ballot copies have the ZIP's state tag, including 03301 and 07102", async context => {
   context.mock.method(Date, "now", () => Date.parse("2026-10-23T22:00:00Z"));
   for (const [zip, state] of [["03301", "NH"], ["07102", "NJ"], ["85701", "AZ"], ["90210", "CA"]]) {
-    const request = new NextRequest(`https://meanwhileusa.com/ballot?zip=${zip}`);
+    const request = new NextRequest(`${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`);
     const response = await middleware(request);
     assert.equal(response.headers.get("Netlify-CDN-Cache-Control"), "public, durable, max-age=32400, must-revalidate");
     assert.equal(response.headers.get("Netlify-Cache-Tag"), `reader-state:${state},reader-national-people,reader-settings`);
@@ -29,7 +30,7 @@ test("ballot copies have the ZIP's state tag, including 03301 and 07102", async 
 });
 
 test("Phoenix midnight ends today's copy and tomorrow's copy receives a new lifetime, through DST changes", () => {
-  const request = new Request("https://meanwhileusa.com/ballot?zip=03301");
+  const request = new Request(`${PUBLIC_SITE_ORIGIN}/ballot?zip=03301`);
   for (const day of ["2026-10-24", "2026-11-01", "2027-03-14"]) {
     const midnight = Date.parse(`${day}T07:00:00.000Z`);
     assert.match(ballotCacheHeaders(request, midnight - 1000)["Netlify-CDN-Cache-Control"], /max-age=1,/);
@@ -41,6 +42,6 @@ test("Phoenix midnight ends today's copy and tomorrow's copy receives a new life
 
 test("unknown ZIPs and map-point selections cannot share a ZIP copy", () => {
   for (const query of ["", "zip=00000", "zip=03301&zip=07102", "zip=03301&lat=32&lng=-110", "zip=03301&state=NJ"]) {
-    assert.deepEqual(ballotCacheHeaders(new Request(`https://meanwhileusa.com/ballot?${query}`)), { "Netlify-CDN-Cache-Control": "no-store" });
+    assert.deepEqual(ballotCacheHeaders(new Request(`${PUBLIC_SITE_ORIGIN}/ballot?${query}`)), { "Netlify-CDN-Cache-Control": "no-store" });
   }
 });

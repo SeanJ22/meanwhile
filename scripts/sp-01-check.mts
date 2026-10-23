@@ -3,6 +3,7 @@
  *   --import ./scripts/register-test-loader.mjs scripts/sp-01-check.mts
  */
 import assert from "node:assert/strict";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { neon } from "@neondatabase/serverless";
 import { createElement } from "react";
@@ -64,7 +65,7 @@ for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
     if(!Object.hasOwn(points,address))points[address]=await resolvePublishedOfficePoint(address);
     return points[address];
   };
-  const response = await readerStateResponse(new Request(`https://meanwhileusa.com/api/reader/state?state=${state}&zip=${zip}`));
+  const response = await readerStateResponse(new Request(`${PUBLIC_SITE_ORIGIN}/api/reader/state?state=${state}&zip=${zip}`));
   assert.equal(response.status,200);
   const page = await response.json() as ReaderStateResponse;
   const scope = federalDirectoryScope(state);
@@ -141,7 +142,7 @@ for (const [state,zip] of [["NH","03301"],["NJ","07102"]]) {
   assert.deepEqual(purges,[[`reader-state:${state}`]]);
   const presidentTags=readerCacheTags(readerCacheScopeForPublication("US:people:statewide-executive-sources:v1"));
   assert.ok(presidentTags.some(tag=>response.headers.get("Netlify-Cache-Tag")!.split(",").includes(tag)));
-  for(const day of [today,tomorrow])assert.ok(ballotCacheHeaders(new Request(`https://meanwhileusa.com/ballot?zip=${zip}`),Date.parse(day))["Netlify-Cache-Tag"].includes(`reader-state:${state}`));
+  for(const day of [today,tomorrow])assert.ok(ballotCacheHeaders(new Request(`${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`),Date.parse(day))["Netlify-Cache-Tag"].includes(`reader-state:${state}`));
   results.push({state,zip,productionVersion:original.metadata.versionId,replayedVersion:read.metadata.versionId,
     directoryCards:cards.length,rendered,savedNativePoints,nativeOfficePublicationVersion,nativeOfficeNextConfirmed,scheduledNow:today,scheduledNext:tomorrow,nextRunDue:true,nextPublicationConfirmed:!!nextOutcome.confirmed,
     nextReaderVersion:nextRead.metadata.versionId,freshLookupsForPreviouslyMissingPoints:freshLookups,

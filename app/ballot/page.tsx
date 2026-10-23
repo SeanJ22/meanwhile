@@ -61,6 +61,7 @@ import { BallotAskPill } from "@/components/ballot/ballot-ask-pill";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
+import { officeCardSections, officeHasActions } from "@/lib/officials/office-sections";
 import { StateCampaignSection } from "@/components/funding/state-campaign-section";
 
 import {
@@ -321,6 +322,9 @@ async function BallotBattlecard({
     }
   }
 
+  const officeHolder = { id: targetKey, officeTitle: contestTitle, officeJurisdictionOcdId: contestOcdId };
+  const sectionIds = officeCardSections(officeHolder), has = (id: (typeof sectionIds)[number]) => sectionIds.includes(id);
+
   const filingContact = await withBallotReader(readerSelection, async () => {
     const candidacyId = targetKey.includes("|") ? reconciledCandidacyIdForCard(targetKey) : targetKey;
     return candidacyId ? candidateContactForCandidacy(state, candidacyId) : null;
@@ -342,6 +346,8 @@ async function BallotBattlecard({
       divisionIds={[contestOcdId]}
 
       contactHolder={recordHolder}
+      sectionIds={sectionIds}
+      actionsGap={officeHasActions(officeHolder)}
       contact={<><CandidateContact card={card ?? null} links={links} filing={filingContact} />{recordHolder && <ContactPills holder={recordHolder} scope="primary" />}{!card?.email && !links?.campaign && !filingContact?.email && !recordHolder && <CardGapContribution id={`candidate-contact:${targetKey}`} label="contact details" subject={{ type: "CANDIDATE", id: targetKey }} />}</>}
       sections={{
 
@@ -361,22 +367,22 @@ async function BallotBattlecard({
           ) : null,
 
         committees:
-          !officeholdersAvailable ? (
+          !has("committees") ? null : !officeholdersAvailable ? (
             unavailableHolding("officeholder-directory")
           ) : recordHolder && memberDirectoryReaches(recordHolder.id) ? (
             <MemberCommitteesContent holder={recordHolder} />
           ) : null,
         offices:
-          !officeholdersAvailable ? (
+          !has("offices") ? null : !officeholdersAvailable ? (
             unavailableHolding("officeholder-directory")
           ) : recordHolder && memberDirectoryReaches(recordHolder.id, "offices", recordHolder.state) ? (
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
-        money: federal ? (
+        money: !has("money") ? null : federal ? (
           <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerSelection={readerSelection} />
         ) : <StateCampaignSection divisionId={contestOcdId} personId={targetKey} bare context={context}/>,
 
-        record: !officeholdersAvailable ? (
+        record: !has("record") ? null : !officeholdersAvailable ? (
           unavailableHolding("officeholder-directory")
         ) : recordHolder ? (
           <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />

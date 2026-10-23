@@ -24,6 +24,7 @@ import { PublicStatementsProfile } from "@/components/officials/public-statement
 import { OfficialActions } from "@/components/officials/official-actions";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 
+import { officeCardSections, officeHasActions } from "@/lib/officials/office-sections";
 import { identityChipsFor } from "@/lib/officials/identity-chips";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { OfficialTermNote } from "@/components/officials/official-term-note";
@@ -72,6 +73,8 @@ export function OfficialModal({
   const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
   const { directory } = useMemberDirectory(holder.id,holder.state);
   const officeSource = directory?.officeDetails?.[0];
+  const sectionIds = officeCardSections(holder);
+  const has = (id: (typeof sectionIds)[number]) => sectionIds.includes(id);
   const sources = personCardSources(
     holder,
     [
@@ -104,20 +107,21 @@ export function OfficialModal({
         sources={sources}
         identity={<PersonIdentity holder={holder} seatLabel={seatLabel} large chips={identityChipsFor(holder, tier, "INCUMBENT")} />}
         contact={<>{office && <DistrictOffice office={office} />}<ContactPills holder={holder} /><OfficialTermNote holder={holder} /></>}
+        sectionIds={sectionIds}
         sections={{
           office: <OfficeBlurb holder={holder} bare />,
-          positions: <PositionsSection context={reactionContext} divisionIds={(holder.officeJurisdictionOcdId ? [holder.officeJurisdictionOcdId] : [])} subjectId={holder.id} subjectName={holder.name} contentOnly />,
-          committees: memberDirectoryReaches(holder.id, "committees") ? <MemberCommitteesContent holder={holder} /> : null,
-          offices: memberDirectoryReaches(holder.id, "offices") ? <MemberOfficesContent holder={holder} /> : null,
-          money: <FundingBlock holder={holder} reactionContext={reactionContext} bare />,
-          record: <RecentVotes holder={holder} reactionContext={reactionContext} columns contentOnly />,
+          positions: !has("positions") ? null : <PositionsSection context={reactionContext} divisionIds={(holder.officeJurisdictionOcdId ? [holder.officeJurisdictionOcdId] : [])} subjectId={holder.id} subjectName={holder.name} contentOnly />,
+          committees: has("committees") && memberDirectoryReaches(holder.id, "committees") ? <MemberCommitteesContent holder={holder} /> : null,
+          offices: has("offices") && memberDirectoryReaches(holder.id, "offices") ? <MemberOfficesContent holder={holder} /> : null,
+          money: has("money") ? <FundingBlock holder={holder} reactionContext={reactionContext} bare /> : null,
+          record: has("record") ? <RecentVotes holder={holder} reactionContext={reactionContext} columns contentOnly /> : null,
         }}
         afterSections={<>
           <FederalMemberRecords key={holder.id} memberId={holder.id} />
           {!holder.id.startsWith("congress:") && <LegislatorBills key={holder.id} holder={holder} />}
           {holder.id.startsWith("congress:") && <FederalCommentRules />}
           <PublicStatementsProfile subjectId={holder.id} onProfile={setPrlProfile} />
-          <OfficialActions context={reactionContext} divisionIds={(holder.officeJurisdictionOcdId ? [holder.officeJurisdictionOcdId] : [])} subjectId={holder.id} />
+          <OfficialActions context={reactionContext} divisionIds={(holder.officeJurisdictionOcdId ? [holder.officeJurisdictionOcdId] : [])} subjectId={holder.id} gapWhenEmpty={officeHasActions(holder)} />
           <SpeakYourMind key={holder.id} context={reactionContext ?? undefined} subjectType="OFFICIAL" subjectId={holder.id} subject={holder.name} />
         </>}
       />

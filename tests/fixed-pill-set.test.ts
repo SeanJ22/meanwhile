@@ -109,5 +109,5 @@ test("state people offices use the exact native person scope while committees ke
 
 test("the ballot card uses the shared person frame and its section order", () => {
   assert.match(BALLOT_CARD, /<PersonCard/);
-  assert.match(readFileSync("components/ui/person-card.tsx", "utf8"), /PERSON_CARD_SECTIONS\.filter[\s\S]*?\.map/);
+  assert.match(readFileSync("components/ui/person-card.tsx", "utf8"), /PERSON_CARD_READING_ORDER\.filter[\s\S]*?\.map/);
 });

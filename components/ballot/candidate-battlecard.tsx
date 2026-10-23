@@ -36,6 +36,8 @@ export function CandidateBattlecard({
   contactHolder = null,
   contact,
   tier = null,
+  sectionIds,
+  actionsGap = true,
 }: {
   name: string;
 
@@ -43,6 +45,10 @@ export function CandidateBattlecard({
   contact?: React.ReactNode;
 
   tier?: Tier | null;
+
+  /** The sections the contested office has; the rest are never reported as still being gathered. */
+  sectionIds?: readonly BattlecardSectionId[];
+  actionsGap?: boolean;
 
   partyLabel?: string | null;
 
@@ -140,12 +146,13 @@ export function CandidateBattlecard({
 
             )}
             contact={contact ?? (contactHolder ? <div data-ballot-contact-row><ContactPills holder={contactHolder} scope="primary" /><OfficialTermNote holder={contactHolder} /></div> : <CardGapContribution id={`contact:${subjectId}`} label="contact details" subject={{ type: "CANDIDATE", id: subjectId }} />)}
+            sectionIds={sectionIds}
             sections={{ ...sections, positions: <>{sections?.positions}<PositionsSection context={speakContext} divisionIds={divisionIds} subjectId={contactHolder?.id ?? subjectId} subjectName={name} contentOnly /></> }}
             afterSections={<>
               <FederalMemberRecords key={contactHolder?.id ?? subjectId} memberId={contactHolder?.id ?? subjectId} />
               {(contactHolder?.id ?? subjectId).startsWith("congress:") && <FederalCommentRules />}
               <PublicStatementsProfile subjectId={contactHolder?.id ?? subjectId} />
-              <OfficialActions context={speakContext} divisionIds={divisionIds} subjectId={contactHolder?.id ?? subjectId} />
+              <OfficialActions context={speakContext} divisionIds={divisionIds} subjectId={contactHolder?.id ?? subjectId} gapWhenEmpty={actionsGap} />
               <div className="mt-5"><SpeakYourMind subjectType="CANDIDATE" subjectId={subjectId} subject={name} context={speakContext ?? undefined} /></div>
             </>}
           />

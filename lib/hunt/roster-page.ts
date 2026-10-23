@@ -116,7 +116,7 @@ const NOT_A_NAME =
 export function looksLikeNameCell(text: string): boolean {
   const first = splitPersonTitle(text.split("\n")[0]?.trim() ?? "").name;
   if (first.length < 5 || first.length > 60 || /^(?:contact|email|meet|about|biography of)\b/i.test(first)) return false;
-  if (OFFICE_WORD.test(first) || NOT_A_NAME.test(first)) return false;
+  if (OFFICE_WORD.test(first) || NOT_A_NAME.test(first) || /^(?:(?:vice|deputy|acting|interim)\s+)?president$/i.test(first)) return false;
   if (EMAIL.test(first) || PHONE.test(first) || /\d/.test(first)) return false;
   const tokens = first.replace(/[,.]$/, "").split(/\s+/);
   if (tokens.length < 2 || tokens.length > 5) return false;

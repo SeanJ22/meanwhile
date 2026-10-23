@@ -107,7 +107,7 @@ export const linkQuote = (value: string, quote: string): string =>
 
 /** A place as people write it on its own pages: "City Of Coolidge" and "Coolidge city governing" are "Coolidge", "Eloy School District 11" is "Eloy". */
 const placeCore = (name: string): string => name.replace(/^(city|town|village|borough|township|county|municipality)\s+of\s+/i, "")
-  .replace(/\s+((city|town|village|borough|township|county)\s+)?governing$|\s+school board$/i, "")
+  .replace(/\s+((city|town|village|borough|township|county)\s+)?governing(?: board)?$|\s+school board$/i, "")
   .replace(/\s+((elementary|unified|union|high|joint)\s+)*(school\s+)?district(\s+(no\.?\s*)?\d+)?$/i, "").trim();
 
 /** The page is on a .gov host or the entity's own site, carries one of its ids, or names it with its state spelled out or abbreviated. */

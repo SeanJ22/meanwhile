@@ -1,0 +1,971 @@
+{
+  "productionWrites": 0,
+  "findingCount": 51,
+  "capturedPages": 25,
+  "now": "2026-10-23T08:22:23.974Z",
+  "tomorrow": "2026-10-24T08:22:23.974Z",
+  "scheduler": "IndependentRuntimeLaneScheduler / publishNowLane",
+  "recoveredFromCurrentGovernmentPages": [
+    {
+      "findingId": "box-sha256-0d1431da2a10943bf224a7b002b8f4a1994201f069938da5932eb557ef74c75e",
+      "sourceUrl": "https://www.parishhill.org/board-of-education-2/"
+    }
+  ],
+  "runs": [
+    {
+      "looked": 50,
+      "deferred": 0,
+      "published": 13,
+      "publishedByRoute": {
+        "rosters": 13
+      },
+      "handed": 0,
+      "refused": 37,
+      "seats": {
+        "flagged": 0
+      },
+      "labels": {
+        "flagged": 0,
+        "moved": 0,
+        "cut": 0,
+        "renamed": 0
+      },
+      "errorExamples": [],
+      "waitingByClass": {},
+      "failuresByReason": {
+        "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 11,
+        "SEAT_NOT_IN_QUOTE": 25,
+        "NOT_A_PERSON": 1
+      },
+      "byPlace": {
+        "ar:city:city-of-fort-smith": {
+          "published": 0,
+          "refused": 5,
+          "waiting": 0
+        },
+        "fl:city:city-of-orlando": {
+          "published": 0,
+          "refused": 2,
+          "waiting": 0
+        },
+        "ak:city:city-of-houston": {
+          "published": 2,
+          "refused": 0,
+          "waiting": 0
+        },
+        "ct:depschool:chaplin-town-schools": {
+          "published": 1,
+          "refused": 0,
+          "waiting": 0
+        },
+        "fl:city:city-of-jacksonville": {
+          "published": 0,
+          "refused": 1,
+          "waiting": 0
+        },
+        "al:county:county-of-cullman": {
+          "published": 0,
+          "refused": 17,
+          "waiting": 0
+        },
+        "government:US-AK:nces:0200480": {
+          "published": 0,
+          "refused": 6,
+          "waiting": 0
+        },
+        "ga:city:town-of-talking-rock": {
+          "published": 0,
+          "refused": 1,
+          "waiting": 0
+        },
+        "az:city:town-of-marana": {
+          "published": 3,
+          "refused": 0,
+          "waiting": 0
+        },
+        "government:US-AR:nces:0509190": {
+          "published": 0,
+          "refused": 1,
+          "waiting": 0
+        },
+        "ca:city:city-of-martinez": {
+          "published": 0,
+          "refused": 1,
+          "waiting": 0
+        },
+        "al:county:county-of-autauga": {
+          "published": 0,
+          "refused": 2,
+          "waiting": 0
+        },
+        "ga:city:city-of-union-city": {
+          "published": 1,
+          "refused": 0,
+          "waiting": 0
+        },
+        "government:US-AR:nces:0500032": {
+          "published": 0,
+          "refused": 1,
+          "waiting": 0
+        },
+        "az:city:city-of-tombstone": {
+          "published": 2,
+          "refused": 0,
+          "waiting": 0
+        },
+        "az:school:sierra-vista-unified-school-district-68": {
+          "published": 1,
+          "refused": 0,
+          "waiting": 0
+        },
+        "az:school:sahuarita-school-district-30": {
+          "published": 2,
+          "refused": 0,
+          "waiting": 0
+        },
+        "az:school:picacho-school-district-33": {
+          "published": 1,
+          "refused": 0,
+          "waiting": 0
+        }
+      }
+    },
+    {
+      "looked": 12,
+      "deferred": 0,
+      "published": 1,
+      "publishedByRoute": {
+        "rosters": 1
+      },
+      "handed": 0,
+      "refused": 11,
+      "seats": {
+        "flagged": 0
+      },
+      "labels": {
+        "flagged": 0,
+        "moved": 0,
+        "cut": 0,
+        "renamed": 0
+      },
+      "errorExamples": [],
+      "waitingByClass": {},
+      "failuresByReason": {
+        "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 11
+      },
+      "byPlace": {
+        "ar:city:city-of-fort-smith": {
+          "published": 0,
+          "refused": 5,
+          "waiting": 0
+        },
+        "fl:city:city-of-orlando": {
+          "published": 0,
+          "refused": 1,
+          "waiting": 0
+        },
+        "government:US-AK:nces:0200480": {
+          "published": 0,
+          "refused": 2,
+          "waiting": 0
+        },
+        "ca:city:city-of-martinez": {
+          "published": 0,
+          "refused": 1,
+          "waiting": 0
+        },
+        "al:county:county-of-autauga": {
+          "published": 0,
+          "refused": 2,
+          "waiting": 0
+        },
+        "al:school:albertville-city-school-district": {
+          "published": 1,
+          "refused": 0,
+          "waiting": 0
+        }
+      }
+    }
+  ],
+  "reader": {
+    "today": [
+      "Tony Bruno",
+      "Karen Tidwell",
+      "Pat Rochford",
+      "Dan Lewis",
+      "Kent Mitchell",
+      "Dustin Escapule",
+      "DUSTY ESCAPULE",
+      "Jon Post",
+      "Susan Lovegreen",
+      "Christina Hobbs"
+    ],
+    "tomorrow": [
+      "Tony Bruno",
+      "Karen Tidwell",
+      "Pat Rochford",
+      "Dan Lewis",
+      "Kent Mitchell",
+      "Amanda Baugh",
+      "Dustin Escapule",
+      "DUSTY ESCAPULE",
+      "Jon Post",
+      "Susan Lovegreen",
+      "Christina Hobbs"
+    ],
+    "bodies": [
+      {
+        "id": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district#board",
+        "names": [
+          "Tony Bruno"
+        ]
+      },
+      {
+        "id": "ocd-division/country:us/state:az/school_district:picacho_elementary_district#board",
+        "names": [
+          "Karen Tidwell"
+        ]
+      },
+      {
+        "id": "ocd-division/country:us/state:az/school_district:sierra_vista_unified_district#board",
+        "names": [
+          "Pat Rochford"
+        ]
+      },
+      {
+        "id": "ocd-division/country:us/state:ak/place:houston#governing",
+        "names": [
+          "Dan Lewis",
+          "Kent Mitchell"
+        ]
+      },
+      {
+        "id": "al:school:albertville-city-school-district#board",
+        "names": [
+          "Amanda Baugh"
+        ]
+      },
+      {
+        "id": "ocd-division/country:us/state:az/place:tombstone#governing",
+        "names": [
+          "Dustin Escapule",
+          "DUSTY ESCAPULE"
+        ]
+      },
+      {
+        "id": "ocd-division/country:us/state:az/place:marana#governing",
+        "names": [
+          "Jon Post"
+        ]
+      },
+      {
+        "id": "ct:depschool:chaplin-town-schools#board",
+        "names": [
+          "Susan Lovegreen"
+        ]
+      },
+      {
+        "id": "ga:city:city-of-union-city#governing",
+        "names": [
+          "Christina Hobbs"
+        ]
+      }
+    ],
+    "component": "components/map/popup/entity-modal.tsx#Representation"
+  },
+  "findings": [
+    {
+      "id": "box-sha256-11e52293b556b7f4c01a291c5f5f476c81f5e774adbbe50a34523638e0519a15",
+      "subject": "ocd-division/country:us/state:al/county:autauga#governing",
+      "field": "OFF-02",
+      "value": "Director",
+      "sourceUrl": "http://www.autaugaco.org/home/county-departments/autauga-county-commission/",
+      "captureAvailable": false,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-108d1b3ef15bd9baadad1f19c1143e3ca3247b587fddc7bb0b5f6ef4f139f710",
+      "subject": "ocd-division/country:us/state:al/county:autauga#governing",
+      "field": "OFF-04",
+      "value": "Audra Smith",
+      "sourceUrl": "http://www.autaugaco.org/home/county-departments/autauga-county-commission/",
+      "captureAvailable": false,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-0c8d3f8b6fbcec67df736edd09df32cdccbe1079577f76dd92bf5348a64b4ccf",
+      "subject": "government:US-AK:nces:0200480#body:notice-of-board-of-education-possible-quorum",
+      "field": "OFF-02",
+      "value": "Director of Secondary Instruction",
+      "sourceUrl": "https://www.kibsd.org/departments/instruction/",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-0c7a8ae4bbc66bdf8f59475b20f9dcb8ef195ac86d31f977344293a5f41ba19b",
+      "subject": "government:US-AK:nces:0200480#body:notice-of-board-of-education-possible-quorum",
+      "field": "OFF-04",
+      "value": "Katrina Stewart",
+      "sourceUrl": "https://www.kibsd.org/departments/federal-programs/",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-11009ba514c1c9f7e697318020e6996cb2faa6106195f211f9123f2a2ee2229e",
+      "subject": "government:US-AK:nces:0200480#body:notice-of-board-of-education-possible-quorum",
+      "field": "OFF-04",
+      "value": "Jamie Bennett",
+      "sourceUrl": "https://www.kibsd.org/about-us/staff-directory/?staff-az=B",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-0324ec412fcc13ef6fbcb72dc54ade8c4f320f59a2d6d6e4dc876ae1fc7e6545",
+      "subject": "government:US-AK:nces:0200480#body:notice-of-board-of-education-possible-quorum",
+      "field": "OFF-04",
+      "value": "Jamella Fruto",
+      "sourceUrl": "https://www.kibsd.org/about-us/staff-directory/?staff-az=F",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-02a19fe85457639d480578690e7b66d263682e36c005a17566bda4f5a2f13e70",
+      "subject": "government:US-AK:nces:0200480#body:notice-of-board-of-education-possible-quorum",
+      "field": "OFF-04",
+      "value": "Heidi Hargraves",
+      "sourceUrl": "https://www.kibsd.org/about-us/staff-directory/?staff-az=H",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-08d4c1a5257b683d1a18d6badb6bc938dfd095910ce262b0401b3c5c5698f8b5",
+      "subject": "government:US-AK:nces:0200480#body:notice-of-board-of-education-possible-quorum",
+      "field": "OFF-04",
+      "value": "Damon Hargraves",
+      "sourceUrl": "https://www.kibsd.org/about-us/staff-directory/",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-02c70859cf8e928a3b054770991aa01f0aa934a85058741ee0b56758208a28b6",
+      "subject": "al:county:county-of-cullman#governing",
+      "field": "OFF-04",
+      "value": "Ken Walling",
+      "sourceUrl": "http://www.co.cullman.al.us/info-tech.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-03738fff620446eaf11a185da66a7962d2da3df7ae39cbf50ff7f9681f3e2bf2",
+      "subject": "al:county:county-of-cullman#governing",
+      "field": "OFF-04",
+      "value": "Main Line",
+      "sourceUrl": "http://www.co.cullman.al.us/info-tech.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-0bed60fbbc1da85e777d8af6393b84622be47f3d5922e03e56b5ad0c16d4f41b",
+      "subject": "ocd-division/country:us/state:ar/place:fort_smith#governing",
+      "field": "OFF-04",
+      "value": "Schaffer, Tammy",
+      "sourceUrl": "http://www.fortsmithar.gov/government/leadership/-alpha-S",
+      "captureAvailable": false,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-0992c566e500aa04aaa9b1f1176583db9b7c13b3380336f815ea5f39bf146949",
+      "subject": "ocd-division/country:us/state:ar/place:fort_smith#governing",
+      "field": "OFF-04",
+      "value": "Penix, Brian",
+      "sourceUrl": "http://www.fortsmithar.gov/government/leadership/-alpha-P",
+      "captureAvailable": false,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-004a8a2102d886cde518e5869b24841df1bc4813d73f108b7c53d65c3db661e6",
+      "subject": "ocd-division/country:us/state:ar/place:fort_smith#governing",
+      "field": "OFF-04",
+      "value": "Milam, Capt. Wes",
+      "sourceUrl": "http://www.fortsmithar.gov/government/leadership/-alpha-M",
+      "captureAvailable": false,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-0895ee628c9401a9c349ab1811e2a89a58369accff5744ad60ba8ebb9d38fef9",
+      "subject": "ocd-division/country:us/state:ar/place:fort_smith#governing",
+      "field": "OFF-04",
+      "value": "Buchfink, Josh",
+      "sourceUrl": "https://www.fortsmithar.gov/government/leadership",
+      "captureAvailable": false,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-0a29b6f10fdc6bc14cc29aa52c78c57bd7ecde353e22f7f8a21be3a895b1c4cc",
+      "subject": "ocd-division/country:us/state:ar/place:fort_smith#governing",
+      "field": "OFF-04",
+      "value": "Bennett, Jesse",
+      "sourceUrl": "https://www.fortsmithar.gov/government/leadership",
+      "captureAvailable": false,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-0a3b894ca6940c55f0599716fd1414463f9c8e04ae82ecdb2d9d1cfb39f648ef",
+      "subject": "al:county:county-of-cullman#governing",
+      "field": "OFF-04",
+      "value": "Miranda Hood",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-0af600eb4857544017f35185f0304d10a70da9964ba093fe3462a1078316d5c7",
+      "subject": "al:county:county-of-cullman#governing",
+      "field": "OFF-04",
+      "value": "Frances Montgomery",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-0a70495f94461fee592aa5ca1ba938e5ad3912d39713692ead966826e8cdb8e1",
+      "subject": "government:US-AR:nces:0509190#board",
+      "field": "OFF-04",
+      "value": "High School Fax",
+      "sourceUrl": "https://magnetcove.k12.ar.us/phone-directory",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-5f90b1ce61cefa60c3243b3a2a2bd0eb8b4d10ee37fe1084511e8d06a812d9a1",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Shane Bailey",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-ee9c54022677d18f1ba6225babea16809635b99e7b99a532173add618446dc91",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Summer Bixler",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-dcf1f541d6536c1779082866ce2e15e57d4c3d1ada82682a02ac2a23d2ba480a",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Kelsey Hancock",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-4d481b27ceac083200a8dd27df67ebb604b071a2c958a7c2d1c177a4963671a9",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Angela Lockhart",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-0ba2d4b2a4f5c67ad06ad88e23f8c998e949edf257cf7d16dffe1827da17cc5b",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Miranda Hood",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-cfc2e9e16661b33320adb7b1cb324e460c61a49274b71120adfac7e3fc5c3ded",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Kayla Cupp",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-4830b3014e2b3f4a45772bb144cf494e12a69a1face5abad6ca12890fb3cea1f",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Leah Chambers",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-ad101180d9ce950477ab9bfff6175d008cfd110a1f4d09485d2906a2feccb1f5",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Haley Fullilove",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-316f1603cf4ba5a5deb8436b5cc39b6e7fbff142c76bfbab7a04ce3a6c1a2ea3",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Heather Conn",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-ab53cbf8c92e02ddb447d7ec1564b6a4196c6bca6bb92f7fd7000cecd1fe9f14",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Brad Wilson",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-e2a644200bc90fc94c4977579ff3731d3bf4acec0d184dcb442f31f8e6671cbe",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Frances Montgomery",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-063b1450b2173fafd12671d958bb44759cfa89d600b923fc07a0c4e0cf894d09",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "Tiffany Merriman",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-d74cc1782ebbf0510c97115910f7f4792cb49b842d08517b69dc872bfa2b2cf6",
+      "subject": "al:county:county-of-cullman#body:cullman-county-commission",
+      "field": "OFF-04",
+      "value": "John Bullard",
+      "sourceUrl": "http://www.co.cullman.al.us/commission.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-0744f1a8a79d7ff4f4bd90a4adcfff0418f6e88b37a46311e3929876a50429c3",
+      "subject": "ocd-division/country:us/state:ak/place:houston#governing",
+      "field": "OFF-04",
+      "value": "Dan Lewis",
+      "sourceUrl": "https://houstonak.us/government/city_council/index.php",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-00695b80db21b76f017f6aea48a62acca515833c1eb1895db18ab6232bf851d6",
+      "subject": "ocd-division/country:us/state:ak/place:houston#governing",
+      "field": "OFF-04",
+      "value": "Kent Mitchell",
+      "sourceUrl": "https://houstonak.us/government/city_council/index.php",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-208fc79b0d06494679ff080e5b919f57d7f26b39283349a9ce77f3be90908053",
+      "subject": "government:US-AR:nces:0500032#body:bearden-school-board",
+      "field": "OFF-04",
+      "value": "Kaye Livingston",
+      "sourceUrl": "http://www.beardenschools.org/school-board-information",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-04760afe77e4958a442f18c9e343eb3f037f75dfede146c092d1c3bbd3f59f05",
+      "subject": "al:school:albertville-city-school-district#board",
+      "field": "OFF-04",
+      "value": "Amanda Baugh",
+      "sourceUrl": "https://www.albertk12.org/about/board-of-education/post/~board/school-board-members/post/amanda-baugh",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-06d764c217876daeafd85d0e4a079dcdcb7b59436018cc801219c23e7dcad8d4",
+      "subject": "ga:city:town-of-talking-rock#governing",
+      "field": "OFF-04",
+      "value": "OPEN RECORDS REQUEST",
+      "sourceUrl": "http://www.talkingrockga.com/about.html",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-07b68b740342757ef06395f46b0d7d9bec382eadcf43f70a67736fc6bf608a82",
+      "subject": "ga:city:city-of-union-city#governing",
+      "field": "OFF-04",
+      "value": "Christina Hobbs",
+      "sourceUrl": "https://www.unioncityga.gov/Departments/City-Government/City-Council/Christina-Hobbs",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-0928d4b6df5511ae2e749ffbef64d0171315b13bc5df25c644cfe301d712245b",
+      "subject": "fl:city:city-of-orlando#governing",
+      "field": "OFF-04",
+      "value": "Code Enforcement",
+      "sourceUrl": "https://www.orlando.gov/Our-Government/Departments-Offices",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-00ed710cceeebe5fc6e78a1e0b7711e2df31dba360a1a63c026bd96c1480a3c5",
+      "subject": "fl:city:city-of-orlando#governing",
+      "field": "OFF-04",
+      "value": "Karl Anderson",
+      "sourceUrl": "https://www.orlando.gov/Our-Government/Get-Involved/NNO-Neighborhood-Block-Party",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "SEAT_NOT_IN_QUOTE"
+    },
+    {
+      "id": "box-sha256-04aec344311341a95d2786525fb51f78a9957066276c6950fc30f15acf7ea099",
+      "subject": "fl:city:city-of-jacksonville#governing",
+      "field": "OFF-04",
+      "value": "Vice President",
+      "sourceUrl": "http://www.coj.net/city-council/city-council-members",
+      "captureAvailable": true,
+      "state": "refused",
+      "reason": "NOT_A_PERSON"
+    },
+    {
+      "id": "box-sha256-04fb17be4eb354fcbbce4423361277d00567b5b8e74b46ab4507dae6d0e51649",
+      "subject": "az:city:town-of-marana",
+      "field": "officeholder.name",
+      "value": "Jon Post",
+      "sourceUrl": "https://www.maranaaz.gov/Council/Council-Bios/Mayor-Jon-Post",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-0c42eff0c9a3e5679da17d58c8b586ec85162b8a0f91e82e824571f95977166c",
+      "subject": "ca:city:city-of-martinez#governing",
+      "field": "OFF-04",
+      "value": "F. M. Warmcastle",
+      "sourceUrl": "http://www.cityofmartinez.org/government/mayor-and-city-council/former-mayors",
+      "captureAvailable": false,
+      "state": "refused",
+      "reason": "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE"
+    },
+    {
+      "id": "box-sha256-0d1431da2a10943bf224a7b002b8f4a1994201f069938da5932eb557ef74c75e",
+      "subject": "ct:depschool:chaplin-town-schools#board",
+      "field": "OFF-04",
+      "value": "Susan Lovegreen",
+      "sourceUrl": "https://www.parishhill.org/board-of-education-x",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-3607ebe0973c1f9f8cc202b885d00ad80212592a1b4b945b39f3571840ba0152",
+      "subject": "az:city:city-of-tombstone",
+      "field": "officeholder.name",
+      "value": "DUSTY ESCAPULE",
+      "sourceUrl": "https://cityoftombstoneaz.gov/mayor-city-council/",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-4d892b54f33a72fd5a12c9f81af51791fbd6ffab2dd327c779dd30f2203a134b",
+      "subject": "az:city:city-of-tombstone",
+      "field": "officeholder.name",
+      "value": "Dustin Escapule",
+      "sourceUrl": "https://lgd.azleague.org/?post_type=city&s=Tombstone",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-4f2c0b6e6af2c1fb51c86fb0ecc05a3e230dc99c78b7c457a2d75c57494b2f25",
+      "subject": "az:school:sierra-vista-unified-school-district-68",
+      "field": "officeholder.name",
+      "value": "Pat Rochford",
+      "sourceUrl": "https://www.svusd68.org/page/governing-board",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-58973bd878b626b11c7abd43ed7959fbe16b4c1afe041aa9e64494ab44883b87",
+      "subject": "az:school:sahuarita-school-district-30",
+      "field": "officeholder.name",
+      "value": "Tony Bruno",
+      "sourceUrl": "https://susd30.us/governing-board/",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-5d0e6cc1ee61baba021debff3d4bc42e64bd3584ca74bdd620ac9bf8ec1d7360",
+      "subject": "az:school:picacho-school-district-33",
+      "field": "governingBoard.member",
+      "value": "Karen Tidwell",
+      "sourceUrl": "https://www.pinalcso.org/superintendent-s-office/superintendent-s-office-governing-board-vacancies-appointments",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-65ebd0aec1bec594570ab4054829a52533d1aa77ad0ad15496603e46ae7d118d",
+      "subject": "az:school:sahuarita-school-district-30",
+      "field": "officeholder.name",
+      "value": "Tony Bruno",
+      "sourceUrl": "https://susd30.us/governing-board/",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-a60e8e04433c80a28ed38fafae987e437deaa72d0a9c8edc05db374660e8728e",
+      "subject": "az:city:town-of-marana",
+      "field": "officeholder.name",
+      "value": "Jon Post",
+      "sourceUrl": "https://www.maranaaz.gov/Council/Council-Bios/Mayor-Jon-Post",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    },
+    {
+      "id": "box-sha256-ce78cf94dcbf92d686c95102f7a262fcd8dbaed49c3e5755e3d2fc6d0d4383f3",
+      "subject": "az:city:town-of-marana",
+      "field": "officeholder.name",
+      "value": "Jon Post",
+      "sourceUrl": "https://www.maranaaz.gov/Council/Council-Bios/Mayor-Jon-Post",
+      "captureAvailable": true,
+      "state": "built",
+      "reason": null
+    }
+  ],
+  "captures": [
+    {
+      "requestedUrl": "https://www.kibsd.org/departments/instruction/",
+      "transportUrl": "https://www.kibsd.org/departments/instruction/",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-2999d604e1184a0d07a26446",
+      "contentHash": "sha256-293d87ea10be89245bb49484837e4f97ca2f5068b18f34799195ab1079f6e17c"
+    },
+    {
+      "requestedUrl": "https://www.kibsd.org/departments/federal-programs/",
+      "transportUrl": "https://www.kibsd.org/departments/federal-programs/",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-cc842d62d5d75b700ae9bf6a",
+      "contentHash": "sha256-fad83e4c61363393dde21f505d67a22f28fb00932dac6ec9558dd804dd905cfb"
+    },
+    {
+      "requestedUrl": "https://www.kibsd.org/about-us/staff-directory/?staff-az=B",
+      "transportUrl": "https://www.kibsd.org/about-us/staff-directory/?staff-az=B",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-f45be5aa4f303b089a494a53",
+      "contentHash": "sha256-fa150572c882555a99a0ec92fff7b4efe09ccaca204f3ec1e62f5a1ca91e3baa"
+    },
+    {
+      "requestedUrl": "https://www.kibsd.org/about-us/staff-directory/?staff-az=F",
+      "transportUrl": "https://www.kibsd.org/about-us/staff-directory/?staff-az=F",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-ddd31709b3581cde7c26c6df",
+      "contentHash": "sha256-e76e56442080b11549cd4115f0bd426f95afd7c0f59ba7d2ef6584d001f44e8d"
+    },
+    {
+      "requestedUrl": "https://www.kibsd.org/about-us/staff-directory/?staff-az=H",
+      "transportUrl": "https://www.kibsd.org/about-us/staff-directory/?staff-az=H",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-1f1cb039654a036373203091",
+      "contentHash": "sha256-9bbdfeb6803e9a3300ca0cd952284790273d1d8b8bd274f4a3d7501372d1d8c1"
+    },
+    {
+      "requestedUrl": "https://www.kibsd.org/about-us/staff-directory/",
+      "transportUrl": "https://www.kibsd.org/about-us/staff-directory/",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-68d81faf13e8edbb2526bfc1",
+      "contentHash": "sha256-f682401c6287ea09b142397424d626215a64fb99c521ad3c543c5a022c627497"
+    },
+    {
+      "requestedUrl": "http://www.co.cullman.al.us/info-tech.html",
+      "transportUrl": "https://www.co.cullman.al.us/info-tech.html",
+      "observedAt": "2026-10-23T08:11:28.096Z",
+      "artifactId": "ar-291e486c2333e1dbc9978d5a",
+      "contentHash": "sha256-e02acd8230ef236d4a6e8b989b301203c62e9fc19d0fd4c5fe2f5fe3d4b5fe4f"
+    },
+    {
+      "requestedUrl": "http://www.co.cullman.al.us/commission.html",
+      "transportUrl": "https://www.co.cullman.al.us/commission.html",
+      "observedAt": "2026-10-23T08:11:29.059Z",
+      "artifactId": "ar-d63c3fa167891cb2bb368f52",
+      "contentHash": "sha256-aec3fe09a825a54b2077d41f5f413016c60aebe71445e938620e25d0bc97db00"
+    },
+    {
+      "requestedUrl": "https://magnetcove.k12.ar.us/phone-directory",
+      "transportUrl": "https://magnetcove.k12.ar.us/phone-directory",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-f8bc35b2272db5f41443db27",
+      "contentHash": "sha256-88bcdcfda4b1ae5d482f5d7837cd031b33d2b93b20c9d59de4a2b56cef30426a"
+    },
+    {
+      "requestedUrl": "https://houstonak.us/government/city_council/index.php",
+      "transportUrl": "https://houstonak.us/government/city_council/index.php",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-114b901f747784b1e1dd8f00",
+      "contentHash": "sha256-a4291300162b7f28418ed4b8d0e125ebc754112f95e75a9ca823e16242fc902b"
+    },
+    {
+      "requestedUrl": "http://www.beardenschools.org/school-board-information",
+      "transportUrl": "https://www.beardenschools.org/school-board-information",
+      "observedAt": "2026-10-23T08:11:29.115Z",
+      "artifactId": "ar-19b7e347da27f1553305132f",
+      "contentHash": "sha256-53030c3bf43b6a26ad633bd946d9116f3218fe0475fe0fe8221cc786be9b8d2b"
+    },
+    {
+      "requestedUrl": "https://www.albertk12.org/about/board-of-education/post/~board/school-board-members/post/amanda-baugh",
+      "transportUrl": "https://www.albertk12.org/about/board-of-education/post/~board/school-board-members/post/amanda-baugh",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-56911115859ae4ed791244d3",
+      "contentHash": "sha256-f2c4a29450b1c65b60d8a493aae110f0eebe8b569740cf073fabd1cc9fd1a609"
+    },
+    {
+      "requestedUrl": "http://www.talkingrockga.com/about.html",
+      "transportUrl": "https://www.talkingrockga.com/about.html",
+      "observedAt": "2026-10-23T08:11:29.225Z",
+      "artifactId": "ar-4747137dca5cabf520870531",
+      "contentHash": "sha256-b3c005487cece4e7cead1ac0d31392357cba26aa232442f0e16ee967828a6165"
+    },
+    {
+      "requestedUrl": "https://www.unioncityga.gov/Departments/City-Government/City-Council/Christina-Hobbs",
+      "transportUrl": "https://www.unioncityga.gov/Departments/City-Government/City-Council/Christina-Hobbs",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-5127128a0aba2aa69cc0b915",
+      "contentHash": "sha256-7ae4af30048a1424cca6bf6bceedf1d0715c29fb1af5b88f9759610e54294a45"
+    },
+    {
+      "requestedUrl": "https://www.orlando.gov/Our-Government/Departments-Offices",
+      "transportUrl": "https://www.orlando.gov/Our-Government/Departments-Offices",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-ec1d6badb45b738768409e24",
+      "contentHash": "sha256-9c4809a87ee7ad7533f741e7923c724f2552b404bb19d1e334897792dfb01f22"
+    },
+    {
+      "requestedUrl": "https://www.orlando.gov/Our-Government/Get-Involved/NNO-Neighborhood-Block-Party",
+      "transportUrl": "https://www.orlando.gov/Our-Government/Get-Involved/NNO-Neighborhood-Block-Party",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-8da126b6d8a4e3a018188b60",
+      "contentHash": "sha256-390ba2fa121d27ac57e10d88b0c64c573bc4847165611f9f2783ba96ec9ebae0"
+    },
+    {
+      "requestedUrl": "http://www.coj.net/city-council/city-council-members",
+      "transportUrl": "https://www.coj.net/city-council/city-council-members",
+      "observedAt": "2026-10-23T08:11:29.458Z",
+      "artifactId": "ar-54a67c4d37f994ec33a1bae2",
+      "contentHash": "sha256-2d942f7e125017d2ec2f627359d104ba979bf6d4d9a4208b31a9b5d563de7c24"
+    },
+    {
+      "requestedUrl": "https://www.maranaaz.gov/Council/Council-Bios/Mayor-Jon-Post",
+      "transportUrl": "https://www.maranaaz.gov/Council/Council-Bios/Mayor-Jon-Post",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-e4c4ab05c7c18c7b965062c8",
+      "contentHash": "sha256-292973517e32bf4e653638f6468f70deb716388cdaf603cac5461cfd173f3112"
+    },
+    {
+      "requestedUrl": "https://www.parishhill.org/board-of-education-x",
+      "transportUrl": "https://www.parishhill.org/board-of-education-x",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-13f49088777f40d9350dcc11",
+      "contentHash": "sha256-d5f06f2705d999a16d9a1a89e0501b8687ffbca44d01fc06d7877050002021a4"
+    },
+    {
+      "requestedUrl": "https://cityoftombstoneaz.gov/mayor-city-council/",
+      "transportUrl": "https://cityoftombstoneaz.gov/mayor-city-council/",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-e88476b93c0f5dbd8fc535dc",
+      "contentHash": "sha256-fddc0cf362752b1b503684ebd928a68480b4b0df066619a28874772d810110b2"
+    },
+    {
+      "requestedUrl": "https://lgd.azleague.org/?post_type=city&s=Tombstone",
+      "transportUrl": "https://lgd.azleague.org/?post_type=city&s=Tombstone",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-87957a98a77ef95dc0c5d174",
+      "contentHash": "sha256-288fe66c422624c35ab5924334f2ffcbe69d45ab345e5b28f894eb9dbb1aedb1"
+    },
+    {
+      "requestedUrl": "https://www.svusd68.org/page/governing-board",
+      "transportUrl": "https://www.svusd68.org/page/governing-board",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-06829ed1308c97f2f76e77e5",
+      "contentHash": "sha256-e8ed87322b69d04449a466625a65cc683c52da82e49e1e707bf6c1e166af39d4"
+    },
+    {
+      "requestedUrl": "https://susd30.us/governing-board/",
+      "transportUrl": "https://susd30.us/governing-board/",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-3cbe0e8ae1ffd323ac6bed2f",
+      "contentHash": "sha256-7125889aee60e2f509bdf60a18242d70033b87ab27443f8f51fa29abd2c830cb"
+    },
+    {
+      "requestedUrl": "https://www.pinalcso.org/superintendent-s-office/superintendent-s-office-governing-board-vacancies-appointments",
+      "transportUrl": "https://www.pinalcso.org/superintendent-s-office/superintendent-s-office-governing-board-vacancies-appointments",
+      "observedAt": "2026-10-23T08:08:27.883Z",
+      "artifactId": "ar-9945210753e6643c7db363f3",
+      "contentHash": "sha256-077a5dab94bee0e51fd7cb17a3bca979c7b4f89124bf7c335df3f6ac897fdd87"
+    }
+  ],
+  "sourceLimits": {
+    "originalVault": "HTTP 401",
+    "unavailableOriginalSourceFindings": 8,
+    "fallback": "Fresh government pages captured by normal HTTP fetch; all production mutations were replaced with local PGlite and memory repositories."
+  },
+  "browser": {
+    "runId": "pb02-per-body-reader@2026-10-23T08:45:33.416Z",
+    "chromiumBuild": 1234,
+    "renderedNames": 11,
+    "writesBlocked": 0,
+    "screenshot": "/tmp/pb02-reader-per-body.png",
+    "renderedBodies": 9
+  }
+}

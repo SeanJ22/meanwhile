@@ -10,7 +10,9 @@ async function main(): Promise<void> {
   const args = parsePeopleSourceArguments(process.argv.slice(2));
   installNeonRequestDeadline();
   prepareProductionCivicDataWrite();
-  const result = await runPeopleSourceRefresh({ ...args, store: new PostgresRoutineDataStore(), vault: rawCaptureVault() });
+  const result = await runPeopleSourceRefresh({ ...args, store: new PostgresRoutineDataStore(), vault: rawCaptureVault() }, {
+    executiveCredentials: { fec: process.env.FEC_API_KEY, congress: process.env.CONGRESS_API_KEY },
+  });
   if (!result.succeeded) process.exitCode = 2;
 }
 

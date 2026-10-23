@@ -33,9 +33,11 @@ export interface DepartmentAction extends Citation {
 export interface CabinetConfirmation extends Citation {
   readonly date: string; readonly yeas: number | null; readonly nays: number | null; readonly method: string; readonly quote: string;
   readonly evidenceSourceUrl: string;
+  readonly aliasSources?: readonly CommitteeNomineeAlias[];
 }
+export interface CommitteeNomineeAlias extends Citation { readonly publishedName: string; readonly nominationName: string; readonly quote: string }
 export interface CabinetRecords {
-  readonly department?: Citation & { readonly name: string; readonly budget?: DepartmentBudget; readonly budgets?: readonly DepartmentBudget[];
+  readonly department?: Citation & { readonly name: string; readonly budget?: DepartmentBudget; readonly budgets?: readonly DepartmentBudget[]; readonly budgetNote?: ExecutiveText;
     readonly headcount?: DepartmentHeadcount; readonly headcountNote?: ExecutiveText; readonly actions: readonly DepartmentAction[] };
   readonly confirmation?: CabinetConfirmation;
   readonly priorOffices: readonly ExecutiveText[];
@@ -90,6 +92,17 @@ function iso(value: unknown): string {
 }
 
 export const USA_AGENCIES_URL = "https://api.usaspending.gov/api/v2/references/toptier_agencies/";
+export const CIA_FAQ_URL = "https://www.cia.gov/faqs/";
+/** CIA explicitly withholds both figures; absence from another publisher alone cannot establish this. */
+export function ciaResourcesDisclosure(page: CabinetPage): ExecutiveText {
+  source(page, "www.cia.gov", /^\/faqs\/?$/);
+  const body = statewidePageText(page.body);
+  const question = "How many people work for CIA and what is its budget?";
+  const quote = "Neither the number of employees nor the size of the Agency's budget can, at present, be publicly disclosed.";
+  const at = body.indexOf(question);
+  if (at < 0 || !body.slice(at, at + 1000).includes(quote)) throw new Error("CIA_RESOURCES_DISCLOSURE_UNVERIFIED");
+  return { text: quote, ...cite(page) };
+}
 export function spendingAgency(page: CabinetPage, own: CabinetDepartment): { code: string; name: string } | null {
   source(page, "api.usaspending.gov", /^\/api\/v2\/references\/toptier_agencies\/$/);
   const root = parsed(page);
@@ -146,11 +159,37 @@ export function departmentRegisterActions(page: CabinetPage, own: CabinetDepartm
 }
 
 /** A Congress nomination must explicitly bind this person to this office before its final confirmation is read. */
-export function cabinetConfirmation(page: CabinetPage, person: Pick<Officeholder, "name" | "officeTitle">, actionsPage?: CabinetPage): CabinetConfirmation | null {
+export const SENATE_INTELLIGENCE_URL = "https://www.intelligence.senate.gov/";
+const unsuffixedName = (value: string): string => key(value).replace(/\s+(?:jr|sr|ii|iii|iv|v)$/, "");
+/** A quoted nickname in a hearing's own office-bound heading is evidence, rather than a guessed name equivalence. */
+export function committeeNomineeAliases(page: CabinetPage, person: Pick<Officeholder, "name" | "officeTitle">): CommitteeNomineeAlias[] {
+  source(page, "www.intelligence.senate.gov");
+  const aliases: CommitteeNomineeAlias[] = [];
+  for (const heading of page.body.matchAll(/<h([1-4])\b[^>]*>([\s\S]*?)<\/h\1\s*>/gi)) {
+    const quote = statewidePageText(heading[2]);
+    const nomination = /\bNomination(?: for| of)?(?: the)?(?: Honorable)?\s+(.+?)\s+to be\s+(.+?)\.?$/i.exec(quote);
+    if (!nomination || key(nomination[2]) !== key(person.officeTitle)) continue;
+    const named = /^(.+?)\s+[“"‘']([^”"’']+)[”"’']\s+(.+)$/.exec(nomination[1]);
+    if (!named || unsuffixedName(`${named[2]} ${named[3]}`) !== unsuffixedName(person.name)) continue;
+    aliases.push({ publishedName: person.name, nominationName: `${named[1]} ${named[3]}`, quote, ...cite(page) });
+  }
+  return [...new Map(aliases.map(alias => [unsuffixedName(alias.nominationName), alias])).values()];
+}
+export function cabinetConfirmation(page: CabinetPage, person: Pick<Officeholder, "name" | "officeTitle">, actionsPage?: CabinetPage,
+  aliasPages: readonly CabinetPage[] = []): CabinetConfirmation | null {
   const url = source(page, "api.congress.gov", /^\/v3\/nomination\/\d+\/[\d-]+\/?$/);
   const root = parsed(page), row = object(root.nomination), description = key(text(row.description));
   const aliases = person.officeTitle === "Secretary of War" ? ["Secretary of War", "Secretary of Defense"] : [person.officeTitle];
-  if (!description.includes(key(person.name)) || !aliases.some(title => description.includes(key(title)))) throw new Error("CABINET_NOMINATION_PERSON_OFFICE_MISMATCH");
+  const titles = list(row.nominees).map(nominee => key(text(nominee.positionTitle))).filter(Boolean);
+  // The department's deputy is a different office even when its name contains the Cabinet title.
+  const namedOffice = /\bto be (.+)/.exec(description)?.[1] ?? "";
+  const officeMatches = aliases.some(title => titles.length ? titles.includes(key(title))
+    : namedOffice === key(title) || [" vice ", " for ", " with "].some(suffix => namedOffice.startsWith(`${key(title)}${suffix}`)));
+  const aliasSources = aliasPages.flatMap(aliasPage => committeeNomineeAliases(aliasPage, person));
+  if (new Set(aliasSources.map(alias => unsuffixedName(alias.nominationName))).size > 1) throw new Error("CABINET_NOMINEE_ALIAS_AMBIGUOUS");
+  const directName = description.includes(key(person.name));
+  const matchingAliases = aliasSources.filter(alias => description.includes(unsuffixedName(alias.nominationName)));
+  if ((!directName && !matchingAliases.length) || !officeMatches) throw new Error("CABINET_NOMINATION_PERSON_OFFICE_MISMATCH");
   const identity = /^\/v3\/nomination\/(\d+)\/([\d-]+)/.exec(url.pathname)!;
   if (Number(row.congress) !== Number(identity[1]) || String(row.number) !== identity[2].split("-")[0] ||
     row.partNumber !== undefined && Number(row.partNumber) !== Number(identity[2].split("-")[1] ?? 0)) throw new Error("CABINET_NOMINATION_ID_MISMATCH");
@@ -168,6 +207,7 @@ export function cabinetConfirmation(page: CabinetPage, person: Pick<Officeholder
   const quote = text(confirmed.text), tally = /(?:Yea[\s-]*Nay(?: Vote)?[\s.:]*)?(\d+)\s*-\s*(\d+)/i.exec(quote);
   const method = /voice vote/i.test(quote) ? "Voice vote" : /unanimous consent/i.test(quote) ? "Unanimous consent" : tally ? "Recorded vote" : "Confirmation recorded; tally not yet acquired";
   return { date: iso(confirmed.actionDate), yeas: tally ? Number(tally[1]) : null, nays: tally ? Number(tally[2]) : null, method, quote,
+    ...(!directName && matchingAliases.length ? { aliasSources: matchingAliases } : {}),
     sourceUrl: `https://www.congress.gov/nomination/${identity[1]}th-congress/${identity[2]}`, evidenceSourceUrl: actionsPage?.url ?? page.url, collectedAt: actionsPage?.retrievedAt ?? page.retrievedAt };
 }
 
@@ -278,8 +318,9 @@ function shared(read: CabinetReader, url: string, request?: CabinetReadRequest):
   if (!held) { held = read(url, request); cache.set(requestKey, held); }
   return held;
 }
-async function nominationFor(person: Officeholder, read: CabinetReader, signal?: AbortSignal): Promise<CabinetConfirmation | undefined> {
+async function nominationFor(person: Officeholder, read: CabinetReader, signal?: AbortSignal, aliasPages: readonly CabinetPage[] = []): Promise<CabinetConfirmation | undefined> {
   const year = new Date().getUTCFullYear(), congress = Math.floor((year - 1789) / 2) + 1;
+  const names = [key(person.name), ...aliasPages.flatMap(page => committeeNomineeAliases(page, person)).map(alias => unsuffixedName(alias.nominationName))];
   // The previous Congress covers unchanged holders who were confirmed before this Congress began.
   for (const term of [congress, congress - 1]) {
     let url: string | null = `https://api.congress.gov/v3/nomination/${term}?format=json&limit=250`;
@@ -294,12 +335,12 @@ async function nominationFor(person: Officeholder, read: CabinetReader, signal?:
       if (!Array.isArray(root.nominations)) throw new Error("CABINET_NOMINATION_LIST_INVALID");
       for (const row of list(root.nominations)) {
         const description = key(text(row.description));
-        if (!description.includes(key(person.name))) continue;
+        if (!names.some(name => description.includes(name))) continue;
         const detailUrl = text(row.url);
         if (!detailUrl) continue;
         try {
           const detail = await shared(read, detailUrl), nomination = object(parsed(detail).nomination), actionsUrl = text(object(nomination.actions).url);
-          const confirmation = cabinetConfirmation(detail, person, actionsUrl ? await shared(read, actionsUrl) : undefined);
+          const confirmation = cabinetConfirmation(detail, person, actionsUrl ? await shared(read, actionsUrl) : undefined, aliasPages);
           if (confirmation) return confirmation;
         } catch (error) {
           if (error instanceof Error && error.message === "CABINET_NOMINATION_PERSON_OFFICE_MISMATCH") continue;
@@ -307,7 +348,10 @@ async function nominationFor(person: Officeholder, read: CabinetReader, signal?:
         }
       }
       const next = text(object(root.pagination).next) ? publicFederalUrl(text(object(root.pagination).next)) : "";
-      if (next && (new URL(next).hostname !== "api.congress.gov" || !new URL(next).pathname.startsWith(`/v3/nomination/${term}`))) throw new Error("CABINET_NOMINATION_NEXT_HOST_INVALID");
+      if (next) {
+        const nextUrl = new URL(next);
+        if (nextUrl.hostname !== "api.congress.gov" || !nextUrl.pathname.startsWith(`/v3/nomination/${term}`)) throw new Error("CABINET_NOMINATION_NEXT_HOST_INVALID");
+      }
       url = next || null;
     }
   }
@@ -325,6 +369,7 @@ export async function acquireCabinetRecords(input: { readonly person: Officehold
   if (!own) return { priorOffices, gaps: ["Department mapping is not yet held for this Cabinet office."], sources, coverage: {} };
   let budget: DepartmentBudget | undefined, confirmation: CabinetConfirmation | undefined, actions: DepartmentAction[] = [];
   const budgets: DepartmentBudget[] = [];
+  let resourceDisclosure: ExecutiveText | undefined;
   let departmentSource: Citation | undefined, actionsRead = false;
   const budgetWork = (async () => {
     try {
@@ -374,10 +419,24 @@ export async function acquireCabinetRecords(input: { readonly person: Officehold
     } catch (error) { gaps.push(`Department actions: ${error instanceof Error ? error.message : "source unavailable"}`); }
   })();
   const confirmationWork = (async () => {
-    try { confirmation = await nominationFor(person, read, input.signal); if (!confirmation) gaps.push("Senate confirmation has not yet been acquired."); else sources.push(confirmation); }
+    try {
+      const aliasPages: CabinetPage[] = [];
+      if (own.name === "Office of the Director of National Intelligence") {
+        try { aliasPages.push(await shared(read, SENATE_INTELLIGENCE_URL)); }
+        catch (error) { gaps.push(`Nominee alias: ${error instanceof Error ? error.message : "source unavailable"}`); }
+      }
+      confirmation = await nominationFor(person, read, input.signal, aliasPages);
+      if (!confirmation) gaps.push("Senate confirmation has not yet been acquired.");
+      else { sources.push(confirmation, ...confirmation.aliasSources ?? []); }
+    }
     catch (error) { gaps.push(`Confirmation: ${error instanceof Error ? error.message : "source unavailable"}`); }
   })();
-  await Promise.all([budgetWork, registerWork, confirmationWork]);
+  const disclosureWork = (async () => {
+    if (own.name !== "Central Intelligence Agency") return;
+    try { resourceDisclosure = ciaResourcesDisclosure(await shared(read, CIA_FAQ_URL)); sources.push(resourceDisclosure); }
+    catch (error) { gaps.push(`CIA disclosure: ${error instanceof Error ? error.message : "source unavailable"}`); }
+  })();
+  await Promise.all([budgetWork, registerWork, confirmationWork, disclosureWork]);
   input.signal?.throwIfAborted();
   let headcount: DepartmentHeadcount | undefined;
   let headcountNote: ExecutiveText | undefined;
@@ -396,9 +455,11 @@ export async function acquireCabinetRecords(input: { readonly person: Officehold
   } else gaps.push("OPM employment is not yet acquired.");
   if (headcount) sources.push(headcount);
   if (headcount?.coverageSource) sources.push(headcount.coverageSource);
+  if (resourceDisclosure) { headcountNote ??= resourceDisclosure; gaps.push(resourceDisclosure.text); }
   // An officially excluded intelligence office still carries the source's explicit coverage note.
   departmentSource ??= headcountNote ? { sourceUrl: headcountNote.sourceUrl, collectedAt: headcountNote.collectedAt } : undefined;
-  const currentDepartment = departmentSource ? { name: own.name, ...departmentSource, budget, ...(budgets.length ? { budgets } : {}), headcount, headcountNote, actions } : undefined;
+  const currentDepartment = departmentSource ? { name: own.name, ...departmentSource, budget, ...(budgets.length ? { budgets } : {}),
+    ...(resourceDisclosure ? { budgetNote: resourceDisclosure } : {}), headcount, headcountNote, actions } : undefined;
   return { department: currentDepartment, confirmation, priorOffices: [...new Map(priorOffices.map(row => [row.text, row])).values()], sources,
     gaps, coverage: { department: Boolean(currentDepartment), budget: Boolean(budget?.scope === "DEPARTMENT"), headcount: Boolean(headcount),
       confirmation: Boolean(confirmation && (confirmation.yeas !== null && confirmation.nays !== null || ["Voice vote", "Unanimous consent"].includes(confirmation.method))), priorOffices: priorOffices.length > 0, departmentActions: actionsRead } };

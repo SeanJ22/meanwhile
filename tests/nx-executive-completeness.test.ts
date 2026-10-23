@@ -24,7 +24,7 @@ test("a portrait lead and a claimed completion flag cannot make an executive car
   const row = person();
   row.portraitCandidate = { imageUrl: "https://www.whitehouse.gov/example.jpg", sourceUrl: url, collectedAt: at };
   row.executive = { ...row.executive, complete: true };
-  assert.deepEqual(executiveCardCompleteness(row), { complete: false, missing: ["portrait"] });
+  assert.deepEqual(executiveCardCompleteness(row), { complete: false, missing: ["portrait", "campaignMoney"] });
   row.photo = { url: "/officials/example.jpg", sourceUrl: url, collectedAt: at, license: null, attribution: null };
   assert.equal(withExecutiveCompleteness(row).executive?.complete, false);
   row.fieldSources = { ...row.fieldSources, partyLabel: { ...provenance, sourceUrl: null } };
@@ -71,4 +71,14 @@ test("a shared White House account cannot fill the Vice President's own official
   const row = { ...person(), officeTitle: "Vice President of the United States", social: [] };
   row.executive = { ...row.executive, officeSocial: [{ platform: "twitter", url: "https://x.com/whitehouse", accountKind: "OFFICIAL", label: "The White House on X", scope: "WHITE_HOUSE", sourceUrl: url, collectedAt: at }] };
   assert.ok(executiveCardCompleteness(row).missing.includes("officialSocial"));
+});
+
+
+test("coverage flags cannot replace the sourced money and Cabinet facts", () => {
+  const row = person();
+  assert.ok(executiveCardCompleteness(row).missing.includes("campaignMoney"));
+  const secretary = { ...row, officeTitle: "Secretary of the Treasury", executive: { ...row.executive,
+    coverage: Object.fromEntries(["department", "budget", "headcount", "confirmation", "priorOffices", "departmentActions"].map(key => [key, true])) } };
+  const missing = executiveCardCompleteness(secretary).missing;
+  for (const key of ["department", "budget", "headcount", "confirmation", "priorOffices", "departmentActions"]) assert.ok(missing.includes(key), key);
 });

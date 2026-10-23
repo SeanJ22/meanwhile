@@ -63,6 +63,54 @@
           }
         }
       }
+    },
+    {
+      "file": "congress-blanche-ag.json",
+      "url": "https://api.congress.gov/v3/nomination/119/1078?format=json",
+      "retrievedAt": "2026-10-23T03:56:26.055917Z",
+      "sha256": "d8ba4f2dc3dc663ae04d8deab8e887c56f1d1410170c9504790d9940eb90d4aa"
+    },
+    {
+      "file": "congress-blanche-deputy-ag.json",
+      "url": "https://api.congress.gov/v3/nomination/119/12-5?format=json",
+      "retrievedAt": "2026-10-23T03:56:27.209971Z",
+      "sha256": "cae257e0d5c8d1b56b99dcd0603953f23228ccf6eddb8d41b8e99b444c211981"
+    },
+    {
+      "file": "congress-sonderling-labor.json",
+      "url": "https://api.congress.gov/v3/nomination/119/1129?format=json",
+      "retrievedAt": "2026-10-23T03:56:28.361962Z",
+      "sha256": "b754822da9743ac2205381dcc1316af03ffcb6cb82a9a475fbb777560f4cac94"
+    },
+    {
+      "file": "congress-sonderling-deputy-labor.json",
+      "url": "https://api.congress.gov/v3/nomination/119/12-42?format=json",
+      "retrievedAt": "2026-10-23T03:56:29.484720Z",
+      "sha256": "579c7475083014968af443ab5e9e5337d4528ffcc0ed7961be19046d4c02e63e"
+    },
+    {
+      "file": "cia-faqs.html",
+      "url": "https://www.cia.gov/faqs/",
+      "retrievedAt": "2026-10-23T03:59:48.444751Z",
+      "sha256": "e585f3ac350f216eddfbbbab7340df019a401a2d14061977d73b77d4ba4a190a"
+    },
+    {
+      "file": "senate-clayton-hearing.html",
+      "url": "https://www.intelligence.senate.gov/2026/06/10/closed-briefing-intelligence-matters-74/",
+      "retrievedAt": "2026-10-23T04:01:22.311939Z",
+      "sha256": "8399a290279d1c5a41def48b201fdcc035eb5c64b9815b3c72851cae2793d31e"
+    },
+    {
+      "file": "congress-clayton-dni.json",
+      "url": "https://api.congress.gov/v3/nomination/119/1092?format=json",
+      "retrievedAt": "2026-10-23T04:01:23.651332Z",
+      "sha256": "0931d0a993a8890388acf3e8135ef989560a80b71815187d3e492ea639495a21"
+    },
+    {
+      "file": "congress-clayton-dni-actions.json",
+      "url": "https://api.congress.gov/v3/nomination/119/1092/actions?format=json",
+      "retrievedAt": "2026-10-23T04:04:23.137081Z",
+      "sha256": "5f7c4b8563b488843475c87a659629594c3e27063b571b19c8a73af5479e44c9"
     }
   ]
 }

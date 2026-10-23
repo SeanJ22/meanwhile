@@ -9,14 +9,15 @@ import { statePeoplePortraits, type StatePeopleAcquisition } from "../../civic-d
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
 import { parseExecutiveProfile, parseExecutiveElectionParty, parseExecutiveTerm, EXECUTIVE_TERM_SOURCES, executiveProfileLinks,
   executiveOfficeSources, executiveDirectoryLinks, executiveContactLinks, parseExecutiveOfficeChannels, parseCabinetTenure, CABINET_TENURE_SOURCE_URL,
-  inaugurationLinks, INAUGURATION_INDEX_URL } from "./profile.ts";
-import { acquirePresidentialRecords } from "./presidential-records.ts";
+  inaugurationLinks, INAUGURATION_INDEX_URL, EXECUTIVE_INSTITUTIONAL_ACCOUNTS_URL, parseExecutiveInstitutionalSocial, executiveOathLinks, parseExecutiveOathRelease } from "./profile.ts";
+import { acquirePresidentialRecords, type ExecutiveSourceCredentials } from "./presidential-records.ts";
 import { acquireCabinetRecords, acquireOpmHeadcounts, cabinetDepartment, currentOpmRelease, OPM_EMPLOYMENT_URL } from "./cabinet-records.ts";
 
 type Acquired = { roster: OfficeholderSet; acquisitions: readonly StatePeopleAcquisition[]; gaps: readonly { sourceUrl: string; detail: string }[]; releaseId: string };
 type PublisherRequest = { readonly method: "POST"; readonly body: Readonly<Record<string, unknown>> };
 export interface ExecutiveEnrichmentOptions extends Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now"> {
   readonly signal: AbortSignal;
+  readonly credentials?: ExecutiveSourceCredentials;
   readonly heldPeople?: OfficeholderSet;
   readonly acquire?: typeof acquireKnownRelease;
   readonly portraits?: typeof statePeoplePortraits;
@@ -75,8 +76,7 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
         parserVersion: "national-executive/1", maxBytes: 16 * 1024 * 1024, checkAfterMs: 86_400_000,
         allowedHosts: [new URL(url).hostname], headers: { accept: "text/html,application/json,application/xml",
           ...(request ? { "content-type": "application/json" } : {}),
-          "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-          ...(new URL(url).hostname === "api.congress.gov" && process.env.CONGRESS_API_KEY ? { "X-Api-Key": process.env.CONGRESS_API_KEY } : {}),
+          ...(new URL(url).hostname === "api.congress.gov" && options.credentials?.congress ? { "X-Api-Key": options.credentials.congress } : {}),
         } });
       releases.set(cacheKey, pending);
     }
@@ -149,6 +149,15 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
       return next;
     });
   }
+  // One official NARA read supplies both elected offices' institutional accounts.
+  if (elected.length) try {
+    const accountPage = profilePage(await read(EXECUTIVE_INSTITUTIONAL_ACCOUNTS_URL));
+    people = people.map(person => {
+      if (!elected.some(official => official.id === person.id)) return person;
+      try { return applyExecutivePatch(person, parseExecutiveInstitutionalSocial(person, accountPage)); }
+      catch (error) { failed(accountPage.url, error); return person; }
+    });
+  } catch (error) { failed(EXECUTIVE_INSTITUTIONAL_ACCOUNTS_URL, error); }
   let tenure: Awaited<ReturnType<typeof read>> | undefined;
   try { if (people.some(person => whiteHouseOffice(person.officeTitle)?.startsWith("cabinet:"))) tenure = await read(CABINET_TENURE_SOURCE_URL); }
   catch (error) { failed(CABINET_TENURE_SOURCE_URL, error); }
@@ -160,6 +169,20 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
       next = { ...next, executive: { ...next.executive, termEndDescription }, fieldSources: { ...next.fieldSources,
         termNote: { sourceUrl: termEndDescription.sourceUrl, sourceOrg: "United States Government Manual", collectedAt: termEndDescription.collectedAt, verifiedAt: termEndDescription.collectedAt, quote: termEndDescription.text } } };
     } catch (error) { failed(tenure.url, error); }
+    const oathLeads = new Set<string>();
+    const followOaths = async (page: { url: string; html: string; retrievedAt: string }) => {
+      for (const url of executiveOathLinks(person, page)) {
+        if (oathLeads.has(url)) continue;
+        oathLeads.add(url);
+        try { next = applyExecutivePatch(next, parseExecutiveOathRelease(person, profilePage(await read(url)))); }
+        catch (error) { failed(url, error); }
+      }
+    };
+    for (const held of captures.values()) {
+      const page = { url: held.finalUrl, html: held.body, retrievedAt: held.retrievedAt };
+      try { next = applyExecutivePatch(next, parseExecutiveOathRelease(person, page)); } catch { /* A non-oath capture supplies no appointment date. */ }
+      await followOaths(page);
+    }
     const leads = new Set(person.profileUrls ?? []);
     for (const page of captures.values()) {
       if (!isOfficialSource(page.finalUrl)) continue;
@@ -173,11 +196,12 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
       try {
         const page = await read(url), directory = profilePage(page);
         const pages = [directory];
+        await followOaths(directory);
         for (const link of executiveDirectoryLinks(directory)) {
-          try { pages.push(profilePage(await read(link))); } catch (error) { failed(link, error); }
+          try { const page = profilePage(await read(link)); pages.push(page); await followOaths(page); } catch (error) { failed(link, error); }
         }
         for (const directoryPage of pages) for (const profile of executiveProfileLinks(person, directoryPage)) {
-          try { next = parseProfile(next, await read(profile)); } catch (error) { failed(profile, error); }
+          try { const page = await read(profile); next = parseProfile(next, page); await followOaths(profilePage(page)); } catch (error) { failed(profile, error); }
         }
         const contacts = [...new Set(pages.flatMap(executiveContactLinks))];
         for (const contact of [url, ...contacts]) {

@@ -64,19 +64,31 @@ const sourced = (fact: { sourceUrl?: string | null; collectedAt?: string } | und
 export function executiveCardCompleteness(person: Officeholder): { complete: boolean; missing: string[] } {
   const office = whiteHouseOffice(person.officeTitle), data = person.executive;
   const missing: string[] = [];
-  const require = (key: string, holds: boolean | undefined) => { if (!holds) missing.push(key); };
-  require("portrait", Boolean(person.photo && portraitBindingMatches(person.personId ?? person.id, person.photo)));
-  require("biography", Boolean(data?.biography?.text && sourced(data.biography)));
-  for (const key of ["partyLabel", "termStart"] as const) require(key, Boolean(person[key] && sourced(person.fieldSources?.[key])));
-  require("termEnd", Boolean(person.termEnd && sourced(person.fieldSources?.termEnd) || data?.termEndDescription?.text && sourced(data.termEndDescription)));
-  require("contact", ["phone", "email", "contactFormUrl"].some(key => Boolean(person[key as keyof Officeholder] && sourced(person.fieldSources?.[key]))));
+  const check = (key: string, holds: boolean | undefined) => { if (!holds) missing.push(key); };
+  check("portrait", Boolean(person.photo && portraitBindingMatches(person.personId ?? person.id, person.photo)));
+  check("biography", Boolean(data?.biography?.text && sourced(data.biography)));
+  for (const key of ["partyLabel", "termStart"] as const) check(key, Boolean(person[key] && sourced(person.fieldSources?.[key])));
+  check("termEnd", Boolean(person.termEnd && sourced(person.fieldSources?.termEnd) || data?.termEndDescription?.text && sourced(data.termEndDescription)));
+  check("contact", ["phone", "email", "contactFormUrl"].some(key => Boolean(person[key as keyof Officeholder] && sourced(person.fieldSources?.[key]))));
   const directSocial = Array.isArray(person.social) && person.social.some(account => account.accountKind === "OFFICIAL" && sourced(account));
   const sharedSocial = office !== "vice-president" && data?.officeSocial?.some(account => account.accountKind === "OFFICIAL" && sourced(account));
-  require("officialSocial", directSocial || sharedSocial);
-  if (office === "president") for (const key of ["campaignMoney", "executiveOrders", "proclamations", "memoranda", "signedBills", "vetoedBills"]) require(key, data?.coverage?.[key]);
-  else if (office === "vice-president") require("tieBreakingVotes", data?.coverage?.tieBreakingVotes);
-  else if (office?.startsWith("cabinet:")) for (const key of ["department", "budget", "headcount", "confirmation", "priorOffices", "departmentActions"]) require(key, data?.coverage?.[key]);
-  else require("nationalOffice", false);
+  check("officialSocial", directSocial || sharedSocial);
+  if (office === "president") {
+    check("campaignMoney", Boolean(data?.coverage?.campaignMoney && sourced(data.money)));
+    for (const key of ["executiveOrders", "proclamations", "memoranda", "signedBills", "vetoedBills"]) check(key, data?.coverage?.[key]);
+  } else if (office === "vice-president") check("tieBreakingVotes", data?.coverage?.tieBreakingVotes);
+  else if (office?.startsWith("cabinet:")) {
+    const cabinet = data?.cabinet, department = cabinet?.department;
+    const facts = {
+      department: Boolean(department?.name && sourced(department)),
+      budget: Boolean(department?.budget?.scope === "DEPARTMENT" && sourced(department.budget)),
+      headcount: sourced(department?.headcount),
+      confirmation: sourced(cabinet?.confirmation),
+      priorOffices: Boolean(cabinet?.priorOffices.length && cabinet.priorOffices.every(sourced)),
+      departmentActions: Boolean(department && department.actions.every(sourced)),
+    };
+    for (const key of Object.keys(facts) as (keyof typeof facts)[]) check(key, Boolean(data?.coverage?.[key] && facts[key]));
+  } else check("nationalOffice", false);
   return { complete: missing.length === 0, missing };
 }
 

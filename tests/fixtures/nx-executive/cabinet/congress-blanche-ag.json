@@ -1,0 +1,42 @@
+{
+    "nomination": {
+        "actions": {
+            "count": 12,
+            "url": "https://api.congress.gov/v3/nomination/119/1078/actions?format=json"
+        },
+        "authorityDate": "2026-08-08",
+        "citation": "PN1078",
+        "committees": {
+            "count": 1,
+            "url": "https://api.congress.gov/v3/nomination/119/1078/committees?format=json"
+        },
+        "congress": 119,
+        "description": "Todd Blanche, of Florida, to be Attorney General, vice Pamela Bondi.",
+        "latestAction": {
+            "actionDate": "2026-08-08",
+            "text": "Confirmed by the Senate by Yea-Nay Vote. 50 - 49. Record Vote Number: 230."
+        },
+        "nominationType": {
+            "isCivilian": true
+        },
+        "nominees": [
+            {
+                "nomineeCount": 1,
+                "ordinal": 1,
+                "organization": "Department of Justice",
+                "positionTitle": "Attorney General",
+                "url": "https://api.congress.gov/v3/nomination/119/1078/1?format=json"
+            }
+        ],
+        "number": 1078,
+        "partNumber": "00",
+        "receivedDate": "2026-06-08",
+        "updateDate": "2026-08-08T15:49:44Z"
+    },
+    "request": {
+        "congress": "119",
+        "contentType": "application/json",
+        "format": "json",
+        "number": "1078"
+    }
+}

@@ -4,7 +4,8 @@ import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { acquireCabinetRecords, acquireOpmHeadcounts, cabinetConfirmation, cabinetDepartment, currentOpmRelease, departmentBudget,
   departmentRegisterActions, executiveOfficeAccountBudgets, opmEmploymentCoverage, opmHeadcountsFromParquet, spendingAgency,
-  USA_AGENCIES_URL, USA_FEDERAL_ACCOUNTS_URL, OPM_EMPLOYMENT_URL, OPM_COVERAGE_URL, type CabinetPage, type CabinetReadRequest } from "../lib/sources/white-house/cabinet-records.ts";
+  USA_AGENCIES_URL, USA_FEDERAL_ACCOUNTS_URL, OPM_EMPLOYMENT_URL, OPM_COVERAGE_URL, CIA_FAQ_URL, ciaResourcesDisclosure,
+  SENATE_INTELLIGENCE_URL, committeeNomineeAliases, type CabinetPage, type CabinetReadRequest } from "../lib/sources/white-house/cabinet-records.ts";
 import type { Officeholder } from "../lib/officials/types.ts";
 
 const root = new URL("./fixtures/nx-executive/cabinet/", import.meta.url);
@@ -76,6 +77,60 @@ test("Congress.gov partitioned nomination binds the person and office and reads 
   const noConfirmation = JSON.parse(page("congress-bessent.json").body);
   noConfirmation.nomination.latestAction = { actionDate: "2025-01-25", text: "Cloture invoked in Senate by Yea-Nay Vote. 67 - 23." };
   assert.equal(cabinetConfirmation({ ...page("congress-bessent.json"), body: JSON.stringify(noConfirmation) }, bessent), null);
+});
+
+test("current Cabinet confirmations reject the same holder's earlier deputy office", () => {
+  const attorneyGeneral = { name: "Todd Blanche", officeTitle: "Attorney General" };
+  const confirmed = cabinetConfirmation(page("congress-blanche-ag.json"), attorneyGeneral)!;
+  assert.equal(confirmed.date, "2026-08-08");
+  assert.equal(confirmed.yeas, 50);
+  assert.equal(confirmed.nays, 49);
+  assert.throws(() => cabinetConfirmation(page("congress-blanche-deputy-ag.json"), attorneyGeneral), /PERSON_OFFICE_MISMATCH/);
+  const secretary = { name: "Keith Sonderling", officeTitle: "Secretary of Labor" };
+  const labor = cabinetConfirmation(page("congress-sonderling-labor.json"), secretary)!;
+  assert.equal(labor.date, "2026-09-30");
+  assert.equal(labor.yeas, 47);
+  assert.equal(labor.nays, 41);
+  assert.throws(() => cabinetConfirmation(page("congress-sonderling-deputy-labor.json"), secretary), /PERSON_OFFICE_MISMATCH/);
+  // Older responses without a nominees array still bind the exact "to be" office in their own description.
+  const deputy = JSON.parse(page("congress-blanche-deputy-ag.json").body);
+  delete deputy.nomination.nominees;
+  assert.throws(() => cabinetConfirmation({ ...page("congress-blanche-deputy-ag.json"), body: JSON.stringify(deputy) }, attorneyGeneral), /PERSON_OFFICE_MISMATCH/);
+  const current = JSON.parse(page("congress-blanche-ag.json").body);
+  delete current.nomination.nominees;
+  assert.equal(cabinetConfirmation({ ...page("congress-blanche-ag.json"), body: JSON.stringify(current) }, attorneyGeneral)?.yeas, 50);
+});
+
+test("a current nominee's explicit quoted Senate alias binds both official sources without changing the displayed name", async () => {
+  const person = { ...bessent, name: "Jay Clayton", officeTitle: "Director of National Intelligence" };
+  const hearing = page("senate-clayton-hearing.html");
+  const aliases = committeeNomineeAliases(hearing, person);
+  assert.equal(aliases.length, 1);
+  assert.equal(aliases[0].nominationName, "Walter Clayton III");
+  assert.match(aliases[0].quote, /Walter “Jay” Clayton III to be Director of National Intelligence/);
+  assert.equal(committeeNomineeAliases(hearing, { ...person, officeTitle: "Attorney General" }).length, 0);
+  assert.equal(committeeNomineeAliases(hearing, { ...person, name: "Joe Clayton" }).length, 0);
+  assert.equal(committeeNomineeAliases(hearing, { ...person, name: "Jay Smith" }).length, 0);
+  const nomination = page("congress-clayton-dni.json");
+  assert.throws(() => cabinetConfirmation(nomination, person), /PERSON_OFFICE_MISMATCH/);
+  const record = cabinetConfirmation(nomination, person, page("congress-clayton-dni-actions.json"), [hearing])!;
+  assert.equal(record.date, "2026-07-28");
+  assert.equal(record.yeas, 51);
+  assert.equal(record.nays, 47);
+  assert.equal(record.aliasSources?.[0].sourceUrl, hearing.url);
+  assert.equal(record.evidenceSourceUrl, page("congress-clayton-dni-actions.json").url);
+  assert.equal(person.name, "Jay Clayton");
+  const apiNomination = JSON.parse(nomination.body).nomination;
+  const cabinet = await acquireCabinetRecords({ person, read: async url => {
+    if (url === SENATE_INTELLIGENCE_URL) return hearing;
+    if (url === nomination.url) return nomination;
+    if (url === page("congress-clayton-dni-actions.json").url) return page("congress-clayton-dni-actions.json");
+    if (/\/v3\/nomination\/\d+\?/.test(url)) return { ...nomination, url, body: JSON.stringify({ nominations: [{ ...apiNomination, url: nomination.url }], pagination: { count: 1 } }) };
+    throw new Error("Unacquired independent source");
+  } });
+  assert.equal(cabinet.confirmation?.yeas, 51);
+  assert.equal(cabinet.coverage.confirmation, true);
+  assert.ok(cabinet.sources.some(source => source.sourceUrl === hearing.url));
 });
 
 const rangeManifest = JSON.parse(fixture("opm-ranges.json").toString()) as { url: string; retrievedAt: string; byteLength: number; ranges: { start: number; end: number; file: string; sha256: string }[] };
@@ -193,4 +248,18 @@ test("OPM explicit intelligence exclusions publish a sourced note without a nume
     assert.equal(record.department?.headcountNote?.sourceUrl, OPM_COVERAGE_URL);
     assert.match(record.department?.headcountNote?.text ?? "", /OPM excludes/);
   }
+});
+
+test("CIA's own disclosure publishes exact sourced unavailability without numeric budget or headcount coverage", async () => {
+  const disclosure = ciaResourcesDisclosure(page("cia-faqs.html"));
+  assert.equal(disclosure.text, "Neither the number of employees nor the size of the Agency's budget can, at present, be publicly disclosed.");
+  assert.equal(disclosure.sourceUrl, CIA_FAQ_URL);
+  const record = await acquireCabinetRecords({ person: { ...bessent, name: "John Ratcliffe", officeTitle: "Director of the Central Intelligence Agency" },
+    read: async url => { if (url === CIA_FAQ_URL) return page("cia-faqs.html"); throw new Error("Unacquired independent source"); } });
+  assert.equal(record.department?.budgetNote?.text, disclosure.text);
+  assert.equal(record.department?.headcountNote?.text, disclosure.text);
+  assert.equal(record.department?.budget, undefined);
+  assert.equal(record.department?.headcount, undefined);
+  assert.equal(record.coverage.budget, false);
+  assert.equal(record.coverage.headcount, false);
 });

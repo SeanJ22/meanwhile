@@ -11,6 +11,8 @@
     {"file":"whitehouse-contact.html","url":"https://www.whitehouse.gov/contact/","usedFor":"Separate President and Vice President contact form options; labelled shared White House accounts"},
     {"file":"treasury-contact.html","url":"https://home.treasury.gov/utility/contact","usedFor":"General Treasury phone, office address and labelled department social channels"},
     {"file":"cabinet-tenure-manual.html","url":"https://www.govinfo.gov/content/pkg/GOVMAN-1998-06-02/html/GOVMAN-1998-06-02-Pg89.htm","usedFor":"Government Manual's institutional Cabinet tenure description only; no current names, department list or fixed end dates are taken from this historical edition"}
+    ,{"file":"archives-transition-faq.html","url":"https://www.archives.gov/presidential-libraries/presidential-transitions-faqs","usedFor":"NARA identifies @VP and @POTUS as institutional accounts transferred to incoming administrations; the current White House membership binds the holder"},
+    {"file":"treasury-bessent-sworn.html","url":"https://home.treasury.gov/news/press-releases/sb0001","usedFor":"Treasury names Scott Bessent as sworn in as Secretary of the Treasury on January 28, 2025; this is separate from Senate confirmation"}
   ],
   "reuse": "President, Vice President and all 21 Cabinet portraits and biographies use the pre-existing real pages in tests/fixtures/white-house; those pages were not fetched again.",
   "routes": [

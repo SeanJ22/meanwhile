@@ -144,13 +144,11 @@ test("the FEC supplies the President's unique native identity and party using th
 });
 
 test("a failed Congress source preserves independently complete presidential documents and discovered FEC money", async () => {
-  const oldFec = process.env.FEC_API_KEY, oldCongress = process.env.CONGRESS_API_KEY;
-  process.env.FEC_API_KEY = "fixture-fec-key"; process.env.CONGRESS_API_KEY = "fixture-congress-key";
-  try {
     const acquired: string[] = [];
     const acquire = async (options: KnownReleaseOptions): Promise<KnownRelease> => {
       acquired.push(options.url);
       const url = new URL(options.url);
+      if (url.hostname === "api.open.fec.gov") assert.equal(new Headers(options.headers).get("X-Api-Key"), "fixture-fec-key");
       const name = url.pathname === "/presidential-documents" ? "register-presidents.html" : url.hostname === "www.federalregister.gov" ? "register-complete.json" : url.pathname === "/v1/candidates/" ? "fec-candidates.json" : url.pathname.includes("/totals/") ? "fec-totals.json" : null;
       if (!name) throw new Error("Congress source unavailable");
       const body = fixture(name);
@@ -159,6 +157,7 @@ test("a failed Congress source preserves independently complete presidential doc
         checkedAt: NOW, lastCheckStatus: 200, contentType: name.endsWith("html") ? "text/html" : "application/json", etag: null, lastModified: null, reused: true };
     };
     const result = await acquirePresidentialRecords({ signal: new AbortController().signal, now: () => NOW, acquire,
+      credentials: { fec: "fixture-fec-key", congress: "fixture-congress-key" },
       president: { person: { ...president, fecCandidateIds: [] }, congresses: [119], fecCycle: 2024 } });
     assert.equal(result.coverage.executiveOrders, true);
     assert.equal(result.coverage.proclamations, true);
@@ -173,8 +172,4 @@ test("a failed Congress source preserves independently complete presidential doc
     assert.ok(acquired.includes(PRESIDENTIAL_DOCUMENTS_URL));
     assert.equal(result.gaps.length, 2);
     assert.ok(result.captures.every(capture => !capture.requestedUrl.includes("fixture-fec-key") && !capture.requestedUrl.includes("fixture-congress-key")));
-  } finally {
-    if (oldFec === undefined) delete process.env.FEC_API_KEY; else process.env.FEC_API_KEY = oldFec;
-    if (oldCongress === undefined) delete process.env.CONGRESS_API_KEY; else process.env.CONGRESS_API_KEY = oldCongress;
-  }
 });

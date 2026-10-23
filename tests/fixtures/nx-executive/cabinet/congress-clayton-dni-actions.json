@@ -1,0 +1,120 @@
+{
+    "actions": [
+        {
+            "actionCode": "S05310",
+            "actionDate": "2026-07-28",
+            "text": "Confirmed by the Senate by Yea-Nay Vote. 51 - 47. Record Vote Number: 211.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05220",
+            "actionDate": "2026-07-28",
+            "text": "Considered by Senate.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05307",
+            "actionDate": "2026-07-27",
+            "text": "By unanimous consent agreement, debate and vote 7/28/2026.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05220",
+            "actionDate": "2026-07-27",
+            "text": "Considered by Senate.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05240",
+            "actionDate": "2026-07-27",
+            "text": "Cloture invoked in Senate by Yea-Nay Vote. 51 - 43. Record Vote Number: 210.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05307",
+            "actionDate": "2026-07-27",
+            "text": "By unanimous consent agreement, mandatory quorum required under Rule XXII waived.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05235",
+            "actionDate": "2026-07-22",
+            "text": "Cloture motion presented in Senate.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05205",
+            "actionDate": "2026-07-22",
+            "text": "Motion to proceed to executive session to consideration of nomination agreed to in Senate by Voice Vote.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05181",
+            "actionDate": "2026-07-21",
+            "text": "Placed on Senate Executive Calendar. Calendar No. 833. Subject to nominee's commitment to respond to requests to appear and testify before any duly constituted committee of the Senate.",
+            "type": "Calendars"
+        },
+        {
+            "actionCode": "S05155",
+            "actionDate": "2026-07-21",
+            "committees": [
+                {
+                    "name": "Intelligence (Select) Committee",
+                    "systemCode": "slin00",
+                    "url": "https://api.congress.gov/v3/committee/senate/slin00?format=json"
+                }
+            ],
+            "text": "Reported by Senator Cotton, Select Committee on Intelligence, without printed report.",
+            "type": "Committee"
+        },
+        {
+            "actionCode": "S05890",
+            "actionDate": "2026-07-21",
+            "committees": [
+                {
+                    "name": "Intelligence (Select) Committee",
+                    "systemCode": "slin00",
+                    "url": "https://api.congress.gov/v3/committee/senate/slin00?format=json"
+                }
+            ],
+            "text": "Select Committee on Intelligence. Ordered to be reported favorably.",
+            "type": "Committee"
+        },
+        {
+            "actionCode": "S05750",
+            "actionDate": "2026-07-15",
+            "committees": [
+                {
+                    "name": "Intelligence (Select) Committee",
+                    "systemCode": "slin00",
+                    "url": "https://api.congress.gov/v3/committee/senate/slin00?format=json"
+                }
+            ],
+            "text": "Select Committee on Intelligence. Hearings held.",
+            "type": "Committee"
+        },
+        {
+            "actionCode": "S05120",
+            "actionDate": "2026-06-11",
+            "committees": [
+                {
+                    "name": "Intelligence (Select) Committee",
+                    "systemCode": "slin00",
+                    "url": "https://api.congress.gov/v3/committee/senate/slin00?format=json"
+                }
+            ],
+            "text": "Received in the Senate and referred to the Select Committee on Intelligence.",
+            "type": "IntroReferral"
+        }
+    ],
+    "pagination": {
+        "count": 13
+    },
+    "request": {
+        "congress": "119",
+        "contentType": "application/json",
+        "format": "json",
+        "nominationUrl": "https://api.congress.gov/v3/nomination/119/1092?format=json",
+        "number": "1092"
+    }
+}

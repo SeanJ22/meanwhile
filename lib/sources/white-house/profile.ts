@@ -63,6 +63,28 @@ function isoDate(text: string): string | undefined {
   const date = new Date(`${value}T00:00:00Z`);
   return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value ? value : undefined;
 }
+/** Abbreviations and initials stay inside their own source sentence. */
+function profileSentences(text: string): string[] {
+  return text.replace(/\b(?:Mr|Mrs|Ms|Dr|St|U\.S|[A-Z])\./g, value => value.replaceAll(".", "\u2060"))
+    .split(/(?<=[.!?])\s+|;\s*/).map(value => value.replaceAll("\u2060", "."));
+}
+function currentOfficeOath(person: Pick<Officeholder, "name" | "officeTitle">, text: string, requireName = false): { date: string; quote: string } | null {
+  const title = normalized(person.officeTitle).replace(/^(?:united states|u s) /, "");
+  for (const sentence of profileSentences(text)) {
+    const event = /\b(?:sworn[- ]in|took office|assumed (?:the )?office|began (?:his|her|their) (?:service|term))\b/i.exec(sentence);
+    if (!event || /\b(?:previously|formerly|prior to)\b/i.test(sentence.slice(0, event.index))) continue;
+    if (requireName && !nameKey(sentence).includes(nameKey(person.name))) continue;
+    const normalizedSentence = normalized(sentence), roleAt = normalizedSentence.indexOf(title);
+    if (roleAt < 0 || roleAt > 0 && /(?:deputy|acting|assistant|under|former)\s*$/.test(normalizedSentence.slice(0, roleAt))) continue;
+    const after = new RegExp(datePattern, "gi"), dates = [...sentence.slice(event.index).matchAll(after)];
+    const before = [...sentence.slice(0, event.index).matchAll(new RegExp(datePattern, "gi"))];
+    const raw = dates.length === 1 ? dates[0][0] : dates.length === 0 && before.length === 1 ? before[0][0] : undefined;
+    const date = raw ? isoDate(raw) : undefined;
+    if (date) return { date, quote: sentence.trim() };
+  }
+  return null;
+}
+
 const socialPlatforms: Readonly<Record<string, string>> = { "x.com": "twitter", "twitter.com": "twitter", "facebook.com": "facebook", "instagram.com": "instagram", "youtube.com": "youtube", "linkedin.com": "linkedin", "bsky.app": "bluesky", "truthsocial.com": "truthsocial" };
 
 /** Extract only fields the named official's own current profile actually publishes. */
@@ -100,8 +122,8 @@ export function parseExecutiveProfile(input: { readonly person: Pick<Officeholde
     }
   }
   for (const paragraph of allParagraphs) {
-    const start = new RegExp(`\\b(?:sworn in|took office|assumed (?:the )?office|began (?:his|her|their) (?:service|term))(?:[^.;]{0,100}?)\\b(?:on|as of)\\s+(${datePattern})`, "i").exec(paragraph);
-    if (start && !/\b(?:previously|formerly|prior to)\b/i.test(paragraph.slice(0, start.index))) { const date = isoDate(start[1]); if (date) { patch.termStart = date; fields.termStart = sourceOf(page, paragraph, sourceOrg); break; } }
+    const oath = currentOfficeOath(person, paragraph);
+    if (oath) { patch.termStart = oath.date; fields.termStart = sourceOf(page, oath.quote, sourceOrg); break; }
   }
   const end = new RegExp(`\\b(?:term (?:ends|expires)|serves until)\\s+(?:on\\s+)?(${datePattern})`, "i").exec(text);
   if (end) { const date = isoDate(end[1]); if (date) { patch.termEnd = date; fields.termEnd = sourceOf(page, end[0], sourceOrg); } }
@@ -181,7 +203,8 @@ export function parseExecutiveTerm(input: {
 /** The National Archives records the ticket's filed party next to its named
  * President and Vice President. No party is inferred from who appointed someone. */
 export function parseExecutiveElectionParty(person: Pick<Officeholder, "name" | "officeTitle">, page: ExecutiveProfilePage): Partial<Officeholder> {
-  if (new URL(page.url).hostname !== "www.archives.gov" || !/^\/electoral-college\/\d{4}\/?$/.test(new URL(page.url).pathname)) throw new Error("EXECUTIVE_PARTY_ELECTION_SOURCE_REQUIRED");
+  const sourceUrl = new URL(page.url);
+  if (sourceUrl.hostname !== "www.archives.gov" || !/^\/electoral-college\/\d{4}\/?$/.test(sourceUrl.pathname)) throw new Error("EXECUTIVE_PARTY_ELECTION_SOURCE_REQUIRED");
   const text = statewidePageText(page.html), role = /^Vice President/.test(person.officeTitle) ? "Vice President" : /^President/.test(person.officeTitle) ? "President" : null;
   if (!role) throw new Error("EXECUTIVE_PARTY_ELECTED_OFFICE_REQUIRED");
   const labels = [...text.matchAll(/\b(Vice President|President)\s+([^\[\]]{1,90})\s+\[([RDI])\]/g)];
@@ -236,8 +259,13 @@ export const INAUGURATION_INDEX_URL = "https://www.inaugural.senate.gov/past-ina
  * person's own ceremony check; a future event never proves a person took office. */
 export function inaugurationLinks(page: ExecutiveProfilePage): string[] {
   if (new URL(page.url).hostname !== "www.inaugural.senate.gov") throw new Error("EXECUTIVE_INAUGURATION_SENATE_INDEX_REQUIRED");
-  return [...new Set(linksIn(page.html, page.url).map(link => link.url).filter((url): url is string => Boolean(url && new URL(url).hostname === "www.inaugural.senate.gov" && /^\/\d+(?:st|nd|rd|th)-inaugural-ceremonies\/$/.test(new URL(url).pathname))))]
-    .sort((a, b) => Number(/\/(\d+)/.exec(new URL(b).pathname)![1]) - Number(/\/(\d+)/.exec(new URL(a).pathname)![1]));
+  const ceremonies = linksIn(page.html, page.url).flatMap(link => {
+    if (!link.url) return [];
+    const ceremonyUrl = new URL(link.url);
+    const number = /^\/(\d+)(?:st|nd|rd|th)-inaugural-ceremonies\/$/.exec(ceremonyUrl.pathname)?.[1];
+    return ceremonyUrl.hostname === "www.inaugural.senate.gov" && number ? [{ url: link.url, number: Number(number) }] : [];
+  });
+  return [...new Set(ceremonies.sort((a, b) => b.number - a.number).map(ceremony => ceremony.url))];
 }
 
 export interface ExecutiveOfficeSocial extends SocialAccount {
@@ -310,4 +338,40 @@ export function parseCabinetTenure(person: Pick<Officeholder, "officeTitle">, pa
   const quote = /The Cabinet,[^.]*functions at the pleasure of the President\./i.exec(statewidePageText(page.html))?.[0];
   if (!quote) throw new Error("CABINET_TENURE_RULE_UNRESOLVED");
   return textOf(page, quote);
+}
+
+
+export const EXECUTIVE_INSTITUTIONAL_ACCOUNTS_URL = "https://www.archives.gov/presidential-libraries/presidential-transitions-faqs";
+/** NARA explicitly identifies the office-owned institutional account and its
+ * transfer to each incoming administration; the current White House membership
+ * binds that office's account to its current holder. */
+export function parseExecutiveInstitutionalSocial(person: Officeholder, page: ExecutiveProfilePage): Partial<Officeholder> {
+  if (page.url !== EXECUTIVE_INSTITUTIONAL_ACCOUNTS_URL) throw new Error("EXECUTIVE_ACCOUNT_NARA_SOURCE_REQUIRED");
+  const role = /^(?:Vice )?President(?: of the United States)?$/.test(person.officeTitle) ? person.officeTitle.startsWith("Vice") ? "Vice President" : "President" : null;
+  const current = role && person.id.startsWith("white-house:") && person.memberships?.some(membership => membership.current === true && membership.divisionId === "ocd-division/country:us" && (membership.officeTitle ?? person.officeTitle).replace(/ of the United States$/, "") === role);
+  if (!current || !person.provenance.sourceUrl || !/^https:\/\/(?:www\.)?whitehouse\.gov\/administration\//.test(person.provenance.sourceUrl)) throw new Error("EXECUTIVE_ACCOUNT_CURRENT_WHITE_HOUSE_OFFICE_REQUIRED");
+  const quote = /The institutional accounts on social media[^.]*transfer to the incoming administration\./i.exec(statewidePageText(page.html))?.[0];
+  const handle = role === "Vice President" ? "VP" : "POTUS";
+  if (!quote || !new RegExp(`@${handle}(?:[,\\s]|$)`).test(quote)) throw new Error("EXECUTIVE_INSTITUTIONAL_ACCOUNT_UNRESOLVED");
+  const account: SocialAccount = { platform: "twitter", url: `https://x.com/${handle}`, accountKind: "OFFICIAL", sourceUrl: page.url, collectedAt: page.retrievedAt };
+  const held = Array.isArray(person.social) ? person.social as readonly SocialAccount[] : [];
+  return { social: [...held.filter(row => row.url !== account.url), account], fieldSources: { social: sourceOf(page, quote, "National Archives") } };
+}
+
+/** An oath release is an independent source of a start date, not a biography
+ * and not a substitute for the Senate's separate confirmation record. */
+export function parseExecutiveOathRelease(person: Pick<Officeholder, "name" | "officeTitle">, page: ExecutiveProfilePage): Partial<Officeholder> {
+  if (!isOfficialSource(page.url) || !executiveOfficeSources(person.officeTitle).some(url => officialRoot(url) === officialRoot(page.url))) throw new Error("EXECUTIVE_OATH_OWN_DEPARTMENT_REQUIRED");
+  const main = mainOf(page.html), headings = [...main.matchAll(/<h[1-3]\b[^>]*>([\s\S]*?)<\/h[1-3]\s*>/gi)].map(match => statewidePageText(match[1]));
+  if (!headings.some(heading => nameKey(heading).includes(nameKey(person.name)) && /\b(?:sworn[- ]in|swearing[- ]in|takes? (?:the )?oath|took office|takes? office)\b/i.test(heading))) throw new Error("EXECUTIVE_OATH_PERSON_HEADING_REQUIRED");
+  for (const paragraph of main.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p\s*>/gi)) {
+    const oath = currentOfficeOath(person, statewidePageText(paragraph[1]), true);
+    if (oath) return { termStart: oath.date, fieldSources: { termStart: sourceOf(page, oath.quote, new URL(page.url).hostname) } };
+  }
+  throw new Error("EXECUTIVE_OATH_CURRENT_OFFICE_DATE_UNRESOLVED");
+}
+export function executiveOathLinks(person: Pick<Officeholder, "name" | "officeTitle">, page: ExecutiveProfilePage): string[] {
+  if (!isOfficialSource(page.url)) return [];
+  const roots = executiveOfficeSources(person.officeTitle).map(officialRoot);
+  return [...new Set(linksIn(page.html, page.url).filter(link => link.url && isOfficialSource(link.url) && roots.includes(officialRoot(link.url)) && nameKey(link.label).includes(nameKey(person.name)) && /\b(?:sworn[- ]in|swearing[- ]in|takes? (?:the )?oath|took office|takes? office)\b/i.test(link.label)).map(link => link.url!))];
 }

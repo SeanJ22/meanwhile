@@ -229,8 +229,14 @@ export function resolvePresidentialFecIdentity(page: Page, person: Officeholder,
 }
 
 interface PresidentInput { person: Officeholder; registerSlug?: string; congresses: readonly number[]; fecCandidateId?: string; fecCycle?: number }
+/** Backend acquisition entrypoints own environment access; reader libraries receive only explicit credentials. */
+export interface ExecutiveSourceCredentials {
+  readonly fec?: string;
+  readonly congress?: string;
+}
 export interface PresidentialRecordOptions extends Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now"> {
   signal: AbortSignal;
+  credentials?: ExecutiveSourceCredentials;
   president?: PresidentInput;
   vicePresident?: Officeholder;
   acquire?: typeof acquireKnownRelease;
@@ -250,11 +256,11 @@ export async function acquirePresidentialRecords(options: PresidentialRecordOpti
   const complete: Record<string, boolean> = {}, acquire = options.acquire ?? acquireKnownRelease;
   const read = async (url: string): Promise<Page> => {
     const sourceUrl = publicFederalUrl(url), host = new URL(sourceUrl).hostname;
-    const key = host === "api.congress.gov" ? process.env.CONGRESS_API_KEY : host === "api.open.fec.gov" ? process.env.FEC_API_KEY : undefined;
+    const key = host === "api.congress.gov" ? options.credentials?.congress : host === "api.open.fec.gov" ? options.credentials?.fec : undefined;
     if (["api.congress.gov", "api.open.fec.gov"].includes(host) && !key) throw new Error(`${host === "api.congress.gov" ? "CONGRESS" : "FEC"}_API_KEY_UNAVAILABLE`);
     const release = await acquire({ ...options, sourceId: "statewide-executive-sources", releaseId: `executive-record:${sourceUrl}`, url: sourceUrl,
       parserVersion: "presidential-records/1", maxBytes: 16 * 1024 * 1024, checkAfterMs: 86_400_000,
-      allowedHosts: ["api.congress.gov", "api.open.fec.gov", "www.federalregister.gov", "www.senate.gov"], headers: { accept: host === "www.senate.gov" ? "text/html,application/xml" : "application/json", ...(key ? { "X-Api-Key": key } : {}), "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36" } });
+      allowedHosts: ["api.congress.gov", "api.open.fec.gov", "www.federalregister.gov", "www.senate.gov"], headers: { accept: host === "www.senate.gov" ? "text/html,application/xml" : "application/json", ...(key ? { "X-Api-Key": key } : {}) } });
     const body = new TextDecoder("utf-8", { fatal: true }).decode(release.bytes);
     captures.push({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus, body,
       retrievedAt: release.retrievedAt, rawHash: release.sha256, sourceCheck: knownReleaseSourceCheck(release) });
@@ -367,7 +373,10 @@ export async function acquirePresidentialRecords(options: PresidentialRecordOpti
       return { ...parseFecPage(page.body), sourceObservedAt: page.retrievedAt };
     }, `/candidate/${id}/totals/`, { cycle, election_full: false });
     const chosen = fecTotalsForPeriod(results, id, cycle);
-    const source = chosen ? captures.find(capture => new URL(capture.finalUrl).pathname === `/v1/candidate/${id}/totals/` && parseFecPage(capture.body).results.some(row => JSON.stringify(row) === JSON.stringify(chosen))) : undefined;
+    const source = chosen ? captures.find(capture => {
+      const sourceUrl = new URL(capture.finalUrl);
+      return sourceUrl.pathname === `/v1/candidate/${id}/totals/` && parseFecPage(capture.body).results.some(row => JSON.stringify(row) === JSON.stringify(chosen));
+    }) : undefined;
     if (!source) throw new Error("PRESIDENTIAL_FEC_TOTALS_EVIDENCE_MISSING");
     money = presidentialFecMoney(source.body, id, cycle, source.retrievedAt);
     if (!money) throw new Error("PRESIDENTIAL_FEC_TOTALS_NOT_RETURNED");

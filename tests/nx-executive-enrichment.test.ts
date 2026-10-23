@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { acquirePresidentPeople, ADMINISTRATION_URL } from "../lib/sources/white-house/president.ts";
 import { enrichNationalExecutives, checkedExecutivePerson } from "../lib/sources/white-house/enrichment.ts";
-import { EXECUTIVE_TERM_SOURCES, CABINET_TENURE_SOURCE_URL } from "../lib/sources/white-house/profile.ts";
+import { EXECUTIVE_TERM_SOURCES, CABINET_TENURE_SOURCE_URL, EXECUTIVE_INSTITUTIONAL_ACCOUNTS_URL } from "../lib/sources/white-house/profile.ts";
 import { acquireKnownRelease } from "../lib/sources/known-release.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -24,6 +24,7 @@ test("standing enrichment replays all held profiles, keeps membership dates, and
     [EXECUTIVE_TERM_SOURCES.schedule, fixture("nx-executive/profiles/usa-presidential-inauguration.html")],
     [EXECUTIVE_TERM_SOURCES.amendment, fixture("nx-executive/profiles/constitution-amendment-20.html")],
     [EXECUTIVE_TERM_SOURCES.election, fixture("nx-executive/profiles/archives-president-2025.html")],
+    [EXECUTIVE_INSTITUTIONAL_ACCOUNTS_URL, fixture("nx-executive/profiles/archives-transition-faq.html")],
     [CABINET_TENURE_SOURCE_URL, fixture("nx-executive/profiles/cabinet-tenure-manual.html")],
     ["https://www.whitehouse.gov/contact/", fixture("nx-executive/profiles/whitehouse-contact.html")],
   ]);
@@ -38,6 +39,10 @@ test("standing enrichment replays all held profiles, keeps membership dates, and
   const options = { store, locks, now: () => at, fetchImpl, acquire: acquireKnownRelease, signal: new AbortController().signal };
   const base = await acquirePresidentPeople(options);
   assert.equal(base.roster.officeholders.length, 23);
+  const oathUrl = "https://home.treasury.gov/news/press-releases/sb0001";
+  base.acquisitions.push({ requestedUrl: oathUrl, finalUrl: oathUrl, httpStatus: 200,
+    body: fixture("nx-executive/profiles/treasury-bessent-sworn.html"), retrievedAt: at });
+
   let profilesPublished = false;
   const enriched = await enrichNationalExecutives(base, { ...options,
     portraits: (async input => ({ roster: input.roster, excludedFacts: [], attempted: 0 })) as ExecutiveEnrichmentOptions["portraits"],
@@ -61,6 +66,12 @@ test("standing enrichment replays all held profiles, keeps membership dates, and
     assert.equal(holder.termStart, "2025-01-20");
     assert.equal(holder.termEnd, "2029-01-20");
   }
+  const vice = enriched.roster.officeholders.find(person => person.officeTitle === "Vice President of the United States")!;
+  assert.ok(Array.isArray(vice.social) && vice.social.some(account => account.url === "https://x.com/VP" && account.sourceUrl === EXECUTIVE_INSTITUTIONAL_ACCOUNTS_URL));
+  const treasury = enriched.roster.officeholders.find(person => person.officeTitle === "Secretary of the Treasury")!;
+  assert.equal(treasury.termStart, "2025-01-28");
+  assert.equal(treasury.fieldSources!.termStart.sourceUrl, oathUrl);
+  assert.equal(requested.get(oathUrl), undefined, "the saved oath source is replayed before any fetch");
   for (const url of [ADMINISTRATION_URL, `${ADMINISTRATION_URL}donald-j-trump/`, `${ADMINISTRATION_URL}jd-vance/`]) assert.equal(requested.get(url), 1, `held bytes reused: ${url}`);
   assert.ok(enriched.gaps.length > 0);
   assert.ok(enriched.acquisitions.length > base.acquisitions.length);

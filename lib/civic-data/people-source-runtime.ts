@@ -2,6 +2,7 @@ import type { OfficeholderSet } from "../officials/types.ts";
 import { acquirePeopleSource } from "../sources/people/acquisition.ts";
 import { acquirePresidentPeople, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
 import { enrichNationalExecutives } from "../sources/white-house/enrichment.ts";
+import type { ExecutiveSourceCredentials } from "../sources/white-house/presidential-records.ts";
 import { readPeopleSourceProjection } from "./people-source-read.ts";
 import { acquireStatewidePeople } from "../sources/statewide/acquisition.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
@@ -50,6 +51,7 @@ export function parsePeopleSourceArguments(args: readonly string[]): { state: st
 }
 
 export interface PeopleSourceRuntimeDependencies {
+  readonly executiveCredentials?: ExecutiveSourceCredentials;
   readonly now?: () => string;
   readonly readHeld?: (state: string, store: RoutineDataStore, now: string) => Promise<OfficeholderSet | undefined>;
   readonly readDivisions?: (state: string, asOf: string) => Promise<readonly RegistryDivisionLite[] | Slice<RegistryDivisionLite[]>>;
@@ -111,7 +113,7 @@ export async function runPeopleSourceRefresh(input: {
       : input.state.toLowerCase() === "us" && input.sourceId === "statewide-executive-sources"
         ? await (async () => {
           const base = await acquirePresidentPeople(options);
-          return enrichNationalExecutives(base, { ...options, heldPeople: roster,
+          return enrichNationalExecutives(base, { ...options, credentials: dependencies.executiveCredentials, heldPeople: roster,
             onProfiles: async profiles => { await publish({ ...base, ...profiles }); },
           });
         })()

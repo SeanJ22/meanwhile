@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 import { serverReaderValue } from "../lib/reader/memory.ts";
 
@@ -86,11 +87,11 @@ test("real card endpoints use the same resident national roster without touching
   globalThis.fetch = async () => { throw new Error("Reader attempted an external or database fetch"); };
   const before = state.reads;
   try {
-    const actions = await actionsGET(new Request(`https://meanwhileusa.com/api/official-actions/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ subject: president.id }) });
+    const actions = await actionsGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/official-actions/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ subject: president.id }) });
     assert.equal(actions.status, 200);
     const actionBody = await actions.json();
     assert.equal(actionBody.count, register.length + signed.length);
-    const votes = await votesGET(new Request(`https://meanwhileusa.com/api/votes?member=${encodeURIComponent(vice.id)}`));
+    const votes = await votesGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/votes?member=${encodeURIComponent(vice.id)}`));
     assert.equal(votes.status, 200);
     const voteBody = await votes.json();
     assert.equal(voteBody.votes[0].id, tie.id);

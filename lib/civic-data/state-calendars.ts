@@ -6,7 +6,7 @@ import type { BoundedChildResult } from "./bounded-child-pass.ts";
 import { meetingPartitionContract, type MeetingPartitionContract } from "./meeting-partitions.ts";
 import { RuntimeAuthorityRefused, assertRegisteredRuntimeContract, assertRuntimeAuthority, runtimeAuthorityEnvelope } from "./runtime-authority.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";
-import { SOURCE_CHECK_AFTER_ENV } from "../sources/known-release.ts";
+import { SOURCE_CHECK_AFTER_ENV } from "../sources/source-check-request.ts";
 
 export const STATE_CALENDARS_PREFIX = "meetings-state:";
 export const stateCalendarsId = (state: string): string => `${STATE_CALENDARS_PREFIX}${state}`;

@@ -4,7 +4,7 @@ import { FEDERAL_PEOPLE_SPLIT_LOG_KEY, federalPeopleSplitRecord, federalPeopleSp
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { readerFactDb, readPassCursor } from "../lib/facts/db.ts";
 import { routineTasksWithoutClocks } from "../lib/civic-data/clock-presence.ts";
-import { writeContractHandoff } from "../lib/civic-data/contract-handoff.ts";
+import { writeContractHandoff } from "../lib/civic-data/contract-handoff-parent.ts";
 import { savePublishNowFailure } from "../lib/civic-data/publish-now-failure.ts";
 import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";

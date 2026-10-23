@@ -62,10 +62,16 @@ export async function publishLegistarMembers(input: {
 }) {
   const prepared = legistarMembersPackage(input.raw, input.rows, input.now);
   const source = `legistar-members:${input.raw.slug}`;
-  const [prior] = await input.facts.query("SELECT sha256 FROM fact_store_load WHERE source = $1", [source]);
+  const [prior] = await input.facts.query("SELECT sha256, loaded_at FROM fact_store_load WHERE source = $1", [source]);
   const unchanged = prior?.sha256 === prepared.signature;
+  const loadedAt = prior?.loaded_at instanceof Date ? prior.loaded_at.getTime() : Date.parse(String(prior?.loaded_at ?? ""));
+  const fullEvidenceMoved = input.raw.readings.some(reading => {
+    const url = new URL(reading.artifact.canonicalUrl);
+    return url.pathname.endsWith("/officerecords") && !memberProbe(url) &&
+      Date.parse(reading.artifact.retrievedAt) > loadedAt;
+  });
   let records = 0, held = 0;
-  if (!unchanged) {
+  if (!unchanged || fullEvidenceMoved) {
     const offices = new Map(input.raw.offices.map(office => [office.OfficeRecordId, office]));
     const bodyFor = (owner: BodySourceWiring) => ({ id: owner.bodyId, name: owner.config.bodyName ?? owner.bodyId,
       state: /\/state:([a-z]{2})/.exec(owner.ocdId ?? "")?.[1]?.toUpperCase() ?? null, parentId: owner.ocdId });

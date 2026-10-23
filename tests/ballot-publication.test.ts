@@ -206,7 +206,10 @@ test("the runner's ballot child publishes only its state under exact authority a
     await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
     await writeFile(resolve(directory, "ak.json"), "{");
     const source = await readFile("scripts/routine-civic-data-runner.mts", "utf8");
-    const snippet = transpileModule(source.slice(source.indexOf("function sourceChildCommand("), source.indexOf("function recordSourceSettlementFailures")),
+    const flagsStart = source.indexOf("const TS_CHILD = ");
+    assert.ok(flagsStart > 0, "the extracted runner command needs its actual shared TypeScript child flags");
+    const flags = source.slice(flagsStart, source.indexOf(";", flagsStart) + 1);
+    const snippet = transpileModule(flags + "\n" + source.slice(source.indexOf("function sourceChildCommand("), source.indexOf("function recordSourceSettlementFailures")),
       { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
     const parentEnv = { ...process.env, NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
       DATABASE_URL: "postgresql://local:local@staging.invalid/reader", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control" };

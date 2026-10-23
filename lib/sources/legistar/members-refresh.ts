@@ -19,8 +19,10 @@ export async function refreshLegistarMembers(input: {
   const vault = input.vault ?? new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
   let prior = await loadLegistarMembers(vault, input.slug);
   if (prior && Date.parse(input.now) - Date.parse(prior.collectedAt) > input.clocks.windowHours("officeholder") * 3_600_000) prior = null;
-  const read = makeLegistarMembersReader(vault, input.fetchImpl, prior);
+  const read = makeLegistarMembersReader(vault, input.fetchImpl, prior, input.clocks.windowHours("officeholder"));
   const raw = await runInSourceAcquisitionDomain({ sourceLabel: `legistar-members:${input.slug}`, timeoutMs: ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS }, signal => read(input.slug, signal));
-  await saveLegistarMembers(vault, raw, input.now);
-  return publishLegistarMembers({ facts: input.facts, clocks: input.clocks, vault, raw, rows, now: input.now });
+  // The run's start precedes its HTTP responses. A captured page cannot be checked against an earlier clock.
+  const checkedAt = new Date(Math.max(Date.parse(input.now), Date.now())).toISOString();
+  await saveLegistarMembers(vault, raw, checkedAt);
+  return publishLegistarMembers({ facts: input.facts, clocks: input.clocks, vault, raw, rows, now: checkedAt });
 }

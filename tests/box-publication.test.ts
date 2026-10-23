@@ -593,6 +593,47 @@ test("the pass deadline leaves every unstarted finding due and reports their cou
   assert.deepEqual((await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: 10 })).map(row => row.id), [finding.id]);
 });
 
+test("slow metadata cannot spend every publication pass before true findings reach their source checks", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const page = await hold(TCCC_URL, B15, NOW);
+  const count = 60;
+  await facts.query(`INSERT INTO entity (id, kind, name, state, parent_id)
+    SELECT $1 || ':preparation:' || n, 'body', name, state, parent_id FROM entity, generate_series(0, $2::int - 1) n WHERE id = $1`, [TCCC, count]);
+  for (let index = 0; index < count; index++) await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: `at-preparation-${index}`, missionPart: null,
+    finding: { subjectId: `${TCCC}:preparation:${index}`, field: "office.phone", value: "(520)791-4213", exactQuote: "(520)791-4213", sourceUrl: TCCC_URL, artifactIds: [page], subjectHint: null, index } }, NOW);
+  let clockMs = Date.parse(NOW), metadataQueries = 0, sources = 0;
+  const actualNow = Date.now;
+  const slowFacts = { ...facts, query: async (text: string, params?: readonly unknown[]) => {
+    if (text === "SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND id = $1") {
+      metadataQueries++;
+      clockMs += 10_000;
+    }
+    return facts.query(text, params);
+  } };
+  const counted = { ...repos, artifacts: { ...repos.artifacts, read: async (key: string) => { sources++; return repos.artifacts.read(key); } } };
+  const input = { repos: counted, facts: slowFacts, vault, fetch: async () => { throw new Error("the saved source proves the finding"); },
+    store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: count, audit: false, purge: async () => ({ purged: true }) };
+  Date.now = () => clockMs;
+  try {
+    let remaining = count;
+    for (let pass = 0; pass < 2; pass++) {
+      metadataQueries = 0; sources = 0;
+      const result = await publishBoxFindings({ ...input, deadlineMs: clockMs + 200_000 });
+      assert.ok(metadataQueries > 0 && sources > 0, "both preparation and source checking get a turn");
+      assert.ok(result.published > 0, JSON.stringify(result));
+      remaining -= result.published;
+      const due = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: count });
+      assert.equal(due.length, remaining, "the waiting count falls each pass");
+      assert.equal(result.deferred, remaining);
+      assert.ok(due.every(row => row.waitingFor === undefined && row.attempts.length === 0), "unstarted findings remain due with their evidence intact");
+    }
+    const rest = await publishBoxFindings(input);
+    assert.equal(rest.published, remaining, "without a deadline the entire remaining page still publishes");
+    assert.equal(rest.deferred, 0);
+    assert.deepEqual(await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: count }), []);
+  } finally { Date.now = actualNow; }
+});
+
 test("a slow saved page for one body does not hold another body's verified publication", async () => {
   const { facts, repos, vault, hold } = await setup();
   await ensureEntity(facts.query, { id: AGENDA, kind: "body", name: "Agenda Committee", state: "AZ", parentId: TUCSON });

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { execFileSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
-import { writeContractHandoff } from "../lib/civic-data/contract-handoff.ts";
+import { writeContractHandoff } from "../lib/civic-data/contract-handoff-parent.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { selectedMeetingPartitions } from "../scripts/ingest.ts";
 

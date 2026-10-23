@@ -312,6 +312,10 @@ export async function publishBoxFindings(input: {
   const rows = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: input.now, limit: input.limit });
   const deferred = new Set<string>(), settled = new Set<string>();
   const outOfTime = () => Date.now() >= (input.deadlineMs ?? Infinity);
+  // Preparing a whole page must leave time to check its sources and publish. Otherwise the same untouched rows can consume every pass in metadata lookups.
+  const preparationStartedMs = Date.now();
+  const preparationDeadlineMs = input.deadlineMs === undefined ? Infinity
+    : preparationStartedMs + Math.max(0, input.deadlineMs - preparationStartedMs) / 3;
   const retryAt = (reason: string) => recoverableBlank(reason) ? { retryAt: new Date(now.getTime() + 60 * 60_000).toISOString() } : {};
   const wait = (row: BoxFinding, slotClass: string, reason: string) =>
     holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: FINDING_SLOTS_VERSION, ...retryAt(reason) }, input.now);
@@ -372,7 +376,7 @@ export async function publishBoxFindings(input: {
   const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
   const orderedRows = [...rows.filter(row => naming.has(row.id)), ...rows.filter(row => !naming.has(row.id))];
   for (const [index, row] of orderedRows.entries()) {
-    if (outOfTime()) { for (const pending of orderedRows.slice(index)) deferred.add(pending.id); break; }
+    if (Date.now() >= preparationDeadlineMs) { for (const pending of orderedRows.slice(index)) deferred.add(pending.id); break; }
     report.looked++;
     try {
     if (row.state === "refused") await reopenBoxFinding(repos.boxFindings, row.id, FINDING_SLOTS_VERSION, input.now);

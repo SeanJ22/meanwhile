@@ -1,7 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 
 type Named = string | { readonly id: string };
 const idOf = (value: Named): string => typeof value === "string" ? value : value?.id;
@@ -14,20 +12,11 @@ function validate(values: unknown): asserts values is Named[] {
   if (new Set(values.map(idOf)).size !== values.length) throw new Error("CONTRACT_HANDOFF_DUPLICATE_ID");
 }
 
-/** The private file is complete before a child starts. Count and bytes are checked independently by the child. */
-export function writeContractHandoff<T extends Named>(values: readonly T[]): { readonly args: readonly string[]; cleanup(): void } {
+/** Pure encoding is shared; source children can reach no filesystem writer through this module. */
+export function encodeContractHandoff<T extends Named>(values: readonly T[]): { readonly bytes: string; readonly count: number; readonly sha256: string } {
   validate(values);
-  const directory = mkdtempSync(join(tmpdir(), "meanwhile-contracts-"));
-  try {
-    const path = join(directory, "contracts.json");
-    const bytes = JSON.stringify(values);
-    writeFileSync(path, bytes, { encoding: "utf8", mode: 0o600, flag: "wx" });
-    return { args: [`--contracts-file=${path}`, `--contracts-count=${values.length}`, `--contracts-sha256=${hash(bytes)}`],
-      cleanup: () => rmSync(directory, { recursive: true, force: true }) };
-  } catch (error) {
-    rmSync(directory, { recursive: true, force: true });
-    throw error;
-  }
+  const bytes = JSON.stringify(values);
+  return { bytes, count: values.length, sha256: hash(bytes) };
 }
 
 /** Never reconstruct a selection from the current registry: it may have changed since the parent's pass began. */

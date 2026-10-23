@@ -5,7 +5,7 @@ import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partition
 import { calendarReadOrder, groupCalendarReadsByState, meetingPartitionState, stateCalendarEnvironment, stateCalendarMemberResults, stateCalendarsCovers, stateCalendarsId,
   type StateCalendarGroup } from "../lib/civic-data/state-calendars.ts";
 import type { BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
-import { SOURCE_CHECK_AFTER_ENV } from "../lib/sources/known-release.ts";
+import { SOURCE_CHECK_AFTER_ENV } from "../lib/sources/source-check-request.ts";
 
 const boards = (state: string) => MEETING_PARTITION_CONTRACTS.filter((partition) => partition.derivedFamily === null && meetingPartitionState(partition) === state);
 const run = (partition: (typeof MEETING_PARTITION_CONTRACTS)[number]) =>

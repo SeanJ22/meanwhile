@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 91 LIVE (/api/build d8013db from 12:33 PM EDT); RELEASE 92 (VS-07-FX + PB-03-FX) PR #802 full CI running (admission, verify, both builds green 1:27 PM EDT; 4 test shards running), auto-merge on; RELEASE 93 candidate river-next 01f39a1f6 (BL-01 + BL-21-FX on release 92) in pnpm gates from 1:35 PM EDT
+build_state: RELEASE 92 LIVE (/api/build 5f0e9de16 from 1:46 PM EDT; runner on 5f0e9de16 from 17:44 UTC); RELEASE 93 candidate river-next 01f39a1f6 (BL-01 + BL-21-FX on release 92) in pnpm gates from 1:35 PM EDT
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -15,6 +15,13 @@ Items 1 (Vice President) and 2 (planning round) are answered above and shipped o
 ## Open data issue (from RN-02, Oct 23)
 
 NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 vs unified-school GEOID 3416500, both named "Union Township School District". Registration file identical on release 88 and release 90. Owner: the registration identity lane (to disambiguate the two districts). Not an observed live runner failure yet.
+
+## Release 92 live checks (Oct 23, from 1:46 PM EDT)
+
+Release 92 (VS-07-FX + PB-03-FX) is live: /api/build 5f0e9de16 at 1:46 PM EDT. The runner ran its migrations on 5f0e9de16 at 17:44 UTC. Both lanes put their reader change in data the runner publishes, so the first reading is the code alone; recheck after the runner's next routine passes (scheduled ~2:55 PM EDT).
+- PB-03-FX, at once: PASS. 97204 and 97232 /api/meetings?include=state list ocd-division/country:us/state:or/special_district:metro among their governing places; 97301 does not. 36602's Board of Commissioners reads under "Mobile Housing Authority" (City Council stays under "Mobile city").
+- PB-03-FX, after registration:or + legistar-members:oregonmetro run: not yet. 97204 and 97232 show 0 boards (owed: 13 under Metro, Council meeting 7 members). Boards by ZIP at 1:47 PM EDT: AK 99559 1 (1 with members), AL 35801 1 (1), AL 36602 2 (0), AZ 85641 76 (7), AZ 85701 136 (9), CO 80202 1 (0), WI 53202 342 (138); 0 in CA 94102, GA 30303, MN 55401, NV 89506, NY 12207, OR 97204/97232/97301, TX 78701, WA 98101.
+- VS-07-FX: not yet published. Sites the reader returns at 1:47 PM EDT against the lane's replay: AZ 85701 345 (owed 153: the official replacement retires 212 old Pima rows), KY 40202 226, SC 29201 135 (= 135); 0 everywhere the lane publishes new: CA 90012 (owed 1,054) and 92101 (362), FL 33441 (310) and 33130 (56), GA 30303 (33) and 30044 (13), NC 28203 (215) and 27601 (231), NY 10301 (82) and 11201 (409), OH 44113 (268) and 43215 (1), PA 19147 and 19104 (683 each), TX 78207 (304), 77002 (617), 75201 (70); IL 60090 0 (lane expects 0, Wheeling held, Sean's decision on key-like pages). Answers 1.0 to 4.7 s.
 
 ## Release 91 live checks (Oct 23, from 12:33 PM EDT)
 - RN-01-FX planning round (1:41 to 1:55 PM EDT, control plane read-only): FAILED, returned (returns/rn-01.md). Both rounds on release 91 (16:48 to 17:02 and 17:04 to 17:21 UTC) finished 0 of 57 states, STATE_PLANNING_FAILED everywhere; before RN-01-FX rounds finished 1 to 20 states. No per-state digest written since d8013db; rounds last ~15 min (~16 s a state), so the state children die rather than hit the cap. The runner heartbeat shows the system planner at 1.75 GB with its event loop pinned at 1, and cp_work_items.coordinatorItems (pg-store.ts:1535) timing out at 56 s against its 25 s bound. Round order PASS (opens la, ma, md ..., ends al, ar, as, az, ak). STATE_POINTER_RETIREMENT_FAILED: 0 since release 91, PASS. 2-minute cap: no state lived long enough to test it.

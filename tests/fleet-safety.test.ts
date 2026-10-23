@@ -558,6 +558,8 @@ test("402 and quota refusals hard-latch one provider without probing or substitu
   assert.equal(circuit.eligibleAt, operationalNightAt(NIGHT).end);
 
   assert.equal(classifyProviderFailure(new Error("quota exhausted for account")).class, "HARD");
+  for (const status of [400, 429]) assert.equal(classifyProviderFailure(new ModelTransportError(
+    "You have reached your specified workspace API usage limits.", status)).class, "HARD");
   assert.equal(classifyProviderFailure(new Error("transfer allowance exhausted")).class, "HARD");
 
   let quotaCalls = 0;

@@ -3833,5 +3833,17 @@
     "tested_sha": "dd3b0ace2af423cd261c8df8ea26e021ab7d0847",
     "gates": "pass",
     "at": "2026-10-22T23:51:06Z"
+  },
+  {
+    "lane": "pm-01",
+    "steps": [
+      "R3-LEGISTAR-MEMBERS"
+    ],
+    "ready_sha": "ab9adfee860a7d00203ee8cb44d49ea25a0ec50c",
+    "merge_sha": "009bcb90586bfb4c6a7966d98d023336d0d07431",
+    "river_sha": "3e7ee0d759a423b9e3e16e7de878d051fcff5c2d",
+    "tested_sha": "3e7ee0d759a423b9e3e16e7de878d051fcff5c2d",
+    "gates": "pass",
+    "at": "2026-10-23T00:46:29Z"
   }
 ]

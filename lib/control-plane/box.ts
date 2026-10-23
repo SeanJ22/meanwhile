@@ -149,17 +149,18 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
     const elsewhere = input.sourceUrl !== null && (input.sourceUrl !== held.value.sourceUrl || input.exactQuote !== held.value.exactQuote);
     const origin: BoxOrigin = elsewhere && !input.origin.source ? { ...input.origin, source: { exactQuote: input.exactQuote, sourceUrl: input.sourceUrl! } } : input.origin;
     const prior = held.value.origins.find(held => originId(held) === originId(origin));
+    const fact = held.value.fact ?? input.fact;
+    const waitingFor = fact ? waitingForSlot(slotFor(fact.field, fact.value, fact.recordClass, input.exactQuote ?? "", input.sourceUrl ?? "", input.subjectId)) : undefined;
+    const unaddressed = held.value.state === "waiting" && held.value.waitingFor === undefined && held.value.attempts.length === 0 && waitingFor !== undefined;
     const gains = !held.value.fact && input.fact !== undefined || held.value.lastRecordedAt === undefined;
     const quotes = [held.value.exactQuote, ...held.value.origins.map(known => known.source?.exactQuote)].filter(quote => quote !== undefined);
     const changed = input.fact !== undefined && held.value.fact !== undefined && factValue(input.fact.value) !== factValue(held.value.fact.value)
       || !quotes.some(quote => quoteValue(input.exactQuote) === quoteValue(quote ?? null));
-    if (prior && (!origin.resultKey || prior.resultKey === origin.resultKey) && !gains && !changed) return held.value;
+    if (prior && (!origin.resultKey || prior.resultKey === origin.resultKey) && !gains && !changed && !unaddressed) return held.value;
     const origins = prior ? held.value.origins.map(known => known === prior ? { ...origin, resultKey: origin.resultKey ?? known.resultKey } : known)
       : [...held.value.origins, origin];
-    const fact = held.value.fact ?? input.fact;
     const reopen = (changed || !held.value.fact && input.fact !== undefined) && (held.value.state === "waiting" || held.value.state === "refused" && held.value.attempts.at(-1)?.builder === PUBLISHER);
-    const waitingFor = fact ? waitingForSlot(slotFor(fact.field, fact.value, fact.recordClass, input.exactQuote ?? "", input.sourceUrl ?? "", input.subjectId)) : undefined;
-    const next: BoxFinding = { ...held.value, ...(reopen ? { state: "waiting", refusal: null, waitingFor } : {}), origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
+    const next: BoxFinding = { ...held.value, ...(reopen ? { state: "waiting", refusal: null, waitingFor } : unaddressed ? { waitingFor } : {}), origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
       lastRecordedAt: origins.map(known => known.recordedAt).sort().at(-1)! };
     try { return (await repo.compareAndSet(at, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }

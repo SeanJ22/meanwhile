@@ -9,7 +9,7 @@ import { section3Record } from "../control-plane/promotion/section3.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { ProbeFetch } from "../doors/probe.ts";
 import { captureProvenance, fetchCapture } from "./capture.ts";
-import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
+import { boundedIndexOf, checkFact, isOwnUrl, pageNamesEntity, linkQuote, normalizeText, type FieldKind } from "./check.ts";
 import { looksLikeNameCell, splitPersonTitle } from "../hunt/roster-page.ts";
 import { isPlainSentence, OTHER_NOTICE, schedulePhrase } from "../hunt/page-rules.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
@@ -19,7 +19,7 @@ import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOT_VERSIONS, othe
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
-import { saveCaptureCopy } from "./source-copy.ts";
+import { pageCopy, saveCaptureCopy } from "./source-copy.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
 import { seatIn, seatQuoteOnPage, seatTitleIn } from "./seat-evidence.ts";
 export { seatIn } from "./seat-evidence.ts";
@@ -448,6 +448,14 @@ export async function publishBoxFindings(input: {
     const people = group.filter(entry => entry.slot.class === "rosters" || entry.slot.class === "contacts");
     const forOffice: typeof ready = [];
     if (people.length) {
+      // An official page about a different government cannot put its officials on this government's board.
+      const jurisdiction = people.some(entry => entry.slot.class === "rosters") ? await readCheckEntity(facts.query, body.parentId ?? body.id) : null;
+      const copy = pageCopy({ finalUrl: read.capture.evidence.canonicalUrl, body: read.capture.evidence.text,
+        contentType: "text/html", fetchedAt: read.capture.observedAt });
+      if (jurisdiction && !isOwnUrl(copy.finalUrl, jurisdiction.hosts) && !pageNamesEntity(jurisdiction, copy)) {
+        for (const { finding, slot } of people) await settle(finding.row, { blank: "PAGE_NOT_ABOUT_ENTITY" }, slot.class);
+        continue;
+      }
       const seated = (await liveMembers(facts.query, [body.id])).map(row => row.name);
       const known = [...people.filter(e => e.slot.slot === "member_name").map(e => splitPersonTitle(String(e.finding.value)).name), ...seated];
       const titled = new Map<string, { title: string; quote: string }>();

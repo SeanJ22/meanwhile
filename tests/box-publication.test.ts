@@ -947,3 +947,16 @@ test("a member already live with a title inside the name is renamed to the name,
     [{ field: "name", value_text: "Priscilla Alderete" }, { field: `office:${BOARD}`, value_text: "President" }]);
   assert.equal((await run()).labels.renamed, 0, "a member is read once");
 });
+
+test("a federal committee page cannot seat its members on an unrelated local government", async t => {
+  const { facts, repos, vault, hold } = await setup();
+  t.after(() => facts.pg.close());
+  const url = "https://www.hud.gov/helping-americans/public-indian-housing-tiac";
+  const artifact = await hold(url, "<h1>Tribal Intergovernmental Advisory Committee</h1><p>Committee Member Jacqueline Pata, Juneau, AK</p>", NOW);
+  await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-hunt", missionPart: null,
+    finding: { subjectId: `${TUCSON}#governing`, field: "OFF-04", value: "Jacqueline Pata", exactQuote: "Committee Member Jacqueline Pata, Juneau, AK",
+      sourceUrl: url, artifactIds: [artifact], subjectHint: null, index: 0 } }, NOW);
+  const outcome = await publishBoxFindings({ repos, facts, vault, fetch: async () => { throw new Error("saved page only"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 1000, audit: false, purge: async () => ({ purged: true }) });
+  assert.equal(outcome.published, 0);
+  assert.equal((await repos.boxFindings.list())[0]!.value.refusal, "PAGE_NOT_ABOUT_ENTITY");
+});

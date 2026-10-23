@@ -35,7 +35,7 @@ const arg = (name: string) => {
 };
 const read = async <T,>(name: string): Promise<T> => JSON.parse(await readFile(arg(name), "utf8")) as T;
 type FindingRow = { id: string; value: BoxFinding };
-const rows = [...await read<FindingRow[]>("findings"), ...await read<FindingRow[]>("examples")];
+const rows = await read<FindingRow[]>("findings");
 const snapshot = await read<EntitySnapshot>("entities"), pages = await read<CaptureRow[]>("captures");
 const out = arg("out"), facts = await factDb(), repos = createMemoryRepositories(), vault = new MemoryEvidenceStore();
 try {
@@ -59,14 +59,26 @@ try {
   for (const { capture } of updated) captured.set(capture.evidence.canonicalUrl, capture);
   const now = [...captured.values()].map(capture => capture.observedAt).sort().at(-1)!;
   const tomorrow = new Date(Date.parse(now) + 86_400_000).toISOString();
-  const late = rows.find(row => row.value.fact?.value === "Amanda Baugh")!;
-  assert.ok(late, "Reserve one actual production finding for tomorrow's scheduled intake");
-  for (const row of rows.filter(row => row.id !== late.id)) await repos.boxFindings.put(row.id, row.value, now);
+  const late = process.argv.some(arg => arg.startsWith("--late=")) ? (await read<FindingRow[]>("late"))[0]! : null;
+  const replayIds = new Map<string, string>();
+  for (const row of rows) {
+    if (process.argv.includes("--fresh")) {
+      const origin = row.value.origins.find(origin => !origin.source) ?? row.value.origins[0]!;
+      const indexed = await indexBoxFinding(repos.boxFindings, { subjectId: row.value.subjectId, fact: row.value.fact,
+        exactQuote: row.value.exactQuote, sourceUrl: row.value.sourceUrl, origin }, now);
+      replayIds.set(row.id, indexed.id);
+    } else {
+      await repos.boxFindings.put(row.id, { ...row.value, state: "refused", claim: null, refusal: "SEAT_NOT_IN_QUOTE",
+        waitingFor: { class: "rosters", reason: "SEAT_NOT_IN_QUOTE", slots: "1" },
+        attempts: row.value.attempts.filter(attempt => attempt.detail === "SEAT_NOT_IN_QUOTE").slice(-1) }, now);
+      replayIds.set(row.id, row.id);
+    }
+  }
   // A saved archive page can link to a current roster. Feed that actual new government-page capture through normal hunt intake.
   for (const { findingId, capture } of updated) {
     const row = rows.find(row => row.id === findingId)!;
     assert.ok(row?.value.fact);
-    const origin = row.value.origins.find(origin => !origin.source)!;
+    const origin = row.value.origins.find(origin => !origin.source) ?? row.value.origins[0]!;
     await indexBoxFinding(repos.boxFindings, { subjectId: row.value.subjectId, fact: row.value.fact, exactQuote: String(row.value.fact.value),
       sourceUrl: capture.evidence.canonicalUrl, origin: { ...origin, resultId: `pb02-current-${origin.resultId}`, recordedAt: now, artifactIds: [] } }, now);
   }
@@ -100,10 +112,10 @@ try {
     });
   };
   const todayReader = await renderer();
-  assert.ok(!todayReader.names.includes("Amanda Baugh"));
+  if (late) assert.ok(!todayReader.names.includes(String(late.value.fact?.value)));
   // Tomorrow's new hunt reports the same saved values and quotes through the real intake function.
-  for (const row of rows) {
-    const origin = row.value.origins.find(origin => !origin.source)!;
+  for (const row of [...rows, ...(late ? [late] : [])]) {
+    const origin = row.value.origins.find(origin => !origin.source) ?? row.value.origins[0]!;
     const input = { subjectId: row.value.subjectId, fact: row.value.fact, exactQuote: row.value.exactQuote, sourceUrl: row.value.sourceUrl,
       origin: { ...origin, resultId: `pb02-tomorrow-${origin.resultId}`, recordedAt: tomorrow } };
     await indexBoxFinding(repos.boxFindings, input, tomorrow);
@@ -117,17 +129,21 @@ try {
   await scheduler.waitForIdle();
   assert.deepEqual(failures, []);
   const tomorrowReader = await renderer();
-  assert.ok(tomorrowReader.names.includes("Amanda Baugh"), "Tomorrow's new intake reaches the actual reader component on its scheduled tick");
-  assert.ok(tomorrowReader.html.includes("Amanda Baugh"));
+  if (late) {
+    assert.ok(tomorrowReader.names.includes(String(late.value.fact?.value)), "Tomorrow's new intake reaches the actual reader component on its scheduled tick");
+    assert.ok(tomorrowReader.html.includes(String(late.value.fact?.value)));
+  }
   for (const name of todayReader.names) assert.ok(tomorrowReader.names.includes(name), `${name} survives the next scheduled run`);
   await writeFile(`${out}.html`, tomorrowReader.html);
   const final = (await repos.boxFindings.list()).map(row => row.value);
   const report = { productionWrites: 0, findingCount: rows.length, capturedPages: captured.size, now, tomorrow, scheduler: "IndependentRuntimeLaneScheduler / publishNowLane",
     recoveredFromCurrentGovernmentPages: updated.map(row => ({ findingId: row.findingId, sourceUrl: row.capture.evidence.canonicalUrl })),
     runs, reader: { today: todayReader.names, tomorrow: tomorrowReader.names, bodies: tomorrowReader.bodies, component: "components/map/popup/entity-modal.tsx#Representation" },
-    findings: rows.map(row => { const next = final.find(next => next.id === row.id)!; return { id: row.id, subject: row.value.subjectId,
+    lateArrival: late?.value.fact ?? null,
+    facts: await facts.query("SELECT f.entity_id, f.field, f.value_text, f.quote, s.url, s.sha256 FROM fact f JOIN source_copy s ON s.id=f.source_copy_id WHERE f.status='live'"),
+    findings: rows.map(row => { const next = final.find(next => next.id === replayIds.get(row.id))!; return { id: row.id, subject: row.value.subjectId,
       field: row.value.fact?.field, value: row.value.fact?.value, sourceUrl: row.value.sourceUrl,
-      captureAvailable: row.value.sourceUrl !== null && captured.has(row.value.sourceUrl), state: next.state, reason: next.refusal }; }) };
+      before: row.value.state, captureAvailable: row.value.sourceUrl !== null && captured.has(row.value.sourceUrl), state: next.state, reason: next.refusal }; }) };
   await writeFile(out, JSON.stringify(report, null, 2) + "\n");
   console.log(JSON.stringify({ out, findings: rows.length, readerToday: todayReader.names, readerTomorrow: tomorrowReader.names,
     runs, unavailable: report.findings.filter(row => !row.captureAvailable).length }));

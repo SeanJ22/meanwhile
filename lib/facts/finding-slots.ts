@@ -22,7 +22,7 @@ export type FindingSlot =
 
 /** Bump only the class whose routing or publication changes. Routing fixtures bind each version to its behavior. */
 export const FINDING_SLOT_VERSIONS: Readonly<Record<string, number>> = Object.freeze({
-  rosters: 2, contacts: 1, "office contacts": 1, "body links": 1, bodies: 1, "other offices": 1,
+  rosters: 3, contacts: 1, "office contacts": 1, "body links": 1, bodies: 1, "other offices": 1,
   schedules: 1, "meeting routes": 2, sittings: 2, "comment rules": 1, "official hosts": 1,
   "ballot navigation": 1, "campaign sites": 1, candidates: 1, "site walk": 1, "comment summary": 1,
   meetings: 1, other: 1,

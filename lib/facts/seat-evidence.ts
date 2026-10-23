@@ -1,17 +1,17 @@
 import { visibleText } from "../extract/visible-text.ts";
 import { boundedIndexOf, normalizeText } from "./check.ts";
-import { looksLikeNameCell } from "../hunt/roster-page.ts";
+import { isOfficeTitle, looksLikeNameCell } from "../hunt/roster-page.ts";
 
-// A supervisor of a kind of work is staff ("Maintenance Supervisor", "Road Supervisor"); a bare "Supervisor", "Town Supervisor" or "Supervisor Rex Scott, District 1" is a seat.
+// A supervisor of a kind of work is staff; county supervisors, a Town Supervisor and numbered supervisory districts are seats.
 const JOB_SUPERVISOR = "(?:maintenance|road|roads|highway|street|streets|bridge|public works|works|water|sewer|wastewater|sanitation|solid waste|landfill|utilit(?:y|ies)|park|parks|recreation|facilit(?:y|ies)|building|grounds|cemetery|fleet|equipment|shop|garage|transportation|bus|custodial|food service|nutrition|cafeteria|library|operations|field|crew|shift|plant|program|department|dept|office|it|technology|payroll|billing|collections|records|dispatch|animal control|code enforcement|inspection|election|elections|youth|school|district office)\\s+supervisors?";
-const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff|specialist|technician|captain|officer|${JOB_SUPERVISOR}|supervisors? of (?:maintenance|roads?|highways?|streets?|public works|operations|parks))\\b`, "i");
+const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff|purchasing|procurement|administrative head|teacher|principal|counselor|custodian|paraprofessional|specialist|technician|captain|officer|${JOB_SUPERVISOR}|supervisors? of (?:maintenance|roads?|highways?|streets?|public works|operations|parks))\\b`, "i");
 const COUNCIL_SEAT = /\b((vice|deputy)[- ]?)?mayor\b|\bcouncil[- ]?(m[ae]n|member|woman|person|or|lor|president)s?\b|\balder(m[ae]n|woman|person)\b|\bselect(m[ae]n|woman|board)\b|\b(trustee|supervisor|freeholder|legislator|commissioner)s?\b/i;
 const BOARD_SEAT = /\b(vice[- ]?)?(chair(person|man|woman)?|president)\b|\bboard (?:members?|clerk|secretary|treasurer)\b|\bmember of the board\b/i;
-const SEAT_NUMBER = /\b(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?\d+|seat\s+[a-f]|at[- ]large)\b/i;
-const TERM_LINE = /\bterms?\s*(?:expires?|ends?|:|\()|\bterm of office\b|\b(?:elected|appointed) (?:to|in|for) /i;
-const SEAT_MARKER = /\b(?:(?:seat|position|place|zone|ward)\s*(?:no\.?\s*)?\d+|seat\s+[a-f])\b/i;
+const SEAT_NUMBER = /\b(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?\d+|seat\s+[a-f]|at[- ]large)\b(?![\w@])/i;
+const TERM_LINE = /\bterms?\s*(?:expires?|ends?|:|\(|[-–]\s*\d{1,2}\/\d{2,4})|\bterm of office\b|\b(?:elected|appointed) (?:to|in|for) /i;
+const SEAT_MARKER = /\b(?:(?:seat|position|place|zone|ward)\s*(?:no\.?\s*)?\d+|seat\s+[a-f])\b(?![\w@])/i;
 const WARD = /\b(?:ward|district)\s*(?:no\.?\s*)?(\d+)\b/i;
-const ROSTER_HEADER = /\bname\s+seat\s+seat expires\b/i;
+const ROSTER_HEADER = /\bname\s+seat\s+seat expires\b|\bdistrict\s+member\b/i;
 
 /** The seat a person's own words show on this body, or null: a staff title never seats anyone, and a council seats only by its own titles. */
 export function seatIn(words: string, bodyId: string, personName?: string): { readonly ward: string | null } | null {
@@ -29,7 +29,10 @@ export function seatIn(words: string, bodyId: string, personName?: string): { re
   // A lettered or numbered seat is a seat held, whatever office the holder also fills ("Seat E - Secretary/Treasurer" is a school board member).
   const seated = (council || board) && SEAT_MARKER.test(words);
   const boardOffice = board && /\bgoverning board (?:clerk|secretary|treasurer)\b/i.test(words);
-  if (STAFF_TITLE.test(words) && !seated && !boardOffice) return null;
+  const staff = [...words.matchAll(new RegExp(STAFF_TITLE.source, "gi"))].map(match => match[0]);
+  if (staff.length && !seated && !(boardOffice && staff.every(title => /^(?:clerk|secretary|treasurer)$/i.test(title)))) return null;
+  // A city's maintenance supervisor is staff. A county supervisor, Town Supervisor, or a numbered district is a seat.
+  if (/\bsupervisor\b/i.test(words) && !/county[:/]|:county:/.test(bodyId) && !/\btown supervisor\b|\bboard of supervisors\b/i.test(words) && !SEAT_NUMBER.test(words)) return null;
   // On a council or a board, the district, ward or seat a person holds is a seat on its own ("Annie Williams, District 1"), and a school board's plain "Member" is a member.
   // A county board's "Chairman" is a seat on it, unless the words put that chair on a committee, department or authority.
   const chairs = council && /\b(?:vice[- ]?)?chair(?:man|woman|person)?\b/i.test(words) && !/\b(?:committee|department|commission|authority|library|hospital|district board)\b/i.test(words);
@@ -50,7 +53,7 @@ export function seatTitleIn(quote: string, bodyId: string, name: string): string
     : COUNCIL_SEAT.exec(words))?.[0] ?? null;
 }
 
-const FORMER = /\b(former|past|previous|late|retired|deceased)\s+(?:\w+\s+){0,2}(?:mayors?|council|members?|officials?|officeholders?|commissioners?|trustees?)\b|\bhistory of\b/i;
+const FORMER = /\b(former|past|previous|late|retired|deceased)\s+(?:\w+\s+){0,2}(?:mayors?|council|members?|officials?|officeholders?|commissioners?|trustees?|presidents?|chairs?|chairmen|chairwomen|officers?)\b|\bhistory of\b/i;
 
 /** Read this person's seat from a contiguous passage of the same saved page. A page-wide menu is not a person's title. */
 export function seatQuoteOnPage(page: string, name: string, bodyId: string, original: string): string | null {
@@ -64,11 +67,11 @@ export function seatQuoteOnPage(page: string, name: string, bodyId: string, orig
   if (headings.some(h => FORMER.test(h.text) && hasName(visibleText(page.slice(h.at,
     headings.find(next => next.at > h.at && next.level <= h.level)?.at ?? page.length))))) return null;
   const valid = (words: string) => hasName(words) && !FORMER.test(words) && seatIn(words, bodyId, name) !== null;
-  // Split prose before applying the staff veto: another person's job in the next sentence says nothing about this person.
-  const ownSentences = original.split(/(?<=[.!?])\s+(?=[A-Z])/).filter(hasName);
-  for (const sentence of ownSentences) {
-    const at = normalized.toLowerCase().indexOf(normalizeText(sentence).toLowerCase());
-    if (valid(sentence) && at >= 0) return normalized.slice(at, at + normalizeText(sentence).length);
+  for (const heading of headings) if (valid(heading.text)) return heading.text;
+  // A paragraph or table row keeps the person's name and title together across inline markup.
+  for (const block of page.matchAll(/<(p|li|tr)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi)) {
+    const passage = visibleText(block[2]!);
+    if (passage.length < 600 && valid(passage)) return passage;
   }
   const lines = text.split("\n");
   // An explicit members list binds every listed name to the heading. A general council page does not.
@@ -102,7 +105,7 @@ export function seatQuoteOnPage(page: string, name: string, bodyId: string, orig
     // A title immediately above or below a name belongs to that name when it names no other person.
     for (const neighbor of [index + 1, index - 1]) {
       const title = lines[neighbor];
-      if (!title || title.length > 100 || looksLikeNameCell(title) || !seatIn(title, bodyId)) continue;
+      if (!title || !(isOfficeTitle(title) || TERM_LINE.test(title) || /^(?:(?:vice|deputy)[- ]?)?(?:mayor|councilmember) of [\p{L} .'-]+$/iu.test(title)) || !seatIn(title, bodyId)) continue;
       if (neighbor < index && /\band\b|\b(?:mayors|members|council|board|commission)\s*$/i.test(title)) continue;
       if (neighbor < index && index >= 2 && looksLikeNameCell(lines[index - 2]!)) continue;
       const passage = lines.slice(Math.min(index, neighbor), Math.max(index, neighbor) + 1).join("\n");
@@ -117,6 +120,12 @@ export function seatQuoteOnPage(page: string, name: string, bodyId: string, orig
     for (const sentence of section.split(/(?<=[.!?])\s+(?=[A-Z])/).filter(hasName)) {
       if (sentence.length < 600 && valid(sentence)) return sentence;
     }
+  }
+  // Split prose before applying the staff veto: another person's job in the next sentence says nothing about this person.
+  const ownSentences = original.split(/(?<=[.!?])\s+(?=[A-Z])/).filter(hasName);
+  for (const sentence of ownSentences) {
+    const at = normalized.toLowerCase().indexOf(normalizeText(sentence).toLowerCase());
+    if (valid(sentence) && at >= 0) return normalized.slice(at, at + normalizeText(sentence).length);
   }
   return null;
 }

@@ -18,6 +18,10 @@ test("document, meeting and government links never enter due, including tomorrow
     const input = { workItemId: "hunt", attemptId: "today", missionPart: null, finding };
     const row = await indexReportedFinding(repos.boxFindings, input, now);
     assert.equal(row.waitingFor?.reason, SITE_WALK_LEAD);
+    // A legacy never-tried row already exists when the same hunt result is read again.
+    const stored = await repos.boxFindings.mustRead(row.id);
+    await repos.boxFindings.compareAndSet(row.id, stored.revision, { ...row, waitingFor: undefined }, now);
+    await indexReportedFinding(repos.boxFindings, input, now);
     await indexReportedFinding(repos.boxFindings, { ...input, attemptId: "tomorrow" }, tomorrow);
     const held = (await repos.boxFindings.mustRead(row.id)).value;
     assert.equal(held.waitingFor?.reason, SITE_WALK_LEAD);

@@ -1,5 +1,5 @@
 {
-  "description": "Original public official responses, read with TLS verification. Congress requires a normal browser User-Agent. OPM sparse ranges preserve the original Parquet metadata and only department, agency, count columns; they contain no personal identifiers. The headcount is a sum of OPM count, not a total including contractors or military personnel.",
+  "description": "Original public official responses, read with TLS verification. OPM sparse ranges preserve the original Parquet metadata and only department, agency, count columns; they contain no personal identifiers. The headcount is a sum of OPM count, not a total including contractors or military personnel.",
   "sources": [
     {
       "file": "usa-agencies.json",

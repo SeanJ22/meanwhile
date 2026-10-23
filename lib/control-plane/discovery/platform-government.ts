@@ -4,9 +4,7 @@ import { newFieldManualEntry, writeFieldManual } from "../field-manual.ts";
 import { walkMeetingsDiscoveryNeed, discoveryFieldManualEntries, type DiscoveryRuntime } from "./meetings-discovery-executor.ts";
 import { reviewDiscoveryWalk, textSha256, type HeldBytes, type RegisteredGovernment } from "./auto-crosswalk.ts";
 import { openPlatformMeetingDoors, platformMeetingDoor } from "../../doors/platform-census.ts";
-import { platformHostedUrl } from "./platform-enumeration.ts";
-import { governmentName, type PlatformTenant } from "./platform-enumeration.ts";
-import { platformPublisherIdentity, platformPublisherNames } from "./platform-catalog.ts";
+import { platformHostedUrl, samePlatformTenant, type PlatformTenant } from "./platform-enumeration.ts";
 import { siteOrigins } from "../../hunt/site-origins.ts";
 import { pageLinks } from "../../hunt/meetings-site-discovery.ts";
 import { DEFAULT_USER_AGENT } from "../scheduler/route-executor.ts";
@@ -33,7 +31,7 @@ export function reviewPlatformAttempt(input: {
   const platformFind = (find: { url: string; vendor: string }) => {
     const url = new URL(find.url);
     return !/\/AgendaCenter\/(?:ViewFile|PreviousVersions)(?:\/|$)/i.test(url.pathname)
-      && (platformHostedUrl(find.url) || find.vendor === "ical" && (civicPlusHosts.has(url.hostname)
+      && (find.vendor === "platform-publisher" || platformHostedUrl(find.url) || find.vendor === "ical" && (civicPlusHosts.has(url.hostname)
         || /\/common\/modules\/iCalendar\/iCalendar\.aspx$/i.test(url.pathname)));
   };
   const platformAttempt = { ...attempt, found: attempt.found.filter(platformFind), leads: attempt.leads.filter(platformFind) };
@@ -62,10 +60,12 @@ export async function readPlatformGovernment(input: {
     : input.need;
   type Page = Awaited<ReturnType<DiscoveryRuntime["open"]>>;
   const pages = new Map<string, Page>();
-  const primaryWebsite = need.ownWebAddress;
-  let publisher: { url: string; page: Page } | null = null, civicPlusPublisher = false;
+  const primaryWebsite = need.ownWebAddress, primaryAddressSource = need.addressSource;
+  let publisher: { url: string; page: Page } | null = null, civicPlusPublisher = false, tenantLinked = false;
+  let authority: { url: string; page: Page; artifactId: string; startedAt: string; redirects: { from: string; to: string; status: number }[] } | null = null;
   const readPage = async (first: string) => {
     let url = first, page: Page | undefined;
+    const redirects: { from: string; to: string; status: number }[] = [];
     for (let hops = 0; hops <= 6; hops++) {
       if (input.runtime.budget.spent()) return null;
       assertPublicUrl(url);
@@ -73,9 +73,11 @@ export async function readPlatformGovernment(input: {
       const got = pages.get(url) ?? await withPlatformPublisher(primaryWebsite, url, () => input.runtime.open({ url, headers: { "user-agent": DEFAULT_USER_AGENT }, timeoutMs: input.runtime.timeoutMs ?? 20_000 }));
       page = { ...got, retrievedAt: got.retrievedAt ?? input.runtime.now() }; pages.set(url, page);
       if (!page.status || page.status < 300 || page.status >= 400 || !page.location) break;
-      url = new URL(page.location, url).href;
+      const next = new URL(page.location, url).href;
+      redirects.push({ from: url, to: next, status: page.status });
+      url = next;
     }
-    return page?.status === 200 ? { url, page } : null;
+    return page?.status === 200 ? { url, page, startedAt: first, redirects } : null;
   };
   const readablePublisher = async (source: { url: string; page: Page }) => {
     const { url, page } = source, at = page.retrievedAt!;
@@ -85,6 +87,11 @@ export async function readPlatformGovernment(input: {
     const readable = acquired.artifact.tier === "RESTRICTED_RAW" ? deriveSanitized(acquired.artifact, page.body, at) : { artifact: acquired.artifact, text: page.body };
     const saved = await input.runtime.vault(readable.artifact, readable.text);
     if (!saved.stored) throw new Error(saved.why);
+    if (readable.artifact.tier === "RAW" || readable.artifact.tier === "SANITIZED_DERIVED") held.set(readable.artifact.id, {
+      text: readable.text, contentType: readable.artifact.contentType, sha256: textSha256(readable.text),
+      evidence: { kind: "VAULTED_EVIDENCE", artifactId: readable.artifact.id, contentHash: readable.artifact.contentHash,
+        tier: readable.artifact.tier, retrievedAt: readable.artifact.retrievedAt },
+    });
     return readable;
   };
   const choosePublisher = (source: { url: string; page: Page }, readable: Awaited<ReturnType<typeof readablePublisher>>) => {
@@ -95,28 +102,28 @@ export async function readPlatformGovernment(input: {
         .some(candidate => !["ical", "civicplus-agendacenter"].includes(candidate.vendor) && platformHostedUrl(candidate.url));
     need = { ...need, ownWebAddress: source.url, addressSource: { source: "WEBSITE_EVIDENCE", versionId: readable.artifact.id } };
   };
-  if (input.tenant && platformHostedUrl(input.tenant.url)) {
-    const source = await readPage(input.tenant.url);
-    if (source) {
+  // A catalogue selects the government to check. Only its recorded site can establish the outbound portal connection.
+  const origins = siteOrigins(primaryWebsite);
+  if (primaryWebsite && origins.length) {
+    const recorded = new URL(/^https?:\/\//i.test(primaryWebsite) ? primaryWebsite : `https://${primaryWebsite}`);
+    recorded.protocol = "https:";
+    for (const start of [...new Set([recorded.href, ...origins.map(origin => `${origin}/`)])]) {
+      const source = await readPage(start); if (!source) continue;
       const readable = await readablePublisher(source);
-      const ownHost = primaryWebsite ? new URL(/^https?:/.test(primaryWebsite) ? primaryWebsite : `https://${primaryWebsite}`).hostname.replace(/^www\./, "") : null;
-      const linked = ownHost && pageLinks(readable.text, source.url).some(link => {
-        const host = new URL(link).hostname.replace(/^www\./, "");
-        return host === ownHost || ownHost.endsWith(".gov") && host.endsWith(`.${ownHost}`);
-      });
-      const names = [need.name, need.name.replace(/^(?:the )?(?:city|town|village|borough) of\s+/i, "")].map(governmentName);
-      const named = platformPublisherNames(readable.text).some(name => names.includes(governmentName(platformPublisherIdentity(name).name)));
-      if (linked || named) choosePublisher(source, readable);
+      authority = { ...source, artifactId: readable.artifact.id };
+      if (input.tenant && platformHostedUrl(input.tenant.url)) {
+        const linked = pageLinks(readable.text, source.url).some(link => samePlatformTenant(link, input.tenant!.url));
+        if (samePlatformTenant(source.url, input.tenant.url) || linked) {
+          const portal = samePlatformTenant(source.url, input.tenant.url) ? source : await readPage(input.tenant.url);
+          if (portal) { choosePublisher(portal, portal === source ? readable : await readablePublisher(portal)); tenantLinked = true; }
+        }
+      }
+      if (!publisher) {
+        const census = observePlatformCensus(readable.text, source.url, readable.artifact.id, source.page.retrievedAt!);
+        if (census.matches.some(match => match.platform === "civicplus" && new URL(match.url).origin === new URL(source.url).origin)) choosePublisher(source, readable);
+      }
+      if (publisher) break;
     }
-  }
-  // The registered website can attest a platform whose customer portal prints no publisher title.
-  // Reuse that same response in the ordinary walker when it is another platform.
-  if (!publisher && primaryWebsite) for (const origin of siteOrigins(primaryWebsite)) {
-    const source = await readPage(`${origin}/`); if (!source) continue;
-    const readable = await readablePublisher(source);
-    const census = observePlatformCensus(readable.text, source.url, readable.artifact.id, source.page.retrievedAt!);
-    if (census.matches.some(match => match.platform === "civicplus" && new URL(match.url).origin === new URL(source.url).origin)) choosePublisher(source, readable);
-    break;
   }
   const runtime: DiscoveryRuntime = { ...input.runtime,
     open: request => request.method !== "POST" && pages.has(request.url) ? Promise.resolve(pages.get(request.url)!)
@@ -132,12 +139,28 @@ export async function readPlatformGovernment(input: {
       return stored;
     },
   };
-  const client = input.tenant?.platform === "legistar" ? /^([a-z0-9_-]+)\.legistar\.com$/i.exec(new URL(input.tenant.url).hostname)?.[1] : null;
-  const attempt = publisher && client
+  const client = tenantLinked && input.tenant?.platform === "legistar" ? /^([a-z0-9_-]+)\.legistar\.com$/i.exec(new URL(input.tenant.url).hostname)?.[1] : null;
+  let attempt = publisher && client
     ? await readLegistarGovernment({ need, runtime, client, publisher })
     : publisher && civicPlusPublisher
       ? await readCivicPlusGovernment({ need, runtime, publisher, checkedCalendars })
     : await walkMeetingsDiscoveryNeed(need, runtime);
+  if (publisher && authority && attempt.site?.homepage) {
+    const portal = attempt.site.homepage;
+    const separatePage = authority.url !== portal.url;
+    attempt = { ...attempt, ownWebAddress: primaryWebsite, site: { address: primaryAddressSource ?? attempt.site.address,
+      homepage: { url: authority.url, artifactId: authority.artifactId, basis: "RECORDED_ADDRESS", hintFingerprint: null,
+        startedAt: authority.startedAt, redirects: authority.redirects } },
+      steps: [...(separatePage ? [{ purpose: "homepage" as const, url: authority.url, permission: "ALLOWED" as const, status: authority.page.status,
+        transportError: authority.page.transportError, bytes: authority.page.bytes, artifactId: authority.artifactId,
+        rung: null, note: "The government's recorded site links this platform tenant." }] : []), ...attempt.steps],
+      found: attempt.found.map(find => separatePage && find.via?.page === portal.url
+        ? { ...find, via: { page: authority!.url, artifactId: authority!.artifactId } } : find),
+      leads: [...(separatePage ? [{ vendor: "platform-publisher", url: portal.url, basis: "LINKED" as const, evidence: portal.url,
+        detail: "Portal linked by the government's own saved page.",
+        via: { page: authority.url, artifactId: authority.artifactId } }] : []), ...attempt.leads],
+    };
+  }
   const { attempt: platformAttempt, review, doors } = reviewPlatformAttempt({ attempt, registered: input.registered, held, reviewer: input.reviewer, now: runtime.now() });
   if (!input.readonly) {
     await input.repos.discoveryAttempts.append(input.need.jurisdictionId, attempt.attemptId, platformAttempt, attempt.finishedAt);

@@ -1,0 +1,107 @@
+{
+    "actions": [
+        {
+            "actionCode": "S05310",
+            "actionDate": "2025-01-27",
+            "text": "Confirmed by the Senate by Yea-Nay Vote. 68 - 29. Record Vote Number: 19.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05220",
+            "actionDate": "2025-01-27",
+            "text": "Considered by Senate.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05307",
+            "actionDate": "2025-01-25",
+            "text": "By unanimous consent agreement, debate 1/27/2025.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05220",
+            "actionDate": "2025-01-25",
+            "text": "Considered by Senate.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05240",
+            "actionDate": "2025-01-25",
+            "text": "Cloture invoked in Senate by Yea-Nay Vote. 67 - 23. Record Vote Number: 18.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05307",
+            "actionDate": "2025-01-25",
+            "text": "By unanimous consent agreement, mandatory quorum required under Rule XXII waived.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05235",
+            "actionDate": "2025-01-22",
+            "text": "Cloture motion presented in Senate.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05205",
+            "actionDate": "2025-01-22",
+            "text": "Motion to proceed to executive session to consideration of nomination agreed to in Senate by Voice Vote.",
+            "type": "Floor"
+        },
+        {
+            "actionCode": "S05181",
+            "actionDate": "2025-01-21",
+            "text": "Placed on Senate Executive Calendar. Calendar No. 5. Subject to nominee's commitment to respond to requests to appear and testify before any duly constituted committee of the Senate.",
+            "type": "Calendars"
+        },
+        {
+            "actionCode": "S05155",
+            "actionDate": "2025-01-21",
+            "committees": [
+                {
+                    "name": "Finance Committee",
+                    "systemCode": "ssfi00",
+                    "url": "https://api.congress.gov/v3/committee/senate/ssfi00?format=json"
+                }
+            ],
+            "text": "Reported by Senator Crapo, Committee on Finance, without printed report.",
+            "type": "Committee"
+        },
+        {
+            "actionCode": "S05890",
+            "actionDate": "2025-01-21",
+            "committees": [
+                {
+                    "name": "Finance Committee",
+                    "systemCode": "ssfi00",
+                    "url": "https://api.congress.gov/v3/committee/senate/ssfi00?format=json"
+                }
+            ],
+            "text": "Committee on Finance. Ordered to be reported favorably.",
+            "type": "Committee"
+        },
+        {
+            "actionCode": "S05120",
+            "actionDate": "2025-01-20",
+            "committees": [
+                {
+                    "name": "Finance Committee",
+                    "systemCode": "ssfi00",
+                    "url": "https://api.congress.gov/v3/committee/senate/ssfi00?format=json"
+                }
+            ],
+            "text": "Received in the Senate and referred to the Committee on Finance.",
+            "type": "IntroReferral"
+        }
+    ],
+    "pagination": {
+        "count": 12
+    },
+    "request": {
+        "congress": "119",
+        "contentType": "application/json",
+        "format": "json",
+        "nominationUrl": "https://api.congress.gov/v3/nomination/119/11-1?format=json",
+        "number": "11-1"
+    }
+}

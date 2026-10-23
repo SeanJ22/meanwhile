@@ -122,6 +122,29 @@ test("SAM echoed keys and download tokens fail without entering saved evidence o
   const token = "synthetic-private-token";
   await assert.rejects(acquireFederalMoney("sam-gov-entities", "CA", { samGovApiKey: key, fetch: async url => String(url).includes("download-entities") ? json({ entityData, links: { selfLink: `https://api.sam.gov/entity-information/v3/download-entities?token=${token}` } }) : json({ downloadURL: `https://api.sam.gov/entity-information/v3/download-entities?token=${token}` }) }), error => error instanceof Error && error.message.includes("echoed a private credential") && !error.message.includes(token));
 });
+for (const method of ["GET", "POST"] as const) test(`SAM follows its plain-text ${method} extract notice, polls readiness, and saves only the downloaded JSON`, async () => {
+  const token = "synthetic-notice-token", key = "synthetic-notice-key", waits: number[] = [], calls: string[] = [];
+  const body = JSON.stringify({ totalRecords: 1, entityData: [JSON.parse(fixture("sam-official-example.json"))] });
+  const result = await acquireFederalMoney("sam-gov-entities", "CA", { now, samGovApiKey: key, sleep: async delay => { waits.push(delay); }, fetch: async (input, init) => {
+    const url = new URL(String(input)); calls.push(url.pathname);
+    assert.equal(new Headers(init?.headers).get("X-Api-Key"), key);
+    if (url.pathname.endsWith("/entities")) { assert.equal(init?.method ?? "GET", "GET"); return new Response(`Extract File will be available for download with ${method} url:\nhttps://api.sam.gov/entity-information/v3/download-entities?token=${token}&api_key=REPLACE_WITH_API_KEY in some time. If you have provided an email id, you will get a notification email once file is ready for download. Requests for Larger Set of Data may take longer time to process.`, { headers: { "Content-Type": "text/plain" } }); }
+    assert.equal(init?.method, method);
+    assert.equal(url.searchParams.get("token"), token); assert.equal(url.searchParams.get("api_key"), key);
+    return calls.length === 2 ? new Response("The file is not ready for download. Please try again in some time.", { headers: { "Retry-After": "3" } }) : streamed(gzipSync(body));
+  } });
+  assert.deepEqual(calls, ["/entity-information/v3/entities", "/entity-information/v3/download-entities", "/entity-information/v3/download-entities"]);
+  assert.deepEqual(waits, [3000]); assert.equal(result.facts[0].uei, "WB23FJYKNLM1");
+  for (const savedKey of await evidenceStore.list("project/meanwhile/source/federal-money/")) {
+    const text = Buffer.from((await evidenceStore.get(savedKey))!.bytes).toString("utf8");
+    assert.equal(text.includes(token), false); assert.equal(text.includes(key), false); assert.equal(text.includes("Extract File will"), false);
+  }
+});
+test("SAM rejects private keys in text notices without saving notice bytes", async () => {
+  const key = "synthetic-notice-private-key";
+  await assert.rejects(acquireFederalMoney("sam-gov-entities", "CA", { now, samGovApiKey: key, fetch: async () => new Response(`Extract File will be available for download with GET url: https://api.sam.gov/entity-information/v3/download-entities?token=synthetic&api_key=${key}`) }), error => error instanceof Error && error.message.includes("echoed a private credential") && !error.message.includes(key));
+  assert.deepEqual(await evidenceStore.list("project/meanwhile/source/federal-money/"), []);
+});
 test("malformed successful responses become source outages and never claim an empty successful check", async () => {
   await assert.rejects(acquireFederalMoney("openfema", "AZ", { fetch: async () => json({ error: "transport fixture" }) }), /declaration array is missing/);
   await assert.rejects(acquireFederalMoney("usaspending", "AZ", { fetch: async () => json({}) }), /transaction extract links/);

@@ -37,7 +37,7 @@ function CampaignSection({divisionId,personId,data,bare=false,context=null}:Prop
     catch{if(request.current===current)setFailed(true);}
     finally{if(request.current===current)setLoading(false);}
   }
-  if(!value?.records.length)return <CardGapContribution id={`campaign-finance:${divisionId}:${personId??"place"}`} label="campaign money"/>;
+  if(!value?.records.length)return <CardGapContribution id={`campaign-finance:${divisionId}:${personId??"place"}`} label={value?.missingReason?`campaign money (${value.missingReason})`:"campaign money"}/>;
   return <section aria-label="Campaign money" className="space-y-3">
     {!bare&&<h4 className="t-detail font-medium text-paper">Campaign money</h4>}
     {value.records.map(row=>{

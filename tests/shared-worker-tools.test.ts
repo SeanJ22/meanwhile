@@ -5,6 +5,8 @@ import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { newFieldManualEntry, readFieldManual, readFieldManualSourceHints, readLearnedManualRoutes, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
+import { knowledgeEntries, methodFixture, methodVersionEntry } from "./method-store-fixture.ts";
 import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -141,6 +143,23 @@ test("hosted workers receive their own manual rows and browser observations with
     ]);
     await writeFieldManual(shared,[newFieldManualEntry("test","learned-route",{role:"SHARED",kind:"ROUTE",title:"Indexed route",summary:"Shared maturity",outcome:"YIELDED",payload:{routeId:"indexed-route"}})],"2026-10-07T00:00:00.000Z");
     assert.deepEqual(await readLearnedManualRoutes(repos as never,["indexed-route","unlearned"]),{present:true,routeIds:["indexed-route"]});
+    await assert.rejects(readMethodKnowledge(repos as never), /has not been seeded/);
+    const fixture = methodFixture();
+    const entries = [...knowledgeEntries(fixture), methodVersionEntry(fixture)];
+    await writeFieldManual(shared, entries, "2026-10-07T00:00:00.000Z");
+    let routeRowsRead = 0;
+    const readMany = shared.fieldManual.readMany.bind(shared.fieldManual);
+    shared.fieldManual.readMany = async ids => { routeRowsRead += ids.length; return readMany(ids); };
+    const first = await readMethodKnowledge(repos as never);
+    assert.equal(first.routes.length, fixture.routes.length);
+    routeRowsRead = 0;
+    assert.deepEqual(await readMethodKnowledge(repos as never), first);
+    assert.equal(routeRowsRead, 0, "workers share the host's revision-checked route rows");
+    const changed = await shared.fieldManual.mustRead(entries[0]!.id);
+    await shared.fieldManual.compareAndSet(changed.id, changed.revision, { ...changed.value,
+      payload: { ...changed.value.payload as object, title: "Updated shared method" } }, "2026-10-07T01:00:00.000Z");
+    assert.equal((await readMethodKnowledge(repos as never)).routes.find(route => route.id === fixture.routes[0]!.id)?.title, "Updated shared method");
+    assert.equal(routeRowsRead, 1, "only the changed route is read again");
     assert.equal((await browseWithPlaywright({ url: "https://one.gov", timeoutMs: 1000, holder: "test" })).text, "official");
   } finally {
     await host.close();

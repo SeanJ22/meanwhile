@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import {PUBLIC_SITE_ORIGIN} from "../lib/ops/origins.ts";
 import test from "node:test";
 import { readFile, mkdtemp, rm } from "node:fs/promises";
-import { bindCampaignMoney as bindIndexedMoney,campaignMoneyPeopleIndex, campaignMoneyWork, campaignMoneyStateDue,readCampaignMoneyStateWork,campaignRecordYear, type CampaignMoneyPerson } from "../lib/funding/state-people.ts";
+import { bindCampaignMoney as bindIndexedMoney,campaignMoneyPeopleIndex, campaignMoneyWork, campaignMoneyStateDue,readCampaignMoneyStateWork,campaignRecordYear, CAMPAIGN_MONEY_MISSING_REASONS, type CampaignMoneyPerson } from "../lib/funding/state-people.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { CAMPAIGN_MONEY_SCOPE,CAMPAIGN_FINANCE_SOURCES, campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { refreshCampaignMoneyState } from "../lib/funding/state-publication.ts";
@@ -125,6 +125,41 @@ test("a failed daily source check stays due for the next hour and keeps verified
     unavailable=false;now="2026-10-21T13:00:00.000Z";await refreshCampaignMoneyState(options);
     assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T14:00:00.000Z")).length,0);
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
+});
+
+test("missing people keep their own filing reason through tomorrow's refresh and the reader card",async()=>{
+  const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-person-reasons-"));
+  const unreadable={...person,id:"unreadable-period",name:"Unreadable Period",seat:person.seat+"-unreadable"};
+  const absent={...person,id:"no-filing",name:"No Filing",seat:person.seat+"-absent"};
+  let now=at;
+  const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
+    fetch:async(url:RequestInfo|URL)=>Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:1792454400}:[
+      {...raw,election_year:"2018"},
+      {...raw,id:"no-period",filer_id:"no-period",filer_name:unreadable.name,election_year:""},
+    ])};
+  try{
+    for(const published of [person,unreadable,absent])await publishPerson(db,published);
+    for(const checkedAt of [at,"2026-10-21T00:00:00.000Z"]){
+      now=checkedAt;await refreshCampaignMoneyState(options);
+      const blanks=await db.query("SELECT entity_id,detail FROM blank WHERE field LIKE 'campaign-money:%' ORDER BY entity_id");
+      assert.deepEqual(new Map(blanks.map(row=>[row.entity_id,row.detail])),new Map([
+        [person.id,CAMPAIGN_MONEY_MISSING_REASONS.old],
+        [unreadable.id,CAMPAIGN_MONEY_MISSING_REASONS.period],
+        [absent.id,CAMPAIGN_MONEY_MISSING_REASONS.absent],
+      ]));
+      const read=await readCampaignFinanceForPlace(unreadable.division,{query:db.query,personId:unreadable.id});
+      assert.equal(read.missingReason,CAMPAIGN_MONEY_MISSING_REASONS.period);
+      installFactReader(db.query);
+      const {GET}=await import("../app/api/campaign-finance/route.ts");
+      const response=await GET(new Request(`${PUBLIC_SITE_ORIGIN}/api/campaign-finance?${new URLSearchParams({division:unreadable.division,person:unreadable.id})}`));
+      assert.equal(response.status,200);const data=await response.json();assert.deepEqual(data,read);
+      const markup=await renderCardWithSources({modulePath:"./components/funding/state-campaign-section.tsx",exportName:"StateCampaignSection",
+        props:{divisionId:unreadable.division,personId:unreadable.id,data},sourceUrls:[]});
+      assert.match(markup,/The source has no readable filing period/);assert.doesNotMatch(markup,/The filing predates January 1, 2020/);
+    }
+    await db.query("UPDATE blank SET detail='SourceAcquisitionFailure(PUBLISHER_UNAVAILABLE): raw technical failure' WHERE entity_id=$1",[unreadable.id]);
+    assert.equal((await readCampaignFinanceForPlace(unreadable.division,{query:db.query,personId:unreadable.id})).missingReason,undefined);
+  }finally{installFactReader(undefined);await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 
 test("a held source document without a filing period cannot become cycle totals",async()=>{

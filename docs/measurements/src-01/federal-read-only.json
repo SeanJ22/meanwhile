@@ -1,0 +1,103 @@
+{
+  "productionReadOnly": true,
+  "productionProject": "tiny-hill-13996172",
+  "productionBranch": "br-delicate-lab-ax02xuo5",
+  "productionRole": "readonly",
+  "controlledReplayDates": [
+    "2026-10-23T17:00:00.000Z",
+    "2026-10-24T17:00:00.000Z"
+  ],
+  "downstream": "registered source refresh -> bounded FEDERAL_MONEY partitions -> local reader artifact projection -> readFederalMoneyForPlace -> actual Card + FederalMoneySection",
+  "nextRunMethod": "Controlled next-day clock with the persisted source continuation; fetch the real subsequent publisher page; confirm prior accepted source records remain readable through pagination. This is a replay, not observation of a future production run.",
+  "proofs": [
+    {
+      "source": "openfema",
+      "productionFailure": "cv-f5e44118eba0755372c2ee89eb9e5c35",
+      "hashCauseReproduced": true,
+      "rebuiltProductionCheckpoint": "PROMOTED",
+      "exactSourceBytes": false,
+      "firstRows": {
+        "loaded": 500,
+        "joined": 479,
+        "unjoined": 21
+      },
+      "nextRows": {
+        "loaded": 1000,
+        "joined": 961,
+        "unjoined": 39
+      },
+      "nextCursorResumed": true,
+      "readerDivision": "ocd-division/country:us/state:fl/county:alachua",
+      "visibleRows": 1,
+      "nextVisibleRows": 1,
+      "productionCapturedUrl": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24filter=state+eq+%27FL%27&%24orderby=id&%24top=500&%24skip=0&%24inlinecount=allpages",
+      "productionCaptureSha256": "64d91d406b663043fec8650bd18ef0d770754b9b4b085611a0d8f1f33c5b8143",
+      "replaySourceSha256": "4b0edf6c760f5e8e40ba24fbc2397473c715dc4f336e5f754b6fe8073f9cd016",
+      "priorFirstRunFactStillReadableNextDay": true,
+      "registeredTypedReaderChecks": "PASS",
+      "reportedStateLocationDoesNotCreateBodyJoin": null
+    },
+    {
+      "source": "federal-audit-clearinghouse",
+      "productionFailure": "cv-56023d9489f1c171d5befd31048e8550",
+      "hashCauseReproduced": true,
+      "rebuiltProductionCheckpoint": "PROMOTED",
+      "exactSourceBytes": true,
+      "firstRows": {
+        "loaded": 100,
+        "joined": 100,
+        "unjoined": 0
+      },
+      "nextRows": {
+        "loaded": 309,
+        "joined": 309,
+        "unjoined": 0
+      },
+      "nextCursorResumed": true,
+      "readerDivision": "ocd-division/country:us/state:de",
+      "visibleRows": 95,
+      "nextVisibleRows": 100,
+      "productionCapturedUrl": "https://api.fac.gov/general?auditee_state=eq.DE&order=report_id.asc&limit=100&offset=0",
+      "productionCaptureSha256": "0d7e30493a3a1c0cd9e4b5c2412eddc689f63ef52a5da8981c84c3af8dcddfb2",
+      "replaySourceSha256": "0d7e30493a3a1c0cd9e4b5c2412eddc689f63ef52a5da8981c84c3af8dcddfb2",
+      "priorFirstRunFactStillReadableNextDay": true,
+      "registeredTypedReaderChecks": "PASS",
+      "reportedStateLocationDoesNotCreateBodyJoin": true
+    }
+  ],
+  "browser": {
+    "actualComponents": [
+      "components/ui/card.tsx",
+      "components/funding/federal-money-section.tsx"
+    ],
+    "readerData": "Accepted local artifacts built from real production source inputs and subsequent live publisher pages",
+    "productionWrites": 0,
+    "inspection": "Screenshots inspected; source rows, state-location wording and source links visible in the real components. Screenshot uses a local proof page with minimal styling.",
+    "results": [
+      {
+        "source": "openfema",
+        "division": "ocd-division/country:us/state:fl/county:alachua",
+        "firstUsableMs": 362,
+        "visibleRows": 1,
+        "sourceLinks": 1,
+        "firstRecord": "openfema:5113ba5e-9146-4817-9b05-328d10e90ccc",
+        "textExcerpt": "Disaster declarations\nDisaster declaration\nDisaster declaration: HURRICANE DEBBY \u2014 Alachua (County); Period: 2024-08-10; Declaration type: DR; Incident type: Tropical Storm; Designated area: Alachua (County); Incident begin: 2024-08-01; Incident end: 2024-08-27; Individual assistance: No; Individuals households: Yes; Public assistance: Yes; Hazard mitigation: Yes; Tribal request: No; Last refresh: 2026-10-05.\nLoad more records",
+        "screenshot": "docs/measurements/src-01/openfema-card.png",
+        "runId": "src-01-federal-production-replay@2026-10-23T08:23:33.336Z",
+        "writesBlocked": 0
+      },
+      {
+        "source": "federal-audit-clearinghouse",
+        "division": "ocd-division/country:us/state:de",
+        "firstUsableMs": 363,
+        "visibleRows": 100,
+        "sourceLinks": 2,
+        "firstRecord": "federal-audit-clearinghouse:2016-06-CENSUS-0000136003",
+        "textExcerpt": "Federal audit findings\nFederal audit\nFederal audit: Federal single audit, 2016 \u2014 CITY OF HARRINGTON; Auditee location: DE; Audited federal expenditures: $3,484,680.00; Recipient: CITY OF HARRINGTON; Period: 2016; Reported state: DE; Material weakness: No; Significant deficiency: No; Material noncompliance: No; Low risk auditee: No; Auditee city: HARRINGTON.\nFederal audit\nFederal audit: Audit finding 2016-001, 2016; Auditee location: DE; Period: 2016; Reference: 2016-001; Award reference: AWARD-00001; Requirement: L; Material weakness: No; Significant deficiency: Yes; Questioned costs: No; Repeat finding: No; Modified opinion: No; Other matters: No; Prior finding references: N/A.\nFederal audit\nFederal audit: Audit finding 2016-001, 2016; Auditee location: DE; Period: 2016; Reference: 2016-001; Award reference: AWARD-00002; Requirement: L; Material weakness: No; Significant deficiency: Yes; Questioned costs: No; Repeat finding: No; Modified opinion: No; Other matters: No; Prior finding references: N/A.\nFederal audit\nFederal audit: Audit finding 2016-001, 2016; Auditee location: DE; Period: 2016; Reference: 2016-001; Award reference: AWARD-00003; Requirement: L; Material weakness: No;",
+        "screenshot": "docs/measurements/src-01/federal-audit-clearinghouse-card.png",
+        "runId": "src-01-federal-production-replay@2026-10-23T08:23:35.768Z",
+        "writesBlocked": 0
+      }
+    ]
+  }
+}

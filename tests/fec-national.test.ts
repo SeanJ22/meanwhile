@@ -75,6 +75,26 @@ test("real API records page both chambers and national totals without per-candid
   assert.equal(row.totals.cashOnHand, Number(first.cash_on_hand_end_period));
 });
 
+test("an election-registration refresh preserves an off-cycle filing and its original source dates on both runs", async () => {
+  const offCycle = rows.find(row => row.office === "S" && row.totals.receipts !== null)!;
+  const registrations = bulk.registrations.filter(row => row.candidateId !== offCycle.fecCandidateId);
+  const discovery = { ...bulk, registrations };
+  const store = new MemoryRoutineDataStore();
+  const publish = (value: FundingSnapshot, at: string) => processRegisteredRoutineCandidate(store, "fec-funding",
+    fecFundingCandidate({ snapshot: value, rawBodies: [master, summary], finalUrl: fecBulkUrls(cycle).master,
+      retrievedAt: at, excludedFacts: [] }), at);
+  assert.ok((await publish({ ...snapshot, candidates: [offCycle] }, NOW)).promoted);
+  for (const at of ["2026-10-13T12:00:00.000Z", "2026-10-14T12:00:00.000Z"]) {
+    const held = await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported");
+    const candidates = projectFecDiscovery(discovery, cycle, roster, held!.payload.candidates);
+    assert.deepEqual(candidates.find(row => row.fecCandidateId === offCycle.fecCandidateId), offCycle);
+    const result = await publish({ ...snapshot, candidates, fetchedAt: at }, at);
+    assert.ok(result.promoted, JSON.stringify(result.candidate.receipt));
+    assert.equal(result.candidate.candidate.changeSet?.removed.length, 0);
+    assert.equal(result.readerReadback?.status, "PASS");
+  }
+});
+
 test("real full-election Senate totals cannot wear a two-year period label", async () => {
   const full = parseFecPage(source("totals-full-election.json")).results;
   assert.ok(full.some(row => row.office === "S" && String(row.coverage_start_date) < "2025-01-01"));

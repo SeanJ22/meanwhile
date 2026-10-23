@@ -34,10 +34,14 @@ function childReceipt(stdout: string, prefix: string): Record<string, unknown> {
   return JSON.parse(lines[0].slice(prefix.length)) as Record<string, unknown>;
 }
 
+/** Retirement is the routine pass's long tail: it stops at `deadlineMs`, the units it reconciled stay published, and the next pass continues. */
 export async function reconcileNationalStatePointers(input: {
   readonly query: Query; readonly env: NodeJS.ProcessEnv;
   readonly launch?: BoundedChildLauncher; readonly slots?: WorkerProcessSlots;
+  readonly deadlineMs?: number;
 }): Promise<readonly StateRetirementOrigin[]> {
+  const deadlineMs = input.deadlineMs ?? Number.POSITIVE_INFINITY;
+  const late = () => new Error("PASS_TIME_BUDGET: state retirement reached the pass deadline; the next pass continues it");
   const keys = retired.map(([, recordClass, scope]) => `${recordClass}:${scope}`);
   const rows = await input.query(`SELECT p.key,p.current_version_id,p.promoted_at,c.normalized_hash
     FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
@@ -60,18 +64,29 @@ export async function reconcileNationalStatePointers(input: {
   const releases = new Map<string, WorkerMemoryRelease>(), failures: string[] = [];
   const slots = input.slots ?? routineProcessSlots();
   const options = { cwd, env: childEnv, maxBufferBytes: 64 * 1024, discardOutputAfterSettlement: true,
+    ...(Number.isFinite(deadlineMs) ? { deadlineMs } : {}),
     onStarting: async (command: { id: string; onStarted?: (pid: number) => void }) => {
-      const release = await slots.acquire(`${command.id}/retire-state-authorities.mts`, Date.now() + ROUTINE_CHILD_TIMEOUT_MS);
+      if (Date.now() >= deadlineMs) throw late();
+      const release = await slots.acquire(`${command.id}/retire-state-authorities.mts`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, deadlineMs));
       releases.set(command.id, release); command.onStarted = pid => release.observe?.(pid);
     } };
   const release = (id: string) => { releases.get(id)?.(); releases.delete(id); };
+  let cut = false;
+  // A child ended by the deadline, or never started for it, is owed to the next pass rather than failed.
+  const settledLate = (run: { errorMessage: string | null }) => {
+    const isLate = /^PASS_TIME_BUDGET:/.test(run.errorMessage ?? "");
+    if (isLate) cut = true;
+    return isLate;
+  };
   try {
+    if (Date.now() >= deadlineMs) throw late();
     let manifestPath: string | null = null;
     await runBoundedChildPass([{ id: "state-retirement:prepare", executable: process.execPath,
       args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", script, `--prepare=${directory}`, `--origins=${originsFile}`],
       env: admittedRuntimeChildEnvironment({ parentEnv: childEnv, capability: "ROUTINE_SUPERVISOR", contract: null, parentPid: process.pid }) }],
     { ...options, onSettled: run => {
       try {
+        if (settledLate(run)) return;
         if (run.status !== 0 || run.termination !== "EXITED") throw new Error(run.errorMessage ?? (run.stderr.trim() || "STATE_RETIREMENT_PREPARE_FAILED"));
         const receipt = childReceipt(run.stdout, "STATE_RETIREMENT_PREPARED=");
         if (receipt.manifestPath !== join(directory, "manifest.json")) throw new Error("STATE_RETIREMENT_PLAN_PATH_INVALID");
@@ -79,6 +94,7 @@ export async function reconcileNationalStatePointers(input: {
       } catch (error) { failures.push(sanitizedErrorDiagnostic(error)); }
       finally { release(run.id); }
     } }, input.launch);
+    if (cut && !failures.length) throw late();
     if (failures.length || !manifestPath) throw new Error(failures.join(" | ") || "STATE_RETIREMENT_PLAN_UNAVAILABLE");
     const plan = JSON.parse(await readFile(temporaryPath(manifestPath), "utf8")) as { units: StateRetirementUnit[]; unassigned: unknown[] };
     if (!Array.isArray(plan.units) || !Array.isArray(plan.unassigned) || plan.unassigned.length)
@@ -87,7 +103,8 @@ export async function reconcileNationalStatePointers(input: {
     for (const unit of plan.units) {
       const queue = pending.get(unit.contractId) ?? []; queue.push(unit); pending.set(unit.contractId, queue);
     }
-    while (pending.size) {
+    while (pending.size && !cut) {
+      if (Date.now() >= deadlineMs) { cut = true; break; }
       const units = [...pending.values()].map(queue => queue.shift()!);
       for (const [key, queue] of pending) if (!queue.length) pending.delete(key);
       await runBoundedChildPass(units.map(unit => ({ id: `${unit.contractId}:retirement:${unit.originVersionId}`, executable: process.execPath,
@@ -97,6 +114,7 @@ export async function reconcileNationalStatePointers(input: {
       })), { ...options, onSettled: (run, index) => {
         const unit = units[index];
         try {
+          if (settledLate(run)) return;
           if (run.status !== 0 || run.termination !== "EXITED") throw new Error(run.errorMessage ?? (run.stderr.trim() || "STATE_RETIREMENT_UNIT_FAILED"));
           const receipt = childReceipt(run.stdout, "STATE_RETIREMENT_UNIT=");
           if (receipt.family !== unit.family || receipt.state !== unit.state || !["PUBLISHED", "CURRENT"].includes(String(receipt.status)))
@@ -106,6 +124,7 @@ export async function reconcileNationalStatePointers(input: {
       } }, input.launch);
     }
     if (failures.length) throw new Error(failures.join(" | "));
+    if (cut) throw late();
     return origins;
   } finally { for (const free of releases.values()) free(); await rm(temporaryPath(directory), { recursive: true, force: true }); }
 }

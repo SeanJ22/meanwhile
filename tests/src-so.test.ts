@@ -16,7 +16,7 @@ import { openDataEvidence, openDataText } from "../lib/ask/open-data.ts";
 import { OPEN_DATA_CLOCKS, ECHO_EXPORT, divisionPartition, zipPartition, type OpenDataFact } from "../lib/sources/open-data/model.ts";
 import { streamCsvObjects } from "../lib/sources/prl/streaming.ts";
 import { OpenDataSpool } from "../lib/sources/open-data/spool.ts";
-import { parseOpenDataArguments } from "../scripts/open-data-refresh.mts";
+import { parseOpenDataArguments, openDataArchiveStore } from "../scripts/open-data-refresh.mts";
 import { portalBindingsFromPage,stateDirectoryPage,stateGovernmentWebsite } from "../lib/sources/open-data/portals.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
 import { facilityCell,facilityPoint,nearbyFacilityCells,facilityNear } from "../lib/sources/open-data/geography.ts";
@@ -27,6 +27,9 @@ import { readPublicKindOwed } from "../lib/coverage/public-kind-owed.ts";
 import { openArchiveSource } from "../lib/sources/archive-download.ts";
 import { saveOpenDataPartition } from "../lib/sources/open-data/artifacts.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { refreshSocrata, socrataStateDivisionId } from "../lib/sources/open-data/socrata.ts";
+import type { OpenDataCapture } from "../lib/sources/open-data/publication.ts";
+import type { OpenDataPartitionRef, OpenDataReport } from "../lib/sources/open-data/model.ts";
 
 const NOW="2026-10-12T23:24:00.000Z", LATER="2026-10-12T23:25:00.000Z";
 const fixture=(name:string)=>readFileSync(new URL(`./fixtures/src-so/${name}`,import.meta.url),"utf8");
@@ -124,6 +127,15 @@ test("Disk spool retains exact rows and captures while publishing one ZIP at a t
   const rows=await echoRows(),spool=await OpenDataSpool.create();
   try{for(const row of rows)await spool.append(zipPartition(row.zip!),row,echoCapture([row]));let count=0;for await(const p of spool.partitions()){count+=p.rows.length;assert.equal(p.partition,zipPartition(p.rows[0].zip!));assert.equal(p.rows[0].nativeIds.registry_id,p.rows[0].sourceRow.REGISTRY_ID);}assert.equal(count,9);}finally{await spool.dispose();}
 });
+test("The real Texas catalog Unicode line separator survives disk spooling exactly",async()=>{
+  const raw=parseCatalogPage(fixture("socrata-texas-line-separator.json")).rows[0],row=normalizeSocrata(raw,NOW),spool=await OpenDataSpool.create();
+  assert.ok(row.description.includes("\u2028"));
+  try {
+    await spool.append(`domain:${row.nativeIds.domain}`,row,{url:"https://api.us.socrata.com/api/catalog/v1?ids=25ut-iey2",retrievedAt:NOW,rawHash:createHash("sha256").update(fixture("socrata-texas-line-separator.json")).digest("hex")});
+    const partitions=[];for await(const partition of spool.partitions())partitions.push(partition);
+    assert.equal(partitions.length,1);assert.deepEqual(partitions[0].rows[0],row);assert.deepEqual(partitions[0].captures[0].sourceRows[0],raw);
+  } finally {await spool.dispose();}
+});
 test("Catalog evidence carries metadata and dates while contents remain source leads",()=>{
   const row=normalizeSocrata(catalog("ny").rows[0],NOW);const evidence=openDataEvidence(row,"government-body");
   assert.equal(evidence.subjectId,"government-body");assert.equal(evidence.kind,"DATASET");assert.equal(evidence.occurredAt,row.publishedAt);assert.match(openDataText(row),/catalog entry/);
@@ -143,6 +155,17 @@ test("Catalog datasets reach the same place's Scout manual and open standing pub
   assert.ok(read.store.entries.some(e=>e.kind==="SOURCE_LEAD"&&e.url===row.sourceUrl));
   const owed=await readPublicKindOwed(repos,[division]);assert.equal(owed.length,1);assert.equal(owed[0].sourceUrl,row.sourceUrl);
 });
+test("Catalog source leads insert in bulk and unchanged scheduled checks issue no per-row writes",async()=>{
+  const repos=createMemoryRepositories(),manual=repos.fieldManual;let puts=0,updates=0,batches=0;
+  const counted={...repos,fieldManual:{...manual,put:async(...args:Parameters<typeof manual.put>)=>{puts++;return manual.put(...args);},
+    compareAndSet:async(...args:Parameters<typeof manual.compareAndSet>)=>{updates++;return manual.compareAndSet(...args);},
+    insertNew:async(...args:Parameters<typeof manual.insertNew>)=>{batches++;return manual.insertNew(...args);}}};
+  const rows=catalog("ny").rows.map(raw=>normalizeSocrata(raw,NOW));
+  await saveSocrataLeads(counted,rows,NOW);assert.equal(batches,1);assert.equal(puts,0);assert.equal(updates,0);
+  await saveSocrataLeads(counted,rows.map(row=>({...row,capturedAt:LATER})),LATER);assert.equal(puts,0);assert.equal(updates,0);
+  const raw={...rows[0].sourceRow,resource:{...(rows[0].sourceRow.resource as object),name:"Updated catalog title"}};
+  await saveSocrataLeads(counted,[normalizeSocrata(raw,LATER)],LATER);assert.equal(updates,1);
+});
 test("Statewide publisher discovery follows USA.gov's native postal IDs and captured government links",()=>{
   assert.equal(stateDirectoryPage(fixture("usa-state-ids.html"),"NY"),"https://www.usa.gov/states/new-york");
   assert.equal(stateDirectoryPage(fixture("usa-state-ids.html"),"TX"),"https://www.usa.gov/states/texas");
@@ -159,4 +182,69 @@ test("Shared disk acquisition holds real raw fixture bytes and confirms a condit
   const first=await openArchiveSource(spec,fetchImpl,archive);
   try{let rows=0;for await(const _row of streamCsvObjects(first.textChunks))rows++;assert.equal(rows,9);await first.accept?.();assert.equal(first.publishedAt,"2026-10-11T02:25:45.000Z");}finally{await first.dispose();}
   const second=await openArchiveSource(spec,fetchImpl,archive,first.sourceSha256);try{assert.equal(second.unchanged,true);assert.equal(second.retrievedAt,first.retrievedAt);assert.equal(second.publishedAt,first.publishedAt);}finally{await second.dispose();}
+});
+test("EPA archive evidence gets a fresh key on the next scheduled run",async()=>{
+  const vault=new MemoryEvidenceStore(),spec={id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv" as const};
+  const firstBytes=fixture("echo-exporter-sample.csv"),secondBytes=firstBytes.replace("TITAN CLEANERS & LAUNDRY","TITAN CLEANERS & LAUNDRY UPDATED");
+  assert.notEqual(firstBytes,secondBytes);
+  for(const [run,body]of [["first-run",firstBytes],["next-run",secondBytes]]) {
+    const source=await openArchiveSource(spec,(async()=>new Response(body,{headers:{etag:`"${run}"`}})) as typeof fetch,openDataArchiveStore(vault,run));
+    try {for await(const _row of streamCsvObjects(source.textChunks)){}await source.accept?.();}
+    finally {await source.dispose();}
+  }
+  const keys=await vault.list("project/freshness/source/src-so/archive/");
+  assert.ok(keys.some(key=>key.includes("/first-run/epa-echo/source.json")));
+  assert.ok(keys.some(key=>key.includes("/next-run/epa-echo/source.json")));
+});
+test("Socrata native facts reach the place reader before portal enrichment on consecutive scheduled runs",async()=>{
+  const division="ocd-division/country:us/state:ny",store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore(),repos=createMemoryRepositories();
+  const references=new Map<string,OpenDataPartitionRef>();
+  const government={id:"government:US-NY:cog:state",nativeIds:{state_fips:"36"},bodyIds:[],associations:[{divisionId:division,geoid:"36",layer:"state",basis:"SOURCE_CODE"}],website:"https://www.ny.gov/"} as unknown as RegistrationGovernmentListing;
+  const raw=catalog("ny").rows[0];let nativePublications=0,enrichmentReads=0,learningGaps=0;
+  for(const now of [NOW,"2026-10-13T23:24:00.000Z"]) {
+    const body=JSON.stringify({results:[raw],resultSetSize:1}),sha256=createHash("sha256").update(body).digest("hex");
+    const pages=(async function*(){yield {rows:[raw],total:1,body,url:"https://api.us.socrata.com/api/catalog/v1?limit=1000&scroll_id=",retrievedAt:now,sha256,
+      sourceCheck:{requestedUrl:"https://api.us.socrata.com/api/catalog/v1",finalUrl:"https://api.us.socrata.com/api/catalog/v1",httpStatus:200 as const,checkedAt:now,rawHash:sha256}};})();
+    const states=(async function*(){yield {state:"NY",fips:"36",divisionId:division,governments:[government]};})();
+    await refreshSocrata({pages,states,signal:AbortSignal.timeout(5000),gap:detail=>{if((detail as {work?:string})?.work)learningGaps++;},
+      writePartition:async partition=>{const ref=await saveOpenDataPartition({source:"socrata-discovery",...partition,now},vault);references.set(ref.id,ref);},
+      saveLeads:async rows=>{if(now!==NOW)throw Error("Learning store is unavailable");await saveSocrataLeads(repos,rows,now);},
+      publish:async(reports,capture:OpenDataCapture)=>{
+        const publication=await publishOpenData({store,source:"socrata-discovery",rows:[],reports,partitions:[...references.values()],captures:[capture],now,replace:true});
+        assert.ok(publication.outcome.promoted || publication.outcome.confirmed);nativePublications++;
+      },
+      stateWebsite:async()=>null,
+      discover:async()=>{
+        enrichmentReads++;
+        assert.equal(nativePublications,enrichmentReads,"portal requests must follow native publication");
+        const read=await readerOpenData({divisionIds:[division]},{store,vault,now,bypassCache:true});
+        assert.equal(read.records[0]?.nativeIds.socrata_id,(raw.resource as {id:string}).id);
+        assert.equal(read.records[0].capturedAt,now);
+        assert.match(openDataText(read.records[0]),/catalog entry/);
+        return {bindings:[],gaps:[{governmentId:government.id,url:government.website,reason:"Government website unavailable"}]};
+      }});
+  }
+  assert.equal(nativePublications,2);assert.equal(enrichmentReads,2);assert.equal(learningGaps,1);
+});
+test("Statewide Socrata publishers bind the exact state parent held by a local-only registration",()=>{
+  const root="ocd-division/country:us/state:ct";
+  assert.equal(socrataStateDivisionId([{ocdId:`${root}/county:capitol`,parentOcdId:root}],"CT"),root);
+  assert.equal(socrataStateDivisionId([{ocdId:`${root}/county:capitol`,parentOcdId:root}],"NY"),undefined);
+  assert.equal(socrataStateDivisionId([{ocdId:`${root}/county:capitol`,parentOcdId:null}],"CT"),undefined);
+});
+test("Portal enrichment moves unresolved catalog counts without deleting an open-set report",async()=>{
+  const division="ocd-division/country:us/state:ny",store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore(),refs=new Map<string,OpenDataPartitionRef>();
+  const raw=catalog("ny").rows[0],body=JSON.stringify({results:[raw],resultSetSize:1}),sha256=createHash("sha256").update(body).digest("hex");
+  const captured:OpenDataReport[][]=[];
+  await refreshSocrata({pages:(async function*(){yield {rows:[raw],total:1,body,url:"https://api.us.socrata.com/api/catalog/v1",retrievedAt:NOW,sha256,
+    sourceCheck:{requestedUrl:"https://api.us.socrata.com/api/catalog/v1",finalUrl:"https://api.us.socrata.com/api/catalog/v1",httpStatus:200 as const,checkedAt:NOW,rawHash:sha256}};})(),
+    states:(async function*(){yield {state:"NY",fips:"36",divisionId:division,governments:[]};})(),signal:AbortSignal.timeout(5000),gap:()=>{},saveLeads:async()=>{},
+    writePartition:async partition=>{const ref=await saveOpenDataPartition({source:"socrata-discovery",...partition,now:NOW},vault);refs.set(ref.id,ref);},
+    stateWebsite:async()=>"https://www.ny.gov/",
+    discover:async(governments,domains)=>({bindings:portalBindingsFromPage(governments[0],"https://www.ny.gov/",'<a href="https://data.ny.gov/">Open data</a>',domains),gaps:[]}),
+    publish:async(reports,capture)=>{const result=await publishOpenData({store,source:"socrata-discovery",rows:[],reports,partitions:[...refs.values()],captures:[capture],now:NOW,replace:true});assert.ok(result.outcome.promoted);captured.push(reports);}});
+  assert.equal(captured.length,2);
+  assert.equal(captured[0].find(row=>row.state==="UNRESOLVED")?.loaded,1);
+  assert.equal(captured[1].find(row=>row.state==="UNRESOLVED")?.loaded,0);
+  const read=await readerOpenData({divisionIds:[division]},{store,vault,now:NOW,bypassCache:true});assert.equal(read.records.length,1);
 });

@@ -15,6 +15,7 @@ import {
 import { sittingWindowSourceIds, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { authorityFor, installDoorHosts } from "../lib/civic-data/source-authority.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { applyManualEdit, checkDoorDraft, type DoorDraft, type DoorRecord } from "../lib/doors/registry.ts";
 import { legistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
 import { DOOR_OUTCOME_POINTERS, setDoorOutcomePointers } from "../lib/outcomes/door-outcome-pointers.ts";
@@ -98,7 +99,7 @@ describe("DB-22: outcome contracts are built from doors", () => {
     assert.equal(stateJurisdictionOf("ocd-division/country:us/state:nh/place:concord"), "US-NH");
   });
 
-  it("leaves out a door without the outcomes hold, a suspended door, a non-Legistar door, and the two places that already have contracts", () => {
+  it("automatically follows a registered calendar, excluding suspended and unsupported doors and existing place contracts", () => {
     const pima = door({
       doorId: "meetings:legistar:pima", bodyIds: ["ocd-division/country:us/state:az/county:pima#governing"],
       ocdId: "ocd-division/country:us/state:az/county:pima", config: { slug: "pima", sourceRoutes: "legistar" },
@@ -112,7 +113,8 @@ describe("DB-22: outcome contracts are built from doors", () => {
     const suspended = door({ doorId: "meetings:legistar:y", status: "SUSPENDED" });
     const ical = door({ doorId: "meetings:ical:z", kind: "ical", config: { slug: "z", feed: "https://example.gov/cal.ics" } });
     const { contracts, skipped } = buildOutcomePartitions([pima, mesa, meetingsOnly, suspended, ical]);
-    assert.deepEqual(contracts, []);
+    assert.equal(contracts.length, 1);
+    assert.equal(contracts[0].tenant.slug, "demo", "a supported calendar keeps its minutes and outcomes owed without a manual hold edit");
     assert.deepEqual(skipped, []);
   });
 
@@ -129,6 +131,18 @@ describe("DB-22: outcome contracts are built from doors", () => {
     assert.match(skipped.map((skip) => skip.why).join(" "), /INSITE_BODY_NAMES_MISSING/);
   });
 
+  it("keeps a routed calendar's identity in its scheduled outcome reader", () => {
+    const route = "7ed7e84e8ac9405f";
+    const calendar = door({ doorId: "routed-calendar", holds: ["meetings"],
+      config: { ...DEMO.config, partitionRoute: route } });
+    const { contracts, skipped } = buildOutcomePartitions([calendar]);
+    assert.deepEqual(skipped, []);
+    assert.equal(contracts.length, 1);
+    assert.ok(contracts[0].doorId.endsWith(`:route:${route}`));
+    assert.equal(contracts[0].acquisitionAdapter.command[5], contracts[0].doorId);
+    assert.ok(decodeURIComponent(contracts[0].scope).includes(`:route:${route}:outcomes`));
+  });
+
   it("builds an InSite minutes door on its own portal host", () => {
     const insite = door({
       doorId: "meetings:legistar-insite:portal", kind: "legistar-insite", bodyIds: ["ocd-division/country:us/state:az/place:portal#governing"],
@@ -139,6 +153,9 @@ describe("DB-22: outcome contracts are built from doors", () => {
     assert.equal(contracts[0].tenant.portalHost, "portal.legistar.com");
     assert.equal(contracts[0].tenant.requestedUrl, "https://portal.legistar.com/Calendar.aspx");
     assert.equal(contracts[0].acquisitionAdapter.command[0], "scripts/legistar-insite-minutes-ingest.mts");
+    installDoorHosts(insite.hosts);
+    assert.equal(routineTaskFromContract(contracts[0]).parserVersion, "legistar-minutes-outcomes/1",
+      "the scheduled PDF reader is admitted under its own registered parser");
   });
 
   it("a refresh installs the list for the runner, the contract lookup, the sitting window and the Reader, and an empty read clears it", () => {

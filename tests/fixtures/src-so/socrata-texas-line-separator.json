@@ -1,0 +1,146 @@
+{
+  "results" :
+    [
+      {
+        "resource" :
+          {
+            "name" : "TJJD – Average Daily Population by Location, FY 2011-2022",
+            "id" : "25ut-iey2",
+            "resource_name" : null,
+            "parent_fxf" : [],
+            "description" : "This project is part of a larger plan to transfer commonly requested TJJD data onto the Texas Open Data Portal. This will allow for greater efficiency in sharing publicly available information and answering Public Information Requests (PIRs). Average Daily Population (ADP) data provides the daily population of specific TJJD locations of the following types: Institutions, Halfway Houses, Contract Services, Orientation and Assessment, Parole, Other Parole (Out of State Parole) and Interstate Compact.\nThere are two levels of measurement of ADP on this data set. The first, titled MTD ADP (Month to Date), provides a month to month population count; it does NOT take into account the previous month's population count. Each month's population count is specific to that month. \nThe second, titled YTD ADP (Year to Date), provides a rolling average of ADP; it includes the previous month's population and averages it out with that month's population count.\u2028Lastly, both Calendar Years (CY) and Fiscal Years (FY) are provided on this data set. TJJD’s fiscal year starts in September and ends in August of the following year.",
+            "attribution" : null,
+            "attribution_link" : null,
+            "contact_email" : null,
+            "type" : "dataset",
+            "updatedAt" : "2022-10-24T20:19:56.000Z",
+            "createdAt" : "2022-10-18T21:18:22.000Z",
+            "metadata_updated_at" : "2022-10-24T20:19:56.000Z",
+            "data_updated_at" : "2022-10-18T21:29:05.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 13,
+                "page_views_last_month" : 47,
+                "page_views_total" : 1062,
+                "page_views_last_week_log" : 3.8073549220576037,
+                "page_views_last_month_log" : 5.584962500721157,
+                "page_views_total_log" : 10.053925881531105
+              },
+            "columns_name" :
+              [
+                "Type",
+                "FYTD ADP",
+                "Location",
+                "Fiscal Year",
+                "MTD ADP",
+                "Month"
+              ],
+            "columns_field_name" :
+              [
+                "type",
+                "fytd_adp",
+                "location",
+                "fiscal_year",
+                "mtd_adp",
+                "month"
+              ],
+            "columns_datatype" :
+              [ "Text", "Number", "Text", "Text", "Number", "Calendar date" ],
+            "columns_description" :
+              [
+                "Type of TJJD location",
+                "Year-to-date average daily population - sum of all days population for the entire fiscal year ending in the fiscal year as of the end of this month divided by number of days in the fiscal year as of the end of this month",
+                "TJJD Location",
+                "State of Texas Fiscal Year (September - August)",
+                "Month-to-date average daily population - sum of all days population for the month divided by number of days in the month",
+                "Calendar Month"
+              ],
+            "columns_format" : [ {}, {}, {}, {}, {}, { "view" : "date" } ],
+            "download_count" : 2646,
+            "provenance" : "official",
+            "lens_view_type" : "tabular",
+            "lens_display_type" : "table",
+            "locked" : false,
+            "backend" : "nbe",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2022-10-18T21:29:11.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_category" : "See Category Tile",
+            "domain_tags" :
+              [
+                "gainesville",
+                "orientation",
+                "mcfadden",
+                "mart",
+                "juvenile justice",
+                "juvenile criminal justice",
+                "juvenile",
+                "interstate compact",
+                "institutions",
+                "halfway house",
+                "government",
+                "giddings",
+                "evins",
+                "erjc",
+                "counties",
+                "cottrell",
+                "contract services",
+                "brownwood",
+                "beto",
+                "ayres",
+                "average daily population",
+                "assessment",
+                "adp",
+                "youth",
+                "york",
+                "willoughby",
+                "tyc",
+                "turman",
+                "tjjd",
+                "texas youth commission",
+                "texas juvenile justice department",
+                "tamayo",
+                "secure facilities",
+                "schaeffer",
+                "ron jackson",
+                "referral data",
+                "parole"
+              ],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Dataset-Category_Agency",
+                  "value" : "Texas Juvenile Justice Department"
+                },
+                {
+                  "key" : "Dataset-Category_Category-Tile",
+                  "value" : "Public Reports and Maps"
+                }
+              ]
+          },
+        "metadata" : { "domain" : "data.texas.gov" },
+        "permalink" : "https://data.texas.gov/d/25ut-iey2",
+        "link" : "https://data.texas.gov/See-Category-Tile/TJJD-Average-Daily-Population-by-Location-FY-2011-/25ut-iey2",
+        "owner" :
+          {
+            "id" : "eg8j-bki4",
+            "user_type" : "interactive",
+            "display_name" : "Shalini"
+          },
+        "creator" :
+          {
+            "id" : "eg8j-bki4",
+            "user_type" : "interactive",
+            "display_name" : "Shalini"
+          }
+      }
+    ],
+  "resultSetSize" : 1,
+  "timings" : { "serviceMillis" : 32, "searchMillis" : [ 6, 6 ] },
+  "warnings" : []
+}

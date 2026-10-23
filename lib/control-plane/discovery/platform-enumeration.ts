@@ -82,7 +82,8 @@ function names(need: MeetingsDiscoveryNeed): string[] {
 }
 
 export type PlatformGovernmentMatch =
-  | { readonly kind: "MATCHED"; readonly government: MeetingsDiscoveryNeed; readonly basis: "WEBSITE" | "DIRECTORY_NAME" }
+  | { readonly kind: "MATCHED"; readonly government: MeetingsDiscoveryNeed; readonly basis: "WEBSITE" }
+  | { readonly kind: "CANDIDATE"; readonly government: MeetingsDiscoveryNeed; readonly basis: "DIRECTORY_NAME" }
   | { readonly kind: "UNRESOLVED" | "AMBIGUOUS"; readonly candidates: readonly string[] };
 
 /** A directory name only selects work; the saved government-to-portal link still establishes publication authority. */
@@ -94,7 +95,7 @@ export function matchPlatformGovernment(tenant: PlatformTenant, governments: rea
   if (!tenant.name || !tenant.state) return { kind: "UNRESOLVED", candidates: [] };
   const key = governmentName(tenant.name);
   const matched = inState.filter(government => names(government).includes(key));
-  return matched.length === 1 ? { kind: "MATCHED", government: matched[0], basis: "DIRECTORY_NAME" }
+  return matched.length === 1 ? { kind: "CANDIDATE", government: matched[0], basis: "DIRECTORY_NAME" }
     : { kind: matched.length ? "AMBIGUOUS" : "UNRESOLVED", candidates: matched.map(row => row.jurisdictionId) };
 }
 
@@ -104,4 +105,20 @@ export function platformHostedUrl(raw: string): boolean {
   try { url = new URL(raw); } catch { return false; }
   return /(?:^|\.)(?:legistar\.com|civicclerk\.com|primegov\.com|granicus\.com|escribemeetings\.com|novusagenda\.com|municodemeetings\.com|iqm2\.com|civicweb\.net|diligentoneplatform\.com|boarddocs\.com|boardbook\.org|swagit\.com|municode\.com)$/.test(url.hostname)
     || /\/AgendaCenter(?:\/|$)/i.test(url.pathname);
+}
+
+/** Unique-host portals use their host; shared services also require the observed tenant path or identifier. */
+export function samePlatformTenant(left: string, right: string): boolean {
+  try {
+    const a = new URL(left), b = new URL(right);
+    if (a.hostname.toLowerCase().replace(/^www\./, "") !== b.hostname.toLowerCase().replace(/^www\./, "")) return false;
+    const tenant = (url: URL): string => {
+      if (/(^|\.)boarddocs\.com$/i.test(url.hostname)) return /^(\/[^/]+\/[^/]+\/Board\.nsf)(?:\/|$)/i.exec(url.pathname)?.[1]?.toLowerCase() ?? url.pathname;
+      if (url.hostname === "meetings.boardbook.org") return /^\/Public\/Organization\/(\d+)(?:\/|$)/i.exec(url.pathname)?.[1] ?? url.pathname;
+      if (url.hostname === "meetings.municode.com") return url.searchParams.get("siteId") ?? url.pathname + url.search;
+      if (/\.granicus\.com$/i.test(url.hostname)) return url.searchParams.get("view_id") ?? url.pathname;
+      return "";
+    };
+    return tenant(a) === tenant(b);
+  } catch { return false; }
 }

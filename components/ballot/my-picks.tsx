@@ -1,16 +1,20 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 import {
   getAllPicks,
   getSuppressedDerived,
+  readPicksFile,
+  replacePicksFile,
+  setPickDistricts,
   subscribePicks,
   type StoredPick,
 } from "@/lib/ballot/picks";
 import {
   tallyPicks,
   tallyLine,
+  resolveWithSuppression,
   type PickableContest,
 } from "@/lib/ballot/pick-tally";
 import {
@@ -19,11 +23,12 @@ import {
 } from "@/lib/ballot/pick-jurisdiction";
 import { getStoredReaction, subscribeReactions } from "@/lib/reactions/client";
 import { PicksCardControls } from "@/components/ballot/picks-card";
+import { privatePicksLink, privatePicksSnapshot, savePrivatePicks, startPicksSync, subscribePrivatePicks } from "@/lib/ballot/picks-sync";
 
 /**
- * Everything this device has marked, grouped by contest, with N of M picked.
- * Renders nothing until a pick exists. Picks from a different ballot are
- * labelled. Resolves through `lib/ballot/pick-tally.ts`, as the per-contest
+ * The reader's picks, grouped by contest, with N of M picked.
+ * A saved list keeps its link visible after clearing. Picks from a different
+ * ballot are labelled. Resolves through `lib/ballot/pick-tally.ts`, as the per-contest
  * control does, so derived picks count.
  */
 export function MyPicks({
@@ -35,6 +40,9 @@ export function MyPicks({
   /** Every contest on this page with a pick control; the tally's denominator. */
   pickable?: PickableContest[];
 }) {
+  useEffect(() => startPicksSync({ read: readPicksFile, replace: replacePicksFile }), []);
+  useEffect(() => setPickDistricts(pickable), [pickable]);
+  const saved = JSON.parse(useSyncExternalStore(subscribePrivatePicks, privatePicksSnapshot, () => '{"secret":null,"created":false,"status":""}')) as { secret: string | null; created: boolean; status: string };
   const raw = useSyncExternalStore(
     subscribePicks,
     () => JSON.stringify({ picks: getAllPicks(), cleared: getSuppressedDerived() }),
@@ -73,7 +81,7 @@ export function MyPicks({
 
   const tally = tallyPicks(pickable, picks, yesTargets, cleared);
 
-  if (tally.rows.length === 0 && tally.foreign.length === 0) return null;
+  if (tally.rows.length === 0 && tally.foreign.length === 0 && !saved.secret && !saved.status) return null;
 
   /* The card and the clear act on the resolved set, derived picks included. */
   const cardPicks: StoredPick[] = [
@@ -137,9 +145,25 @@ export function MyPicks({
         yesTargets={yesTargets}
         cleared={cleared}
       />
-      <p className="mt-2 t-caption leading-relaxed text-muted">
-        Clearing your browser&apos;s storage clears this list.
-      </p>
+      <div className="mt-3 t-detail">
+        <button type="button" className="cursor-pointer text-signal underline decoration-dotted" onClick={() => {
+          const derived = pickable.flatMap(contest => {
+            const yes = contest.options.filter(option => option.reactionTargetId && yesTargets.has(option.reactionTargetId)).map(option => option.id);
+            const resolution = resolveWithSuppression(picks.find(pick => pick.contestId === contest.contestId) ?? null, yes, contest.voteFor, cleared[contest.contestId]);
+            return resolution.basis === "DERIVED" ? [{ contestId: contest.contestId, contestTitle: contest.contestTitle,
+              choiceIds: resolution.chosen, labels: Object.fromEntries(contest.options.map(option => [option.id, option.label])) }] : [];
+          });
+          void savePrivatePicks(derived);
+        }}>
+          {saved.secret ? "Sync my picks" : "Save my picks on another device"}
+        </button>
+        {saved.secret && saved.created && <label className="mt-2 block">
+          Private picks link
+          <input className="mt-1 block w-full rounded border border-[var(--panel-border)] p-2" aria-label="Private picks link" readOnly value={privatePicksLink(saved.secret)} onFocus={event => event.target.select()} />
+          <span className="mt-1 block t-caption text-muted">Keep this link. Anyone with it can see and change this list.</span>
+        </label>}
+        {saved.status && <p role="status" className="mt-2 t-caption text-muted">{saved.status}</p>}
+      </div>
     </section>
   );
 }

@@ -1,0 +1,98 @@
+{
+  "productionReadOnly": true,
+  "proofs": [
+    {
+      "now": "2026-10-23T08:03:40.755Z",
+      "indexPromoted": true,
+      "sessionPromoted": true,
+      "sessionCandidate": "cv-6b51937e1c01daf8aa195052b2be77d5",
+      "rows": 9,
+      "personBills": 3,
+      "askBillRecords": 3,
+      "productionRosterVersion": "cv-ad87dcab9e2e40245b1ce03026f8283c",
+      "people": 152,
+      "personId": "plural:al:f4133b43-f822-4d95-b1e0-a0a524de56f6",
+      "personName": "Chris Pringle",
+      "firstBill": {
+        "number": "HB1",
+        "title": "Elections; special primary election for redistricting certain Congressional districts authorized in certain circumstances",
+        "sourceUrl": "https://legiscan.com/AL/bill/HB1/2026/X1"
+      },
+      "failedChecks": []
+    },
+    {
+      "now": "2026-10-24T08:03:40.755Z",
+      "indexPromoted": true,
+      "sessionPromoted": true,
+      "sessionCandidate": "cv-304b9268a71a80eb18e9a01cc3ce8749",
+      "rows": 9,
+      "personBills": 3,
+      "askBillRecords": 3,
+      "productionRosterVersion": "cv-ad87dcab9e2e40245b1ce03026f8283c",
+      "people": 152,
+      "personId": "plural:al:f4133b43-f822-4d95-b1e0-a0a524de56f6",
+      "personName": "Chris Pringle",
+      "firstBill": {
+        "number": "HB1",
+        "title": "Elections; special primary election for redistricting certain Congressional districts authorized in certain circumstances",
+        "sourceUrl": "https://legiscan.com/AL/bill/HB1/2026/X1"
+      },
+      "failedChecks": []
+    },
+    {
+      "now": "2026-10-30T08:03:40.755Z",
+      "indexPromoted": true,
+      "sessionPromoted": true,
+      "sessionCandidate": "cv-b82045b44049ca784475e141bc00f1d3",
+      "rows": 9,
+      "personBills": 3,
+      "askBillRecords": 3,
+      "productionRosterVersion": "cv-ad87dcab9e2e40245b1ce03026f8283c",
+      "people": 152,
+      "personId": "plural:al:f4133b43-f822-4d95-b1e0-a0a524de56f6",
+      "personName": "Chris Pringle",
+      "firstBill": {
+        "number": "HB1",
+        "title": "Elections; special primary election for redistricting certain Congressional districts authorized in certain circumstances",
+        "sourceUrl": "https://legiscan.com/AL/bill/HB1/2026/X1"
+      },
+      "failedChecks": []
+    }
+  ],
+  "scheduling": {
+    "initialDue": true,
+    "tomorrowDue": false,
+    "nextScheduledDue": true,
+    "cadenceMs": 604800000
+  },
+  "pageProof": {
+    "elapsedMs": 299,
+    "cardName": "Chris Pringle",
+    "visibleBills": 3,
+    "text": "Sponsored bills\nHB1 · Elections; special primary election for redistricting certain Congressional districts authorized in certain circumstances\n\nPassed · 2026-05-08 · First Special Session 2026\n\nSponsors: Chris Pringle\n\nIntroduced (2026-05-04) · Enrolled (2026-05-08)\n\nHR2 · Notifying the Senate of the convening of the House of Representatives\n\nIntroduced · 2026-05-04 · First Special Session 2026\n\nSponsors: Chris Pringle\n\nIntroduced (2026-05-04)\n\nHJR1 · Committee appointed to notify the Governor that the Legislature is in special session\n\nIntroduced · 2026-05-04 · First Special Session 2026\n\nSponsors: Chris Pringle\n\nIntroduced (2026-05-04)\n\nShowing 3 of 3 sponsored bills.",
+    "screenshot": "/tmp/src-01-legiscan-production-card.png",
+    "runId": "src-01-legiscan-production-replay@2026-10-23T08:18:07.257Z",
+    "timing": [
+      {
+        "name": "http://127.0.0.1:41391/fixture.js",
+        "duration": 35.200000000186265,
+        "startTime": 41.0999999998603
+      },
+      {
+        "name": "http://127.0.0.1:41391/api/bills?state=AL&member=plural%3Aal%3Af4133b43-f822-4d95-b1e0-a0a524de56f6",
+        "duration": 10.199999999953434,
+        "startTime": 167.19999999995343
+      },
+      {
+        "name": "http://127.0.0.1:41391/favicon.ico",
+        "duration": 28.100000000093132,
+        "startTime": 207.89999999990687
+      },
+      {
+        "name": "http://127.0.0.1:41391/api/reader/link-health",
+        "duration": 7.800000000046566,
+        "startTime": 266.5
+      }
+    ]
+  }
+}

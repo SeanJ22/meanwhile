@@ -74,7 +74,7 @@ test("a government is not marked checked before its verified doors have been sav
   assert.equal((await repos.fieldManual.list()).length, 0, "an interrupted door write leaves the standing check due");
 });
 
-test("a named custom-domain Legistar portal reaches its directory client's native API even when the government homepage has no calendar link", async () => {
+test("a government-site link to the exact custom-domain Legistar tenant reaches its native API", async () => {
   const repos = createMemoryRepositories();
   const division = "ocd-division/country:us/state:or/place:example";
   const city = { ...need, jurisdictionId: "or:city:city-of-example", stateCode: "OR", countyFips: "41051", name: "City of Example",
@@ -86,6 +86,7 @@ test("a named custom-domain Legistar portal reaches its directory client's nativ
   endpoint.searchParams.set("$top", "1000");
   endpoint.searchParams.set("$skip", "0");
   const open = recordedDiscoveryOpen({
+    "https://example.gov/": { status: 200, body: '<a href="https://fixture.legistar.com/">Meetings</a>' },
     "https://fixture.legistar.com/": { status: 302, location: "https://meetings.example.gov/" },
     "https://meetings.example.gov/": { status: 200, body: page },
     "https://meetings.example.gov/robots.txt": { status: 200, body: "User-agent: *\nAllow: /" },
@@ -109,6 +110,7 @@ test("a public InSite grid opens the existing HTML adapter when the native API r
   const city = { ...need, jurisdictionId: "az:county:county-of-pima", name: "County of Pima", govClass: "COUNTY", ownWebAddress: "https://pima.gov/" };
   const apiRequests: string[] = [];
   const opened = recordedDiscoveryOpen({
+    "https://pima.gov/": { status: 200, body: `<a href="${portal}">Meetings</a>` },
     [portal]: { status: 200, body: '<title>Pima County - Calendar</title><a href="https://pima.gov/">County website</a>' + fixture },
     "https://fixture.legistar.com/": { status: 302, location: portal },
     "https://fixture.legistar.com/robots.txt": { status: 404 },
@@ -134,6 +136,7 @@ test("different registered districts in one county keep their own governing and 
   endpoint.searchParams.set("$filter", "EventDate ge datetime'2026-04-16' and EventDate le datetime'2026-12-12'");
   endpoint.searchParams.set("$orderby", "EventId"); endpoint.searchParams.set("$top", "1000"); endpoint.searchParams.set("$skip", "0");
   const open = recordedDiscoveryOpen({
+    [website]: { status: 200, body: `<a href="${portal}">Meetings</a>` },
     [portal]: { status: 200, body: `<title>Water District - Calendar</title><a href="${website}">District website</a>` },
     "https://district.legistar.com/robots.txt": { status: 404 }, "https://webapi.legistar.com/robots.txt": { status: 404 },
     "https://webapi.legistar.com/v1/district/bodies": { status: 200, body: JSON.stringify([{ BodyId: 10, BodyName: "Board of Directors" }, { BodyId: 11, BodyName: "Finance Committee" }]) },
@@ -156,7 +159,7 @@ test("different registered districts in one county keep their own governing and 
   assert.ok(ids[0].every(id => !ids[1].includes(id)), "one county never collapses separate governments' boards");
 });
 
-test("a named CivicPlus customer supplies its calendar even when Census has no website for the government", async () => {
+test("a government's recorded CivicPlus website supplies its calendar", async () => {
   const host = "www.cochise.az.gov", portal = `https://${host}/AgendaCenter`, index = `https://${host}/iCalendar.aspx`;
   const feed = `https://${host}/common/modules/iCalendar/iCalendar.aspx?catID=31&feed=calendar`;
   const token = [{ alg: "RS256", typ: "at+jwt" }, { exp: 1792550000, iss: "https://fixture.example" }]
@@ -173,7 +176,7 @@ test("a named CivicPlus customer supplies its calendar even when Census has no w
   const division = "ocd-division/country:us/state:az/county:cochise";
   try {
   const got = await readPlatformGovernment({ repos: createMemoryRepositories(), readonly: true, reviewer: "auto-crosswalk-reviewer@0123456789ab",
-    need: { ...need, jurisdictionId: "az:county:county-of-cochise", name: "County of Cochise", govClass: "COUNTY", countyFips: "04003", ownWebAddress: null },
+    need: { ...need, jurisdictionId: "az:county:county-of-cochise", name: "County of Cochise", govClass: "COUNTY", countyFips: "04003", ownWebAddress: `https://${host}/` },
     registered: { ...registered, publishingOrg: "County of Cochise", bodyId: `${division}#governing`, ocdId: division, countyFips: "04003" },
     runtime: { ...runtime(), open: input => { requests.push(input.url); return open(input); }, vault: vault.put }, tenant: { platform: "civicplus", url: portal, name: "Cochise County", state: "AZ", source: "public customer directory" } });
   assert.ok(got.doors.some(door => door.config?.feedUrl === feed), JSON.stringify(got.review.held));
@@ -182,4 +185,26 @@ test("a named CivicPlus customer supplies its calendar even when Census has no w
   assert.ok([...vault.ledger.values()].filter(row => row.canonicalUrl === portal).every(row => row.tier === "SANITIZED_DERIVED"), "a retained derivative never becomes raw evidence on the next parser call");
   assert.ok([...got.held.values()].every(bytes => !bytes.text.includes(token)));
   } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test("matching titles and portal backlinks cannot attach an unrelated in-state tenant", async () => {
+  for (const example of [
+    { name: "Metro", state: "OR", website: "https://oregonmetro.gov/", portal: "https://metro.legistar.com/", kind: "SPECIAL_DISTRICT" },
+    { name: "Russian River County Water District", state: "CA", website: "https://rrcountywater.gov/", portal: "https://ca-ventura.civicclerk.com/", kind: "SPECIAL_DISTRICT" },
+    { name: "Lee County", state: "FL", website: "https://leegov.com/", portal: "https://pub-capecoral.escribemeetings.com/", kind: "COUNTY" },
+  ]) {
+    const repos = createMemoryRepositories(), requests: string[] = [];
+    const open = recordedDiscoveryOpen({
+      [example.website]: { status: 200, body: `<title>${example.name}</title><h1>Official website</h1><script src="/Common/Modules/Calendar/calendar.js"></script>` },
+      [example.portal]: { status: 200, body: `<title>${example.name} - Calendar</title><a href="${example.website}">Government</a>` },
+    });
+    const got = await readPlatformGovernment({ need: { ...need, jurisdictionId: `${example.state.toLowerCase()}:special:fixture`, name: example.name,
+      govClass: example.kind, stateCode: example.state, ownWebAddress: example.website }, registered, repos,
+      runtime: { ...runtime(), open: request => { requests.push(request.url); return open(request); } },
+      reviewer: "auto-crosswalk-reviewer@0123456789ab", tenant: { platform: "legistar", url: example.portal, name: example.name,
+        state: example.state, source: "public directory" } });
+    assert.deepEqual(got.doors, [], example.name);
+    assert.deepEqual(await repos.doors.list(), [], example.name);
+    assert.ok(!requests.some(url => url.includes("webapi.legistar.com")), "an unconfirmed portal never starts its member/body API reads");
+  }
 });

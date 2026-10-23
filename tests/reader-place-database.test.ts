@@ -6,6 +6,7 @@ import {installFactReader} from "../lib/facts/db.ts";
 import {installReaderDatabaseQuery} from "../lib/reader/database.ts";
 import {PLACE_PACKAGE_SQL,readPlacePackage,readPlacePackageHttp} from "../lib/reader/place.ts";
 import {withReaderSelection} from "../lib/db/reader-route.ts";
+import {stateCoverage,withPlaceRegistry} from "../lib/reader/coverage.ts";
 
 test("place reads preserve the migrated state type, use the existing one-shot client and share request work",async()=>{
   const {pg}=await migratedReaderDb();
@@ -93,5 +94,66 @@ test("a board filed on the state shows where the one local government sharing it
     const place=await readPlacePackage({state:"AZ",divisionIds:[county]},query);
     assert.deepEqual(place.bodies.map(body=>[body.id,body.fields.ocdId]),[["wtp-body/fixture/parks#governing",county]],
       "a website two governments share, a state agency's website and another county's board never place a board here");
+  }finally{await pg.close();}
+});
+
+test("a local registration brings its own native and jurisdiction boards with live facts into the place",async()=>{
+  const {pg,publish}=await migratedReaderDb();
+  const legacy=BOOTSTRAP_DDL.find(ddl=>ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("));
+  assert.ok(legacy);await pg.exec(legacy);
+  const state="ocd-division/country:us/state:al",city=`${state}/place:mobile`,other=`${state}/place:elsewhere`,at="2026-10-23T00:00:00.000Z";
+  const native="government:US-AL:cog:115070",alias="al:special:mobile-housing-authority";
+  const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  try{
+    await pg.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES
+      ($1,'place','Alabama','AL',NULL),($2,'place','Mobile','AL',$1),($3,'place','Elsewhere','AL',$1),
+      ($4,'government','Mobile Housing Authority','AL',$1),($5,'government','Mobile Housing Authority','AL',$1),
+      ($4||'#governing','body','Mobile Housing Authority governing board','AL',$4),
+      ($5||'#body:finance','body','Finance Committee','AL',$5),
+      ('al:special:other','government','Other Authority','AL',$1),('al:special:other#governing','body','Other Board','AL','al:special:other')`,[state,city,other,native,alias]);
+    await pg.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES (1,'https://example.gov/housing','https://example.gov/housing',$1,$2,'housing')",[at,"b".repeat(64)]);
+    await pg.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES ($1||'#governing','office_phone','"251-555-0100"','251-555-0100','live','OFFICIAL',1,'251-555-0100',$2,'fixture')`,[native,at]);
+    const government=(id:string,jurisdictionId:string,divisionId:string)=>({id,jurisdictionId,name:"Housing Authority",state:"AL",kind:"GOVERNMENT",governmentClass:"SPECIAL_DISTRICT",aliases:[],nativeIds:{},bodyIds:[],
+      associations:[{divisionId,layer:"place",geoid:"0150000",basis:"SOURCE_CODE"}]});
+    await publish({id:"registration-local",recordClass:"REGISTRATION",scope:"US-AL:registration:v1",sourceId:"fixture",at,
+      value:{formatVersion:1,state:"AL",divisions:[],bodies:[],governments:[government(native,alias,city),government("government:US-AL:cog:other","al:special:other",other)]}});
+    const place=await readPlacePackage({state:"AL",divisionIds:[city]},query);
+    assert.deepEqual(place.bodies.map(body=>body.id).sort(),[`${alias}#body:finance`,`${native}#governing`].sort());
+    assert.equal(place.bodies.find(body=>body.id===`${native}#governing`)?.fields.officePhone,"251-555-0100");
+    assert.ok(!place.bodies.some(body=>body.id.startsWith("al:special:other")));
+  }finally{await pg.close();}
+});
+
+test("a merged board's saved runtime and old links resolve to one canonical body and preserve its roster",async()=>{
+  const {pg,publish}=await migratedReaderDb();
+  await pg.exec(BOOTSTRAP_DDL.find(ddl=>ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("))!);
+  const state="ocd-division/country:us/state:az",place=`${state}/school_district:fixture`,body=`${place}#board`,alias="wtp-body/country:us/state:az/fixture#governing",at="2026-10-23T00:00:00.000Z";
+  const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  try{
+    await pg.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES
+      ($1,'place','Arizona','AZ',NULL),($2,'place','Fixture School District','AZ',$1),($3,'body','Fixture School Board','AZ',$2)`,[state,place,body]);
+    await pg.query("INSERT INTO entity_place VALUES ($1,$2)",[body,place]);
+    await pg.query("INSERT INTO entity_external_id VALUES ($1,'body-alias',$2)",[body,alias]);
+    const roster={bodyId:alias,bodyName:"Fixture School Board",members:[{id:"roster:fixture:1",name:"Jane Example",officeTitle:"Member"}],sourceUrl:"https://example.gov/board",sourceOrg:"Fixture District",collectedAt:at};
+    await publish({id:"alias-runtime",recordClass:"REGISTRY_RUNTIME_BINDING",scope:"US-AZ:reader-registry-runtime",sourceId:"fixture",at,
+      value:{formatVersion:1,registry:{generatedAt:at,bodies:[{id:alias,name:roster.bodyName,ocdId:place}],divisions:[]},
+        bodyRosters:[roster],rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{rows:[]},officialPhotos:{photos:[]},rosterPhotos:{}}});
+    for(const input of [{state:"AZ",divisionIds:[place]},{state:"AZ",divisionIds:[],bodyIds:[alias],neighbors:true}]){
+      const result=await readPlacePackage(input,query);
+      assert.deepEqual(result.bodies.map(row=>row.id),[body]);
+      assert.deepEqual(result.registry?.registry.bodies.map(row=>row.id),[body]);
+      assert.equal(result.registry?.bodyRosters[0]?.bodyId,body);
+      assert.equal(result.registry?.bodyRosters[0]?.members[0]?.name,"Jane Example");
+      const current=result.registry!;
+      const old={...current,registry:{...current.registry,bodies:[...current.registry.bodies,{...current.registry.bodies[0]!,id:alias}]}};
+      const statePackage={state:"AZ",version:"fixture",registry:old};
+      const local=withPlaceRegistry(statePackage,current);
+      assert.equal(local.registry.officialPhotos,old.officialPhotos,"state officials' portraits survive the local board selection");
+      const coverage=stateCoverage(local,[place],0,0,[],result.bodies,[{ocdId:place,label:"Fixture School District",state:"AZ",divisionType:"school_district",parentOcdId:state,
+        tier:"local",lsad:null,funcstat:null,classfp:null,geoid:null,canonicalOcdId:place,canonicalMatch:"exact",sourceDataset:"TIGER_CB2023",
+        provenance:{sourceUrl:"https://example.gov/district",sourceOrg:"Fixture District",collectedAt:at,verifiedAt:at}}]);
+      assert.deepEqual(coverage.bodies.map(row=>row.bodyId),[body],"map movement uses the same canonical local registry as ZIP entry");
+    }
   }finally{await pg.close();}
 });

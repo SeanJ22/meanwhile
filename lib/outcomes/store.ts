@@ -115,9 +115,11 @@ async function readMeetingOutcomes(states: readonly string[], selectors: readonl
   const keys = [...new Set([...(ids ?? []), ...selectors])];
   const doorKeys = selectors.flatMap(bodyId => ["legistar", "legistar-insite"].map(kind =>
     `MEETING_OUTCOME:${outcomePartitionScope(meetingPartitionId(kind, bodyId))}`));
-  const doorPrefixes = ids === null ? selectedStates.flatMap(state => ["state", "district", "territory"].flatMap(type =>
+  const routedPrefixes = selectors.flatMap(bodyId => ["legistar", "legistar-insite"].map(kind =>
+    outcomePartitionScope(meetingPartitionId(kind, bodyId)).slice(0, -":outcomes".length) + encodeURIComponent(":route:")));
+  const doorPrefixes = [...routedPrefixes, ...(ids === null ? selectedStates.flatMap(state => ["state", "district", "territory"].flatMap(type =>
     ["legistar", "legistar-insite"].map(kind => outcomePartitionScope(meetingPartitionId(kind,
-      `ocd-division/country:us/${type}:${state.toLowerCase()}/`)).slice(0, -":outcomes".length)))) : [];
+      `ocd-division/country:us/${type}:${state.toLowerCase()}/`)).slice(0, -":outcomes".length)))) : [])];
   const [rows] = await query([{ text: SELECTED_OUTCOMES, params: [selectedStates.map(state => `US-${state}:%`), keys, ids === null ? null : [...ids], doorKeys,
     selectedStates, doorPrefixes.map(prefix => prefix.replace(/[\\%_]/g, "\\$&") + "%")] }]);
   const snapshots: OutcomeSnapshot[] = [];

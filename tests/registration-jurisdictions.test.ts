@@ -21,7 +21,7 @@ import { syncObligations } from "../lib/control-plane/scheduler/durable.ts";
 import { OWNER_DISPATCH, type FreshnessObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { jurisdictionRequirements } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import { dispatchedAddressSource, meetingsDiscoveryNeedFor } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
-import { registrySourceOf, type JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
+import { registrySourceOf } from "../lib/hunt/jurisdiction-universe.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import {
   loadRegistrationJurisdictions,
@@ -66,7 +66,10 @@ test("Ohio's registration, read as a registry: every government under the review
   const oh = registrationJurisdictionRegistry({ reference, promoted: { versionId, model }, census });
   assert.equal(registrySourceOf(oh), "REGISTRATION");
   assert.deepEqual(oh.registration, { kind: "REGISTRATION", versionId, referenceSha256: reference.sha256, webAddresses: oh.registration!.webAddresses });
-  assert.equal(oh.jurisdictions.length, reference.reference.governments.length, "every government the reference names, the state itself included");
+  const expectedIds = new Set([...reference.reference.governments.map(row => row[1]),
+    ...model.governments!.filter(row => row.nativeIds.census_pid6).map(row => row.jurisdictionId ?? row.id)]);
+  assert.deepEqual(new Set(oh.jurisdictions.map(row => row.id)), expectedIds, "the reference and independently held Census listings reach the registry");
+  assert.equal(oh.jurisdictions.length, expectedIds.size, "each government appears once, including the state");
   assert.equal(Object.values(oh.counts).reduce((a, b) => a + b, 0), oh.jurisdictions.length);
 
   const columbus = oh.jurisdictions.find((j) => j.id === "oh:city:city-of-columbus")!;

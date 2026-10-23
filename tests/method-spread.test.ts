@@ -82,14 +82,21 @@ test("the replayed request is the procedure's own, at this place's door", () => 
   assert.equal(replayUrl("read the hydration payload, then call the API the page calls", d), null);
 });
 
-test("a working method is tried by plain code at every matching place, and every result is recorded where Admin and workers read it", async () => {
+test("a working method is tried by plain code at every matching place, and every result is recorded where Admin and workers read it", async t => {
   const repos = createMemoryRepositories();
   const method = newFieldManualEntry("door-method", "legistar|meetings|get", { role: "SHARED", kind: "METHOD", title: "legistar: meetings",
     summary: "GET {door}/events", outcome: "YIELDED", platforms: ["legistar"], recordClasses: ["meetings"], observedAt: NOW,
     payload: { platform: "legistar", recordClass: "meetings", procedure: "GET {door}/events", places: [PIMA], doorEntryIds: [] } });
   await writeFieldManual(repos, [method], NOW);
   assert.equal((await repos.fixMap.forPlace(PIMA))[0]!.state, "WORKS", "saving the method recorded where it worked");
-  for (const d of DOORS) await repos.doors.put(d.doorId, d, NOW);
+  for (const d of DOORS) await repos.doors.put(d.doorId, { ...d, config: { ...d.config, capture: "saved source page ".repeat(20_000) } }, NOW);
+  const before = Buffer.byteLength(JSON.stringify(await repos.doors.list()));
+  let received = 0;
+  const narrowed = repos.doors.listWhereNarrowed.bind(repos.doors);
+  repos.doors.listWhereNarrowed = async (...args) => {
+    const rows = await narrowed(...args); received += Buffer.byteLength(JSON.stringify(rows)); return rows;
+  };
+  repos.doors.list = async () => { throw new Error("spread must not read complete doors"); };
   const site = websites({
     "https://maricopa.legistar.com/robots.txt": { status: 200, body: "User-agent: *\nDisallow: /\n" },
     "https://maricopa.legistar.com/events": { status: 200, body: "<html>Calendar rows</html>" },
@@ -98,6 +105,8 @@ test("a working method is tried by plain code at every matching place, and every
     "https://lacounty.legistar.com/events": { status: 503, retryAfter: "120" },
   });
   const result = await runSpreadPass({ repos, now: NOW, sendPlaceIds: new Set([MARICOPA, MORRIS]), paidTriesLeft: 5, fetch: site.fetch });
+  assert.ok(received < before / 100);
+  t.diagnostic(`spread door response bytes: ${before} -> ${received}`);
   assert.deepEqual(result.tried, { works: 1, fails: 1, undecided: 0 });
   assert.equal(result.waiting, 1);
   assert.equal(result.robots.DISALLOWED, 1, "robots.txt said no; it is recorded and the request was still made");

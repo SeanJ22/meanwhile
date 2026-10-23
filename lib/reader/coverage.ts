@@ -16,6 +16,13 @@ import type { Body, Division } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { BodyTerritoryFile } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+
+/** Place reads carry canonical local boards; the state still supplies its official people and portraits. */
+export function withPlaceRegistry<T extends { readonly registry: RegistryRuntimeReadModel }>(state: T, place: RegistryRuntimeReadModel): T {
+  return { ...state, registry: { ...state.registry, registry: place.registry,
+    bodyRosters: place.bodyRosters, rosterReaderDispositions: place.rosterReaderDispositions } };
+}
 
 type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
   "people" | "legislativePeople" | "federal" | "president" | "stateLegislatorAuthority">>;

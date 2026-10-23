@@ -8,12 +8,11 @@ import { evidenceProjection } from "./evidence-projection.ts";
 export { evidenceProjection } from "./evidence-projection.ts";
 import { createRouteTask, type RouteTask } from "../route-task.ts";
 import { registerRouteTask } from "../repository/coordinator.ts";
-import { readCompletedWorkerResult, reconcileWorkerCompletions, type UncommittedWorkerResult } from "../repository/worker-completion.ts";
+import { readCompletedWorkerResult, type UncommittedWorkerResult } from "../repository/worker-completion.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
 import { dispatchOne, hunterWallLimitMs, proofChargeOf, type DeclaredExecutor, type DispatchResult } from "../scheduler/dispatch.ts";
 import type { ScheduledObligation } from "../scheduler/obligation.ts";
 import { ceilingPermits } from "../scheduler/research-policy.ts";
-import { workerTaskAdmission } from "./scheduling.ts";
 import { MODEL_FOR_CLASS } from "../scheduler/model-routing.ts";
 import { isRetiredRoutineMeetingAcquisition } from "./autonomous-plan.ts";
 import { bundleProcedure, runIsolatedWorker } from "./isolation.ts";
@@ -280,39 +279,4 @@ export async function reauthorizeWorkerTask(runtime: FleetRuntime, task: RouteTa
   const { policyDenial: _denial, ...rest } = task;
   return (await runtime.repos.routeTasks.compareAndSet(task.id, row.revision, { ...rest, state: "RECLAIMABLE",
     policyReauthorizations: [...(task.policyReauthorizations ?? []), { at: now, denial, reason }] }, now)).value;
-}
-
-export async function drainWorkerQueue(
-  runtime: FleetRuntime,
-  maximum = Infinity,
-  accepts: (task: RouteTask) => boolean = () => true,
-  admitDispatch: (task: RouteTask) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string } = () => ({ admit: true }),
-): Promise<readonly DispatchResult[]> {
-  const out: DispatchResult[] = [];
-  let snapshot = await runtime.repos.dispatchState.readOpen();
-  const workIds = [...new Set([...snapshot.routeTasks.values()].map(row => row.value.workItemId))];
-  await reconcileWorkerCompletions(runtime.repos, workIds);
-  snapshot = await runtime.repos.dispatchState.readOpen();
-  const attempts = (await Promise.all(workIds.map(id => runtime.repos.attempts.listWhere(["workItemId"], id)))).flat().map(row => row.value);
-  for (const row of snapshot.routeTasks.values()) {
-    let task = row.value;
-    if (
-      runtime.routineMeetingsAuthority === "PERMANENT_CIVIC_DATA_PLANE" &&
-      task.workerTask?.role === "ACQUIRER" &&
-      isRetiredRoutineMeetingAcquisition(task.workerTask.contract)
-    ) continue;
-    if (!accepts(task)) continue;
-    if (out.length >= maximum) break;
-    const now = (runtime.now ?? (() => new Date().toISOString()))();
-    const admission = workerTaskAdmission(task, attempts, now);
-    if (!admission.due) continue;
-    if (admission.requiresPolicyRecheck) {
-      const reauthorized = await reauthorizeWorkerTask(runtime, task, now);
-      if (!reauthorized) continue;
-      task = reauthorized;
-    }
-    if (!admitDispatch(task).admit) continue;
-    out.push(await dispatchWorkerTask(runtime, task));
-  }
-  return out;
 }

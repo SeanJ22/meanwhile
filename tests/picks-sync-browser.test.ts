@@ -46,7 +46,7 @@ test("two fresh browsers restore, sync in both directions, keep offline edits an
   const priorRole = process.env.WTP_DB_ROLE;
   process.env.WTP_DB_ROLE = "local";
   const db = new PGlite();
-  await db.exec(readFileSync("lib/db/migrations/PK-01_saved_picks.sql", "utf8"));
+  await db.exec(readFileSync("lib/db/migrations/0050_pk01_saved_picks.sql", "utf8"));
   const store = savedPicksStore(async (text, params) => (await db.query(text, [...params])).rows as Record<string, unknown>[]);
   const output = await build({ stdin: { contents: `
     import React from "react";

@@ -15,7 +15,7 @@ test("private storage requires the capability, isolates lists and atomically ref
   process.env.WTP_DB_ROLE = "local";
   const db = new PGlite();
   try {
-    await db.exec(readFileSync("lib/db/migrations/PK-01_saved_picks.sql", "utf8"));
+    await db.exec(readFileSync("lib/db/migrations/0050_pk01_saved_picks.sql", "utf8"));
     const store = savedPicksStore(async (text, params) => (await db.query(text, [...params])).rows as Record<string, unknown>[]);
     const key = secret();
     const call = (method: string, code = key, body?: unknown, origin = "http://ballot.test") => handleSavedPicks(new Request("http://ballot.test/api/ballot/picks", {

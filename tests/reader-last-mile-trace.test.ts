@@ -29,7 +29,7 @@ test("Next deployment tracing includes static geography and excludes every migra
   const { globSync } = fs as typeof fs & { globSync(pattern: string, options: { cwd: string }): string[] };
   const includes = Object.values(nextConfig.outputFileTracingIncludes ?? {}).flat();
   for (const required of [
-    "./data/states/*/geo/**/*.geojson",
+    "./data/states/*/geo/**/!(territory-*).geojson",
     "./data/derived/resolver-geometry.json",
     "./public/geo/*.geojson",
     "./data/derived/zip-coverage-tiers-runtime.json",
@@ -91,4 +91,15 @@ test("postbuild checker rejects a removed dynamic holding in emitted route manif
     assert.ok(resolve(root).startsWith(resolve(tmpdir()) + sep));
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+test("no server function packs the special-district and tribal territories, and the resolver never reads one", () => {
+  const manifest = JSON.parse(fs.readFileSync("data/derived/resolver-geometry.json", "utf8")) as { files: { file: string }[]; excluded: { file: string }[] };
+  assert.deepEqual(manifest.files.filter(row => /\/territory-\d{2}\.geojson$/.test(row.file)), []);
+  assert.ok(manifest.excluded.some(row => /\/territory-\d{2}\.geojson$/.test(row.file)));
+  const toml = fs.readFileSync("netlify.toml", "utf8");
+  for (const block of toml.split(/\n(?=\[)/).filter(block => block.includes('"data/states/*/geo/**/*.geojson"'))) {
+    assert.ok(block.includes('"!data/states/*/geo/territory-*.geojson"'), block.split("\n")[0]);
+  }
+  assert.ok(Object.values(nextConfig.outputFileTracingExcludes ?? {}).flat().includes("./data/states/*/geo/territory-*.geojson"));
 });

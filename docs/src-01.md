@@ -1,6 +1,6 @@
 # SRC-01: scheduled sources reaching readers
 
-Status: implemented and checked on `stream/src-01`, cut from `origin/river` at `78f82a232dd1d0545a46835e7716032ff3807425`. **Not READY.** SAM.gov's real-data publication replay is blocked by its publisher quota until `2026-10-24T00:00:00Z` (October 23, 5 PM Phoenix / 8 PM Eastern). No changes have been merged or deployed by this lane, and no production data or settings were written.
+Status: **READY: SRC-01** on `stream/src-01`, cut from `origin/river` at `78f82a232dd1d0545a46835e7716032ff3807425`. FEC, FAC, OpenFEMA, EPA ECHO, LegiScan, Socrata and campaign money passed their connected and next-run replays. Sean authorized shipping these together with the built SAM extract-format fix while SAM's real-data proof waits for its publisher quota reset at `2026-10-24T00:00:00Z` (October 23, 5 PM Phoenix / 8 PM Eastern). No changes have been merged or deployed by this lane, and no production data or settings were written.
 
 Residents should receive current federal filings, audits, disaster declarations, environmental records, datasets and bills, and a legislator's campaign-money gap should explain that person's own missing information. This moves §0's current, sourced information reaching readers and staying current automatically.
 
@@ -33,6 +33,8 @@ Focused source, identity, provider, reader, PostgreSQL and money-card tests pass
 
 ## Remaining work and handoff
 
-This chat has a scheduled follow-up beginning at the SAM reset. SRC-01's owner must obtain actual SAM source data and run it through acquisition, registered promotion, reader artifacts and the visible card. Repeat with a controlled next scheduled clock and test admission. Keep the lane outside READY until every requested source proof passes.
+SRC-01's owner is adding a durable SAM quota cooldown: error `900804` must stop all SAM calls until the source's reset time, retain that time and show it in Admin. A direct test must prove zero additional calls before reset. This follow-up does not hold the already verified sources.
 
-Then push `READY: SRC-01` with both connected and next-run proofs linked. River owns combination checks, release and the post-shipping live check: each source ID (`fec-open-api`, `federal-audit-clearinghouse`, `openfema`, `epa-echo`, `sam-gov-entities`, `legiscan-bills`, `socrata-discovery`) must show a new `PROMOTED` candidate within its next scheduled run. Inspect a real CT legislator card and compare its money reason with that person's own stored blank. A deployment or manually triggered run alone is not that live proof.
+This chat's scheduled follow-up must run SAM's real-data replay after the reset. If it passes, record the proof on River's board; if it fails, fix it and push a second READY commit. Preserve SAM's last verified data and honor any subsequent reset.
+
+River owns combination checks, release and the post-shipping live check: each source ID (`fec-open-api`, `federal-audit-clearinghouse`, `openfema`, `epa-echo`, `sam-gov-entities`, `legiscan-bills`, `socrata-discovery`) must show a new `PROMOTED` candidate within its next scheduled run. Inspect a real CT legislator card and compare its money reason with that person's own stored blank. A deployment or manually triggered run alone is not that live proof.

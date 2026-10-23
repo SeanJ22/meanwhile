@@ -907,6 +907,18 @@ function releaseRecords(ref) {
   return names.split("\n").filter((name) => /^\d+\.json$/.test(name)).map((name) => readJson(ref, `releases/${name}`, null)).filter(Boolean);
 }
 
+/**
+ * Whether river's tip carries only tested code: it is the tested SHA, it is
+ * main (a river restarted from main after a release), or its tree is the
+ * tested SHA's tree byte for byte (main merged in after gates, changing no file).
+ */
+export function riverIsTested({ tested, river, main, treeOf }) {
+  if (tested === river || river === main) return true;
+  if (!tested) return false;
+  const testedTree = treeOf(tested);
+  return testedTree !== null && testedTree === treeOf(river);
+}
+
 /** Main must be inside the river that was tested, or the river is tested again first. */
 function checkMain() {
   fetchBranches(["main", RIVER, BOARD]);
@@ -915,8 +927,8 @@ function checkMain() {
   const integration = readJson(remoteRef(BOARD), "integration.json", []);
   const tested = integration.length ? integration[integration.length - 1].tested_sha : null;
   const mainInRiver = ok(["merge-base", "--is-ancestor", main, river]);
-  // A river restarted from main after a release carries nothing untested.
-  return { main, river, tested, main_in_river: mainInRiver, river_is_tested: tested === river || river === main };
+  const treeOf = (sha) => git(["rev-parse", `${sha}^{tree}`], { allowFail: true });
+  return { main, river, tested, main_in_river: mainInRiver, river_is_tested: riverIsTested({ tested, river, main, treeOf }) };
 }
 
 async function release(n, flags) {

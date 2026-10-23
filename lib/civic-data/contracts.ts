@@ -599,7 +599,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   {
     id: "legiscan-bulk", sourceId: "legiscan-bills", recordClass: "STATE_BILL", scope: "US:legiscan-datasets",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/legiscan-bulk.mts", "--promote"], requestedUrl: "https://api.legiscan.com/?op=getDatasetList" },
-    parserNormalizerVersion: "legiscan-bulk/2",
+    parserNormalizerVersion: "legiscan-bulk/4",
     cadence: { description: "weekly, following LegiScan's weekly dataset publication", defaultEveryMs: 7 * DAY },
     retry: { afterMs: HOUR, description: "one hour after a failed bulk pass; already published sessions remain live" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "legiscan-bills" },

@@ -3,6 +3,7 @@ import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
+import { OPEN_DATA_READER_PAYLOAD } from "../sources/open-data/reader-sql.ts";
 import { createHash } from "node:crypto";
 import {createRequire} from "node:module";
 import { sourceCheckedAt } from "./source-check.ts";
@@ -1498,8 +1499,10 @@ async function loadReaderProjection(recordClass: RoutineRecordClass, scope: stri
   const window = selection.governmentWindow;
   const money = recordClass === "STATE_CAMPAIGN_FINANCE";
   const fec = exactKeys && recordClass === "FEC_FUNDING";
+  const openData=recordClass==="CURATED_READER_RECORD"&&(scope==="epa-echo:national"||scope==="socrata-discovery:national");
   const payload = fec ? BALLOT_FEC_MONEY_PAYLOAD : recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD
     : money ? exactKeys ? BALLOT_STATE_MONEY_PAYLOAD : STATE_MONEY_READER_PAYLOAD
+    : openData ? OPEN_DATA_READER_PAYLOAD
     : window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
   const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
     p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
@@ -1507,7 +1510,7 @@ async function loadReaderProjection(recordClass: RoutineRecordClass, scope: stri
     c.retrieved_at, reader_payload_node(c.candidate)->'temporal' temporal FROM civic_data_promotions p
     JOIN civic_data_candidates c ON c.id=p.current_version_id
     WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys],
-      ...(recordClass === "FEDERAL_KEY_VOTE" || money || fec ? [] : window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
+      ...(recordClass === "FEDERAL_KEY_VOTE" || money || fec || openData ? [] : window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
   const row = rows[0];
   if (!row) return { kind: "NOT_RECORDED", recordClass, scope };
   const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;

@@ -1,8 +1,8 @@
 /** One national bulk clock, publishing one bounded session at a time. */
 import { pathToFileURL } from "node:url";
 import { acquireDatasetList,acquireDataset } from "../lib/sources/legiscan/acquisition.ts";
-import { LEGISCAN_BULK_CONTRACT,LEGISCAN_API,billScope,stateOfDataset,type BillSession,type HeldPerson } from "../lib/sources/legiscan/bills.ts";
-import { publishBulkCandidate } from "../lib/sources/legiscan/publication.ts";
+import { LEGISCAN_BULK_CONTRACT,LEGISCAN_BULK_PARSER,LEGISCAN_API,billScope,stateOfDataset,type BillSession,type HeldPerson,type Dataset } from "../lib/sources/legiscan/bills.ts";
+import { publishBulkCandidate,confirmBulkSession } from "../lib/sources/legiscan/publication.ts";
 import { PostgresRoutineDataStore,type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
@@ -11,30 +11,35 @@ import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure,sourceAcquisitionFailure,withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 
+/** Current sessions across the country precede each jurisdiction's older history. */
+export function bulkDatasetOrder(datasets:readonly Dataset[]):Dataset[] {
+  const states=new Map<string,Dataset[]>();
+  for(const dataset of datasets){const state=stateOfDataset(dataset),rows=states.get(state)??[];rows.push(dataset);states.set(state,rows);}
+  for(const rows of states.values())rows.sort((left,right)=>right.session_id-left.session_id);
+  const ordered:Dataset[]=[];
+  for(let rank=0;ordered.length<datasets.length;rank++)for(const rows of states.values())if(rows[rank])ordered.push(rows[rank]);
+  return ordered;
+}
+
 export async function refreshLegiscan(store:RoutineDataStore,signal:AbortSignal,options:Omit<import("../lib/sources/legiscan/acquisition.ts").BulkRequestOptions,"signal"> & {peopleForState?:(state:string)=>Promise<readonly HeldPerson[]>}={}) {
   const list=await acquireDatasetList({...options,signal});
   // Publish the source index first: prior sessions remain available during the bulk pass.
   const marker=await publishBulkCandidate(store,{capture:list.capture,datasets:list.datasets},options.now?.()??new Date().toISOString());
   if(!marker.outcome.promoted) throw Error("LegiScan dataset index publication failed");
   const counts:Record<string,{rows:number;joined:number;unjoined:number;sponsorsJoined:number;sponsorsUnjoined:number;datasets:number;unchanged:number;failures:string[]}>= {};
-  for(const dataset of list.datasets) {
+  for(const dataset of bulkDatasetOrder(list.datasets)) {
     signal.throwIfAborted(); const state=stateOfDataset(dataset);
     const row=counts[state]??={rows:0,joined:0,unjoined:0,sponsorsJoined:0,sponsorsUnjoined:0,datasets:0,unchanged:0,failures:[]};
     try {
       const prior=await store.readPromotion<BillSession>("STATE_BILL",billScope(dataset.session_id));
-      if(prior?.payload.kind==="SESSION"&&prior.payload.dataset.dataset_hash===dataset.dataset_hash&&prior.payload.dataset.dataset_date===dataset.dataset_date) {
-        const stamps={session_id:String(dataset.session_id),dataset_hash:dataset.dataset_hash,dataset_date:dataset.dataset_date};
-        const priorCandidate=await store.readCandidate(prior.versionId);
-        if(!store.confirmUnchanged) throw Error("LegiScan unchanged confirmation store unavailable");
-        const result=await store.confirmUnchanged({sourceId:"legiscan-bills",recordClass:"STATE_BILL",scope:billScope(dataset.session_id),parserVersion:"legiscan-bulk/2",pointerVersionId:prior.versionId,
-          readModelHash:priorCandidate!.candidate.normalization.normalizedHash!,basis:"PUBLISHER_STAMPS_UNCHANGED",retrieval:list.capture,stamps:[{key:String(dataset.session_id),held:stamps,fetched:stamps}]},list.capture.retrievedAt);
-        if(result.kind!=="CONFIRMED") throw Error(`LegiScan unchanged check failed: ${result.kind}`);
+      if(prior?.payload.kind==="SESSION"&&prior.payload.parserVersion===LEGISCAN_BULK_PARSER&&Array.isArray(prior.payload.parts)&&prior.payload.dataset.dataset_hash===dataset.dataset_hash&&prior.payload.dataset.dataset_date===dataset.dataset_date) {
+        await confirmBulkSession(store,prior.payload,prior.versionId,list.capture,list.capture.retrievedAt);
         for(const key of ["rows","joined","unjoined","sponsorsJoined","sponsorsUnjoined"] as const) row[key]+=prior.payload.counts[key];
         row.datasets++;row.unchanged++;continue;
       }
       const acquired=await acquireDataset(dataset,{...options,signal});
       const people=options.peopleForState?await options.peopleForState(state):state==="US"?[]:await readStatePeopleProjection(`US-${state}`,{store,now:acquired.capture.retrievedAt}).then(read=>read.kind==="PROMOTED"?read.value.roster.officeholders:[]);
-      const published=await publishBulkCandidate(store,{capture:acquired.capture,dataset,bodies:acquired.bodies,people},options.now?.()??new Date().toISOString());
+      const published=await publishBulkCandidate(store,{capture:acquired.capture,dataset,bodies:acquired.bodies,people,archiveHash:acquired.archiveHash},options.now?.()??new Date().toISOString());
       if(!published.outcome.promoted) throw Error("LegiScan session publication failed");
       const session=published.candidate.readModel as BillSession;
       for(const key of ["rows","joined","unjoined","sponsorsJoined","sponsorsUnjoined"] as const) row[key]+=session.counts[key];

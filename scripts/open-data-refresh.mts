@@ -18,7 +18,7 @@ import { recordDoorEvidence } from "../lib/doors/shut.ts";
 import { feedDoorId } from "../lib/doors/registry.ts";
 import { recordDoorOutcome } from "../lib/doors/outcome.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, SOCRATA_CATALOG, ECHO_EXPORT, zipPartition, type OpenDataSource, type OpenDataReport,type OpenDataPartitionRef } from "../lib/sources/open-data/model.ts";
-import { normalizeEcho, openDataReports, type GovernmentJoin } from "../lib/sources/open-data/normalize.ts";
+import { normalizeEcho, openDataReports } from "../lib/sources/open-data/normalize.ts";
 import { openDataFetch, socrataPages } from "../lib/sources/open-data/acquire.ts";
 import { OpenDataSpool } from "../lib/sources/open-data/spool.ts";
 import { publishOpenData, readOpenDataProjection, type OpenDataCapture } from "../lib/sources/open-data/publication.ts";
@@ -27,7 +27,10 @@ import { saveSocrataLeads } from "../lib/sources/open-data/leads.ts";
 import { facilityPoint,facilityCell } from "../lib/sources/open-data/geography.ts";
 import { saveOpenDataPartition,openDataVault } from "../lib/sources/open-data/artifacts.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { refreshSocrata, socrataStateDivisionId, type SocrataGovernmentState } from "../lib/sources/open-data/socrata.ts";
+import { echoMinimumGap, retainEchoMinimumGaps, mergeEchoRetainedPartition, type EchoMinimumGap } from "../lib/sources/open-data/echo-gaps.ts";
+import { materializeEchoPartitions } from "../lib/sources/open-data/echo-materialization.ts";
 
 export function parseOpenDataArguments(args:readonly string[]):OpenDataSource {
   if(args.length!==2 || !args.includes("--promote"))throw Error("SRC-SO requires --promote and one --source.");
@@ -48,11 +51,18 @@ async function main() {
   const spool=await OpenDataSpool.create();
   const signal=AbortSignal.timeout(20*60_000);
   let lastCapture:OpenDataCapture|undefined;
+  const echoGaps:EchoMinimumGap[]=[];
+  let heldEchoGaps:RoutineCandidate["excludedFacts"]=[];
   const priorManifest=await readOpenDataProjection(source,"national",{store,bypassCache:true});
   if(priorManifest.kind==="STORE_UNREACHABLE")throw Error("Source manifest could not be read; the prior source stays live.");
   const partitions=new Map<string,OpenDataPartitionRef>((priorManifest.kind==="PROMOTED"?priorManifest.value.partitions??[]:[]).map(p=>[p.id,p]));
   const vault=openDataVault();
+  const replacedLogicalPartitions=new Set<string>();
   const writePartition=async(partition:{partition:string;rows:Parameters<typeof openDataReports>[0];captures:readonly OpenDataCapture[]})=>{
+    if(source==="epa-echo") {
+      const logical=partition.partition.replace(/:part:\d+$/,"");
+      if(!replacedLogicalPartitions.has(logical)){replacedLogicalPartitions.add(logical);for(const key of partitions.keys())if(key===logical||key.startsWith(`${logical}:part:`))partitions.delete(key);}
+    }
     const reference=await saveOpenDataPartition({source,...partition,now:now()},vault);partitions.set(reference.id,reference);
   };
   const reports=new Map<string,OpenDataReport>(US_JURISDICTIONS.map(s=>[s.usps,{id:`state:${s.usps}`,state:s.usps,loaded:0,joined:0,unjoined:0}]));
@@ -60,7 +70,7 @@ async function main() {
   let publication:Awaited<ReturnType<typeof publishOpenData>>|undefined;
   const publish=async()=>{
     if(!lastCapture)throw Error("Source produced no captured publication.");
-    publication=await publishOpenData({store,source,rows:[],reports:[...reports.values()],partitions:[...partitions.values()].sort((a,b)=>a.id.localeCompare(b.id)),captures:[lastCapture],now:now(),replace:true});
+    publication=await publishOpenData({store,source,rows:[],reports:[...reports.values()],partitions:[...partitions.values()].sort((a,b)=>a.id.localeCompare(b.id)),captures:[lastCapture],excludedFacts:[...heldEchoGaps??[],...echoGaps.map(gap=>gap.fact)],now:now(),replace:true});
   };
   try {
     if(source==="socrata-discovery") {
@@ -84,34 +94,26 @@ async function main() {
         lastCapture={url:ECHO_EXPORT,retrievedAt:archive.retrievedAt,rawHash:archive.sourceSha256,sourceRows:[],
           sourceCheck:{requestedUrl:ECHO_EXPORT,finalUrl:archive.finalUrl,httpStatus:archive.lastCheckStatus as 200|304,checkedAt:archive.checkedAt,rawHash:archive.sourceSha256},
           archive:{sha256:archive.sourceSha256,member:archive.member,publishedAt:archive.publishedAt}};
-        if(archive.unchanged){for(const row of prior.kind==="PROMOTED"?prior.value.reports:[])reports.set(row.state,row);}
+        if(archive.unchanged){heldEchoGaps=candidate?.candidate.excludedFacts;for(const row of prior.kind==="PROMOTED"?prior.value.reports:[])reports.set(row.state,row);}
         else {
           if(archive.member!=="ECHO_EXPORTER.csv")throw Error("EPA exporter archive has a different source member.");
           let count=0;
           for await(const raw of streamCsvObjects(archive.textChunks)) {
             signal.throwIfAborted();
+            const gap=echoMinimumGap(raw);if(gap){echoGaps.push(gap);continue;}
             const row=normalizeEcho(raw,archive.retrievedAt,archive.publishedAt);
             await spool.append(row.zip?`${zipPartition(row.zip)}:state:${row.state??"UNRESOLVED"}`:`unlocated:${row.state??"UNRESOLVED"}`,row,lastCapture);count++;
             const point=facilityPoint(row);if(point)await spool.append(`${facilityCell(point.lat,point.lng)}:state:${row.state??"UNRESOLVED"}`,row,lastCapture);
           }
           await archive.accept?.();if(!count)throw Error("EPA exporter has no facility rows; prior data remain live.");
-          let heldState:string|null=null,held:GovernmentJoin[]=[];
-          const pending=new Set<Promise<void>>();
-          let writeFailure:unknown;
-          try {for await(const partition of spool.partitions()) {
-            const state=partition.rows[0]?.state ?? null;
-            if(state!==heldState){heldState=state;held=[];
-              if(state && US_JURISDICTIONS.some(s=>s.usps===state)){const registration=await readRegistrationProjection(state,{store,bypassCache:true});
-                if(registration.kind==="PROMOTED")held=governmentJoinRows(registration.value.governments??[]);
-                else console.log(`SRC_SO_JOIN_GAP=${JSON.stringify({state,reason:registration.kind})}`);
-              }
-            }
-            const rows=partition.rows.map(row=>normalizeEcho(row.sourceRow,row.capturedAt,row.publishedAt,held));
-            if(!partition.partition.startsWith("cell:"))addReports(rows);
-            const writing:Promise<void>=writePartition({...partition,rows}).catch(error=>{writeFailure??=error;}).finally(()=>pending.delete(writing));pending.add(writing);
-            if(pending.size>=4)await Promise.race(pending);
-            if(writeFailure)throw writeFailure;
-          }await Promise.all(pending);if(writeFailure)throw writeFailure;}finally{await Promise.allSettled(pending);}
+          const priorCaptures=(candidate?.candidate.normalizedPayload as {captures?:OpenDataCapture[]}|null)?.captures??[];
+          const retained=await retainEchoMinimumGaps(echoGaps,prior.kind==="PROMOTED"?prior.value.partitions??[]:[],priorCaptures,vault);
+          const currentPartitions=async function*(){for await(const partition of spool.partitions({consume:true,maxRows:1000,maxBytes:4*1024*1024}))yield mergeEchoRetainedPartition(partition,retained);yield* retained.values();};
+          await materializeEchoPartitions({partitions:currentPartitions(),addReports,writePartition,readStateJoins:async state=>{
+            const registration=await readRegistrationProjection(state,{store,bypassCache:true});
+            if(registration.kind==="PROMOTED")return governmentJoinRows(registration.value.governments??[]);
+            console.log(`SRC_SO_JOIN_GAP=${JSON.stringify({state,reason:registration.kind})}`);return [];
+          }});
         }
       } finally {await archive.dispose();}
     }
@@ -119,6 +121,7 @@ async function main() {
     await recordDoorEvidence(repos.doors,feedDoorId(source),{kind:"GOOD",rows:[...reports.values()].reduce((n,r)=>n+r.loaded,0)},now(),repos);
     await recordDoorOutcome(repos.doors,feedDoorId(source),"SUCCESS",now(),!publication!.outcome.confirmed);
     console.log(`SRC_SO_ROWS=${JSON.stringify([...reports.values()])}`);
+    if(echoGaps.length)console.log(`SRC_SO_FACILITY_GAPS=${JSON.stringify(echoGaps.map(({id,state,fact})=>({id,state,reason:fact.detail})))}`);
     printSourceRunnerReceipt(source,publication!.candidate,publication!.outcome);
   } catch(error) {
     const reason=error instanceof Error?error.message:String(error);

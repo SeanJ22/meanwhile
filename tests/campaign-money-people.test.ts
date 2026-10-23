@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import {PUBLIC_SITE_ORIGIN} from "../lib/ops/origins.ts";
 import test from "node:test";
 import { readFile, mkdtemp, rm } from "node:fs/promises";
-import { bindCampaignMoney as bindIndexedMoney,campaignMoneyPeopleIndex, campaignMoneyWork, campaignMoneyStateDue,readCampaignMoneyStateWork,campaignRecordYear, CAMPAIGN_MONEY_MISSING_REASONS, type CampaignMoneyPerson } from "../lib/funding/state-people.ts";
+import { bindCampaignMoney as bindIndexedMoney,campaignMoneyPeopleIndex, campaignMoneyWork, campaignMoneyStateDue,readCampaignMoneyStateWork,campaignRecordYear, readCampaignMoneyPeople, CAMPAIGN_MONEY_MISSING_REASONS, type CampaignMoneyPerson } from "../lib/funding/state-people.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { CAMPAIGN_MONEY_SCOPE,CAMPAIGN_FINANCE_SOURCES, campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { refreshCampaignMoneyState } from "../lib/funding/state-publication.ts";
@@ -159,6 +159,46 @@ test("missing people keep their own filing reason through tomorrow's refresh and
     }
     await db.query("UPDATE blank SET detail='SourceAcquisitionFailure(PUBLISHER_UNAVAILABLE): raw technical failure' WHERE entity_id=$1",[unreadable.id]);
     assert.equal((await readCampaignFinanceForPlace(unreadable.division,{query:db.query,personId:unreadable.id})).missingReason,undefined);
+  }finally{installFactReader(undefined);await db.pg.close();await rm(directory,{recursive:true,force:true});}
+});
+
+test("the next hourly missing-seat cohort preserves another seat's filed money and its own missing reasons",async()=>{
+  const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-hourly-seats-"));
+  const board={...person,seat:person.division+"#board",office:"Board Member"},missing={...person,id:"hourly-missing",name:"No Filing",seat:person.division+"#missing"};
+  let now=at;
+  const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
+    fetch:async(url:RequestInfo|URL)=>Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:1792454400}:[{...raw,contributions_amount:"100"}])};
+  try{
+    await publishMoneyFixture(db,{recordClass:"REGISTRY_RUNTIME_BINDING",scope:"US-WA",payload:{bodyRosters:[person,board,missing].map(target=>({bodyId:target.seat,sourceUrl:target.sourceUrl,members:[{id:target.id,name:target.name,officeTitle:target.office}]}))}});
+    await refreshCampaignMoneyState(options);
+    const snapshot=()=>db.query("SELECT entity_id,field,value,source_copy_id FROM fact WHERE field LIKE 'campaign-cycle:%' AND status='live' ORDER BY entity_id,field");
+    const before=await snapshot();assert.equal(before.length,1);
+    now="2026-10-20T01:00:00.000Z";
+    assert.deepEqual((await campaignMoneyWork(db.query,"WA",[person,board,missing],now)).map(target=>target.seat).sort(),[board.seat,missing.seat].sort());
+    const hourly=await refreshCampaignMoneyState(options);
+    assert.equal(hourly.report.records[0].loaded,0);assert.ok(!Object.keys(hourly.report.records[0].reasons).some(reason=>reason.includes("previously filed rows")));
+    assert.deepEqual(await snapshot(),before);
+    const [blank]=await db.query("SELECT detail FROM blank WHERE entity_id=$1 AND field=$2",[missing.id,`campaign-money:${missing.seat}`]);
+    assert.equal(blank.detail,CAMPAIGN_MONEY_MISSING_REASONS.absent);
+    assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records[0].totals.find(total=>total.label==="Contributions")?.amount,100);
+    now="2026-10-21T00:00:00.000Z";await refreshCampaignMoneyState(options);assert.deepEqual(await snapshot(),before);
+  }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
+});
+
+test("a special-district member's money reason uses its government's held canonical place",async()=>{
+  const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-body-place-"));
+  const division="ocd-division/country:us/state:al",government="al:special:south-central-alabama-regional-housing-authority",body=government+"#governing";
+  const id="ocd-person/3a34e1e8-4cab-43c5-b20f-4bf49c557397",name="A. P. Hoffman",url="https://www.scarhahousing.com/board-of-commissioners";
+  try{
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Alabama','AL',null),($2,'government','South Central Alabama Regional Housing Authority','AL',$1),($3,'body','Governing board','AL',$2),($4,'person',$5,'AL',null)",[division,government,body,id,name]);
+    await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2)",[government,division]);
+    const [copy]=await db.query("INSERT INTO source_copy(url,final_url,fetched_at,http_status,sha256,blob_key) VALUES($1,$1,$2,200,$3,'body-place-fixture') RETURNING id",[url,at,"a".repeat(64)]);
+    await db.query("INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by) VALUES($1,$2,$3,$4,'live','OFFICIAL',$5,'',$6,$6,'fixture')",[body,`member:${id}`,JSON.stringify({name,office:""}),name,copy.id,at]);
+    const [person]=await readCampaignMoneyPeople(db.query,"AL");assert.equal(person.id,id);assert.equal(person.seat,body);assert.equal(person.division,division);
+    await refreshCampaignMoneyState({state:"AL",query:db.query,facts:db,vault,directory,now:()=>at,fetch:async()=>{throw new Error("An unsupported profile must not fetch");}});
+    installFactReader(db.query);const {GET}=await import("../app/api/campaign-finance/route.ts");
+    const response=await GET(new Request(`${PUBLIC_SITE_ORIGIN}/api/campaign-finance?${new URLSearchParams({division:person.division,person:id})}`));
+    assert.equal(response.status,200);assert.equal((await response.json()).missingReason,CAMPAIGN_MONEY_MISSING_REASONS.unsupported);
   }finally{installFactReader(undefined);await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 

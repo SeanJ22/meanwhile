@@ -38,7 +38,8 @@ export function federalMoneyRows(records: readonly FederalMoneyFact[], target: F
   return records.flatMap(fact => {
     const recipient = Boolean(target.bodyId && fact.bodyIds.includes(target.bodyId));
     const county = /^(.+\/county:[^/]+)(?:\/|$)/.exec(target.divisionId)?.[1];
-    const geography = fact.kind === "DISASTER" ? Boolean(county && fact.divisionIds.includes(county)) : fact.divisionIds.includes(target.divisionId);
+    const disasterState = !target.bodyId && fact.source === "openfema" && fact.details.reportedState === fact.state && target.divisionId === federalMoneyStateDivision(fact.state);
+    const geography = fact.kind === "DISASTER" ? Boolean(county && fact.divisionIds.includes(county) || disasterState && fact.divisionIds.includes(target.divisionId)) : fact.divisionIds.includes(target.divisionId);
     if (fact.kind === "AUDIT" || fact.kind === "ENTITY") {
       if (target.bodyId ? !recipient : !geography) return [];
     } else if (fact.kind === "DISASTER") {

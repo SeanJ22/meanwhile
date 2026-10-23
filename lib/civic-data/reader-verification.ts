@@ -213,7 +213,7 @@ export async function verifyRoutineReaderProjection(
     switch (family) {
       case "legiscan-bulk": {
         const { readBulkProjection } = await import("../sources/legiscan/reader.ts");
-        return verifyExactVersion(verifierId, await readBulkProjection(options.scope ?? contract.scope, {store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"LegiScan bills");
+        return verifyExactVersion(verifierId, await readBulkProjection(options.scope ?? contract.scope, {store:options.store,now:options.now,bypassCache:true,verifySavedSource:true}),options.expectedVersionId,"LegiScan bills");
       }
       case "google-civic-voterinfo": {
         const { readCivicProjection } = await import("../sources/google-civic/reader.ts");

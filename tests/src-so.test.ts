@@ -8,12 +8,12 @@ import { routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { feedDoorDrafts } from "../lib/doors/seed-feeds.ts";
-import { normalizeSocrata, normalizeEcho, openDataReports, type GovernmentJoin } from "../lib/sources/open-data/normalize.ts";
+import { normalizeSocrata, normalizeEcho, openDataReports, echoReaderArtifactRecord, type GovernmentJoin } from "../lib/sources/open-data/normalize.ts";
 import { parseCatalogPage, socrataPages, openDataFetch } from "../lib/sources/open-data/acquire.ts";
 import { openDataCandidate, publishOpenData, readOpenDataProjection } from "../lib/sources/open-data/publication.ts";
 import { readerOpenData } from "../lib/sources/open-data/reader.ts";
 import { openDataEvidence, openDataText } from "../lib/ask/open-data.ts";
-import { OPEN_DATA_CLOCKS, ECHO_EXPORT, divisionPartition, zipPartition, type OpenDataFact } from "../lib/sources/open-data/model.ts";
+import { OPEN_DATA_CLOCKS, ECHO_EXPORT, openDataFactIssue, openDataReaderRecord, divisionPartition, zipPartition, type OpenDataFact } from "../lib/sources/open-data/model.ts";
 import { streamCsvObjects } from "../lib/sources/prl/streaming.ts";
 import { OpenDataSpool } from "../lib/sources/open-data/spool.ts";
 import { parseOpenDataArguments, openDataArchiveStore } from "../scripts/open-data-refresh.mts";
@@ -30,6 +30,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { refreshSocrata, socrataStateDivisionId } from "../lib/sources/open-data/socrata.ts";
 import type { OpenDataCapture } from "../lib/sources/open-data/publication.ts";
 import type { OpenDataPartitionRef, OpenDataReport } from "../lib/sources/open-data/model.ts";
+import { echoMinimumGap, retainEchoMinimumGaps, mergeEchoRetainedPartition } from "../lib/sources/open-data/echo-gaps.ts";
 
 const NOW="2026-10-12T23:24:00.000Z", LATER="2026-10-12T23:25:00.000Z";
 const fixture=(name:string)=>readFileSync(new URL(`./fixtures/src-so/${name}`,import.meta.url),"utf8");
@@ -247,4 +248,79 @@ test("Portal enrichment moves unresolved catalog counts without deleting an open
   assert.equal(captured[0].find(row=>row.state==="UNRESOLVED")?.loaded,1);
   assert.equal(captured[1].find(row=>row.state==="UNRESOLVED")?.loaded,0);
   const read=await readerOpenData({divisionIds:[division]},{store,vault,now:NOW,bypassCache:true});assert.equal(read.records.length,1);
+});
+
+
+test("Real program-only EPA rows retain their native ID and blank FRS through publication and API source validation",async()=>{
+  const rawRows=JSON.parse(fixture("echo-program-identities.json")) as Record<string,unknown>[];
+  assert.deepEqual(rawRows.map(row=>row.FAC_STATE),["AZ","CA"]);
+  for(const raw of rawRows){
+    const row=normalizeEcho(raw,NOW,null),store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
+    assert.equal(raw.REGISTRY_ID,"");assert.equal(row.sourceRow.REGISTRY_ID,"");assert.equal(row.nativeIds.registry_id,undefined);
+    assert.match(row.id,/^epa-echo:program:(?:npdes_ids|rcra_ids):/);
+    assert.ok(row.sourceUrl.startsWith("https://echo.epa.gov/detailed-facility-report?fid="));
+    assert.equal(openDataFactIssue(row),null);
+    const publicRow=openDataReaderRecord(row);assert.equal(publicRow.sourceRow.REGISTRY_ID,"");assert.equal(openDataFactIssue(publicRow),null);
+    assert.equal(publicRow.sourceRow.FAC_STREET,undefined);
+    const published=await publishOpenData({store,...await echoManifest([row],vault)});assert.ok(published.outcome.promoted);
+    const read=await readerOpenData({zip:row.zip},{store,vault,now:NOW,bypassCache:true});assert.equal(read.records[0].id,row.id);
+    assert.equal(openDataEvidence(read.records[0]).sourceUrl,row.sourceUrl);
+    assert.ok(openDataFactIssue({...publicRow,nativeIds:{...publicRow.nativeIds,echo_fid:"forged"}}));
+  }
+  const frs=(await echoRows())[0];assert.equal(frs.id,`epa-echo:${frs.sourceRow.REGISTRY_ID}`);
+});
+test("A program facility requires an exact unambiguous ID in its captured official EPA report URL",()=>{
+  const raw=(JSON.parse(fixture("echo-program-identities.json")) as Record<string,unknown>[])[0];
+  for(const altered of [
+    {...raw,DFR_URL:String(raw.DFR_URL).replace("echo.epa.gov","echo.epa.gov.evil.example")},
+    {...raw,DFR_URL:String(raw.DFR_URL).replace("fid=","fid=unknown")},
+    {...raw,RCRA_IDS:raw.NPDES_IDS},
+    {...raw,NPDES_IDS:""},
+    {...raw,DFR_URL:String(raw.DFR_URL)+"&fid="+raw.NPDES_IDS},
+    {...raw,FAC_NAME:""},
+  ])assert.throws(()=>normalizeEcho(altered,NOW,null),/unambiguous native facility ID or name/);
+});
+
+test("EPA publishes mixed valid rows, records exact minimum gaps, and retains the prior verified rejected identity",async()=>{
+  const [old,valid]=await echoRows(),store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
+  const firstInput=await echoManifest([old],vault);
+  await publishOpenData({store,...firstInput});
+  const bad={...old.sourceRow,FAC_NAME:""},gap=echoMinimumGap(bad);assert.ok(gap);assert.equal(gap.id,old.id);
+  const actualGap=echoMinimumGap(JSON.parse(fixture("echo-missing-name.json")));assert.match(actualGap!.fact.detail,/Publisher FAC_NAME is blank/);
+  const retained=await retainEchoMinimumGaps([gap],firstInput.partitions,firstInput.captures,vault);
+  const partition=mergeEchoRetainedPartition({partition:firstInput.partitions[0].id,rows:[valid],captures:[echoCapture([valid])]},retained);
+  assert.equal(retained.size,1); // The retained source coordinates also retain its cell partition.
+  assert.ok(partition.rows.some(row=>row.id===old.id&&row.title===old.title&&row.sourceRow.FAC_NAME===old.sourceRow.FAC_NAME));
+  const oldRetained=partition.rows.find(row=>row.id===old.id)!;
+  assert.deepEqual(oldRetained.fields,old.fields);assert.deepEqual(oldRetained.nativeIds,old.nativeIds);
+  assert.equal(oldRetained.sourceRow.FAC_STREET,undefined);
+  const references:OpenDataPartitionRef[]=[];
+  for(const part of [partition,...retained.values()])references.push(await saveOpenDataPartition({source:"epa-echo",...part,now:LATER},vault));
+  const published=await publishOpenData({store,source:"epa-echo",rows:[],reports:openDataReports(partition.rows),partitions:references,captures:[echoCapture([valid])],excludedFacts:[gap.fact],now:LATER,replace:true});
+  assert.ok(published.outcome.promoted);assert.equal(published.candidate.excludedFacts?.length,1);
+  const receipt=(await store.readCandidate(published.candidate.id))!.receipt;
+  assert.equal(receipt!.excludedFacts[0].code,"EPA_FACILITY_MINIMUM_MISSING");
+  assert.deepEqual((receipt!.excludedFacts[0].record as {sourceRow:unknown}).sourceRow,bad);
+  const reader=await readerOpenData({zip:old.zip},{store,vault,now:LATER,bypassCache:true});assert.ok(reader.records.some(row=>row.id===old.id&&row.title===old.title));
+  const schema={FAC_NAME:"unrecognized header"};assert.throws(()=>echoMinimumGap(schema),/required facility columns/);
+  const held=await readOpenDataProjection("epa-echo","national",{store,bypassCache:true});assert.equal(held.metadata.versionId,published.candidate.id);
+});
+test("Compact EPA reader cells round-trip every interpreted fact and exact native identity, including program-only rows",async()=>{
+  const rows=[...await echoRows(),...(JSON.parse(fixture("echo-program-identities.json")) as Record<string,unknown>[]).map(raw=>normalizeEcho(raw,NOW,null))];
+  for(const row of rows){
+    const held:GovernmentJoin[]=[{divisionId:`ocd-division/country:us/state:${row.state?.toLowerCase()}`,bodyIds:[],nativeIds:row.nativeIds}];
+    const full=normalizeEcho(row.sourceRow,row.capturedAt,row.publishedAt,held),compact=echoReaderArtifactRecord(full);
+    for(const [key,value]of Object.entries(compact.sourceRow))assert.deepEqual(value,full.sourceRow[key]);
+    assert.equal(compact.sourceRow.FAC_STREET,undefined);
+    const {sourceRow:_fullSource,...fullFacts}=full,{sourceRow:_compactSource,...compactFacts}=normalizeEcho(compact.sourceRow,compact.capturedAt,compact.publishedAt,held);
+    assert.deepEqual(compactFacts,fullFacts);
+    assert.deepEqual(openDataReaderRecord(compact),openDataReaderRecord(full));
+  }
+});
+test("Immutable slices bind defensive copies exactly and reject raw-source substitutions",async()=>{
+  const row=(await echoRows())[0],capture=echoCapture([row]),vault=new MemoryEvidenceStore();
+  const copy={...row,sourceRow:structuredClone(row.sourceRow),fields:Object.fromEntries(Object.entries(row.fields).reverse())};
+  await saveOpenDataPartition({source:"epa-echo",partition:"bound-copy",rows:[copy],captures:[capture],now:NOW},vault);
+  const changed=normalizeEcho({...row.sourceRow,FAC_INSPECTION_COUNT:"99999"},NOW,row.publishedAt);
+  await assert.rejects(saveOpenDataPartition({source:"epa-echo",partition:"substitution",rows:[changed],captures:[capture],now:NOW},vault),/differs from its captured source/);
 });

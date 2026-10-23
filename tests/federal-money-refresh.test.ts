@@ -96,7 +96,7 @@ test("real OpenFEMA sample publishes through registered fanout, native join and 
   assert.deepEqual(result.projection.counts, { loaded: 1, joined: 1, unjoined: 0 });
   const read = await readFederalMoneyPartition("openfema", leafScope, { store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
-  if (read.kind === "PROMOTED") assert.deepEqual(read.value.records[0].divisionIds, [county]);
+  if (read.kind === "PROMOTED") assert.deepEqual(read.value.records[0].divisionIds, ["ocd-division/country:us/state:ar", county]);
   const checkpoint = await readFederalMoneyCheckpoint("openfema", "AR", { store, now, bypassCache: true });
   assert.equal(checkpoint.kind, "PROMOTED");
   if (checkpoint.kind === "PROMOTED") assert.equal("records" in checkpoint.value, false);
@@ -167,12 +167,15 @@ test("same saved source is a successful unchanged check; outages preserve its st
   assert.equal(statuses.at(-1), "OUTAGE");
 });
 
-test("unfinished pages keep a durable continuation and source-native unmatched rows; native audit report links do not alter source bytes", async () => {
+test("unfinished pages keep a durable continuation and the publisher state while county association remains open", async () => {
   const store = new MemoryRoutineDataStore();
   let received: unknown;
   const first = await refreshFederalMoney({ source: "openfema", store, acquireOptions, states: ["AR"], identities: async () => ({ divisions: [], bodies: [], governments: [] }),
     acquire: async () => ({ ...fullPage, complete: false, continuation: { source: "openfema", phase: "declarations", offset: 1000 } }), now: () => now, maxRounds: 1 });
-  assert.deepEqual(first.projection.counts, { loaded: 1, joined: 0, unjoined: 1 });
+  assert.deepEqual(first.projection.counts, { loaded: 1, joined: 1, unjoined: 0 });
+  const firstRecord = (await store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", leafScope))?.payload.records[0];
+  assert.deepEqual(firstRecord?.divisionIds, ["ocd-division/country:us/state:ar"]);
+  assert.deepEqual(firstRecord?.bodyIds, []);
   await refreshFederalMoney({ source: "openfema", store, acquireOptions, states: ["AR"], identities: async () => identities,
     acquire: async (_source, _state, options) => { received = options?.cursor; return fullPage; }, now: () => now, maxRounds: 1 });
   assert.deepEqual(received, { source: "openfema", phase: "declarations", offset: 1000 });

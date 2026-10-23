@@ -231,6 +231,11 @@ export async function verifySourceScopedCandidateProjection(
     const sourceIssue = await federalMoneySavedSourceIssue(candidate, source, predecessor?.candidate ?? null, proofStore);
     if (sourceIssue) return fail(verifierId, sourceIssue);
   }
+  if(candidate.sourceId==="legiscan-bills"&&candidate.recordClass==="STATE_BILL"){
+    const {bulkManifestIssue}=await import("../sources/legiscan/publication.ts");
+    const issue=await bulkManifestIssue(candidate,proofStore);
+    if(issue)return fail("lib/sources/legiscan/publication.ts#bulkManifestIssue",issue);
+  }
 
   const store = candidateReadOnlyStore(candidate, observedAt, predecessor);
   if (candidate.recordClass === "MEETING") {

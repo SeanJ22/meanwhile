@@ -178,8 +178,13 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
   const root = object(payload) ?? {};
   switch (recordClass) {
-    case "STATE_BILL":
-      return [...keyed("bill", array(root.bills), ["id"]), ...keyed("dataset", array(root.datasets), ["session_id"])];
+    case "STATE_BILL": {
+      const bills=root.kind==="PART"?array(root.bills).map(value=>{
+        const row=object(value)??{}, {sponsorRefs,...fields}=row;
+        return {...fields,sponsors:array(sponsorRefs).map(index=>array(root.sponsors)[Number(index)])};
+      }):array(root.bills);
+      return [...keyed("bill", bills, ["id"]), ...keyed("dataset", array(root.datasets), ["session_id"]), ...keyed("part", array(root.parts), ["scope"])];
+    }
     case "FEC_FUNDING":
       return [
         ...keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]),

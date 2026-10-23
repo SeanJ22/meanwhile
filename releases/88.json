@@ -1,0 +1,19 @@
+{
+  "n": 88,
+  "branch": "release/88",
+  "river_sha": "78f82a232dd1d0545a46835e7716032ff3807425",
+  "tested_sha": "78f82a232dd1d0545a46835e7716032ff3807425",
+  "steps": [
+    "NX-PLACE"
+  ],
+  "lanes": [
+    "pm-01"
+  ],
+  "integration_from": 295,
+  "integration_count": 296,
+  "pr": {
+    "number": 798,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/798"
+  },
+  "at": "2026-10-23T06:17:38Z"
+}

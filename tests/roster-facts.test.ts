@@ -75,3 +75,18 @@ test("the same person read from two pages is one person; a name the page does no
   assert.ok(blanks.every(b => b.stage === "CHECK" && b.reason === "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY"));
   assert.ok(blanks.some(b => String(b.field).startsWith("member:")));
 });
+
+test("a native official identity preserves a surname-only source name while labels and unidentified words stay blank", async t => {
+  const db = await factDb(); t.after(() => db.pg.close());
+  const page = capture("Pope Member Burkee Actions", "ar-native-4");
+  const report = await publishRosterFacts(db, { body: { ...BODY, parentId: null }, capture: page, complete: false, producedBy: "native-roster",
+    members: [
+      { recordId: "person:543", externalIds: [["legistar:keywest", "543"]], fields: { name: "Pope", office: "Member" } },
+      { recordId: "unidentified", fields: { name: "Burkee" } },
+      { recordId: "navigation", externalIds: [["native-person", "2"]], fields: { name: "Actions" } },
+    ] }, clocks, NOW);
+  assert.equal(report.blanks, 2);
+  const { rosters } = await readFactRosters(db.query, [BODY.id]);
+  assert.deepEqual(rosters[0].members.map(m => m.name), ["Pope"]);
+  assert.deepEqual(await db.query("SELECT value,quote FROM fact WHERE field='name' AND status='live'"), [{ value: "Pope", quote: "Pope" }]);
+});

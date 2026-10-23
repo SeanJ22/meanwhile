@@ -8,7 +8,9 @@ export async function loadLegistarMembers(vault: EvidenceStore, slug: string): P
   const workItemId = `legistar-members:${slug}`;
   const pointer = await vault.get(latestKey(slug));
   if (!pointer) return null;
-  const { manifest: key, signature, collectedAt } = JSON.parse(new TextDecoder().decode(pointer.bytes));
+  const { manifest: key, signature, collectedAt, bodyTypes } = JSON.parse(new TextDecoder().decode(pointer.bytes));
+  // Old full pages did not select body types. Read them again even if row versions are unchanged.
+  if (bodyTypes !== 1) return null;
   if (typeof signature !== "string" || !/^[a-f0-9]{64}$/.test(signature) || !Number.isFinite(Date.parse(collectedAt))) throw new Error("LEGISTAR_MEMBERS_CACHE_POINTER_INVALID");
   if (typeof key !== "string" || !key.startsWith(`project/${FRESHNESS_PROJECT}/source/legistar:${slug}/`) ||
     !key.endsWith(`/${workItemId}/manifest.json`) || key.includes("..")) throw new Error("LEGISTAR_MEMBERS_CACHE_POINTER_INVALID");
@@ -52,7 +54,7 @@ export async function saveLegistarMembers(vault: EvidenceStore, raw: LegistarMem
   if (!artifacts.length) throw new Error("LEGISTAR_MEMBERS_CACHE_NO_SOURCE_READS");
   const latest = [...artifacts].sort((a, b) => Date.parse(a.retrievedAt) - Date.parse(b.retrievedAt)).at(-1)!;
   await putManifest(vault, FRESHNESS_PROJECT, latest, buildManifest(FRESHNESS_PROJECT, latest.workItemId, artifacts, now));
-  const pointer = Buffer.from(JSON.stringify({ manifest: manifestKey(FRESHNESS_PROJECT, latest), signature: legistarMemberSignature(raw), collectedAt: raw.collectedAt }));
+  const pointer = Buffer.from(JSON.stringify({ manifest: manifestKey(FRESHNESS_PROJECT, latest), signature: legistarMemberSignature(raw), collectedAt: raw.collectedAt, bodyTypes: 1 }));
   await vault.put(latestKey(raw.slug), pointer, { contentType: "application/json", byteLength: pointer.byteLength,
     contentHash: `manifest:legistar-members:${raw.slug}:latest`, objectClass: "MUTABLE_INDEX" });
 }

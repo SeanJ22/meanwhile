@@ -1,0 +1,66 @@
+{
+  "needle": "WHERE p.entity_id=substr(f.field,8) AND p.status='live'",
+  "replacement": "WHERE p.entity_id=substr(f.field,8) AND p.status='live' AND (p.field IN ('name','email','phone','website') OR p.field LIKE '%:'||f.entity_id)",
+  "results": [
+    {
+      "zip": "53703",
+      "phase": "before",
+      "bytes": 603858,
+      "ms": 1466.9261120000003,
+      "serverTiming": "place;dur=1268, total;dur=1386",
+      "dbBytes": 5262263,
+      "dbMs": 1098.787103,
+      "identical": false
+    },
+    {
+      "zip": "53703",
+      "phase": "scoped-person-fields",
+      "bytes": 603858,
+      "ms": 1251.459292,
+      "serverTiming": "place;dur=1156, total;dur=1212",
+      "dbBytes": 3020198,
+      "dbMs": 1037.975809,
+      "identical": true
+    },
+    {
+      "zip": "53202",
+      "phase": "before",
+      "bytes": 798120,
+      "ms": 1695.2957780000002,
+      "serverTiming": "place;dur=1577, total;dur=1662",
+      "dbBytes": 6062891,
+      "dbMs": 1444.9790440000002,
+      "identical": false
+    },
+    {
+      "zip": "53202",
+      "phase": "scoped-person-fields",
+      "bytes": 798120,
+      "ms": 1261.012087,
+      "serverTiming": "place;dur=1052, total;dur=1161",
+      "dbBytes": 3328210,
+      "dbMs": 962.1701970000004,
+      "identical": true
+    },
+    {
+      "zip": "60120",
+      "phase": "before",
+      "bytes": 419447,
+      "ms": 3433.733575,
+      "serverTiming": "place;dur=3332, total;dur=3397",
+      "dbBytes": 20267397,
+      "dbMs": 3114.252121999999,
+      "identical": false
+    },
+    {
+      "zip": "60120",
+      "phase": "scoped-person-fields",
+      "bytes": 419447,
+      "ms": 1292.0890850000014,
+      "serverTiming": "place;dur=1225, total;dur=1253",
+      "dbBytes": 2327700,
+      "dbMs": 1169.6130950000006,
+      "identical": true
+    }
+  ]
+}

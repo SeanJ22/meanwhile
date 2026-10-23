@@ -59,9 +59,12 @@ export interface RosterFactsReport {
 const text = (value: unknown): string | null => (typeof value === "string" && value.trim() ? value.trim() : null);
 export const nameKey = (name: string) => name.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
-const NAVIGATION = new Set(["contact us", "contact information", "staff directory", "email us", "town hall", "member name"]);
-/** A single word ("Actions", "Menu") or a navigation label is page furniture, never an officeholder's name. */
-const personName = (name: string) => /\s/.test(name.trim()) && !NAVIGATION.has(name.trim().toLowerCase().replace(/\s+/g, " "));
+const NAVIGATION = new Set(["contact us", "contact information", "staff directory", "email us", "town hall", "member name",
+  "actions", "menu", "vacant", "vacancy", "unfilled", "tbd"]);
+/** An official native person id can identify a source's surname-only name; page labels cannot. */
+const personName = (name: string, identified: boolean) =>
+  (/\s/.test(name.trim()) || identified && /^\p{L}[\p{L}\p{M}'’.-]*$/u.test(name.trim())) &&
+  !NAVIGATION.has(name.trim().toLowerCase().replace(/\s+/g, " "));
 
 const CONTACTS = [["email", "email"], ["phone", "phone"], ["websiteUrl", "website"]] as const;
 const TERMS = [["termNote", "term_note"], ["termStart", "term_start"], ["termEnd", "term_end"]] as const;
@@ -113,7 +116,8 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
   const seated = new Set<string>();
   for (const member of input.members) {
     const name = text(member.fields.name), written = text(member.fields.nameAsWritten) ?? name, office = text(member.fields.office);
-    if (!name || !written || !personName(name)) {
+    const identified = provenance === "OFFICIAL" && !!member.externalIds?.some(([scheme, value]) => !scheme.startsWith("roster-") && value.trim());
+    if (!name || !written || !personName(name, identified)) {
       const reason = name ? "NAME_NOT_A_PERSON" : "NAME_NOT_READ";
       await openBlank(db.query, { entityId: body.id, field: `member-row:${member.recordId}`, stage: "READ", reason,
         detail: capture.evidence.canonicalUrl, retryMinutes: clocks.retryMinutes("officeholder") });

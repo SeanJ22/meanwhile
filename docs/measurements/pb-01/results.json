@@ -1,0 +1,342 @@
+{
+  "checkedAt": "2026-10-23T08:40:12.857Z",
+  "identities": [
+    {
+      "role": "readonly",
+      "read_only": "on",
+      "can_write": false
+    },
+    {
+      "role": "wtp_cp_release_readonly",
+      "read_only": "on",
+      "can_write": false
+    }
+  ],
+  "productionReadBytes": 11204423,
+  "retired": [
+    {
+      "produced_by": "legistar-members:milwaukee",
+      "names": 2
+    },
+    {
+      "produced_by": "legistar-members:milwaukeecounty",
+      "names": 33
+    }
+  ],
+  "scope": "Dane County, Milwaukee city and county; real source captures and production facts; local publication only",
+  "budget": {
+    "uncompressedBytes": 1000000,
+    "completeAnswerMs": 3000,
+    "compressedBytes": 100000
+  },
+  "runs": [
+    {
+      "pass": "first",
+      "slug": "dane",
+      "at": "2026-10-23T08:16:04.495Z",
+      "records": 1274,
+      "held": 0,
+      "unchanged": false,
+      "members": 848,
+      "bodies": 166,
+      "sourceRequests": 42
+    },
+    {
+      "pass": "first",
+      "slug": "milwaukee",
+      "at": "2026-10-23T08:16:04.495Z",
+      "records": 3222,
+      "held": 0,
+      "unchanged": false,
+      "members": 859,
+      "bodies": 191,
+      "sourceRequests": 46
+    },
+    {
+      "pass": "first",
+      "slug": "milwaukeecounty",
+      "at": "2026-10-23T08:16:04.495Z",
+      "records": 365,
+      "held": 0,
+      "unchanged": false,
+      "members": 215,
+      "bodies": 151,
+      "sourceRequests": 11
+    },
+    {
+      "pass": "next",
+      "slug": "dane",
+      "at": "2026-10-23T20:16:04.495Z",
+      "records": 0,
+      "held": 0,
+      "unchanged": true,
+      "members": 848,
+      "bodies": 166,
+      "sourceRequests": 42
+    },
+    {
+      "pass": "next",
+      "slug": "milwaukee",
+      "at": "2026-10-23T20:16:04.495Z",
+      "records": 0,
+      "held": 0,
+      "unchanged": true,
+      "members": 859,
+      "bodies": 191,
+      "sourceRequests": 46
+    },
+    {
+      "pass": "next",
+      "slug": "milwaukeecounty",
+      "at": "2026-10-23T20:16:04.495Z",
+      "records": 0,
+      "held": 0,
+      "unchanged": true,
+      "members": 215,
+      "bodies": 151,
+      "sourceRequests": 11
+    },
+    {
+      "pass": "tomorrow",
+      "slug": "dane",
+      "at": "2026-10-24T08:16:04.495Z",
+      "records": 0,
+      "held": 0,
+      "unchanged": true,
+      "members": 848,
+      "bodies": 166,
+      "sourceRequests": 42
+    },
+    {
+      "pass": "tomorrow",
+      "slug": "milwaukee",
+      "at": "2026-10-24T08:16:04.495Z",
+      "records": 1,
+      "held": 0,
+      "unchanged": false,
+      "members": 858,
+      "bodies": 191,
+      "sourceRequests": 46
+    },
+    {
+      "pass": "tomorrow",
+      "slug": "milwaukeecounty",
+      "at": "2026-10-24T08:16:04.495Z",
+      "records": 0,
+      "held": 0,
+      "unchanged": true,
+      "members": 215,
+      "bodies": 151,
+      "sourceRequests": 11
+    },
+    {
+      "pass": "next-after-retirement",
+      "slug": "dane",
+      "at": "2026-10-24T20:16:04.495Z",
+      "records": 0,
+      "held": 0,
+      "unchanged": true,
+      "sourceRequests": 42
+    },
+    {
+      "pass": "next-after-retirement",
+      "slug": "milwaukee",
+      "at": "2026-10-24T20:16:04.495Z",
+      "records": 0,
+      "held": 0,
+      "unchanged": true,
+      "sourceRequests": 46
+    },
+    {
+      "pass": "next-after-retirement",
+      "slug": "milwaukeecounty",
+      "at": "2026-10-24T20:16:04.495Z",
+      "records": 0,
+      "held": 0,
+      "unchanged": true,
+      "sourceRequests": 11
+    }
+  ],
+  "results": [
+    {
+      "phase": "before",
+      "zip": "53703",
+      "bytes": 26781,
+      "ms": 1992.699799,
+      "serverTiming": "place;dur=1910, total;dur=1948",
+      "boards": 0,
+      "emptyBoards": 0,
+      "daneMembers": 0,
+      "henry": 0
+    },
+    {
+      "phase": "before",
+      "zip": "53202",
+      "bytes": 541211,
+      "ms": 1381.1951339999996,
+      "serverTiming": "place;dur=1143, total;dur=1328",
+      "boards": 117,
+      "emptyBoards": 0,
+      "daneMembers": 0,
+      "henry": 0
+    },
+    {
+      "phase": "first",
+      "zip": "53703",
+      "bytes": 603856,
+      "ms": 2227.230122000008,
+      "serverTiming": "place;dur=2157, total;dur=2210",
+      "boards": 95,
+      "emptyBoards": 0,
+      "daneMembers": 37,
+      "henry": 1
+    },
+    {
+      "phase": "first",
+      "zip": "53202",
+      "bytes": 798104,
+      "ms": 1669.867247999995,
+      "serverTiming": "place;dur=1537, total;dur=1645",
+      "boards": 171,
+      "emptyBoards": 0,
+      "daneMembers": 0,
+      "henry": 0
+    },
+    {
+      "phase": "next",
+      "zip": "53703",
+      "bytes": 603856,
+      "ms": 2306.470843999996,
+      "serverTiming": "place;dur=2174, total;dur=2278",
+      "boards": 95,
+      "emptyBoards": 0,
+      "daneMembers": 37,
+      "henry": 1
+    },
+    {
+      "phase": "next",
+      "zip": "53202",
+      "bytes": 798104,
+      "ms": 2155.6427029999904,
+      "serverTiming": "place;dur=1905, total;dur=2121",
+      "boards": 171,
+      "emptyBoards": 0,
+      "daneMembers": 0,
+      "henry": 0
+    },
+    {
+      "phase": "tomorrow",
+      "zip": "53703",
+      "bytes": 603856,
+      "ms": 2486.2696369999903,
+      "serverTiming": "place;dur=2398, total;dur=2465",
+      "boards": 95,
+      "emptyBoards": 0,
+      "daneMembers": 37,
+      "henry": 1
+    },
+    {
+      "phase": "tomorrow",
+      "zip": "53202",
+      "bytes": 797422,
+      "ms": 3321.2202439999674,
+      "serverTiming": "place;dur=3094, total;dur=3296",
+      "boards": 171,
+      "emptyBoards": 0,
+      "daneMembers": 0,
+      "henry": 0
+    },
+    {
+      "phase": "isolated-tomorrow",
+      "zip": "53703",
+      "bytes": 603856,
+      "ms": 1763.1451900000102,
+      "serverTiming": "place;dur=1647, total;dur=1728",
+      "boards": 95,
+      "emptyBoards": 0,
+      "daneMembers": 37,
+      "henry": 1
+    },
+    {
+      "phase": "isolated-tomorrow",
+      "zip": "53202",
+      "bytes": 797437,
+      "ms": 1202.5068319999846,
+      "serverTiming": "place;dur=1083, total;dur=1183",
+      "boards": 171,
+      "emptyBoards": 0,
+      "daneMembers": 0,
+      "henry": 0
+    }
+  ],
+  "baseline": {
+    "reportedAt": "2026-10-23 04:15 America/New_York",
+    "source": "Sean live-site measurement",
+    "53202": {
+      "boards": 342,
+      "emptyBoards": 225,
+      "allCapsBoards": 185,
+      "members": 708,
+      "uncompressedBytes": 3074693,
+      "reportedWireKB": 83
+    },
+    "53703": {
+      "boards": 0,
+      "uncompressedBytes": 31952
+    },
+    "capturedServerTimingMs": {
+      "53703": 984,
+      "53202": 764
+    }
+  },
+  "browser": [
+    {
+      "phase": "first",
+      "zip": "53703",
+      "boards": 95,
+      "members": 37,
+      "henry": 1,
+      "pageMs": 1796.0160439999995,
+      "pageErrors": []
+    },
+    {
+      "phase": "first",
+      "zip": "53202",
+      "boards": 171,
+      "pageMs": 1919.2293369999988,
+      "pageErrors": []
+    },
+    {
+      "phase": "tomorrow",
+      "zip": "53703",
+      "boards": 95,
+      "members": 37,
+      "henry": 1,
+      "pageMs": 1762.7202550000002,
+      "pageErrors": []
+    },
+    {
+      "phase": "tomorrow",
+      "zip": "53202",
+      "boards": 171,
+      "pageMs": 2293.2751129999997,
+      "pageErrors": []
+    }
+  ],
+  "compression": {
+    "53703": {
+      "uncompressedBytes": 603856,
+      "gzipLevel6Bytes": 65275
+    },
+    "53202": {
+      "uncompressedBytes": 797437,
+      "gzipLevel6Bytes": 88545
+    }
+  },
+  "snapshot": {
+    "sha256": "45070e98d7f4c399d4e8fd7ebeefd74500b56585b3c6fc81de4d6aa67734a275",
+    "scope": "Dane, Milwaukee city and county; all published tenant bodies, their member facts and source-copy metadata; local writes only"
+  },
+  "timingMethod": "Actual production place SQL and normal reader composition/encoding, with locally published fact rows substituted at the SQL result boundary. Local fixture SQL projection is prepared before timing; it is not an extra production reader query.",
+  "limits": "Controlled clocks replay saved real source responses. No production write, purge, deployment, actual future run or future CDN/browser network latency is claimed. Browser replay serves the built page and intercepts its APIs with exact recorded answers; optional APIs return 503. Compression numbers are local gzip level 6, not measured future CDN transfer."
+}

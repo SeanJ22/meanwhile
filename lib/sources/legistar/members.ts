@@ -2,7 +2,7 @@ import type { BodyRoster, RosterMember } from "../../registry/body-rosters.ts";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { fetchBodies, fetchPersons, fetchOfficeRecords } from "./client.ts";
 import { saveLegistarReading } from "./members-cache.ts";
-import { legistarMemberSignature, validateLegistarMembers, termDate, memberProbe, type LegistarMembers, type CachedLegistarMembers, type MemberBody, type MemberPerson, type MemberOffice } from "./members-model.ts";
+import { legistarMemberSignature, validateLegistarMembers, termDate, memberDay, currentMemberOffice, memberName, memberProbe, type LegistarMembers, type CachedLegistarMembers, type MemberBody, type MemberPerson, type MemberOffice } from "./members-model.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 
 /** Legistar refuses a filter of more than 100 expression nodes; 15 ids stay under it with the paging clause. */
@@ -44,7 +44,7 @@ export function makeLegistarMembersReader(vault: EvidenceStore, fetchImpl?: type
     held = null;
     readings.length = 0;
     const result = { slug, signature, collectedAt: new Date().toISOString(), readings,
-      bodies: await fetchBodies<MemberBody>(slug, { ...options, select: ["BodyId", "BodyName", "BodyRowVersion"] }),
+      bodies: await fetchBodies<MemberBody>(slug, { ...options, select: ["BodyId", "BodyName", "BodyTypeName", "BodyRowVersion"] }),
       persons: await people(personIds, ["PersonId", "PersonFullName", "PersonRowVersion"]),
       offices: await fetchOfficeRecords<MemberOffice>(slug, { ...options, filter: officeFilter,
         select: ["OfficeRecordId", "OfficeRecordPersonId", "OfficeRecordBodyId", "OfficeRecordFullName", "OfficeRecordTitle",
@@ -83,7 +83,7 @@ export function* legistarMemberRosters(raw: LegistarMembers, rows: readonly Body
   for (const wiring of rows.filter(row => row.config.slug === raw.slug)) {
     let today = days.get(wiring.timeZone);
     if (!today) {
-      today = new Intl.DateTimeFormat("en-CA", { timeZone: wiring.timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(now));
+      today = memberDay(now, wiring.timeZone);
       days.set(wiring.timeZone, today);
     }
     const nativeId = Number(wiring.config.eventBodyId);
@@ -96,7 +96,7 @@ export function* legistarMemberRosters(raw: LegistarMembers, rows: readonly Body
     for (const office of raw.offices) {
       if (office.OfficeRecordBodyId !== nativeId) continue;
       const termStart = termDate(office.OfficeRecordStartDate), termEnd = termDate(office.OfficeRecordEndDate);
-      if ((termStart && termStart > today) || (termEnd && termEnd < today)) continue;
+      if (!currentMemberOffice(office, today)) continue;
       const held = seats.get(office.OfficeRecordPersonId);
       if (!held || (termStart ?? "") > (held.termStart ?? "") || (termStart ?? "") === (held.termStart ?? "") && office.OfficeRecordId > held.office.OfficeRecordId) {
         seats.set(office.OfficeRecordPersonId, { office, termStart, termEnd });
@@ -105,7 +105,7 @@ export function* legistarMemberRosters(raw: LegistarMembers, rows: readonly Body
     for (const { office, termStart, termEnd } of seats.values()) {
       if (pageUrl && memberSourceUrl(raw, "officerecords", "OfficeRecordId", office.OfficeRecordId) !== pageUrl) continue;
       const person = persons.get(office.OfficeRecordPersonId);
-      const name = office.OfficeRecordFullName?.trim();
+      const name = memberName(office);
       const officeTitle = office.OfficeRecordTitle?.trim() || office.OfficeRecordMemberType?.trim() || "";
       if (!name) continue;
       const source = { kind: "OFFICIAL" as const, sourceUrl: memberSourceUrl(raw, "officerecords", "OfficeRecordId", office.OfficeRecordId), sourceOrg: wiring.publishingOrg, collectedAt: raw.collectedAt, verifiedAt: raw.collectedAt };

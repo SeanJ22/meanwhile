@@ -8,11 +8,13 @@ import { makeLegistarMembersReader } from "./members.ts";
 import { publishLegistarMembers } from "./members-publication.ts";
 import type { Clocks, FactDb, Query } from "../../facts/publish.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
+import type { ReaderCachePurger } from "../../reader/cache.ts";
 import { runInSourceAcquisitionDomain, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../acquisition-deadline.ts";
 
 export async function refreshLegistarMembers(input: {
   facts: FactDb & { readonly query: Query }; clocks: Clocks; now: string; slug: string;
   doors?: Query; vault?: EvidenceStore; fetchImpl?: typeof fetch;
+  purge?: ReaderCachePurger;
 }) {
   const rows = await legistarTenantDoors(input.doors ?? legistarDoorQuery(), input.slug);
   if (!rows.length) throw new Error("LEGISTAR_MEMBERS_TENANT_UNBOUND");
@@ -24,5 +26,5 @@ export async function refreshLegistarMembers(input: {
   await saveLegistarMembers(vault, raw, input.now);
   // The pages were saved after the pass began; checking them against the start time refuses every fresh read.
   const publishedAt = new Date(Math.max(Date.now(), Date.parse(raw.collectedAt), Date.parse(input.now))).toISOString();
-  return publishLegistarMembers({ facts: input.facts, clocks: input.clocks, vault, raw, rows, now: publishedAt });
+  return publishLegistarMembers({ facts: input.facts, clocks: input.clocks, vault, raw, rows, now: publishedAt, purge: input.purge });
 }

@@ -4,6 +4,7 @@ import { createServer } from "node:http";
 import { build } from "esbuild";
 import { launchGuarded } from "../scripts/browser.mts";
 import { readerStartScript } from "../lib/reader/bootstrap.ts";
+import { encodeReaderValue } from "../lib/reader/wire.ts";
 
 test("the arriving page starts one state/place read before hydration and the reader consumes each response once", async () => {
   const bundle = await build({ stdin: { resolveDir: process.cwd(), contents: `
@@ -72,7 +73,7 @@ test("the arriving page starts one state/place read before hydration and the rea
         districtOffices:[{address:"100 Example Street",city:"Tucson",state:"AZ",zip:"85701",lat:null,lng:null}],
         officeDetails:[{officeKind:"DISTRICT",official:true,sourceUrl:"https://example.gov/offices",sourceOrg:"Official office",collectedAt:"2026-10-01"}] }},
         {ids:["congress:A000002"],directory:{source:null,committees:[],districtOffices:[{address:"An unselected office"}],officeDetails:[]}}] };
-      response.writeHead(200,{"content-type":"application/json"}).end(JSON.stringify({meetings:["held"],stateResponse:{status:200,headers:[],value}})); }
+      response.writeHead(200,{"content-type":"application/json"}).end(JSON.stringify(encodeReaderValue({meetings:["held"],stateResponse:{status:200,headers:[],value}}))); }
     else if (url === "/api/geocode") {
       let body="";for await(const chunk of request)body+=chunk;
       assert.equal(JSON.parse(body).address,"100 Example Street, Tucson, AZ 85701");
@@ -161,7 +162,7 @@ test("a bundled state failure preserves meetings, including when the optional wo
     const server=createServer((request,response)=>{
       const url=request.url!;
       response.setHeader("content-type","application/json");
-      if(url.startsWith("/api/meetings"))return response.end(JSON.stringify({meetings:["held"],stateResponse:{status:503,headers:[["cache-control","no-store"]],value:{error:"State unavailable"}}}));
+      if(url.startsWith("/api/meetings"))return response.end(JSON.stringify({meetings:[{$readerText:0}],readerTexts:["held"],stateResponse:{status:503,headers:[["cache-control","no-store"]],value:{error:"State unavailable"}}}));
       if(url==="/geo/reader-zips/85.json")return response.end(JSON.stringify({locations:{"85701":{zip:"85701",lat:32,lng:-110,postal:{state:"AZ"}}}}));
       if(url==="/map-boundary-worker.mjs"){
         response.setHeader("content-type","application/javascript");return response.end('throw new Error("Worker unavailable");');

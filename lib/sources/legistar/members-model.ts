@@ -4,7 +4,7 @@ import type { Artifact } from "../../control-plane/evidence/artifact.ts";
 
 export interface MemberReading { readonly artifact: Artifact; readonly ids: readonly number[] }
 
-export interface MemberBody { BodyId: number; BodyName: string; BodyRowVersion: string; }
+export interface MemberBody { BodyId: number; BodyName: string; BodyRowVersion: string; BodyTypeName?: string | null; }
 export interface MemberPerson { PersonId: number; PersonFullName: string; PersonRowVersion: string }
 export interface MemberOffice {
   OfficeRecordId: number; OfficeRecordPersonId: number; OfficeRecordBodyId: number;
@@ -24,6 +24,7 @@ export interface CachedLegistarMembers {
 
 export function legistarMemberSignature(raw: Pick<LegistarMembers, "bodies" | "persons" | "offices">): string {
   const hash = createHash("sha256");
+  hash.update("body-types/1");
   for (const [rows, idKey, versionKey] of [[raw.bodies, "BodyId", "BodyRowVersion"], [raw.persons, "PersonId", "PersonRowVersion"],
     [raw.offices, "OfficeRecordId", "OfficeRecordRowVersion"]] as const) {
     hash.update("[");
@@ -52,6 +53,20 @@ export function termDate(value: string | null): string | null {
   const date = isoTermDate(value.slice(0, 10));
   if (!date) throw new Error("LEGISTAR_MEMBERS_TERM_INVALID");
   return date;
+}
+
+export function memberDay(now: string, timeZone: string): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(now));
+}
+
+export function currentMemberOffice(office: MemberOffice, today: string): boolean {
+  const start = termDate(office.OfficeRecordStartDate), end = termDate(office.OfficeRecordEndDate);
+  return (!start || start <= today) && (!end || end >= today);
+}
+
+export function memberName(office: MemberOffice): string | null {
+  const name = office.OfficeRecordFullName?.trim();
+  return !name || /^(?:vacant|vacancy|unfilled|tbd|to be (?:appointed|determined))$/i.test(name) ? null : name;
 }
 
 export function memberReading(artifact: Artifact, rows: unknown): MemberReading {

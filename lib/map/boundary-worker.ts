@@ -3,6 +3,7 @@ import { createOfficeLocator } from "./office-locator.ts";
 import { officeOwners, directoryOffices } from "./office-pins.ts";
 import { personIdentityKeys } from "../officials/people-identity.ts";
 import type { ReaderStateResponse } from "../reader/client.ts";
+import { decodeReaderValue } from "../reader/wire.ts";
 
 export type ReaderWorkerRequest = BoundaryRequest
   | { kind: "bootstrap"; body: ArrayBuffer; status: number; headers: [string,string][] }
@@ -13,7 +14,7 @@ const locate = createOfficeLocator();
 async function readWorker(request: ReaderWorkerRequest, signal: AbortSignal) {
   if (request.kind === "office") return locate(request.address);
   if (request.kind !== "bootstrap") return read(request, signal);
-  const place = JSON.parse(new TextDecoder().decode(request.body)) as {stateResponse?:{value:ReaderStateResponse;status:number;headers:[string,string][]}};
+  const place = decodeReaderValue(JSON.parse(new TextDecoder().decode(request.body))) as {stateResponse?:{value:ReaderStateResponse;status:number;headers:[string,string][]}};
   const state = place.stateResponse ?? {value:{error:"The state's information could not be loaded"},status:503,headers:[["cache-control","no-store"]]};
   delete place.stateResponse;
   const value = state.value as ReaderStateResponse;

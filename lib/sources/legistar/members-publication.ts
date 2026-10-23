@@ -8,7 +8,7 @@ import type { Clocks, FactDb, Query } from "../../facts/publish.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../../reader/cache.ts";
 import { legistarMemberRosters } from "./members.ts";
-import { memberProbe, type LegistarMembers } from "./members-model.ts";
+import { memberProbe, memberDay, currentMemberOffice, memberName, type LegistarMembers } from "./members-model.ts";
 import { legistarMemberCapture } from "./members-cache.ts";
 
 export function legistarMembersPackage(raw: LegistarMembers, rows: readonly BodySourceWiring[], now: string) {
@@ -19,7 +19,8 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
   const unbound: { key: string; detail: string }[] = [];
   const candidates = new Map<string, { body: LegistarMembers["bodies"][number]; row: BodySourceWiring }[]>();
   for (const body of raw.bodies) {
-    const wired = own.filter(row => Number(row.config.eventBodyId) === body.BodyId || !row.config.eventBodyId &&
+    const exact = own.filter(row => Number(row.config.eventBodyId) === body.BodyId);
+    const wired = exact.length ? exact : own.filter(row => !row.config.eventBodyId &&
       (row.config.eventBodyName || row.config.insiteBodyName) === body.BodyName);
     if (wired.length > 1 || wired.length === 0 && (jurisdictions.size !== 1 || parent.ocdId === null)) {
       unbound.push({ key: `${raw.slug}:body:${body.BodyId}`, detail: "The public body has no exact government binding in this shared tenant" });
@@ -29,7 +30,11 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
     const id = wired[0]?.bodyId ?? subBodyId(owner.ocdId!, body.BodyName);
     candidates.set(id, [...candidates.get(id) ?? [], { body, row: { ...owner, bodyId: id, config: { ...owner.config, eventBodyId: String(body.BodyId), bodyName: body.BodyName } } }]);
   }
-  const seated = new Set(raw.offices.map(office => office.OfficeRecordBodyId));
+  const days = new Map(own.map(row => [row.timeZone, memberDay(now, row.timeZone)]));
+  const seated = new Set(raw.offices.filter(office => {
+    const owner = own.find(row => Number(row.config.eventBodyId) === office.OfficeRecordBodyId) ?? parent;
+    return memberName(office) !== null && currentMemberOffice(office, days.get(owner.timeZone)!);
+  }).map(office => office.OfficeRecordBodyId));
   const listed = new Set(raw.bodies.map(body => body.BodyId));
   for (const id of [...seated].filter(id => !listed.has(id)).sort((a, b) => a - b)) {
     unbound.push({ key: `${raw.slug}:office-body:${id}`, detail: "Current office records name a body this tenant does not list" });
@@ -45,7 +50,10 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
   const hash = createHash("sha256");
   for (const row of bound) hash.update(JSON.stringify([row.bodyId, row.ocdId, row.timeZone]));
   hash.update(JSON.stringify(unbound));
-  hash.update("body-names/1");
+  const named = bound.filter(row => seated.has(Number(row.config.eventBodyId)) ||
+    /\b(board|commission|committee|council|authority|legislative)\b/i.test(raw.bodies.find(body => body.BodyId === Number(row.config.eventBodyId))?.BodyTypeName ?? ""));
+  hash.update(JSON.stringify(named.map(row => row.bodyId)));
+  hash.update("body-names/3");
   let members = 0;
   for (const roster of legistarMemberRosters(raw, bound, now)) {
     hash.update(JSON.stringify([roster.bodyId, roster.bodyName]));
@@ -54,7 +62,7 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
       members++;
     }
   }
-  return { bound, unbound, signature: hash.digest("hex"), members };
+  return { bound, named, unbound, signature: hash.digest("hex"), members };
 }
 
 export async function publishLegistarMembers(input: {
@@ -71,6 +79,17 @@ export async function publishLegistarMembers(input: {
     Date.parse(reading.artifact.retrievedAt) > loadedAt);
   let records = 0, held = 0;
   if (!unchanged || fullEvidenceMoved) {
+    // An ambiguous door leaves standing work; it does not erase a verified name beside a live roster.
+    const retired = await input.facts.query(`UPDATE fact SET status = 'superseded', held_reason = 'NOT_A_CURRENT_LEGISTAR_BOARD'
+      WHERE produced_by = $1 AND field = 'name' AND status = 'live' AND provenance_kind = 'OFFICIAL'
+        AND EXISTS (SELECT 1 FROM entity e WHERE e.id = fact.entity_id AND e.kind = 'body')
+        AND NOT (entity_id = ANY($2::text[]))
+        AND (entity_id = ANY($3::text[]) OR NOT EXISTS (
+          SELECT 1 FROM fact seat WHERE seat.entity_id = fact.entity_id AND seat.status = 'live' AND seat.field LIKE 'member:%'
+        )) RETURNING entity_id`, [source, prepared.named.map(row => row.bodyId), prepared.bound.map(row => row.bodyId)]);
+    for (const id of new Set(retired.map(row => String(row.entity_id))))
+      await invalidateReaderCache(await readerCacheScopeForEntity(input.facts.query, id), input.purge);
+    records += retired.length;
     const offices = new Map(input.raw.offices.map(office => [office.OfficeRecordId, office]));
     const bodyFor = (owner: BodySourceWiring) => ({ id: owner.bodyId, name: owner.config.bodyName ?? owner.bodyId,
       state: /\/state:([a-z]{2})/.exec(owner.ocdId ?? "")?.[1]?.toUpperCase() ?? null, parentId: owner.ocdId });
@@ -78,12 +97,13 @@ export async function publishLegistarMembers(input: {
       const body = bodyFor(owner);
       await ensureEntity(input.facts.query, { ...body, kind: "body" });
       await learnDoorChannel(input.facts.query, body.id, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords`);
+      if (owner.config.governmentWebsite) await learnDoorChannel(input.facts.query, body.id, new URL(owner.config.governmentWebsite).origin + "/");
     }
     for (const reading of input.raw.readings) {
       const url = new URL(reading.artifact.canonicalUrl);
       if (!url.pathname.endsWith("/bodies") || memberProbe(url)) continue;
       const capture = await legistarMemberCapture(input.vault, reading.artifact);
-      for (const owner of prepared.bound) {
+      for (const owner of prepared.named) {
         const row = reading.ids.includes(Number(owner.config.eventBodyId)) ? input.raw.bodies.find(body => body.BodyId === Number(owner.config.eventBodyId)) : undefined;
         if (!row) continue;
         const [outcome] = await publishBodyFacts(input.facts, { bodyId: owner.bodyId, capture, producedBy: source, purge: input.purge,

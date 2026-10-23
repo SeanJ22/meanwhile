@@ -1,5 +1,6 @@
 import type { BodyRoster, RosterReaderDisposition } from "../registry/body-rosters.ts";
 import type { Query } from "./publish.ts";
+import { surnameDisplayCase } from "../ballot/name-case.ts";
 
 const ROSTER_FACTS_SQL = `WITH members AS (
     SELECT f.entity_id AS body_id, substr(f.field, 8) AS person_id, f.value, f.quote, f.checked_at, f.provenance_kind,
@@ -48,7 +49,7 @@ export function factRostersFromRows(rows: readonly Record<string, unknown>[]): {
     const roster = byBody.get(bodyId) ?? { bodyId, bodyName: String(row.body_name), members: [], sourceUrl: own.url,
       sourceOrg: new URL(own.url).hostname, collectedAt: day(own.checked), partisanship: "UNDETERMINED" as const };
     if (day(own.checked) > roster.collectedAt) Object.assign(roster, { sourceUrl: own.url, sourceOrg: new URL(own.url).hostname, collectedAt: day(own.checked) });
-    roster.members.push({ id, personId: String(row.person_id), name: value("name") ?? membership.name,
+    roster.members.push({ id, personId: String(row.person_id), name: surnameDisplayCase(value("name") ?? membership.name),
       officeTitle: (typeof office?.value === "string" ? office.value : membership.office) ?? "Member",
       termNote: value("term_note"), termStart: value("term_start"), termEnd: value("term_end"),
       email: value("email"), phone: value("phone"), websiteUrl: value("website"), contactKind: "PUBLIC_OFFICE",

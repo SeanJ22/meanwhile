@@ -75,6 +75,8 @@ export function stateCoverage(
   const divisions = new Map([...runtime.registry.divisions, ...extraDivisions].map(division => [division.ocdId, division]));
   const resolved = divisionIds.flatMap(id => divisions.get(id) ?? []);
   const bodies = runtime.registry.bodies;
+  const legistar = new Set(bodies.filter(body => ["LEGISTAR", "LEGISTAR_INSITE"].includes(body.agendaSourceType) ||
+    /^https?:\/\/(?:[^./]+\.)?legistar\.com(?:\/|$)/i.test(body.provenance?.sourceUrl ?? "")).map(body => body.id));
   const { officials } = stateOfficials(state);
   return withReaderSelection(undefined, () => withReaderAuthorityEdge(null, () => withRegistryRuntimeProjection(runtime, [state.state], () => {
     const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings);
@@ -92,9 +94,11 @@ export function stateCoverage(
       governmentInventoryUnavailableStates: [],
       stateOffices: stateOfficesForStates([state.state]),
       ...(state.federal === undefined ? {} : { federalDirectoryUnavailable: state.federal === null }),
-      bodies: coverage.bodies.map(body => {
+      bodies: coverage.bodies.flatMap(body => {
+        const members = membersOfBody(body.bodyId).members;
+        if (legistar.has(body.bodyId) && !members.length) return [];
         const gap = rosterGapForBody(body.bodyId);
-        return { ...body, readerRoster: { members: membersOfBody(body.bodyId).members, gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };
+        return [{ ...body, readerRoster: { members, gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } }];
       }),
     };
   })));

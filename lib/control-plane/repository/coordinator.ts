@@ -313,9 +313,12 @@ export async function recordArtifactMetadata(
   } catch (error) {
     if (!(error instanceof AppendOnlyViolation)) throw error;
 
-    const held = await repos.artifacts.read(record.workItemId);
-    const position = held.findIndex((a) => a.artifactId === record.artifactId);
-    const prior = position >= 0 ? held[position] : undefined;
+    const entry = repos.artifacts.readEntry ? await repos.artifacts.readEntry(record.workItemId, record.artifactId)
+      : await repos.artifacts.read(record.workItemId).then(held => {
+        const position = held.findIndex(a => a.artifactId === record.artifactId);
+        return position < 0 ? null : { position, record: held[position] };
+      });
+    const prior = entry?.record;
     const contentIdentical =
       prior !== undefined &&
       prior.contentHash === record.contentHash &&
@@ -323,7 +326,7 @@ export async function recordArtifactMetadata(
       prior.tier === record.tier &&
       prior.partial === record.partial;
     if (!contentIdentical) throw error;
-    return { appended: false, recordId: record.artifactId, record: prior, position };
+    return { appended: false, recordId: record.artifactId, record: prior, position: entry!.position };
   }
 }
 

@@ -27,7 +27,8 @@ test("built registry routes contain their canonical geometry and roster inputs",
   const resolver = "data/derived/resolver-geometry.json";
   const manifest = JSON.parse(readFileSync(join(ROOT, resolver), "utf8")) as { files: string[] };
   assert.ok(manifest.files.length >= 20, "resolver input denominator unexpectedly empty or partial");
-  const expected = [resolver, ...manifest.files, BODY_TERRITORY_FILE];
+  const expected = [resolver, "data/derived/state-geometry.json",
+    ...manifest.files.filter(file => !file.startsWith("data/states/"))];
   const votingInputs = ["lib/geo/postal-zips.json", ...readdirSync(join(ROOT, "data/derived/zip-divisions"))
     .filter(file => /^\d{2}\.json$/.test(file)).map(file => `data/derived/zip-divisions/${file}`)];
   assert.ok(votingInputs.length > 1, "the voting ZIP input denominator must include the held shards");

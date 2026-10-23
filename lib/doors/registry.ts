@@ -1,4 +1,4 @@
-import { canonicalJson, type AggregateRepository } from "../control-plane/repository/types.ts";
+import { canonicalJson, type AggregateRepository, type Persisted, type RecordProjection } from "../control-plane/repository/types.ts";
 
 /** Whether a door is read, shut because it stopped working, or deliberately set aside. */
 export const DOOR_STATUSES = ["OPEN", "SHUT", "SUSPENDED"] as const;
@@ -99,7 +99,10 @@ export interface DoorRecord {
   readonly updatedAt: string;
 }
 
-export type DoorRepository = AggregateRepository<DoorRecord>;
+export type DoorRepository = AggregateRepository<DoorRecord> & {
+  /** Store-filtered descriptors for hand-wired calendars or census calendars. */
+  meetingMatches?(census: boolean, projection: RecordProjection): Promise<readonly Persisted<DoorRecord>[]>;
+};
 
 /** The fields a person or a derive step supplies; the rest the system keeps. */
 export interface DoorDraft {

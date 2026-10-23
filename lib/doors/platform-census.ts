@@ -80,17 +80,19 @@ export const CENSUS_DOOR_MATCH_FIELDS = {
   meeting: ["family"], config: ["crosswalkRowId", "bodyName", "insiteBodyName", "eventBodyName", "slug", "insiteHost"],
 } as const satisfies RecordProjection;
 
-async function censusDoorMatches(repo: DoorRepository) {
-  const rows = (await Promise.all(["OPEN", "SHUT"].map(status =>
+async function censusDoorMatches(repo: DoorRepository, census: boolean) {
+  const rows = repo.meetingMatches ? await repo.meetingMatches(census, CENSUS_DOOR_MATCH_FIELDS)
+    : (await Promise.all(["OPEN", "SHUT"].map(status =>
     repo.listWhereNarrowed(["status"], status, CENSUS_DOOR_MATCH_FIELDS)))).flat();
   return rows.filter((row): row is typeof row & { value: DoorRecord } => isDoorRecord(row.value))
+    .filter(row => census ? row.value.meeting != null && row.value.config.crosswalkRowId !== undefined : handWiredMeetingDoor(row.value))
     .sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 }
 
 /** Census doors that copy a hand-wired door are set aside, so each board is read once. Returns the doors set aside. */
 export async function retireCensusDuplicates(repo: DoorRepository, at: string): Promise<string[]> {
-  const rows = await censusDoorMatches(repo);
-  const handWired = rows.map(row => row.value).filter(handWiredMeetingDoor);
+  const [rows, handWiredRows] = await Promise.all([censusDoorMatches(repo, true), censusDoorMatches(repo, false)]);
+  const handWired = handWiredRows.map(row => row.value);
   const retired: string[] = [];
   for (const row of rows) {
     const door = row.value;
@@ -110,7 +112,7 @@ export async function retireCensusDuplicates(repo: DoorRepository, at: string): 
 
 export async function openPlatformMeetingDoors(repo: DoorRepository, rows: readonly MeetingBodyCrosswalkRow[], at: string) {
   const opened: string[] = [], seen = new Set<string>();
-  const handWired = rows.length ? (await censusDoorMatches(repo)).map(row => row.value).filter(handWiredMeetingDoor) : [];
+  const handWired = rows.length ? (await censusDoorMatches(repo, false)).map(row => row.value) : [];
   for (const row of rows) for (const proposed of platformMeetingDoor(row)) {
     if (handWiredDoorFor(proposed, handWired)) continue;
     const legacy = await repo.read(legacyPlatformDoorId(proposed));

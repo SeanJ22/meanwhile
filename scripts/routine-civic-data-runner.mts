@@ -83,7 +83,7 @@ import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.
 import { SOURCE_CHECK_AFTER_ENV } from "../lib/sources/known-release.ts";
 import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
 import { meetingReadQuietMs } from "../lib/civic-data/meeting-lanes.ts";
-import { listDoors } from "../lib/doors/registry.ts";
+import { readRoutineDoors } from "../lib/doors/routine-reads.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
@@ -542,7 +542,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     if (!PUBLISH_NOW) return publication;
 
     try {
-      const listed = (await listDoors(repos.doors)).doors;
+      const listed = await readRoutineDoors(repos.doors, "probes");
       const clockStore = new PostgresRoutineDataStore();
       const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
       const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb(), query: facts.query }, Date.now()),
@@ -554,7 +554,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     } catch (error) {
       console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
     }
-    return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
+    return [...publication, ...publishNowDoorTasks(await readRoutineDoors(repos.doors, "publication"),
       MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
   }
   const intents = readIntents([...(await readPlanningIntents(repos))]);
@@ -770,7 +770,7 @@ if (!PUBLISH_NOW) {
     const connection = controlPlaneUrlFromEnv();
     if (connection) {
       const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-      const doors = (await listDoors(repos.doors)).doors;
+      const doors = await readRoutineDoors(repos.doors, "refresh");
       const sizeFor = websiteSizeFromHoldings([...new Set(doors.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
       const pages = await refreshDuePageDoors({ repos, facts: readerFactDb(), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
         fetch: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), doors, now: new Date().toISOString() });
@@ -885,9 +885,10 @@ if (!FORCE && controlPlaneUrlFromEnv() !== null) {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     const settledAt = new Date().toISOString();
     const cleared = await settleReadNow(doorRepos.doors, settledAt);
-    const marked = readNowDueRequests((await listDoors(doorRepos.doors)).doors, new Set([...MEETING_PARTITION_CONTRACTS.map((contract) => contract.id), ...STANDING_SOURCE_TASKS.map((task) => task.id)]), settledAt);
+    const doors = await readRoutineDoors(doorRepos.doors, "requests");
+    const marked = readNowDueRequests(doors, new Set([...MEETING_PARTITION_CONTRACTS.map((contract) => contract.id), ...STANDING_SOURCE_TASKS.map((task) => task.id)]), settledAt);
 
-    const derive = editDeriveDueRequests((await listDoors(doorRepos.doors)).doors, new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
+    const derive = editDeriveDueRequests(doors, new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
     dueRequests = [...dueRequests, ...[...marked, ...derive].filter((request) => !dueRequests.some((held) => held.id === request.id))];
     if (marked.length > 0 || cleared > 0 || derive.length > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled; ${derive.length} derive request(s) after door edits`);
   } catch (error) {

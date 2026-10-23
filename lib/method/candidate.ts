@@ -109,6 +109,9 @@ export interface CandidateStore {
   readonly candidates: readonly MethodCandidate[];
 }
 
+/** Fields used by lifecycle metrics and research progression. */
+export type CandidateSummary = Pick<MethodCandidate, "id" | "lifecycle" | "submittedAt" | "admission">;
+
 export function emptyCandidateStore(): CandidateStore {
   return { storeVersion: 1, updatedOn: null, candidates: [] };
 }
@@ -228,7 +231,7 @@ export function markRejected(
 }
 
 /** Counts by lifecycle. Every state named, including the zeroes. */
-export function candidateCounts(store: CandidateStore): Record<CandidateLifecycle, number> {
+export function candidateCounts(store: { readonly candidates: readonly Pick<MethodCandidate, "lifecycle">[] }): Record<CandidateLifecycle, number> {
   const counts = Object.fromEntries(
     CANDIDATE_LIFECYCLE_STATES.map((s) => [s, 0]),
   ) as Record<CandidateLifecycle, number>;

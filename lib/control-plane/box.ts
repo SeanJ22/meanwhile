@@ -73,7 +73,10 @@ interface BoxQueue {
   /** Waiting rows handed to one builder, by the reason it gave them, about any board of the given governments (`<government>`, `<government>#governing`, `#board`, `#body:<slug>`); at most `limit` per government. */
   waitingUnder(reason: string, limit: number, governmentIds: readonly string[]): Promise<readonly BoxFinding[]>;
 }
-export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue;
+export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue & {
+  /** A replay needs the identity only when this origin is already complete. */
+  indexedOrigin?(id: string, legacyId: string, input: BoxInput): Promise<string | null>;
+};
 
 /** The queue for a store that is read whole: the in-memory and file stores. */
 export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxRepository {
@@ -152,6 +155,14 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
     try { return (await repo.compareAndSet(at, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
   }
+}
+
+/** Result indexing consumes identities, while builders load the finding only when they take it. */
+async function indexBoxReference(repo: AggregateRepository<BoxFinding> & Pick<BoxRepository, "indexedOrigin">, input: BoxInput, now: string): Promise<Pick<BoxFinding, "id">> {
+  instant(now);
+  if (!input.subjectId || !input.origin.resultId || !input.origin.workItemId || !Number.isSafeInteger(input.origin.findingIndex) || input.origin.findingIndex < 0) throw new Error("BOX_INVALID_ORIGIN");
+  const id = await repo.indexedOrigin?.(boxFindingId(input), legacyBoxFindingId(input), input);
+  return { id: id ?? (await indexBoxFinding(repo, input, now)).id };
 }
 
 /** The caller supplies its existing lease duration; Box creates no work or spending budget. */
@@ -234,9 +245,9 @@ export function otherSources(row: BoxFinding): readonly { readonly origin: BoxOr
 
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */
 type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt"> & Partial<Pick<ScoutResult, "obligationId" | "recordClass">>;
-export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, result: BoxScoutResult, now: string): Promise<readonly BoxFinding[]> {
-  const indexed: BoxFinding[] = [];
-  for (const [findingIndex, finding] of result.findings.entries()) indexed.push(await indexBoxFinding(repo, {
+export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, result: BoxScoutResult, now: string): Promise<readonly Pick<BoxFinding, "id">[]> {
+  const indexed: Pick<BoxFinding, "id">[] = [];
+  for (const [findingIndex, finding] of result.findings.entries()) indexed.push(await indexBoxReference(repo, {
     subjectId: finding.subjectId ?? result.subjectId, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null,
     origin: { kind: "SCOUT", resultId: result.attemptId, ...(result.obligationId ? { resultKey: result.obligationId } : {}), workItemId: result.workItemId, findingIndex,
       artifactIds: finding.artifactIds, recordedAt: result.recordedAt, ...(finding.missionPart ? { missionPart: finding.missionPart } : {}) },
@@ -279,15 +290,15 @@ async function capturedUrls(artifacts: AppendOnlyRepository<ArtifactRecord>, ids
 
 /** Detective spans retain their exact quote and saved-copy identity; unquoted findings remain references. */
 export async function indexDetectiveFindings(repo: AggregateRepository<BoxFinding>, record: BoxDetectiveRecord,
-  artifacts: AppendOnlyRepository<ArtifactRecord>, now: string): Promise<readonly BoxFinding[]> {
-  const indexed: BoxFinding[] = [];
+  artifacts: AppendOnlyRepository<ArtifactRecord>, now: string): Promise<readonly Pick<BoxFinding, "id">[]> {
+  const indexed: Pick<BoxFinding, "id">[] = [];
   const base = { kind: "DETECTIVE" as const, resultId: record.id, workItemId: record.workItemId, recordedAt: record.endedAt };
   const urls = await capturedUrls(artifacts, record.result.spans.map(span => span.artifactId));
-  for (const [findingIndex, span] of record.result.spans.entries()) indexed.push(await indexBoxFinding(repo, {
+  for (const [findingIndex, span] of record.result.spans.entries()) indexed.push(await indexBoxReference(repo, {
     subjectId: record.result.question.subjectId, exactQuote: span.quote, sourceUrl: urls.get(span.artifactId) ?? null,
     origin: { ...base, collection: "spans", findingIndex, artifactIds: [span.artifactId] },
   }, now));
-  for (const [findingIndex] of record.result.findings.entries()) indexed.push(await indexBoxFinding(repo, {
+  for (const [findingIndex] of record.result.findings.entries()) indexed.push(await indexBoxReference(repo, {
     subjectId: record.result.question.subjectId, exactQuote: null, sourceUrl: null,
     origin: { ...base, collection: "findings", findingIndex, artifactIds: record.result.artifactIds },
   }, now));

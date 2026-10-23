@@ -1,0 +1,34 @@
+{
+  "n": 90,
+  "branch": "release/90",
+  "river_sha": "5130d339c83fac517179b8612a2e1ee414c9464b",
+  "tested_sha": "1885b95f465a4b26379a6d67d13003b5087ab411",
+  "steps": [
+    "CAL-01",
+    "PB-03",
+    "PK-01",
+    "SRC-01",
+    "NX-01",
+    "NX-02",
+    "NB-01",
+    "NB-02",
+    "DG-01",
+    "DG-02"
+  ],
+  "lanes": [
+    "cal-01-fx",
+    "pb-03",
+    "pk-01",
+    "src-01",
+    "nx-02-fx",
+    "nb-02",
+    "dg-02"
+  ],
+  "integration_from": 298,
+  "integration_count": 305,
+  "pr": {
+    "number": 800,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/800"
+  },
+  "at": "2026-10-23T13:59:14Z"
+}

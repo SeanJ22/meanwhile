@@ -1,15 +1,28 @@
 {
-  "implementationRevision": "1f901339b42c247b671c9f1537a696ed2669c63a",
-  "baseRevision": "78f82a232dd1d0545a46835e7716032ff3807425",
+  "implementationRevision": "466f0ce95ba46a6b16c0ac506aa91a2c19cc73f8",
+  "baseRevision": "dfae00f3c70444f06c95adf66c89c9b4e818827d",
+  "resolvedReturn": {
+    "id": "fix:81a2add3",
+    "supersedesReady": "d0498209046b7c6bc4473d7eb8744c69d2bcb26d",
+    "release91PrerequisiteCleared": true,
+    "reconciledOntoTestedRelease92River": true,
+    "acceptanceClaimed": false
+  },
   "productionWrites": 0,
-  "productionDoorCaptureAt": "2026-10-23T11:13:55.267Z",
+  "productionReplayRoles": {
+    "reader": "readonly",
+    "control": "wtp_cp_release_readonly",
+    "transactionReadOnly": true,
+    "insertUpdateDeleteGranted": false
+  },
+  "proofMethod": "Production SELECT-only door/pointer/typed-reader replay; local readback evidence, source and LKG guards retained. Native acquisition/publication and scheduled-parent writes only in isolated Neon copies. Frozen detached implementation checkout throughout.",
   "doorReplay": {
     "productionReadOnly": true,
     "productionBaseVersion": "cv-a142e000f9ca3f6681aba5969cada744",
-    "observedAt": "2026-10-23T14:21:30.490Z",
+    "observedAt": "2026-10-23T18:43:15.930Z",
     "doorPublish": "PROMOTED",
-    "openDoors": 5862,
-    "publishedDoors": 5931,
+    "openDoors": 6599,
+    "publishedDoors": 6668,
     "allOpenDoorsBecomeWork": true,
     "removed": [
       "meeting-door:meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing:route:0391b4c4f54b65e7",
@@ -22,1132 +35,2232 @@
       "detail": "2 removed door(s) have exact suspended registry records."
     },
     "nextScheduledPublish": {
-      "at": "2026-10-24T14:21:30.490Z",
+      "at": "2026-10-24T18:43:15.930Z",
       "kind": "UNCHANGED_CONFIRMED",
-      "versionId": "cv-68a2bfe0be665705ccf4a89827599ee5"
+      "versionId": "cv-2506b340410264f4c861c0559f1df13c"
     }
   },
-  "productionReadOnlyBaseline": {
-    "productionReadOnly": true,
-    "localEvidenceWrites": 740,
-    "passes": [
-      {
-        "at": "2026-10-23T12:22:38.652Z",
-        "contracts": 6912,
-        "failures": [],
-        "dispositions": {
-          "RECORDED:PASS": 739,
-          "NO_PROMOTION": 6172,
-          "RECORDED:FAIL": 1
-        },
-        "byState": {
-          "US": {
-            "contracts": 41,
-            "pass": 25,
-            "noPromotion": 16,
-            "failures": 0
-          },
-          "NH": {
-            "contracts": 131,
-            "pass": 76,
-            "noPromotion": 54,
-            "failures": 0
-          },
-          "AZ": {
-            "contracts": 172,
-            "pass": 58,
-            "noPromotion": 114,
-            "failures": 0
-          },
-          "NJ": {
-            "contracts": 49,
-            "pass": 21,
-            "noPromotion": 28,
-            "failures": 0
-          },
-          "DE": {
-            "contracts": 20,
-            "pass": 15,
-            "noPromotion": 5,
-            "failures": 0
-          },
-          "DC": {
-            "contracts": 19,
-            "pass": 14,
-            "noPromotion": 5,
-            "failures": 0
-          },
-          "FL": {
-            "contracts": 558,
-            "pass": 14,
-            "noPromotion": 544,
-            "failures": 0
-          },
-          "GA": {
-            "contracts": 69,
-            "pass": 13,
-            "noPromotion": 56,
-            "failures": 0
-          },
-          "HI": {
-            "contracts": 27,
-            "pass": 14,
-            "noPromotion": 13,
-            "failures": 0
-          },
-          "ID": {
-            "contracts": 68,
-            "pass": 15,
-            "noPromotion": 53,
-            "failures": 0
-          },
-          "IL": {
-            "contracts": 232,
-            "pass": 13,
-            "noPromotion": 219,
-            "failures": 0
-          },
-          "IN": {
-            "contracts": 25,
-            "pass": 12,
-            "noPromotion": 13,
-            "failures": 0
-          },
-          "IA": {
-            "contracts": 29,
-            "pass": 12,
-            "noPromotion": 17,
-            "failures": 0
-          },
-          "KS": {
-            "contracts": 25,
-            "pass": 12,
-            "noPromotion": 13,
-            "failures": 0
-          },
-          "KY": {
-            "contracts": 20,
-            "pass": 12,
-            "noPromotion": 8,
-            "failures": 0
-          },
-          "LA": {
-            "contracts": 19,
-            "pass": 12,
-            "noPromotion": 7,
-            "failures": 0
-          },
-          "ME": {
-            "contracts": 70,
-            "pass": 12,
-            "noPromotion": 58,
-            "failures": 0
-          },
-          "MD": {
-            "contracts": 32,
-            "pass": 12,
-            "noPromotion": 20,
-            "failures": 0
-          },
-          "MA": {
-            "contracts": 178,
-            "pass": 12,
-            "noPromotion": 166,
-            "failures": 0
-          },
-          "MI": {
-            "contracts": 124,
-            "pass": 12,
-            "noPromotion": 112,
-            "failures": 0
-          },
-          "MN": {
-            "contracts": 87,
-            "pass": 12,
-            "noPromotion": 75,
-            "failures": 0
-          },
-          "MS": {
-            "contracts": 21,
-            "pass": 12,
-            "noPromotion": 9,
-            "failures": 0
-          },
-          "MO": {
-            "contracts": 253,
-            "pass": 12,
-            "noPromotion": 241,
-            "failures": 0
-          },
-          "MT": {
-            "contracts": 19,
-            "pass": 11,
-            "noPromotion": 8,
-            "failures": 0
-          },
-          "NE": {
-            "contracts": 19,
-            "pass": 11,
-            "noPromotion": 8,
-            "failures": 0
-          },
-          "NV": {
-            "contracts": 62,
-            "pass": 11,
-            "noPromotion": 51,
-            "failures": 0
-          },
-          "NM": {
-            "contracts": 64,
-            "pass": 11,
-            "noPromotion": 53,
-            "failures": 0
-          },
-          "NY": {
-            "contracts": 163,
-            "pass": 11,
-            "noPromotion": 152,
-            "failures": 0
-          },
-          "NC": {
-            "contracts": 145,
-            "pass": 11,
-            "noPromotion": 134,
-            "failures": 0
-          },
-          "ND": {
-            "contracts": 33,
-            "pass": 11,
-            "noPromotion": 22,
-            "failures": 0
-          },
-          "OH": {
-            "contracts": 121,
-            "pass": 11,
-            "noPromotion": 110,
-            "failures": 0
-          },
-          "OK": {
-            "contracts": 77,
-            "pass": 11,
-            "noPromotion": 66,
-            "failures": 0
-          },
-          "OR": {
-            "contracts": 62,
-            "pass": 11,
-            "noPromotion": 51,
-            "failures": 0
-          },
-          "PA": {
-            "contracts": 107,
-            "pass": 11,
-            "noPromotion": 96,
-            "failures": 0
-          },
-          "RI": {
-            "contracts": 37,
-            "pass": 11,
-            "noPromotion": 26,
-            "failures": 0
-          },
-          "SC": {
-            "contracts": 26,
-            "pass": 11,
-            "noPromotion": 15,
-            "failures": 0
-          },
-          "SD": {
-            "contracts": 42,
-            "pass": 11,
-            "noPromotion": 31,
-            "failures": 0
-          },
-          "TN": {
-            "contracts": 32,
-            "pass": 10,
-            "noPromotion": 22,
-            "failures": 0
-          },
-          "TX": {
-            "contracts": 643,
-            "pass": 11,
-            "noPromotion": 632,
-            "failures": 0
-          },
-          "UT": {
-            "contracts": 39,
-            "pass": 10,
-            "noPromotion": 29,
-            "failures": 0
-          },
-          "VT": {
-            "contracts": 19,
-            "pass": 10,
-            "noPromotion": 9,
-            "failures": 0
-          },
-          "VA": {
-            "contracts": 176,
-            "pass": 10,
-            "noPromotion": 166,
-            "failures": 0
-          },
-          "WA": {
-            "contracts": 161,
-            "pass": 10,
-            "noPromotion": 151,
-            "failures": 0
-          },
-          "WV": {
-            "contracts": 62,
-            "pass": 10,
-            "noPromotion": 52,
-            "failures": 0
-          },
-          "WI": {
-            "contracts": 385,
-            "pass": 10,
-            "noPromotion": 375,
-            "failures": 0
-          },
-          "WY": {
-            "contracts": 41,
-            "pass": 9,
-            "noPromotion": 32,
-            "failures": 0
-          },
-          "PR": {
-            "contracts": 19,
-            "pass": 4,
-            "noPromotion": 15,
-            "failures": 0
-          },
-          "AL": {
-            "contracts": 67,
-            "pass": 9,
-            "noPromotion": 58,
-            "failures": 0
-          },
-          "AK": {
-            "contracts": 97,
-            "pass": 9,
-            "noPromotion": 88,
-            "failures": 0
-          },
-          "AR": {
-            "contracts": 24,
-            "pass": 9,
-            "noPromotion": 15,
-            "failures": 0
-          },
-          "CA": {
-            "contracts": 1451,
-            "pass": 9,
-            "noPromotion": 1442,
-            "failures": 0
-          },
-          "CO": {
-            "contracts": 210,
-            "pass": 9,
-            "noPromotion": 201,
-            "failures": 0
-          },
-          "CT": {
-            "contracts": 176,
-            "pass": 9,
-            "noPromotion": 167,
-            "failures": 0
-          },
-          "AS": {
-            "contracts": 16,
-            "pass": 4,
-            "noPromotion": 12,
-            "failures": 0
-          },
-          "GU": {
-            "contracts": 16,
-            "pass": 3,
-            "noPromotion": 13,
-            "failures": 0
-          },
-          "MP": {
-            "contracts": 16,
-            "pass": 4,
-            "noPromotion": 12,
-            "failures": 0
-          },
-          "VI": {
-            "contracts": 16,
-            "pass": 4,
-            "noPromotion": 12,
-            "failures": 0
-          }
-        }
+  "doorCounts": {
+    "at": "2026-10-23T18:43:18.504Z",
+    "openDoors": 6599,
+    "meetingContracts": 6645,
+    "states": {
+      "NH": {
+        "openDoors": 99,
+        "runnableDoors": 99,
+        "contracts": 99
       },
-      {
-        "at": "2026-10-24T12:22:38.652Z",
-        "contracts": 6912,
-        "failures": [],
-        "dispositions": {
-          "CURRENT:PASS": 739,
-          "NO_PROMOTION": 6172,
-          "RECORDED:FAIL": 1
-        },
-        "byState": {
-          "US": {
-            "contracts": 41,
-            "pass": 25,
-            "noPromotion": 16,
-            "failures": 0
-          },
-          "NH": {
-            "contracts": 131,
-            "pass": 76,
-            "noPromotion": 54,
-            "failures": 0
-          },
-          "AZ": {
-            "contracts": 172,
-            "pass": 58,
-            "noPromotion": 114,
-            "failures": 0
-          },
-          "NJ": {
-            "contracts": 49,
-            "pass": 21,
-            "noPromotion": 28,
-            "failures": 0
-          },
-          "DE": {
-            "contracts": 20,
-            "pass": 15,
-            "noPromotion": 5,
-            "failures": 0
-          },
-          "DC": {
-            "contracts": 19,
-            "pass": 14,
-            "noPromotion": 5,
-            "failures": 0
-          },
-          "FL": {
-            "contracts": 558,
-            "pass": 14,
-            "noPromotion": 544,
-            "failures": 0
-          },
-          "GA": {
-            "contracts": 69,
-            "pass": 13,
-            "noPromotion": 56,
-            "failures": 0
-          },
-          "HI": {
-            "contracts": 27,
-            "pass": 14,
-            "noPromotion": 13,
-            "failures": 0
-          },
-          "ID": {
-            "contracts": 68,
-            "pass": 15,
-            "noPromotion": 53,
-            "failures": 0
-          },
-          "IL": {
-            "contracts": 232,
-            "pass": 13,
-            "noPromotion": 219,
-            "failures": 0
-          },
-          "IN": {
-            "contracts": 25,
-            "pass": 12,
-            "noPromotion": 13,
-            "failures": 0
-          },
-          "IA": {
-            "contracts": 29,
-            "pass": 12,
-            "noPromotion": 17,
-            "failures": 0
-          },
-          "KS": {
-            "contracts": 25,
-            "pass": 12,
-            "noPromotion": 13,
-            "failures": 0
-          },
-          "KY": {
-            "contracts": 20,
-            "pass": 12,
-            "noPromotion": 8,
-            "failures": 0
-          },
-          "LA": {
-            "contracts": 19,
-            "pass": 12,
-            "noPromotion": 7,
-            "failures": 0
-          },
-          "ME": {
-            "contracts": 70,
-            "pass": 12,
-            "noPromotion": 58,
-            "failures": 0
-          },
-          "MD": {
-            "contracts": 32,
-            "pass": 12,
-            "noPromotion": 20,
-            "failures": 0
-          },
-          "MA": {
-            "contracts": 178,
-            "pass": 12,
-            "noPromotion": 166,
-            "failures": 0
-          },
-          "MI": {
-            "contracts": 124,
-            "pass": 12,
-            "noPromotion": 112,
-            "failures": 0
-          },
-          "MN": {
-            "contracts": 87,
-            "pass": 12,
-            "noPromotion": 75,
-            "failures": 0
-          },
-          "MS": {
-            "contracts": 21,
-            "pass": 12,
-            "noPromotion": 9,
-            "failures": 0
-          },
-          "MO": {
-            "contracts": 253,
-            "pass": 12,
-            "noPromotion": 241,
-            "failures": 0
-          },
-          "MT": {
-            "contracts": 19,
-            "pass": 11,
-            "noPromotion": 8,
-            "failures": 0
-          },
-          "NE": {
-            "contracts": 19,
-            "pass": 11,
-            "noPromotion": 8,
-            "failures": 0
-          },
-          "NV": {
-            "contracts": 62,
-            "pass": 11,
-            "noPromotion": 51,
-            "failures": 0
-          },
-          "NM": {
-            "contracts": 64,
-            "pass": 11,
-            "noPromotion": 53,
-            "failures": 0
-          },
-          "NY": {
-            "contracts": 163,
-            "pass": 11,
-            "noPromotion": 152,
-            "failures": 0
-          },
-          "NC": {
-            "contracts": 145,
-            "pass": 11,
-            "noPromotion": 134,
-            "failures": 0
-          },
-          "ND": {
-            "contracts": 33,
-            "pass": 11,
-            "noPromotion": 22,
-            "failures": 0
-          },
-          "OH": {
-            "contracts": 121,
-            "pass": 11,
-            "noPromotion": 110,
-            "failures": 0
-          },
-          "OK": {
-            "contracts": 77,
-            "pass": 11,
-            "noPromotion": 66,
-            "failures": 0
-          },
-          "OR": {
-            "contracts": 62,
-            "pass": 11,
-            "noPromotion": 51,
-            "failures": 0
-          },
-          "PA": {
-            "contracts": 107,
-            "pass": 11,
-            "noPromotion": 96,
-            "failures": 0
-          },
-          "RI": {
-            "contracts": 37,
-            "pass": 11,
-            "noPromotion": 26,
-            "failures": 0
-          },
-          "SC": {
-            "contracts": 26,
-            "pass": 11,
-            "noPromotion": 15,
-            "failures": 0
-          },
-          "SD": {
-            "contracts": 42,
-            "pass": 11,
-            "noPromotion": 31,
-            "failures": 0
-          },
-          "TN": {
-            "contracts": 32,
-            "pass": 10,
-            "noPromotion": 22,
-            "failures": 0
-          },
-          "TX": {
-            "contracts": 643,
-            "pass": 11,
-            "noPromotion": 632,
-            "failures": 0
-          },
-          "UT": {
-            "contracts": 39,
-            "pass": 10,
-            "noPromotion": 29,
-            "failures": 0
-          },
-          "VT": {
-            "contracts": 19,
-            "pass": 10,
-            "noPromotion": 9,
-            "failures": 0
-          },
-          "VA": {
-            "contracts": 176,
-            "pass": 10,
-            "noPromotion": 166,
-            "failures": 0
-          },
-          "WA": {
-            "contracts": 161,
-            "pass": 10,
-            "noPromotion": 151,
-            "failures": 0
-          },
-          "WV": {
-            "contracts": 62,
-            "pass": 10,
-            "noPromotion": 52,
-            "failures": 0
-          },
-          "WI": {
-            "contracts": 385,
-            "pass": 10,
-            "noPromotion": 375,
-            "failures": 0
-          },
-          "WY": {
-            "contracts": 41,
-            "pass": 9,
-            "noPromotion": 32,
-            "failures": 0
-          },
-          "PR": {
-            "contracts": 19,
-            "pass": 4,
-            "noPromotion": 15,
-            "failures": 0
-          },
-          "AL": {
-            "contracts": 67,
-            "pass": 9,
-            "noPromotion": 58,
-            "failures": 0
-          },
-          "AK": {
-            "contracts": 97,
-            "pass": 9,
-            "noPromotion": 88,
-            "failures": 0
-          },
-          "AR": {
-            "contracts": 24,
-            "pass": 9,
-            "noPromotion": 15,
-            "failures": 0
-          },
-          "CA": {
-            "contracts": 1451,
-            "pass": 9,
-            "noPromotion": 1442,
-            "failures": 0
-          },
-          "CO": {
-            "contracts": 210,
-            "pass": 9,
-            "noPromotion": 201,
-            "failures": 0
-          },
-          "CT": {
-            "contracts": 176,
-            "pass": 9,
-            "noPromotion": 167,
-            "failures": 0
-          },
-          "AS": {
-            "contracts": 16,
-            "pass": 4,
-            "noPromotion": 12,
-            "failures": 0
-          },
-          "GU": {
-            "contracts": 16,
-            "pass": 3,
-            "noPromotion": 13,
-            "failures": 0
-          },
-          "MP": {
-            "contracts": 16,
-            "pass": 4,
-            "noPromotion": 12,
-            "failures": 0
-          },
-          "VI": {
-            "contracts": 16,
-            "pass": 4,
-            "noPromotion": 12,
-            "failures": 0
-          }
-        }
+      "NJ": {
+        "openDoors": 48,
+        "runnableDoors": 48,
+        "contracts": 48
+      },
+      "AZ": {
+        "openDoors": 145,
+        "runnableDoors": 145,
+        "contracts": 145
+      },
+      "CA": {
+        "openDoors": 1748,
+        "runnableDoors": 1748,
+        "contracts": 1748
+      },
+      "MA": {
+        "openDoors": 159,
+        "runnableDoors": 159,
+        "contracts": 159
+      },
+      "AK": {
+        "openDoors": 78,
+        "runnableDoors": 78,
+        "contracts": 78
+      },
+      "AL": {
+        "openDoors": 48,
+        "runnableDoors": 48,
+        "contracts": 48
+      },
+      "AR": {
+        "openDoors": 5,
+        "runnableDoors": 5,
+        "contracts": 5
+      },
+      "FL": {
+        "openDoors": 677,
+        "runnableDoors": 677,
+        "contracts": 677
+      },
+      "GA": {
+        "openDoors": 50,
+        "runnableDoors": 50,
+        "contracts": 50
+      },
+      "ID": {
+        "openDoors": 49,
+        "runnableDoors": 49,
+        "contracts": 49
+      },
+      "ME": {
+        "openDoors": 51,
+        "runnableDoors": 51,
+        "contracts": 51
+      },
+      "NC": {
+        "openDoors": 129,
+        "runnableDoors": 129,
+        "contracts": 129
+      },
+      "NM": {
+        "openDoors": 45,
+        "runnableDoors": 45,
+        "contracts": 45
+      },
+      "OH": {
+        "openDoors": 102,
+        "runnableDoors": 102,
+        "contracts": 102
+      },
+      "SC": {
+        "openDoors": 7,
+        "runnableDoors": 7,
+        "contracts": 7
+      },
+      "SD": {
+        "openDoors": 23,
+        "runnableDoors": 23,
+        "contracts": 23
+      },
+      "TN": {
+        "openDoors": 13,
+        "runnableDoors": 13,
+        "contracts": 13
+      },
+      "TX": {
+        "openDoors": 697,
+        "runnableDoors": 697,
+        "contracts": 697
+      },
+      "UT": {
+        "openDoors": 20,
+        "runnableDoors": 20,
+        "contracts": 20
+      },
+      "VA": {
+        "openDoors": 174,
+        "runnableDoors": 174,
+        "contracts": 174
+      },
+      "WA": {
+        "openDoors": 199,
+        "runnableDoors": 199,
+        "contracts": 199
+      },
+      "WV": {
+        "openDoors": 43,
+        "runnableDoors": 43,
+        "contracts": 43
+      },
+      "IL": {
+        "openDoors": 213,
+        "runnableDoors": 213,
+        "contracts": 213
+      },
+      "MI": {
+        "openDoors": 106,
+        "runnableDoors": 106,
+        "contracts": 106
+      },
+      "MN": {
+        "openDoors": 68,
+        "runnableDoors": 68,
+        "contracts": 68
+      },
+      "CO": {
+        "openDoors": 195,
+        "runnableDoors": 195,
+        "contracts": 195
+      },
+      "CT": {
+        "openDoors": 204,
+        "runnableDoors": 204,
+        "contracts": 204
+      },
+      "IN": {
+        "openDoors": 6,
+        "runnableDoors": 6,
+        "contracts": 6
+      },
+      "KS": {
+        "openDoors": 6,
+        "runnableDoors": 6,
+        "contracts": 6
+      },
+      "MD": {
+        "openDoors": 13,
+        "runnableDoors": 13,
+        "contracts": 13
+      },
+      "MO": {
+        "openDoors": 237,
+        "runnableDoors": 237,
+        "contracts": 237
+      },
+      "ND": {
+        "openDoors": 14,
+        "runnableDoors": 14,
+        "contracts": 14
+      },
+      "NY": {
+        "openDoors": 144,
+        "runnableDoors": 144,
+        "contracts": 144
+      },
+      "OK": {
+        "openDoors": 68,
+        "runnableDoors": 68,
+        "contracts": 68
+      },
+      "OR": {
+        "openDoors": 43,
+        "runnableDoors": 43,
+        "contracts": 43
+      },
+      "PA": {
+        "openDoors": 88,
+        "runnableDoors": 88,
+        "contracts": 88
+      },
+      "WY": {
+        "openDoors": 22,
+        "runnableDoors": 22,
+        "contracts": 22
+      },
+      "DE": {
+        "openDoors": 1,
+        "runnableDoors": 1,
+        "contracts": 1
+      },
+      "WI": {
+        "openDoors": 469,
+        "runnableDoors": 469,
+        "contracts": 469
+      },
+      "IA": {
+        "openDoors": 10,
+        "runnableDoors": 10,
+        "contracts": 10
+      },
+      "RI": {
+        "openDoors": 18,
+        "runnableDoors": 18,
+        "contracts": 18
+      },
+      "KY": {
+        "openDoors": 1,
+        "runnableDoors": 1,
+        "contracts": 1
+      },
+      "MS": {
+        "openDoors": 2,
+        "runnableDoors": 2,
+        "contracts": 2
+      },
+      "NV": {
+        "openDoors": 54,
+        "runnableDoors": 54,
+        "contracts": 54
+      },
+      "HI": {
+        "openDoors": 8,
+        "runnableDoors": 8,
+        "contracts": 8
       }
-    ]
+    },
+    "gaps": []
   },
-  "nativeReplay": {
-    "today": {
-      "at": "2026-10-23T13:32:06.291Z",
-      "originalDomains": 163,
-      "domains": 90,
-      "contracts": 6912,
-      "durationMs": 912987,
-      "dispositions": {
-        "NO_PROMOTION": 6129,
-        "RECORDED:PASS": 782,
-        "RECORDED:FAIL": 1
-      },
-      "failures": [],
-      "deferred": [],
-      "peakBytes": 1003159552
+  "registryInputs": {
+    "current": {
+      "capturedAt": "2026-10-23T17:45:15.213Z",
+      "doorsSha256": "8f1a9822014e97a6eb906b4b6ee674b87bec21a09789a1dacf919824bfea0b67",
+      "rows": 6697
     },
     "tomorrow": {
-      "at": "2026-10-24T13:32:06.291Z",
-      "originalDomains": 163,
-      "domains": 90,
-      "contracts": 6912,
-      "durationMs": 241031,
-      "dispositions": {
-        "NO_PROMOTION": 6129,
-        "CURRENT:PASS": 782,
-        "RECORDED:FAIL": 1
+      "capturedAt": "2026-10-23T18:41:45.591Z",
+      "doorsSha256": "24183202651695064077984a2fda4f336de227dda3a6d327a2b91739484707b9",
+      "rows": 6701
+    }
+  },
+  "nationalReaderReplay": {
+    "today": {
+      "states": {
+        "NH": {
+          "contracts": 131,
+          "dispositions": {
+            "NO_PROMOTION": 54,
+            "RECORDED:PASS": 76,
+            "RECORDED:FAIL": 1
+          }
+        },
+        "AZ": {
+          "contracts": 211,
+          "dispositions": {
+            "NO_PROMOTION": 147,
+            "RECORDED:PASS": 64
+          }
+        },
+        "NJ": {
+          "contracts": 51,
+          "dispositions": {
+            "NO_PROMOTION": 30,
+            "RECORDED:PASS": 21
+          }
+        },
+        "DE": {
+          "contracts": 20,
+          "dispositions": {
+            "NO_PROMOTION": 5,
+            "RECORDED:PASS": 15
+          }
+        },
+        "DC": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 5,
+            "RECORDED:PASS": 14
+          }
+        },
+        "FL": {
+          "contracts": 1081,
+          "dispositions": {
+            "NO_PROMOTION": 1067,
+            "RECORDED:PASS": 14
+          }
+        },
+        "GA": {
+          "contracts": 89,
+          "dispositions": {
+            "NO_PROMOTION": 76,
+            "RECORDED:PASS": 13
+          }
+        },
+        "HI": {
+          "contracts": 35,
+          "dispositions": {
+            "NO_PROMOTION": 21,
+            "RECORDED:PASS": 14
+          }
+        },
+        "ID": {
+          "contracts": 70,
+          "dispositions": {
+            "NO_PROMOTION": 55,
+            "RECORDED:PASS": 15
+          }
+        },
+        "IL": {
+          "contracts": 394,
+          "dispositions": {
+            "NO_PROMOTION": 378,
+            "RECORDED:PASS": 16
+          }
+        },
+        "IN": {
+          "contracts": 25,
+          "dispositions": {
+            "NO_PROMOTION": 13,
+            "RECORDED:PASS": 12
+          }
+        },
+        "IA": {
+          "contracts": 29,
+          "dispositions": {
+            "NO_PROMOTION": 17,
+            "RECORDED:PASS": 12
+          }
+        },
+        "KS": {
+          "contracts": 25,
+          "dispositions": {
+            "NO_PROMOTION": 13,
+            "RECORDED:PASS": 12
+          }
+        },
+        "KY": {
+          "contracts": 21,
+          "dispositions": {
+            "NO_PROMOTION": 9,
+            "RECORDED:PASS": 12
+          }
+        },
+        "LA": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 7,
+            "RECORDED:PASS": 12
+          }
+        },
+        "ME": {
+          "contracts": 80,
+          "dispositions": {
+            "NO_PROMOTION": 68,
+            "RECORDED:PASS": 12
+          }
+        },
+        "MD": {
+          "contracts": 33,
+          "dispositions": {
+            "NO_PROMOTION": 21,
+            "RECORDED:PASS": 12
+          }
+        },
+        "MA": {
+          "contracts": 196,
+          "dispositions": {
+            "NO_PROMOTION": 179,
+            "RECORDED:PASS": 17
+          }
+        },
+        "MI": {
+          "contracts": 192,
+          "dispositions": {
+            "NO_PROMOTION": 174,
+            "RECORDED:PASS": 18
+          }
+        },
+        "MN": {
+          "contracts": 93,
+          "dispositions": {
+            "NO_PROMOTION": 81,
+            "RECORDED:PASS": 12
+          }
+        },
+        "MS": {
+          "contracts": 23,
+          "dispositions": {
+            "NO_PROMOTION": 11,
+            "RECORDED:PASS": 12
+          }
+        },
+        "MO": {
+          "contracts": 469,
+          "dispositions": {
+            "NO_PROMOTION": 457,
+            "RECORDED:PASS": 12
+          }
+        },
+        "MT": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 8,
+            "RECORDED:PASS": 11
+          }
+        },
+        "NE": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 7,
+            "RECORDED:PASS": 12
+          }
+        },
+        "NV": {
+          "contracts": 127,
+          "dispositions": {
+            "NO_PROMOTION": 116,
+            "RECORDED:PASS": 11
+          }
+        },
+        "NM": {
+          "contracts": 101,
+          "dispositions": {
+            "NO_PROMOTION": 90,
+            "RECORDED:PASS": 11
+          }
+        },
+        "NY": {
+          "contracts": 267,
+          "dispositions": {
+            "NO_PROMOTION": 256,
+            "RECORDED:PASS": 11
+          }
+        },
+        "NC": {
+          "contracts": 189,
+          "dispositions": {
+            "NO_PROMOTION": 178,
+            "RECORDED:PASS": 11
+          }
+        },
+        "ND": {
+          "contracts": 33,
+          "dispositions": {
+            "NO_PROMOTION": 22,
+            "RECORDED:PASS": 11
+          }
+        },
+        "OH": {
+          "contracts": 151,
+          "dispositions": {
+            "NO_PROMOTION": 140,
+            "RECORDED:PASS": 11
+          }
+        },
+        "OK": {
+          "contracts": 137,
+          "dispositions": {
+            "NO_PROMOTION": 126,
+            "RECORDED:PASS": 11
+          }
+        },
+        "OR": {
+          "contracts": 76,
+          "dispositions": {
+            "NO_PROMOTION": 60,
+            "RECORDED:PASS": 16
+          }
+        },
+        "PA": {
+          "contracts": 133,
+          "dispositions": {
+            "NO_PROMOTION": 120,
+            "RECORDED:PASS": 13
+          }
+        },
+        "RI": {
+          "contracts": 37,
+          "dispositions": {
+            "NO_PROMOTION": 26,
+            "RECORDED:PASS": 11
+          }
+        },
+        "SC": {
+          "contracts": 26,
+          "dispositions": {
+            "NO_PROMOTION": 15,
+            "RECORDED:PASS": 11
+          }
+        },
+        "SD": {
+          "contracts": 42,
+          "dispositions": {
+            "NO_PROMOTION": 31,
+            "RECORDED:PASS": 11
+          }
+        },
+        "TN": {
+          "contracts": 32,
+          "dispositions": {
+            "NO_PROMOTION": 22,
+            "RECORDED:PASS": 10
+          }
+        },
+        "TX": {
+          "contracts": 1148,
+          "dispositions": {
+            "NO_PROMOTION": 1137,
+            "RECORDED:PASS": 11
+          }
+        },
+        "UT": {
+          "contracts": 46,
+          "dispositions": {
+            "NO_PROMOTION": 36,
+            "RECORDED:PASS": 10
+          }
+        },
+        "VT": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 9,
+            "RECORDED:PASS": 10
+          }
+        },
+        "VA": {
+          "contracts": 212,
+          "dispositions": {
+            "NO_PROMOTION": 202,
+            "RECORDED:PASS": 10
+          }
+        },
+        "WA": {
+          "contracts": 307,
+          "dispositions": {
+            "NO_PROMOTION": 297,
+            "RECORDED:PASS": 10
+          }
+        },
+        "WV": {
+          "contracts": 62,
+          "dispositions": {
+            "NO_PROMOTION": 52,
+            "RECORDED:PASS": 10
+          }
+        },
+        "WI": {
+          "contracts": 920,
+          "dispositions": {
+            "NO_PROMOTION": 895,
+            "RECORDED:PASS": 25
+          }
+        },
+        "WY": {
+          "contracts": 43,
+          "dispositions": {
+            "NO_PROMOTION": 34,
+            "RECORDED:PASS": 9
+          }
+        },
+        "PR": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 15,
+            "RECORDED:PASS": 4
+          }
+        },
+        "AL": {
+          "contracts": 113,
+          "dispositions": {
+            "NO_PROMOTION": 100,
+            "RECORDED:PASS": 13
+          }
+        },
+        "AK": {
+          "contracts": 138,
+          "dispositions": {
+            "NO_PROMOTION": 126,
+            "RECORDED:PASS": 12
+          }
+        },
+        "AR": {
+          "contracts": 24,
+          "dispositions": {
+            "NO_PROMOTION": 15,
+            "RECORDED:PASS": 9
+          }
+        },
+        "CA": {
+          "contracts": 3038,
+          "dispositions": {
+            "NO_PROMOTION": 2983,
+            "RECORDED:PASS": 55
+          }
+        },
+        "CO": {
+          "contracts": 299,
+          "dispositions": {
+            "NO_PROMOTION": 290,
+            "RECORDED:PASS": 9
+          }
+        },
+        "CT": {
+          "contracts": 270,
+          "dispositions": {
+            "NO_PROMOTION": 261,
+            "RECORDED:PASS": 9
+          }
+        },
+        "US": {
+          "contracts": 41,
+          "dispositions": {
+            "NO_PROMOTION": 15,
+            "RECORDED:PASS": 26
+          }
+        },
+        "AS": {
+          "contracts": 16,
+          "dispositions": {
+            "NO_PROMOTION": 12,
+            "RECORDED:PASS": 4
+          }
+        },
+        "GU": {
+          "contracts": 16,
+          "dispositions": {
+            "NO_PROMOTION": 13,
+            "RECORDED:PASS": 3
+          }
+        },
+        "MP": {
+          "contracts": 16,
+          "dispositions": {
+            "NO_PROMOTION": 12,
+            "RECORDED:PASS": 4
+          }
+        },
+        "VI": {
+          "contracts": 16,
+          "dispositions": {
+            "NO_PROMOTION": 12,
+            "RECORDED:PASS": 4
+          }
+        }
       },
+      "productionReadOnly": true,
+      "at": "2026-10-23T18:30:20.317Z",
+      "domains": 103,
+      "originalDomains": 254,
+      "contracts": 11458,
       "failures": [],
       "deferred": [],
-      "peakBytes": 250798080
-    }
+      "dispositions": {
+        "NO_PROMOTION": 10621,
+        "RECORDED:PASS": 836,
+        "RECORDED:FAIL": 1
+      },
+      "durationMs": 918842,
+      "peakBytes": 988545024,
+      "peakByDomain": {
+        "reader-readback:fec-funding": 340123648,
+        "reader-readback:contracts:NH:0": 488460288,
+        "reader-readback:contracts:AZ:0": 374042624,
+        "reader-readback:contracts:AZ:1": 326959104,
+        "reader-readback:contracts:NJ:0": 548282368,
+        "reader-readback:contracts:DE:0": 450154496,
+        "reader-readback:contracts:DC:0": 337940480,
+        "reader-readback:contracts:FL:0": 494514176,
+        "reader-readback:contracts:FL:12": 253247488,
+        "reader-readback:contracts:GA:0": 503930880,
+        "reader-readback:contracts:GA:1": 249290752,
+        "reader-readback:contracts:HI:0": 478593024,
+        "reader-readback:contracts:ID:0": 502226944,
+        "reader-readback:contracts:IL:0": 752865280,
+        "reader-readback:contracts:IL:5": 250830848,
+        "reader-readback:contracts:IN:0": 457981952,
+        "reader-readback:contracts:IA:0": 527470592,
+        "reader-readback:contracts:KS:0": 395538432,
+        "reader-readback:contracts:KY:0": 438546432,
+        "reader-readback:contracts:LA:0": 553631744,
+        "reader-readback:contracts:ME:0": 518361088,
+        "reader-readback:contracts:MD:0": 617586688,
+        "reader-readback:contracts:MA:0": 391712768,
+        "reader-readback:contracts:MA:1": 249839616,
+        "reader-readback:contracts:MI:0": 529391616,
+        "reader-readback:contracts:MI:1": 250490880,
+        "reader-readback:contracts:MI:2": 248807424,
+        "reader-readback:contracts:MN:0": 432377856,
+        "reader-readback:contracts:MS:0": 444043264,
+        "reader-readback:contracts:MO:0": 406020096,
+        "reader-readback:contracts:MO:7": 252055552,
+        "reader-readback:contracts:MT:0": 613019648,
+        "reader-readback:contracts:NE:0": 457269248,
+        "reader-readback:contracts:NV:0": 438231040,
+        "reader-readback:contracts:NV:2": 251113472,
+        "reader-readback:contracts:NM:0": 340381696,
+        "reader-readback:contracts:NM:1": 253173760,
+        "reader-readback:contracts:NY:0": 988545024,
+        "reader-readback:contracts:NY:3": 251842560,
+        "reader-readback:contracts:NC:0": 429326336,
+        "reader-readback:contracts:NC:1": 254681088,
+        "reader-readback:contracts:ND:0": 535318528,
+        "reader-readback:contracts:OH:0": 422707200,
+        "reader-readback:contracts:OH:1": 252624896,
+        "reader-readback:contracts:OK:0": 548392960,
+        "reader-readback:contracts:OK:1": 250314752,
+        "reader-readback:contracts:OK:2": 251916288,
+        "reader-readback:contracts:OR:0": 327467008,
+        "reader-readback:contracts:PA:0": 578998272,
+        "reader-readback:contracts:PA:1": 249528320,
+        "reader-readback:contracts:RI:0": 461426688,
+        "reader-readback:contracts:SC:0": 564199424,
+        "reader-readback:contracts:SD:0": 347942912,
+        "reader-readback:contracts:TN:0": 327774208,
+        "reader-readback:contracts:TX:0": 437501952,
+        "reader-readback:contracts:TX:13": 285863936,
+        "reader-readback:contracts:TX:14": 250900480,
+        "reader-readback:contracts:UT:0": 311242752,
+        "reader-readback:contracts:VT:0": 330444800,
+        "reader-readback:contracts:VA:0": 347201536,
+        "reader-readback:contracts:VA:1": 251949056,
+        "reader-readback:contracts:WA:0": 358416384,
+        "reader-readback:contracts:WA:3": 247947264,
+        "reader-readback:contracts:WV:0": 335962112,
+        "reader-readback:contracts:WI:0": 333680640,
+        "reader-readback:contracts:WI:1": 252915712,
+        "reader-readback:contracts:WI:2": 248827904,
+        "reader-readback:contracts:WI:13": 252739584,
+        "reader-readback:contracts:WI:14": 249122816,
+        "reader-readback:contracts:WY:0": 285478912,
+        "reader-readback:contracts:PR:0": 270614528,
+        "reader-readback:contracts:AL:0": 345415680,
+        "reader-readback:contracts:AL:1": 250814464,
+        "reader-readback:contracts:AK:0": 287617024,
+        "reader-readback:contracts:AK:1": 248578048,
+        "reader-readback:contracts:AR:0": 335044608,
+        "reader-readback:contracts:CA:0": 473128960,
+        "reader-readback:contracts:CA:1": 249192448,
+        "reader-readback:contracts:CA:2": 252657664,
+        "reader-readback:contracts:CA:3": 248561664,
+        "reader-readback:contracts:CA:4": 249040896,
+        "reader-readback:contracts:CA:5": 253808640,
+        "reader-readback:contracts:CA:6": 250617856,
+        "reader-readback:contracts:CA:7": 252248064,
+        "reader-readback:contracts:CA:40": 255123456,
+        "reader-readback:contracts:CO:0": 328187904,
+        "reader-readback:contracts:CO:3": 254181376,
+        "reader-readback:contracts:CT:0": 325799936,
+        "reader-readback:contracts:CT:1": 249102336,
+        "reader-readback:voting-sites:CT": 248864768,
+        "reader-readback:census-acs-population": 829665280,
+        "reader-readback:contracts:US:0": 606154752,
+        "reader-readback:contracts:AS:0": 252768256,
+        "reader-readback:contracts:GU:0": 250966016,
+        "reader-readback:contracts:MP:0": 248303616,
+        "reader-readback:contracts:VI:0": 246964224,
+        "reader-readback:campaign-money": 249384960,
+        "reader-readback:venue-resolutions": 250138624,
+        "reader-readback:meeting-body-crosswalk": 251056128,
+        "reader-readback:everyday-routing": 253562880,
+        "reader-readback:meetings-aggregate:AZ:0": 393699328,
+        "reader-readback:meetings-aggregate:NH:0": 300650496,
+        "reader-readback:meetings-aggregate:NJ:0": 269258752
+      },
+      "expectedContracts": 11458
+    },
+    "tomorrow": {
+      "states": {
+        "NH": {
+          "contracts": 131,
+          "dispositions": {
+            "NO_PROMOTION": 54,
+            "CURRENT:PASS": 76,
+            "RECORDED:FAIL": 1
+          }
+        },
+        "AZ": {
+          "contracts": 211,
+          "dispositions": {
+            "NO_PROMOTION": 145,
+            "CURRENT:PASS": 64,
+            "RECORDED:PASS": 2
+          }
+        },
+        "NJ": {
+          "contracts": 51,
+          "dispositions": {
+            "NO_PROMOTION": 30,
+            "CURRENT:PASS": 20,
+            "RECORDED:PASS": 1
+          }
+        },
+        "DE": {
+          "contracts": 20,
+          "dispositions": {
+            "NO_PROMOTION": 5,
+            "CURRENT:PASS": 15
+          }
+        },
+        "DC": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 5,
+            "CURRENT:PASS": 14
+          }
+        },
+        "FL": {
+          "contracts": 1084,
+          "dispositions": {
+            "NO_PROMOTION": 1070,
+            "CURRENT:PASS": 14
+          }
+        },
+        "GA": {
+          "contracts": 89,
+          "dispositions": {
+            "NO_PROMOTION": 76,
+            "CURRENT:PASS": 13
+          }
+        },
+        "HI": {
+          "contracts": 35,
+          "dispositions": {
+            "NO_PROMOTION": 21,
+            "CURRENT:PASS": 14
+          }
+        },
+        "ID": {
+          "contracts": 70,
+          "dispositions": {
+            "NO_PROMOTION": 55,
+            "CURRENT:PASS": 15
+          }
+        },
+        "IL": {
+          "contracts": 394,
+          "dispositions": {
+            "NO_PROMOTION": 378,
+            "CURRENT:PASS": 16
+          }
+        },
+        "IN": {
+          "contracts": 25,
+          "dispositions": {
+            "NO_PROMOTION": 13,
+            "CURRENT:PASS": 12
+          }
+        },
+        "IA": {
+          "contracts": 29,
+          "dispositions": {
+            "NO_PROMOTION": 17,
+            "RECORDED:PASS": 1,
+            "CURRENT:PASS": 11
+          }
+        },
+        "KS": {
+          "contracts": 25,
+          "dispositions": {
+            "NO_PROMOTION": 13,
+            "RECORDED:PASS": 1,
+            "CURRENT:PASS": 11
+          }
+        },
+        "KY": {
+          "contracts": 21,
+          "dispositions": {
+            "NO_PROMOTION": 9,
+            "RECORDED:PASS": 1,
+            "CURRENT:PASS": 11
+          }
+        },
+        "LA": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 7,
+            "CURRENT:PASS": 12
+          }
+        },
+        "ME": {
+          "contracts": 80,
+          "dispositions": {
+            "NO_PROMOTION": 68,
+            "CURRENT:PASS": 12
+          }
+        },
+        "MD": {
+          "contracts": 33,
+          "dispositions": {
+            "NO_PROMOTION": 21,
+            "CURRENT:PASS": 12
+          }
+        },
+        "MA": {
+          "contracts": 196,
+          "dispositions": {
+            "NO_PROMOTION": 178,
+            "CURRENT:PASS": 17,
+            "RECORDED:PASS": 1
+          }
+        },
+        "MI": {
+          "contracts": 192,
+          "dispositions": {
+            "NO_PROMOTION": 172,
+            "CURRENT:PASS": 18,
+            "RECORDED:PASS": 2
+          }
+        },
+        "MN": {
+          "contracts": 93,
+          "dispositions": {
+            "NO_PROMOTION": 81,
+            "CURRENT:PASS": 12
+          }
+        },
+        "MS": {
+          "contracts": 23,
+          "dispositions": {
+            "NO_PROMOTION": 11,
+            "CURRENT:PASS": 12
+          }
+        },
+        "MO": {
+          "contracts": 470,
+          "dispositions": {
+            "NO_PROMOTION": 458,
+            "CURRENT:PASS": 12
+          }
+        },
+        "MT": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 8,
+            "CURRENT:PASS": 11
+          }
+        },
+        "NE": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 7,
+            "CURRENT:PASS": 12
+          }
+        },
+        "NV": {
+          "contracts": 127,
+          "dispositions": {
+            "NO_PROMOTION": 116,
+            "CURRENT:PASS": 11
+          }
+        },
+        "NM": {
+          "contracts": 101,
+          "dispositions": {
+            "NO_PROMOTION": 90,
+            "CURRENT:PASS": 11
+          }
+        },
+        "NY": {
+          "contracts": 267,
+          "dispositions": {
+            "NO_PROMOTION": 256,
+            "CURRENT:PASS": 11
+          }
+        },
+        "NC": {
+          "contracts": 189,
+          "dispositions": {
+            "NO_PROMOTION": 178,
+            "CURRENT:PASS": 11
+          }
+        },
+        "ND": {
+          "contracts": 33,
+          "dispositions": {
+            "NO_PROMOTION": 22,
+            "CURRENT:PASS": 11
+          }
+        },
+        "OH": {
+          "contracts": 151,
+          "dispositions": {
+            "NO_PROMOTION": 140,
+            "CURRENT:PASS": 11
+          }
+        },
+        "OK": {
+          "contracts": 137,
+          "dispositions": {
+            "NO_PROMOTION": 126,
+            "CURRENT:PASS": 11
+          }
+        },
+        "OR": {
+          "contracts": 76,
+          "dispositions": {
+            "NO_PROMOTION": 58,
+            "CURRENT:PASS": 16,
+            "RECORDED:PASS": 2
+          }
+        },
+        "PA": {
+          "contracts": 133,
+          "dispositions": {
+            "NO_PROMOTION": 120,
+            "CURRENT:PASS": 13
+          }
+        },
+        "RI": {
+          "contracts": 37,
+          "dispositions": {
+            "NO_PROMOTION": 26,
+            "CURRENT:PASS": 11
+          }
+        },
+        "SC": {
+          "contracts": 26,
+          "dispositions": {
+            "NO_PROMOTION": 15,
+            "CURRENT:PASS": 11
+          }
+        },
+        "SD": {
+          "contracts": 42,
+          "dispositions": {
+            "NO_PROMOTION": 31,
+            "CURRENT:PASS": 11
+          }
+        },
+        "TN": {
+          "contracts": 32,
+          "dispositions": {
+            "NO_PROMOTION": 22,
+            "CURRENT:PASS": 10
+          }
+        },
+        "TX": {
+          "contracts": 1148,
+          "dispositions": {
+            "NO_PROMOTION": 1137,
+            "CURRENT:PASS": 11
+          }
+        },
+        "UT": {
+          "contracts": 46,
+          "dispositions": {
+            "NO_PROMOTION": 36,
+            "CURRENT:PASS": 10
+          }
+        },
+        "VT": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 9,
+            "CURRENT:PASS": 10
+          }
+        },
+        "VA": {
+          "contracts": 212,
+          "dispositions": {
+            "NO_PROMOTION": 202,
+            "CURRENT:PASS": 10
+          }
+        },
+        "WA": {
+          "contracts": 307,
+          "dispositions": {
+            "NO_PROMOTION": 297,
+            "CURRENT:PASS": 10
+          }
+        },
+        "WV": {
+          "contracts": 62,
+          "dispositions": {
+            "NO_PROMOTION": 52,
+            "CURRENT:PASS": 10
+          }
+        },
+        "WI": {
+          "contracts": 920,
+          "dispositions": {
+            "NO_PROMOTION": 888,
+            "CURRENT:PASS": 25,
+            "RECORDED:PASS": 7
+          }
+        },
+        "WY": {
+          "contracts": 43,
+          "dispositions": {
+            "NO_PROMOTION": 34,
+            "CURRENT:PASS": 9
+          }
+        },
+        "PR": {
+          "contracts": 19,
+          "dispositions": {
+            "NO_PROMOTION": 15,
+            "CURRENT:PASS": 4
+          }
+        },
+        "AL": {
+          "contracts": 113,
+          "dispositions": {
+            "NO_PROMOTION": 97,
+            "CURRENT:PASS": 13,
+            "RECORDED:PASS": 3
+          }
+        },
+        "AK": {
+          "contracts": 138,
+          "dispositions": {
+            "NO_PROMOTION": 125,
+            "CURRENT:PASS": 12,
+            "RECORDED:PASS": 1
+          }
+        },
+        "AR": {
+          "contracts": 24,
+          "dispositions": {
+            "NO_PROMOTION": 15,
+            "CURRENT:PASS": 9
+          }
+        },
+        "CA": {
+          "contracts": 3038,
+          "dispositions": {
+            "NO_PROMOTION": 2954,
+            "CURRENT:PASS": 55,
+            "RECORDED:PASS": 29
+          }
+        },
+        "CO": {
+          "contracts": 299,
+          "dispositions": {
+            "NO_PROMOTION": 290,
+            "CURRENT:PASS": 9
+          }
+        },
+        "CT": {
+          "contracts": 270,
+          "dispositions": {
+            "NO_PROMOTION": 261,
+            "CURRENT:PASS": 9
+          }
+        },
+        "US": {
+          "contracts": 41,
+          "dispositions": {
+            "NO_PROMOTION": 15,
+            "CURRENT:PASS": 24,
+            "RECORDED:PASS": 2
+          }
+        },
+        "AS": {
+          "contracts": 16,
+          "dispositions": {
+            "NO_PROMOTION": 12,
+            "CURRENT:PASS": 4
+          }
+        },
+        "GU": {
+          "contracts": 16,
+          "dispositions": {
+            "NO_PROMOTION": 13,
+            "CURRENT:PASS": 3
+          }
+        },
+        "MP": {
+          "contracts": 16,
+          "dispositions": {
+            "NO_PROMOTION": 12,
+            "CURRENT:PASS": 4
+          }
+        },
+        "VI": {
+          "contracts": 16,
+          "dispositions": {
+            "NO_PROMOTION": 12,
+            "CURRENT:PASS": 4
+          }
+        }
+      },
+      "productionReadOnly": true,
+      "at": "2026-10-24T18:30:20.317Z",
+      "domains": 106,
+      "originalDomains": 254,
+      "contracts": 11462,
+      "failures": [],
+      "deferred": [],
+      "dispositions": {
+        "NO_PROMOTION": 10578,
+        "CURRENT:PASS": 830,
+        "RECORDED:FAIL": 1,
+        "RECORDED:PASS": 53
+      },
+      "durationMs": 411675,
+      "peakBytes": 341864448,
+      "peakByDomain": {
+        "reader-readback:fec-funding": 249085952,
+        "reader-readback:contracts:NH:0": 254844928,
+        "reader-readback:contracts:AZ:0": 250867712,
+        "reader-readback:contracts:AZ:1": 253800448,
+        "reader-readback:contracts:NJ:0": 249462784,
+        "reader-readback:contracts:DE:0": 250163200,
+        "reader-readback:contracts:DC:0": 252866560,
+        "reader-readback:contracts:FL:0": 252846080,
+        "reader-readback:contracts:FL:12": 249442304,
+        "reader-readback:contracts:GA:0": 252678144,
+        "reader-readback:contracts:GA:1": 252997632,
+        "reader-readback:contracts:HI:0": 249589760,
+        "reader-readback:contracts:ID:0": 253591552,
+        "reader-readback:contracts:IL:0": 250159104,
+        "reader-readback:contracts:IL:5": 250134528,
+        "reader-readback:contracts:IN:0": 250662912,
+        "reader-readback:contracts:IA:0": 329650176,
+        "reader-readback:contracts:KS:0": 316743680,
+        "reader-readback:contracts:KY:0": 341864448,
+        "reader-readback:contracts:LA:0": 252768256,
+        "reader-readback:contracts:ME:0": 249626624,
+        "reader-readback:contracts:MD:0": 249135104,
+        "reader-readback:contracts:MA:0": 254042112,
+        "reader-readback:contracts:MA:1": 249073664,
+        "reader-readback:contracts:MI:0": 249880576,
+        "reader-readback:contracts:MI:1": 253857792,
+        "reader-readback:contracts:MI:2": 251248640,
+        "reader-readback:contracts:MN:0": 247640064,
+        "reader-readback:contracts:MS:0": 251252736,
+        "reader-readback:contracts:MO:0": 250404864,
+        "reader-readback:contracts:MO:7": 253906944,
+        "reader-readback:contracts:MT:0": 250884096,
+        "reader-readback:contracts:NE:0": 253329408,
+        "reader-readback:contracts:NV:0": 253865984,
+        "reader-readback:contracts:NV:2": 250085376,
+        "reader-readback:contracts:NM:0": 249929728,
+        "reader-readback:contracts:NM:1": 253800448,
+        "reader-readback:contracts:NY:0": 248729600,
+        "reader-readback:contracts:NY:3": 249917440,
+        "reader-readback:contracts:NC:0": 250515456,
+        "reader-readback:contracts:NC:1": 249819136,
+        "reader-readback:contracts:ND:0": 252604416,
+        "reader-readback:contracts:OH:0": 249143296,
+        "reader-readback:contracts:OH:1": 251240448,
+        "reader-readback:contracts:OK:0": 253890560,
+        "reader-readback:contracts:OK:1": 254312448,
+        "reader-readback:contracts:OK:2": 247988224,
+        "reader-readback:contracts:OR:0": 254595072,
+        "reader-readback:contracts:PA:0": 252907520,
+        "reader-readback:contracts:PA:1": 249626624,
+        "reader-readback:contracts:RI:0": 248877056,
+        "reader-readback:contracts:SC:0": 248229888,
+        "reader-readback:contracts:SD:0": 253173760,
+        "reader-readback:contracts:TN:0": 248352768,
+        "reader-readback:contracts:TX:0": 251015168,
+        "reader-readback:contracts:TX:13": 251441152,
+        "reader-readback:contracts:TX:14": 249147392,
+        "reader-readback:contracts:UT:0": 248082432,
+        "reader-readback:contracts:VT:0": 252993536,
+        "reader-readback:contracts:VA:0": 255127552,
+        "reader-readback:contracts:VA:1": 252719104,
+        "reader-readback:contracts:WA:0": 249069568,
+        "reader-readback:contracts:WA:3": 248369152,
+        "reader-readback:contracts:WV:0": 253935616,
+        "reader-readback:contracts:WI:0": 250458112,
+        "reader-readback:contracts:WI:1": 250347520,
+        "reader-readback:contracts:WI:2": 251068416,
+        "reader-readback:contracts:WI:13": 250089472,
+        "reader-readback:contracts:WI:14": 251932672,
+        "reader-readback:contracts:WY:0": 253755392,
+        "reader-readback:contracts:PR:0": 251801600,
+        "reader-readback:contracts:AL:0": 252936192,
+        "reader-readback:contracts:AL:1": 247705600,
+        "reader-readback:contracts:AK:0": 248176640,
+        "reader-readback:contracts:AK:1": 250699776,
+        "reader-readback:contracts:AR:0": 251502592,
+        "reader-readback:contracts:CA:0": 253509632,
+        "reader-readback:contracts:CA:1": 248578048,
+        "reader-readback:contracts:CA:2": 250462208,
+        "reader-readback:contracts:CA:3": 254033920,
+        "reader-readback:contracts:CA:4": 243769344,
+        "reader-readback:contracts:CA:5": 249298944,
+        "reader-readback:contracts:CA:6": 252108800,
+        "reader-readback:contracts:CA:7": 251060224,
+        "reader-readback:contracts:CA:8": 249540608,
+        "reader-readback:contracts:CA:9": 253296640,
+        "reader-readback:contracts:CA:10": 249192448,
+        "reader-readback:contracts:CA:40": 254627840,
+        "reader-readback:contracts:CO:0": 247418880,
+        "reader-readback:contracts:CO:3": 247660544,
+        "reader-readback:contracts:CT:0": 253440000,
+        "reader-readback:contracts:CT:1": 249401344,
+        "reader-readback:voting-sites:CT": 249360384,
+        "reader-readback:census-acs-population": 248233984,
+        "reader-readback:contracts:US:0": 259899392,
+        "reader-readback:contracts:AS:0": 249597952,
+        "reader-readback:contracts:GU:0": 254287872,
+        "reader-readback:contracts:MP:0": 253784064,
+        "reader-readback:contracts:VI:0": 252297216,
+        "reader-readback:campaign-money": 250212352,
+        "reader-readback:venue-resolutions": 254648320,
+        "reader-readback:meeting-body-crosswalk": 250757120,
+        "reader-readback:everyday-routing": 247353344,
+        "reader-readback:meetings-aggregate:AZ:0": 253063168,
+        "reader-readback:meetings-aggregate:NH:0": 250572800,
+        "reader-readback:meetings-aggregate:NJ:0": 251895808
+      },
+      "expectedContracts": 11462
+    },
+    "passBudgetMs": 1500000,
+    "simulatedAvailableMiB": 2036,
+    "headroomMiB": 768,
+    "readerFloorMiB": 1106,
+    "stateCountIncludingNational": 57,
+    "sourceAcquisitionClaimedForNoPromotion": false
   },
   "states": {
-    "NH": {
-      "contracts": 131,
-      "pass": 76,
-      "noPromotion": 54,
-      "fail": 1
-    },
-    "AZ": {
-      "contracts": 172,
-      "pass": 58,
-      "noPromotion": 114,
-      "fail": 0
-    },
-    "NJ": {
-      "contracts": 49,
-      "pass": 21,
-      "noPromotion": 28,
-      "fail": 0
-    },
-    "DE": {
-      "contracts": 20,
-      "pass": 16,
-      "noPromotion": 4,
-      "fail": 0
-    },
-    "DC": {
-      "contracts": 19,
-      "pass": 14,
-      "noPromotion": 5,
-      "fail": 0
-    },
-    "FL": {
-      "contracts": 558,
-      "pass": 14,
-      "noPromotion": 544,
-      "fail": 0
-    },
-    "GA": {
-      "contracts": 69,
-      "pass": 13,
-      "noPromotion": 56,
-      "fail": 0
-    },
-    "HI": {
-      "contracts": 27,
-      "pass": 14,
-      "noPromotion": 13,
-      "fail": 0
-    },
-    "ID": {
-      "contracts": 68,
-      "pass": 15,
-      "noPromotion": 53,
-      "fail": 0
-    },
-    "IL": {
-      "contracts": 232,
-      "pass": 13,
-      "noPromotion": 219,
-      "fail": 0
-    },
-    "IN": {
-      "contracts": 25,
-      "pass": 12,
-      "noPromotion": 13,
-      "fail": 0
-    },
-    "IA": {
-      "contracts": 29,
-      "pass": 12,
-      "noPromotion": 17,
-      "fail": 0
-    },
-    "KS": {
-      "contracts": 25,
-      "pass": 12,
-      "noPromotion": 13,
-      "fail": 0
-    },
-    "KY": {
-      "contracts": 20,
-      "pass": 12,
-      "noPromotion": 8,
-      "fail": 0
-    },
-    "LA": {
-      "contracts": 19,
-      "pass": 12,
-      "noPromotion": 7,
-      "fail": 0
-    },
-    "ME": {
-      "contracts": 70,
-      "pass": 12,
-      "noPromotion": 58,
-      "fail": 0
-    },
-    "MD": {
-      "contracts": 32,
-      "pass": 12,
-      "noPromotion": 20,
-      "fail": 0
-    },
-    "MA": {
-      "contracts": 178,
-      "pass": 12,
-      "noPromotion": 166,
-      "fail": 0
-    },
-    "MI": {
-      "contracts": 124,
-      "pass": 12,
-      "noPromotion": 112,
-      "fail": 0
-    },
-    "MN": {
-      "contracts": 87,
-      "pass": 12,
-      "noPromotion": 75,
-      "fail": 0
-    },
-    "MS": {
-      "contracts": 21,
-      "pass": 12,
-      "noPromotion": 9,
-      "fail": 0
-    },
-    "MO": {
-      "contracts": 253,
-      "pass": 12,
-      "noPromotion": 241,
-      "fail": 0
-    },
-    "MT": {
-      "contracts": 19,
-      "pass": 11,
-      "noPromotion": 8,
-      "fail": 0
-    },
-    "NE": {
-      "contracts": 19,
-      "pass": 11,
-      "noPromotion": 8,
-      "fail": 0
-    },
-    "NV": {
-      "contracts": 62,
-      "pass": 11,
-      "noPromotion": 51,
-      "fail": 0
-    },
-    "NM": {
-      "contracts": 64,
-      "pass": 11,
-      "noPromotion": 53,
-      "fail": 0
-    },
-    "NY": {
-      "contracts": 163,
-      "pass": 11,
-      "noPromotion": 152,
-      "fail": 0
-    },
-    "NC": {
-      "contracts": 145,
-      "pass": 11,
-      "noPromotion": 134,
-      "fail": 0
-    },
-    "ND": {
-      "contracts": 33,
-      "pass": 11,
-      "noPromotion": 22,
-      "fail": 0
-    },
-    "OH": {
-      "contracts": 121,
-      "pass": 11,
-      "noPromotion": 110,
-      "fail": 0
-    },
-    "OK": {
-      "contracts": 77,
-      "pass": 11,
-      "noPromotion": 66,
-      "fail": 0
-    },
-    "OR": {
-      "contracts": 62,
-      "pass": 11,
-      "noPromotion": 51,
-      "fail": 0
-    },
-    "PA": {
-      "contracts": 107,
-      "pass": 11,
-      "noPromotion": 96,
-      "fail": 0
-    },
-    "RI": {
-      "contracts": 37,
-      "pass": 11,
-      "noPromotion": 26,
-      "fail": 0
-    },
-    "SC": {
-      "contracts": 26,
-      "pass": 11,
-      "noPromotion": 15,
-      "fail": 0
-    },
-    "SD": {
-      "contracts": 42,
-      "pass": 11,
-      "noPromotion": 31,
-      "fail": 0
-    },
-    "TN": {
-      "contracts": 32,
-      "pass": 10,
-      "noPromotion": 22,
-      "fail": 0
-    },
-    "TX": {
-      "contracts": 644,
-      "pass": 17,
-      "noPromotion": 627,
-      "fail": 0
-    },
-    "UT": {
-      "contracts": 39,
-      "pass": 10,
-      "noPromotion": 29,
-      "fail": 0
-    },
-    "VT": {
-      "contracts": 19,
-      "pass": 10,
-      "noPromotion": 9,
-      "fail": 0
-    },
-    "VA": {
-      "contracts": 176,
-      "pass": 10,
-      "noPromotion": 166,
-      "fail": 0
-    },
-    "WA": {
-      "contracts": 206,
-      "pass": 10,
-      "noPromotion": 196,
-      "fail": 0
-    },
-    "WV": {
-      "contracts": 62,
-      "pass": 10,
-      "noPromotion": 52,
-      "fail": 0
-    },
-    "WI": {
-      "contracts": 385,
-      "pass": 10,
-      "noPromotion": 375,
-      "fail": 0
-    },
-    "WY": {
-      "contracts": 41,
-      "pass": 9,
-      "noPromotion": 32,
-      "fail": 0
-    },
-    "PR": {
-      "contracts": 19,
-      "pass": 4,
-      "noPromotion": 15,
-      "fail": 0
+    "AK": {
+      "openRunnableDoors": 78,
+      "today": {
+        "contracts": 138,
+        "pass": 12,
+        "noPromotion": 126,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 138,
+        "pass": 13,
+        "noPromotion": 125,
+        "dataFail": 0
+      }
     },
     "AL": {
-      "contracts": 67,
-      "pass": 9,
-      "noPromotion": 58,
-      "fail": 0
-    },
-    "AK": {
-      "contracts": 97,
-      "pass": 9,
-      "noPromotion": 88,
-      "fail": 0
+      "openRunnableDoors": 48,
+      "today": {
+        "contracts": 113,
+        "pass": 13,
+        "noPromotion": 100,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 113,
+        "pass": 16,
+        "noPromotion": 97,
+        "dataFail": 0
+      }
     },
     "AR": {
-      "contracts": 24,
-      "pass": 9,
-      "noPromotion": 15,
-      "fail": 0
-    },
-    "CA": {
-      "contracts": 1451,
-      "pass": 45,
-      "noPromotion": 1406,
-      "fail": 0
-    },
-    "CO": {
-      "contracts": 210,
-      "pass": 9,
-      "noPromotion": 201,
-      "fail": 0
-    },
-    "CT": {
-      "contracts": 176,
-      "pass": 9,
-      "noPromotion": 167,
-      "fail": 0
+      "openRunnableDoors": 5,
+      "today": {
+        "contracts": 24,
+        "pass": 9,
+        "noPromotion": 15,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 24,
+        "pass": 9,
+        "noPromotion": 15,
+        "dataFail": 0
+      }
     },
     "AS": {
-      "contracts": 16,
-      "pass": 4,
-      "noPromotion": 12,
-      "fail": 0
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 16,
+        "pass": 4,
+        "noPromotion": 12,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 16,
+        "pass": 4,
+        "noPromotion": 12,
+        "dataFail": 0
+      }
+    },
+    "AZ": {
+      "openRunnableDoors": 145,
+      "today": {
+        "contracts": 211,
+        "pass": 64,
+        "noPromotion": 147,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 211,
+        "pass": 66,
+        "noPromotion": 145,
+        "dataFail": 0
+      }
+    },
+    "CA": {
+      "openRunnableDoors": 1748,
+      "today": {
+        "contracts": 3038,
+        "pass": 55,
+        "noPromotion": 2983,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 3038,
+        "pass": 84,
+        "noPromotion": 2954,
+        "dataFail": 0
+      }
+    },
+    "CO": {
+      "openRunnableDoors": 195,
+      "today": {
+        "contracts": 299,
+        "pass": 9,
+        "noPromotion": 290,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 299,
+        "pass": 9,
+        "noPromotion": 290,
+        "dataFail": 0
+      }
+    },
+    "CT": {
+      "openRunnableDoors": 204,
+      "today": {
+        "contracts": 270,
+        "pass": 9,
+        "noPromotion": 261,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 270,
+        "pass": 9,
+        "noPromotion": 261,
+        "dataFail": 0
+      }
+    },
+    "DC": {
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 19,
+        "pass": 14,
+        "noPromotion": 5,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 19,
+        "pass": 14,
+        "noPromotion": 5,
+        "dataFail": 0
+      }
+    },
+    "DE": {
+      "openRunnableDoors": 1,
+      "today": {
+        "contracts": 20,
+        "pass": 15,
+        "noPromotion": 5,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 20,
+        "pass": 15,
+        "noPromotion": 5,
+        "dataFail": 0
+      }
+    },
+    "FL": {
+      "openRunnableDoors": 677,
+      "today": {
+        "contracts": 1081,
+        "pass": 14,
+        "noPromotion": 1067,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 1084,
+        "pass": 14,
+        "noPromotion": 1070,
+        "dataFail": 0
+      }
+    },
+    "GA": {
+      "openRunnableDoors": 50,
+      "today": {
+        "contracts": 89,
+        "pass": 13,
+        "noPromotion": 76,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 89,
+        "pass": 13,
+        "noPromotion": 76,
+        "dataFail": 0
+      }
     },
     "GU": {
-      "contracts": 16,
-      "pass": 3,
-      "noPromotion": 13,
-      "fail": 0
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 16,
+        "pass": 3,
+        "noPromotion": 13,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 16,
+        "pass": 3,
+        "noPromotion": 13,
+        "dataFail": 0
+      }
+    },
+    "HI": {
+      "openRunnableDoors": 8,
+      "today": {
+        "contracts": 35,
+        "pass": 14,
+        "noPromotion": 21,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 35,
+        "pass": 14,
+        "noPromotion": 21,
+        "dataFail": 0
+      }
+    },
+    "IA": {
+      "openRunnableDoors": 10,
+      "today": {
+        "contracts": 29,
+        "pass": 12,
+        "noPromotion": 17,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 29,
+        "pass": 12,
+        "noPromotion": 17,
+        "dataFail": 0
+      }
+    },
+    "ID": {
+      "openRunnableDoors": 49,
+      "today": {
+        "contracts": 70,
+        "pass": 15,
+        "noPromotion": 55,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 70,
+        "pass": 15,
+        "noPromotion": 55,
+        "dataFail": 0
+      }
+    },
+    "IL": {
+      "openRunnableDoors": 213,
+      "today": {
+        "contracts": 394,
+        "pass": 16,
+        "noPromotion": 378,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 394,
+        "pass": 16,
+        "noPromotion": 378,
+        "dataFail": 0
+      }
+    },
+    "IN": {
+      "openRunnableDoors": 6,
+      "today": {
+        "contracts": 25,
+        "pass": 12,
+        "noPromotion": 13,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 25,
+        "pass": 12,
+        "noPromotion": 13,
+        "dataFail": 0
+      }
+    },
+    "KS": {
+      "openRunnableDoors": 6,
+      "today": {
+        "contracts": 25,
+        "pass": 12,
+        "noPromotion": 13,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 25,
+        "pass": 12,
+        "noPromotion": 13,
+        "dataFail": 0
+      }
+    },
+    "KY": {
+      "openRunnableDoors": 1,
+      "today": {
+        "contracts": 21,
+        "pass": 12,
+        "noPromotion": 9,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 21,
+        "pass": 12,
+        "noPromotion": 9,
+        "dataFail": 0
+      }
+    },
+    "LA": {
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 19,
+        "pass": 12,
+        "noPromotion": 7,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 19,
+        "pass": 12,
+        "noPromotion": 7,
+        "dataFail": 0
+      }
+    },
+    "MA": {
+      "openRunnableDoors": 159,
+      "today": {
+        "contracts": 196,
+        "pass": 17,
+        "noPromotion": 179,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 196,
+        "pass": 18,
+        "noPromotion": 178,
+        "dataFail": 0
+      }
+    },
+    "MD": {
+      "openRunnableDoors": 13,
+      "today": {
+        "contracts": 33,
+        "pass": 12,
+        "noPromotion": 21,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 33,
+        "pass": 12,
+        "noPromotion": 21,
+        "dataFail": 0
+      }
+    },
+    "ME": {
+      "openRunnableDoors": 51,
+      "today": {
+        "contracts": 80,
+        "pass": 12,
+        "noPromotion": 68,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 80,
+        "pass": 12,
+        "noPromotion": 68,
+        "dataFail": 0
+      }
+    },
+    "MI": {
+      "openRunnableDoors": 106,
+      "today": {
+        "contracts": 192,
+        "pass": 18,
+        "noPromotion": 174,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 192,
+        "pass": 20,
+        "noPromotion": 172,
+        "dataFail": 0
+      }
+    },
+    "MN": {
+      "openRunnableDoors": 68,
+      "today": {
+        "contracts": 93,
+        "pass": 12,
+        "noPromotion": 81,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 93,
+        "pass": 12,
+        "noPromotion": 81,
+        "dataFail": 0
+      }
+    },
+    "MO": {
+      "openRunnableDoors": 237,
+      "today": {
+        "contracts": 469,
+        "pass": 12,
+        "noPromotion": 457,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 470,
+        "pass": 12,
+        "noPromotion": 458,
+        "dataFail": 0
+      }
     },
     "MP": {
-      "contracts": 16,
-      "pass": 4,
-      "noPromotion": 12,
-      "fail": 0
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 16,
+        "pass": 4,
+        "noPromotion": 12,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 16,
+        "pass": 4,
+        "noPromotion": 12,
+        "dataFail": 0
+      }
     },
-    "VI": {
-      "contracts": 16,
-      "pass": 4,
-      "noPromotion": 12,
-      "fail": 0
+    "MS": {
+      "openRunnableDoors": 2,
+      "today": {
+        "contracts": 23,
+        "pass": 12,
+        "noPromotion": 11,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 23,
+        "pass": 12,
+        "noPromotion": 11,
+        "dataFail": 0
+      }
+    },
+    "MT": {
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 19,
+        "pass": 11,
+        "noPromotion": 8,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 19,
+        "pass": 11,
+        "noPromotion": 8,
+        "dataFail": 0
+      }
+    },
+    "NC": {
+      "openRunnableDoors": 129,
+      "today": {
+        "contracts": 189,
+        "pass": 11,
+        "noPromotion": 178,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 189,
+        "pass": 11,
+        "noPromotion": 178,
+        "dataFail": 0
+      }
+    },
+    "ND": {
+      "openRunnableDoors": 14,
+      "today": {
+        "contracts": 33,
+        "pass": 11,
+        "noPromotion": 22,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 33,
+        "pass": 11,
+        "noPromotion": 22,
+        "dataFail": 0
+      }
+    },
+    "NE": {
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 19,
+        "pass": 12,
+        "noPromotion": 7,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 19,
+        "pass": 12,
+        "noPromotion": 7,
+        "dataFail": 0
+      }
+    },
+    "NH": {
+      "openRunnableDoors": 99,
+      "today": {
+        "contracts": 131,
+        "pass": 76,
+        "noPromotion": 54,
+        "dataFail": 1
+      },
+      "tomorrow": {
+        "contracts": 131,
+        "pass": 76,
+        "noPromotion": 54,
+        "dataFail": 1
+      }
+    },
+    "NJ": {
+      "openRunnableDoors": 48,
+      "today": {
+        "contracts": 51,
+        "pass": 21,
+        "noPromotion": 30,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 51,
+        "pass": 21,
+        "noPromotion": 30,
+        "dataFail": 0
+      }
+    },
+    "NM": {
+      "openRunnableDoors": 45,
+      "today": {
+        "contracts": 101,
+        "pass": 11,
+        "noPromotion": 90,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 101,
+        "pass": 11,
+        "noPromotion": 90,
+        "dataFail": 0
+      }
+    },
+    "NV": {
+      "openRunnableDoors": 54,
+      "today": {
+        "contracts": 127,
+        "pass": 11,
+        "noPromotion": 116,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 127,
+        "pass": 11,
+        "noPromotion": 116,
+        "dataFail": 0
+      }
+    },
+    "NY": {
+      "openRunnableDoors": 144,
+      "today": {
+        "contracts": 267,
+        "pass": 11,
+        "noPromotion": 256,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 267,
+        "pass": 11,
+        "noPromotion": 256,
+        "dataFail": 0
+      }
+    },
+    "OH": {
+      "openRunnableDoors": 102,
+      "today": {
+        "contracts": 151,
+        "pass": 11,
+        "noPromotion": 140,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 151,
+        "pass": 11,
+        "noPromotion": 140,
+        "dataFail": 0
+      }
+    },
+    "OK": {
+      "openRunnableDoors": 68,
+      "today": {
+        "contracts": 137,
+        "pass": 11,
+        "noPromotion": 126,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 137,
+        "pass": 11,
+        "noPromotion": 126,
+        "dataFail": 0
+      }
+    },
+    "OR": {
+      "openRunnableDoors": 43,
+      "today": {
+        "contracts": 76,
+        "pass": 16,
+        "noPromotion": 60,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 76,
+        "pass": 18,
+        "noPromotion": 58,
+        "dataFail": 0
+      }
+    },
+    "PA": {
+      "openRunnableDoors": 88,
+      "today": {
+        "contracts": 133,
+        "pass": 13,
+        "noPromotion": 120,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 133,
+        "pass": 13,
+        "noPromotion": 120,
+        "dataFail": 0
+      }
+    },
+    "PR": {
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 19,
+        "pass": 4,
+        "noPromotion": 15,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 19,
+        "pass": 4,
+        "noPromotion": 15,
+        "dataFail": 0
+      }
+    },
+    "RI": {
+      "openRunnableDoors": 18,
+      "today": {
+        "contracts": 37,
+        "pass": 11,
+        "noPromotion": 26,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 37,
+        "pass": 11,
+        "noPromotion": 26,
+        "dataFail": 0
+      }
+    },
+    "SC": {
+      "openRunnableDoors": 7,
+      "today": {
+        "contracts": 26,
+        "pass": 11,
+        "noPromotion": 15,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 26,
+        "pass": 11,
+        "noPromotion": 15,
+        "dataFail": 0
+      }
+    },
+    "SD": {
+      "openRunnableDoors": 23,
+      "today": {
+        "contracts": 42,
+        "pass": 11,
+        "noPromotion": 31,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 42,
+        "pass": 11,
+        "noPromotion": 31,
+        "dataFail": 0
+      }
+    },
+    "TN": {
+      "openRunnableDoors": 13,
+      "today": {
+        "contracts": 32,
+        "pass": 10,
+        "noPromotion": 22,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 32,
+        "pass": 10,
+        "noPromotion": 22,
+        "dataFail": 0
+      }
+    },
+    "TX": {
+      "openRunnableDoors": 697,
+      "today": {
+        "contracts": 1148,
+        "pass": 11,
+        "noPromotion": 1137,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 1148,
+        "pass": 11,
+        "noPromotion": 1137,
+        "dataFail": 0
+      }
     },
     "US": {
-      "contracts": 41,
-      "pass": 25,
-      "noPromotion": 16,
-      "fail": 0
-    }
-  },
-  "reservationsMiB": {
-    "reader": 1046,
-    "calendar": 1447,
-    "newMeasuredLegistarTenant": 179,
-    "zipMinimum": 1229,
-    "headroom": 768
-  },
-  "readerLargestObservedPeakBytes": 1043767296,
-  "nativeReplayAvailableMiB": 2036,
-  "measurementRevision": "72be185ab",
-  "calendarMeasurements": {
-    "fullCalifornia": {
-      "state": "CA",
-      "contracts": 1432,
-      "peakBytes": 678588416,
-      "code": 0,
-      "deadlineMs": 1250000,
-      "sampleMs": 100,
-      "method": "sum of /proc VmHWM for state-program process tree, sampled every 100 ms",
-      "at": "2026-10-23T13:19:00.305Z"
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 41,
+        "pass": 26,
+        "noPromotion": 15,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 41,
+        "pass": 26,
+        "noPromotion": 15,
+        "dataFail": 0
+      }
     },
-    "heldSanDiegoGranicus": {
-      "state": "CA",
-      "contracts": 1,
-      "peakBytes": 1444548608,
-      "code": null,
-      "deadlineMs": 1250000,
-      "sampleMs": 100,
-      "method": "sum of /proc VmHWM for state-program process tree, sampled every 100 ms",
-      "at": "2026-10-23T13:20:10.008Z"
+    "UT": {
+      "openRunnableDoors": 20,
+      "today": {
+        "contracts": 46,
+        "pass": 10,
+        "noPromotion": 36,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 46,
+        "pass": 10,
+        "noPromotion": 36,
+        "dataFail": 0
+      }
+    },
+    "VA": {
+      "openRunnableDoors": 174,
+      "today": {
+        "contracts": 212,
+        "pass": 10,
+        "noPromotion": 202,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 212,
+        "pass": 10,
+        "noPromotion": 202,
+        "dataFail": 0
+      }
+    },
+    "VI": {
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 16,
+        "pass": 4,
+        "noPromotion": 12,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 16,
+        "pass": 4,
+        "noPromotion": 12,
+        "dataFail": 0
+      }
+    },
+    "VT": {
+      "openRunnableDoors": 0,
+      "today": {
+        "contracts": 19,
+        "pass": 10,
+        "noPromotion": 9,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 19,
+        "pass": 10,
+        "noPromotion": 9,
+        "dataFail": 0
+      }
+    },
+    "WA": {
+      "openRunnableDoors": 199,
+      "today": {
+        "contracts": 307,
+        "pass": 10,
+        "noPromotion": 297,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 307,
+        "pass": 10,
+        "noPromotion": 297,
+        "dataFail": 0
+      }
+    },
+    "WI": {
+      "openRunnableDoors": 469,
+      "today": {
+        "contracts": 920,
+        "pass": 25,
+        "noPromotion": 895,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 920,
+        "pass": 32,
+        "noPromotion": 888,
+        "dataFail": 0
+      }
+    },
+    "WV": {
+      "openRunnableDoors": 43,
+      "today": {
+        "contracts": 62,
+        "pass": 10,
+        "noPromotion": 52,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 62,
+        "pass": 10,
+        "noPromotion": 52,
+        "dataFail": 0
+      }
+    },
+    "WY": {
+      "openRunnableDoors": 22,
+      "today": {
+        "contracts": 43,
+        "pass": 9,
+        "noPromotion": 34,
+        "dataFail": 0
+      },
+      "tomorrow": {
+        "contracts": 43,
+        "pass": 9,
+        "noPromotion": 34,
+        "dataFail": 0
+      }
     }
+  },
+  "measurements": {
+    "method": "Sum process-tree /proc VmHWM every 100 ms; Node 24.19 execution host using production-data copies or SELECT-only production reads, not the live 8 GiB runner",
+    "calendar": {
+      "fullCalifornia": {
+        "state": "CA",
+        "contracts": 1432,
+        "peakBytes": 678588416,
+        "code": 0,
+        "deadlineMs": 1250000,
+        "sampleMs": 100,
+        "method": "sum of /proc VmHWM for state-program process tree, sampled every 100 ms",
+        "at": "2026-10-23T13:19:00.305Z"
+      },
+      "heldSanDiegoGranicus": {
+        "state": "CA",
+        "contracts": 1,
+        "peakBytes": 1444548608,
+        "code": null,
+        "deadlineMs": 1250000,
+        "sampleMs": 100,
+        "method": "sum of /proc VmHWM for state-program process tree, sampled every 100 ms",
+        "at": "2026-10-23T13:20:10.008Z"
+      }
+    },
+    "largestCalendarPeakBytes": 1444548608,
+    "largestReaderPeakBytes": 1103515648,
+    "readerPeakRun": "11,451-contract expanded replay; retained despite a later unrelated /tmp ENOSPC failure in IL; final clean replay peak 988545024",
+    "reservationsMiB": {
+      "calendar": 1447,
+      "reader": 1106,
+      "newMeasuredLegistarTenant": 179,
+      "zipMinimum": 1229,
+      "headroom": 768
+    },
+    "persistentPath": "/var/lib/meanwhile/meanwhile-worker-memory.json",
+    "samplePersistence": "every 100 ms sample, not only release",
+    "familyPooling": [
+      "legistar-members",
+      "reader-readback",
+      "national-place"
+    ]
   },
   "calendarStressRemaining": {
     "state": "CA",
@@ -1156,124 +2269,473 @@
     "deferred": 1407,
     "reason": "The full state stress run reaches its pass launch cutoff during historical agenda work; this is not the live under-100-unstarted acceptance result."
   },
-  "schedulerControls": {
-    "at": "2026-10-23T14:05:19.450Z",
-    "productionWrites": 0,
-    "rows": [
+  "connectedProof": {
+    "feedsFrom": [
+      "CAL-01 cp_doors registry",
+      "RN-01 standing frontier and admission"
+    ],
+    "feedsInto": [
+      "PM-01 native meeting facts",
+      "/api/meetings",
+      "Who governs here? Next meeting card"
+    ],
+    "nativeSourceReceipts": [
+      {
+        "source": "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
+        "partitionId": "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
+        "meetingSource": "legistar",
+        "bodyId": "ocd-division/country:us/state:ca/county:san_diego#governing",
+        "scope": "source:legistar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
+        "candidateId": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
+        "acquisitionSucceeded": true,
+        "state": "PROMOTED",
+        "decision": "GOOD",
+        "promotedVersion": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
+        "lastKnownGoodVersion": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
+        "failureDetail": null,
+        "confirmedAt": "2026-10-23T18:49:08.374Z",
+        "structuralReleaseContract": {
+          "testSitePromotions": 0,
+          "gitDataCommits": 0,
+          "pullRequests": 0,
+          "githubActionsRuns": 0,
+          "netlifyDeploys": 0,
+          "nextBuilds": 0,
+          "fullSiteBrowserWalks": 0
+        }
+      },
+      {
+        "source": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
+        "partitionId": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
+        "meetingSource": "legistar-insite",
+        "bodyId": "ocd-division/country:us/state:tx/county:galveston#governing",
+        "scope": "source:legistar-insite:body:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
+        "candidateId": "cv-131f86c81a1ae765e27315c67a7b1d60",
+        "acquisitionSucceeded": true,
+        "state": "PROMOTED",
+        "decision": "GOOD",
+        "promotedVersion": "cv-131f86c81a1ae765e27315c67a7b1d60",
+        "lastKnownGoodVersion": "cv-131f86c81a1ae765e27315c67a7b1d60",
+        "failureDetail": null,
+        "confirmedAt": "2026-10-23T18:49:35.284Z",
+        "structuralReleaseContract": {
+          "testSitePromotions": 0,
+          "gitDataCommits": 0,
+          "pullRequests": 0,
+          "githubActionsRuns": 0,
+          "netlifyDeploys": 0,
+          "nextBuilds": 0,
+          "fullSiteBrowserWalks": 0
+        }
+      }
+    ],
+    "browser": {
+      "current": {
+        "revision": "466f0ce95ba46a6b16c0ac506aa91a2c19cc73f8",
+        "isolatedProductionCopy": true,
+        "results": [
+          {
+            "zip": "92101",
+            "board": "BOARD OF SUPERVISORS",
+            "asOf": "2026-10-23T18:51:12.585Z",
+            "next": {
+              "id": "legistar:sdcounty:2042",
+              "startsAt": "2026-10-27T09:00:00-07:00",
+              "timeZone": "America/Los_Angeles",
+              "sourceUrl": "https://sdcounty.legistar.com/MeetingDetail.aspx?LEGID=2042&GID=644&G=56D5B5E7-094C-4C55-990E-6D7CAD52B798"
+            },
+            "visibleNextMeeting": "Next meeting\n\nTue, October 27th, 2026\n9:00 AM PDT\n\nCounty Administration Center Board Chamber, Room 327\nRead the agenda",
+            "pageErrors": []
+          },
+          {
+            "zip": "77550",
+            "board": "Commissioners Court",
+            "asOf": "2026-10-23T18:51:12.585Z",
+            "next": {
+              "id": "legistar-insite:derived-state-tx-county-galveston-governing:1443038",
+              "startsAt": "2026-10-26T09:30:00-05:00",
+              "timeZone": "America/Chicago",
+              "sourceUrl": "https://galvestoncountytx.legistar.com/MeetingDetail.aspx?ID=1443038&GUID=A8263355-062A-4078-B652-37F838FC0A3F&Options=info|&Search="
+            },
+            "visibleNextMeeting": "Next meeting\n\n174 Calder Rd., Room 100 League City, Texas 77573\n\nMon, October 26th, 2026\n9:30 AM CDT\n\nCALDER MEETING LOCATION\nRead the agenda",
+            "pageErrors": []
+          }
+        ]
+      },
+      "tomorrow": {
+        "revision": "466f0ce95ba46a6b16c0ac506aa91a2c19cc73f8",
+        "isolatedProductionCopy": true,
+        "results": [
+          {
+            "zip": "92101",
+            "board": "BOARD OF SUPERVISORS",
+            "asOf": "2026-10-24T18:51:12.862Z",
+            "next": {
+              "id": "legistar:sdcounty:2042",
+              "startsAt": "2026-10-27T09:00:00-07:00",
+              "timeZone": "America/Los_Angeles",
+              "sourceUrl": "https://sdcounty.legistar.com/MeetingDetail.aspx?LEGID=2042&GID=644&G=56D5B5E7-094C-4C55-990E-6D7CAD52B798"
+            },
+            "visibleNextMeeting": "Next meeting\n\nTue, October 27th, 2026\n9:00 AM PDT\n\nCounty Administration Center Board Chamber, Room 327\nRead the agenda",
+            "pageErrors": []
+          },
+          {
+            "zip": "77550",
+            "board": "Commissioners Court",
+            "asOf": "2026-10-24T18:51:12.862Z",
+            "next": {
+              "id": "legistar-insite:derived-state-tx-county-galveston-governing:1443038",
+              "startsAt": "2026-10-26T09:30:00-05:00",
+              "timeZone": "America/Chicago",
+              "sourceUrl": "https://galvestoncountytx.legistar.com/MeetingDetail.aspx?ID=1443038&GUID=A8263355-062A-4078-B652-37F838FC0A3F&Options=info|&Search="
+            },
+            "visibleNextMeeting": "Next meeting\n\n174 Calder Rd., Room 100 League City, Texas 77573\n\nMon, October 26th, 2026\n9:30 AM CDT\n\nCALDER MEETING LOCATION\nRead the agenda",
+            "pageErrors": []
+          }
+        ]
+      }
+    },
+    "browserMethod": "Built standalone Next server on isolated production copies; current and +24h server/browser clocks; earliest future SCHEDULED exact-body API row equals visible data-meeting-id; personally inspected all four screenshots; system Chromium substituted for unavailable pinned 1234"
+  },
+  "nextScheduledParent": {
+    "implementationRevision": "466f0ce95ba46a6b16c0ac506aa91a2c19cc73f8",
+    "force": false,
+    "schedulerOffsetMs": 86400000,
+    "offsetScope": "routineTaskDue and sittingWindowSignals only; real DB/publication timestamps",
+    "schedulerControls": [
       {
         "id": "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
-        "lastObserved": "2026-10-23T14:02:02.976Z",
+        "lastObserved": "2026-10-23T18:48:59.332Z",
         "dueNow": false,
         "dueTomorrow": true
       },
       {
         "id": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
-        "lastObserved": "2026-10-23T14:02:08.546Z",
+        "lastObserved": "2026-10-23T18:48:59.916Z",
         "dueNow": false,
         "dueTomorrow": true
+      }
+    ],
+    "outcome": {
+      "kind": "ROUTINE_CIVIC_DATA_SUPERVISOR",
+      "state": "SUCCEEDED",
+      "cycleId": "routine-civic-data-supervisor:e5db58173e64:2026-10-23T18:42:14.128Z",
+      "lane": "routine-civic-data",
+      "exactTaskReceipts": 2,
+      "durable": true
+    },
+    "summary": {
+      "lane": "routine-civic-data",
+      "attempted": 2,
+      "denominator": 2,
+      "failed": 0,
+      "verifiedSourceSuccesses": 2,
+      "verifiedSourceFailures": 0,
+      "supervisorFailures": 0,
+      "readerReadbacksRecordedPass": 0,
+      "readerReadbacksRecordedFail": 0,
+      "readerReadbacksCurrentFail": 0,
+      "readerReadbackFailures": 0,
+      "readerReadbackNoops": 2,
+      "readerReadbackRepairFailures": 0,
+      "skipped": 0,
+      "structuralReleaseContract": {
+        "testSitePromotions": 0,
+        "gitDataCommits": 0,
+        "pullRequests": 0,
+        "githubActionsRuns": 0,
+        "netlifyDeploys": 0,
+        "nextBuilds": 0,
+        "fullSiteBrowserWalks": 0
+      }
+    },
+    "sourceReceipts": [
+      {
+        "source": "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
+        "partitionId": "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
+        "meetingSource": "legistar",
+        "bodyId": "ocd-division/country:us/state:ca/county:san_diego#governing",
+        "scope": "source:legistar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
+        "candidateId": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
+        "acquisitionSucceeded": true,
+        "state": "PROMOTED",
+        "decision": "GOOD",
+        "promotedVersion": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
+        "lastKnownGoodVersion": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
+        "failureDetail": null,
+        "confirmedAt": "2026-10-23T18:49:08.374Z",
+        "structuralReleaseContract": {
+          "testSitePromotions": 0,
+          "gitDataCommits": 0,
+          "pullRequests": 0,
+          "githubActionsRuns": 0,
+          "netlifyDeploys": 0,
+          "nextBuilds": 0,
+          "fullSiteBrowserWalks": 0
+        }
+      },
+      {
+        "source": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
+        "partitionId": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
+        "meetingSource": "legistar-insite",
+        "bodyId": "ocd-division/country:us/state:tx/county:galveston#governing",
+        "scope": "source:legistar-insite:body:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
+        "candidateId": "cv-131f86c81a1ae765e27315c67a7b1d60",
+        "acquisitionSucceeded": true,
+        "state": "PROMOTED",
+        "decision": "GOOD",
+        "promotedVersion": "cv-131f86c81a1ae765e27315c67a7b1d60",
+        "lastKnownGoodVersion": "cv-131f86c81a1ae765e27315c67a7b1d60",
+        "failureDetail": null,
+        "confirmedAt": "2026-10-23T18:49:35.284Z",
+        "structuralReleaseContract": {
+          "testSitePromotions": 0,
+          "gitDataCommits": 0,
+          "pullRequests": 0,
+          "githubActionsRuns": 0,
+          "netlifyDeploys": 0,
+          "nextBuilds": 0,
+          "fullSiteBrowserWalks": 0
+        }
       }
     ]
   },
   "exceptions": {
-    "NH": "PROMOTION_PROOF_INVALID: the re-attested successor civic members differ from its exact Reader projection; reproduced on original River 78f82a232",
-    "NV": "FACT_ENTITIES_LOAD_FAILED: PostgreSQL 21000: ON CONFLICT DO UPDATE command cannot affect row a second time; conflicting government nv:special:washoe-rural-fire"
-  },
-  "liveUpstreamBlocker": "RN-01: HUNT_SCOPE_UNREAD: cp_work_items_history exceeds 30000 ms Neon request deadline during headers; baseline production SHA 825ff1c43ff44632923f1011e9480b961aa20dbb",
-  "liveAcceptance": "Pending River integration and shipping; production data/settings have not been changed.",
-  "latestDoorCaptureAt": "2026-10-23T14:21:27.817Z",
-  "latestReplay": {
-    "today": {
-      "at": "2026-10-23T14:22:49.614Z",
-      "originalDomains": 163,
-      "domains": 90,
-      "contracts": 6958,
-      "durationMs": 249715,
-      "dispositions": {
-        "NO_PROMOTION": 6175,
-        "CURRENT:PASS": 782,
-        "RECORDED:FAIL": 1
-      },
-      "failures": [],
-      "deferred": [],
-      "peakBytes": 253259776
+    "NH": {
+      "contract": "nh-sos-campaign-finance",
+      "pointer": "nh-sos-campaign-finance:trusted-lkg-reattested:5cb94ee54c78061b4d927d398452f44b",
+      "reason": "PROMOTION_PROOF_INVALID: the re-attested successor civic members differ from its exact Reader projection",
+      "classification": "one pre-existing typed source-proof FAIL on each day, not a repair protocol failure",
+      "reproducedOnOriginalRiver": true
     },
-    "tomorrow": {
-      "at": "2026-10-24T14:22:49.614Z",
-      "originalDomains": 163,
-      "domains": 90,
-      "contracts": 6958,
-      "durationMs": 254493,
-      "dispositions": {
-        "NO_PROMOTION": 6175,
-        "CURRENT:PASS": 782,
-        "RECORDED:FAIL": 1
+    "NJ": {
+      "reason": "PostgreSQL 21000: ON CONFLICT DO UPDATE command cannot affect row a second time; duplicate division ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 versus unified-school GEOID 3416500",
+      "classification": "pre-existing fresh local entity-import exception, not an observed live runner failure",
+      "registrationBlob": "1eee4348985da4c12ba7cfd1095131bb24b174da",
+      "original56StateSqlReplay": {
+        "pass": 55,
+        "fail": 1
       },
-      "failures": [],
-      "deferred": [],
-      "peakBytes": 252395520
+      "changedRelease92OregonSqlRecheck": "PASS; 1541 governments, 90 people, 1029 places"
+    },
+    "NV": {
+      "status": "upstream resolved in release 90",
+      "identity": "nv:special:washoe-rural-fire",
+      "actualSqlImport": "PASS"
+    },
+    "UNASSIGNED": {
+      "count": 3,
+      "kind": "page",
+      "reason": "generic meetings discovery hints lack meeting metadata, jurisdiction and body identity; not runnable calendar partitions",
+      "ids": [
+        "page:meetings:pima.legistar.com:543724769392",
+        "page:meetings:webapi.legistar.com:5b8d6212dcdc",
+        "page:meetings:webapi.legistar.com:fd616888ee70"
+      ],
+      "owner": "CAL-01 binding work"
     }
   },
-  "allMeetingContractsHaveOneState": 5908,
-  "nextScheduledParent": {
-    "lane": "routine-civic-data",
-    "attempted": 2,
-    "denominator": 2,
-    "failed": 1,
-    "verifiedSourceSuccesses": 2,
-    "verifiedSourceFailures": 0,
-    "supervisorFailures": 1,
-    "readerReadbacksRecordedPass": 0,
-    "readerReadbacksRecordedFail": 0,
-    "readerReadbacksCurrentFail": 0,
-    "readerReadbackFailures": 0,
-    "readerReadbackNoops": 2,
-    "readerReadbackRepairFailures": 0,
-    "skipped": 0,
-    "structuralReleaseContract": {
-      "testSitePromotions": 0,
-      "gitDataCommits": 0,
-      "pullRequests": 0,
-      "githubActionsRuns": 0,
-      "netlifyDeploys": 0,
-      "nextBuilds": 0,
-      "fullSiteBrowserWalks": 0
-    }
-  },
-  "nextScheduledParentFailures": [
-    {
-      "code": "FACT_ENTITIES_LOAD_FAILED",
-      "detail": "error(21000): ON CONFLICT DO UPDATE command cannot affect row a second time",
-      "taskId": "fact-store-entities"
-    }
-  ],
-  "browser": {
-    "current": [
-      {
-        "zip": "92101",
-        "board": "BOARD OF SUPERVISORS",
-        "nextMeeting": true,
-        "errors": []
+  "validation": {
+    "reconciledFocused": {
+      "tests": 487,
+      "pass": 487
+    },
+    "obsoleteMemoryWaitRegression": {
+      "tests": 103,
+      "pass": 103
+    },
+    "registeredOutcomeGrouping": {
+      "tests": 106,
+      "pass": 106
+    },
+    "exactOutcomeHandoffAndDispatcherRace": {
+      "tests": 111,
+      "pass": 111
+    },
+    "finalMemoryFloor": {
+      "tests": 14,
+      "pass": 14
+    },
+    "typeScript": "PASS",
+    "changedFileLint": "PASS",
+    "builds": {
+      "default": "PASS",
+      "standalone": "PASS",
+      "readerTrace": {
+        "routes": 11,
+        "requirements": 15,
+        "files": 107,
+        "failures": []
       },
-      {
-        "zip": "77550",
-        "board": "Commissioners Court",
-        "nextMeeting": true,
-        "errors": []
-      }
+      "deployPathTestsEach": 12
+    },
+    "riverCombinedGatesRunHere": false,
+    "deadCode": "PASS; system Poppler pdftotext declared alongside existing external system binaries",
+    "readyDelta": "Documentation and Knip external-binary declaration only; runtime code and dependency manifests identical to frozen implementation 466f0ce95"
+  },
+  "liveAcceptance": {
+    "accepted": false,
+    "deployed": false,
+    "runnerAdoption": false,
+    "fewerThan100UnstartedSourceReads": "not established live",
+    "productivePassRequired": true,
+    "consecutiveProductiveHourlyObservationsRequired": 2,
+    "countrywideHourlyLastSuccessAdvance": "not established live",
+    "liveCaTxBrowserNextMeeting": "not established for this lane",
+    "watchId": "6adb7283e4ec8191a890ca120e472499",
+    "watchEnabled": true,
+    "release90FollowupErrors": [
+      "READER_READBACK_REPAIR_FAILED 85",
+      "RECEIPT_COUNT_INVALID 13",
+      "READER_REPAIR_CHILD_EXIT_NONZERO 2"
     ],
-    "tomorrow": [
-      {
-        "zip": "92101",
-        "board": "BOARD OF SUPERVISORS",
-        "nextMeeting": true,
-        "errors": []
-      },
-      {
-        "zip": "77550",
-        "board": "Commissioners Court",
-        "nextMeeting": true,
-        "errors": []
-      }
-    ]
+    "upstreamBaseline": "825ff1c HUNT_SCOPE_UNREAD cp_work_items_history 30000 ms headers deadline is historical, superseded by releases 91/92; do not claim current without production outcomes"
+  },
+  "prePushBoard": {
+    "at": "2026-10-23T18:48:45.878Z",
+    "river": "dfae00f3c70444f06c95adf66c89c9b4e818827d",
+    "main": "5f0e9de16016e20c9f068365a55db8a43ca63c51",
+    "status": "# River status\n\nbuild_state: RELEASE 92 LIVE (/api/build 5f0e9de16 from 1:46 PM EDT; runner on 5f0e9de16 from 17:44 UTC); RELEASE 93 candidate river-next 5ddf41bb8 (BL-21-FX alone on release 92) in pnpm gates from 2:25 PM EDT; BL-01 returned\nworker: claude-river\nprovider: Claude\nrun_id: session_012UDbgz3sjA8QN2m7CY78QS\nlock: session_012UDbgz3sjA8QN2m7CY78QS\nheartbeat: 2026-10-23T18:43:46Z\n\n## Waiting on Sean (from FX-01's returns/sean.md on stream/fx-01-fx, Oct 23 ~12:10 PM EDT)\n\nItems 1 (Vice P",
+    "integration": [],
+    "return": "# Returned: rn-02\n\nlane: rn-02\nowner: rn-02\nwriter: the rn-02 lane\ncheck: fold conflict with releases 89 to 91 (runner core)\nready: RN-02 d0498209046b7c6bc4473d7eb8744c69d2bcb26d\nriver: 5130d339c83fac517179b8612a2e1ee414c9464b\nat: 2026-10-23T14:56:49Z\nstate: returned\nfix_subject: fix:81a2add3\nfix: River \u00b7 stream/rn-02 \u2014 fold conflict with releases 89 to 91 (runner core) failed for rn-02: What failed: git merge of d04982090 onto river-next 827e9d6eb (river 5130d339c = release 90, plus RN-01-FX ecfc8636f), Oct 23 ~11:30 AM EDT: 15 conflicting hunks in 7 files: scripts/ingest.ts (7), scripts/routine-civic-data-runner.mts (3),\n\n## Live note (River, 12:20 PM EDT Oct 23)\n\nOn release 90 the 15:41 UTC routine pass logged 100 supervisor failures, 85 of them READER_READBACK_REPAIR_FAILED (plus RECEIPT_COUNT_INVALID 13, READER_REPAIR_CHILD_EXIT_NONZERO 2). Include them in the merged READY's live check.\n\n## Failure\n\n```\nRN-02 READY d04982090 has both proofs now (accepted), but it cannot fold: it is cut from River 78f82a232 (release 88) and conflicts with the 56 commits since (releases 89 and 90, and RN-01-FX, which is in gates as release 91 now).\n\nWhat failed: git merge of d04982090 onto river-next 827e9d6eb (river 5130d339c = release 90, plus RN-01-FX ecfc8636f), Oct 23 ~11:30 AM EDT: 15 conflicting hunks in 7 files: scripts/ingest.ts (7), scripts/routine-civic-data-runner.mts (3), lib/civic-data/meeting-partitions.ts (1), lib/civic-data/runtime-authority.ts (1), lib/civic-data/store.ts (1), lib/doors/mission-refresh.ts (1), tests/deploy-paths.test.ts (1). These are the runner's core paths that CAL-01-FX (publish-now scan, pass deadline), SP-01 and RN-01 (admission, cleanup) changed; River does not hand-resolve runner logic across three lanes.\nLive site: release 90 (a462d38) serves; RN-01 ships in release 91 (gates from 11:30 AM EDT).\nWhat passing looks like: once release 91 is live (river moves; see board/river status.md), merge origin/river into stream/rn-02, resolve keeping CAL-01-FX's publish-now scan, RN-01's admission and cleanup, and RN-02's reader repair and memory bounds, rerun RN-02's focused tests and the all-country replay on the merged tree, and post a new READY with both proofs (same wording as d04982090). River folds it first.\nAlso recorded on the board from RN-02's message: NJ fresh entity import fails on a duplicate division id ocd-division/country:us/state:nj/school_district:union_township_school_district (elementary GEOID 3416440 vs unified GEOID 3416500, both \"Union Township School District\"); the registration identity owner must disambiguate them.\n```\n\n## Repair\n\nFix on stream/rn-02 and publish a new READY commit; River folds the new READY and clears this return when it integrates.\n",
+    "publishedDeploy": {
+      "id": "6adb9cec987c23cc9cb9bfc2",
+      "commit": "5f0e9de16016e20c9f068365a55db8a43ca63c51",
+      "publishedAt": "2026-10-23T17:46:33.108Z"
+    }
+  },
+  "artifacts": {
+    "national-workspace-final-current.json": {
+      "sha256": "0d90f1a4039461f5d9f0875da4cb73984fc6a7238ddea8d02bf0322fb1fcc13d",
+      "bytes": 12963
+    },
+    "national-workspace-final-tomorrow.json": {
+      "sha256": "14639fb4d4ae47eb14a2ebff897b3a8826ff4483a301b43dc98dfffd7086489b",
+      "bytes": 13442
+    },
+    "national-workspace-inputs.json": {
+      "sha256": "cb9f2bc814db69359068f93cc7604d35ee8faba69287f9f603313d260918e7c2",
+      "bytes": 343
+    },
+    "final-expanded-door-states.json": {
+      "sha256": "a46020ee4fc90ed3e95fe4def5b7b3b12924e07bd735149f0e5a3832475001b0",
+      "bytes": 4332
+    },
+    "doors-replay.json": {
+      "sha256": "066bbd3239d084fc058eb4c1fc4866cc3e32ba477ad68373bf62bc7e21c8e857",
+      "bytes": 905
+    },
+    "national-workspace-final.log": {
+      "sha256": "af7cc68a1d1b094a362b6ff473dfd39477d1e187339f4f3c3825291fc22f1ba3",
+      "bytes": 440030
+    },
+    "parent-final-466-scheduled.log": {
+      "sha256": "3fafaccd4ca64c53745a31bf0a16d08e570a759b6c13bb5454afd32ed74a19e9",
+      "bytes": 32766
+    },
+    "final-466-scheduler-controls.log": {
+      "sha256": "6200445b03ad3616441d21074ec8aead26f9c10cbac4ee370ae7e5dd146f0379",
+      "bytes": 911
+    },
+    "final-466-default-build.log": {
+      "sha256": "3aad7944684c6a7073f5b304d7ec1fa1eecff4c0f1a50624a38bda58f4f8d4ef",
+      "bytes": 5832
+    },
+    "final-466-standalone-build.log": {
+      "sha256": "e094db7bab29ac6658005ab3376fb4c6af1f9dc66e6e562870846381e75eaabe",
+      "bytes": 5837
+    },
+    "final-466-current-browser.log": {
+      "sha256": "8c1d550f2f4bf90d727f785b9c4b1a1df3ef9d313c7fa2ac6897856a4ae50d52",
+      "bytes": 1185
+    },
+    "final-466-tomorrow-browser.log": {
+      "sha256": "3006b451597173e31b2cebb5274980623e682b01ed743e5a8f7b68f0b99da943",
+      "bytes": 1186
+    },
+    "release92-focused-final.log": {
+      "sha256": "684a6535898e2eda61526e66294cc829ae37aa9a2b4429e3506f4f12176f70fd",
+      "bytes": 94140
+    },
+    "release92-admission-final.log": {
+      "sha256": "f3c28965e7509b6ad8d8debf54b7af6575a5c2eb12bc12ac72fa2873cedbb9a6",
+      "bytes": 12498
+    },
+    "release92-outcome-handoff2.log": {
+      "sha256": "d52b89926a7fa94de72e8ab6eefb984ab326798618fec416abc04054176752b8",
+      "bytes": 13617
+    },
+    "final-reader-floor-tests.log": {
+      "sha256": "a646a08871e7fddff7bf61040afc7bcd5697a3d45b0550286e69e30d93cba7a4",
+      "bytes": 1880
+    },
+    "release90-entities-sql.json": {
+      "sha256": "c1a9ffc8de181bb62ecb77965249a03acf0501a5937a83061ebeeb083ee45d5f",
+      "bytes": 6660
+    },
+    "release92-entities-or-sql2.json": {
+      "sha256": "2a85e83c24280e079ffe660aa466fcf077d508b25a9ce1a3131cc694dc23a628",
+      "bytes": 141
+    },
+    "door-denominator-audit.json": {
+      "sha256": "e1c7600ca986d9f06214f95df2435d632a4b110600a4e6bc7ef646298dd7474e",
+      "bytes": 2543
+    },
+    "door-missing-metadata.json": {
+      "sha256": "cd876f613c967188bc92fe156fab5003c81cb3e1f8c6db99340434a4657c2f4f",
+      "bytes": 737
+    },
+    "final-current-reader-92101.png": {
+      "sha256": "55ef9dcec17a9502b244c1e4786884a20ce936256d313753d2f28c5768db1914",
+      "bytes": 114621
+    },
+    "final-current-reader-92101.txt": {
+      "sha256": "7b397cbbebc9c8712193e60e48b8002355af408e01c39124acc96e41bdd21788",
+      "bytes": 2265
+    },
+    "final-current-api-92101.json": {
+      "sha256": "e3cb836cdb2167be358297a90be912327e322ea8e682c95b904bd5236b8e4878",
+      "bytes": 299889
+    },
+    "final-current-reader-77550.png": {
+      "sha256": "4aad277a62e7312f7f770c7732279ed6f76a0eeb599dff75112a48172c498f3b",
+      "bytes": 112867
+    },
+    "final-current-reader-77550.txt": {
+      "sha256": "67c6e24d550f9986ae2956ab4e0f9b82515d9d9cfdb10506ca84f137d6fc860a",
+      "bytes": 2210
+    },
+    "final-current-api-77550.json": {
+      "sha256": "963ae5dc4b64a69ac6bc1d78ce238a38e55a106cb482856bd5f60a16eb0d7802",
+      "bytes": 67750
+    },
+    "final-tomorrow-reader-92101.png": {
+      "sha256": "e03a72399036d6a7f1e8ce4767eb469fc2a7218679a61f453d69116249653c07",
+      "bytes": 112068
+    },
+    "final-tomorrow-reader-92101.txt": {
+      "sha256": "cfbc302b6835be2d2fdf2750f39b12cd7ca8a7dd95ac625dd1775e0583b4e161",
+      "bytes": 2261
+    },
+    "final-tomorrow-api-92101.json": {
+      "sha256": "e3cb836cdb2167be358297a90be912327e322ea8e682c95b904bd5236b8e4878",
+      "bytes": 299889
+    },
+    "final-tomorrow-reader-77550.png": {
+      "sha256": "23e5c2ea386a362f56d8c88b096c6b2245ae18935555d555fefe5b65d41d4fc7",
+      "bytes": 112601
+    },
+    "final-tomorrow-reader-77550.txt": {
+      "sha256": "fe5222f0e8376c9d8ed99b2b046904895f27e887ba6b52d0a70e50f1e197198a",
+      "bytes": 2286
+    },
+    "final-tomorrow-api-77550.json": {
+      "sha256": "963ae5dc4b64a69ac6bc1d78ce238a38e55a106cb482856bd5f60a16eb0d7802",
+      "bytes": 67750
+    },
+    "final-466-knip2.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
   }
 }

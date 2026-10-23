@@ -107,16 +107,22 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   SELECT id, parent_id FROM entity WHERE id=ANY(ARRAY(SELECT id FROM selected_places)) AND state=$1::char(2) AND id<>$4
   UNION
   SELECT p.id,p.parent_id FROM ancestors a JOIN entity p ON p.id=a.parent_id WHERE p.state=$1::char(2) AND p.id<>$4
-), linked_bodies AS MATERIALIZED (
-  -- A board filed on the state belongs to the one local government here that shares its website.
-  SELECT DISTINCT ON (b.id) b.id,a->>'divisionId' AS division FROM local_governments lg
-    CROSS JOIN LATERAL jsonb_array_elements(lg.g->'associations') a
+), held_body_hosts AS MATERIALIZED (
+  SELECT DISTINCT bh.host FROM entity b JOIN entity_host bh ON bh.entity_id=b.id
+    WHERE b.kind='body' AND b.parent_id=$4 AND b.state=$1::char(2)
+), local_government_hosts AS MATERIALIZED (
+  SELECT lg.g,gh.host FROM local_governments lg
     JOIN entity_host gh ON gh.entity_id=lg.g->>'jurisdictionId'
-    JOIN entity_host bh ON bh.host=gh.host
+    JOIN held_body_hosts held ON held.host=gh.host
+    WHERE NOT EXISTS (SELECT 1 FROM entity_host o JOIN entity og ON og.id=o.entity_id AND og.kind='government' WHERE o.host=gh.host AND o.entity_id<>gh.entity_id)
+      AND NOT EXISTS (SELECT 1 FROM domains d WHERE d.d->>'domain'=gh.host AND d.d->>'type' ~ '^(State|Federal|Interstate)')
+), linked_bodies AS MATERIALIZED (
+  -- Check shared-site ownership once per government host, then attach its held boards.
+  SELECT DISTINCT ON (b.id) b.id,a->>'divisionId' AS division FROM local_government_hosts lg
+    CROSS JOIN LATERAL jsonb_array_elements(lg.g->'associations') a
+    JOIN entity_host bh ON bh.host=lg.host
     JOIN entity b ON b.id=bh.entity_id AND b.kind='body' AND b.parent_id=$4 AND b.state=$1::char(2)
     WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places))
-      AND NOT EXISTS (SELECT 1 FROM entity_host o JOIN entity og ON og.id=o.entity_id AND og.kind='government' WHERE o.host=gh.host AND o.entity_id<>gh.entity_id)
-      AND NOT EXISTS (SELECT 1 FROM domains d WHERE d.d->>'domain'=gh.host AND d.d->>'type' ~ '^(State|Federal|Interstate)')
     ORDER BY b.id,a->>'divisionId'
 ), covered AS (
   SELECT id FROM ancestors

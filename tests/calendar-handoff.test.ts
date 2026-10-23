@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { writeContractHandoff } from "../lib/civic-data/contract-handoff-parent.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import { selectedMeetingPartitions } from "../scripts/ingest.ts";
+import { readHeldMeetingCliOptions, selectedMeetingPartitions } from "../scripts/ingest.ts";
 import { installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 
 test("the server's calendar child reads its parent's complete exact selection across every state", () => {
@@ -33,5 +33,18 @@ test("a calendar child keeps its parent's wiring after the registry loses that e
     MEETING_PARTITION_CONTRACTS.splice(0);
     assert.deepEqual(selectedMeetingPartitions(handoff.args), [contract]);
     assert.deepEqual(MEETING_PARTITION_CONTRACTS, [contract]);
+  } finally { handoff.cleanup(); installFixtureDoors(); }
+});
+
+test("the ordinary CLI leaves an exact contract handoff to the state program without loading a second door", async () => {
+  const contract = MEETING_PARTITION_CONTRACTS.find(contract => contract.wiring !== null)!;
+  const handoff = writeContractHandoff([contract]);
+  try {
+    const prepared = await readHeldMeetingCliOptions(["composite", "--promote", ...handoff.args], {
+      readDoor: async () => { throw new Error("The handed calendar must not reload its registry door."); },
+      query: async () => { throw new Error("The handed calendar must not enter the one-body preparation path."); },
+    });
+    assert.deepEqual(prepared, {});
+    assert.deepEqual(selectedMeetingPartitions(handoff.args), [contract]);
   } finally { handoff.cleanup(); installFixtureDoors(); }
 });

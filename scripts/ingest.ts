@@ -704,6 +704,8 @@ export async function readHeldMeetingCliOptions(args: readonly string[], depende
   readonly query: Query;
 }): Promise<Omit<MeetingIngestOptions, "initialResponse" | "store">> {
   if (args[0] !== "composite") return {};
+  // The state program receives the parent's exact contracts; its normal selection validates that handoff.
+  if (args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg))) return {};
   const selected = args.filter(arg => arg.startsWith("--only-partition="));
   if (selected.length === 0) throw new Error("INGEST_EXACT_PARTITION_REQUIRED");
   if (selected.length > 1) return {}; // The state program loads its shared dependencies once.
@@ -806,7 +808,7 @@ async function executeMeetingIngest(args: readonly string[], options: MeetingIng
   const diagnosticState = name === "composite" ? null : requireRegistryState(
     args.find(argument => argument.startsWith("--state="))?.slice("--state=".length) ?? (() => { throw new Error("INGEST_STATE_REQUIRED"); })(),
   );
-  const handed = process.argv.some(arg => arg.startsWith("--contracts-file="));
+  const handed = args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg));
   if (!options.partition && !handed) {
     const doors = await ensureMeetingDoors();
     if (!doors.ready) console.error(`meeting doors: ${doors.reason}`);

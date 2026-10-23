@@ -427,6 +427,16 @@
             "verifiedAt": "2026-10-14T05:02:13.727242Z",
             "doorId": "fec-ak-chief",
             "quote": "Jude Pate (Certified) Incumbent"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jude Pate be retained as justice of the supreme court for 10 years?",
+            "provenance": {
+              "sourceUrl": "https://www.ajc.state.ak.us/retention/retlaw.html",
+              "sourceOrg": "Alaska Judicial Council — AS 15.15.030(10)",
+              "collectedAt": "2026-10-23T09:35:32.129057+00:00",
+              "verifiedAt": "2026-10-23T09:35:32.129057+00:00",
+              "quote": "Shall ... be retained as justice of the supreme court for 10 years?\nStatutory/sample form completed with the certified judge and court: Shall Jude Pate be retained as justice of the supreme court for 10 years?"
+            }
           }
         },
         {
@@ -4289,8 +4299,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "ba01-pacific-source-replay",
-    "reviewedAt": "2026-10-20T23:06:30.712208Z",
+    "reviewedBy": "BA-02 official retention question replay",
+    "reviewedAt": "2026-10-23T09:35:32.129057+00:00",
     "sources": [
       {
         "requestedUrl": "https://d1gqre4bkgnik3.cloudfront.net/candidates/?election=26genr",
@@ -4391,6 +4401,17 @@
         "httpStatus": 200,
         "rawHash": "249ec882625d8190b797ac728ff3fafc31414d2c0c905456f3b5c94149ee602b",
         "reviewedEvidence": "Official Alaska Judicial Council page acquired as normalized source text through the web source reader (265-line source). Hash identifies saved transport text, not origin HTML. All21 Judges on the2026 Ballot name/court/electorate triples replayed; recommendations excluded from reader data."
+      },
+      {
+        "requestedUrl": "https://www.ajc.state.ak.us/retention/retlaw.html",
+        "finalUrl": "https://www.ajc.state.ak.us/retention/retlaw.html",
+        "rawHash": "c2f39aeb13e40947d4325e0dbd7b6297b95f09518b2e698007a1a22d9c83f86e",
+        "retrievedAt": "2026-10-23T09:35:32.129057+00:00",
+        "httpStatus": 200,
+        "publisher": "Alaska Judicial Council — AS 15.15.030(10)",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BA-02: all 1 retained judge/court identities inserted into the saved official retention question form; each question is a single Yes/No decision.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

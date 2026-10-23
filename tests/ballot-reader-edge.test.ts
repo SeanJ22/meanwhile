@@ -511,7 +511,9 @@ for (const expected of nationalReaderCases) test(`BL-30: ${expected.zip} preserv
   const verifiedAdditions = expected.zip === "85701" ? new Set([
     "ballot-az-2026-general-supreme-court-john-lopez-iv",
     "ballot-az-pima-general-2026-clerk-of-the-superior-court",
+    ...azBallot.contests.filter(contest => contest.type === "RETENTION" && contest.id.startsWith("az-pima-general-2026-")).map(contest => contest.id),
   ]) : new Set<string>();
+  if (expected.zip === "85701") assert.equal(verifiedAdditions.size, 15, "the two earlier additions and all 13 retained judges reach the page");
   for (const id of verifiedAdditions) assert.ok(rendered.contestIds.has(id), `The reader lost the verified addition ${id}`);
   const preserved = new Set([...rendered.contestIds].filter(id => !verifiedAdditions.has(id)));
   assert.equal(preserved.size, expected.contests, [...preserved].join("\n"));
@@ -631,16 +633,18 @@ const mapPoint = (zip: string) => {
 test("crossing the state line loads only the new state's ballot, and crossing back restores the first", async () => {
   activeFixture = ballotFixture;
   const walk = [
-    { state: "AZ", zip: "85701", mine: "ballot-az", others: ["ballot-nh", "ballot-nj"] },
-    { state: "NH", zip: "03255", mine: "ballot-nh", others: ["ballot-az", "ballot-nj"] },
-    { state: "AZ", zip: "85701", mine: "ballot-az", others: ["ballot-nh", "ballot-nj"] },
+    { state: "AZ", zip: "85701" },
+    { state: "NH", zip: "03255" },
+    { state: "AZ", zip: "85701" },
   ];
   const seen: string[][] = [];
     for (const stop of walk) {
       const rendered = await renderBallot({ state: stop.state, ...mapPoint(stop.zip) });
       const ids = [...rendered.contestIds];
       assert.ok(ids.length > 0, `${stop.state} rendered no contests`);
-      assert.ok(ids.every(id => id.startsWith(stop.mine)), `${stop.state} showed another state's contest: ${ids.join(", ")}`);
+      const own = stop.state === "AZ" ? azBallot : nhBallot;
+      const ownIds = new Set(own.contests.map(contest => contest.id));
+      assert.ok(ids.every(id => ownIds.has(id)), `${stop.state} showed another state's contest: ${ids.join(", ")}`);
       assert.match(rendered.text, new RegExp(`What.s on the ballot\\s+in ${stop.state === "AZ" ? "Arizona" : "New Hampshire"}`));
       assert.match(rendered.text, /We're working on getting the U\.S\. House district for this area/, `${stop.state} did not say its House district is pending`);
       seen.push(ids.sort());

@@ -147,7 +147,7 @@ const AUTHORITIES = {
     jurisdictions: ["US", ...REGISTRATION_TARGETS.map(target => target.jurisdiction)],
     recordClasses: ["BALLOT_CANDIDACY"],
     competentFacts: ["election", "contest", "filed candidate name", "party", "seat count"],
-    expectedIdentifierKeys: ["contest_id", "candidacy_id"],
+    expectedIdentifierKeys: ["contest_id", "candidacy_id", "absence_id"],
     expectedTemporalFields: ["source_through", "collected_at"],
     horizonSemantics: "Each state/election key carries independently verified contests and candidates. Partial lists establish no absence; authoritative complete successor lists can replace their own candidate set.",
     parserVersion: "ballot-contests/1",

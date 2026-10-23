@@ -64,6 +64,16 @@
             "collectedAt": "2026-10-21T00:35:09.562328+00:00",
             "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
             "quote": "Justice Alexandro Cruz Castro, Retention\nAlexandro Cruz Castro — Non-Partisan"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Justice Alexandro Cruz Castro of the CNMI Supreme Court be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.votecnmi.gov.mp/downloads/2026/2026_GE_BALLOT_SPECIMEN.pdf",
+              "sourceOrg": "Commonwealth Election Commission of the Northern Mariana Islands",
+              "collectedAt": "2026-10-21T00:35:09.562328+00:00",
+              "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
+              "quote": "Shall Justice Alexandro Cruz Castro of the CNMI Supreme Court be retained in office?"
+            }
           }
         },
         {
@@ -1914,7 +1924,7 @@
         "publisher": "Commonwealth Election Commission of the Northern Mariana Islands",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "Every certified candidate is compared to an exact row in all 13 official November 3, 2026 specimen fronts by scripts/ba01-south-mp-samples.py. All 77 people, every printed party label, 22 unique rosters and every printed vote limit agree. Governor tickets are paired explicitly by both certification and printed specimen. Precinct 4D has Northern Islands mayor and shares the third-district council and education races; no widening of its separate mayor electorate."
+        "reviewedEvidence": "All 13 fronts of the saved 2026 official specimen print the identical full question, 'Shall Justice Alexandro Cruz Castro of the CNMI Supreme Court be retained in office?' and Vote Yes or No. scripts/ba02-retention.py extracts each occurrence and compares every word. Existing BA-01 candidate, ticket, party and scope checks remain applicable."
       },
       {
         "requestedUrl": "https://www.fec.gov/resources/cms-content/documents/cfsded.pdf",

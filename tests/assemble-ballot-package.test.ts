@@ -497,7 +497,7 @@ test("incomplete lists remain named, same-date complete corrections publish, and
     const files = (await readdir(directory)).filter(file => /^[a-z]{2}\.json$/.test(file)).sort();
     const states = REGISTRY_STATES.filter(state => files.includes(`${state.toLowerCase()}.json`));
     assert.deepEqual(files, states.map(state => `${state.toLowerCase()}.json`).sort());
-    assert.deepEqual(REGISTRY_STATES.filter(state => !states.includes(state)).sort(), ["GU", "PR"]);
+    assert.deepEqual(REGISTRY_STATES.filter(state => !states.includes(state)).sort(), []);
     for (const state of states) {
       const assembled = await publishState(state);
       assert.deepEqual(assembled.skipped, []);

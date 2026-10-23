@@ -7,7 +7,7 @@ test("office identity takes precedence over the electorate's division", () => {
   for (const title of ["U.S. Senator", "United States Senator", "U.S. Representative"]) {
     assert.equal(tierForOffice(title, state), "national", title);
   }
-  for (const title of ["Governor", "Secretary of State", "Attorney General", "State Senator"]) {
+  for (const title of ["Governor", "Secretary of State", "Attorney General", "State Senator", "Supreme Court", "Court of Appeals Judge"]) {
     assert.equal(tierForOffice(title, `${state}/place:example`), "state", title);
   }
   assert.equal(tierForOffice("Mayor", state), "local");

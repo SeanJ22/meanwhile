@@ -1660,6 +1660,16 @@
             "collectedAt": "2026-10-14T05:05:13.944341+00:00",
             "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
             "doorId": "fec-wy-chief"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Justice Bridget Hill be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://wyoleg.gov/statutes/compress/title22.pdf",
+              "sourceOrg": "Wyoming Legislature — W.S. 22-6-126",
+              "collectedAt": "2026-10-23T09:35:31.385821+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.385821+00:00",
+              "quote": "Shall Justice John Roe be retained in office?\nStatutory/sample form completed with the certified judge and court: Shall Justice Bridget Hill be retained in office?"
+            }
           }
         },
         {
@@ -1679,6 +1689,16 @@
             "collectedAt": "2026-10-14T05:05:13.944341+00:00",
             "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
             "doorId": "fec-wy-chief"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Justice Robert C. Jarosh be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://wyoleg.gov/statutes/compress/title22.pdf",
+              "sourceOrg": "Wyoming Legislature — W.S. 22-6-126",
+              "collectedAt": "2026-10-23T09:35:31.385821+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.385821+00:00",
+              "quote": "Shall Justice John Roe be retained in office?\nStatutory/sample form completed with the certified judge and court: Shall Justice Robert C. Jarosh be retained in office?"
+            }
           }
         },
         {
@@ -1698,6 +1718,16 @@
             "collectedAt": "2026-10-14T05:05:13.944341+00:00",
             "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
             "doorId": "fec-wy-chief"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge Ben Burningham be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://wyoleg.gov/statutes/compress/title22.pdf",
+              "sourceOrg": "Wyoming Legislature — W.S. 22-6-126",
+              "collectedAt": "2026-10-23T09:35:31.385821+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.385821+00:00",
+              "quote": "Shall Judge Jane Roe be retained in office?\nStatutory/sample form completed with the certified judge and court: Shall Judge Ben Burningham be retained in office?"
+            }
           }
         },
         {
@@ -4378,8 +4408,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T23:38:47.138279+00:00",
-    "reviewedBy": "Codex BA-01 official county source replay",
+    "reviewedAt": "2026-10-23T09:35:31.385821+00:00",
+    "reviewedBy": "BA-02 official retention question replay",
     "sources": [
       {
         "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
@@ -4420,6 +4450,17 @@
         "publisher": "Laramie County Clerk Elections Office",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official FINAL2026 general COUNTY OFFICES candidate roster. Parsed all13 candidates/eight offices, omitting private contact columns from published records. County commission vote count remains unknown until a sample supplies it.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://wyoleg.gov/statutes/compress/title22.pdf",
+        "finalUrl": "https://wyoleg.gov/statutes/compress/title22.pdf",
+        "rawHash": "a7d73bc40f51c3f285d0de2477a441730c08662fc842c3fde720d4baa7eb48a9",
+        "retrievedAt": "2026-10-23T09:35:31.385821+00:00",
+        "httpStatus": 200,
+        "publisher": "Wyoming Legislature — W.S. 22-6-126",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BA-02: all 3 retained judge/court identities inserted into the saved official retention question form; each question is a single Yes/No decision.",
         "reviewOutcome": "SUPPORTED"
       }
     ]

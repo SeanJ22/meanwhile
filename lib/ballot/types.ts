@@ -27,9 +27,12 @@ export interface Contest {
   divisionVintage: string;
   title: string;
   type: ContestType;
+  /** The official retention question, with the source of its exact wording. */
+  retentionQuestion?: { questionText: string; provenance: Provenance };
   measureTextUrl?: string;
   /** Seats to vote for; multi-member seats are ordinary. */
   voteFor: number | null;
+  voteForSources?: Provenance[];
   termYears: number | null;
   scopeNote: string | null;
   provenance: Provenance;

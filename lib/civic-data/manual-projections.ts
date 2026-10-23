@@ -669,13 +669,15 @@ function genericBallotProjection(payload: ManualProjectionPayload, state?: strin
       identifiers: { candidacy_id: row.id, contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
     ...ballot.measures.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { measure_id: row.id, contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
+    ...ballot.absences.map(row => ({ subjectId: `absence:${row.ocdId}:${row.statement}`, jurisdiction: `US-${ballot.election.state}`,
+      identifiers: { absence_id: `absence:${row.ocdId}:${row.statement}` }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
     ...(ballot.measureRecords ?? []).map(row => ({ subjectId: row.contestId, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
-  ]), missingRequiredFields: records.length ? [] : ["ballots.contests/candidacies"],
+  ]), missingRequiredFields: records.length ? [] : ["ballots.contests/candidacies/absences"],
     violations: problems, schemaVersion: "ballot-contests:1",
     consumerChecks: [{ consumer: "generic state/election ballot Reader", passed: records.length > 0 && problems.length === 0,
-      detail: `${ballots.length} state/election ballot(s) with independently verified contests and candidates.` }],
-    factKind: "sourced official ballot contests and candidates" };
+      detail: `${ballots.length} state/election ballot(s) with independently verified contests, candidates or election absences.` }],
+    factKind: "sourced official ballot contests, candidates and election absences" };
 }
 
 function profileProjection(payload: ManualProjectionPayload, state?: BallotState, inherited = new Map<string, string>()): BuiltProjection {

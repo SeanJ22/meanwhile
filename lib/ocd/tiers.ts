@@ -127,6 +127,7 @@ const STATE_OFFICES = new Set([
   "state_treasurer", "superintendent_of_public_instruction", "state_mine_inspector",
   "corporation_commissioner", "state_auditor", "state_comptroller",
   "insurance_commissioner", "state_senator", "state_lower_house", "executive_councilor",
+  "state_supreme_court", "state_appeals_court",
 ]);
 
 /** Office identity takes precedence over the geography of its electorate. */

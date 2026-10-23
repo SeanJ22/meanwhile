@@ -173,7 +173,7 @@ function pickOptionsFor(
   set: BallotSet | null,
   contest: Contest,
 ): { id: string; label: string; reactionTargetId?: string }[] {
-  if (contest.type === "MEASURE") {
+  if (contest.type === "MEASURE" || contest.type === "RETENTION") {
     return [
       { id: "YES", label: "Yes" },
       { id: "NO", label: "No" },
@@ -559,7 +559,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
   }
   const candidacyContests =
-    matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
+    matched?.contests.filter((c) => c.type === "CANDIDACY" || c.type === "RETENTION") ?? [];
   const officeholderReads = ["registry-runtime", "federal-directory", "nh-members", "federal-funding"] as const;
   const contestResolutionsRead = Promise.allSettled(officeholderReads.flatMap(family => {
     const read = auxiliaryPreloads.get(family);
@@ -725,11 +725,18 @@ export default readerRoute("/ballot", async function BallotPage({
   const filingProjection = await filingRead;
   const filingRows = filingProjection?.kind === "PROMOTED"
     ? filingsForDivisions(filingProjection.value.records as unknown as OfficialFiling[], askOcdIds) : [];
+  const absenceOnly = Boolean(matched && !matched.contests.length && !matched.heldContests?.length && matched.absences.length);
+  const absenceCards = matched ? groupAbsences(matched.absences).map(absence => (
+    <Card key={absence.key} title="Ballot records" titleVisible={false} className="mt-5 lg:max-w-2xl" sources={[{ what: "Election calendar and ballot records", provenance: absence.provenance }]} attrs={{ "data-absence-count": String(absence.members.length), "data-absence-ocd-ids": absence.members.map(record => record.ocdId).join(" ") }}>
+      <p className="t-body leading-relaxed text-paper-dim">{absence.statement}</p>
+    </Card>
+  )) : null;
 
   return (
 
     <>
 
+      {absenceOnly && absenceCards}
       <OfficialFilings rows={filingRows} />
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />
 
@@ -944,6 +951,10 @@ export default readerRoute("/ballot", async function BallotPage({
       <div className="ballot-office-list">
       {candidacyContests.map((contest, contestIndex) => {
           const lineup = lineupForContest(set!.election.state, contest.id);
+          const savedQuestion = [contest.scopeNote, contest.provenance.quote].find(text => /^(Shall\b|Vote Yes or No\b)/.test(text ?? ""));
+          const retentionQuestion = contest.type === "RETENTION"
+            ? contest.retentionQuestion ?? (savedQuestion ? { questionText: savedQuestion, provenance: contest.provenance } : null)
+            : null;
           return (
             <Card
               key={contest.id}
@@ -956,10 +967,15 @@ export default readerRoute("/ballot", async function BallotPage({
                 ...(certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? { "data-could-govern": "true" } : {}),
               }}
               sources={[{ what: readerScopeNotes.get(contest.id) ?? "Candidates and voting instructions", provenance: contest.provenance },
+                ...(retentionQuestion ? [{ what: "Official retention question", provenance: retentionQuestion.provenance }] : []),
+                ...(contest.voteForSources ?? []).map(provenance => ({ what: "Voting instructions", provenance })),
                 ...(filingSources.get(contest.id) ?? []).map(provenance => ({ what: "Candidate filings", provenance })),
                 ...(lineup && set.generalLineup ? [{ what: "Primary election canvass", provenance: { sourceUrl: set.generalLineup.canvass.url, sourceOrg: set.generalLineup.canvass.issuedBy, collectedAt: set.generalLineup.canvass.readAt, verifiedAt: null } }] : []),
                 ...(lineup ? [...new Map(lineup.nominees.map(nominee => { const provenance = nomineeProvenance(nominee, contest, set!.election.state); return [provenance.sourceUrl, { what: "General-election candidates", provenance }] as const; })).values()] : [])]}
-              gaps={contest.voteFor === null ? [{ id: `contest-voting:${contest.id}`, label: "voting instructions" }] : []}
+              gaps={[
+                ...(contest.voteFor === null ? [{ id: `contest-voting:${contest.id}`, label: "voting instructions" }] : []),
+                ...(contest.type === "RETENTION" && !retentionQuestion ? [{ id: `contest-question:${contest.id}`, label: "the official ballot question" }] : []),
+              ]}
               className="ballot-office-card rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)] [&>.reader-card-header]:sr-only [&>.reader-card-body]:p-0"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
@@ -977,6 +993,10 @@ export default readerRoute("/ballot", async function BallotPage({
                   {[contest.voteFor !== null ? `Vote for ${contest.voteFor}` : null, contest.termYears ? `${contest.termYears}-year term` : null].filter(Boolean).join(" · ")}
                 </p>}
               </div>
+
+              {retentionQuestion && <p className="mt-3 t-body leading-relaxed" data-retention-question>
+                {retentionQuestion.questionText}
+              </p>}
 
               {(() => {
                 const blurb = officeBlurbs.get(contest.id) ?? null;
@@ -1370,7 +1390,7 @@ export default readerRoute("/ballot", async function BallotPage({
         </section>
       ))}
 
-      {matched && !matched.contests.some((c) => tierForOcdId(c.ocdId) === "local") && (
+      {matched && !absenceOnly && !matched.contests.some((c) => tierForOcdId(c.ocdId) === "local") && (
         <section
           className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl"
           data-ballot-no-local-races
@@ -1406,20 +1426,7 @@ export default readerRoute("/ballot", async function BallotPage({
         </section>
       )}
 
-      {matched && matched.contests.length > 0 && (
-        <>
-
-          {groupAbsences(matched.absences).map((absence) => (
-            <Card key={absence.key} title="Ballot records" titleVisible={false} className="mt-5 lg:max-w-2xl" sources={[{ what: "Ballot record search", provenance: absence.provenance }]} attrs={{ "data-absence-count": String(absence.members.length), "data-absence-ocd-ids": absence.members.map(record => record.ocdId).join(" ") }}>
-              <p className="t-body leading-relaxed text-paper-dim">
-                {absence.statement}
-              </p>
-            </Card>
-          ))}
-
-
-        </>
-      )}
+      {!absenceOnly && absenceCards}
 
       <p data-ballot-complete className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] lg:max-w-2xl">
         <Link

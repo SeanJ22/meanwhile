@@ -2757,7 +2757,7 @@
           "title": "Supreme Court Justice Position 4",
           "type": "RETENTION",
           "candidateListComplete": true,
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
@@ -2767,6 +2767,16 @@
             "verifiedAt": "2026-10-14T05:38:39Z",
             "doorId": "fec-ks-chief",
             "quote": "Wherefore notice is hereby given pursuant to the provisions of K.S.A. 25-105 that the names and addresses of all persons specified in said notice from the Secretary of State, and in addition thereto, the names and addresses of all persons for whom nomination papers or declarations have been filed in the Election Commissioner’s office for which nomination is sought, are as follows, to-wit:\n\nEric S. Rosen | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Eric S. Rosen, Justice of the Supreme Court, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://ksrevisor.gov/kanconst/093_003_0005.html",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-23T09:35:38.160940+00:00",
+              "verifiedAt": "2026-10-23T09:35:38.160940+00:00",
+              "quote": "Shall ___________________________________ (Here insert name of justice.) ________________________________________ (Here insert the title of the court.) be retained in office?"
+            }
           }
         },
         {
@@ -2777,7 +2787,7 @@
           "title": "Supreme Court Justice Position 6",
           "type": "RETENTION",
           "candidateListComplete": true,
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
@@ -2787,6 +2797,16 @@
             "verifiedAt": "2026-10-14T05:38:39Z",
             "doorId": "fec-ks-chief",
             "quote": "Wherefore notice is hereby given pursuant to the provisions of K.S.A. 25-105 that the names and addresses of all persons specified in said notice from the Secretary of State, and in addition thereto, the names and addresses of all persons for whom nomination papers or declarations have been filed in the Election Commissioner’s office for which nomination is sought, are as follows, to-wit:\n\nLarkin E. Walsh | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Larkin E. Walsh, Justice of the Supreme Court, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://ksrevisor.gov/kanconst/093_003_0005.html",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-23T09:35:38.160940+00:00",
+              "verifiedAt": "2026-10-23T09:35:38.160940+00:00",
+              "quote": "Shall ___________________________________ (Here insert name of justice.) ________________________________________ (Here insert the title of the court.) be retained in office?"
+            }
           }
         },
         {
@@ -2797,7 +2817,7 @@
           "title": "Court of Appeals Judge Position 2",
           "type": "RETENTION",
           "candidateListComplete": true,
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
@@ -2807,6 +2827,16 @@
             "verifiedAt": "2026-10-14T05:38:39Z",
             "doorId": "fec-ks-chief",
             "quote": "Wherefore notice is hereby given pursuant to the provisions of K.S.A. 25-105 that the names and addresses of all persons specified in said notice from the Secretary of State, and in addition thereto, the names and addresses of all persons for whom nomination papers or declarations have been filed in the Election Commissioner’s office for which nomination is sought, are as follows, to-wit:\n\nLesley Ann Isherwood | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Lesley Ann Isherwood, Judge of the Court of Appeals, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-23T09:35:37.744138+00:00",
+              "verifiedAt": "2026-10-23T09:35:37.744138+00:00",
+              "quote": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+            }
           }
         },
         {
@@ -2817,7 +2847,7 @@
           "title": "Court of Appeals Judge Position 3",
           "type": "RETENTION",
           "candidateListComplete": true,
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
@@ -2827,6 +2857,16 @@
             "verifiedAt": "2026-10-14T05:38:39Z",
             "doorId": "fec-ks-chief",
             "quote": "Wherefore notice is hereby given pursuant to the provisions of K.S.A. 25-105 that the names and addresses of all persons specified in said notice from the Secretary of State, and in addition thereto, the names and addresses of all persons for whom nomination papers or declarations have been filed in the Election Commissioner’s office for which nomination is sought, are as follows, to-wit:\n\nAmy Fellows Cline | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Amy Fellows Cline, Judge of the Court of Appeals, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-23T09:35:37.744138+00:00",
+              "verifiedAt": "2026-10-23T09:35:37.744138+00:00",
+              "quote": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+            }
           }
         },
         {
@@ -2837,7 +2877,7 @@
           "title": "Court of Appeals Judge Position 5",
           "type": "RETENTION",
           "candidateListComplete": true,
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
@@ -2847,6 +2887,16 @@
             "verifiedAt": "2026-10-14T05:38:39Z",
             "doorId": "fec-ks-chief",
             "quote": "Wherefore notice is hereby given pursuant to the provisions of K.S.A. 25-105 that the names and addresses of all persons specified in said notice from the Secretary of State, and in addition thereto, the names and addresses of all persons for whom nomination papers or declarations have been filed in the Election Commissioner’s office for which nomination is sought, are as follows, to-wit:\n\nKim R. Schroeder | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Kim R. Schroeder, Judge of the Court of Appeals, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-23T09:35:37.744138+00:00",
+              "verifiedAt": "2026-10-23T09:35:37.744138+00:00",
+              "quote": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+            }
           }
         },
         {
@@ -2857,7 +2907,7 @@
           "title": "Court of Appeals Judge Position 7",
           "type": "RETENTION",
           "candidateListComplete": true,
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
@@ -2867,6 +2917,16 @@
             "verifiedAt": "2026-10-14T05:38:39Z",
             "doorId": "fec-ks-chief",
             "quote": "Wherefore notice is hereby given pursuant to the provisions of K.S.A. 25-105 that the names and addresses of all persons specified in said notice from the Secretary of State, and in addition thereto, the names and addresses of all persons for whom nomination papers or declarations have been filed in the Election Commissioner’s office for which nomination is sought, are as follows, to-wit:\n\nLori Ann Bolton Fleming | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Lori Ann Bolton Fleming, Judge of the Court of Appeals, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-23T09:35:37.744138+00:00",
+              "verifiedAt": "2026-10-23T09:35:37.744138+00:00",
+              "quote": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+            }
           }
         },
         {
@@ -2877,7 +2937,7 @@
           "title": "Court of Appeals Judge Position 13",
           "type": "RETENTION",
           "candidateListComplete": true,
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "provenance": {
@@ -2887,6 +2947,16 @@
             "verifiedAt": "2026-10-14T05:38:39Z",
             "doorId": "fec-ks-chief",
             "quote": "Wherefore notice is hereby given pursuant to the provisions of K.S.A. 25-105 that the names and addresses of all persons specified in said notice from the Secretary of State, and in addition thereto, the names and addresses of all persons for whom nomination papers or declarations have been filed in the Election Commissioner’s office for which nomination is sought, are as follows, to-wit:\n\nJacy Hurst | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jacy Hurst, Judge of the Court of Appeals, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-23T09:35:37.744138+00:00",
+              "verifiedAt": "2026-10-23T09:35:37.744138+00:00",
+              "quote": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+            }
           }
         },
         {
@@ -3011,7 +3081,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 1, Division 5",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3021,6 +3091,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Joan M. Lowdon | District Court Judge | 1 | 0 | 5 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Joan M. Lowdon, District Court Judge, District 1, Division 5, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3030,7 +3110,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 1, Division 6",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3040,6 +3120,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "John James Bryant, Jr. | District Court Judge | 1 | 0 | 6 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall John James Bryant, Jr., District Court Judge, District 1, Division 6, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3049,7 +3139,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 2, Division 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3059,6 +3149,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Norbert C. Marek | District Court Judge | 2 | 0 | 1 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Norbert C. Marek, District Court Judge, District 2, Division 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3068,7 +3168,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 2, Division 2",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3078,6 +3178,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Christopher T. Etzel | District Court Judge | 2 | 0 | 2 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Christopher T. Etzel, District Court Judge, District 2, Division 2, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3087,7 +3197,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 2, Division 3",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3097,6 +3207,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Jeff Elder | District Court Judge | 2 | 0 | 3 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jeff Elder, District Court Judge, District 2, Division 3, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3106,7 +3226,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 3, Division 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3116,6 +3236,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Jason E. Geier | District Court Judge | 3 | 0 | 1 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jason E. Geier, District Court Judge, District 3, Division 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3125,7 +3255,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 3, Division 5",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3135,6 +3265,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Lori Dougherty-Bichsel | District Court Judge | 3 | 0 | 5 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Lori Dougherty-Bichsel, District Court Judge, District 3, Division 5, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3144,7 +3284,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 3, Division 7",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3154,6 +3294,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Penny R. Moylan | District Court Judge | 3 | 0 | 7 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Penny R. Moylan, District Court Judge, District 3, Division 7, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3163,7 +3313,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 3, Division 10",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3173,6 +3323,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Mary E. Mattivi | District Court Judge | 3 | 0 | 10 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Mary E. Mattivi, District Court Judge, District 3, Division 10, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3182,7 +3342,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 3, Division 11",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3192,6 +3352,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Cheryl A. Rios | District Court Judge | 3 | 0 | 11 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Cheryl A. Rios, District Court Judge, District 3, Division 11, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3201,7 +3371,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 5, Division 2",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3211,6 +3381,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "W. Lee Fowler | District Court Judge | 5 | 0 | 2 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall W. Lee Fowler, District Court Judge, District 5, Division 2, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3220,7 +3400,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 6, Division 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3230,6 +3410,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Amy L. Harth | District Court Judge | 6 | 0 | 1 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Amy L. Harth, District Court Judge, District 6, Division 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3239,7 +3429,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 7, Division 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3249,6 +3439,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Amy J. Hanley | District Court Judge | 7 | 0 | 1 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Amy J. Hanley, District Court Judge, District 7, Division 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3258,7 +3458,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 7, Division 6",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3268,6 +3468,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Stacey L. Donovan | District Court Judge | 7 | 0 | 6 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Stacey L. Donovan, District Court Judge, District 7, Division 6, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3277,7 +3487,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 8, Division 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3287,6 +3497,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Ben J. Sexton | District Court Judge | 8 | 0 | 1 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Ben J. Sexton, District Court Judge, District 8, Division 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3296,7 +3516,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 8, Division 4",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3306,6 +3526,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Keith Collett | District Court Judge | 8 | 0 | 4 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Keith Collett, District Court Judge, District 8, Division 4, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3315,7 +3545,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 9, Division 2",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3325,6 +3555,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Marilyn M. Wilder | District Court Judge | 9 | 0 | 2 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Marilyn M. Wilder, District Court Judge, District 9, Division 2, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3334,7 +3574,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3344,6 +3584,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Keven M. P. O'Grady | District Court Judge | 10 | 0 | 1 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Keven M. P. O'Grady, District Court Judge, District 10, Division 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3353,7 +3603,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 4",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3363,6 +3613,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Rhonda K. Mason | District Court Judge | 10 | 0 | 4 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Rhonda K. Mason, District Court Judge, District 10, Division 4, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3372,7 +3632,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 5",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3382,6 +3642,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Erica K. Schoenig | District Court Judge | 10 | 0 | 5 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Erica K. Schoenig, District Court Judge, District 10, Division 5, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3391,7 +3661,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 9",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3401,6 +3671,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Christina Dunn Gyllenborg | District Court Judge | 10 | 0 | 9 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Christina Dunn Gyllenborg, District Court Judge, District 10, Division 9, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3410,7 +3690,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 10",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3420,6 +3700,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Kathleen L. Sloan | District Court Judge | 10 | 0 | 10 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Kathleen L. Sloan, District Court Judge, District 10, Division 10, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3429,7 +3719,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 15",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3439,6 +3729,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Michael Patrick Joyce | District Court Judge | 10 | 0 | 15 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Michael Patrick Joyce, District Court Judge, District 10, Division 15, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3448,7 +3748,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 16",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3458,6 +3758,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Neil B. Foth | District Court Judge | 10 | 0 | 16 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Neil B. Foth, District Court Judge, District 10, Division 16, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3467,7 +3777,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 17",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3477,6 +3787,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Thomas Kelly Ryan | District Court Judge | 10 | 0 | 17 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Thomas Kelly Ryan, District Court Judge, District 10, Division 17, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3486,7 +3806,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 18",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3496,6 +3816,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Timothy P. McCarthy | District Court Judge | 10 | 0 | 18 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Timothy P. McCarthy, District Court Judge, District 10, Division 18, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3505,7 +3835,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 10, Division 19",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3515,6 +3845,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Jacquelyn Ellen Rokusek | District Court Judge | 10 | 0 | 19 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jacquelyn Ellen Rokusek, District Court Judge, District 10, Division 19, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3524,7 +3864,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 11, Division 3",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3534,6 +3874,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Fred W. Johnson, Jr. | District Court Judge | 11 | 0 | 3 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Fred W. Johnson, Jr., District Court Judge, District 11, Division 3, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3543,7 +3893,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 11, Division 5",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3553,6 +3903,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Kurtis I. Loy | District Court Judge | 11 | 0 | 5 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Kurtis I. Loy, District Court Judge, District 11, Division 5, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3562,7 +3922,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 11, Division 6",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3572,6 +3932,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Steven A. Stockard | District Court Judge | 11 | 0 | 6 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Steven A. Stockard, District Court Judge, District 11, Division 6, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3581,7 +3951,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 12, Division 2",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3591,6 +3961,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Jennifer R. O'Hare | District Court Judge | 12 | 0 | 2 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jennifer R. O'Hare, District Court Judge, District 12, Division 2, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3961,7 +4341,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 21, Division 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3971,6 +4351,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "John F. Bosch | District Court Judge | 21 | 0 | 1 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall John F. Bosch, District Court Judge, District 21, Division 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -3980,7 +4370,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 21, Division 3",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -3990,6 +4380,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Grant Bannister | District Court Judge | 21 | 0 | 3 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Grant Bannister, District Court Judge, District 21, Division 3, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4037,7 +4437,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 25, Division 2",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4047,6 +4447,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Natalie K. Morlock | District Court Judge | 25 | 0 | 2 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Natalie K. Morlock, District Court Judge, District 25, Division 2, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4056,7 +4466,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 25, Division 3",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4066,6 +4476,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Kristi M. Cott | District Court Judge | 25 | 0 | 3 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Kristi M. Cott, District Court Judge, District 25, Division 3, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4322,7 +4742,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 30, Division 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4332,6 +4752,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Francis E. Meisenheimer | District Court Judge | 30 | 0 | 1 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Francis E. Meisenheimer, District Court Judge, District 30, Division 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4341,7 +4771,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 30, Division 3",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4351,6 +4781,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Gaten Thomas Wood | District Court Judge | 30 | 0 | 3 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Gaten Thomas Wood, District Court Judge, District 30, Division 3, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4360,7 +4800,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Court Judge, District 30, Division 4",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4370,6 +4810,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Shawn Robert Dejarnett | District Court Judge | 30 | 0 | 4 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Shawn Robert Dejarnett, District Court Judge, District 30, Division 4, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4379,7 +4829,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 2, Position 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4389,6 +4839,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Brian Yearout | District Magistrate Judge | 2 | 1 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Brian Yearout, District Magistrate Judge, District 2, Position 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4398,7 +4858,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 2, Position 3",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4408,6 +4868,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Angela M. Anderson | District Magistrate Judge | 2 | 3 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Angela M. Anderson, District Magistrate Judge, District 2, Position 3, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4417,7 +4887,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 4, Position 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4427,6 +4897,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Lori D. Breshears | District Magistrate Judge | 4 | 1 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Lori D. Breshears, District Magistrate Judge, District 4, Position 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4436,7 +4916,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 4, Position 2",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4446,6 +4926,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "David M. Braun | District Magistrate Judge | 4 | 2 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall David M. Braun, District Magistrate Judge, District 4, Position 2, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4455,7 +4945,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 5",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4465,6 +4955,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Douglas P. Jones | District Magistrate Judge | 5 | 0 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Douglas P. Jones, District Magistrate Judge, District 5, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4474,7 +4974,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 8, Position 3",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4484,6 +4984,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Amy C. Coppola | District Magistrate Judge | 8 | 3 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Amy C. Coppola, District Magistrate Judge, District 8, Position 3, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4493,7 +5003,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 9, Position 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4503,6 +5013,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Amanda Faber | District Magistrate Judge | 9 | 1 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Amanda Faber, District Magistrate Judge, District 9, Position 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4512,7 +5032,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 10, Position 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4522,6 +5042,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Jenifer J. Ashford | District Magistrate Judge | 10 | 1 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jenifer J. Ashford, District Magistrate Judge, District 10, Position 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4531,7 +5061,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 12, Position 3",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4541,6 +5071,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Angela R. Hecke | District Magistrate Judge | 12 | 3 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Angela R. Hecke, District Magistrate Judge, District 12, Position 3, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4550,7 +5090,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 12, Position 5",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4560,6 +5100,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Regine Lucy Thompson | District Magistrate Judge | 12 | 5 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Regine Lucy Thompson, District Magistrate Judge, District 12, Position 5, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4569,7 +5119,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 12, Position 6",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4579,6 +5129,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Jason C Cohorst | District Magistrate Judge | 12 | 6 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jason C Cohorst, District Magistrate Judge, District 12, Position 6, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4664,7 +5224,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 21, Position 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4674,6 +5234,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "John McNish | District Magistrate Judge | 21 | 1 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall John McNish, District Magistrate Judge, District 21, Position 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4759,7 +5329,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 25, Position 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4769,6 +5339,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Wade M. Dixon | District Magistrate Judge | 25 | 1 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Wade M. Dixon, District Magistrate Judge, District 25, Position 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4778,7 +5358,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 25, Position 7",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4788,6 +5368,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Timothy R. Woods | District Magistrate Judge | 25 | 7 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Timothy R. Woods, District Magistrate Judge, District 25, Position 7, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4797,7 +5387,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 28, Position 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4807,6 +5397,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Jennifer L. Oliver | District Magistrate Judge | 28 | 1 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jennifer L. Oliver, District Magistrate Judge, District 28, Position 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4816,7 +5416,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 30, Position 1",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4826,6 +5426,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Candace R. Lattin | District Magistrate Judge | 30 | 1 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Candace R. Lattin, District Magistrate Judge, District 30, Position 1, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4835,7 +5445,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 30, Position 3",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4845,6 +5455,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Roseanna K. Mathis | District Magistrate Judge | 30 | 3 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Roseanna K. Mathis, District Magistrate Judge, District 30, Position 3, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         },
         {
@@ -4854,7 +5474,7 @@
           "divisionVintage": "OCD_CURRENT",
           "title": "District Magistrate Judge, District 31, Position 2",
           "type": "RETENTION",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -4864,6 +5484,16 @@
             "collectedAt": "2026-10-20T23:01:41.268276+00:00",
             "verifiedAt": "2026-10-20T23:01:41.268276+00:00",
             "quote": "Zelda Schlotterbeck | District Magistrate Judge | 31 | 2 | 0 | "
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Zelda Schlotterbeck, District Magistrate Judge, District 31, Position 2, be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+              "sourceOrg": "Kansas Legislature",
+              "collectedAt": "2026-10-20T23:54:07.434091+00:00",
+              "verifiedAt": "2026-10-20T23:54:07.434091+00:00",
+              "quote": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+            }
           }
         }
       ],
@@ -12289,7 +12919,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T23:59:50.123727+00:00",
+    "reviewedAt": "2026-10-23T09:35:38.160940+00:00",
     "reviewedBy": "BL-12 Kansas official-source conversion",
     "sources": [
       {
@@ -12386,17 +13016,6 @@
         "retrievedAt": "2026-10-20T23:57:15.067633+00:00",
         "httpStatus": 200,
         "rawHash": "d3abab82090dc485849e4f583d1c29487a6527a5750d344cad65eef454b99219",
-        "publisher": "Kansas Legislature",
-        "sourceClass": "OFFICIAL_PUBLISHER",
-        "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "scripts/ba01-south-ks-judicial.py replays the exact 2026 Secretary of State office tuples and names, judicial district whole-county map, current constitutional/statutory electorate rules, and magistrate county assignments. No candidate residential contact fields are published."
-      },
-      {
-        "requestedUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
-        "finalUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
-        "retrievedAt": "2026-10-20T23:54:07.434091+00:00",
-        "httpStatus": 200,
-        "rawHash": "45eadae4c12646b95681500c67d1d0e783aa070335493505704a56bec34d62fb",
         "publisher": "Kansas Legislature",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewOutcome": "SUPPORTED",
@@ -12588,6 +13207,39 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "scripts/ba01-south-ks-judicial.py replays the exact 2026 Secretary of State office tuples and names, judicial district whole-county map, current constitutional/statutory electorate rules, and magistrate county assignments. No candidate residential contact fields are published."
+      },
+      {
+        "requestedUrl": "https://ksrevisor.gov/kanconst/093_003_0005.html",
+        "finalUrl": "https://ksrevisor.gov/kanconst/093_003_0005.html",
+        "retrievedAt": "2026-10-23T09:35:38.160940+00:00",
+        "httpStatus": 200,
+        "rawHash": "fe441fae89bb1dc5174dc8668cdd7d8d23a2eae664161d2875fafd19eb09658c",
+        "publisher": "Kansas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Kansas Constitution Article 3 Section 5: official retention question template; name and court placeholders populated only from the held official 2026 candidate list. Each retention is one affirmative/negative decision."
+      },
+      {
+        "requestedUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+        "finalUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+        "retrievedAt": "2026-10-23T09:35:37.744138+00:00",
+        "httpStatus": 200,
+        "rawHash": "03bcead375c0b606ad01d53ea797cfb0d8db08d16e97a1934de48c9b1d702c65",
+        "publisher": "Kansas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "K.S.A. 20-3006: official retention question template; name and court placeholders populated only from the held official 2026 candidate list. Each retention is one affirmative/negative decision."
+      },
+      {
+        "requestedUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+        "finalUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+        "retrievedAt": "2026-10-20T23:54:07.434091+00:00",
+        "httpStatus": 200,
+        "rawHash": "45eadae4c12646b95681500c67d1d0e783aa070335493505704a56bec34d62fb",
+        "publisher": "Kansas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "K.S.A. 20-2908: official retention question template; name and court placeholders populated only from the held official 2026 candidate list. Each retention is one affirmative/negative decision."
       }
     ]
   }

@@ -19,7 +19,7 @@ export function genericBallotProblems(value: GenericBallotProjection, expectedSt
   for (const [key, ballot] of Object.entries(value.ballots)) {
     if (!ballot?.election || key !== ballotElectionKey(ballot) || !/^[A-Z]{2}$/.test(ballot.election.state) ||
       !Array.isArray(ballot.contests) || !Array.isArray(ballot.candidacies) ||
-      !ballot.contests.length && !ballot.heldContests?.length) {
+      !ballot.contests.length && !ballot.heldContests?.length && !ballot.absences?.length) {
       problems.push("A ballot lacks its exact state/election key or contests."); continue;
     }
     states.add(ballot.election.state);
@@ -51,6 +51,16 @@ export function genericBallotProblems(value: GenericBallotProjection, expectedSt
     const identities = [...ballot.contests, ...ballot.candidacies, ...filings].flatMap(row => row.identity !== undefined ? [row.identity] : []);
     if (!unique(identities, "identityId")) problems.push("An embedded ballot identity repeats or lacks its identity key.");
     const ids = new Set(contestById.keys());
+    if (!Array.isArray(ballot.absences) || ballot.absences.some(row => !row.statement?.trim() ||
+      jurisdictionFromOcdId(row.ocdId)?.usps !== ballot.election.state || !row.provenance?.sourceUrl))
+      problems.push("A ballot absence lacks its exact territory, statement or source.");
+    if (ballot.contests.some(row => row.retentionQuestion !== undefined && (row.type !== "RETENTION" ||
+      !row.retentionQuestion?.questionText?.trim() || !row.retentionQuestion?.provenance?.sourceUrl)))
+      problems.push("A retention question lacks its exact contest, official wording or source.");
+    if (ballot.contests.some(row => row.voteForSources !== undefined &&
+      (!Number.isInteger(row.voteFor) || (row.voteFor ?? 0) < 1 || !Array.isArray(row.voteForSources) ||
+        !row.voteForSources.length || row.voteForSources.some(source => !source?.sourceUrl))))
+      problems.push("Sourced voting instructions lack their positive count or source.");
     if (ballot.heldContests !== undefined && (!Array.isArray(ballot.heldContests) ||
       new Set(ballot.heldContests.map(row => row.id)).size !== ballot.heldContests.length ||
       ballot.heldContests.some(row => !row.id || ids.has(row.id) || row.electionId !== ballot.election.id ||

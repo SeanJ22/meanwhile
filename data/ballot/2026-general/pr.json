@@ -1,0 +1,59 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "PR:pr-2026-11-03-general": {
+      "election": {
+        "id": "pr-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election Calendar",
+        "state": "PR"
+      },
+      "contests": [],
+      "candidacies": [],
+      "measures": [],
+      "absences": [
+        {
+          "ocdId": "ocd-division/country:us/territory:pr",
+          "divisionVintage": "2026",
+          "statement": "Puerto Rico has no general election on November 3, 2026. Its next general election is November 7, 2028.",
+          "provenance": {
+            "sourceUrl": "https://www.ceepur.org/subastas/docs/2026/RFP-Escrutinio/es/SOLICITUD-DE-PROPUESTAS-ESCRUTINIO-ELECTRONICO-2028-%28final%29.pdf",
+            "sourceOrg": "Comisión Estatal de Elecciones",
+            "collectedAt": "2026-10-23T09:34:52.878019+00:00",
+            "verifiedAt": "2026-10-23T09:34:52.878019+00:00",
+            "quote": "Las próximas elecciones generales serán el 7 de noviembre de 2028."
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-23T09:38:17.987864+00:00",
+    "reviewedBy": "BA-02 official territory source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://www.pr.gov/directorio-de-agencias/comision-estatal-de-elecciones-cee-4",
+        "finalUrl": "https://www.pr.gov/directorio-de-agencias/comision-estatal-de-elecciones-cee-4",
+        "retrievedAt": "2026-10-23T09:38:17.987864+00:00",
+        "httpStatus": 200,
+        "rawHash": "b3bb50ff054d121beb470a0316e55a01d0a8f5f51482e66e5bd98caa8dd037e3",
+        "publisher": "Government of Puerto Rico",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official PR.gov agency directory identifies the CEE and links ceepur.org."
+      },
+      {
+        "requestedUrl": "https://www.ceepur.org/subastas/docs/2026/RFP-Escrutinio/es/SOLICITUD-DE-PROPUESTAS-ESCRUTINIO-ELECTRONICO-2028-%28final%29.pdf",
+        "finalUrl": "https://www.ceepur.org/subastas/docs/2026/RFP-Escrutinio/es/SOLICITUD-DE-PROPUESTAS-ESCRUTINIO-ELECTRONICO-2028-%28final%29.pdf",
+        "retrievedAt": "2026-10-23T09:34:52.878019+00:00",
+        "httpStatus": 200,
+        "rawHash": "90ac419fa8a9ed815fe92a5ff9c49e697544e8141ad6d29bfff36b5dabba6464",
+        "publisher": "Comisión Estatal de Elecciones",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Section 12.0 expressly states the four-year general-election cycle and next regular election date, November 7, 2028; exact Spanish text verified."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1060 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "GU:gu-2026-11-03-general": {
+      "election": {
+        "id": "gu-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "GU"
+      },
+      "contests": [
+        {
+          "id": "gu-ba02-2026-governor",
+          "electionId": "gu-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:gu",
+          "divisionVintage": "2026",
+          "title": "Governor & Lieutenant Governor of Guam",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "Governor & Lieutenant Governor of Guam | Mark one (1) oval only."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-delegate",
+          "electionId": "gu-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:gu",
+          "divisionVintage": "2026",
+          "title": "Non-Voting Delegate to the U.S. House of Representatives",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "Non-Voting Delegate to the U.S. House of Representatives | Mark one (1) oval only."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature",
+          "electionId": "gu-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:gu",
+          "divisionVintage": "2026",
+          "title": "Guam Legislature",
+          "type": "CANDIDACY",
+          "voteFor": 15,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "Guam Legislature | Mark no more than fifteen (15) ovals."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-attorney-general",
+          "electionId": "gu-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:gu",
+          "divisionVintage": "2026",
+          "title": "Attorney General of Guam",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "Attorney General of Guam | Mark one (1) oval only."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-utilities",
+          "electionId": "gu-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:gu",
+          "divisionVintage": "2026",
+          "title": "Consolidated Commission on Utilities",
+          "type": "CANDIDACY",
+          "voteFor": 3,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "Consolidated Commission on Utilities | Mark no more than three (3) ovals."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-education-board",
+          "electionId": "gu-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/territory:gu",
+          "divisionVintage": "2026",
+          "title": "Guam Education Board",
+          "type": "CANDIDACY",
+          "voteFor": 6,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://col.guamcourts.gov/sites/default/files/17gc003_0.pdf",
+            "sourceOrg": "Compiler of Laws, Judiciary of Guam",
+            "collectedAt": "2026-10-23T09:41:48.742088+00:00",
+            "verifiedAt": "2026-10-23T09:41:48.742088+00:00",
+            "quote": "Guam Education Board | Six (6) voting members shall be elected at-large at each General Election."
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "gu-ba02-2026-governor-ada-vicente-a",
+          "contestId": "gu-ba02-2026-governor",
+          "familyName": "ADA, Vicente A.",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "ADA, Vicente A."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-governor-terlaje-therese-maria",
+          "contestId": "gu-ba02-2026-governor",
+          "familyName": "TERLAJE, Therese Maria",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "TERLAJE, Therese Maria"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-delegate-moylan-james-craig",
+          "contestId": "gu-ba02-2026-delegate",
+          "familyName": "MOYLAN, James Craig",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "MOYLAN, James Craig"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-delegate-limtiaco-alicia-anne-garrido",
+          "contestId": "gu-ba02-2026-delegate",
+          "familyName": "LIMTIACO, Alicia Anne Garrido",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "LIMTIACO, Alicia Anne Garrido"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-duenas-christopher-m",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "DUENAS, Christopher M.",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "DUENAS, Christopher M."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-quinata-donna-rita-muna",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "QUINATA, Donna Rita Muna",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "QUINATA, Donna Rita Muna"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-savares-jonathan-james",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "SAVARES, Jonathan James",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "SAVARES, Jonathan James"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-bordallo-fred-e-jr",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "BORDALLO, Fred E. Jr.",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "BORDALLO, Fred E. Jr."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-taitague-telo-teresa",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "TAITAGUE, Telo Teresa",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "TAITAGUE, Telo Teresa"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-nelson-telena-monique-cruz",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "NELSON, Telena Monique Cruz",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "NELSON, Telena Monique Cruz"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-borja-louisa-jean",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "BORJA, Louisa Jean",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "BORJA, Louisa Jean"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-taitague-joaquin-manuel-paulino",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "TAITAGUE, Joaquin Manuel Paulino",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "TAITAGUE, Joaquin Manuel Paulino"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-calvo-gregorio-salas",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "CALVO, Gregorio Salas",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "CALVO, Gregorio Salas"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-parkinson-william-mark-alkonga",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "PARKINSON, William Mark Alkonga",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "PARKINSON, William Mark Alkonga"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-gumataotao-eulogio-s",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "GUMATAOTAO, Eulogio S.",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "GUMATAOTAO, Eulogio S."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-cruz-joaquin-alan",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "CRUZ, Joaquin Alan",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "CRUZ, Joaquin Alan"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-borja-vincent-anthony-velasco",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "BORJA, Vincent Anthony Velasco",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "BORJA, Vincent Anthony Velasco"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-perez-kallen-marie-e",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "PEREZ, Kallen Marie E.",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "PEREZ, Kallen Marie E."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-calvo-shelly-vargas",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "CALVO, Shelly Vargas",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "CALVO, Shelly Vargas"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-taijeron-anthony-w",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "TAIJERON, Anthony W.",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "TAIJERON, Anthony W."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-nguyen-hoa-van",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "NGUYEN, Hoa Van",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "NGUYEN, Hoa Van"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-quinata-roy-anthony-benavente",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "QUINATA, Roy Anthony Benavente",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "QUINATA, Roy Anthony Benavente"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-castro-william-mendiola",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "CASTRO, William Mendiola",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "CASTRO, William Mendiola"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-sablan-angel-anthony-r",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "SABLAN, Angel Anthony R.",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "SABLAN, Angel Anthony R."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-lujan-jesse-michael-a",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "LUJAN, Jesse Michael A.",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "LUJAN, Jesse Michael A."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-shelton-amanda-l",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "SHELTON, Amanda L.",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "SHELTON, Amanda L."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-matanane-sabrina-salas",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "MATANANE, Sabrina Salas",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "MATANANE, Sabrina Salas"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-santos-angela-therese-a-m",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "SANTOS, Angela Therese A.M.",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "SANTOS, Angela Therese A.M."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-mortera-matteo-thomas",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "MORTERA, Matteo Thomas",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "MORTERA, Matteo Thomas"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-barnett-darrel-christopher",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "BARNETT, Darrel Christopher",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "BARNETT, Darrel Christopher"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-sgambelluri-raffaele-m",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "SGAMBELLURI, Raffaele M.",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "SGAMBELLURI, Raffaele M."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-nededog-sarah-mattie-t",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "NEDEDOG, Sarah Mattie T.",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "NEDEDOG, Sarah Mattie T."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-arriola-joseph-b-d",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "ARRIOLA, Joseph B.D.",
+          "givenName": "",
+          "partyLabel": "REPUBLICAN",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "ARRIOLA, Joseph B.D."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-legislature-ridgell-clynton-e",
+          "contestId": "gu-ba02-2026-legislature",
+          "familyName": "RIDGELL, Clynton E.",
+          "givenName": "",
+          "partyLabel": "DEMOCRAT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "RIDGELL, Clynton E."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-attorney-general-tydingco-phillip-james",
+          "contestId": "gu-ba02-2026-attorney-general",
+          "familyName": "TYDINGCO, Phillip James",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "TYDINGCO, Phillip James"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-attorney-general-pauluhn-jordan-lawrence-evangelista",
+          "contestId": "gu-ba02-2026-attorney-general",
+          "familyName": "PAULUHN, Jordan Lawrence Evangelista",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "PAULUHN, Jordan Lawrence Evangelista"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-attorney-general-fisher-thomas-joseph",
+          "contestId": "gu-ba02-2026-attorney-general",
+          "familyName": "FISHER, Thomas Joseph",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "FISHER, Thomas Joseph"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-attorney-general-santos-peter-john",
+          "contestId": "gu-ba02-2026-attorney-general",
+          "familyName": "SANTOS, Peter John",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "SANTOS, Peter John"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-attorney-general-moylan-douglas-b",
+          "contestId": "gu-ba02-2026-attorney-general",
+          "familyName": "MOYLAN, Douglas B.",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "MOYLAN, Douglas B."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-utilities-limtiaco-michael-troy",
+          "contestId": "gu-ba02-2026-utilities",
+          "familyName": "LIMTIACO, Michael Troy",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "LIMTIACO, Michael Troy"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-utilities-sanchez-simon-a",
+          "contestId": "gu-ba02-2026-utilities",
+          "familyName": "SANCHEZ, Simon A.",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "SANCHEZ, Simon A."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-utilities-perez-kenneth-robert",
+          "contestId": "gu-ba02-2026-utilities",
+          "familyName": "PEREZ, Kenneth Robert",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "PEREZ, Kenneth Robert"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-utilities-santos-francis-edward-borja",
+          "contestId": "gu-ba02-2026-utilities",
+          "familyName": "SANTOS, Francis Edward Borja",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "SANTOS, Francis Edward Borja"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-utilities-adonay-roy-salvador-agudon",
+          "contestId": "gu-ba02-2026-utilities",
+          "familyName": "ADONAY, Roy Salvador Agudon",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "ADONAY, Roy Salvador Agudon"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-education-board-taitano-ii-john-r",
+          "contestId": "gu-ba02-2026-education-board",
+          "familyName": "TAITANO II, John R.",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "TAITANO II, John R."
+          }
+        },
+        {
+          "id": "gu-ba02-2026-education-board-ayuyu-ronald-anthony",
+          "contestId": "gu-ba02-2026-education-board",
+          "familyName": "AYUYU, Ronald Anthony",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "AYUYU, Ronald Anthony"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-education-board-aguon-isaiah-john",
+          "contestId": "gu-ba02-2026-education-board",
+          "familyName": "AGUON, Isaiah John",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "AGUON, Isaiah John"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-education-board-mc-ninch-ronald-lewis-jr",
+          "contestId": "gu-ba02-2026-education-board",
+          "familyName": "MC NINCH, Ronald Lewis Jr.",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "MC NINCH, Ronald Lewis Jr."
+          }
+        }
+      ],
+      "measures": [],
+      "absences": [],
+      "candidateTickets": [
+        {
+          "id": "gu-ba02-2026-governor-ada-vicente-a-ticket",
+          "leadCandidacyId": "gu-ba02-2026-governor-ada-vicente-a",
+          "runningMate": {
+            "id": "gu-ba02-2026-governor-calvo-edward-john",
+            "contestId": "gu-ba02-2026-governor",
+            "familyName": "CALVO, Edward John",
+            "givenName": "",
+            "partyLabel": "REPUBLICAN",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+              "sourceOrg": "Guam Election Commission",
+              "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+              "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+              "quote": "ADA, Vicente A.\nCALVO, Edward John"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "ADA, Vicente A.\nCALVO, Edward John"
+          }
+        },
+        {
+          "id": "gu-ba02-2026-governor-terlaje-therese-maria-ticket",
+          "leadCandidacyId": "gu-ba02-2026-governor-terlaje-therese-maria",
+          "runningMate": {
+            "id": "gu-ba02-2026-governor-perez-sabina-eileen",
+            "contestId": "gu-ba02-2026-governor",
+            "familyName": "PEREZ, Sabina Eileen",
+            "givenName": "",
+            "partyLabel": "DEMOCRAT",
+            "slogan": null,
+            "incumbent": null,
+            "websiteUrl": null,
+            "provenance": {
+              "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+              "sourceOrg": "Guam Election Commission",
+              "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+              "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+              "quote": "TERLAJE, Therese Maria\nPEREZ, Sabina Eileen"
+            },
+            "office": "Lieutenant Governor"
+          },
+          "provenance": {
+            "sourceUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+            "sourceOrg": "Guam Election Commission",
+            "collectedAt": "2026-10-23T09:37:00.741835+00:00",
+            "verifiedAt": "2026-10-23T09:37:00.741835+00:00",
+            "quote": "TERLAJE, Therese Maria\nPEREZ, Sabina Eileen"
+          }
+        }
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-23T09:41:48.742088+00:00",
+    "reviewedBy": "BA-02 official territory source replay",
+    "sources": [
+      {
+        "requestedUrl": "https://drive.google.com/uc?export=download&id=13Lo-4rv9AXfMLGaJ00m1qE89NQMXuhHd",
+        "finalUrl": "https://drive.usercontent.google.com/download?id=13Lo-4rv9AXfMLGaJ00m1qE89NQMXuhHd&export=download",
+        "retrievedAt": "2026-10-23T09:37:00.832744+00:00",
+        "httpStatus": 200,
+        "rawHash": "5663cb249c124c02037957e39eb514650061464d3c2e443bb680f83cbb7fcfef",
+        "publisher": "Guam Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "All 30 legislative and 14 nonpartisan candidates agree with the newer official specimen; two source name variants are explicitly checked."
+      },
+      {
+        "requestedUrl": "https://drive.google.com/uc?export=download&id=1p9FDSdsSlHPxvik-lZKYBdOYJ24ZHMwY",
+        "finalUrl": "https://drive.usercontent.google.com/download?id=1p9FDSdsSlHPxvik-lZKYBdOYJ24ZHMwY&export=download",
+        "retrievedAt": "2026-10-23T09:37:24.589419+00:00",
+        "httpStatus": 200,
+        "rawHash": "9259a4f5290599a4185eedd0aa72a3c828713d361bc772fe30e5a4d3e9596b29",
+        "publisher": "Guam Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Certified primary winners ADA/CALVO, TERLAJE/PEREZ, MOYLAN and LIMTIACO agree with the official general specimen."
+      },
+      {
+        "requestedUrl": "https://drive.google.com/uc?export=download&id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN",
+        "finalUrl": "https://drive.usercontent.google.com/download?id=1RKr3bLuivj8n0n29XKbQVHEgdUYwILMN&export=download",
+        "retrievedAt": "2026-10-23T09:37:00.741835+00:00",
+        "httpStatus": 200,
+        "rawHash": "515c39311649f7efddd50a7fee0f08f94f72e9eb3e3148f7ffc33999d2512432",
+        "publisher": "Guam Election Commission",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Every one of 48 candidate choices and both running mates is verified against the official November 3 sample; all six offices and printed vote limits are replayed."
+      },
+      {
+        "requestedUrl": "https://col.guamcourts.gov/sites/default/files/17gc003_0.pdf",
+        "finalUrl": "https://col.guamcourts.gov/sites/default/files/17gc003_0.pdf",
+        "retrievedAt": "2026-10-23T09:41:48.742088+00:00",
+        "httpStatus": 200,
+        "rawHash": "2124500b6c2189ad2c07f10eda8d4f8a530b9062fa04c6aef71f681d043daa0f",
+        "publisher": "Compiler of Laws, Judiciary of Guam",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "17 GCA §3102.3(b): six Education Board members elected at-large each general election; GEC's saved qualifications page quotes the same law."
+      }
+    ]
+  }
+}

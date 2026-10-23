@@ -3427,7 +3427,17 @@
             "collectedAt": "2026-10-14T05:04:12.714Z",
             "verifiedAt": "2026-10-14T05:04:12.714Z"
           },
-          "candidateListComplete": true
+          "candidateListComplete": true,
+          "retentionQuestion": {
+            "questionText": "Shall Judge Paul C. Wilson of the Missouri Supreme Court be retained in office?",
+            "provenance": {
+              "sourceUrl": "https://revisor.mo.gov/main/OneSection.aspx?constit=y&section=V+++25%28c%29%281%29",
+              "sourceOrg": "Missouri Revisor of Statutes",
+              "collectedAt": "2026-10-23T09:35:35.444699+00:00",
+              "verifiedAt": "2026-10-23T09:35:35.444699+00:00",
+              "quote": "Shall Judge __________________ (Here the name of the judge shall be inserted) of the __________________ (Here the title of the court shall be inserted) be retained in office? | Certified candidate: Paul C. Wilson; court: Missouri Supreme Court."
+            }
+          }
         },
         {
           "id": "mo-sos-2026-amendment-3",
@@ -9469,8 +9479,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:07:28.982Z",
-    "reviewedBy": "Codex BL-13",
+    "reviewedAt": "2026-10-23T09:35:35.444699+00:00",
+    "reviewedBy": "BA-02 saved official retention wording replay",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -9541,6 +9551,17 @@
         "retrievedAt": "2026-10-14T05:07:28.982Z",
         "publisher": "Missouri Secretary of State",
         "reviewedEvidence": "Official election publication converted from the captured response bytes."
+      },
+      {
+        "requestedUrl": "https://revisor.mo.gov/main/OneSection.aspx?constit=y&section=V+++25%28c%29%281%29",
+        "finalUrl": "https://revisor.mo.gov/main/OneSection.aspx?constit=y&section=V+++25%28c%29%281%29",
+        "httpStatus": 200,
+        "rawHash": "3867355d2e73e746a91f1b09507c5cc374690333674e3345a28bf5e1cfe9fcbf",
+        "retrievedAt": "2026-10-23T09:35:35.444699+00:00",
+        "publisher": "Missouri Revisor of Statutes",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Missouri Constitution V25(c)(1) supplies the exact judicial retention question. The held 2026 Secretary of State certification prints Paul C. Wilson under Missouri Supreme Court; scripts/ba02-retention.py checks both values and substitutes only those template fields."
       }
     ]
   }

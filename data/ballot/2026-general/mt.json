@@ -2725,6 +2725,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 4 | DISTRICT COURT JUDGE DISTRICT 4, DEPT 5 | REGULAR | 6 | *SHANE A VANNATTA | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge SHANE A VANNATTA of DISTRICT 4, DEPT 5 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge SHANE A VANNATTA of DISTRICT 4, DEPT 5 of the state of Montana be retained in office for another term?"
+            }
           }
         },
         {
@@ -2763,6 +2773,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 8 | DISTRICT COURT JUDGE DISTRICT 8, DEPT 4 | REGULAR | 6 | *JOHN W PARKER | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge JOHN W PARKER of DISTRICT 8, DEPT 4 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge JOHN W PARKER of DISTRICT 8, DEPT 4 of the state of Montana be retained in office for another term?"
+            }
           }
         },
         {
@@ -2782,6 +2802,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 4 | REGULAR | 6 | *BRETT LINNEWEBER | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge BRETT LINNEWEBER of DISTRICT 13, DEPT 4 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge BRETT LINNEWEBER of DISTRICT 13, DEPT 4 of the state of Montana be retained in office for another term?"
+            }
           }
         },
         {
@@ -2801,6 +2831,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 5 | REGULAR | 6 | *ROD SOUZA | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge ROD SOUZA of DISTRICT 13, DEPT 5 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge ROD SOUZA of DISTRICT 13, DEPT 5 of the state of Montana be retained in office for another term?"
+            }
           }
         },
         {
@@ -2820,6 +2860,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 9 | REGULAR | 6 | *SETH CUNNINGHAM | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge SETH CUNNINGHAM of DISTRICT 13, DEPT 9 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge SETH CUNNINGHAM of DISTRICT 13, DEPT 9 of the state of Montana be retained in office for another term?"
+            }
           }
         },
         {
@@ -2839,6 +2889,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 13 | DISTRICT COURT JUDGE DISTRICT 13, DEPT 10 | REGULAR | 6 | *ED ZINK | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge ED ZINK of DISTRICT 13, DEPT 10 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge ED ZINK of DISTRICT 13, DEPT 10 of the state of Montana be retained in office for another term?"
+            }
           }
         },
         {
@@ -2858,6 +2918,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 18 | DISTRICT COURT JUDGE DISTRICT 18, DEPT 2 | REGULAR | 6 | *RIENNE H MCELYEA | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge RIENNE H MCELYEA of DISTRICT 18, DEPT 2 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge RIENNE H MCELYEA of DISTRICT 18, DEPT 2 of the state of Montana be retained in office for another term?"
+            }
           }
         },
         {
@@ -2877,6 +2947,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 20 | DISTRICT COURT JUDGE DISTRICT 20, DEPT 1 | REGULAR | 6 | *MOLLY OWEN | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge MOLLY OWEN of DISTRICT 20, DEPT 1 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge MOLLY OWEN of DISTRICT 20, DEPT 1 of the state of Montana be retained in office for another term?"
+            }
           }
         },
         {
@@ -2896,6 +2976,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 20 | DISTRICT COURT JUDGE DISTRICT 20, DEPT 2 UNEXPIRED | UNEXPIRED | 6 | *JOHN A MERCER | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge JOHN A MERCER of DISTRICT 20, DEPT 2 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge JOHN A MERCER of DISTRICT 20, DEPT 2 of the state of Montana be retained in office for another term?"
+            }
           }
         },
         {
@@ -2915,6 +3005,16 @@
             "collectedAt": "2026-10-20T23:12:34.615184+00:00",
             "verifiedAt": "2026-10-20T23:12:34.615184+00:00",
             "quote": "FILED | JUDICIAL DISTRICT 21 | DISTRICT COURT JUDGE DISTRICT 21, DEPT 2 | REGULAR | 6 | *JENNIFER LINT | NON"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Judge JENNIFER LINT of DISTRICT 21, DEPT 2 of the state of Montana be retained in office for another term?",
+            "provenance": {
+              "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+              "sourceOrg": "Montana Secretary of State — Montana Ballot Layout Guide",
+              "collectedAt": "2026-10-23T09:35:31.217909+00:00",
+              "verifiedAt": "2026-10-23T09:35:31.217909+00:00",
+              "quote": "Shall Judge HG WELLS of DISTRICT 1, DEPT 1 of the state of Montana be retained in office for another term?\nStatutory/sample form completed with the certified judge and court: Shall Judge JENNIFER LINT of DISTRICT 21, DEPT 2 of the state of Montana be retained in office for another term?"
+            }
           }
         }
       ],
@@ -7983,8 +8083,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:18:52.278241+00:00",
-    "reviewedBy": "Codex BA-01 official court/county source replay",
+    "reviewedAt": "2026-10-23T09:35:31.217909+00:00",
+    "reviewedBy": "BA-02 official retention question replay",
     "sources": [
       {
         "requestedUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
@@ -8098,6 +8198,17 @@
         "publisher": "Montana Legislative Services Division",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "ConstitutionVII8(3) explicitly places unopposed incumbents on approval/rejection ballot.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+        "finalUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+        "rawHash": "ddbd2164bb0e0838f28c1877d42eca023d7d2cbcfb4c86c3892da7881e004a5f",
+        "retrievedAt": "2026-10-23T09:35:31.217909+00:00",
+        "httpStatus": 200,
+        "publisher": "Montana Secretary of State — Montana Ballot Layout Guide",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BA-02: all 10 retained judge/court identities inserted into the saved official retention question form; each question is a single Yes/No decision.",
         "reviewOutcome": "SUPPORTED"
       }
     ]

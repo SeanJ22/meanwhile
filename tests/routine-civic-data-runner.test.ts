@@ -1409,7 +1409,7 @@ test("state readback batches keep exact results and tomorrow's current receipts 
   const sha = "c".repeat(40), emitted: string[] = [];
   const first = await repairRoutineReaderProjectionReadbacks(store, [fec, unpromoted], T0, sha,
     { onResult: result => emitted.push(result.contractId) });
-  assert.deepEqual(emitted, [fec.id, unpromoted.id]);
+  assert.deepEqual([...emitted].sort(), [fec.id, unpromoted.id].sort());
   assert.deepEqual(first.map(result => result.ok ? [result.contractId, result.value.kind, result.value.receipt?.status] : result.error),
     [[fec.id, "RECORDED", "PASS"], [unpromoted.id, "NO_PROMOTION", undefined]]);
   store.readPromotion = async () => { throw new Error("current readbacks must not reload payloads"); };

@@ -794,8 +794,8 @@ export async function repairRoutineReaderProjectionReadbacks(
     const rows = byCandidate.get(event.candidateId) ?? [];
     rows.push(event); byCandidate.set(event.candidateId, rows);
   }
-  const results: MeetingReaderReadbackRepairResult[] = [];
-  for (const contract of contracts) {
+  const results = await runBoundedWorkPool(contracts, 2, async contract => {
+    let result: MeetingReaderReadbackRepairResult;
     try {
       if (errors.has(contract.recordClass)) throw new Error(errors.get(contract.recordClass));
       const promotion = promotions.get(`${contract.recordClass}:${contract.scope}`);
@@ -806,11 +806,14 @@ export async function repairRoutineReaderProjectionReadbacks(
         : !promotion ? { outcome: { kind: "NO_PROMOTION" as const, receipt: null }, promotion: null }
         : inspectReaderReadbackEvents(contract, promotion, byCandidate.get(promotion.versionId) ?? [], now, normalizedSha);
       const value = await repairInspectedReaderReadback(store, contract, inspection, now, normalizedSha, options);
-      results.push({ contractId: contract.id, ok: true, value, error: null });
-    } catch (error) { results.push({ contractId: contract.id, ok: false, value: null, error: sanitizedErrorDiagnostic(error) }); }
-    options.onResult?.(results.at(-1)!);
-  }
-  return results;
+      result = { contractId: contract.id, ok: true, value, error: null };
+    } catch (error) { result = { contractId: contract.id, ok: false, value: null, error: sanitizedErrorDiagnostic(error) }; }
+    options.onResult?.(result);
+    return result;
+  });
+  return results.map(result => result.ok ? result.value : {
+    contractId: contracts[result.index]!.id, ok: false, value: null, error: result.error,
+  });
 }
 
 export async function repairMeetingReaderProjectionReadbacks(

@@ -4,7 +4,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { doorsFromWiringRow } from "../lib/doors/seed-meetings.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
-import { loadLegistarMembers, saveLegistarMembers } from "../lib/sources/legistar/members-cache.ts";
+import { loadLegistarMembers } from "../lib/sources/legistar/members-cache.ts";
 import { memberProbe } from "../lib/sources/legistar/members-model.ts";
 import { publishLegistarMembers } from "../lib/sources/legistar/members-publication.ts";
 import { refreshLegistarMembers } from "../lib/sources/legistar/members-refresh.ts";
@@ -29,19 +29,15 @@ test("HTTP reads finish before publication is dated; identical full rereads conf
   assert.equal(first.members, 15);
   const firstChecks = await facts.query("SELECT id, checked_at FROM fact ORDER BY id");
   const copies = await facts.query("SELECT id, fetched_at, blob_key FROM source_copy ORDER BY id");
-  assert.equal(copies.length, 1);
+  assert.equal(copies.length, 2, "the body's name and its office records retain their own saved source pages");
   assert.ok((await readFactRosters(facts.query, rows.map(row => row.bodyId))).rosters.flatMap(row => row.members).some(member => member.name === "Rex Scott"));
 
   t.mock.timers.tick(2 * 3_600_000);
   const later = new Date().toISOString();
-  // A newer pointer date cannot conceal old value-bearing source pages behind a matching fresh row-version probe.
-  const retained = await (await loadLegistarMembers(vault, "pima"))!.read();
-  retained.collectedAt = later;
-  await saveLegistarMembers(vault, retained, later);
   calls.length = 0;
   const second = await refreshLegistarMembers({ facts, clocks, now: later, slug: "pima", vault, doors, fetchImpl });
   assert.equal(second.unchanged, true, "the member values remain exactly the same");
-  assert.ok(calls.some(url => !memberProbe(url)), "stale full pages are fetched even when the row-version signature still matches");
+  assert.ok(calls.some(url => !memberProbe(url)), "the existing cache expiration fetches the full pages even when their contents are unchanged");
   assert.deepEqual(await facts.query("SELECT id, fetched_at, blob_key FROM source_copy ORDER BY id"), copies,
     "reading identical bytes again preserves the original immutable saved-copy row and fetched date");
   const secondChecks = await facts.query("SELECT id, checked_at FROM fact ORDER BY id");

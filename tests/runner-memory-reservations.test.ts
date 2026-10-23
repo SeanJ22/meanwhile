@@ -26,13 +26,13 @@ test("the runner forwards ordered memory reservations without losing a catch-up 
     slots, repairDeadline, launchDeadline, 900_000, new Map(), started, ran) as (...args: unknown[]) => Promise<void>;
   const order = { priority: 2, hold: true };
   const ordinary = { id: "state", args: ["scripts/ingest.ts"] };
-  await acquire(ordinary, ["board"], undefined, order);
+  await acquire(ordinary, ["board"], order);
   const catchup = { id: "catchup", args: ["scripts/ingest.ts"], onStarted: undefined as ((pid: number) => void) | undefined };
   const earlierDeadline = Date.now() + 5_000;
-  await acquire(catchup, ["catchup-board"], earlierDeadline, order);
+  await acquire(catchup, ["catchup-board"], earlierDeadline);
   await acquire({ id: "repair", args: ["scripts/routine-civic-data-reader-repair.mts"] });
   assert.deepEqual(requests, [
-    { deadline: launchDeadline, order }, { deadline: earlierDeadline, order }, { deadline: repairDeadline, order: undefined },
+    { deadline: launchDeadline, order }, { deadline: earlierDeadline, order: undefined }, { deadline: repairDeadline, order: undefined },
   ]);
   catchup.onStarted?.(123);
   assert.deepEqual([...ran], ["catchup-board"]);

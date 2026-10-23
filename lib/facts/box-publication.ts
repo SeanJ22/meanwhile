@@ -17,7 +17,7 @@ import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, of
 import { readCheckEntity } from "./entity-read.ts";
 import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, otherOffice, COMMENT_SUMMARY_LEAD, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
-import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
+import { nameKey, publishBodyNameFromPage, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
@@ -598,5 +598,47 @@ export async function publishBoxFindings(input: {
     }
   }
   report.deferred = [...deferred].filter(id => !settled.has(id)).length;
+  try { await nameBoardsFromTheirPages(input); }
+  catch (error) {
+    report.failuresByReason.BOX_PUBLICATION_EXCEPTION = (report.failuresByReason.BOX_PUBLICATION_EXCEPTION ?? 0) + 1;
+    if (report.errorExamples.length < 5) report.errorExamples.push({ findingId: "board-names", stage: "BODY_NAMING", detail: sanitizedErrorDiagnostic(error).slice(0, 600) });
+  }
   return report;
+}
+
+const NAMING_PER_PASS = 20;
+const NAME_NOT_ON_PAGE_RETRY_MINUTES = 5 * 24 * 60;
+
+/** Bodies holding verified facts but no verified name: the page that supplied a fact is read again and names the board when it writes the name. */
+async function nameBoardsFromTheirPages(input: { readonly repos: Pick<ControlPlaneRepositories, "artifacts">; readonly facts: FactDb & { readonly query: Query };
+  readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly clocks: Clocks; readonly now: string; readonly purge?: ReaderCachePurger; readonly deadlineMs?: number }): Promise<number> {
+  const { facts } = input;
+  const outOfTime = () => Date.now() >= (input.deadlineMs ?? Infinity);
+  if (outOfTime()) return 0;
+  const nameless = await facts.query(`SELECT e.id, (SELECT s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id WHERE f.entity_id = e.id AND f.status = 'live'
+        AND s.url ~ '^https?://' ORDER BY f.checked_at DESC, f.id DESC LIMIT 1) AS url
+    FROM entity e WHERE e.kind = 'body'
+      AND EXISTS (SELECT 1 FROM fact f WHERE f.entity_id = e.id AND f.status = 'live')
+      AND NOT EXISTS (SELECT 1 FROM fact n WHERE n.entity_id = e.id AND n.field = 'name' AND n.status = 'live')
+      AND NOT EXISTS (SELECT 1 FROM blank b WHERE b.entity_id = e.id AND b.field = 'name' AND b.next_try_at > now())
+    ORDER BY e.id LIMIT $1`, [NAMING_PER_PASS]);
+  let named = 0;
+  for (const row of nameless) {
+    if (outOfTime()) break;
+    const id = String(row.id);
+    if (!row.url) continue;
+    const read = await fetchCapture({ url: String(row.url), repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now });
+    if ("error" in read) {
+      await openBlank(facts.query, { entityId: id, field: "name", stage: "ACQUIRE", reason: read.error.split(":")[0]!, detail: String(row.url), retryMinutes: input.clocks.retryMinutes("officeholder") });
+      continue;
+    }
+    const entity = await readCheckEntity(facts.query, id);
+    if (!entity) continue;
+    const copy = await facts.transaction(query => saveCaptureCopy(query, read.capture));
+    const outcome = await publishBodyNameFromPage(facts, { entity, copy, provenance: captureProvenance(read.capture, entity.hosts), producedBy: "box", purge: input.purge },
+      input.clocks, new Date(input.now));
+    if (outcome && "decision" in outcome && outcome.decision === "PUBLISH") named++;
+    else if (!outcome) await openBlank(facts.query, { entityId: id, field: "name", stage: "READ", reason: "NAME_NOT_ON_PAGE", detail: String(row.url), retryMinutes: NAME_NOT_ON_PAGE_RETRY_MINUTES });
+  }
+  return named;
 }

@@ -67,12 +67,3 @@ export function memberProbe(url: URL): boolean {
   const selected = url.searchParams.get("$select");
   return selected !== null && !selected.split(",").some(field => ["BodyName", "PersonFullName", "OfficeRecordFullName"].includes(field));
 }
-
-/** A current row-version probe proves identity, but does not make the retained value-bearing pages younger. */
-export function legistarMemberEvidenceFresh(raw: LegistarMembers, nowMs: number, windowHours: number): boolean {
-  const full = raw.readings.filter(reading => !memberProbe(new URL(reading.artifact.canonicalUrl)));
-  return full.length > 0 && full.every(reading => {
-    const ageMs = nowMs - Date.parse(reading.artifact.retrievedAt);
-    return Number.isFinite(ageMs) && ageMs >= 0 && ageMs <= windowHours * 3_600_000;
-  });
-}

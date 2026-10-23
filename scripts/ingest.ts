@@ -639,9 +639,8 @@ export async function promoteDerivedMeetingFamily(
   if (outcome.promoted || outcome.confirmed) {
     await publishVenuePins(store, partition.id, census.package);
     for (const read of facts ? reads.filter(row => row.ok) : []) {
-      // The snapshot's window anchor predates acquisition; fact freshness is judged when the copy is published.
       await publishPartitionFacts({ ...facts!, responses: retaining.responses }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
-        read.freshMeetings, read.acquisitions, candidate.id, new Date().toISOString());
+        read.freshMeetings, read.acquisitions, candidate.id, generatedAt);
     }
   }
   console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,

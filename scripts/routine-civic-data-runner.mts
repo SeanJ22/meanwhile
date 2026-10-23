@@ -292,7 +292,9 @@ const childMemoryReleases = new Map<string, () => void>();
 const startedSourceChildren = new Set<string>();
 /** Every child this pass started: what it ran is what its edge publish carries. */
 const ranThisPass = new Set<string>();
-async function acquireChildMemory(command: BoundedChildCommand, ran: readonly string[] = [command.id], deadlineOverrideMs?: number, order?: WorkerMemoryOrder): Promise<void> {
+async function acquireChildMemory(command: BoundedChildCommand, ran: readonly string[] = [command.id], orderOrDeadline?: WorkerMemoryOrder | number): Promise<void> {
+  const deadlineOverrideMs = typeof orderOrDeadline === "number" ? orderOrDeadline : undefined;
+  const order = typeof orderOrDeadline === "number" ? undefined : orderOrDeadline;
   const script = command.args.find(arg => /[.](?:mts|ts)$/.test(arg))?.split(/[\\/]/).at(-1) ?? "";
   const deadline = deadlineOverrideMs ?? (script === "routine-civic-data-reader-repair.mts" ? PASS_REPAIR_DEADLINE_MS : PASS_LAUNCH_DEADLINE_MS);
   const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, deadline), order);
@@ -1147,7 +1149,7 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
       // Memory goes in launch order; the next read of a serial lane is not overtaken by work queued behind it.
-      await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), undefined, { priority: index, hold: command.serialLane !== undefined });
+      await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), { priority: index, hold: command.serialLane !== undefined });
       for (const member of unitMembers(units[index]!)) {
         await recordHuntSourceProgress(member.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
       }

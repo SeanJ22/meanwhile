@@ -2,14 +2,13 @@ import type { BodyRoster, RosterMember } from "../../registry/body-rosters.ts";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { fetchBodies, fetchPersons, fetchOfficeRecords } from "./client.ts";
 import { saveLegistarReading } from "./members-cache.ts";
-import { legistarMemberSignature, legistarMemberEvidenceFresh, validateLegistarMembers, termDate, memberProbe, type LegistarMembers, type CachedLegistarMembers, type MemberBody, type MemberPerson, type MemberOffice } from "./members-model.ts";
+import { legistarMemberSignature, validateLegistarMembers, termDate, memberProbe, type LegistarMembers, type CachedLegistarMembers, type MemberBody, type MemberPerson, type MemberOffice } from "./members-model.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 
 /** Legistar refuses a filter of more than 100 expression nodes; 15 ids stay under it with the paging clause. */
 const PERSON_IDS_PER_REQUEST = 15;
 
-export function makeLegistarMembersReader(vault: EvidenceStore, fetchImpl?: typeof fetch, initial: CachedLegistarMembers | null = null,
-  windowHours = Number.POSITIVE_INFINITY) {
+export function makeLegistarMembersReader(vault: EvidenceStore, fetchImpl?: typeof fetch, initial: CachedLegistarMembers | null = null) {
   let held = initial;
   return async (slug: string, signal?: AbortSignal): Promise<LegistarMembers> => {
     const readings: LegistarMembers["readings"] = [];
@@ -38,11 +37,9 @@ export function makeLegistarMembersReader(vault: EvidenceStore, fetchImpl?: type
     if (held?.signature === signature) {
       const previous = await held.read();
       if (previous.slug !== slug) throw new Error("LEGISTAR_MEMBERS_CACHE_TENANT_INVALID");
-      if (legistarMemberEvidenceFresh(previous, Date.now(), windowHours)) {
-        previous.readings = previous.readings.filter(reading => !memberProbe(new URL(reading.artifact.canonicalUrl)));
-        previous.readings.push(...readings);
-        return previous;
-      }
+      previous.readings = previous.readings.filter(reading => !memberProbe(new URL(reading.artifact.canonicalUrl)));
+      previous.readings.push(...readings);
+      return previous;
     }
     held = null;
     readings.length = 0;

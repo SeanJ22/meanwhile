@@ -16,7 +16,7 @@
           "divisionVintage": "2026",
           "title": "Delegate to the United States Congress",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -26,7 +26,30 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "Delegate to the United States Congress\nAumua Amata\nFualaau Rosie Tago Lancaster\nMeleagi Suitonu Chapman\nSamana Semo Veavea\nSandra King Young\nTuifagaloa Dr. Afu Lefaoseu"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://www.govinfo.gov/content/pkg/USCODE-2024-title48/html/USCODE-2024-title48-chap16.htm",
+              "sourceOrg": "United States Government Publishing Office",
+              "collectedAt": "2026-10-23T10:05:59.116607+00:00",
+              "verifiedAt": "2026-10-23T10:05:59.116607+00:00",
+              "quote": "The Territory of American Samoa shall be represented in the United States Congress by a nonvoting Delegate to the House of Representatives, elected as hereinafter provided."
+            },
+            {
+              "sourceUrl": "https://www.govinfo.gov/content/pkg/USCODE-2024-title48/html/USCODE-2024-title48-chap16.htm",
+              "sourceOrg": "United States Government Publishing Office",
+              "collectedAt": "2026-10-23T10:05:59.116607+00:00",
+              "verifiedAt": "2026-10-23T10:05:59.116607+00:00",
+              "quote": "The Delegate shall be elected at large, by separate ballot, and by a plurality of the votes cast for the office of Delegate."
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-1",
@@ -35,7 +58,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 1 – Manu’a",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 2,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -45,7 +68,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 1 – Manu’a\nFetui F. Fetu Jr.\nMana’oimalo Fa’aaliga Matagi\nPaepaetele Mapu Jamias\nSatia Aokuso Satia\nVala Porotesano Liusamoa"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 1 Composed of Ta’u, Fitiuta and Faleasao: 2 Representatives"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-2",
@@ -54,7 +107,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 2 – Manu’a",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -64,7 +117,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 2 – Manu’a\nNiuatoa Loleni Faiai\nTiaoali’i Fauagiga T. Sai"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 2 Composed of Ofu, Olosega and Sili: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-3",
@@ -73,7 +156,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 3 – Vaifanua",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -83,7 +166,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 3 – Vaifanua\nShaun O. Va’a\nTiapula Dr. Toafa Vaiaga’e"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 3 Vaifanua — Composed of the Villages of Alao, Aoa, Onenoa, Tula and Vatia: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-4",
@@ -92,7 +205,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 4 – Saole",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -102,7 +215,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 4 – Saole\nDr. Va’asa Simanu\nTitiali’i Kitara Vaiau\nVitolio Ioane Lotu"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 4 Saole — Composed of the Villages of Aunuu, Amouli, Utumea and Alofau: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-5",
@@ -111,7 +254,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 5 – Sua #1",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -121,7 +264,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 5 – Sua #1\nLuaitaua Gene Pan\nLynn Nu’uuli Pulou-Alaimalo"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 5 Sua No. 1 — Composed of the Villages of Fagaitua, Amaua, Auto, Avaio, Alega, Aumi and Laulii: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-6",
@@ -130,7 +303,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 6 – Sua #2",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -140,7 +313,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 6 – Sua #2\nAvaolagi Ta’atiatia I.Mata’utia Sua\nMatagaono Vaimaga Maiava"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 6 Sua No. 2 — Composed of the Villages of Sailele, Masausi, Masefau and Afono: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-7",
@@ -149,7 +352,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 7 – Maoputasi #1",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -159,7 +362,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 7 – Maoputasi #1\nVailoata Eteuati Amituanai"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 7 Ma’uputasi Ma’oputasi No. 1 — Composed of the Villages of Fatumafuti, Fagaalu and Utulei: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-8",
@@ -168,7 +401,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 8 – Maoputasi #2",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -178,7 +411,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 8 – Maoputasi #2\nMalaeoletalu Melesio Gurr\nLeiviifiloa Mariota K. Tuiasosopo"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 8 Ma’uputasi Ma’oputasi No. 2 — Composed of the Village of Fagatogo: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-9",
@@ -187,7 +450,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 9 – Maoputasi #3",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -197,7 +460,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 9 – Maoputasi #3\nTrude Gasetotolemasina Ledoux-Sunia"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 9 Ma’uputasi Ma’oputasi No. 3 — Composed of the Village of Pago Pago: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-10",
@@ -206,7 +499,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 10 – Maoputasi #4",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -216,7 +509,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 10 – Maoputasi #4\nSaena Omar Shalhout\nTalali Perry T. Loloaso Wightman-Uia\nTapai Alailepule Ben Vaivao"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 10 Ma’uputasi Ma’oputasi No. 4 — Composed of the Villages of Satala, Atuu and Leloaloa: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-11",
@@ -225,7 +548,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 11 – Maoputasi #5",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -235,7 +558,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 11 – Maoputasi #5\nFaimealelei Anthony Fu’e Allen\nMuaiavaona Fofoga Pila"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 11 Ma’uputasi Ma’oputasi No. 5 — composed of the Village of Aua: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-12",
@@ -244,7 +597,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 12 – Ituau",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 2,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -254,7 +607,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 12 – Ituau\nManumaua Wayne Wilson\nSauasetoa Tautoloitua Soliai Ho Ching"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 12 Ituau — composed of the Villages of Nu’uuli, Fagasa, Matuu, Faganeanea: 2 Representatives"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-13",
@@ -263,7 +646,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 13 – Fofo",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -273,7 +656,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 13 – Fofo\nFiu J. Saelua"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 13 Fofo — composed of the Villages of Leone and Auma: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-14",
@@ -282,7 +695,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 14 – Alataua",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -292,7 +705,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 14 – Alataua\nMona Uli\nSavali Talavou Ale"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 14 Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-15",
@@ -301,7 +744,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 15 – Tualauta",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 2,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -311,7 +754,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 15 – Tualauta\nAlex Sene Jr.\nBen Vaomu Solomona Sauvao\nFagaima Larry Sanitoa\nSefulu Mika Kelemete\nTapusalaia “Tap” Moemalemalo Maneafaiga"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 15 Ma’upu — composed of the Villages of Tafuna, Mesepa; Faleniu, Mapusaga Fou, Pavaiai, Iliili and Vaitogi: 2 Representatives"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-16",
@@ -320,7 +793,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 16 – Tualatai",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -330,7 +803,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 16 – Tualatai\nManavaalofa Tutuila Manase"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 16 Tualatai- composed of the Villages of Futiga, Ituau (Malaeloa), Taputimu and Vailoatai: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         },
         {
           "id": "as-ba01-2026-house-17",
@@ -339,7 +842,7 @@
           "divisionVintage": "2026",
           "title": "House of Representatives, District 17 – Aitulagi/Leasina",
           "type": "CANDIDACY",
-          "voteFor": null,
+          "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
           "candidateListComplete": true,
@@ -349,7 +852,37 @@
             "collectedAt": "2026-10-21T00:34:11.037319+00:00",
             "verifiedAt": "2026-10-21T00:34:11.037319+00:00",
             "quote": "House of Representatives, District 17 – Aitulagi/Leasina\nApe Mike Asifoa\nFuasali’i I. Iose"
-          }
+          },
+          "voteForSources": [
+            {
+              "sourceUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+              "sourceOrg": "American Samoa Election Office",
+              "collectedAt": "2026-10-23T09:42:12.395646+00:00",
+              "verifiedAt": "2026-10-23T09:42:12.395646+00:00",
+              "quote": "The Commissioner of Elections has certified the following candidates for the Midterm Election scheduled for November 3, 2026."
+            },
+            {
+              "sourceUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+              "sourceOrg": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+              "collectedAt": "2026-10-23T10:01:55.075130+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.075130+00:00",
+              "quote": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+            },
+            {
+              "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+              "sourceOrg": "Office of the Governor of American Samoa, submitted to the U.S. House of Representatives",
+              "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+              "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+              "quote": "Representative District No. 17 Leasina ma Aitulagi — composed of the Villages of Aitulagi (Malaeloa), Aoloau and Asu: 1 Representative"
+            },
+            {
+              "sourceUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+              "sourceOrg": "Office of Congresswoman Uifa’atali Amata",
+              "collectedAt": "2026-10-23T10:03:19.399181+00:00",
+              "verifiedAt": "2026-10-23T10:03:19.399181+00:00",
+              "quote": "The amendments are already approved by the people of American Samoa"
+            }
+          ]
         }
       ],
       "candidacies": [
@@ -1105,16 +1638,774 @@
       "measures": [],
       "absences": [],
       "coverageNotes": [
-        "The Election Office certified list verifies the delegate and all 17 numbered House contests. We are working on official sample ballots, ballot questions and voting instructions."
+        "The Election Office certified list verifies the delegate and all 17 numbered House contests. Voting limits follow the official ballot rule and constitutional seats for each certified district.",
+        "The official constitutional district table connects the named villages to all 17 House electorates. ZIP 96799 reaches every district; an address narrows the ballot."
       ],
-      "districtMemberships": [],
+      "districtMemberships": [
+        {
+          "id": "as-ba02--county-manu-a-district-place-ta-u-county-to-house-1",
+          "memberOcdId": "ocd-division/country:us/territory:as/county:manu_a_district/place:ta_u_county",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:1",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 1 | Composed of Ta’u, Fitiuta and Faleasao: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--county-manu-a-district-place-fitiuta-county-to-house-1",
+          "memberOcdId": "ocd-division/country:us/territory:as/county:manu_a_district/place:fitiuta_county",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:1",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 1 | Composed of Ta’u, Fitiuta and Faleasao: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--county-manu-a-district-place-faleasao-county-to-house-1",
+          "memberOcdId": "ocd-division/country:us/territory:as/county:manu_a_district/place:faleasao_county",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:1",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 1 | Composed of Ta’u, Fitiuta and Faleasao: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-ofu-to-house-2",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:ofu",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:2",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 2 | Composed of Ofu, Olosega and Sili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-olosega-to-house-2",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:olosega",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:2",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 2 | Composed of Ofu, Olosega and Sili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-sili-to-house-2",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:sili",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:2",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 2 | Composed of Ofu, Olosega and Sili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-alao-to-house-3",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:alao",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:3",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 3 | Vaifanua — Composed of the Villages of Alao, Aoa, Onenoa, Tula and Vatia: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-aoa-to-house-3",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:aoa",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:3",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 3 | Vaifanua — Composed of the Villages of Alao, Aoa, Onenoa, Tula and Vatia: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-onenoa-to-house-3",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:onenoa",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:3",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 3 | Vaifanua — Composed of the Villages of Alao, Aoa, Onenoa, Tula and Vatia: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-tula-to-house-3",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:tula",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:3",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 3 | Vaifanua — Composed of the Villages of Alao, Aoa, Onenoa, Tula and Vatia: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-vatia-to-house-3",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:vatia",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:3",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 3 | Vaifanua — Composed of the Villages of Alao, Aoa, Onenoa, Tula and Vatia: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-aunu-u-to-house-4",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:aunu_u",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:4",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 4 | Saole — Composed of the Villages of Aunuu, Amouli, Utumea and Alofau: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-amouli-to-house-4",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:amouli",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:4",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 4 | Saole — Composed of the Villages of Aunuu, Amouli, Utumea and Alofau: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-alofau-to-house-4",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:alofau",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:4",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 4 | Saole — Composed of the Villages of Aunuu, Amouli, Utumea and Alofau: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-faga-itua-to-house-5",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:faga_itua",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:5",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 5 | Sua No. 1 — Composed of the Villages of Fagaitua, Amaua, Auto, Avaio, Alega, Aumi and Laulii: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-amaua-to-house-5",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:amaua",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:5",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 5 | Sua No. 1 — Composed of the Villages of Fagaitua, Amaua, Auto, Avaio, Alega, Aumi and Laulii: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-auto-to-house-5",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:auto",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:5",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 5 | Sua No. 1 — Composed of the Villages of Fagaitua, Amaua, Auto, Avaio, Alega, Aumi and Laulii: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-avaio-to-house-5",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:avaio",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:5",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 5 | Sua No. 1 — Composed of the Villages of Fagaitua, Amaua, Auto, Avaio, Alega, Aumi and Laulii: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-alega-to-house-5",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:alega",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:5",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 5 | Sua No. 1 — Composed of the Villages of Fagaitua, Amaua, Auto, Avaio, Alega, Aumi and Laulii: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-aumi-to-house-5",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:aumi",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:5",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 5 | Sua No. 1 — Composed of the Villages of Fagaitua, Amaua, Auto, Avaio, Alega, Aumi and Laulii: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-lauli-i-to-house-5",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:lauli_i",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:5",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 5 | Sua No. 1 — Composed of the Villages of Fagaitua, Amaua, Auto, Avaio, Alega, Aumi and Laulii: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-sa-ilele-to-house-6",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:sa_ilele",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:6",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 6 | Sua No. 2 — Composed of the Villages of Sailele, Masausi, Masefau and Afono: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-masausi-to-house-6",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:masausi",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:6",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 6 | Sua No. 2 — Composed of the Villages of Sailele, Masausi, Masefau and Afono: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-masefau-to-house-6",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:masefau",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:6",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 6 | Sua No. 2 — Composed of the Villages of Sailele, Masausi, Masefau and Afono: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-afono-to-house-6",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:afono",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:6",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 6 | Sua No. 2 — Composed of the Villages of Sailele, Masausi, Masefau and Afono: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-fatumafuti-to-house-7",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:fatumafuti",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:7",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 7 | Ma’uputasi Ma’oputasi No. 1 — Composed of the Villages of Fatumafuti, Fagaalu and Utulei: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-faga-alu-to-house-7",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:faga_alu",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:7",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 7 | Ma’uputasi Ma’oputasi No. 1 — Composed of the Villages of Fatumafuti, Fagaalu and Utulei: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-utulei-to-house-7",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:utulei",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:7",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 7 | Ma’uputasi Ma’oputasi No. 1 — Composed of the Villages of Fatumafuti, Fagaalu and Utulei: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-fagatogo-to-house-8",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:fagatogo",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:8",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 8 | Ma’uputasi Ma’oputasi No. 2 — Composed of the Village of Fagatogo: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-pago-pago-to-house-9",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:pago_pago",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:9",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 9 | Ma’uputasi Ma’oputasi No. 3 — Composed of the Village of Pago Pago: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-satala-to-house-10",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:satala",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:10",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 10 | Ma’uputasi Ma’oputasi No. 4 — Composed of the Villages of Satala, Atuu and Leloaloa: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-atu-u-to-house-10",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:atu_u",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:10",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 10 | Ma’uputasi Ma’oputasi No. 4 — Composed of the Villages of Satala, Atuu and Leloaloa: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-leloaloa-to-house-10",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:leloaloa",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:10",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 10 | Ma’uputasi Ma’oputasi No. 4 — Composed of the Villages of Satala, Atuu and Leloaloa: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-aua-to-house-11",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:aua",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:11",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 11 | Ma’uputasi Ma’oputasi No. 5 — composed of the Village of Aua: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-nu-uuli-to-house-12",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:nu_uuli",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:12",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 12 | Ituau — composed of the Villages of Nu’uuli, Fagasa, Matuu, Faganeanea: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-fagasa-to-house-12",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:fagasa",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:12",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 12 | Ituau — composed of the Villages of Nu’uuli, Fagasa, Matuu, Faganeanea: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-matu-u-to-house-12",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:matu_u",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:12",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 12 | Ituau — composed of the Villages of Nu’uuli, Fagasa, Matuu, Faganeanea: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-faganeanea-to-house-12",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:faganeanea",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:12",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 12 | Ituau — composed of the Villages of Nu’uuli, Fagasa, Matuu, Faganeanea: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-leone-to-house-13",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:leone",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:13",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 13 | Fofo — composed of the Villages of Leone and Auma: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-auma-to-house-13",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:auma",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:13",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 13 | Fofo — composed of the Villages of Leone and Auma: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-fagamalo-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:fagamalo",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-fagali-i-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:fagali_i",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-poloa-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:poloa",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-amanave-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:amanave",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-failolo-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:failolo",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-se-etaga-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:se_etaga",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-nua-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:nua",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-afao-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:afao",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-amaluia-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:amaluia",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-asili-to-house-14",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:asili",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:14",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 14 | Lealataua — composed of the Villages of Fagamalo, Fagalii, Poloa, Amanave, Failolo, Agagulu Seetaga, Nua, Atauloma, Afao, Amaluia and Asili: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-tafuna-to-house-15",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:tafuna",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:15",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 15 | Ma’upu — composed of the Villages of Tafuna, Mesepa; Faleniu, Mapusaga Fou, Pavaiai, Iliili and Vaitogi: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-mesepa-to-house-15",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:mesepa",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:15",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 15 | Ma’upu — composed of the Villages of Tafuna, Mesepa; Faleniu, Mapusaga Fou, Pavaiai, Iliili and Vaitogi: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-faleniu-to-house-15",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:faleniu",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:15",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 15 | Ma’upu — composed of the Villages of Tafuna, Mesepa; Faleniu, Mapusaga Fou, Pavaiai, Iliili and Vaitogi: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-mapusagafou-to-house-15",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:mapusagafou",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:15",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 15 | Ma’upu — composed of the Villages of Tafuna, Mesepa; Faleniu, Mapusaga Fou, Pavaiai, Iliili and Vaitogi: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-pava-ia-i-to-house-15",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:pava_ia_i",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:15",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 15 | Ma’upu — composed of the Villages of Tafuna, Mesepa; Faleniu, Mapusaga Fou, Pavaiai, Iliili and Vaitogi: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-ili-ili-to-house-15",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:ili_ili",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:15",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 15 | Ma’upu — composed of the Villages of Tafuna, Mesepa; Faleniu, Mapusaga Fou, Pavaiai, Iliili and Vaitogi: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-vaitogi-to-house-15",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:vaitogi",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:15",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 15 | Ma’upu — composed of the Villages of Tafuna, Mesepa; Faleniu, Mapusaga Fou, Pavaiai, Iliili and Vaitogi: 2 Representatives"
+          }
+        },
+        {
+          "id": "as-ba02--place-futiga-to-house-16",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:futiga",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:16",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 16 | Tualatai- composed of the Villages of Futiga, Ituau (Malaeloa), Taputimu and Vailoatai: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-taputimu-to-house-16",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:taputimu",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:16",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 16 | Tualatai- composed of the Villages of Futiga, Ituau (Malaeloa), Taputimu and Vailoatai: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-vailoatai-to-house-16",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:vailoatai",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:16",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 16 | Tualatai- composed of the Villages of Futiga, Ituau (Malaeloa), Taputimu and Vailoatai: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-aoloau-to-house-17",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:aoloau",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:17",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 17 | Leasina ma Aitulagi — composed of the Villages of Aitulagi (Malaeloa), Aoloau and Asu: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-malaeloa-ituau-to-house-16",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:malaeloa_ituau",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:16",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 16 | Tualatai- composed of the Villages of Futiga, Ituau (Malaeloa), Taputimu and Vailoatai: 1 Representative"
+          }
+        },
+        {
+          "id": "as-ba02--place-malaeloa-aitulagi-to-house-17",
+          "memberOcdId": "ocd-division/country:us/territory:as/place:malaeloa_aitulagi",
+          "districtOcdId": "ocd-division/country:us/territory:as/sldl:17",
+          "provenance": {
+            "sourceUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+            "sourceOrg": "American Samoa Governor, certified constitutional text filed with the U.S. House",
+            "collectedAt": "2026-10-23T10:01:55.972306+00:00",
+            "verifiedAt": "2026-10-23T10:01:55.972306+00:00",
+            "quote": "Representative District No. 17 | Leasina ma Aitulagi — composed of the Villages of Aitulagi (Malaeloa), Aoloau and Asu: 1 Representative"
+          }
+        }
+      ],
       "candidateTickets": []
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:34:11.037319+00:00",
-    "reviewedBy": "Codex BA-01 official territorial lists and specimens",
+    "reviewedAt": "2026-10-23T10:05:59.116607+00:00",
+    "reviewedBy": "BA-02 current certified roster joined to official ballot rule and constitutional seats",
     "sources": [
       {
         "requestedUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
@@ -1125,7 +2416,59 @@
         "publisher": "American Samoa Election Office",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewOutcome": "SUPPORTED",
-        "reviewedEvidence": "The Commissioner of Elections expressly certifies every listed candidate for the Midterm Election scheduled November 3, 2026. The saved HTML parser checks six congressional delegate names, all 17 numbered House districts and all 38 House names. No party labels or vote limits are printed; those fields remain null uniformly."
+        "reviewedEvidence": "The Commissioner of Elections certifies six delegate names and all 38 House names in 17 numbered districts for November 3, 2026. Each name is joined to its exact certified office; voting limits attach from the saved ballot rule, single-delegate statute and constitutional seat table. Unprinted party labels remain null."
+      },
+      {
+        "requestedUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+        "finalUrl": "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+        "retrievedAt": "2026-10-23T09:42:12.395646+00:00",
+        "httpStatus": 200,
+        "rawHash": "435147b4e5e90e755c2c8d1efea27e5b7dfc55e911215f34ef68e778fd61070c",
+        "publisher": "American Samoa Election Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "The Commissioner of Elections certifies six delegate names and all 38 House names in 17 numbered districts for November 3, 2026. Each name is joined to its exact certified office; voting limits attach from the saved ballot rule, single-delegate statute and constitutional seat table. Unprinted party labels remain null."
+      },
+      {
+        "requestedUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+        "finalUrl": "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+        "retrievedAt": "2026-10-23T10:01:55.075130+00:00",
+        "httpStatus": 200,
+        "rawHash": "29c42d304f0d139ed0fc8a11ef498b5a88ba777a7dc924aafc61463abd511862",
+        "publisher": "American Samoa Code Annotated, reproduced by the International Labour Organization",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available."
+      },
+      {
+        "requestedUrl": "https://www.govinfo.gov/content/pkg/USCODE-2024-title48/html/USCODE-2024-title48-chap16.htm",
+        "finalUrl": "https://www.govinfo.gov/content/pkg/USCODE-2024-title48/html/USCODE-2024-title48-chap16.htm",
+        "retrievedAt": "2026-10-23T10:05:59.116607+00:00",
+        "httpStatus": 200,
+        "rawHash": "8617af0ebb3c195f62f396bbd20c02945e2c174a9a75ec68e13ec6dfeea4c04e",
+        "publisher": "United States Government Publishing Office",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "The Delegate shall be elected at large, by separate ballot, and by a plurality of the votes cast for the office of Delegate."
+      },
+      {
+        "requestedUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+        "finalUrl": "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+        "retrievedAt": "2026-10-23T10:01:55.972306+00:00",
+        "httpStatus": 200,
+        "rawHash": "2ebc433efa453b88a624eb19b0b4c1a6aed8c6e1b44b0d753e99c115589f609e",
+        "publisher": "American Samoa Governor; U.S. House of Representatives",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Governor's certified results enclosure: first constitutional district table only, incorporating the five voter-approved amendments, printed pages 7–9. Exact named villages/counties join existing Census divisions; proposed amendments later in the file are excluded."
+      },
+      {
+        "requestedUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+        "finalUrl": "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony",
+        "retrievedAt": "2026-10-23T10:03:19.399181+00:00",
+        "httpStatus": 200,
+        "rawHash": "743058a6441af799a8935ddd9da7c8c8efbe722ec645bce560e3cc130e3ba474",
+        "publisher": "Office of U.S. Representative Aumua Amata",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "January 16, 2025 official announcement confirms the approved constitutional amendments took effect. Geographic allocations in the first certified text remain unchanged."
       }
     ]
   }

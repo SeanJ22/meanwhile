@@ -287,6 +287,8 @@ export function classifyProviderFailure(error: unknown): {
         ? error.status
         : null;
   const condition = error instanceof Error ? error.message : String(error);
+  const usageLimit = /You have reached your specified workspace API usage limits\.?(?: You will regain access on \d{4}-\d{2}-\d{2} at \d{2}:\d{2} UTC\.?)?/i.exec(condition);
+  if (usageLimit) return { class: "HARD", condition: usageLimit[0], status };
   const hardWords = /payment required|payment failure|quota (?:is )?exhausted|exhausted quota|transfer (?:allowance )?exhausted|billing restriction|account restriction|billing disabled|insufficient credits?/i;
   if (status === 402 || hardWords.test(condition)) return { class: "HARD", condition, status };
   if (status === 429 || (status !== null && status >= 500) || /timeout|timed out|network|econnreset|eai_again|fetch failed/i.test(condition)) {

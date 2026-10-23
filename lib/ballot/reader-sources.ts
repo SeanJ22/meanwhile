@@ -53,7 +53,13 @@ export async function readerBallotSourcesForDivisions(divisions: readonly string
   electionDivisions?: (election: BallotSet["election"], districtFamilies: readonly string[]) => Promise<readonly string[]>): Promise<readonly RegisteredBallotSource[]> {
   const states = ballotStatesForDivisions(divisions);
   if (!states.length) return [];
-  const translationsRead = readTranslations(divisions, options).catch(() => []);
+  // ZIP holdings can name only counties and districts. Statewide measures still
+  // appear on those ballots, so read their state's explainers too.
+  const translationDivisions = divisions.flatMap(division => {
+    const state = /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}(?=\/|$)/.exec(division)?.[0];
+    return state ? [division, state] : [];
+  });
+  const translationsRead = readTranslations(translationDivisions, options).catch(() => []);
   const rows = await Promise.all(states.map(async state => {
     try {
       const read = await readGenericBallotProjection(state, options);

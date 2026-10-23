@@ -36,7 +36,7 @@ export function withMeasureTranslations(ballot: BallotSet, records: readonly Tra
     const analysis = ballot.measureAnalyses?.analyses.find(row => row.contestId === contest.id);
     // These are the sources the existing ballot card links. Keep the explainer
     // attached to the exact contest and a source readers can follow there.
-    const sources = new Set([prior?.sourceUrl, measure?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance?.sourceUrl].filter(Boolean));
+    const sources = new Set([contest.measureTextUrl, prior?.sourceUrl, measure?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance?.sourceUrl].filter(Boolean));
     // A page found on the election office's own site is not linked by the ballot card. Its saved text
     // must name this exact measure, as it had to when the explainer was written and checked.
     const names = measureLabels({ title: contest.title, questionText: measure?.questionText, officialNumber: measure?.officialNumber, analysisText: analysis?.text });

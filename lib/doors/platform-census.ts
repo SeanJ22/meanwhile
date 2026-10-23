@@ -4,6 +4,7 @@ import { meetingPartitionId } from "../meetings/body-scope.ts";
 import { wiringRowFor } from "../control-plane/discovery/derived-wiring.ts";
 import type { MeetingBodyCrosswalkRow } from "../civic-data/meeting-body-crosswalk.ts";
 import { doorsFromWiringRow } from "./seed-meetings.ts";
+import type { RecordProjection } from "../control-plane/repository/types.ts";
 import { isDoorRecord, upsertDerivedDoor, type DoorDraft, type DoorRepository, type DoorRecord, type DoorConfigValue } from "./registry.ts";
 
 /** Acquisition selectors, not discovery metadata or output labels, identify a calendar. */
@@ -73,9 +74,22 @@ export function handWiredDoorFor(door: DoorShape, handWired: readonly DoorRecord
     (name !== null && tenant !== null && boardName(held.config) === name && tenantOf(held) === tenant))) ?? null;
 }
 
+/** Only identity and matching fields leave the store; page captures and adapter payloads stay there. */
+export const CENSUS_DOOR_MATCH_FIELDS = {
+  formatVersion: true, doorId: true, kind: true, bodyIds: true, hosts: true, status: true, updatedAt: true,
+  meeting: ["family"], config: ["crosswalkRowId", "bodyName", "insiteBodyName", "eventBodyName", "slug", "insiteHost"],
+} as const satisfies RecordProjection;
+
+async function censusDoorMatches(repo: DoorRepository) {
+  const rows = (await Promise.all(["OPEN", "SHUT"].map(status =>
+    repo.listWhereNarrowed(["status"], status, CENSUS_DOOR_MATCH_FIELDS)))).flat();
+  return rows.filter((row): row is typeof row & { value: DoorRecord } => isDoorRecord(row.value))
+    .sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+}
+
 /** Census doors that copy a hand-wired door are set aside, so each board is read once. Returns the doors set aside. */
 export async function retireCensusDuplicates(repo: DoorRepository, at: string): Promise<string[]> {
-  const rows = (await repo.list()).filter(row => isDoorRecord(row.value));
+  const rows = await censusDoorMatches(repo);
   const handWired = rows.map(row => row.value).filter(handWiredMeetingDoor);
   const retired: string[] = [];
   for (const row of rows) {
@@ -83,8 +97,12 @@ export async function retireCensusDuplicates(repo: DoorRepository, at: string): 
     if (door.config.crosswalkRowId === undefined || door.status === "SUSPENDED" || door.meeting == null) continue;
     const held = handWiredDoorFor(door, handWired);
     if (held === null) continue;
-    await repo.compareAndSet(row.id, row.revision, { ...door, status: "SUSPENDED", readNow: false,
-      notes: `This board is read through ${held.doorId}`, updatedAt: at }, at);
+    const current = await repo.mustRead(row.id);
+    if (current.value.config.crosswalkRowId === undefined || current.value.status === "SUSPENDED" || current.value.meeting == null) continue;
+    const currentHeld = handWiredDoorFor(current.value, handWired);
+    if (currentHeld === null) continue;
+    await repo.compareAndSet(row.id, current.revision, { ...current.value, status: "SUSPENDED", readNow: false,
+      notes: `This board is read through ${currentHeld.doorId}`, updatedAt: at }, at);
     retired.push(row.id);
   }
   return retired;
@@ -92,7 +110,7 @@ export async function retireCensusDuplicates(repo: DoorRepository, at: string): 
 
 export async function openPlatformMeetingDoors(repo: DoorRepository, rows: readonly MeetingBodyCrosswalkRow[], at: string) {
   const opened: string[] = [], seen = new Set<string>();
-  const handWired = rows.length ? (await repo.list()).map(row => row.value).filter(value => isDoorRecord(value) && handWiredMeetingDoor(value)) : [];
+  const handWired = rows.length ? (await censusDoorMatches(repo)).map(row => row.value).filter(handWiredMeetingDoor) : [];
   for (const row of rows) for (const proposed of platformMeetingDoor(row)) {
     if (handWiredDoorFor(proposed, handWired)) continue;
     const legacy = await repo.read(legacyPlatformDoorId(proposed));

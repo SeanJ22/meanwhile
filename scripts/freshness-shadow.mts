@@ -4,11 +4,11 @@ import { readPlannerMeetingBodies } from "../lib/civic-data/planner-meeting-stat
 import { plannerMeetingOwnership } from "../lib/civic-data/planner-ownership-state-read.ts";
 import { refreshPlannerDoorsForPass } from "../lib/civic-data/planner-door-state-read.ts";
 import { readPlannerRoutineClock } from "../lib/civic-data/planner-clock-state-read.ts";
-import { summarizePlanningRound, mergeStatePlanningPass, type StatePlanningSummary, PLANNING_STATES, stateDispatchTarget, planningStateArg, planningStateOf, runStateControlBackfill, runStatePlanningRound } from "../lib/control-plane/scheduler/state-planning.ts";
+import { summarizePlanningRound, mergeStatePlanningPass, STATE_PLANNING_WALK_MS, type StatePlanningSummary, PLANNING_STATES, stateDispatchTarget, planningStateArg, planningStateOf, runStateControlBackfill, runStatePlanningRound } from "../lib/control-plane/scheduler/state-planning.ts";
 import { fork } from "node:child_process";
 import { applyHuntOrders, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
 import { backfillBox } from "../lib/control-plane/box.ts";
-import { readMaterializedPlanningIds, readPlanningIntents, deactivateUnfundedHunts } from "../lib/control-plane/repository/pg-store.ts";
+import { readMaterializedPlanningIds, readPlanningIntents, readPlanningStateOrder, deactivateUnfundedHunts } from "../lib/control-plane/repository/pg-store.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { loadCandidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment-loader.ts";
 import { huntPacketsProvider } from "../lib/control-plane/scheduler/providers/hunt-packets.ts";
@@ -443,12 +443,12 @@ if(STATE===null) {
       void cleanup.then(()=>resolve(code===0 && summaries.has(state)),reject);
     });
   });
-  const states=IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))]:PLANNING_STATES;
+  const states=await readPlanningStateOrder(parentRepos, IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))]:PLANNING_STATES);
   let result=await runStatePlanningRound(runState,states);
   if(!releaseDrainRequested && !filteredCycle && parentRepos.planningControls)for(;;) {
     const pending=(await parentRepos.planningControls.pendingStates()).filter(state=>!result.failed.includes(state));
     if(!pending.length)break;
-    const extra=await runStatePlanningRound(runState,pending);
+    const extra=await runStatePlanningRound(runState,await readPlanningStateOrder(parentRepos,pending));
     result={...result,failed:[...result.failed,...extra.failed]};
   }
   if(!dry && !filteredCycle)for(const intent of readIntents(roundIntents).pendingDispatch) {
@@ -1739,7 +1739,7 @@ const writeHunterLaneReading = (): void => {
 writeHunterLaneReading();
 const spacer = serializeHostSpacing(hostSpacer());
 
-const dispatchDeadlineMs = Date.now() + 15 * 60_000;
+const dispatchDeadlineMs = Date.now() + STATE_PLANNING_WALK_MS;
 
 const reportedHostSlots = reportingWorkerSlots(hostWorkerSlots);
 const workerSlots = { acquire: (entry?: string, deadlineMs = dispatchDeadlineMs) =>
@@ -1968,7 +1968,7 @@ const simulated: RunWork = async ({ executor, routeTaskId }) => ({
 const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecutor => {
   const route = registry.routeFor(obligation.obligation.id);
   if (!dry) return routeProcessExecutor({ root: ROOT, postgres: true,
-    route, slots: workerSlots, spaceOut: spacer, vault: vault.put,
+    route, deadlineMs: dispatchDeadlineMs, slots: workerSlots, spaceOut: spacer, vault: vault.put,
     openOne: fleetSafety.guardedOpenOne("public-web", obligation.obligation.id),
     onStarted: pid => console.log(`  route lease worker process: pid ${pid}; ${obligation.obligation.id}`) });
   return {
@@ -2042,6 +2042,32 @@ const routeUrl = (obligationId: string): string | null => {
   const open = registry.routeFor(obligationId)?.open;
   return open && (open.kind === "HTTP_GET" || open.kind === "HTTP_POST") ? open.url : null;
 };
+const discoveryMaintenance = !dry && !canary ? Promise.all([(async () => {
+  const leads = await pending.step("leads:test", () => runLeadsPass({ repos,
+    get: guardedLeadGet(fleetSafety),
+    now: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)),
+    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
+    deadlineMs: Math.min(dispatchDeadlineMs, Date.now() + LEADS_PASS_BUDGET_MS) })).catch((error: unknown) => {
+    runtimeConditions.push(`the owner's research leads were not tested this round: ${error instanceof Error ? error.message : String(error)}`);
+    return null;
+  });
+  if (leads && leads.orders > 0) {
+    console.log(`  research leads: ${leads.tested} tested across ${leads.orders} order(s): ${leads.works} work, ${leads.paid} sent to paid work, ${leads.failed} failed, ${leads.waiting} waiting; ${leads.lessons} lesson(s) saved` +
+      (leads.lessonError ? `; lessons not saved (${leads.lessonError})` : ""));
+  }
+
+})(), (async () => {
+  const spread = await pending.step("methods:spread", () => runSpreadPass({ repos, now: nowIso(), deadlineMs: dispatchDeadlineMs,
+    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
+    paidTriesLeft: guards.paidWorkerCapacity(), fetch: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor: websiteSize }), sizeFor: websiteSize })).catch((error: unknown) => {
+    runtimeConditions.push(`working methods were not tried elsewhere: ${error instanceof Error ? error.message : String(error)}`);
+    return null;
+  });
+  if (spread && spread.methods > 0) console.log(`  spread: ${spreadLine(spread)}`);
+  if (spread?.writeError) runtimeConditions.push(`the spread's results were not all recorded: ${spread.writeError}`);
+
+})()]) : Promise.resolve();
+
 const cycle = await runCycle({
   repos,
   recoveryRepos,
@@ -2068,7 +2094,9 @@ const cycle = await runCycle({
   settledOccurrences,
   onRecoveryComplete: () => finishPhase("lease-and-completion-recovery"),
   skipReclaim: canary,
-  admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id, routeUrl(row.obligation.id)),
+  admitDispatch: (row) => releaseDrainRequested || Date.now() >= dispatchDeadlineMs
+    ? { admit: false, code: "WALL_CLOCK_CEILING", why: "This state yielded its source walks; saved links remain owed to its next turn." }
+    : fleetSafety.admitDispatch(row.obligation.id, routeUrl(row.obligation.id)),
   providerLimitOf: (row) => {
     const url = routeUrl(row.obligation.id);
     if (url === null) return null;
@@ -2127,31 +2155,7 @@ for (const row of cycle.deferred) {
   );
 }
 
-if (!dry && !canary) {
-  const leads = await pending.step("leads:test", () => runLeadsPass({ repos,
-    get: guardedLeadGet(fleetSafety),
-    now: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)),
-    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
-    deadlineMs: Date.now() + LEADS_PASS_BUDGET_MS })).catch((error: unknown) => {
-    runtimeConditions.push(`the owner's research leads were not tested this round: ${error instanceof Error ? error.message : String(error)}`);
-    return null;
-  });
-  if (leads && leads.orders > 0) {
-    console.log(`  research leads: ${leads.tested} tested across ${leads.orders} order(s): ${leads.works} work, ${leads.paid} sent to paid work, ${leads.failed} failed, ${leads.waiting} waiting; ${leads.lessons} lesson(s) saved` +
-      (leads.lessonError ? `; lessons not saved (${leads.lessonError})` : ""));
-  }
-}
-
-if (!dry && !canary) {
-  const spread = await pending.step("methods:spread", () => runSpreadPass({ repos, now: nowIso(),
-    sendPlaceIds: sentMoneyPlaces({ areas: expansionBudget?.gate.armedReading().scopes ?? null, sends: assignmentMembers }),
-    paidTriesLeft: guards.paidWorkerCapacity(), fetch: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor: websiteSize }), sizeFor: websiteSize })).catch((error: unknown) => {
-    runtimeConditions.push(`working methods were not tried elsewhere: ${error instanceof Error ? error.message : String(error)}`);
-    return null;
-  });
-  if (spread && spread.methods > 0) console.log(`  spread: ${spreadLine(spread)}`);
-  if (spread?.writeError) runtimeConditions.push(`the spread's results were not all recorded: ${spread.writeError}`);
-}
+await discoveryMaintenance;
 
 await nextDuePersistence;
 

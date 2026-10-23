@@ -67,6 +67,7 @@ export async function runHourlyProbes(
   hotPartitions: ReadonlySet<string>,
   fetchFn: ProbeFetch,
   now: string,
+  deadlineMs = Number.POSITIVE_INFINITY,
 ): Promise<ProbeRunReport> {
   const plan = planProbes(doors, hotPartitions, now);
   const byUrl = new Map<string, Promise<ProbeResult>>();
@@ -77,7 +78,9 @@ export async function runHourlyProbes(
   let failed = 0;
   let waiting = 0;
   let requests = 0;
+  let deferred = plan.deferred;
   for (const door of plan.doors) {
+    if (Date.now() >= deadlineMs) { deferred += plan.doors.length - plan.doors.indexOf(door); break; }
     const url = probeUrlFor(door)!;
     if (!byUrl.has(url)) byUrl.set(url, firstLook(url, door.validators, fetchFn, now));
     const result = await byUrl.get(url)!;
@@ -93,5 +96,5 @@ export async function runHourlyProbes(
     looked += 1;
     await recordProbe(repo, door.doorId, result, now);
   }
-  return { looked, changed, unchanged, failed, waiting, deferred: plan.deferred, requests };
+  return { looked, changed, unchanged, failed, waiting, deferred, requests };
 }

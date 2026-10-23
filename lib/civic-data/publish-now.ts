@@ -155,36 +155,23 @@ export async function readWorkerPublicationItems(
   }
 }
 
-/** Keep only task descriptors across pages; source documents and completion evidence stay with each existing repository page. */
-export async function readPublishNowWorkerTasks(
+/** One completion-evidence read per page serves both fact and contract admission; no whole history is retained. */
+export async function readPublicationAdmission(
   items: readonly WorkerPublicationItem[],
   readCompleted: (workItemIds: readonly string[]) => Promise<readonly WorkerResultRecord[]>,
   now: string,
   heldInputs: HeldInputs | null = null,
-): Promise<RoutineSourceTask[]> {
-  const owed: OwedWorkerPublication[] = [];
+): Promise<{ owed: { rosters: string[]; comments: string[] }; publication: RoutineSourceTask[] }> {
+  const owed = { rosters: [] as string[], comments: [] as string[] }, contracts: OwedWorkerPublication[] = [];
   for (let at = 0; at < items.length; at += AGGREGATE_LIST_READ_PAGE) {
     const page = items.slice(at, at + AGGREGATE_LIST_READ_PAGE);
-    owed.push(...owedWorkerPublications(page, await readCompleted(page.map(item => item.id)), now, heldInputs));
-  }
-  return workerPublicationTasksFor(owed, now);
-}
-
-/** Rosters and comment rules owed publication as facts, read a page of completion evidence at a time. */
-export async function readOwedFactItems(
-  items: readonly WorkerPublicationItem[],
-  readCompleted: (workItemIds: readonly string[]) => Promise<readonly WorkerResultRecord[]>,
-  now: string,
-  heldInputs: HeldInputs | null = null,
-): Promise<{ rosters: string[]; comments: string[] }> {
-  const owed = { rosters: [] as string[], comments: [] as string[] };
-  for (let at = 0; at < items.length; at += AGGREGATE_LIST_READ_PAGE) {
-    const page = items.slice(at, at + AGGREGATE_LIST_READ_PAGE);
-    const found = owedFactItems(page, await readCompleted(page.map(item => item.id)), now, heldInputs);
+    const completed = await readCompleted(page.map(item => item.id));
+    const found = owedFactItems(page, completed, now, heldInputs);
     owed.rosters.push(...found.rosters);
     owed.comments.push(...found.comments);
+    contracts.push(...owedWorkerPublications(page, completed, now, heldInputs));
   }
-  return owed;
+  return { owed, publication: workerPublicationTasksFor(contracts, now) };
 }
 
 export function publishNowDoorTasks(doors: readonly DoorRecord[], tasks: readonly RoutineSourceTask[], now: string): RoutineSourceTask[] {

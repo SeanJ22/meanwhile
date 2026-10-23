@@ -415,3 +415,25 @@ test("THE OLD ROBOTS REFUSALS DO NOT RETURN in production code", () => {
   }
   assert.deepEqual(offenders, []);
 });
+
+test("a planning slice clips each site request to its remaining time and retains the page before yielding", async (t) => {
+  let clock = 1000;
+  t.mock.method(Date, "now", () => clock);
+  const saved: string[] = [], timeouts: number[] = [];
+  const reader = placePageReader({ now: () => "2026-10-23T12:00:00.000Z", workItemId: "slice", attemptId: "slice-attempt", routeId: "own-site-meetings",
+    canRead: () => clock < 1100, endsAt: 1100, spaceOut: async () => {},
+    open: async ({ url, timeoutMs }) => {
+      timeouts.push(timeoutMs);
+      clock += 40;
+      const body = url.endsWith("robots.txt") ? "User-agent: *\nAllow: /" : "<h1>City Council</h1>";
+      return { status: 200, body, bytes: body.length, contentType: "text/html", durationMs: 40, transportError: null };
+    },
+    vault: async (artifact) => { saved.push(artifact.canonicalUrl); return { stored: true, where: artifact.id, why: "saved" }; },
+  });
+  assert.ok(await reader.read("https://example.gov/council"));
+  assert.deepEqual(timeouts, [100, 60]);
+  assert.ok(saved.includes("https://example.gov/council"));
+  clock = 1100;
+  await assert.rejects(reader.read("https://example.gov/next"), /HUNT_WALK_DEFERRED/);
+  assert.equal(timeouts.length, 2, "a later page is left for the next slice without a request");
+});

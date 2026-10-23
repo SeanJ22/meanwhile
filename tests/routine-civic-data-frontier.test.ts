@@ -797,3 +797,20 @@ test("unreceipted meeting retries keep the existing sitting cadence", () => {
   assert.equal(routineTaskDue(task, admission, at, true), false);
   assert.equal(routineTaskDue(task, admission, at + 3_600_000, true), true);
 });
+
+test("56 state tasks get three launch slots per pass: every state within 19 passes, including failed first reads", () => {
+  const states = ROUTINE_SOURCE_TASKS.filter(task => task.recordClass === "REGISTRATION");
+  assert.equal(states.length, 56);
+  for (const baselineOwed of [false, true]) {
+    const last = new Map<string, string>();
+    const launched: string[] = [];
+    for (let pass = 0; pass < 19; pass++) {
+      const at = new Date(Date.parse("2026-10-23T12:00:00.000Z") + pass * 300_000).toISOString();
+      const jobs = states.map(task => ({ task, baselineOwed, lastConsideredAt: last.get(task.id) ?? null }));
+      const chosen = routinePassLaunchOrder(routineFailureDomainFrontier(jobs), Date.parse(at)).slice(0, 3);
+      for (const { task } of chosen) { launched.push(task.id); last.set(task.id, at); }
+    }
+    assert.equal(new Set(launched.slice(0, 56)).size, 56, "no repeat before every state gets its first launch");
+    assert.equal(last.size, 56);
+  }
+});

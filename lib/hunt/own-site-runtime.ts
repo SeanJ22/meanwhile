@@ -28,9 +28,9 @@ import type {SiteScope} from './site-findings.ts';
 /** Links hunters found that go to the front of one walk; the walk's own allowance decides how many it reaches. */
 const HANDED_LINKS_PER_WALK=25;
 export interface HuntSourceScope {jurisdictionId:string;governmentId:string|null;bodyId:string|null;name:string;state:string;website:string;knownOwnSite?:boolean;directorySeeds?:readonly string[];govClass?:string;}
-export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:HuntSourceScope;open:OpenOne;vault:VaultPut;spaceOut:(host:string)=>Promise<void>;now:()=>string;root?:string;query?:Query;readHeld?:(ids:readonly string[])=>Promise<import('./place-plan.ts').PlaceCapture>;canRead?:()=>boolean;prepareBody?:PrepareHuntBody;readHeldPage?:(url:string)=>Promise<import('./site-findings.ts').SitePage|null>;}):RunWork{
+export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:HuntSourceScope;open:OpenOne;vault:VaultPut;spaceOut:(host:string)=>Promise<void>;now:()=>string;root?:string;query?:Query;readHeld?:(ids:readonly string[])=>Promise<import('./place-plan.ts').PlaceCapture>;canRead?:()=>boolean;deadlineMs?:number;prepareBody?:PrepareHuntBody;readHeldPage?:(url:string)=>Promise<import('./site-findings.ts').SitePage|null>;}):RunWork{
  return async (job):Promise<WorkOutcome>=>{
-  const started=Date.now(),canRead=input.canRead??(()=>Date.now()-started<job.bound.maxWallMs);
+  const started=Date.now(),endsAt=Math.min(started+job.bound.maxWallMs,input.deadlineMs??Infinity),canRead=()=>Date.now()<endsAt && (input.canRead?.()??true);
   const selected=input.query ? null : readerQuery();
   const query:Query=input.query??(async(text,params=[])=>{if(!selected)throw new Error('HUNT_READER_DATABASE_UNCONFIGURED');return (await selected([{text,params}]))[0];});
   const reference=input.scope;
@@ -59,7 +59,7 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
     }
     return null;
   };
-  const reader=placePageReader({open:input.open,vault:input.vault,spaceOut:input.spaceOut,now:input.now,attemptId:job.attemptId,workItemId:job.workItemId,routeId:job.obligation.obligation.routeId??'own-site-meetings',canRead,endsAt:started+job.bound.maxWallMs,websiteSize:websiteSizeForObligation(job.obligation.obligation,input.root),
+  const reader=placePageReader({open:input.open,vault:input.vault,spaceOut:input.spaceOut,now:input.now,attemptId:job.attemptId,workItemId:job.workItemId,routeId:job.obligation.obligation.routeId??'own-site-meetings',canRead,endsAt,websiteSize:websiteSizeForObligation(job.obligation.obligation,input.root),
    onArtifact:artifact=>recordArtifactMetadata(input.repos,{...artifact,workItemId:job.workItemId,attemptId:job.attemptId,routeTaskId:job.routeTaskId},input.now()).then(()=>undefined)});
   const readPage=async(url:string)=>{
    job.assertLeaseHealthy?.();

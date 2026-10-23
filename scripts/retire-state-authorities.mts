@@ -7,6 +7,7 @@ import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { temporaryPath } from "../lib/civic-data/temporary-path.ts";
 import { assertRuntimeAuthority, assertRegisteredRuntimeContract } from "../lib/civic-data/runtime-authority.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { requireRegistryState } from "../lib/civic-data/state-scopes.ts";
 import type { StateRetirementOrigin } from "../lib/civic-data/state-retirement-inputs.ts";
 
 try {
@@ -27,7 +28,8 @@ try {
     await client.connect();
     const directory = temporaryPath(resolve(prepare));
     try {
-      const plan = await withRetirementSourceCursor(client, source => prepareRetirementStateInputs({ ...source, directory, origins }));
+      const states = assignment(args, "states")?.split(",").map(requireRegistryState);
+      const plan = await withRetirementSourceCursor(client, source => prepareRetirementStateInputs({ ...source, directory, origins, states }));
       const manifestPath = temporaryPath(join(directory, "manifest.json")), temporary = temporaryPath(`${manifestPath}.${process.pid}.tmp`);
       await writeFile(temporary, JSON.stringify(plan), { mode: 0o600 });
       await rename(temporary, manifestPath);

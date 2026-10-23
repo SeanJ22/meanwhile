@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { PUBLISH_NOW_PASS_BUDGET_MS, publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_PASS_BUDGET_MS, publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublicationAdmission, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../lib/control-plane/repository/pg-store.ts";
 import { owedFactItems, type WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
@@ -92,7 +92,7 @@ test("publication admission reads only the named result page and releases its ev
   }));
   const readIds: string[][] = [];
   let reading = false;
-  const tasks = await readPublishNowWorkerTasks(items, async ids => {
+  const { publication: tasks } = await readPublicationAdmission(items, async ids => {
     assert.equal(reading, false, "one completion evidence page is retained at a time");
     reading = true;
     assert.ok(ids.length <= AGGREGATE_LIST_READ_PAGE);
@@ -184,7 +184,7 @@ test("a held roster or board is read again only once a page for its body is save
   const inputs = { pagesAt: new Map<string, string>(), nationalAt: null, registryAt: null, routesAt: null,
     bodyPagesAt: new Map([["body-roster", "2026-10-05T17:00:00.000Z"], ["body-board", "2026-10-05T18:30:00.000Z"]]) };
   assert.deepEqual(owedFactItems(held, [], later, inputs).rosters, [], "six hours on, but no page saved since: not read");
-  assert.deepEqual((await readPublishNowWorkerTasks(held, async () => [], later, inputs)).map(task => task.id.split(":").at(-1)), ["board"]);
+  assert.deepEqual((await readPublicationAdmission(held, async () => [], later, inputs)).publication.map(task => task.id.split(":").at(-1)), ["board"]);
 
   const seen: { query: string; values: readonly unknown[] }[] = [];
   await readWorkerPublicationItems(async (query, values) => { seen.push({ query, values }); return []; }, ["registry-runtime:AZ"], { at: NOW, sharedInputsMoved: false });

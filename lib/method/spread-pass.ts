@@ -41,6 +41,7 @@ export interface SpreadPassInput {
   /** The free tries' plain fetch (`pacedProbeFetch`): identified, and paced by the one per-website count every reader shares. */
   readonly fetch: ProbeFetch;
   readonly sizeFor?: WebsiteSizeForUrl;
+  readonly deadlineMs?: number;
 }
 
 /** One method's round, for the log: where it could go and what each place came to. */
@@ -121,6 +122,7 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
   };
 
   for (const method of methods) {
+    if (Date.now() >= (input.deadlineMs ?? Infinity)) break;
     const worked = workedIn.get(method.id) ?? "another place";
     const plan = planSpread({
       method: { methodId: method.id, doorKind: method.platforms[0] ?? null, platforms: method.platforms },
@@ -139,6 +141,7 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
       put(untried(method.id, target, SPREAD_ATTEMPT.QUEUED, `Queued: it worked in ${worked}, and this place has ${sameWebsite(target)}; ${why}.`, now));
 
     for (const target of plan.plain) {
+      if (Date.now() >= (input.deadlineMs ?? Infinity)) { waiting += plan.plain.length - plan.plain.indexOf(target); break; }
       const door = doorById.get(target.doorId);
       if (door === undefined) continue;
       if (freeLeft <= 0) {

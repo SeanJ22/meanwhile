@@ -472,7 +472,7 @@ export async function processRegisteredStateRetirementCandidate(
     throw new Error("STATE_RETIREMENT_CURRENT_CHANGED");
   const verification = await verifySourceScopedCandidateProjection(contract, bounded, sourceProjectionObservedAt(store, now), null);
   const outcome = await processRoutineCandidate(store, bounded, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, verification,
-    { retirementAuthority: evidence });
+    { retirementAuthority: evidence, confirmUnchanged: false });
   return appendTypedReaderProjectionReadback(store, contract, outcome, now);
 }
 

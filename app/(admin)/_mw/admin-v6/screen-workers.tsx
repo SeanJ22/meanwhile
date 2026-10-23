@@ -214,15 +214,16 @@ function Reliability() {
   const src = v.data.reliability;
   const rows = src.data ?? [];
   const { page, pager } = usePager(rows, 8);
-  const failing = rows.filter((r) => r.state === "failing").length;
+  const failing = rows.filter((r) => r.state === "failing" || r.state === "waiting").length;
   return (
     <Card title="How reliable our sources are · whole country" aside={<span className={s.meta}>{src.data ? `${count(rows.length)} sources across the country · ${count(failing)} failing now` : "—"}</span>}>
       {src.data && !rows.length && <Empty>No sources</Empty>}
       <div className={s.stack}>
         {page.map((r) => (
           <div key={r.source} className={s.row}>
-            <div className={s.spread}><strong style={{ fontSize: 13 }}>{r.source.replace(/^https?:\/\//, "")}</strong><Pill tone={r.state === "failing" ? "warn" : r.state === "recovering" ? "gold" : "good"}>{r.state === "failing" ? `${r.consecutiveFailures} failed in a row` : r.state === "recovering" ? "Recovered" : "Healthy"}</Pill></div>
-            <span className={s.meta}>{count(r.successes)} worked · {count(r.failures)} failed · last try {when(r.lastAttemptAt)}{r.retryAt ? ` · next try ${when(r.retryAt)}` : ""}</span>
+            <div className={s.spread}><strong style={{ fontSize: 13 }}>{r.quota ? "SAM.gov entities" : r.source.replace(/^https?:\/\//, "")}</strong><Pill tone={r.state === "failing" || r.state === "waiting" ? "warn" : r.state === "healthy" ? "good" : "gold"}>{r.quota ? r.quota.active ? "Waiting for daily reset" : "Reset time passed" : r.state === "failing" ? `${r.consecutiveFailures ?? "—"} failed in a row` : r.state === "recovering" ? "Recovered" : "Healthy"}</Pill></div>
+            {r.quota ? <span className={s.meta}>Daily allowance reached {when(r.quota.checkedAt)} · reset {when(r.quota.retryAt)}{r.quota.active ? ". Requests are paused until then." : ". The next scheduled run can try again."}</span>
+              : <span className={s.meta}>{r.successes === null ? "—" : count(r.successes)} worked · {r.failures === null ? "—" : count(r.failures)} failed · last try {when(r.lastAttemptAt)}{r.retryAt ? ` · next try ${when(r.retryAt)}` : ""}</span>}
             {r.state === "failing" && <span className={s.small}>{r.detail ? r.detail : "—"}</span>}
           </div>
         ))}

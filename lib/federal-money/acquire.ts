@@ -9,6 +9,7 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
 import { FEDERAL_MONEY_STATES } from "./sources.ts";
 import { parseFederalMoney } from "./parse.ts";
+import { recordSamQuotaResponse, requireSamQuotaAvailable } from "./sam-quota.ts";
 import { readFederalMoneyCapture, saveFederalMoneyCapture } from "./vault.ts";
 import { buildFederalBulk, chunkFederalCsvFile, chunkFederalJson, federalBulkCapture, federalBulkId, federalBulkMetadata, saveFederalBulkBytes, stageFederalBulkBytes, vaultFederalBulkBytes, scanFederalJson, federalBulkRangeHeaders, spoolFederalBytes, completedFederalBulkPath, completeFederalBulkState, federalBulkMemory, type FederalBulkContext } from "./bulk.ts";
 import { federalCsvRecords, federalZipBytes, federalZipEntries, FEDERAL_MONEY_CHUNK_ROWS, type FederalZipEntry, type FederalJsonEnvelope } from "./streams.ts";
@@ -44,7 +45,13 @@ function retryDelay(response: Response, attempt: number, now: string): number {
 }
 async function request(ctx: Context, source: FederalMoneySource, url: string, init: RequestInit = {}, pending = false): Promise<Response> {
   for (let attempt = 0; ; attempt++) {
+    if (source === "sam-gov-entities") await requireSamQuotaAvailable(ctx.evidenceStore, ctx.now());
     ctx.signal?.throwIfAborted(); const response = await requestPublisher(source, () => ctx.fetch(url, { ...init, signal: ctx.signal }));
+    if (source === "sam-gov-entities" && !response.ok) {
+      const text = await boundedText(response, 8 * 1024 * 1024); let body: unknown;
+      try { body = JSON.parse(text); } catch { /* A non-JSON refusal follows normal HTTP handling. */ }
+      await recordSamQuotaResponse(ctx.evidenceStore, body, ctx.now(), response.headers.get("retry-after"));
+    }
     if (response.ok || pending && [202, 404].includes(response.status)) return response;
     if ((response.status === 429 || response.status >= 500) && attempt < ctx.retries) { await response.body?.cancel(); await ctx.sleep(retryDelay(response, attempt, ctx.now()), ctx.signal); continue; }
     throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `${source}: the publisher returned HTTP ${response.status}.`);
@@ -59,7 +66,7 @@ async function boundedText(response: Response, limit: number): Promise<string> {
   if (!response.body) return "";
   const reader = response.body.getReader(), buffers: Uint8Array[] = []; let length = 0;
   try { for (;;) { const next = await reader.read(); if (next.done) break; length += next.value.length; if (length > limit) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The publisher control response exceeded its size limit."); buffers.push(next.value); } }
-  finally { await reader.cancel(); }
+  finally { await reader.cancel(); reader.releaseLock(); }
   return Buffer.concat(buffers).toString("utf8");
 }
 function json(body: string): Record<string, unknown> {
@@ -221,11 +228,18 @@ async function sam(ctx: Context, state: string, cursor: FederalMoneyCursor): Pro
     let response = await completedFederalBulkPath(directory) ? new Response() : await request(ctx, "sam-gov-entities", url.href, { headers }), downloadToken: string | null = null, requestUrl = url.href, requestMethod: "GET" | "POST" = "GET";
     for (let pending = 0; ; pending++) {
       ctx.signal?.throwIfAborted();
+      if (response.status === 202) {
+        const text = await boundedText(response, 8 * 1024 * 1024); let body: unknown;
+        try { body = JSON.parse(text); } catch { /* An unfinished extract may return a plain-text notice. */ }
+        await recordSamQuotaResponse(ctx.evidenceStore, body, ctx.now(), response.headers.get("retry-after"));
+      }
       if ([202, 404].includes(response.status)) { await response.body?.cancel(); await ctx.sleep(retryDelay(response, pending, ctx.now()), ctx.signal); response = await request(ctx, "sam-gov-entities", requestUrl, { headers, method: requestMethod }, true); continue; }
       const path = await stageFederalBulkBytes(bulk, response, directory);
       const envelope = await samExtractResponse(bulk, path, key), data = envelope.value ?? {};
+      try { await recordSamQuotaResponse(ctx.evidenceStore, data, ctx.now(), response.headers.get("retry-after")); }
+      catch (error) { await rm(temporaryPath(path)); await rm(temporaryPath(join(directory, "download.state")), { force: true }); throw error; }
       if (envelope.found) {
-        await scanFederalJson(bulk, path, "entityData", [downloadToken ?? ""]);
+        await scanFederalJson(bulk, path, "entityData", [key, downloadToken ?? ""]);
         if (data.links && typeof data.links === "object" && valueString((data.links as Record<string, unknown>).nextLink)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "SAM.gov returned a paginated response to a full-state extract request; the response is incomplete.");
         const total = data.totalRecords ?? data.totalRecordsCount;
         if (typeof total === "number" && total !== envelope.rows) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "SAM.gov: its extract row count did not reconcile; incomplete data was retained for retry.");
@@ -233,6 +247,8 @@ async function sam(ctx: Context, state: string, cursor: FederalMoneyCursor): Pro
         const result = await chunkFederalJson(bulk, directory, state, path, { url: cleanUrl(url.href), format: "json", retrievedAt: ctx.now(), publicationDate: response.headers.get("last-modified"), archiveId }, "entityData");
         await completeFederalBulkState(bulk, directory, state, { count: result.count, archiveId, total: typeof total === "number" ? total : null }); break;
       }
+      const control = JSON.stringify(data);
+      if (control.includes(key) || control.includes(encodeURIComponent(key))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "SAM.gov: its source response echoed a private credential and cannot be saved.");
       const values = [data.downloadURL, data.downloadUrl, data.downloadLink, data.url, data.message, data.detail].filter(value => typeof value === "string").join(" "), rawLink = values.match(/https:\/\/api\.sam\.gov\/[^\s"<>]+/)?.[0];
       await rm(temporaryPath(path)); await rm(temporaryPath(join(directory, "download.state")), { force: true });
       if (!rawLink && /not ready|in progress|being processed|not available|try again/i.test(values)) { await ctx.sleep(retryDelay(response, pending, ctx.now()), ctx.signal); response = await request(ctx, "sam-gov-entities", requestUrl, { headers, method: requestMethod }, true); continue; }
@@ -249,7 +265,7 @@ async function samExtractResponse(bulk: FederalBulkContext, path: string, key: s
   try {
     const prefix = Buffer.alloc(4096), { bytesRead } = await file.read(prefix, 0, prefix.length, 0);
     const start = prefix.subarray(0, bytesRead).toString("utf8").replace(/^\uFEFF/, "").trimStart();
-    if (prefix[0] === 0x1f && prefix[1] === 0x8b || start.startsWith("{") || start.startsWith("[")) return scanFederalJson(bulk, path, "entityData", [key]);
+    if (prefix[0] === 0x1f && prefix[1] === 0x8b || start.startsWith("{") || start.startsWith("[")) return scanFederalJson(bulk, path, "entityData", []);
     if ((await file.stat()).size > 8 * 1024 * 1024) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The publisher control response exceeded its size limit.");
     let notice = new TextDecoder("utf-8", { fatal: true }).decode(await file.readFile());
     if (start.startsWith('"')) {

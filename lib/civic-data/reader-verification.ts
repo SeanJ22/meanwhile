@@ -7,7 +7,7 @@ import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStor
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
-import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
+import type { CandidateEvent, PromotedPointerIdentity, RoutineRecordClass } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
@@ -715,6 +715,13 @@ export async function repairRoutineReaderProjectionReadback(
 ): Promise<ReaderReadbackRepairOutcome> {
   const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
   const inspection = await inspectReaderReadback(store, contract, now, normalizedVerifierCodeSha);
+  return repairInspectedReaderReadback(store, contract, inspection, now, normalizedVerifierCodeSha, options);
+}
+
+async function repairInspectedReaderReadback(
+  store: RoutineDataStore, contract: ReaderContract, inspection: ReaderReadbackInspection, now: string,
+  normalizedVerifierCodeSha: string | null, options: { readonly attestor?: ReaderVerifierClosureAttestor },
+): Promise<ReaderReadbackRepairOutcome> {
   if (inspection.outcome !== null) return inspection.outcome;
   if (inspection.promotion === null) throw new Error(`READER_REPAIR_PROMOTION_MISSING:${contract.id}`);
   if (inspection.attestFrom !== undefined) {
@@ -754,6 +761,57 @@ export type MeetingReaderReadbackRepairResult =
       readonly value: null;
       readonly error: string;
     };
+
+/** One state's bounded contract selection: inspect pointer identities and latest receipts together, then
+ * re-read only the versions that lack a current typed PASS. Actual verification still checks the live pointer. */
+export async function repairRoutineReaderProjectionReadbacks(
+  store: RoutineDataStore, contracts: readonly ReaderContract[], now = new Date().toISOString(),
+  verifierCodeSha: string | null = headSha(), options: { readonly attestor?: ReaderVerifierClosureAttestor;
+    readonly onResult?: (result: MeetingReaderReadbackRepairResult) => void } = {},
+): Promise<readonly MeetingReaderReadbackRepairResult[]> {
+  const normalizedSha = normalizeReaderCodeSha(verifierCodeSha);
+  const groups = new Map<RoutineRecordClass, string[]>();
+  if (new Set(contracts.map(contract => contract.id)).size !== contracts.length) throw new Error("READER_REPAIR_CONTRACT_IDENTITY_DUPLICATE");
+  for (const contract of contracts) {
+    const scopes = groups.get(contract.recordClass) ?? [];
+    scopes.push(contract.scope); groups.set(contract.recordClass, scopes);
+  }
+  const reads = await runBoundedWorkPool([...groups], 4, ([recordClass, scopes]) => store.readPromotionIdentities(recordClass, scopes));
+  const promotions = new Map<string, PromotedPointerIdentity>();
+  const errors = new Map<RoutineRecordClass, string>();
+  for (const read of reads) {
+    if (!read.ok) { errors.set([...groups.keys()][read.index]!, read.error); continue; }
+    for (const pointer of read.value) {
+      if (promotions.has(pointer.key)) throw new Error(`READER_REPAIR_PROMOTION_DUPLICATE:${pointer.key}`);
+      promotions.set(pointer.key, pointer);
+    }
+  }
+  let events: readonly CandidateEvent[] = [], eventError: string | null = null;
+  try { events = await readLatestReaderReadbacks(store, [...new Set([...promotions.values()].map(pointer => pointer.versionId))]); }
+  catch (error) { eventError = sanitizedErrorDiagnostic(error); }
+  const byCandidate = new Map<string, CandidateEvent[]>();
+  for (const event of events) {
+    const rows = byCandidate.get(event.candidateId) ?? [];
+    rows.push(event); byCandidate.set(event.candidateId, rows);
+  }
+  const results: MeetingReaderReadbackRepairResult[] = [];
+  for (const contract of contracts) {
+    try {
+      if (errors.has(contract.recordClass)) throw new Error(errors.get(contract.recordClass));
+      const promotion = promotions.get(`${contract.recordClass}:${contract.scope}`);
+      if (promotion && eventError) throw new Error(eventError);
+      const issue = promotion && promotionIdentityIssue(contract, promotion);
+      if (issue) throw new Error(issue);
+      const inspection = contract.readerProjection === null ? { outcome: { kind: "NOT_APPLICABLE" as const, receipt: null }, promotion: null }
+        : !promotion ? { outcome: { kind: "NO_PROMOTION" as const, receipt: null }, promotion: null }
+        : inspectReaderReadbackEvents(contract, promotion, byCandidate.get(promotion.versionId) ?? [], now, normalizedSha);
+      const value = await repairInspectedReaderReadback(store, contract, inspection, now, normalizedSha, options);
+      results.push({ contractId: contract.id, ok: true, value, error: null });
+    } catch (error) { results.push({ contractId: contract.id, ok: false, value: null, error: sanitizedErrorDiagnostic(error) }); }
+    options.onResult?.(results.at(-1)!);
+  }
+  return results;
+}
 
 export async function repairMeetingReaderProjectionReadbacks(
   store: RoutineDataStore,

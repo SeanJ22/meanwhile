@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { execFileSync } from "node:child_process";
 import test from "node:test";
 import ts from "typescript";
 import { CALENDAR_READ_PEAK_MIB, memoryReading, RESEARCH_PARENT_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, routineProcessSlots,
@@ -119,7 +122,7 @@ test("measured memory is filed by job: every calendar read is one job, a statewi
   assert.equal(workerJobType("national-place:ocd-division/country:us"), null);
 });
 
-test("a state's calendar program is reserved from measured calendar reads, not the statewide bound once measured", async () => {
+test("small calendar runs retain the measured large-state floor and a larger observed program raises it", async () => {
   const host = workerMemoryHost({ processes: () => [] });
   const slots = routineProcessSlots({ host, availableBytes: () => 10000 * mib });
   let release = await slots.acquire("meetings-state:CA/ingest.ts");
@@ -127,8 +130,92 @@ test("a state's calendar program is reserved from measured calendar reads, not t
   release();
   host.transact(state => { state.peaks = { "calendar-read": [400 * mib], "ingest.ts": [3000 * mib] }; }, false);
   release = await slots.acquire("meetings-state:WY/ingest.ts");
-  host.transact(state => assert.equal(state.reservations[0].peak, 420 * mib, "the measured calendar read, 5% over"), false);
+  host.transact(state => assert.equal(state.reservations[0].peak, CALENDAR_READ_PEAK_MIB * mib, "a small state cannot lower the measured California program's floor"), false);
   release();
+  host.transact(state => { state.peaks = { "calendar-read": [1500 * mib] }; }, false);
+  release = await slots.acquire("meetings-state:CA/ingest.ts");
+  host.transact(state => assert.equal(state.reservations[0].peak, 1575 * mib), false);
+  release();
+});
+
+test("memory samples survive a stopped service and pool a new tenant, readback and ZIP by family", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "rn02-worker-memory-"));
+  const path = join(directory, "meanwhile-worker-memory.json");
+  try {
+    // Persisted before release: a stopped service leaves its latest sample behind.
+    const deadPid = 2147483647;
+    writeFileSync(path, JSON.stringify({ parents: [], reservations: [
+      { id: "tenant", owner: deadPid, pid: deadPid, entry: "legistar-members:old/legistar-members-refresh.mts", peak: 512 * mib, measured: 170 * mib },
+      { id: "reader", owner: deadPid, pid: deadPid, entry: "reader-readback:old/routine-civic-data-reader-repair.mts", peak: 342 * mib, measured: 120 * mib },
+      { id: "zip", owner: deadPid, pid: deadPid, entry: "national-place:10001/promote-registry-runtime.mts", peak: 3181 * mib, measured: 900 * mib },
+    ] }));
+    const restarted = workerMemoryHost({ shared: true, directory, processes: () => [] });
+    const slots = routineProcessSlots({ host: restarted, availableBytes: () => 10000 * mib });
+    for (const [entry, expected] of [
+      ["legistar-members:new/legistar-members-refresh.mts", 179],
+      ["reader-readback:new/routine-civic-data-reader-repair.mts", 126],
+      ["national-place:90210/promote-registry-runtime.mts", 1229],
+    ] as const) {
+      const release = await slots.acquire(entry);
+      const stored = JSON.parse(readFileSync(path, "utf8"));
+      assert.equal(stored.reservations.length, 1);
+      assert.equal(stored.reservations[0].peak, expected * mib);
+      release();
+    }
+    const secondRestart = workerMemoryHost({ shared: true, directory, processes: () => [] });
+    await secondRestart.transact(state => assert.deepEqual(state.peaks?.["legistar-members/legistar-members-refresh.mts"], [170 * mib]), false);
+  } finally { rmSync(directory, { recursive: true, force: true }); }
+});
+
+test("observing a running job persists its peak before release even below the original guess", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "rn02-worker-sample-"));
+  const path = join(directory, "meanwhile-worker-memory.json");
+  let release: (() => void) | undefined;
+  try {
+    const host = workerMemoryHost({ shared: true, directory, processes: () => [] });
+    const lease = await routineProcessSlots({ host, availableBytes: () => 10000 * mib }).acquire("legistar-members:running/legistar-members-refresh.mts");
+    release = lease;
+    lease.observe!(process.pid);
+    // The first sample is immediate; allow its asynchronous continuation to persist.
+    await new Promise(resolve => setTimeout(resolve, 30));
+    const stored = JSON.parse(readFileSync(path, "utf8"));
+    assert.ok(stored.reservations[0].measured > 0);
+    assert.equal(stored.reservations[0].pid, process.pid);
+    assert.equal(stored.reservations.length, 1, "the sample is durable while the lease is still held");
+  } finally { release?.(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test("a never-measured ZIP gets the national publication reservation before its state's script fallback", async () => {
+  const host = workerMemoryHost({ processes: () => [] });
+  const release = await routineProcessSlots({ host, availableBytes: () => 10000 * mib }).acquire("national-place:94102/promote-registry-runtime.mts");
+  await host.transact(state => assert.ok(state.reservations[0].peak >= 1.2 * 1024 * mib), false);
+  release();
+});
+
+test("a service process exits without release and the next process recovers its durable sampled peak", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "rn02-service-restart-"));
+  try {
+    execFileSync(process.execPath, ["--experimental-strip-types", "--input-type=module", "-e", `
+      import {workerMemoryHost,routineProcessSlots} from ${JSON.stringify(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url).href)};
+      const host=workerMemoryHost({shared:true,directory:${JSON.stringify(directory)},processes:()=>[]});
+      const release=await routineProcessSlots({host,availableBytes:()=>10000*1024**2}).acquire('legistar-members:before/legistar-members-refresh.mts');
+      release.observe(process.pid);
+      await new Promise(resolve=>setTimeout(resolve,30));
+      process.exit(0);
+    `]);
+    const saved = JSON.parse(readFileSync(join(directory, "meanwhile-worker-memory.json"), "utf8"));
+    const sampled = saved.reservations[0].measured;
+    assert.ok(sampled > 0);
+    const host = workerMemoryHost({ shared: true, directory, processes: () => [] });
+    const release = await routineProcessSlots({ host, availableBytes: () => 10000 * mib })
+      .acquire("legistar-members:after/legistar-members-refresh.mts");
+    await host.transact(state => {
+      assert.deepEqual(state.peaks?.["legistar-members/legistar-members-refresh.mts"], [sampled]);
+      assert.equal(state.reservations[0].peak, Math.ceil(sampled * 1.05 / mib) * mib);
+    }, false);
+    release();
+    assert.match(readFileSync("deploy/runner/meanwhile-runner.service", "utf8"), /Environment=WTP_WORKER_MEMORY_DIRECTORY=\/var\/lib\/meanwhile/);
+  } finally { rmSync(directory, { recursive: true, force: true }); }
 });
 
 test("the runner admits its door-publication and federal-split children through host memory like every source child", () => {

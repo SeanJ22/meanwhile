@@ -134,12 +134,12 @@ export async function refreshGoogleCivic(input: {
       }
     }
     coverage.push(report);
-    const checkedAt = (options.now ?? (() => new Date().toISOString()))();
-    // The only saved Google response is the public elections catalog; probes contribute counts only.
+    const checkedAt = catalog.checkedAt;
+    // The saved Google response is the public elections catalog; probes contribute counts only.
     const marker = await civicCandidate(input.vault, civicStateScope(state), { formatVersion: 1, kind: "STATE", checkedAt, rows: elections, coverage: [report] }, catalog.raw, "elections");
     await processRegisteredFanOutCandidate(input.store, GOOGLE_CIVIC_SOURCE_ID, marker, checkedAt);
   }
-  const checkedAt = (options.now ?? (() => new Date().toISOString()))();
+  const checkedAt = catalog.checkedAt;
   coverage.sort((a, b) => a.state.localeCompare(b.state));
   const candidate = await civicCandidate(input.vault, GOOGLE_CIVIC_SCOPE, { formatVersion: 1, kind: "CATALOG", checkedAt, rows: elections, coverage }, catalog.raw, "elections");
   const outcome = await processRegisteredRoutineCandidate(input.store, GOOGLE_CIVIC_SOURCE_ID, candidate, checkedAt);

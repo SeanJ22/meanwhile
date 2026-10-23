@@ -53,6 +53,7 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import {
   assertSanctionedRuntimeAuthority,
   runtimeAuthorityEnvelope,
+  candidacyRegistryAuthority,
   RuntimeAuthorityRefused,
   type RuntimeAuthorityEnvelope,
 } from "./runtime-authority.ts";
@@ -118,10 +119,6 @@ export interface RoutineDataStore {
   readonly readRegistryDivisions: (state: string, labels: readonly string[]) => Promise<readonly RegistryDivisionMatch[]>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   readonly readCandidateSummary: (candidateId: string) => Promise<CandidateVersionSummary | null>;
-  /** The newest candidate a source wrote for a scope, by acquisition time. */
-  readonly latestCandidate: (sourceId: string, recordClass: RoutineRecordClass, scope: string) => Promise<LatestCandidate | null>;
-  /** A re-read whose values and refusal match this candidate, recorded on it in its own state instead of a new candidate. */
-  readonly recordRecheck: (candidateId: string, at: string, detail: string) => Promise<CandidateEvent>;
   readonly readStateRetirementBaseline?: (recordClass: RoutineRecordClass, scope: string) => Promise<RoutineCandidate["normalization"]["stateRecordHashes"] | null>;
   readonly hasStateRetirementProof?: (contractId: string, origin: NonNullable<RoutineCandidate["stateRetirement"]>["origin"]) => Promise<boolean>;
   readonly readStateRetirementOrigin?: (recordClass: string, scope: string) => Promise<{
@@ -207,14 +204,6 @@ type RegisteredMutationContract = {
   readonly readerProjectionId: string | null;
 };
 
-interface LatestCandidate {
-  readonly id: string;
-  readonly state: CandidateState;
-  readonly normalizedHash: string | null;
-  readonly parserVersion: string;
-  readonly failureCode: string | null;
-}
-
 export type CandidateAuthorityIdentity = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport">;
 
 function registeredMutationContract(
@@ -282,6 +271,7 @@ export function routineDataStoreCandidateAuthorityIssue(
     return !hasAuthorityTransferMarker && contract.kind === "manual" && federalDirectoryStateOf(contract.id) !== null
       ? null : `the national Congress read cannot mutate ${contract.id}`;
   }
+  if (!hasAuthorityTransferMarker && contract.kind === "manual" && candidacyRegistryAuthority(authority, contract.id)) return null;
   const expectedCapability = contract.kind === "manual" ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT";
   if (authority.capability !== expectedCapability) {
     return `contract ${contract.id} requires ${expectedCapability}, not ${authority.capability}`;
@@ -827,22 +817,6 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
     const row = this.candidates.get(candidateId);
     return row ? structuredClone(candidateVersionSummary(row)) : null;
-  }
-
-  async latestCandidate(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<LatestCandidate | null> {
-    const rows = [...this.candidates.values()].filter(row => row.candidate.sourceId === sourceId && row.candidate.recordClass === recordClass && row.candidate.scope === scope);
-    const row = rows.sort((a, b) => b.candidate.retrieval.retrievedAt.localeCompare(a.candidate.retrieval.retrievedAt))[0];
-    return row ? { id: row.candidate.id, state: row.state, normalizedHash: row.candidate.normalization.normalizedHash ?? null,
-      parserVersion: row.candidate.normalization.parserVersion, failureCode: row.failureCode } : null;
-  }
-
-  async recordRecheck(candidateId: string, at: string, detail: string): Promise<CandidateEvent> {
-    const prior = this.candidates.get(candidateId);
-    if (!prior) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
-    const { history, event } = this.nextEvent(candidateId, prior.state, at, detail);
-    history.push(structuredClone(event));
-    this.history.set(candidateId, history);
-    return structuredClone(event);
   }
 
   private pointerRead(recordClass: RoutineRecordClass, scope: string): PromotedProjection | null {
@@ -1847,14 +1821,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     this.assertCandidateMutationAuthority(record.candidate);
     assertInitialRecord(record, firstEvent);
     const stateAuthority = statePublicationScope(record.candidate.scope);
-    const candidate = stateAuthority ? { ...encodeStateCandidate(record.candidate),
+    const meetingDoors = record.candidate.sourceId === "meeting-doors";
+    const candidate = stateAuthority || meetingDoors ? { ...(stateAuthority ? encodeStateCandidate(record.candidate) : record.candidate),
       retrieval: await this.payloadParts.store(record.candidate.retrieval,
         ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "sourceCheck", "failureDetail"]),
     } : record.candidate;
     const navigationIndex = navigationCandidateIndex(record.candidate);
-    const stored = stateAuthority || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
+    const stored = stateAuthority || meetingDoors || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(candidate,
-        ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"], stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
+        ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"],
+        meetingDoors ? ["readModel", "normalizedPayload", "changeSet", "identities"] : stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
       : navigationIndex ? await this.storeNavigationCandidate(record.candidate, navigationIndex) : record.candidate;
     await this.db.batch([
       this.db.insert(civicDataCandidates).values({
@@ -2011,30 +1987,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
     const [row] = await candidateSummaryRead(this.db, candidateId);
     return row ? postgresCandidateSummary(row) : null;
-  }
-
-  async latestCandidate(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<LatestCandidate | null> {
-    const [row] = await this.db.select({ id: civicDataCandidates.id, state: civicDataCandidates.state, normalizedHash: civicDataCandidates.normalizedHash,
-      parserVersion: civicDataCandidates.parserVersion, failureCode: civicDataCandidates.failureCode }).from(civicDataCandidates)
-      .where(and(eq(civicDataCandidates.recordClass, recordClass), eq(civicDataCandidates.scope, scope), eq(civicDataCandidates.sourceId, sourceId)))
-      .orderBy(desc(civicDataCandidates.retrievedAt)).limit(1);
-    return row ? { ...row, state: row.state as CandidateState } : null;
-  }
-
-  async recordRecheck(candidateId: string, at: string, detail: string): Promise<CandidateEvent> {
-    const [row] = await this.db.select({ id: civicDataCandidates.id, sourceId: civicDataCandidates.sourceId, recordClass: civicDataCandidates.recordClass,
-      scope: civicDataCandidates.scope, state: civicDataCandidates.state }).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
-    if (!row) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
-    this.assertCandidateMutationAuthority({ ...row, recordClass: row.recordClass as RoutineRecordClass });
-    const [, eventRows] = await this.db.batch([
-      this.candidateEventLock(candidateId),
-      this.db.insert(civicDataCandidateEvents).select(sql`
-        select gen_random_uuid(), ${candidateId}, ${this.nextCandidateEventSequence(candidateId)}, ${row.state}, ${at}::timestamptz, ${detail}
-        from ${civicDataCandidates} where ${civicDataCandidates.id} = ${candidateId} and ${civicDataCandidates.state} = ${row.state}
-      `).returning(),
-    ]);
-    if (!eventRows[0]) throw new Error(`CANDIDATE_EVIDENCE_STATE_MISMATCH:${candidateId}:${row.state}`);
-    return postgresCandidateEventRowToEvent(eventRows[0]);
   }
 
   async readStateRetirementBaseline(recordClass: RoutineRecordClass, scope: string) {

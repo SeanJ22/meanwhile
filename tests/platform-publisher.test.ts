@@ -8,6 +8,23 @@ import { websiteRequestLimit, websiteSizeFromHoldings } from "../lib/control-pla
 import { memoryWebsitePacing, websiteOf } from "../lib/control-plane/website-pacing.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 import { readCivicPlusGovernment } from "../lib/control-plane/discovery/platform-civicplus.ts";
+import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
+import { retainMeetingFetchBytes } from "../lib/civic-data/retained-meeting-bytes.ts";
+
+test("a platform reader built before acquisition retains the actual response and its source evidence", async () => {
+  const original = globalThis.fetch;
+  const url = "https://school.community.diligentoneplatform.com/Services/MeetingsService.svc/meetings";
+  globalThis.fetch = async () => new Response('[{"Id":161,"Name":"Board meeting"}]', { headers: { "content-type": "application/json" } });
+  try {
+    const read = platformPublisherFetch([{ config: { governmentWebsite: "https://school.k12.de.us", platformPublisherUrl: url } } as unknown as BodySourceWiring])!;
+    const retained = await retainMeetingFetchBytes(() => captureSourceAcquisitions(run => run("diligent", async () => (await read(url)).text())));
+    assert.equal(retained.value.evidence.length, 1);
+    assert.equal(retained.responses.length, 1);
+    assert.equal(retained.value.evidence[0]!.source, "diligent");
+    assert.equal(retained.value.evidence[0]!.rawHash, retained.responses[0]!.rawHash);
+    assert.equal(new TextDecoder().decode(retained.responses[0]!.bytes), retained.value.value);
+  } finally { globalThis.fetch = original; }
+});
 
 test("an ordinary platform door applies its registered small publisher's ten-request allowance without leaking to another government or a national API", async t => {
   const root = mkdtempSync(join(tmpdir(), "mp01-publisher-")); t.after(() => rmSync(root, { recursive: true, force: true }));

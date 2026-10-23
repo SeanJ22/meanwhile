@@ -4,6 +4,7 @@
  * The clock stamps in this file are minted at the moment of the fetch.
  */
 import { createHash } from "node:crypto";
+import { execFile } from "node:child_process";
 
 import { extractHtmlText } from "../extract/html-text.ts";
 export { extractHtmlText } from "../extract/html-text.ts";
@@ -175,29 +176,17 @@ export function contentHashOf(bytes: Uint8Array): string {
 
 /** Extract text from a PDF's bytes. Throws when the file cannot be read. */
 export async function extractPdfText(bytes: Uint8Array): Promise<string> {
-  // Imported lazily so only actual retrieval pays for the PDF engine.
-  const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
-  const doc = await getDocument({
-    data: bytes,
-    // No worker in Node; extraction runs on the main thread.
-    useWorkerFetch: false,
-  }).promise;
-
-  try {
-    const pages: string[] = [];
-    for (let i = 1; i <= doc.numPages; i++) {
-      const page = await doc.getPage(i);
-      const content = await page.getTextContent();
-      pages.push(
-        content.items
-          .map((item) => ("str" in item ? item.str : ""))
-          .join(" "),
-      );
-    }
-    return pages.join("\n").replace(/[ \t]+/g, " ").trim();
-  } finally {
-    await doc.cleanup();
-  }
+  // Poppler is installed with the runner. Its document/font buffers end with this child,
+  // rather than accumulating in a state's long-lived Node calendar process.
+  return new Promise((resolve, reject) => {
+    const child = execFile("pdftotext", ["-enc", "UTF-8", "-layout", "-nopgbrk", "-", "-"],
+      { encoding: "utf8", timeout: 120_000, maxBuffer: 64 * 1024 * 1024 }, (error, stdout) => {
+        if (error) reject(error);
+        else resolve(stdout.replace(/[ \t]+/g, " ").trim());
+      });
+    child.stdin!.on("error", () => { /* An invalid PDF can close stdin before its exit callback. */ });
+    child.stdin!.end(bytes);
+  });
 }
 
 export interface RetrieveOptions {

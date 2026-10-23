@@ -1,11 +1,14 @@
-import { freemem, platform, tmpdir, totalmem } from "node:os";
-import { existsSync, openSync, closeSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { freemem, platform, totalmem, tmpdir } from "node:os";
+import { existsSync, mkdirSync, openSync, closeSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { join } from "node:path";
+import { operationalStatePath } from "../../ops/operational-state-path.ts";
 
 const MIB = 1024 * 1024;
+/** Fixed glibc thresholds release response buffers between reads instead of retaining an adaptive process heap. */
+export const CIVIC_DATA_PROCESS_ENV = { MALLOC_MMAP_THRESHOLD_: "131072", MALLOC_TRIM_THRESHOLD_: "131072" } as const;
 /** Rounded-up measured RSS peaks for a script never measured on this host; a reservation pays only for growth not yet in OS usage. */
 export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 285, scout: 248, lease: 342, national: 1258 };
 /** Rounded up from the ordinary staging research parent's 3,069,235,200-byte peak. */
@@ -42,11 +45,14 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "retire-state-authorities.mts": STATE_PUBLICATION_PEAK_MIB,
 };
 /**
- * One state's calendar program before its own runs are measured on this host: the retained data-worker bound. Every
- * finished program records its measured peak under the calendar-read job, and the largest of its last five runs
- * (5% over) replaces this number, so a single board read and a state's whole list are reserved the same way.
+ * RN-02: 1,136,578,560-byte native California state-program peak, 2026-10-23.
+ * Measured against a production data copy with all 1,402 state contracts handed to scripts/ingest.ts;
+ * summed /proc VmHWM across its process tree every 100 ms until the scheduled pass deadline, including
+ * agenda extraction and native publication. Poppler releases PDF buffers between documents; fixed glibc
+ * thresholds are in CIVIC_DATA_PROCESS_ENV. Reservation is the measured peak plus 5%, rounded up to MiB.
+ * Finished programs retain the largest of their last five host measurements, also with 5% headroom.
  */
-export const CALENDAR_READ_PEAK_MIB = WORKER_ENTRY_PEAK_MIB.national!;
+export const CALENDAR_READ_PEAK_MIB = 1139;
 export const CALENDAR_READ_JOB = "calendar-read";
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
@@ -152,7 +158,7 @@ function alive(pid: number): boolean {
   catch (error) { return (error as NodeJS.ErrnoException).code !== "ESRCH"; }
 }
 
-interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string }
+interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string; measured?: number }
 interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number; entry?: string }[]; peaks?: Record<string, number[]> }
 
 function parentMemoryEntry(): string {
@@ -162,7 +168,7 @@ function parentMemoryEntry(): string {
 }
 
 /** How often a running reserved child's peak is read, and how many recent run peaks set its job's reservation. */
-const PEAK_SAMPLE_MS = 2000;
+const PEAK_SAMPLE_MS = 100;
 const MEASURED_PEAK_RUNS = 5;
 /**
  * The job an entry ("<task id>/<script>") runs, which its measured memory is filed under: every calendar read is one
@@ -175,6 +181,8 @@ export function workerJobType(entry: string): string | null {
   if (!/[.](?:mts|ts|mjs|js)$/.test(script)) return null;
   const task = parts.slice(0, -1).join("/");
   if (/^meetings(?:-state)?:/.test(task)) return CALENDAR_READ_JOB;
+  const pooled = /^(legistar-members|reader-readback|national-place):/.exec(task)?.[1];
+  if (pooled) return `${pooled}/${script}`;
   if (!task) return script;
   const family = task.split(/([-:/])/).map(part => /^[a-z]{2}$/i.test(part) ? "*" : part).join("");
   return `${family}/${script}`;
@@ -182,6 +190,13 @@ export function workerJobType(entry: string): string | null {
 /** The largest recent measured peak, 5% over and rounded up to a whole MiB. */
 function measuredReservationBytes(peaks: readonly number[]): number {
   return Math.ceil(Math.max(...peaks) * 1.05 / MIB) * MIB;
+}
+function retainMeasuredPeak(state: HostState, row: MemoryReservation): void {
+  const key = workerJobType(row.entry);
+  if (key && (row.measured ?? 0) > 0) (state.peaks ??= {})[key] = [...state.peaks[key] ?? [], row.measured!].slice(-MEASURED_PEAK_RUNS);
+}
+function memoryDirectory(): string {
+  return process.env.WTP_WORKER_MEMORY_DIRECTORY ?? (process.env.WTP_RUNTIME_MODE === "production" ? "/var/lib/meanwhile" : join(tmpdir(), "meanwhile-worker-memory"));
 }
 /** Linux high-water RSS of a process and its live descendants; null once the process is gone. */
 async function processTreePeakBytes(root: number): Promise<number | null> {
@@ -201,15 +216,17 @@ export interface WorkerMemoryHost {
 }
 /** Transient host reservations, shared by independent research/routine parents.
  * No work, receipt, spending or publication state is written here. */
-export function workerMemoryHost(input: { readonly shared?: boolean; readonly processes?: () => readonly WorkerProcessMemory[] | PromiseLike<readonly WorkerProcessMemory[]> } = {}): WorkerMemoryHost {
+export function workerMemoryHost(input: { readonly shared?: boolean; readonly directory?: string; readonly processes?: () => readonly WorkerProcessMemory[] | PromiseLike<readonly WorkerProcessMemory[]> } = {}): WorkerMemoryHost {
   let local: HostState = { reservations: [], parents: [] };
   const sample = input.processes ?? hostProcesses;
   const apply = (operation: Parameters<WorkerMemoryHost["transact"]>[0], rows: readonly WorkerProcessMemory[]): boolean => {
-    const path = join(tmpdir(), "meanwhile-worker-memory.json");
-    const lock = join(tmpdir(), "meanwhile-worker-memory.json.lock");
-    const temporary = join(tmpdir(), "meanwhile-worker-memory.json.tmp");
+    const directory = input.directory ?? memoryDirectory();
+    const path = operationalStatePath(join(directory, "meanwhile-worker-memory.json"));
+    const lock = operationalStatePath(join(directory, "meanwhile-worker-memory.json.lock"));
+    const temporary = operationalStatePath(join(directory, "meanwhile-worker-memory.json.tmp"));
     let descriptor: number | undefined;
     if (input.shared) {
+      mkdirSync(operationalStatePath(directory), { recursive: true });
       try { descriptor = openSync(lock, "wx"); writeFileSync(lock, String(process.pid)); }
       catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
@@ -220,9 +237,19 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
     }
     try {
       if (input.shared && existsSync(path)) local = JSON.parse(readFileSync(path, "utf8")) as HostState;
+      for (const [entry, peaks] of Object.entries(local.peaks ?? {})) {
+        const family = workerJobType(entry);
+        if (!family || family === entry) continue;
+        local.peaks![family] = [...local.peaks![family] ?? [], ...peaks].sort((a, b) => b - a).slice(0, MEASURED_PEAK_RUNS);
+        delete local.peaks![entry];
+      }
       // A dead parent cannot retain future growth. A surviving job tree still can.
       local.parents = local.parents.filter(parent => alive(parent.pid));
-      local.reservations = local.reservations.filter(row => alive(row.owner) || (row.pid !== null && alive(row.pid)));
+      local.reservations = local.reservations.filter(row => {
+        if (alive(row.owner) || (row.pid !== null && alive(row.pid))) return true;
+        retainMeasuredPeak(local, row);
+        return false;
+      });
       operation(local, rows);
       if (input.shared) {
         writeFileSync(temporary, JSON.stringify(local)); renameSync(temporary, path);
@@ -276,6 +303,9 @@ function statePublicationPeakBytes(entry: string): number {
 }
 
 function routineMinimumPeakBytes(entry: string): number {
+  // New ZIPs must retain room for the measured 0.87–1.21 GB native publication, including unseen growth.
+  if (entry.startsWith("national-place:")) return Math.ceil(1.2 * 1024) * MIB;
+  if (workerJobType(entry) === CALENDAR_READ_JOB) return CALENDAR_READ_PEAK_MIB * MIB;
   const script = entry.split(/[\\/]/).at(-1)!;
   return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "acs-population-promote.mts"].includes(script)
     ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0);
@@ -285,8 +315,8 @@ export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProce
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     // Recent small-state runs cannot lower the full-state publication reservation.
     minimumPeakBytes: memory.minimumPeakBytes ?? routineMinimumPeakBytes,
-    peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : workerJobType(entry) === CALENDAR_READ_JOB ? CALENDAR_READ_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
-          ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB)) });
+    peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : statePublicationPeakBytes(entry) || (workerJobType(entry) === CALENDAR_READ_JOB ? CALENDAR_READ_PEAK_MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
+          ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!)) * MIB) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
@@ -380,33 +410,35 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           if (index < 0) break;
           const [item] = waiting.splice(index, 1);
           const id = randomUUID();
-          let reserved = reserve(item!.entry);
+          const reserved = reserve(item!.entry);
           if (!inherited) state.reservations.push({ id, owner: process.pid, pid: null, peak: reserved, entry: item!.entry });
           active++;
           let released = false;
           let measured = 0;
           let sampler: ReturnType<typeof setInterval> | undefined;
-          const key = workerJobType(item!.entry);
           const release: WorkerMemoryRelease = Object.assign(() => {
             if (released) return;
             released = true; active--;
             clearInterval(sampler);
             if (!inherited) mutate(state => {
+              const held = state.reservations.find(row => row.id === id);
+              if (held) retainMeasuredPeak(state, { ...held, measured: Math.max(held.measured ?? 0, measured) });
               state.reservations = state.reservations.filter(row => row.id !== id);
-              if (key !== null && measured > 0) (state.peaks ??= {})[key] = [...state.peaks[key] ?? [], measured].slice(-MEASURED_PEAK_RUNS);
             });
             requestDrain();
           }, { observe: (pid: number) => {
             if (released || inherited) return;
             mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) row.pid = pid; });
             if (platform() !== "linux") return;
-            sampler = setInterval(() => void processTreePeakBytes(pid).then(bytes => {
+            const sample = () => void processTreePeakBytes(pid).then(bytes => {
               if (bytes === null || released) { clearInterval(sampler); return; }
               measured = Math.max(measured, bytes);
-              if (bytes <= reserved) return;
-              reserved = bytes;
-              mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) row.peak = Math.max(row.peak, bytes); });
-            }), PEAK_SAMPLE_MS);
+              mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) {
+                row.peak = Math.max(row.peak, bytes); row.measured = Math.max(row.measured ?? 0, bytes);
+              } });
+            });
+            sample();
+            sampler = setInterval(sample, PEAK_SAMPLE_MS);
             sampler.unref();
           } });
           item!.resolve(release);
@@ -510,7 +542,7 @@ export function memoryReading(input: {
 /** The reading for this host, rooted at this process (the runner). Never throws; an unreadable file reads as no reservations. */
 export async function hostMemoryReading(at: string = new Date().toISOString()): Promise<HostMemoryReading> {
   let state: HostState | null = null;
-  try { state = JSON.parse(readFileSync(join(tmpdir(), "meanwhile-worker-memory.json"), "utf8")) as HostState; }
+  try { state = JSON.parse(readFileSync(join(memoryDirectory(), "meanwhile-worker-memory.json"), "utf8")) as HostState; }
   catch { state = null; }
   const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
   return memoryReading({ at, totalBytes: Number.isFinite(hostMiB) && hostMiB > 0 ? hostMiB * MIB : totalmem(),

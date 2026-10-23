@@ -14,7 +14,7 @@ import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
-import { installMeetingReaderRepairSelection } from "../lib/civic-data/reader-repair-protocol.ts";
+import { installMeetingPartitionSelection } from "../lib/civic-data/reader-repair-protocol.ts";
 import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
 import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -455,7 +455,7 @@ test("a parent-selected meeting partition is checked from its handed snapshot af
   try {
     installFixtureDoors(FIXTURE_DOOR_ROWS.filter(row => row.bodyId !== snapshot.bodyId));
     assert.equal(MEETING_PARTITION_CONTRACTS.some(partition => partition.id === snapshot.id), false);
-    installMeetingReaderRepairSelection([snapshot]);
+    installMeetingPartitionSelection([snapshot]);
     assert.deepEqual(MEETING_PARTITION_CONTRACTS.map(partition => partition.id), [snapshot.id]);
     store.reset();
     const [repair] = await repairMeetingReaderProjectionReadbacks(store, [snapshot], SECOND, "f".repeat(40));

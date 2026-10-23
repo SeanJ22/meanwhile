@@ -1,10 +1,12 @@
 import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
+import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { pathToFileURL } from "node:url";
 import { readFile } from "node:fs/promises";
 import { withRetainedSourceResponse } from "./lib/retained-source-replay.ts";
 
 import {
   agendaDocumentStore,
+  canonicalAgendaDocument,
   retrieveAgendaDocument,
   AgendaDocumentStore,
   type AgendaDocument,
@@ -25,7 +27,6 @@ import {
 } from "../lib/meetings/attribution.ts";
 import { agendaItems } from "../lib/routing/agenda-search.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
-import { ROUTINE_SAME_DOMAIN_CHILD_GAP_MS } from "../lib/civic-data/bounded-child-pass.ts";
 import { calendarReadOrder } from "../lib/civic-data/state-calendars.ts";
 import { readContractHandoff } from "../lib/civic-data/contract-handoff.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
@@ -77,9 +78,10 @@ import { makeLegistarSource } from "../lib/sources/legistar/index.ts";
 import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { activeWiring, installMeetingDoors, isUnreadableRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
-import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
-import { installDoorRecords } from "../lib/doors/meeting-doors.ts";
+import { ensureMeetingDoors, installDoorRecords, installMeetingWiring } from "../lib/doors/meeting-doors.ts";
 import { isDoorRecord, type DoorRecord } from "../lib/doors/registry.ts";
+import { hostsOfConfig } from "../lib/doors/seed-meetings.ts";
+import { installMeetingPartitionSelection } from "../lib/civic-data/reader-repair-protocol.ts";
 import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
@@ -158,7 +160,12 @@ export function selectedMeetingPartitions(args: readonly string[]): readonly Mee
     .map((arg) => arg.slice("--only-partition=".length));
   const handed = args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg));
   if (handed && flags.length > 0) throw new Error("MEETING_PARTITION_SELECTION_AMBIGUOUS");
-  const requested = handed ? readContractHandoff<string>(args) : flags;
+  if (handed) {
+    const contracts = readContractHandoff<MeetingPartitionContract>(args);
+    installMeetingPartitionSelection(contracts);
+    return contracts;
+  }
+  const requested = flags;
   if (requested.length === 0 || requested.some((id) => typeof id !== "string" || !id)) throw new Error("MEETING_PARTITION_REQUIRED");
   if (new Set(requested).size !== requested.length) throw new Error("MEETING_PARTITION_NAMED_TWICE");
   return requested.map((id) => {
@@ -674,10 +681,10 @@ export async function promoteDerivedMeetingFamily(
     await publishVenuePins(store, partition.id, census.package);
     for (const read of facts ? reads.filter(row => row.ok) : []) {
       await publishPartitionFacts({ ...facts!, responses: retaining.responses }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
-        read.freshMeetings, read.acquisitions, candidate.id, generatedAt);
+        read.freshMeetings, read.acquisitions, outcome.candidate.candidate.id, generatedAt);
     }
   }
-  console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
+  console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: outcome.candidate.candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
     retainedFromPrior: retained.filter((meeting, index) => meeting !== cited[index]).length,
     held: census.held.length, decision: outcome.candidate.receipt?.decision ?? null,
@@ -823,7 +830,8 @@ async function executeMeetingIngest(args: readonly string[], options: MeetingIng
   const diagnosticState = name === "composite" ? null : requireRegistryState(
     args.find(argument => argument.startsWith("--state="))?.slice("--state=".length) ?? (() => { throw new Error("INGEST_STATE_REQUIRED"); })(),
   );
-  if (!options.partition) {
+  const handed = process.argv.some(arg => arg.startsWith("--contracts-file="));
+  if (!options.partition && !handed) {
     const doors = await ensureMeetingDoors();
     if (!doors.ready) console.error(`meeting doors: ${doors.reason}`);
   }
@@ -838,6 +846,13 @@ async function executeMeetingIngest(args: readonly string[], options: MeetingIng
     : [diagnosticState!];
   if (selectedStates.length !== 1) throw new Error("INGEST_EXACT_STATE_REQUIRED");
   const state = selectedStates[0]!;
+  if (handed) {
+    const wiring = partitions.flatMap(partition => partition.wiring ? [partition.wiring] : []);
+    installMeetingWiring(wiring, [...new Set(partitions.flatMap(partition => [
+      partition.acquisitionFailureDomain.replace(/^meeting-upstream:/, "").split("/")[0]!,
+      ...(partition.wiring ? hostsOfConfig(partition.wiring.config, [partition.wiring.noticeUrl]) : []),
+    ]))]);
+  }
   return withRegistryRuntimeStates([state], async () => {
     if (name !== "composite") {
       await preloadCanonicalMeetingDependencies({ sourceName: name, state });
@@ -868,16 +883,14 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
   };
   const results: MeetingIngestResult[] = [];
   const lastStartMs = passDeadlineFromEnv() - STANDING_PARTITION_ACQUISITION_TIMEOUT_MS;
-  const lastEnded = new Map<string, number>();
   const ordered = calendarReadOrder(partitions);
   for (const [index, partition] of ordered.entries()) {
-    const gapEndsMs = (lastEnded.get(partition.acquisitionFailureDomain) ?? Number.NEGATIVE_INFINITY) + ROUTINE_SAME_DOMAIN_CHILD_GAP_MS;
-    if (Math.max(Date.now(), gapEndsMs) >= lastStartMs) {
+    if (Date.now() >= lastStartMs) {
       for (const owed of ordered.slice(index)) console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: owed.id })}`);
       break;
     }
-    if (gapEndsMs > Date.now()) await new Promise(resolve => setTimeout(resolve, gapEndsMs - Date.now()));
     agendaDocumentStore.clear();
+    clearPromotedReadModelCache();
     try {
       if (partition.derivedFamily !== null) {
         const outcome = await promoteDerivedMeetingFamily(store, partition, prepare,
@@ -896,7 +909,6 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
       console.log(`RCD_MEETING_PARTITION_UNREAD=${JSON.stringify({ partitionId: partition.id,
         detail: (error instanceof Error ? error.stack ?? error.message : String(error)).split("\n").slice(0, 8).join(" | ") })}`);
     }
-    lastEnded.set(partition.acquisitionFailureDomain, Date.now());
     console.log("RCD_PROGRESS=" + JSON.stringify({ key: partition.id, records: 1 }));
   }
   if (results.length === 1 && partitions.length === 1) return results[0]!;
@@ -1509,6 +1521,7 @@ export async function promoteMeetingPartition(
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
 }> {
+  snapshot = { ...snapshot, agendaDocuments: snapshot.agendaDocuments.map(canonicalAgendaDocument) };
   validateSnapshot(snapshot);
   const base = candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence, heldFacts);
   const clocked = sourceResponse ? { ...base, retrieval: { ...base.retrieval, retrievedAt: sourceResponse.retrievedAt,
@@ -1716,7 +1729,7 @@ export async function promoteMeetingPartitions(input: {
     );
     if (outcome.promoted || outcome.confirmed) {
       await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
-      if (input.facts) await publishPartitionFacts(input.facts, partition.id, partition.meetingSource, freshRows, report.acquisitions ?? [], candidate.id, input.generatedAt);
+      if (input.facts) await publishPartitionFacts(input.facts, partition.id, partition.meetingSource, freshRows, report.acquisitions ?? [], outcome.candidate.candidate.id, input.generatedAt);
     }
     results.push({ partition, candidate, outcome });
   }

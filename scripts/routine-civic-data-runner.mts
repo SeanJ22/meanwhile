@@ -72,6 +72,7 @@ import {
 } from "../lib/civic-data/runner.ts";
 import {
   MEETING_PARTITION_CONTRACTS,
+  meetingPartitionContract,
   observableRoutineContracts,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partitions.ts";
@@ -147,6 +148,7 @@ import {
   parseRoutineReaderRepairRecords,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
+  readerRepairDomainPhases,
   selectedReaderRepairContracts,
   type RoutineReaderRepairDomain,
 } from "../lib/civic-data/reader-repair-protocol.ts";
@@ -180,7 +182,7 @@ import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
-import { routineProcessSlots, type WorkerMemoryOrder } from "../lib/control-plane/workers/worker-slots.ts";
+import { CIVIC_DATA_PROCESS_ENV, routineProcessSlots, type WorkerMemoryOrder } from "../lib/control-plane/workers/worker-slots.ts";
 import { publishStateGeometry } from "../lib/geo/state-geometry.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
@@ -1184,16 +1186,26 @@ function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
       env: withPassDeadline({ ...admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "MANUAL_CONTRACT", contract: unit.id, parentPid: process.pid }),
         ...stateCalendarEnvironment(unit.members) }, PASS_LAUNCH_DEADLINE_MS) };
   }
-  if (unit.kind !== "STATE_CALENDARS") return sourceChildCommand(unit);
-  const handoff = writeContractHandoff(unit.members.map(member => member.id));
+  if (unit.kind !== "STATE_CALENDARS" && unit.kind !== "MEETING_PARTITION") return sourceChildCommand(unit);
+  const members = unit.kind === "STATE_CALENDARS" ? unit.members : [unit];
+  const handoff = writeContractHandoff(members.map(member => {
+    const partition = meetingPartitionContract(member.id);
+    if (!partition) throw new Error(`MEETING_PARTITION_NOT_REGISTERED:${member.id}`);
+    return partition;
+  }));
   sourceHandoffs.set(unit.id, handoff);
+  if (unit.kind !== "STATE_CALENDARS") {
+    const command = sourceChildCommand(unit);
+    return { ...command, args: [...command.args.filter(arg => !arg.startsWith("--only-partition=")), ...handoff.args],
+      env: { ...command.env, NODE_ENV: command.env?.NODE_ENV ?? process.env.NODE_ENV, ...CIVIC_DATA_PROCESS_ENV } };
+  }
   return {
     id: unit.id,
     failureDomain: unit.id,
     executable: process.execPath,
     args: [...TS_CHILD, ...unit.command.filter(arg => !arg.startsWith("--only-partition=")), ...handoff.args],
     env: withPassDeadline({ ...admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "STATE_CALENDARS", contract: unit.id, parentPid: process.pid }),
-      ...stateCalendarEnvironment(unit.members) },
+      ...CIVIC_DATA_PROCESS_ENV, ...stateCalendarEnvironment(unit.members) },
       PASS_LAUNCH_DEADLINE_MS),
     ...(meetingReadQuietMs() !== undefined ? { timeoutMs: meetingReadQuietMs()! } : {}),
   };
@@ -1275,7 +1287,7 @@ async function settleStateCalendars(group: StateCalendarGroup<PendingRun>, run: 
 
 async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): Promise<void> {
   try { await settlePendingRunResult(pending, run); }
-  finally { releaseChildMemory(run.id); }
+  finally { releaseChildMemory(run.id); sourceHandoffs.get(run.id)?.cleanup(); sourceHandoffs.delete(run.id); }
 }
 
 async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResult): Promise<void> {
@@ -1310,6 +1322,12 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     return;
   }
   const output = `${run.stdout}\n${run.stderr}`;
+  if (pending.kind === "MEETING_PARTITION" && run.errorMessage?.startsWith("MEETING_PARTITION_READ_FAILED:")) {
+    const detail = safeFailure(run.errorMessage.slice("MEETING_PARTITION_READ_FAILED:".length));
+    supervisorFailures.push({ taskId: pending.id, code: "MEETING_PARTITION_READ_FAILED", detail });
+    await recordTaskDoorOutcome(pending.id, "FAILURE");
+    return;
+  }
   const executionFailure = boundedExecutionFailure(run);
 
   if (pending.kind === "MEETING_PARTITION") {
@@ -1527,34 +1545,37 @@ const repairingContractIds = new Set<string>();
 
 function startReaderRepair(
   sourceRuns: readonly BoundedChildResult[],
+  launch: readonly RoutineReaderRepairDomain[] = readerLaunch,
 ): { readonly repair: Promise<readonly BoundedChildResult[]>; readonly unblocked: Promise<void> } {
   recordSourceSettlementFailures(sourceRuns);
   step = "running the Reader readbacks";
   const readerObservedAt = new Date().toISOString();
-  for (const domain of readerLaunch.filter(domain => repairDomainRacesHotReads(domain, hotReadTaskIds))) {
+  for (const domain of launch.filter(domain => repairDomainRacesHotReads(domain, hotReadTaskIds))) {
     for (const contract of domain.contracts) repairingContractIds.add(contract.id);
   }
   const handoffs = new Map<string, ReturnType<typeof writeContractHandoff>>();
   const readerPass = runBoundedChildPass(
-    readerLaunch.map((domain) => {
-      const handoff = domain.mode === "MEETING_AGGREGATE" ? writeContractHandoff(domain.contracts) : null;
+    launch.map((domain) => {
+      const handoff = domain.mode === "MEETING_AGGREGATE" ? writeContractHandoff(domain.contracts)
+        : writeContractHandoff(domain.contracts.map(contract => contract.id));
       if (handoff) handoffs.set(domain.id, handoff);
       return {
       id: domain.id,
       executable: process.execPath,
       args: [
         ...TS_CHILD,
+        "--expose-gc",
         "scripts/routine-civic-data-reader-repair.mts",
-        domain.mode === "MEETING_AGGREGATE" ? "--meeting-aggregate" : `--contract=${domain.contracts[0]!.id}`,
+        domain.mode === "MEETING_AGGREGATE" ? "--meeting-aggregate" : "--contract-batch",
         ...(handoff?.args ?? []),
         `--observed-at=${readerObservedAt}`,
       ],
       timeoutMs: domain.timeoutMs,
-      env: admittedRuntimeChildEnvironment({
+      env: { ...admittedRuntimeChildEnvironment({
         parentEnv: process.env,
         capability: "ROUTINE_SUPERVISOR",
         parentPid: process.pid,
-      }),
+      }), ...CIVIC_DATA_PROCESS_ENV },
     }; }),
     {
       cwd: ROOT,
@@ -1565,10 +1586,10 @@ function startReaderRepair(
       concurrency: ROUTINE_READER_CHILD_CONCURRENCY,
       onStarting: async (command) => {
         if (Date.now() >= PASS_REPAIR_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent; the next pass repairs this reader");
-        await acquireChildMemory(command);
+        await acquireChildMemory(command, [command.id], { priority: -1 });
       },
       onSettled: (run, index) => {
-        const domain = readerLaunch[index]!;
+        const domain = launch[index]!;
         try {
           settleReaderDomain(domain, run);
         } finally {
@@ -1581,7 +1602,7 @@ function startReaderRepair(
     },
   ).finally(() => {
     for (const handoff of handoffs.values()) handoff.cleanup();
-    repairingContractIds.clear();
+    for (const domain of launch) for (const contract of domain.contracts) repairingContractIds.delete(contract.id);
   });
   return { repair: readerPass, unblocked: Promise.resolve() };
 }
@@ -1636,7 +1657,7 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
       `concurrency=${HOT_READ_CATCH_UP_CONCURRENCY}`,
   );
   const readDeadlineMs = Math.min(hotReadLimitsMs.REPAIR, atMs + HOT_READ_CATCH_UP_READ_BUDGET_MS);
-  const command = sourceChildCommand(run);
+  const command = sourceUnitCommand(run);
   recordSourceSettlementFailures(await runBoundedChildPass([{
     ...command,
     env: withPassDeadline(command.env ?? process.env, readDeadlineMs),
@@ -1657,9 +1678,16 @@ const factMaintenance = !PUBLISH_NOW && ONLY === null
   ? runFactMaintenance(Math.min(PASS_REPAIR_DEADLINE_MS, Date.now() + 60_000)).catch(error => {
     supervisorFailures.push({ taskId: "fact-maintenance", code: "FACT_MAINTENANCE_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }) : Promise.resolve();
+// A source child can change only its registered pointer. Repair every other pointer while sources run;
+// repairs of those source pointers wait for settlement, so they cannot race that publication.
+const readerPhases = readerRepairDomainPhases(readerLaunch, pendingRuns.map(run => run.task));
+const earlyReaderRepair = startReaderRepair([], readerPhases.early);
 const pass = await runRoutinePassWithHotReadCatchUp({
   source: sourcePass,
-  startRepair: startReaderRepair,
+  startRepair: runs => {
+    const late = startReaderRepair(runs, readerPhases.late);
+    return { repair: Promise.all([earlyReaderRepair.repair, late.repair]).then(results => results.flat()), unblocked: late.unblocked };
+  },
   now: () => Date.now(),
 
   sleepUntil: (atMs) => new Promise<void>((resolve) => { setTimeout(resolve, Math.max(0, atMs - Date.now())).unref(); }),

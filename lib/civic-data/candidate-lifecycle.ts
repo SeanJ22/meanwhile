@@ -1,4 +1,5 @@
 import { statePublicationPriorOf } from "./state-publication.ts";
+import { randomUUID } from "node:crypto";
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
 import { PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
@@ -14,6 +15,18 @@ import { navigationBaseProjection, type NavigationComparison } from "./navigatio
 function failureOf(receipt: NonNullable<CandidateVersionRecord["receipt"]>): { code: string; detail: string } {
   const check = receipt.checks.find((item) => item.verdict !== "PASS");
   return { code: check?.code ?? "VALIDATION_REFUSED", detail: check?.detail ?? "Candidate did not satisfy the GOOD contract." };
+}
+
+function duplicateCandidate(error: unknown, id: string): boolean {
+  if (error instanceof Error && error.message === `CANDIDATE_ALREADY_EXISTS:${id}`) return true;
+  const seen = new Set<unknown>();
+  for (let cause = error; cause && typeof cause === "object" && !seen.has(cause);) {
+    seen.add(cause);
+    const row = cause as { code?: string; constraint?: string; cause?: unknown; sourceError?: unknown };
+    if (row.code === "23505" && row.constraint === "civic_data_candidates_pkey") return true;
+    cause = row.cause ?? row.sourceError;
+  }
+  return false;
 }
 
 
@@ -219,16 +232,8 @@ export async function processRoutineCandidate(
     validationLkg = null;
     current = null;
   }
-  // A re-read refused for the same reason with the same extracted values as the newest candidate writes no new one.
-  const refusal = candidate.retrieval.succeeded && validated.state !== "VALIDATED" ? failureOf(validated.receipt) : null;
-  const latest = refusal ? await store.latestCandidate(candidate.sourceId, candidate.recordClass, candidate.scope) : null;
-  if (refusal && latest && latest.id !== observedBaseVersionId && latest.failureCode === refusal.code &&
-    latest.normalizedHash === candidate.normalization.normalizedHash && latest.parserVersion === candidate.normalization.parserVersion) {
-    await store.recordRecheck(latest.id, transitionAt, `RECHECKED_UNCHANGED: read ${candidate.retrieval.retrievedAt} (${candidate.id}); the same values meet the same refusal, ${refusal.code}.`);
-    return { candidate: (await store.readCandidate(latest.id))!, promoted: null, readerReadback: null };
-  }
   const acquisitionFailure = candidate.retrieval.succeeded ? null : failureOf(validated.receipt);
-  await store.create({
+  try { await store.create({
     candidate,
     state: initialState,
     acquisitionSucceeded: candidate.retrieval.succeeded,
@@ -243,7 +248,14 @@ export async function processRoutineCandidate(
     state: initialState,
     at: transitionAt,
     detail: candidate.retrieval.succeeded ? `Acquired raw ${candidate.retrieval.rawHash}.` : (candidate.retrieval.failureDetail ?? "Source route blocked."),
-  });
+  }); } catch (error) {
+    if (!duplicateCandidate(error, candidate.id) || inputCandidate.retryOfCandidateId) throw error;
+    const priorAttempt = await store.readCandidateSummary(candidate.id);
+    if (!priorAttempt || priorAttempt.candidate.sourceId !== candidate.sourceId ||
+      priorAttempt.candidate.recordClass !== candidate.recordClass || priorAttempt.candidate.scope !== candidate.scope) throw error;
+    return processRoutineCandidate(store, { ...inputCandidate, id: `cv-${randomUUID().replaceAll("-", "")}`,
+      retryOfCandidateId: candidate.id }, transitionAt, expectedBaseVersionId, registeredDoor, sourceProjectionVerification, options);
+  }
 
   if (!candidate.retrieval.succeeded) {
     return { candidate: (await store.readCandidate(candidate.id))!, promoted: null, readerReadback: null };

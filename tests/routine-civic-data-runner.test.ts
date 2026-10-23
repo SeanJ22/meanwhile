@@ -241,7 +241,7 @@ test("the server catch-up child, inherited acquisition and memory lease share th
     console: { log: () => {} }, HOT_READ_CATCH_UP_CONCURRENCY: 2, HOT_READ_CATCH_UP_READ_BUDGET_MS,
     hotReadLimitsMs: { REPAIR: repairDeadlineMs }, ROOT: process.cwd(), process,
     ROUTINE_CHILD_TIMEOUT_MS: 30 * 60_000, ROUTINE_CHILD_MAX_BUFFER_BYTES: 1_024,
-    withPassDeadline, sourceChildCommand: () => ({ id: task.id, args: [], executable: process.execPath, env: { SOURCE: "fixture" } }),
+    withPassDeadline, sourceUnitCommand: () => ({ id: task.id, args: [], executable: process.execPath, env: { SOURCE: "fixture" } }),
     recordSourceSettlementFailures: () => {}, settlePendingRun: () => {},
     acquireChildMemory: async (_command: unknown, _ids: readonly string[], deadline: number) => { memoryDeadlines.push(deadline); },
     runBoundedChildPass: async (commands: readonly { env: NodeJS.ProcessEnv }[], options: {
@@ -429,13 +429,14 @@ import {
   runBoundedChildPass,
   type BoundedChildResult,
 } from "../lib/civic-data/bounded-child-pass.ts";
-import { repairRoutineReaderProjectionReadback } from "../lib/civic-data/reader-verification.ts";
+import { repairRoutineReaderProjectionReadback, repairRoutineReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
 import {
   ROUTINE_READER_CHILD_CONCURRENCY,
   ROUTINE_READER_MEETING_TIMEOUT_MS,
   ROUTINE_READER_SINGLE_TIMEOUT_MS,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
+  readerRepairDomainPhases,
   selectedReaderRepairContracts,
 } from "../lib/civic-data/reader-repair-protocol.ts";
 import {
@@ -868,8 +869,8 @@ test("the source pass queues all ready commands and memory admits four measured 
     id: `national-place:${index}`, executable: "ignored", args: [] as string[],
   }));
   const mib = 1024 * 1024;
-  const memory = routineProcessSlots({ availableBytes: () => (4 * 999 + 768) * mib,
-    peakBytes: () => 999 * mib });
+  const memory = routineProcessSlots({ availableBytes: () => (4 * 1300 + 768) * mib,
+    peakBytes: () => 1300 * mib });
   const releases = new Map<string, () => void>();
   const launched: string[] = [];
   let active = 0, peakActive = 0;
@@ -1400,6 +1401,38 @@ test("a killed Reader child is an exact delivery repair fault and cannot mutate 
   assert.deepEqual(await store.events(candidateId), before.events);
 });
 
+test("state readback batches keep exact results and tomorrow's current receipts need no payload reads", async () => {
+  const store = new MemoryRoutineDataStore();
+  const fec = observableRoutineContracts().find(contract => contract.id === "fec-funding")!;
+  const unpromoted = observableRoutineContracts().find(contract => contract.id === "dotgov")!;
+  await processRegisteredRoutineCandidate(store, fec.id, sourceGoodCandidate(), T0);
+  const sha = "c".repeat(40), emitted: string[] = [];
+  const first = await repairRoutineReaderProjectionReadbacks(store, [fec, unpromoted], T0, sha,
+    { onResult: result => emitted.push(result.contractId) });
+  assert.deepEqual(emitted, [fec.id, unpromoted.id]);
+  assert.deepEqual(first.map(result => result.ok ? [result.contractId, result.value.kind, result.value.receipt?.status] : result.error),
+    [[fec.id, "RECORDED", "PASS"], [unpromoted.id, "NO_PROMOTION", undefined]]);
+  store.readPromotion = async () => { throw new Error("current readbacks must not reload payloads"); };
+  store.readCandidate = async () => { throw new Error("current readbacks must not reload candidates"); };
+  const tomorrow = await repairRoutineReaderProjectionReadbacks(store, [fec, unpromoted], "2026-09-09T12:00:00.000Z", sha);
+  assert.deepEqual(tomorrow.map(result => result.ok ? [result.contractId, result.value.kind] : result.error),
+    [[fec.id, "CURRENT"], [unpromoted.id, "NO_PROMOTION"]]);
+});
+
+test("readbacks begin alongside unrelated source work and wait for a state's dependent candidacy join", () => {
+  const all = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS];
+  const selected = ["fec-funding", "openstates-people-de", "registry-runtime:DE", "registry-runtime:CA"]
+    .map(id => all.find(contract => contract.id === id)!);
+  const phases = readerRepairDomainPhases(routineReaderRepairDomains(selected), [selected[1]!]);
+  assert.deepEqual(new Set(phases.early.flatMap(domain => domain.contracts.map(contract => contract.id))), new Set(["fec-funding", "registry-runtime:CA"]));
+  assert.deepEqual(new Set(phases.late.flatMap(domain => domain.contracts.map(contract => contract.id))), new Set(["openstates-people-de", "registry-runtime:DE"]));
+  const ids = [...phases.early, ...phases.late].map(domain => domain.id);
+  assert.equal(new Set(ids).size, ids.length);
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.ok(runner.indexOf("const earlyReaderRepair = startReaderRepair") < runner.indexOf("const pass = await runRoutinePassWithHotReadCatchUp"));
+  assert.match(runner, /startReaderRepair\(runs, readerPhases\.late\)/);
+});
+
 test("the pilot outer bound contains the source and meeting frontier", () => {
   const tasks = [...ROUTINE_SOURCE_TASKS, ...Array.from({length:SITTING_WINDOW_LANE_SLOTS_PER_PASS}, () => ({ acquisitionFailureDomain: "fixture-meeting-host",
     contract: { ...ROUTINE_SOURCE_TASKS[0]!.contract, schedule: { kind: "SITTING_WINDOW" as const, windowMs: 1, hotEveryMs: 1, baseEveryMs: 1 } } }))];
@@ -1508,7 +1541,7 @@ test("the standing authority envelope is narrowed independently for every runtim
     assert.match(pilot, new RegExp(`standingChildEnvironment\\(\\s*"${capability}"`));
   }
   assert.match(runner, /capability:\s*"ROUTINE_CONTRACT",[\s\S]*contract:\s*pending\.task\.id/);
-  assert.match(runner, /readerLaunch\.map[\s\S]*capability:\s*"ROUTINE_SUPERVISOR"/);
+  assert.match(runner, /launch\.map[\s\S]*capability:\s*"ROUTINE_SUPERVISOR"/);
   assert.match(runner, /parentPid:\s*process\.pid/);
 });
 
@@ -1580,19 +1613,20 @@ test("Reader readback repair covers the observable registry independently of sou
   const protocol = readFileSync("lib/civic-data/reader-repair-protocol.ts", "utf8");
   assert.match(runner, /const readerContracts = selectedReaderRepairContracts\(/);
   assert.match(runner, /const readerDomains = routineReaderRepairDomains\(readerContracts\)/);
-  assert.match(runner, /runBoundedChildPass\([\s\S]*readerLaunch\.map[\s\S]*scripts\/routine-civic-data-reader-repair\.mts/);
+  assert.match(runner, /runBoundedChildPass\([\s\S]*launch\.map[\s\S]*scripts\/routine-civic-data-reader-repair\.mts/);
   assert.match(runner, /timeoutMs: domain\.timeoutMs/);
   assert.match(runner, /concurrency: ROUTINE_READER_CHILD_CONCURRENCY/);
   assert.match(runner, /reconcileRoutineReaderRepairDomain/);
   assert.doesNotMatch(runner, /READER_REPAIR_DENOMINATOR_MISMATCH/);
   assert.match(runner, /writeContractHandoff\(domain\.contracts\)/);
+  assert.match(runner, /writeContractHandoff\(domain\.contracts\.map/);
   assert.doesNotMatch(runner, /`--contracts=\$\{/);
-  assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract/);
+  assert.match(child, /repairRoutineReaderProjectionReadbacks\(store, selected/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
   // Repair reads each body's own partition; serving-copy publication runs independently.
   assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ attestor \},?\s*\)/);
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
-  assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
+  assert.match(child, /repairRoutineReaderProjectionReadbacks\(store, selected, observedAt, undefined, \{ attestor, onResult/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderMeetings/);
   assert.doesNotMatch(child, /readMeetingsProjection\(/, "the child composes nothing: it reads each body's own partition");
   assert.match(child, /serializeRoutineReaderRepairRecord/);

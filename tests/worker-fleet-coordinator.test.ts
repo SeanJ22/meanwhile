@@ -444,7 +444,9 @@ test("ZIP process reports return after parent registry and election publication,
     };
     const reports = await runNationalPlaceWorkerProcesses({ root, places: ["10001", "10002", "10003"].map(zip => ({ id: `national-place:${zip}`, zip, state: "NY" })), capacity: () => 2, store,
       orderPending: async ids => [...ids].reverse(),
-      slots: workerProcessSlots(() => 2, { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 }),
+      slots: workerProcessSlots(() => 2, { availableBytes: () => 1000 * 1024 * 1024,
+        headroomBytes: 100 * 1024 * 1024, peakBytes: () => 600 * 1024 * 1024,
+        minimumPeakBytes: () => 600 * 1024 * 1024 }),
       onStarted: pid => {
         if (pids.length === 1) assert.equal(delivered.length, 1, "The second ready ZIP stays queued until the first process finishes.");
         pids.push(pid);

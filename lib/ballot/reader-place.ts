@@ -3,6 +3,7 @@ import { registryJurisdictions } from "../civic-data/state-scopes.ts";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { contains, type GeoFeature } from "../registry/resolve.ts";
+import { readStateGeometryText } from "../geo/state-geometry.ts";
 import { requireBallotState } from "../civic-data/state-scopes.ts";
 import { zipDivisionEntry } from "../geo/zip-division-index.ts";
 import { resolveZip } from "../geo/zcta.ts";
@@ -107,7 +108,7 @@ export async function ballotPointDivisions(states: readonly string[], lat: numbe
         const files = await Promise.all(names.map(async name => {
           const filename = name.slice(prefix.length);
           if (!/^[a-z0-9][a-z0-9.-]*\.geojson$/.test(filename)) throw new Error("Invalid state geometry path");
-          return JSON.parse(await readFile(join(process.cwd(), "data", "states", state.toLowerCase(), "geo", filename), "utf8")) as { features: GeoFeature[] };
+          return JSON.parse(await readStateGeometryText(state, filename)) as { features: GeoFeature[] };
         }));
         return files.flatMap(file => file.features);
       })();

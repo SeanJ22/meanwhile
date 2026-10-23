@@ -174,6 +174,8 @@ import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts"
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { sharedScoutBrowser } from "./scout-browse.mts";
 import { routineProcessSlots, type WorkerMemoryOrder } from "../lib/control-plane/workers/worker-slots.ts";
+import { publishStateGeometry } from "../lib/geo/state-geometry.ts";
+import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { childCrash, childFatalLine, installFatalLine } from "../lib/ops/fatal-line.ts";
 import {
@@ -320,6 +322,19 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
     await refreshDoorsForPass(doorRepos.doors);
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: door refresh unavailable — ${safeFailure(sanitizedErrorDiagnostic(error))}; existing source work continues`);
+  }
+}
+
+// State geometry is served from the reader edge store; each pass puts there any committed file it does not hold yet.
+if (ROUTINE_DATA_PROCESS_LEASE && !PUBLISH_NOW) {
+  const edge = resolveReaderArtifactWriteStore();
+  if (edge) {
+    try {
+      const geometry = await publishStateGeometry(edge, ROOT);
+      console.log(`RCD_TASK routine-civic-data-runner: state geometry — ${geometry.published} file(s) published (${Math.round(geometry.bytes / 1024)} KiB), ${geometry.current} already held`);
+    } catch (error) {
+      console.warn(`RCD_TASK routine-civic-data-runner: state geometry not published — ${safeFailure(sanitizedErrorDiagnostic(error))}; readers copy each file from the deploy and the next pass tries again`);
+    }
   }
 }
 

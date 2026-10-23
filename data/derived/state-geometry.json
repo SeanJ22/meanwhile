@@ -1,0 +1,297 @@
+{
+ "formatVersion": 1,
+ "files": {
+  "data/states/ak/geo/territory-02.geojson": {
+   "sha256": "aad50688f8001e814562ae355484eb745fa9d58efc9602b24bb8a01696475150",
+   "bytes": 375577
+  },
+  "data/states/al/geo/territory-01.geojson": {
+   "sha256": "a96ab13e640488f0454f2255d7800269dbd7a0d46a1bcd016b55bcf121426add",
+   "bytes": 247088
+  },
+  "data/states/ar/geo/territory-05.geojson": {
+   "sha256": "21bb73725160f53778b63847f88535159a3bce2b4d52d6754ac0d752b4f7ced2",
+   "bytes": 253848
+  },
+  "data/states/az/geo/body-territories.geojson": {
+   "sha256": "09dc53d5d878a146945130a663e5f35cfb86c93aeb642df8e58d4724644351b3",
+   "bytes": 258276
+  },
+  "data/states/az/geo/cousub-04.geojson": {
+   "sha256": "13a183cf8661ce7343ded300a20f5f28442236987cb02a2920a97114a5c5a9d8",
+   "bytes": 49047
+  },
+  "data/states/az/geo/elsd-04.geojson": {
+   "sha256": "9133354e7e5625db6414dcf9411bf1ca35df7638a79996ea18262e06f293ba30",
+   "bytes": 49674
+  },
+  "data/states/az/geo/place-04.geojson": {
+   "sha256": "3d91cb1d2c16e47ad18af60f00fda7c726c810fe323634f03e6e76945a4d74ba",
+   "bytes": 240111
+  },
+  "data/states/az/geo/scsd-04.geojson": {
+   "sha256": "c38b09be3942b6d4a343d7e93def026aa22297b666c540adc04a396120855fc5",
+   "bytes": 12051
+  },
+  "data/states/az/geo/sldl-04.geojson": {
+   "sha256": "8570236577c4560bfc38fc45149bd457ef7bd3e3f72c4899bfad91a3b0ac9dbf",
+   "bytes": 44099
+  },
+  "data/states/az/geo/sldu-04.geojson": {
+   "sha256": "5ef0ebe69905a705f5d5c997edc7591043a3bb6958f75da9a20c5fed9231dafe",
+   "bytes": 44129
+  },
+  "data/states/az/geo/territory-04.geojson": {
+   "sha256": "98a12b2fa4df1a508404d1f898f5f814a69997d2ff82a7470bec1e6dbfedf839",
+   "bytes": 1441467
+  },
+  "data/states/az/geo/unsd-04.geojson": {
+   "sha256": "3a47f301ffce8b5d2367e3a928c95842e4e66697350b93bfcd2cd207474d7e57",
+   "bytes": 57525
+  },
+  "data/states/ca/geo/territory-06.geojson": {
+   "sha256": "53c57fe397aef8c4bb3c81920e9458ad9b2e5ec557577cb06d02c63df2e689ae",
+   "bytes": 2081601
+  },
+  "data/states/co/geo/territory-08.geojson": {
+   "sha256": "b791a23336c6fb0da104b0f52fae6dfa9bead0cdfe507fb02bd4d2cdc9be3ae8",
+   "bytes": 4837257
+  },
+  "data/states/ct/geo/territory-09.geojson": {
+   "sha256": "e1977f3e28db6f3805110080bfc6906606a25da77b3d48b2c68683f737a62ee5",
+   "bytes": 42763
+  },
+  "data/states/dc/geo/territory-11.geojson": {
+   "sha256": "6625823d881e4172b603073ed90bd6c25240254fd6170327af90f51c5587115c",
+   "bytes": 27325
+  },
+  "data/states/de/geo/territory-10.geojson": {
+   "sha256": "1aa6e4c7e2a649929c4bbb895cc3c0203175c84b4f2d84590bf95b637998c762",
+   "bytes": 4631
+  },
+  "data/states/fl/geo/territory-12.geojson": {
+   "sha256": "de234f8c4225fd760d88b948efea1fa3e65bc5451bed864068380cecb4db144d",
+   "bytes": 273359
+  },
+  "data/states/ga/geo/territory-13.geojson": {
+   "sha256": "fd68af0225247e8b1a97787602f0e30462b5825eb72aa18b78d4915845cb3fc7",
+   "bytes": 169958
+  },
+  "data/states/hi/geo/territory-15.geojson": {
+   "sha256": "201e9e2ac7f41293081319887a9a3cd5d357e6084d186d4fe0538b0a16c9ef69",
+   "bytes": 47443
+  },
+  "data/states/ia/geo/territory-19.geojson": {
+   "sha256": "1b0d01527d1daea9e58e2d83a22fe5627234dafd9ed50dc386729394240b12dd",
+   "bytes": 8800
+  },
+  "data/states/id/geo/territory-16.geojson": {
+   "sha256": "f90dac0b781f1ecefe8155c169e5cc548b208f42927130aa6901014f39fb1952",
+   "bytes": 1802604
+  },
+  "data/states/il/geo/territory-17.geojson": {
+   "sha256": "0b941d48edd8d9c9320ad9df411a4de63937f95873fc387a50f68ae001d1b8ea",
+   "bytes": 1077873
+  },
+  "data/states/in/geo/territory-18.geojson": {
+   "sha256": "18164fc58e91fbda5d11bb43231f05bddba1b710e10010ba2eaa5a151801feae",
+   "bytes": 392845
+  },
+  "data/states/ks/geo/territory-20.geojson": {
+   "sha256": "b154ec142b5bfb302d30d70fc2a309a2fabe11498005f6beb9f3eb2ba87c7902",
+   "bytes": 29007
+  },
+  "data/states/ky/geo/territory-21.geojson": {
+   "sha256": "3a4dd09b6928ece9399528dee95279c7bcbee5543b8a5a58760ea79170f89b16",
+   "bytes": 2898391
+  },
+  "data/states/la/geo/territory-22.geojson": {
+   "sha256": "261213b288037ce2b2d0165d95a82e81b439c0995080794b2d40db2612e868ba",
+   "bytes": 52583
+  },
+  "data/states/ma/geo/territory-25.geojson": {
+   "sha256": "9f4e8b2cd89108a2eb942ec434cf7dc5504388b24c5bf82d673559f9c5698c29",
+   "bytes": 554096
+  },
+  "data/states/md/geo/territory-24.geojson": {
+   "sha256": "89aeac606a0295868ce91b120619427d667505e200b191650b49ea8c536b193c",
+   "bytes": 347
+  },
+  "data/states/me/geo/territory-23.geojson": {
+   "sha256": "ffc82afa1281943e3939fbb069932fbc643271f093561a4dcfb1ff533cc24e42",
+   "bytes": 239346
+  },
+  "data/states/mi/geo/territory-26.geojson": {
+   "sha256": "98be1662edaea11210037d0bed1976e596a8f89998e369f4d1cea0509d07e9ce",
+   "bytes": 45303
+  },
+  "data/states/mn/geo/territory-27.geojson": {
+   "sha256": "c3103a29e5a1abc6262c6082f482411216a6ce2095a310d7761ac583d8e68af3",
+   "bytes": 562520
+  },
+  "data/states/mo/geo/territory-29.geojson": {
+   "sha256": "da3da20bf085c67ef1d90ed4c38add8d00f25c93944f1db692d00b7cc3a8bb1a",
+   "bytes": 69970
+  },
+  "data/states/ms/geo/territory-28.geojson": {
+   "sha256": "3abce9d9f5da613905aa57fd871b674ab9672013c19f8b682c86aa9b1b308912",
+   "bytes": 52689
+  },
+  "data/states/mt/geo/territory-30.geojson": {
+   "sha256": "17f28540993e6fb3c210a66c0bdc2af37f7caef4164c96582074c8a82462f2f0",
+   "bytes": 1673649
+  },
+  "data/states/nc/geo/territory-37.geojson": {
+   "sha256": "f5b04015480ba11abc5b40879b8d9e971acaa9feedb28d600cc239993f5d70e6",
+   "bytes": 109787
+  },
+  "data/states/nd/geo/territory-38.geojson": {
+   "sha256": "2b0c317b4602844e1f0e6a9ca61dfdb62bd172f6e4d248b9407615d9f59048f9",
+   "bytes": 820473
+  },
+  "data/states/ne/geo/territory-31.geojson": {
+   "sha256": "f64d39bdeca30ceef196f76c7c855b81bba182d26b6a2745b9bb340a26c1bd59",
+   "bytes": 678453
+  },
+  "data/states/nh/geo/cousub-33.geojson": {
+   "sha256": "3fb5f4ff042ea9b8deae79c9336263bc5815778f513f4d3340ac6339532d7b45",
+   "bytes": 105933
+  },
+  "data/states/nh/geo/elsd-33.geojson": {
+   "sha256": "8ef3942203fc7be592ca28f5059ee4314b9c96947797a87d7c9b63214506d566",
+   "bytes": 38816
+  },
+  "data/states/nh/geo/place-33.geojson": {
+   "sha256": "11b381fd875b08532c66e37f5441e70a5b32d315dd90d9c072322ac38e9e8480",
+   "bytes": 38756
+  },
+  "data/states/nh/geo/scsd-33.geojson": {
+   "sha256": "0766aa95aa3057fd61719950593285fdd05714f0fdec051405084451b6381cec",
+   "bytes": 6602
+  },
+  "data/states/nh/geo/sldl-33.geojson": {
+   "sha256": "05593e12c6186ec9676eb9a2dfdd997eef41d8ca69d7e5f333a71b7ba9141871",
+   "bytes": 80083
+  },
+  "data/states/nh/geo/sldu-33.geojson": {
+   "sha256": "8de502fc132308b0cff5852805991f44b8d07a27e40fc5f9ffab4fc26540544b",
+   "bytes": 22192
+  },
+  "data/states/nh/geo/territory-33.geojson": {
+   "sha256": "b78eff38fe1d82e6f9a133a04dd45c369fa47946583c56eaba1339374f6ba10c",
+   "bytes": 28063
+  },
+  "data/states/nh/geo/unsd-33.geojson": {
+   "sha256": "0cb8fd0599527963e836b6d9eb3f6aa1df13d868dab1052979e733f016eea258",
+   "bytes": 42027
+  },
+  "data/states/nj/geo/cousub-34.geojson": {
+   "sha256": "c39efe463a0388713c9a2423149078d4bba1c368242e25c8fb7c8be725507353",
+   "bytes": 124478
+  },
+  "data/states/nj/geo/elsd-34.geojson": {
+   "sha256": "3fced51ee78a906996a01ea1a311bc696e9d2e60da8a76921df861fe6f8bbfd3",
+   "bytes": 40613
+  },
+  "data/states/nj/geo/place-34.geojson": {
+   "sha256": "960003cc5e6bc22815ea35ed2619d7b0b9fe2d53102207dfd058bda30f6cfb89",
+   "bytes": 123751
+  },
+  "data/states/nj/geo/scsd-34.geojson": {
+   "sha256": "6e32eb0c617bac5cf5bab5a28c830de89e81765b157e7daa5cd80b3b84eb62b6",
+   "bytes": 12534
+  },
+  "data/states/nj/geo/sldl-34.geojson": {
+   "sha256": "b7f36c8f4045414bd64490cd09ab364b2b0b6e3b271a2d91b5da2d8bfdc4d45d",
+   "bytes": 18266
+  },
+  "data/states/nj/geo/sldu-34.geojson": {
+   "sha256": "c7c93c0a47186bfc522d30006eefeda76097310c66846d0d6813c9460d010a07",
+   "bytes": 18354
+  },
+  "data/states/nj/geo/territory-34.geojson": {
+   "sha256": "b063768a367623e297dee2753301d80e982e725999b4a5cb671126ac00e7cbed",
+   "bytes": 34315
+  },
+  "data/states/nj/geo/unsd-34.geojson": {
+   "sha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
+   "bytes": 69877
+  },
+  "data/states/nm/geo/territory-35.geojson": {
+   "sha256": "42bfdde2b38fc1e0da35c7881108c1d751ba2d6c146031a94a7e43b257e4b48c",
+   "bytes": 407486
+  },
+  "data/states/nv/geo/territory-32.geojson": {
+   "sha256": "70042d22c52530cf3aa777139c2f2b064af7ed68d79c1248288d3ddd93ea5d6b",
+   "bytes": 351621
+  },
+  "data/states/ny/geo/territory-36.geojson": {
+   "sha256": "e4e1ed0faa4c1e48cfe736a74ea55b014ea769f018c7720aafd0a9a4ac16f544",
+   "bytes": 422114
+  },
+  "data/states/oh/geo/territory-39.geojson": {
+   "sha256": "3d8e1b58739205500c107f7b579b2e46db14524a1f438326f1b7ebc07adf113a",
+   "bytes": 35582
+  },
+  "data/states/ok/geo/territory-40.geojson": {
+   "sha256": "80b4f382142c272db352314f1bfb8821bdbefe0ae188abdcea37762a102b8811",
+   "bytes": 211722
+  },
+  "data/states/or/geo/territory-41.geojson": {
+   "sha256": "976bf418cbacfcefff6b4a8f04ac91037cbbaba954739664d79000a0778078a2",
+   "bytes": 690492
+  },
+  "data/states/pa/geo/territory-42.geojson": {
+   "sha256": "664101eccb247b1788e556ecddc74f6c06ce05d424efb9fbd128d5e1a850a821",
+   "bytes": 377881
+  },
+  "data/states/ri/geo/territory-44.geojson": {
+   "sha256": "4c47a40a8f657b3ec9461480668ab5e9ab74d88d1056d92bf8bc76ac0330bba7",
+   "bytes": 49787
+  },
+  "data/states/sc/geo/territory-45.geojson": {
+   "sha256": "1b7ceb35eacdd6d902013927b2c7c841fc158e51139837975bffa033674e7e6c",
+   "bytes": 106005
+  },
+  "data/states/sd/geo/territory-46.geojson": {
+   "sha256": "580cd25b78ee5945c573592de88e60957b4e017e20b8cfd54b6d37f7f06b356e",
+   "bytes": 341769
+  },
+  "data/states/tn/geo/territory-47.geojson": {
+   "sha256": "9f56453cdc74ed923713782e3776fa8d6957ee9ee5e18a6dc6f796bb39fd9d06",
+   "bytes": 312799
+  },
+  "data/states/tx/geo/territory-48.geojson": {
+   "sha256": "25f0c8444456dbf66f7194915e7d8b7fcdad000906ac2bd6849e4a05f73c5136",
+   "bytes": 3012972
+  },
+  "data/states/ut/geo/territory-49.geojson": {
+   "sha256": "095d146098a298368e70e77e9c17324379ff57ea618fce3b99cfa2c7c4e34c49",
+   "bytes": 472359
+  },
+  "data/states/va/geo/territory-51.geojson": {
+   "sha256": "7e79f3f63be98226182cd767617c62b83f58585f72bae12c666eb8d22d9d7195",
+   "bytes": 57663
+  },
+  "data/states/vt/geo/territory-50.geojson": {
+   "sha256": "5f80f917f076630f5c1313ae7c6793b52bdaaa92d8de93deee316fb6f1b349f6",
+   "bytes": 8200
+  },
+  "data/states/wa/geo/territory-53.geojson": {
+   "sha256": "cffc50be141b1ff970ba9f786fe4dff5fde7dc0d2046905500dd5d91c6459b68",
+   "bytes": 1588038
+  },
+  "data/states/wi/geo/territory-55.geojson": {
+   "sha256": "033b15908156f7142c435dfaf3dddca9499970b86787df88c730af111e32dd7d",
+   "bytes": 73967
+  },
+  "data/states/wv/geo/territory-54.geojson": {
+   "sha256": "971b3614ef2092c395477cdaed9b7add2f4248cd4fc8b3487a82194d06a3d885",
+   "bytes": 46171
+  },
+  "data/states/wy/geo/territory-56.geojson": {
+   "sha256": "f749a6a7eedb482dd199fc533fddd2a3b42cbc4cdd6516c256712648454ca3fa",
+   "bytes": 742387
+  }
+ }
+}

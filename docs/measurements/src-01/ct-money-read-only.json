@@ -1,0 +1,113 @@
+{
+  "step": "SRC-01",
+  "source": "campaign-money",
+  "productionWrites": 0,
+  "upstream": "Registered campaign-money coordinator reads the hourly CT clock, production published person/seat projections, and saved official campaign publications.",
+  "downstream": "refreshCampaignMoneyState writes each person/seat blank; /api/campaign-finance → readCampaignFinanceForPlace → FundingBlock → StateCampaignSection → CardFooter reads it.",
+  "production": {
+    "project": "tiny-hill-13996172",
+    "branch": "br-delicate-lab-ax02xuo5",
+    "role": "readonly",
+    "priorBlank": {
+      "state": "CT",
+      "count": 463,
+      "sharedDetail": "The filed person, office or district does not uniquely match a person we publish"
+    },
+    "source": {
+      "url": "https://seec.ct.gov/ecrisreporting/Data/eCrisDownloads/exportdatafiles/Receipts2026ElectionYearCandidateExploratoryCommittees.csv",
+      "bytes": 57363452,
+      "rawHash": "b9316e90fad6589cc76771b0197444bef46c7c412c3453fa687184f5e0f4e408",
+      "rows": 108168,
+      "productionCapturedAt": "2026-10-23T07:52:03.008Z",
+      "hashMatchesProductionPassCursor": true
+    },
+    "stateClock": {
+      "startedAt": "2026-10-23T07:52:01.195Z",
+      "dueBeforeHour": false,
+      "dueAtHour": true,
+      "dueTomorrow": true
+    }
+  },
+  "scope": "Read-only replay of the complete production-held 2026 candidate-receipt publication against two actual production legislators, with local PostgreSQL-compatible replay writes only. Other CT annual publications were not replayed.",
+  "runs": [
+    {
+      "checkedAt": "2026-10-23T09:00:00.000Z",
+      "peopleWorked": 2,
+      "peopleWithMoney": 1,
+      "loaded": 516,
+      "unrelatedUnmatched": 107652,
+      "missing": {
+        "id": "plural:02ce0fa3-ac25-42dd-9f5e-ee44b7e9d542",
+        "reason": "No filed money has matched this published person and seat yet",
+        "cardRendered": true
+      },
+      "published": {
+        "id": "plural:102845da-9b93-400d-b58a-fa3e7df1806e",
+        "cycles": [
+          2026
+        ],
+        "receipts": [
+          {
+            "label": "Receipt",
+            "amount": 24000
+          }
+        ]
+      },
+      "sourceRequest": "200 full source body"
+    },
+    {
+      "checkedAt": "2026-10-24T09:00:00.000Z",
+      "peopleWorked": 2,
+      "peopleWithMoney": 1,
+      "loaded": 516,
+      "unrelatedUnmatched": 107652,
+      "missing": {
+        "id": "plural:02ce0fa3-ac25-42dd-9f5e-ee44b7e9d542",
+        "reason": "No filed money has matched this published person and seat yet",
+        "cardRendered": true
+      },
+      "published": {
+        "id": "plural:102845da-9b93-400d-b58a-fa3e7df1806e",
+        "cycles": [
+          2026
+        ],
+        "receipts": [
+          {
+            "label": "Receipt",
+            "amount": 24000
+          }
+        ]
+      },
+      "sourceRequest": "304 reuses identical saved bytes"
+    }
+  ],
+  "reader": {
+    "person": {
+      "id": "plural:02ce0fa3-ac25-42dd-9f5e-ee44b7e9d542",
+      "name": "Craig Fishbein",
+      "seat": "openstates-office:ct:state_lower_house:90"
+    },
+    "reason": "No filed money has matched this published person and seat yet",
+    "apiMs": 62.94272900000033,
+    "firstUseMs": 539.4890479999995,
+    "readerPath": "FundingBlock → StateCampaignSection → /api/campaign-finance → readCampaignFinanceForPlace → blank.detail → CardGapContribution → CardFooter",
+    "browser": "system Chromium substituted for pinned 1234",
+    "productionWrites": 0,
+    "firstUseScope": "Local replay page from first navigation through FundingBlock API fetch until the reason was visible; this is not a live-site latency measurement.",
+    "screenshot": "ct-money-card.png",
+    "screenshotInspected": true,
+    "styles": "Functional replay fixture uses actual components without the site stylesheet."
+  },
+  "validation": {
+    "tests": "campaign-money-people.test.ts: 14 passed, 0 failed, including two daily refreshes through the real API and browser card",
+    "lint": "Owned files passed ESLint",
+    "limitation": "Production CT also reports four malformed/repeated-column annual CSV failures; these are preserved as source work. A full-state run may correctly report a plain source-read reason for an affected missing person."
+  },
+  "reproduction": {
+    "data": "/tmp/src01-ct-receipts-2026.csv",
+    "people": "/tmp/src01-ct-money-people.json",
+    "publisherReplay": "/tmp/src01-ct-money-replay.mts",
+    "readerReplay": "/tmp/src01-ct-money-page.mts",
+    "browserOverride": "WTP_CHROMIUM_EXECUTABLE=/usr/bin/chromium"
+  }
+}

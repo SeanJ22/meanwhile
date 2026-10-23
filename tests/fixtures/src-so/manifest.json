@@ -67,6 +67,14 @@
       "sha256": "b6d3370ec6e8c1dbcd4517ddb0a9d699164dca8bb3b7534f95097f5e7cb4f4d4",
       "complete": false,
       "selection": "Unmodified native deep-scroll response, limit=2; provider resultSetSize retained."
+    },
+    {
+      "file": "socrata-texas-line-separator.json",
+      "url": "https://api.us.socrata.com/api/catalog/v1?ids=25ut-iey2",
+      "sha256": "7ae9db7d62e5a9226a1a0cebe5f9500400d40d31090bb8476f769ebb359de062",
+      "capturedAt": "2026-10-23T08:26:42.452Z",
+      "complete": false,
+      "selection": "Exact catalog response for the Texas resource whose description contains a Unicode line separator; publisher values retained."
     }
   ]
 }

@@ -1,0 +1,29 @@
+{
+  "input": "actual saved SAM 900804 body from sam-read-only.json; controlled observation clock; no SAM calls",
+  "observationClock": "2026-10-23T08:00:00.000Z",
+  "hold": {
+    "formatVersion": 1,
+    "source": "sam-gov-entities",
+    "publisherCode": "900804",
+    "checkedAt": "2026-10-23T08:00:00.000Z",
+    "retryAt": "2026-10-24T00:00:00.000Z"
+  },
+  "proof": [
+    {
+      "width": 1280,
+      "usableMs": 473,
+      "cardText": "How reliable our sources are · whole country\n1 sources across the country · 1 failing now\nSAM.gov entities\nWaiting for daily reset\nDaily allowance reached Oct 23, 4:00 AM ET · reset Oct 23, 8:00 PM ET. Requests are paused until then.\nShowing all 1",
+      "screenshot": "/workspace/meanwhile/docs/measurements/src-01/sam-quota-admin-1280.png",
+      "errors": []
+    },
+    {
+      "width": 390,
+      "usableMs": 391,
+      "cardText": "How reliable our sources are · whole country\n1 sources across the country · 1 failing now\nSAM.gov entities\nWaiting for daily reset\nDaily allowance reached Oct 23, 4:00 AM ET · reset Oct 23, 8:00 PM ET. Requests are paused until then.\nShowing all 1",
+      "screenshot": "/workspace/meanwhile/docs/measurements/src-01/sam-quota-admin-390.png",
+      "errors": []
+    }
+  ],
+  "browser": "system Chromium substitution via WTP_CHROMIUM_EXECUTABLE",
+  "writesBlocked": 0
+}

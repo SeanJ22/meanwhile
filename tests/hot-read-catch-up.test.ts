@@ -459,7 +459,7 @@ test("C6: the repairs a catch-up read could race run first", () => {
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /const readerLaunch = \[\s*\.\.\.readerDomains\.filter\(\(domain\) => repairDomainRacesHotReads\(domain, hotReadTaskIds\)\),\s*\.\.\.readerDomains\.filter\(\(domain\) => !repairDomainRacesHotReads/);
-  assert.match(runner, /const readerPass = runBoundedChildPass\(\s*launch\.map/);
+  assert.match(runner, /const active = planned\.domains;\s*return runBoundedChildPass\(\s*active\.map/);
   assert.match(runner, /return \{ repair: readerPass, unblocked: Promise\.resolve\(\) \};/);
   assert.match(runner, /repairingContractIds\.add\(contract.id\)/);
   assert.match(runner, /!launchedTaskIds\.has\(id\) && !repairingContractIds\.has\(id\)/);

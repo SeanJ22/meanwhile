@@ -1,11 +1,25 @@
 # River status
 
-build_state: RELEASE 89 MERGED (main 1e353d428, 8:34 AM EDT), waiting for /api/build to serve it; NEXT FOLD (7 lanes) IN GATES; production still release 88 until /api/build shows 1e353d4
+build_state: RELEASE 89 LIVE (/api/build 1e353d4 from 8:37 AM EDT); SP-01 RETURNED (ballot cache 24 h, 00000 cached); NEXT FOLD (7 lanes) IN GATES
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
 lock: session_012UDbgz3sjA8QN2m7CY78QS
 heartbeat: 2026-10-23T12:41:22Z
+
+## Release 89 live checks (Oct 23, 8:37 to 9:05 AM EDT)
+
+Release 89 = SP-01 + EX-03 + River's dead-code gate. Live from 8:37 AM EDT (/api/build 1e353d4, deploy 6adb546b9ccc594b1c1ca3cb).
+
+SP-01: FAILED, returned (returns/sp-01.md).
+- Sean's cache check: /ballot?zip=85701 second load 5 minutes later was an edge miss; the next load was "Netlify Edge"; hit; ttl=86377 with 65,799 s to Phoenix midnight (about 5.7 h past midnight). /ballot?zip=95814 hit, ttl=86071. /ballot?zip=00000: "Netlify Edge"; hit; ttl=86050, age 353; it must never be cached. Cause found: next.config.ts:82 sets max-age=86400 for /ballot and the middleware's per-ZIP value (middleware.ts:82, lib/reader/ballot-cache.ts) never reaches the edge, so likely neither do its state cache tags: a ballot change may wait up to 24 h to reach readers.
+- Speed, ten ZIPs in ten states plus 85701 (first visit, parallel): ballot 3.6 to 11.4 s (03301 10.7, 85711 11.4, 85701 11.1, 17101 8.7, 95814 7.9, 30334 7.2, 12207 6.5, 98501 6.2, 32301 5.9, 07102 5.8, 78701 4.6, 80202 3.8, 43215 3.6 s); place answers 0.9 to 10.4 s. Five minutes later: ballot 0.4 to 5.1 s, place 0.45 to 1.1 s. Goal: under 3 s first, under 300 ms repeat.
+- Place answers, River's 16-place set (first visit, parallel): 12 of 16 under 3 s (was 4 of 16 at 4:56 AM): AZ 85701 4.9 s, IL 60602 3.4 s, WI 53703 3.0 s, WI 53202 2.9 s; Milwaukee 342 boards, 138 with members (was 117), 204 empty; 10 of 16 big cities still 0 boards (PB-01 not shipped).
+
+EX-03: baseline (Sean's 24-hour test starts when EX-03, RN-01 and RN-02 are all live; RN-01 and RN-02 are not).
+- Rendered ZIP ballot page, one real ZIP per state (Chromium, full page), measure cards with a plain-language summary: AL 4 of 4 (35004), AR 3 of 4 (71601), AZ 11 of 12 (85003), CA 18 of 24 (90001). Measures shown with no explainer in 33 states: AK, CO, DC, FL, GA, HI, IA, ID, IN, KS, KY, LA, MA, MD, MN, MO, NC, ND, NE, NM, NV, NY, OH, OK, RI, SD, TN, UT, VA, WA, WI, WV, WY. No measure card found by River's selector at that ZIP (may be the selector): MI, MT, NH, OR, PA, TX, VT.
+- cp_attempts (control plane, read-only): measure-translation attempts exist only for AL (36: 4 completed, 32 held), AR (7: 4, 3), AZ (33: 9, 24), CA (72: 57, 15), plus finds for AK, AL, AZ. 40 states have no attempt: admission is RN-01's (not yet live). AL and AZ's latest held reason: "You have reached your specified workspace API usage limits. You will regain access on 2026-11-01 at 00:00 UTC." AR and CA: "A translated sentence lacks a confirmed source passage or independent support."
+- DECISION FOR SEAN: the Anthropic workspace usage limit blocks every new explainer until Nov 1, two days before the Nov 3 election. Only Sean can raise it (Anthropic console, workspace limits). EX-03 already closes the paid lane cleanly on that refusal and shows the reason in Admin.
 
 ## River session claude/river-fold-ship-ysodir (Oct 23, from 4:15 AM EDT)
 

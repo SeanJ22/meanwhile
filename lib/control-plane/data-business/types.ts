@@ -147,7 +147,3 @@ export interface CandidatePickTotal {
   readonly value: number;
   readonly readers: number;
 }
-export type Shape = ResultBody["shape"];
-
-/** What the recipe is asked to run over, by where its numbers come from. */
-export type RecipeSource = "totals" | "cohorts" | "events";

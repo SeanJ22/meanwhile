@@ -27,9 +27,9 @@ import { localDate } from "./meeting-time.ts";
 
 export {
   ASK_GAP_CODES,
-  ASK_GAP_CODE_WORDS,
+  
   ASK_GAP_RECORD_CLASS,
-  isAskGapCode,
+  
   type AskGapCode,
   type AskGapRecordClass,
 } from "./gap-codes.ts";

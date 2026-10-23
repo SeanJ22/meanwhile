@@ -5,16 +5,6 @@
  */
 
 import { neon } from "@neondatabase/serverless";
-import { sql } from "drizzle-orm";
-
-/** Shared read-only expression for an exact absent migration receipt. */
-export function migrationReceiptAbsentExpression(expectedWhen: number) {
-  return sql<boolean>`(
-    select count(*) = 0
-    from drizzle.__drizzle_migrations
-    where created_at = ${expectedWhen}
-  )`;
-}
 
 /** What a database says it has applied, or why that could not be established. */
 export type AppliedMigrations =

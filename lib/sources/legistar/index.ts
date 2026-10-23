@@ -44,29 +44,16 @@ import type { LegistarEvent, LegistarEventItem } from "./types.ts";
  * "what did they decide" finds it at the same import as everything else — and
  * finds the record classes already separated when they get there.
  */
-export {
-  classifyRollCall,
-  collectEventOutcomes,
-  dispositionGap,
-  hasRecordedAction,
-  isFailedExtraction,
-  minutesPointerFor,
-  readDisposition,
-  receiptFor,
-  rollCallGap,
-  rollCallRecordFrom,
-  toAgendaRecords,
-  toOutcomeRecords,
-} from "./outcomes.ts";
+;
 export type {
-  EventOutcomes,
-  LegistarAgendaRecord,
-  LegistarMinutesPointer,
+  
+  
+  
   LegistarOutcomeRecord,
-  LegistarRecordedVote,
-  LegistarRollCallRecord,
-  OutcomeDisposition,
-  RollCallState,
+  
+  
+  
+  
 } from "./outcomes.ts";
 
 /**
@@ -467,9 +454,6 @@ export function makeLegistarSource(
     },
   };
 }
-
-/** The default source; its membership is the installed meeting doors'. */
-export const legistarSource: MeetingSource<LegistarEventWithClient> = makeLegistarSource();
 
 /**
  * Read one event's agenda items, or say that we did not. One extra request per event, run at ingest and

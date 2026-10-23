@@ -103,12 +103,6 @@ export function normalizeElecRow(row: Record<string, unknown>): ElecEntity {
   };
 }
 
-/** Location codes for two example municipalities, read from the page. */
-export const ELEC_LOCATION_CODES_MORRIS: Readonly<Record<string, string>> = {
-  "ROCKAWAY TOWNSHIP": "1435",
-  "ROCKAWAY BOROUGH": "1434",
-};
-
 /** Parse the location-code option list out of the search page, so codes are read, not transcribed. */
 export function parseLocationCodes(html: string): Map<string, string> {
   const out = new Map<string, string>();

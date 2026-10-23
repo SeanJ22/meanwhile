@@ -112,7 +112,3 @@ export async function readPostingToLive(
   });
 }
 
-export function postingToLiveClass(recordClass: RoutineRecordClass): boolean {
-  return recordClass === "MEETING" || recordClass === "MEETING_OUTCOME";
-}
-

@@ -121,11 +121,6 @@ export function nameForms(raw: string): NameForm[] {
   return [...out.values()];
 }
 
-/** The comparison keys alone, for a set-intersection test. */
-export function nameFormKeys(raw: string): Set<string> {
-  return new Set(nameForms(raw).map((f) => f.form));
-}
-
 /**
  * Do two published names share at least one exact form, and which one? The
  * shared form with the shortest rule chain, or `null`.

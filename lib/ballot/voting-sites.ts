@@ -49,7 +49,6 @@ export interface VotingPublication {
   specialElections?: string[];
 }
 
-
 export interface VotingSite {
   id: string;
   name: string;
@@ -256,9 +255,6 @@ export interface VotingSitesAnswer {
   pollingPlaceLinks: readonly import("./polling-place-links.ts").PollingPlaceLink[];
   ballotNavigationDataState?: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
 }
-
-export const UNPLACED_SITE_LINE =
-  "We could not place this address on the map, so it has no pin. The address above is what the county published.";
 
 export function modelSentence(j: VotingJurisdiction): string {
   if (j.publication?.status === "NO_GENERAL_ELECTION") return j.publication.text;

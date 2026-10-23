@@ -1,4 +1,3 @@
-import { PRL_FORBIDDEN_COLUMN_PATTERN } from "./types.ts";
 
 /**
  * What each PRL dictionary says its fields mean. Encodes only what ingestion
@@ -137,13 +136,4 @@ export function dictionaryColumnNames(dictionaryCsvRows: readonly (readonly stri
   // Row 0 is the header `COLUMN_NAME,DATA_TYPE,DESCRIPTION`; the column names
   // are cell 0 of every subsequent row.
   return dictionaryCsvRows.slice(1).map((row) => (row[0] ?? "").trim()).filter(Boolean);
-}
-
-/**
- * A dataset column is a forbidden rank / percentile / ideology / score, matched
- * against the dictionary's own names — re-exported so archive and profile
- * ingestion share the one allowlist gate `index.ts` established.
- */
-export function isForbiddenColumn(name: string): boolean {
-  return PRL_FORBIDDEN_COLUMN_PATTERN.test(name);
 }

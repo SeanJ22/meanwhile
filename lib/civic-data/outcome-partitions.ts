@@ -7,7 +7,7 @@ import { wiringRowsFromDoors } from "../doors/rows.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import type { OutcomeTenant } from "../outcomes/data-plane.ts";
 import { outcomePartitionScope, setDoorOutcomePointers } from "../outcomes/door-outcome-pointers.ts";
-export { outcomePartitionScope } from "../outcomes/door-outcome-pointers.ts";
+;
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -33,10 +33,6 @@ export interface OutcomePartitionContract extends RoutineSourceContract {
 
 export function outcomePartitionId(doorId: string): string {
   return `${doorId}:outcomes`;
-}
-
-export function isOutcomePartitionScope(scope: string): boolean {
-  return scope.startsWith("door:") && scope.endsWith(":outcomes");
 }
 
 export function stateJurisdictionOf(ocdId: string): string | null {
@@ -202,10 +198,6 @@ export function refreshOutcomePartitions(doors: readonly DoorRecord[]): OutcomeP
       reason: `the registry's doors could not be built into outcome work (${error instanceof Error ? error.message : String(error)}), so the previous list stays in use`,
     };
   }
-}
-
-export function outcomePartitionContract(id: string): OutcomePartitionContract | null {
-  return OUTCOME_PARTITION_CONTRACTS.find((contract) => contract.id === id) ?? null;
 }
 
 export function outcomePartitionForDoor(doorId: string): OutcomePartitionContract | null {

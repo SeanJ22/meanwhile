@@ -265,13 +265,6 @@ export async function refreshOutcomeSnapshotFromPromoted(
   return combinedOutcomeVersionId(doorOutcomeParts().map((part) => ({ contractId: part.pointer.contractId, versionId: part.versionId })));
 }
 
-/** The doors whose read failed (neither promoted nor honestly not recorded yet); a publisher leaves these out whole. */
-export function doorOutcomesUnreadable(): readonly string[] {
-  return [...readStates.values()]
-    .filter(({ state }) => state.kind !== "PROMOTED" && state.kind !== "NOT_RECORDED" && state.kind !== "BOOTSTRAP")
-    .map(({ pointer }) => pointer.contractId);
-}
-
 export function doorOutcomeParts(): readonly { readonly pointer: DoorOutcomePointer; readonly value: OutcomeSnapshot; readonly versionId: string }[] {
   return [...readStates.values()].flatMap(({ pointer, state }) =>
     (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") && state.metadata.versionId
@@ -675,15 +668,4 @@ export function publicationObservationsFor(
     meetingId,
     sitting?.publicationObservations ?? [],
   );
-}
-
-/** Every meeting id the store holds outcome records for. */
-export function answerableMeetingIds(): ReadonlySet<string> {
-  const ids = new Set<string>();
-  for (const sitting of getOutcomeSnapshot().sittings) {
-    if (sitting.extraction === "RETRIEVED" && sitting.outcomes.length > 0) {
-      ids.add(sitting.meetingId);
-    }
-  }
-  return ids;
 }

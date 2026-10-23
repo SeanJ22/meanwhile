@@ -1,8 +1,7 @@
 /** A read of held data only: no agent runs and nothing is written. A failed read is a named refusal, never an empty place. */
-import { divisionsForZip, type PlaceDivision } from "../expansion/national-geography.ts";
+import { divisionsForZip } from "../expansion/national-geography.ts";
 import { readHeldPlaceCapture, type HeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
-import { openBlanksOf, type OpenBlanks } from "../../coverage/open-blanks.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { countyIdentity, stateBase } from "../../ocd/divisions.ts";
 import { refreshOwedOverlay } from "./owed-overlay-read.ts";
@@ -141,9 +140,4 @@ export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defa
   return read;
 }
 
-export async function openBlanks(placeKey: string, deps: PlaceOwedDeps = defaultPlaceOwedDeps, options: { readonly fresh?: boolean; readonly squads?: Readonly<Record<string, string>> } = {}): Promise<{ readonly state: "READ"; readonly placeKey: string; readonly blanks: OpenBlanks } | PlaceOwedRefusal> {
-  const read = await readPlaceOwed(placeKey, deps, options);
-  return read.state === "REFUSED" ? read : { state: "READ", placeKey, blanks: openBlanksOf(read.rows, options.squads) };
-}
-
-export type { PlaceDivision };
+;

@@ -41,9 +41,6 @@ export const ONLINE_ONLY_LINE = "Online only — there is no room to attend in p
 /** What a sitting with no building and no published online access says about where it is held: our gap. */
 export const PLACE_UNRECORDED_LINE = copy("copy.working");
 
-/** The same gap, short enough for a list row's metadata line. */
-export const PLACE_UNRECORDED_MARK = "place not recorded yet";
-
 /** A physical sitting whose room is a named gap, or null. Read only where there is no building. */
 export function venueGapOf(meeting: OnlineShaped): MeetingVenueGap | null {
   return meeting.location === null && meeting.venueGap ? meeting.venueGap : null;
@@ -54,9 +51,6 @@ export function venueNotStatedLine(publisher: string): string {
   return `${publisher}'s page doesn't say where this meeting is held.`;
 }
 
-/** The same publisher's gap, short enough for a list row's metadata line. */
-export const VENUE_NOT_STATED_MARK = "place not stated by the publisher";
-
 /** The place the publisher stated, verbatim, or null when its page states none. */
 export function statedVenueText(gap: MeetingVenueGap): string | null {
   const stated = gap.kind === "STATED_NOT_PLACED" ? gap.publishedText?.trim() : "";
@@ -66,11 +60,6 @@ export function statedVenueText(gap: MeetingVenueGap): string | null {
 /** A stated place renders as the publisher's words, never a pin; a page that states none gets the publisher's gap. */
 export function venueGapLine(gap: MeetingVenueGap): string {
   return statedVenueText(gap) ?? venueNotStatedLine(gap.publisher);
-}
-
-/** The venue gap for a list row's metadata line: the stated place, or the publisher's gap. */
-export function venueGapMark(gap: MeetingVenueGap): string {
-  return statedVenueText(gap) ?? VENUE_NOT_STATED_MARK;
 }
 
 /** The "Where" row for a sitting with no building. */

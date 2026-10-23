@@ -31,8 +31,6 @@ export const MODELS = {
 
 export type ModelTier = keyof typeof MODELS;
 export const MODEL_TIERS = ["haiku", "sonnet", "opus"] as const;
-/** Provider protocol maxima used to bound historical unmetered sends, not new application caps. */
-export const MODEL_LIMIT_SOURCE = "https://platform.claude.com/docs/en/models/overview";
 export const MODEL_PRICE_SOURCE = "https://platform.claude.com/docs/en/about-claude/pricing";
 export const MODEL_PRICES_STATED_ON = "2026-10-07";
 

@@ -24,19 +24,7 @@ import type {
   OfficeLevel,
   PlannedRoute,
 } from "./model.ts";
-import {
-  FILING_REGIME_REGISTRY_PATH,
-  authoritiesById,
-  jurisdictionFilingRegime,
-  loadFilingRegimeRegistry,
-  requireAuthority,
-  selectCustodian,
-  selectRegime,
-  type FilingRegimeRecord,
-  type FilingRegimeRegistry,
-  type RegimeEffectivePeriod,
-  type RegimePublisher,
-} from "./filing-regime.ts";
+import { FILING_REGIME_REGISTRY_PATH, jurisdictionFilingRegime, loadFilingRegimeRegistry, requireAuthority, selectCustodian, selectRegime, type FilingRegimeRecord, type FilingRegimeRegistry, type RegimeEffectivePeriod, type RegimePublisher } from "./filing-regime.ts";
 
 /* ── The registry, loaded once ────────────────────────────────────────────── */
 
@@ -82,15 +70,6 @@ export const TUCSON_CITY_CLERK: FilingAuthority = requireAuthority(
   "az:municipal:tucson:city-clerk",
 );
 
-/** A co-regulator over the same money, carried as `coRegulator`, not as a substitute custodian. */
-export const AZ_CLEAN_ELECTIONS_COMMISSION: FilingAuthority = requireAuthority(
-  REGISTRY,
-  "az:state:clean-elections-commission",
-);
-
-/** Every authority the registry knows, by id. */
-export const AUTHORITIES_BY_ID: ReadonlyMap<string, FilingAuthority> = authoritiesById(REGISTRY);
-
 /* ── The regimes, as the jurisdiction-level view ──────────────────────────── */
 
 function requireRegime(jurisdiction: string): FilingRegime {
@@ -105,15 +84,8 @@ function requireRegime(jurisdiction: string): FilingRegime {
   return regime;
 }
 
-export const FEDERAL_REGIME: FilingRegime = requireRegime("US");
-
 /** Arizona's regime. Read `authorityLevel` against `officeLevel`: they need not agree. */
 export const ARIZONA_REGIME: FilingRegime = requireRegime("AZ");
-
-/** The regimes this repository has read a routing rule for. Never a complete list. */
-export const REGIMES: readonly FilingRegime[] = REGISTRY.jurisdictions
-  .map((j) => jurisdictionFilingRegime(REGISTRY, j.jurisdiction))
-  .filter((r): r is FilingRegime => r !== null);
 
 /* ── Resolution ───────────────────────────────────────────────────────────── */
 
@@ -163,7 +135,7 @@ export interface FilingAuthorityQuery {
 
 /** Defined in `model.ts` (which this module imports) and re-exported here. */
 export {
-  AUTHORITY_RESOLUTION_STATUSES,
+  
   type AuthorityResolutionStatus,
 } from "./model.ts";
 

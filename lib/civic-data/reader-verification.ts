@@ -733,8 +733,6 @@ export async function repairRoutineReaderProjectionReadback(
   if (receipt === null) return { kind: "NOT_APPLICABLE", receipt: null };
   return { kind: "RECORDED", receipt };
 }
-
-export const MEETING_READER_EVENT_READ_CONCURRENCY = 8;
 export const MEETING_READER_EVIDENCE_WRITE_CONCURRENCY = 4;
 
 export type MeetingReaderReadbackRepairResult =

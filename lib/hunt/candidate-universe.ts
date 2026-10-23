@@ -319,28 +319,3 @@ function provenanceOf(
   const org = cand.provenance?.sourceOrg ?? contest.provenance?.sourceOrg ?? null;
   return `${doc.path}${org ? ` — ${org}` : ""}${src ? ` — ${src}` : ""}`;
 }
-
-/* ------------------------------------------------------------- arithmetic */
-
-export interface EnrichmentSplit {
-  readonly total: number;
-  readonly found: number;
-  readonly searchedNoResult: number;
-  readonly unworked: number;
-}
-
-export function enrichmentSplit(u: CandidateUniverse, field: EnrichmentField): EnrichmentSplit {
-  let found = 0;
-  let searched = 0;
-  for (const c of u.candidacies) {
-    const s = c.enrichment[field].state;
-    if (s === "FOUND") found += 1;
-    else if (s === "SEARCHED_NO_RESULT") searched += 1;
-  }
-  return {
-    total: u.candidacies.length,
-    found,
-    searchedNoResult: searched,
-    unworked: u.candidacies.length - found - searched,
-  };
-}

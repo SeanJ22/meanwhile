@@ -23,11 +23,6 @@ export interface DistrictFeature {
   };
 }
 
-export interface DistrictCollection {
-  type: "FeatureCollection";
-  features: DistrictFeature[];
-}
-
 /** Where each overlay's geometry lives, and which tier it belongs to. */
 interface LayerSpec {
   /** Census layers represented by this boundary kind, independent of state coverage. */
@@ -164,9 +159,6 @@ export function withDistricts(style: StyleSpecification, types: readonly Distric
 export const fillLayerId = (type: DistrictType) => `district-${type}-fill`;
 export const lineLayerId = (type: DistrictType) => `district-${type}-line`;
 export const labelLayerId = (type: DistrictType) => `district-${type}-label`;
-
-/** Every fill layer, for hit-testing a click. */
-export const allFillLayerIds = () => DISTRICT_TYPES.map(fillLayerId);
 
 const LABEL_FONT = ["Noto Sans Regular"];
 
@@ -346,10 +338,6 @@ export function removeDistrictLayer(map: MapLibreMap, type: DistrictType): void 
   if (!districtLayersPresent(map) && map.getSource(NATIONAL_BOUNDARIES_SOURCE)) map.removeSource(NATIONAL_BOUNDARIES_SOURCE);
 }
 
-export function removeDistrictLayers(map: MapLibreMap): void {
-  for (const type of DISTRICT_TYPES) removeDistrictLayer(map, type);
-}
-
 /* ------------------------------------------------------------ selection --- */
 
 let selected: { type: DistrictType; ocdId: string } | null = null;
@@ -426,14 +414,6 @@ export interface DrawnDistrict {
   typeLabel: string;
   ocdId: string;
   label: string;
-}
-
-export function districtsAreVisible(
-  drawnCount: number | null,
-  switchOn: boolean,
-): boolean {
-  if (drawnCount !== null && drawnCount > 0) return true;
-  return switchOn;
 }
 
 export function districtsSwitchedOffAndEmpty(

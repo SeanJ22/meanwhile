@@ -24,8 +24,3 @@ export function readerOfficeTitle(title: string | null | undefined): string {
   }
   return trimmed;
 }
-
-/** Every title this map knows, for a test that wants the denominator. */
-export function readerSpellingCount(): number {
-  return READER_SPELLING.size;
-}

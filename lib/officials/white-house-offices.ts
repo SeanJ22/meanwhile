@@ -13,9 +13,3 @@ export function whiteHouseOffice(title: string | null | undefined): WhiteHouseOf
   if (!CABINET_TITLE.test(value)) return null;
   return `cabinet:${value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`;
 }
-
-/** The President leads, then the Vice President, then the Cabinet. */
-export function whiteHouseOfficeRank(title: string | null | undefined): number {
-  const office = whiteHouseOffice(title);
-  return office === "president" ? 0 : office === "vice-president" ? 1 : office ? 2 : 3;
-}

@@ -38,13 +38,6 @@ export function stampFromRead(receipt: ReadReceipt): ReadStamp | NeverRead {
   return receipt.on as ReadStamp;
 }
 
-/** Carry a freshness date forward from a prior read; `why` is required. */
-export function carried(prior: string | null | undefined, why: string): ReadStamp | NeverRead {
-  if (why.trim().length === 0) return NEVER_READ;
-  if (typeof prior !== "string" || !ISO_DAY.test(prior)) return NEVER_READ;
-  return prior as ReadStamp;
-}
-
 /** The day this program ran, in `America/Phoenix`, typed so it cannot be written into a freshness field. */
 export function runStamp(now: Date = new Date()): RunStamp {
   return new Intl.DateTimeFormat("en-CA", {
@@ -54,42 +47,3 @@ export function runStamp(now: Date = new Date()): RunStamp {
     day: "2-digit",
   }).format(now) as RunStamp;
 }
-
-/** How a run date may appear in a generated document: worded so it is never read as data currency. */
-export function provenanceLine(
-  command: string,
-  ran: RunStamp,
-  read: ReadStamp | NeverRead,
-): string {
-  const readPart =
-    read === NEVER_READ
-      ? "No read date is recorded for the data below, so it reads as stale."
-      : `The data below was read ${read}.`;
-  return `Written by \`${command}\` on a run of ${ran} — that is when the program ran, not when the data was read. ${readPart}`;
-}
-
-/** The field names this project uses for a freshness date, one list for every caller. */
-export const FRESHNESS_FIELDS = [
-  "collectedAt",
-  "verifiedAt",
-  "attemptedAt",
-  "fetchedAt",
-  "retrievedAt",
-  "readOn",
-  "lastWalked",
-  "observedAt",
-  "checkedOn",
-  "testedOn",
-] as const;
-
-export type FreshnessField = (typeof FRESHNESS_FIELDS)[number];
-
-/** Expressions that produce a date from the clock rather than from a read. */
-export const CLOCK_EXPRESSIONS = [
-  "stamp()",
-  "today()",
-  "runStamp()",
-  "new Date()",
-  "Date.now()",
-  "toISOString()",
-] as const;

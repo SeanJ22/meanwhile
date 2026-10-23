@@ -68,7 +68,6 @@ export interface CohortRow {
 }
 
 export type Grain = "day" | "week";
-export const GRAINS: readonly Grain[] = ["day", "week"];
 
 export interface PlaceFilter {
   readonly kind: "zip" | "district" | "county" | "state";
@@ -138,7 +137,3 @@ export type ResultBody =
   | { readonly shape: "totals"; readonly rows: readonly TotalsEntry[] }
   | { readonly shape: "words"; readonly rows: readonly WordEntry[] }
   | { readonly shape: "verbatim"; readonly rows: readonly VerbatimEntry[] };
-export type Shape = ResultBody["shape"];
-
-/** What the recipe is asked to run over, by where its numbers come from. */
-export type RecipeSource = "totals" | "cohorts" | "events";

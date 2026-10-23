@@ -10,9 +10,6 @@
  */
 export const INSTRUMENT_VERSION = "v2";
 
-/** The day this version was fixed. From `pnpm stamp`, never a plausible date. */
-export const INSTRUMENT_VERSION_ADOPTED = "2026-08-25";
-
 /**
  * One word limit for every question, candidate, contest and office class. Nothing is ever cut: an
  * over-limit answer is refused with its count shown (see `checkWordLimit`).

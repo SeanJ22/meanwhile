@@ -117,15 +117,6 @@ export function sweepPerson(
   };
 }
 
-/** The sweep for a list of people. Same topics, same rule, every person. */
-export function sweepPeople(
-  people: readonly SweepPerson[],
-  corpus: StatementCorpus,
-  topics: readonly string[] = POSITION_TOPICS,
-): SweepRecord[] {
-  return people.map((p) => sweepPerson(p, corpus, topics));
-}
-
 /**
  * "Not found in the sources checked" is shown only for a topic that an
  * equal-effort sweep searched and found nothing for. Anything else keeps

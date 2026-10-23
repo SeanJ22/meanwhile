@@ -115,7 +115,6 @@ export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet
 
 /** The national roster is deliberately resident in each server, independent of runner publication copies. */
 const national = serverReaderValue("national-current", () => ({ value: null as NationalShelf | null }));
-export const currentNationalShelf = (): NationalShelf | null => national.value;
 
 /** States read the national executives independently of Congress's national directory load. */
 const presidentSources = ["statewide-executive-sources", "wikidata-people"];

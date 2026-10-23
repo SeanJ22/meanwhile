@@ -15,10 +15,6 @@
 /** A robots.txt verdict is evidence to record and never refuses a public page by itself. */
 export const ROBOTS_BLOCKS_ACQUISITION = false as const;
 
-/** The citation a record carries when a public page was read over a robots.txt that names it. */
-export const ROBOTS_OWNER_DECISION =
-  "robots.txt recorded, not blocking (owner decision 2026-09-25, docs/rulings.md: public pages only; access controls are never bypassed)";
-
 export type PermissionVerdict = "ALLOWED" | "DISALLOWED" | "NO_ROBOTS" | "CANNOT_TELL";
 
 /**
@@ -83,7 +79,6 @@ export interface RobotsRead {
 }
 
 export const DEFAULT_ROBOTS_TOKEN = "we-the-people";
-
 
 function stripComment(line: string): string {
   const hash = line.indexOf("#");
@@ -157,7 +152,6 @@ export function parseRobots(text: string): RobotsDocument {
   return { groups, sitemaps, directiveCount };
 }
 
-
 function patternToRegExp(pattern: string): RegExp {
   const anchored = pattern.endsWith("$");
   const body = anchored ? pattern.slice(0, -1) : pattern;
@@ -228,7 +222,6 @@ function decide(
     detail: `longest-match rule in the \`${label}\` group is \`${winner.line}\` for ${target}`,
   };
 }
-
 
 const HTML_SHAPE = /^\s*(<!doctype\s+html|<html[\s>]|<head[\s>]|<body[\s>]|<\?xml)/i;
 

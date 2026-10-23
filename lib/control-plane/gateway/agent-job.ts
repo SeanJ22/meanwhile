@@ -1,4 +1,4 @@
-export const AGENT_JOB_FORMAT_VERSION = 1;
+
 
 export const AGENT_JOB_LOG_KEY = "agent-job";
 

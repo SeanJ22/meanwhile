@@ -4,12 +4,6 @@ import { stateOfSubject } from "../expansion/subjects.ts";
 
 export type ScopeWorkObligation = Pick<FreshnessObligation, "id" | "subjectId" | "recordClass" | "routeId" | "lastWorkedAt" | "active" | "scopeDivisions">;
 
-export const SCOPE_WORK_QUERY = `SELECT jsonb_build_object(
-  'id', value->'id', 'subjectId', value->'subjectId', 'recordClass', value->'recordClass',
-  'routeId', value->'routeId', 'lastWorkedAt', value->'lastWorkedAt',
-  'active', value->'active', 'scopeDivisions', coalesce(value->'scopeDivisions', '[]'::jsonb)
-) AS obligation FROM cp_obligations WHERE value->>'active' = 'true' ORDER BY id`;
-
 export interface ScopeWorkRow {
   readonly id: string;
   readonly subjectId: string;

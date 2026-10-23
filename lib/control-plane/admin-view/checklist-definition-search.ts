@@ -1,6 +1,4 @@
 import { CHECKLIST_PROFILE } from "../readiness/checklist-score.ts";
-
-export const CHECKLIST_DEFINITION_PAGE_SIZE = 25;
 export const CHECKLIST_DEFINITION_MAX_PAGE_SIZE = 50;
 const CURSOR_FORMAT = 1;
 

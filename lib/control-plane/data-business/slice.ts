@@ -69,13 +69,6 @@ export function parseSlice(input: unknown): SliceParse {
   return { ok: true, slice: { from: raw.from, to: raw.to, grain, place, topics, residency, card } };
 }
 
-/** The days a slice covers, by period at its grain, oldest first. */
-export function periodsOf(slice: Slice): readonly string[] {
-  const out = new Set<string>();
-  for (let t = dayMs(slice.from); t <= dayMs(slice.to); t += 86_400_000) out.add(periodOf(new Date(t).toISOString().slice(0, 10), slice.grain));
-  return [...out];
-}
-
 /** Where a ZIP is: its state (two lowercase letters) and the counties its territory reaches (OCD ids). */
 export interface ZipPlaces {
   readonly state: string | null;

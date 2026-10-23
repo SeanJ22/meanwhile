@@ -1,3 +1,4 @@
+import type { PlanningControls } from "../scheduler/state-planning.ts";
 import type { BoxRepository } from "../box.ts";
 import type { FieldManualSourceHint,FieldManualSourceScope } from "../field-manual-sources.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
@@ -483,7 +484,7 @@ export interface ControlPlaneRepositories {
 
   readonly ownerDecisions: AppendOnlyRepository<OwnerDecisionIntent>;
   readonly huntOrders: import("../hunt-orders.ts").HuntOrderRepository;
-  readonly planningControls?: import("../scheduler/state-planning.ts").PlanningControls;
+  readonly planningControls?: PlanningControls;
   readonly planningState?: string;
   readonly controlReadsBackfill?: import("./control-reads-backfill.ts").ControlReadsBackfill;
   readonly researchState: AggregateRepository<ResearchState>;

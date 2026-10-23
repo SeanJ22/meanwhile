@@ -84,17 +84,6 @@ export function recordRecentZip(zip: string) {
   );
 }
 
-export function clearRecentZips() {
-  commitStorageWrite(
-    () => window.localStorage.removeItem(STORAGE_KEY),
-    () => {
-      cachedRaw = null;
-      cachedList = EMPTY;
-      publishToListeners(listeners);
-    },
-  );
-}
-
 export function useRecentZips(): string[] {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

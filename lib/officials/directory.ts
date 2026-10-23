@@ -50,10 +50,6 @@ export interface DirectoryFile {
   byMember: Record<string, MemberDirectoryEntry>;
 }
 
-export function directorySource(): DirectorySource {
-  return getFederalDirectoryFile().source;
-}
-
 /** One member's slice, joined by BIOGUIDE, never by name; a non-federal holder id returns null. */
 export function directoryFor(holderId: string): {
   source: DirectorySource;

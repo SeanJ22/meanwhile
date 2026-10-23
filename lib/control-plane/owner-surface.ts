@@ -1153,27 +1153,6 @@ export interface OwnerSnapshot {
   readonly billingAttribution?: import("./provider-billing-attribution.ts").BillingAttribution | null;
 }
 
-export function countClaimsFor(snapshot: OwnerSnapshot): readonly CountClaim[] {
-  return [
-    {
-      label: "pilot health contracts",
-      stated: snapshot.contracts.length,
-      rendered: snapshot.contracts.length,
-    },
-    {
-      label: "decision cards",
-      stated: snapshot.decisionCards.length,
-      rendered: snapshot.decisionCards.length,
-    },
-    { label: "incidents", stated: snapshot.incidents.length, rendered: snapshot.incidents.length },
-    {
-      label: "ZIP rows",
-      stated: snapshot.zipRows.held ? snapshot.zipRows.value.length : 0,
-      rendered: snapshot.zipRows.held ? snapshot.zipRows.value.length : 0,
-    },
-  ];
-}
-
 export type HealthLevel = "GREEN" | "AMBER" | "RED" | "UNKNOWN";
 
 export interface ContractCard {

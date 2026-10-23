@@ -363,3 +363,5 @@ One line per batch folded into river.
 - 2026-10-23T13:57:34Z · nx-02-fx · NX-01, NX-02 · ready a5d5f7d4ea14 · river 1885b95f465a · pnpm gates pass on 1885b95f465a
 - 2026-10-23T13:57:34Z · nb-02 · NB-01, NB-02 · ready 0b42253dcd9d · river 1885b95f465a · pnpm gates pass on 1885b95f465a
 - 2026-10-23T13:57:34Z · dg-02 · DG-01, DG-02 · ready e6745c664a83 · river 1885b95f465a · pnpm gates pass on 1885b95f465a
+- 2026-10-23T16:09:15Z · sp-01-fx · SP-01 · ready 8a6d2111fc05 · river 171c09b52f07 · pnpm gates pass on 171c09b52f07
+- 2026-10-23T16:09:15Z · rn-01-fx · RN-01 · ready ecfc8636fb3b · river 171c09b52f07 · pnpm gates pass on 171c09b52f07

@@ -95,7 +95,8 @@ test("postbuild checker rejects a removed dynamic holding in emitted route manif
 
 test("no server function packs state geometry; each file is read from the reader edge store by the sha its manifest names", () => {
   const manifest = JSON.parse(fs.readFileSync("data/derived/state-geometry.json", "utf8")) as { files: Record<string, { sha256: string }> };
-  const held = fs.globSync("data/states/*/geo/*.geojson").map(path => path.replaceAll("\\", "/")).sort();
+  const held = fs.readdirSync("data/states").flatMap(state => fs.existsSync(`data/states/${state}/geo`)
+    ? fs.readdirSync(`data/states/${state}/geo`).filter(file => file.endsWith(".geojson")).map(file => `data/states/${state}/geo/${file}`) : []).sort();
   assert.deepEqual(Object.keys(manifest.files).sort(), held, "every committed state geometry file, territories included, is named");
   const toml = fs.readFileSync("netlify.toml", "utf8");
   assert.ok(!toml.includes('"data/states/*/geo/**/*.geojson"'), "a function packs state geometry");

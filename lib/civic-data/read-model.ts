@@ -1226,8 +1226,9 @@ export function promotionProofIssue<T>(
   if (row.state !== "PROMOTED" || row.acquisitionSucceeded !== true) return "the pointed candidate is not a successfully acquired PROMOTED row";
   if (row.promotedVersion !== projection.versionId || row.lastKnownGoodVersion !== projection.lastKnownGoodVersionId) return "the candidate's durable promotion fields do not match the pointer";
   const scoped = statePublicationScope(scope);
+  const streamed = scoped || recordClass === "CENSUS_GEOGRAPHY";
   const indexedPrior = scoped ? statePublicationPriorOf(candidate) : undefined;
-  const readModelHash = indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableProjectionHash(candidate.readModel));
+  const readModelHash = indexedPrior?.payloadHash ?? (streamed ? durableStateHash(candidate.readModel) : durableProjectionHash(candidate.readModel));
   if (
     readModelHash === null ||
     !candidate.normalization?.normalizedHash ||
@@ -1235,7 +1236,7 @@ export function promotionProofIssue<T>(
     candidate.normalization.normalizedHash !== readModelHash
   ) return "the candidate Reader projection does not match its durable normalized hash";
   const normalizedPayloadHash = indexedPrior ? candidate.normalization.normalizedPayloadHash : candidate.normalizedPayload === candidate.readModel ? readModelHash :
-    scoped ? durableStateHash(candidate.normalizedPayload) : durableProjectionHash(candidate.normalizedPayload);
+    streamed ? durableStateHash(candidate.normalizedPayload) : durableProjectionHash(candidate.normalizedPayload);
   if (
     normalizedPayloadHash === null ||
     !candidate.normalization.normalizedPayloadHash ||
@@ -1271,7 +1272,7 @@ export function promotionProofIssue<T>(
     projectionReceipt.scope !== scope
   ) return "the GOOD receipt does not identify the pointed candidate";
   if (canonicalCivicDataJson(projectionReceipt) !== canonicalCivicDataJson(candidateReceipt)) return "the candidate and pointer receipts differ";
-  if (!indexedPrior && (scoped ? projection.payload !== candidate.readModel && durableStateHash(projection.payload) !== readModelHash :
+  if (!indexedPrior && (streamed ? projection.payload !== candidate.readModel && durableStateHash(projection.payload) !== readModelHash :
     canonicalCivicDataJson(projection.payload) !== canonicalCivicDataJson(candidate.readModel))) return "the pointer payload differs from the validated candidate read model";
   const retrievedAt = Date.parse(candidate.retrieval?.retrievedAt ?? "");
   const validatedAt = Date.parse(projectionReceipt.validatedAt);

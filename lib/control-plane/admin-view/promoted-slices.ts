@@ -35,22 +35,26 @@ export interface ContainerSlice {
 const GEO_TYPES: readonly GeographyType[] = ["county", "congressional_district", "cbsa", "state_leg_upper", "state_leg_lower"];
 
 /** A `scope` row per published scope, so a type the pointer does not carry is never read as "none there". */
-function groupingsQuery(withOverlaps: boolean, where: string, overlapZipParam?: number): string {
+function groupingsQuery(withOverlaps: boolean, where: string, overlapZipParam?: number, stateParam?: number): string {
   const grouping =
     "g->>'geoid', g->>'ocdId', g->>'label', g->>'stateFips', g->>'stateAbbr', g->>'cbsaClass', g->'memberStates'" +
     (withOverlaps ? overlapZipParam
       ? `, (SELECT jsonb_agg(overlap) FROM jsonb_array_elements(g->'overlaps') overlap WHERE overlap->>'zcta5'=$${overlapZipParam}::text)`
       : ", g->'overlaps'" : ", NULL::jsonb");
-  return (
-    "WITH scopes AS MATERIALIZED (SELECT x AS scope FROM civic_data_promotions p" +
-    " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'scopes') x WHERE p.record_class = $1 AND p.scope = $2)" +
-    " SELECT 'scope' AS row_kind, scope->>'type' AS type, scope->>'version' AS version, scope->'versionMeta'->>'plan' AS plan," +
-    " NULL::text AS geoid, NULL::text AS ocd_id, NULL::text AS label, NULL::text AS state_fips, NULL::text AS state_abbr," +
-    " NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, scope->'versionMeta' AS version_meta FROM scopes" +
-    " UNION ALL SELECT 'grouping', scope->>'type', scope->>'version', scope->'versionMeta'->>'plan', " +
-    grouping + ", NULL::jsonb" +
-    ` FROM scopes CROSS JOIN LATERAL jsonb_array_elements(scope->'groupings') g WHERE scope->>'type' = ANY($3::text[]) AND ${where}`
-  );
+  return `WITH scopes AS MATERIALIZED (
+    SELECT meta FROM civic_data_promotions p,
+      LATERAL jsonb_path_query(p.payload, '$.scopes[*].versionMeta') meta
+    WHERE p.record_class=$1 AND p.scope=$2
+  ) SELECT 'scope' AS row_kind, meta->>'type' AS type, meta->>'key' AS version, meta->>'plan' AS plan,
+    NULL::text AS geoid, NULL::text AS ocd_id, NULL::text AS label, NULL::text AS state_fips, NULL::text AS state_abbr,
+    NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, meta AS version_meta FROM scopes
+  UNION ALL SELECT 'grouping', meta->>'type', meta->>'key', meta->>'plan', ${grouping}, NULL::jsonb
+    FROM civic_data_promotions p CROSS JOIN scopes
+    CROSS JOIN LATERAL jsonb_path_query(p.payload,
+      '$.scopes[*] ? (@.version == $version).groupings[*]${stateParam ? ' ? (@.stateAbbr == $state || @.memberStates[*] == $state)' : ''}',
+      jsonb_build_object('version', meta->>'key'${stateParam ? `, 'state', $${stateParam}::text` : ''})) g
+    WHERE p.record_class=$1 AND p.scope=$2 AND meta->>'type'=ANY($3::text[]) AND ${where}`;
+
 }
 
 export interface ScopeSlice {
@@ -154,7 +158,7 @@ export async function stateContainers(
 ): Promise<Slice<GeographySlice>> {
   const st = stateAbbr.toUpperCase();
   const statement = {
-    text: groupingsQuery(withOverlaps, "(g->>'stateAbbr' = $4 OR g->'memberStates' @> jsonb_build_array($4::text))"),
+    text: groupingsQuery(withOverlaps, "(g->>'stateAbbr' = $4 OR g->'memberStates' @> jsonb_build_array($4::text))", undefined, 4),
     params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...types], st],
   };
   return (await geography(query, `The Census geography for ${st}`, [statement], withOverlaps)).slice;
@@ -180,7 +184,7 @@ export function stateContainersStatement(state: string, divisionIds: readonly st
     ...(districtKeys ? { canonicalKeys: true as const } : {}),
     text: `WITH geography AS MATERIALIZED (
       ${groupingsQuery(true, "(g->>'stateAbbr' = $4 OR g->'memberStates' @> jsonb_build_array($4::text))" +
-        (districtKeys ? " AND g->'overlaps' @> jsonb_build_array(jsonb_build_object('zcta5',$6::text))" : ""),districtKeys ? 6 : undefined)}
+        (districtKeys ? " AND g->'overlaps' @> jsonb_build_array(jsonb_build_object('zcta5',$6::text))" : ""),districtKeys ? 6 : undefined, 4)}
     ) SELECT (SELECT pointer.current_version_id FROM civic_data_promotions pointer WHERE pointer.key=$1||':'||$2) AS version_id,
       coalesce((SELECT jsonb_agg(to_jsonb(g)) FROM geography g),'[]'::jsonb) AS geography,
       coalesce((SELECT jsonb_agg(d) FROM civic_data_promotions registration,

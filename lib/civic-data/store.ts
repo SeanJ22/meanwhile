@@ -146,6 +146,7 @@ export interface RoutineDataStore {
 }
 
 export interface RoutineStoreClock {
+  readonly publishedScopeVersions?: readonly string[];
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
@@ -1068,6 +1069,8 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const confirmation = pointedRow ? latestUnchangedConfirmation(pointedHistory, pointedRow.candidate.id) : null;
     return confirmedClock({
       lastAttemptedAt,
+      ...(recordClass === "CENSUS_GEOGRAPHY" ? { publishedScopeVersions: ((pointer?.payload as { scopes?: { version: string; versionMeta?: { retrievalComplete?: boolean } }[] } | undefined)?.scopes ?? [])
+        .filter(scope => scope.versionMeta?.retrievalComplete !== false).map(scope => scope.version) } : {}),
       lastSucceededAt: proofConsistentSuccess(pointedRecord, pointer),
       lastSucceededObservedAt: proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt),
       ...(recordClass === "FEDERAL_MONEY" && scope === `${sourceId}:US` && pointer?.sourceId === sourceId
@@ -1124,6 +1127,9 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
       lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
       promotedAt: civicDataPromotions.promotedAt,
       validationReceipt: civicDataPromotions.validationReceipt,
+      ...(recordClass === "CENSUS_GEOGRAPHY" ? { publishedScopeVersions: sql<readonly string[]>`
+        coalesce((select jsonb_agg(s->>'version') from jsonb_array_elements(${civicDataPromotions.payload}->'scopes') s
+          where coalesce(s#>>'{versionMeta,retrievalComplete}', 'true') <> 'false'), '[]'::jsonb)` } : {}),
       ...(recordClass === "FEDERAL_MONEY" && scope.endsWith(":US") ? { continuationPending: sql<boolean>`
         coalesce(${civicDataPromotions.payload}->>'state', '') = 'US'
         and ${civicDataPromotions.payload}->>'source' = ${civicDataPromotions.sourceId}
@@ -1178,6 +1184,7 @@ function confirmedClock(
     ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
     ...(clock.lastSucceededParserVersion ? { lastSucceededParserVersion: clock.lastSucceededParserVersion } : {}),
     ...(clock.continuationPending !== undefined ? { continuationPending: clock.continuationPending } : {}),
+    ...(clock.publishedScopeVersions !== undefined ? { publishedScopeVersions: clock.publishedScopeVersions } : {}),
     ...sittings,
   };
 }
@@ -2192,7 +2199,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     this.assertMutationAuthority();
     const held = options.candidate;
     let record: CandidateVersionRecord | null;
-    if (held && statePublicationScope(held.scope)) {
+    if (held && (statePublicationScope(held.scope) || held.recordClass === "CENSUS_GEOGRAPHY")) {
       const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
         normalizedPayloadHash: sql<string | null>`${civicDataCandidates.candidate}#>>'{normalization,normalizedPayloadHash}'`,
@@ -2418,6 +2425,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       lastAttemptedAt,
       lastSucceededAt: canonicalLastSucceededAt,
       lastSucceededObservedAt,
+      ...(recordClass === "CENSUS_GEOGRAPHY" ? { publishedScopeVersions: pointer?.publishedScopeVersions ?? [] } : {}),
       ...(recordClass === "FEDERAL_MONEY" && scope === `${sourceId}:US` && pointer?.sourceId === sourceId
         ? { continuationPending: pointer.continuationPending === true } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)

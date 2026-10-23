@@ -75,7 +75,10 @@ export async function processRoutineCandidate(
   const scoped = statePublicationScope(inputCandidate.scope);
   let base = scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope) : null;
   let current = base ? base.current : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
-  let lkg = base ? base.lkg : current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
+  // Geography needs the prior payload and its proof, without rereading the
+  // national before/after delta and identity lists from the prior candidate.
+  let lkg = base ? base.lkg : current ? await (inputCandidate.recordClass === "CENSUS_GEOGRAPHY" && store.readCandidateProof
+    ? store.readCandidateProof(current.lastKnownGoodVersionId) : store.readCandidate(current.lastKnownGoodVersionId)) : null;
   let indexedPrior = lkg ? statePublicationPriorOf(lkg.candidate) : undefined;
   const observedBaseVersionId = current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
@@ -281,7 +284,7 @@ export async function processRoutineCandidate(
   const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt, undefined, held);
   let promoted: PromotedProjection;
   try {
-    promoted = await store.promote(candidate.id, validated.receipt, transitionAt, scoped ? held : undefined);
+    promoted = await store.promote(candidate.id, validated.receipt, transitionAt, scoped || candidate.recordClass === "CENSUS_GEOGRAPHY" ? held : undefined);
   } catch (error) {
     if (!(error instanceof PromotionBaseChangedError)) throw error;
     const code = "PROMOTION_BASE_CHANGED";

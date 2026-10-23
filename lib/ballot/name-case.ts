@@ -33,20 +33,19 @@ function caseWord(word: string): string {
   return word.charAt(0) + word.slice(1).toLowerCase();
 }
 
-/** Mixed-case spelling stays as filed; only ledger capitals are cased. */
+/** Case each filed all-capitals word; preserve mixed-case words and initials. */
 export function surnameDisplayCase(surname: string): string {
   const trimmed = surname.trim();
   if (trimmed.length === 0) return surname;
-  if (trimmed !== trimmed.toUpperCase()) return surname;
   // Single letters with periods (initials like "B.") and suffixes keep form.
   return trimmed
     .split(/(\s+|-)/)
-    .map((part) => (/^\s+$/.test(part) || part === "-" ? part : caseWord(part)))
+    .map((part) => (part.length <= 2 || part !== part.toUpperCase() || /^\s+$/.test(part) || part === "-" ? part : caseWord(part)))
     .join("");
 }
 
 export function ballotCandidateDisplayName(candidate: Pick<Candidacy, "givenName" | "familyName">): string {
-  if (candidate.givenName.trim()) return `${candidate.givenName} ${surnameDisplayCase(candidate.familyName)}`.trim();
+  if (candidate.givenName.trim()) return `${surnameDisplayCase(candidate.givenName)} ${surnameDisplayCase(candidate.familyName)}`.trim();
   return candidate.familyName.split(/\s*\/\s*/).map(person => {
     const [family, given, ...suffixes] = person.split(",").map(part => part.trim());
     if (!given || /^(?:jr\.?|sr\.?|[ivx]+)$/i.test(given)) return surnameDisplayCase(person.trim());

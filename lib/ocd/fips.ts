@@ -150,3 +150,13 @@ export function districtIdentity(
     label: `${postal}-${number}`,
   };
 }
+
+/** Canonicalize ballot/provider spellings of a congressional division through
+ * the same seat rule used for Census rows. Null means it carries no seat. */
+export function canonicalCongressionalDivision(ocdId: string): string | null {
+  const match = /^ocd-division\/country:us\/(state|district|territory):([a-z]{2})\/cd:([^/]+)$/.exec(ocdId);
+  const fips = match && Object.entries(FIPS_TO_STATE).find(([, entry]) =>
+    entry.prefix === match[1] && entry.postal.toLowerCase() === match[2])?.[0];
+  const code = match?.[3];
+  return fips && code ? districtIdentity(fips, code === "at-large" ? "00" : code.padStart(2, "0"))?.ocdId ?? null : null;
+}

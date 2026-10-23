@@ -11,6 +11,7 @@ import { manualPayloadScope } from "./scoped-manual-contracts.ts";
 import { specialDistrictBoundaryIssue } from "../registry/special-district-boundary.ts";
 import { publicRecordIssue } from "./public-record-contract.ts";
 import { governmentBudgetIssue } from "./government-budget-contract.ts";
+import { canonicalCongressionalDivision } from "../ocd/fips.ts";
 
 import { genericBallotProblems, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
@@ -658,10 +659,25 @@ function plainEnglishProjection(payload: ManualProjectionPayload): BuiltProjecti
 }
 
 function genericBallotProjection(payload: ManualProjectionPayload, state?: string): BuiltProjection {
-  const value = payload as GenericBallotProjection;
+  const input = payload as GenericBallotProjection;
+  const districtProblems: string[] = [];
+  const canonicalDivision = <T extends { ocdId: string }>(row: T): T => {
+    if (!row.ocdId.includes("/cd:")) return row;
+    const ocdId = canonicalCongressionalDivision(row.ocdId);
+    if (!ocdId) {
+      districtProblems.push(`A ballot congressional division carries no seat: ${row.ocdId}`);
+      return row;
+    }
+    return { ...row, ocdId };
+  };
+  const value: GenericBallotProjection = { ...input, ballots: Object.fromEntries(Object.entries(input.ballots ?? {}).map(([key, ballot]) =>
+    [key, { ...ballot, contests: ballot.contests.map(canonicalDivision),
+      ...(ballot.heldContests ? { heldContests: ballot.heldContests.map(canonicalDivision) } : {}),
+      absences: ballot.absences.map(canonicalDivision) }])) };
+  payload = value;
   const ballots = Object.values(value?.ballots ?? {});
   const records = civicRecordsFor("BALLOT_CANDIDACY", value);
-  const problems = genericBallotProblems(value, state);
+  const problems = [...genericBallotProblems(value, state), ...districtProblems];
   return { payload, records, identities: ballots.flatMap(ballot => [
     ...[...ballot.contests, ...ballot.heldContests ?? []].map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { contest_id: row.id }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),

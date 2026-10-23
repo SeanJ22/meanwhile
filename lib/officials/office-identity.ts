@@ -67,7 +67,7 @@ const RULES: OfficeRule[] = [
   { key: "school_board", blurbType: "school-board", pattern: /^(?:member of the )?(?:regional )?board of education$|^(?:member of the )?school (?:board(?: (?:member|chair|vice chair))?|committee)$|^(?:member of the )?governing board(?: (?:member|president|vice president|clerk))?$|^school (?:district )?(?:trustee|director)$/i },
   { key: "library_trustee", pattern: /^library (?:board )?(?:trustee|board member)$/i },
   { key: "school_superintendent", blurbType: "superintendent", pattern: /^(?:school |district |school district )?superintendent$/i },
-  { key: "state_supreme_court", pattern: /^(?:(?:chief |associate )?justice(?: of (?:the )?)?(?:state )?supreme court|(?:state )?supreme court(?: (?:chief |associate )?(?:justice|judge))?)$/i },
+  { key: "state_supreme_court", pattern: /^(?:(?:chief |associate )?justice(?: of (?:the )?)?(?:state )?supreme court|(?:state )?supreme court(?: (?:chief |associate )?(?:justice|judge))?|justice supreme court of maryland(?: - appellate circuit \d+)?)$/i },
   { key: "state_appeals_court", pattern: /^(?:judge(?: of (?:the )?)?(?:state )?court of appeals|(?:state )?court of appeals(?: judge)?|(?:state )?appeals court(?: judge)?)$/i },
   { key: "circuit_court_judge", pattern: /^(?:circuit court judge|judge of (?:the )?circuit court)$/i },
   { key: "district_court_judge", pattern: /^(?:district court judge|judge of (?:the )?district court)$/i },

@@ -23,6 +23,10 @@ const NOT_DISTRICT_GEOMETRY: Record<string, string> = {
     "body id, which is the join confusion this session spent its day removing.",
 };
 
+/** Every state's special-district and tribal polygons together outgrow a server function (Netlify's 250 MB), so no
+ * function packs them and the resolver never reads them; ZIP pages carry these districts from the ZIP shards. */
+const TERRITORY_EXCLUSION = "special-district and tribal territories are not packed into server functions (250 MB function limit); ZIP shards carry these districts";
+
 /** `cd119.geojson` → `cd119`; `cd119-NN.geojson` → `cd119` + state FIPS `NN`. */
 function parseName(file: string): { type: string; fips: string | null } {
   const stem = basename(file).replace(/\.geojson$/, "");
@@ -52,6 +56,10 @@ for (const file of files) {
   }
 
   const { type, fips } = parseName(file);
+  if (type === "territory") {
+    excluded.push({ file, reason: TERRITORY_EXCLUSION });
+    continue;
+  }
   const ownIds = ids(file);
   const splitFiles = files.filter(other => { const parsed = parseName(other); return parsed.type === type && parsed.fips !== null; });
   const splitIds = new Set(splitFiles.flatMap(other => [...ids(other)]));

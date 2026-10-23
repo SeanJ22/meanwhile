@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 92 LIVE (/api/build 5f0e9de16 from 1:46 PM EDT; runner on 5f0e9de16 from 17:44 UTC); RELEASE 93 candidate river-next 5ddf41bb8 (BL-21-FX alone on release 92) in pnpm gates from 2:25 PM EDT; BL-01 returned
+build_state: RELEASE 92 LIVE (/api/build 5f0e9de16 from 1:46 PM EDT; runner on it from 17:44 UTC); RELEASE 93 (BL-21-FX) PR #803 OPEN: gates 9 of 9 on 5ddf41bb8 (9,634 pass, 0 fail, 6 skipped; 2:25 to 3:13 PM EDT), river 739e03665 (main merged, tree identical), run-full-ci + auto-merge; RELEASE 94 candidate river-next 97819bc62 (RN-02 on river) in pnpm gates from 3:16 PM EDT
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -102,7 +102,7 @@ Queue (8:20 AM EDT):
   - Unchanged, still returned: rn-02 d04982090 (merge river), pb-02 85bf54e3d (READY message), lv-01 f786ce81f (READY message), src-01 66437c4f2 (EPA ECHO, OpenFEMA), pb-01 (withdrawn). eo-01: WIP only (waits on lv-01).
 - Live checks owed when release 93 is live (plus real places in 10+ states, counts by state):
   - BL-01: /ballot on real ZIPs in every state shows the same contests today and tomorrow; 58501 (Bismarck ND) keeps its at-large House race; Maryland's Supreme Court label is county-scoped; PR and GU stay empty until BA-01 publishes their ballots (no BALLOT_CANDIDACY pointer at their state scope).
-  - BL-21-FX: /ballot?zip=85653 (Marana) shows the Arizona card with Secretary of State 602-542-8683, Pima County Recorder 520-724-4330 and Marana Town Clerk 520-382-1961; 85701 the same card; every state's card renders with no false gap; navigation tasks publish on their next pass (51 due).
+  - BL-21-FX (release 93): /ballot?zip=85653 (Marana) shows the Arizona card with Secretary of State 602-542-8683, Pima County Recorder 520-724-4330 and Marana Town Clerk 520-382-1961; 85701 the same card; every state's card renders with no false gap; navigation tasks publish on their next pass (51 due).
 
 Baseline before this release (live, release 88, 4:56 AM EDT; first visit, 16 places fetched in parallel), /api/meetings by ZIP: boards shown / with members / empty / ms
 - WI 53703 Madison 0/0/0 618 ms; WI 53202 Milwaukee 342/117/225 (184 all-caps names, 3.07 MB) 659 ms; AZ 85701 136/9/127 5.3 s; TX 77002 2/1/1; MO 64106 2/2/0; FL 33130 1/0/1.

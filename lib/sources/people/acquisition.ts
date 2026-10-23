@@ -1,9 +1,9 @@
-export { PEOPLE_SOURCE_DEFINITIONS, type PeopleSourceId, type PeopleAcquisitionOptions, type PeopleSourceRelease } from "./common.ts";
-export { acquireLegiscanPeople, normalizeLegiscanPeople, currentLegiscanSessions } from "./legiscan.ts";
-export { acquireCongressMembers, normalizeCongressMember } from "./congress.ts";
-export { acquireGovinfoDirectory, normalizeGovinfoMember } from "./govinfo.ts";
-export { acquireWikidataPeople, normalizeWikidataPeople, wikidataPeopleQuery, acquireWikidataPortraitLicense, discoverWikidataIdentifierProperties, WIKIDATA_IDENTIFIER_PROPERTIES } from "./wikidata.ts";
-export { acquireLegislatureRosters, normalizeOfficialLegislaturePage, legislatureRosterLinks } from "./legislature.ts";
+export {   type PeopleAcquisitionOptions, type PeopleSourceRelease } from "./common.ts";
+export {  normalizeLegiscanPeople,  } from "./legiscan.ts";
+;
+;
+export {  normalizeWikidataPeople,     } from "./wikidata.ts";
+export {  normalizeOfficialLegislaturePage,  } from "./legislature.ts";
 import type { PeopleAcquisitionOptions, PeopleSourceRelease } from "./common.ts";
 import { acquireLegiscanPeople } from "./legiscan.ts";
 import { acquireCongressMembers } from "./congress.ts";

@@ -188,10 +188,6 @@ export function buildFleetView(input: FleetViewInput): FleetView {
   };
 }
 
-export function fleetRenderedNumbers(view: FleetView): readonly Measured[] {
-  return view.groups.flatMap((g) => [g.working, g.queued, g.completed]);
-}
-
 export interface DeploymentRow {
   readonly intentId: string;
   readonly requestedAt: string;

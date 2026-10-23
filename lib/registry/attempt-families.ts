@@ -3,10 +3,6 @@ import { stateFromRegistryRuntimeContractId } from "../civic-data/state-scopes.t
 export const ATTEMPT_FAMILIES = ["meetings", "people", "services", "elections", "filings"] as const;
 export type AttemptFamily = (typeof ATTEMPT_FAMILIES)[number];
 
-export const ATTEMPT_FAMILY_WORDS: Readonly<Record<AttemptFamily, string>> = {
-  meetings: "Meetings", people: "Officeholders", services: "Services", elections: "Election routes", filings: "Filings",
-};
-
 /** The family each existing publication door serves. Unknown doors serve none. */
 const FAMILY_OF_CONTRACT: Readonly<Record<string, AttemptFamily>> = {
   "comment-access": "meetings",
@@ -18,10 +14,6 @@ const FAMILY_OF_CONTRACT: Readonly<Record<string, AttemptFamily>> = {
 export function attemptFamilyOf(contractId: string | undefined): AttemptFamily | null {
   if (contractId === undefined) return null;
   return stateFromRegistryRuntimeContractId(contractId) ? "people" : FAMILY_OF_CONTRACT[contractId] ?? null;
-}
-
-export function isAttemptFamily(value: unknown): value is AttemptFamily {
-  return typeof value === "string" && (ATTEMPT_FAMILIES as readonly string[]).includes(value);
 }
 
 export interface FamilyAttemptLike {

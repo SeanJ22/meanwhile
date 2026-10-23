@@ -58,16 +58,6 @@ export type DerivedInputRef =
     };
 
 export type DerivedInputKind = DerivedInputRef["kind"];
-export const DERIVED_INPUT_KINDS = [
-  "PROMOTED_VERSION",
-  "VAULTED_EVIDENCE",
-  "DISCOVERY_ATTEMPT",
-  "COMMITTED_ROUTE_HINT",
-  "CROSSWALK_VERSION",
-  "PIPELINE_APPROVAL",
-  "MEMBER_ACQUISITION",
-  "DOOR_RECORD",
-] as const satisfies readonly DerivedInputKind[];
 
 export type HostAttestation =
   | {

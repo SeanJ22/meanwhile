@@ -20,6 +20,7 @@ import {
   decideLock,
   decideObserve,
   foldOrder,
+  missingProofs,
   parseArgs,
   parseStatus,
   pendingReady,
@@ -31,6 +32,8 @@ import {
 } from "../scripts/river.mjs";
 
 const SCRIPT = join(import.meta.dirname, "..", "scripts", "river.mjs");
+/** The two connection proofs every READY message carries. */
+const PROOFS = "Connected end to end: a reader request reaches the new rows.\n\nNext scheduled run: the controlled clock shows the next pass still serves them.";
 const NOW = Date.parse("2026-10-04T12:00:00Z");
 const minutesAgo = (minutes: number) => new Date(NOW - minutes * 60_000).toISOString();
 
@@ -82,6 +85,17 @@ test("plan step ids from R, platform and source lanes count as steps", () => {
   assert.deepEqual(stepIds("READY: SRC-AC"), ["SRC-AC"]);
   assert.deepEqual(stepIds("READY: R2B, SRC-LS and DB-09"), ["R2B", "SRC-LS", "DB-09"]);
   assert.deepEqual(stepIds("WIP: still working"), []);
+});
+
+test("a READY message carries both connection proofs or names the ones it lacks", () => {
+  assert.deepEqual(missingProofs(`READY: DB-09\n\n${PROOFS}`), []);
+  assert.deepEqual(missingProofs("READY: DB-09\n\nConnected end-to-end through the reader route."), ["still working on the next scheduled run"]);
+  assert.deepEqual(missingProofs("READY: DB-09"), ["connected end to end", "still working on the next scheduled run"]);
+  assert.deepEqual(missingProofs("READY: PB-01\n\nFeeds into: reader body cards.\n\nControlled next/tomorrow scheduler replays preserve the roster."), []);
+  assert.deepEqual(missingProofs("READY: SRC-01\n\nConnection proof 1 — upstream to reader.\n\nConnection proof 2 — next configured run."), []);
+  assert.deepEqual(missingProofs("READY: EX-03\n\nTomorrow proof: the scheduled pass is due."), ["connected end to end"]);
+  assert.deepEqual(missingProofs("READY: PK-01\n\nWhat PK-01 feeds: BL-01's ballot controls.\n\nTomorrow-clock connection proof: the next poll syncs."), []);
+  assert.deepEqual(missingProofs("READY: NX-02\n\nFeeds: NationalSection.\n\nNext scheduled-run proof: due at the boundary."), []);
 });
 
 test("READY subjects name their step ids; the newest READY is folded and later WIP stays behind", () => {
@@ -253,7 +267,7 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
     put(work, "lib/db/migration-phases.ts", 'export const MIGRATION_PHASES = {\n  "0000_first": "expand",\n  "DB-09_place_owed": "expand",\n};\n');
     put(work, "measures.txt", "ready\n");
     sh(work, ["add", "-A"]);
-    sh(work, ["commit", "--quiet", "-m", "READY: DB-09"]);
+    sh(work, ["commit", "--quiet", "-m", "READY: DB-09", "-m", PROOFS]);
     const measuresReady = sh(work, ["rev-parse", "HEAD"]);
     put(work, "measures.txt", "wip\n");
     sh(work, ["commit", "--quiet", "-am", "WIP: DB-12"]);
@@ -264,7 +278,7 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
     put(work, ".factory/registry.md", "build_state: active\nlock: r-1\nheartbeat: 2026-01-01T00:00:00Z\n");
     put(work, "registry.txt", "ready\n");
     sh(work, ["add", "-A"]);
-    sh(work, ["commit", "--quiet", "-m", "READY: DB-10"]);
+    sh(work, ["commit", "--quiet", "-m", "READY: DB-10", "-m", PROOFS]);
     const registryReady = sh(work, ["rev-parse", "HEAD"]);
     sh(work, ["push", "--quiet", "origin", "registry:stream/registry"]);
 
@@ -275,7 +289,7 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
     const plan = JSON.parse(scanned.out);
     assert.deepEqual(plan.ready_lanes, ["measures", "registry"]);
     const measures = plan.lanes.find((lane: { lane: string }) => lane.lane === "measures");
-    assert.deepEqual(measures.ready, { ready_sha: measuresReady, steps: ["DB-09"], wip_after_ready: 1 });
+    assert.deepEqual(measures.ready, { ready_sha: measuresReady, steps: ["DB-09"], wip_after_ready: 1, missing_proofs: [] });
     assert.equal(measures.stale_lock, false);
     assert.equal(plan.lanes.find((lane: { lane: string }) => lane.lane === "registry").stale_lock, true);
 
@@ -322,7 +336,7 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
     put(work, ".factory/measures.md", `build_state: active\nlock: m-1\nheartbeat: ${new Date().toISOString()}\nready: DB-12\n`);
     put(work, "measures-two.txt", "ready\n");
     sh(work, ["add", "-A"]);
-    sh(work, ["commit", "--quiet", "-m", "READY: DB-12"]);
+    sh(work, ["commit", "--quiet", "-m", "READY: DB-12", "-m", PROOFS]);
     sh(work, ["push", "--quiet", "origin", "measures:stream/measures"]);
     const second = river(riverCheckout, "fold");
     assert.equal(second.code, 0, second.out);
@@ -336,7 +350,7 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
       sh(work, ["checkout", "--quiet", "-f", "-B", lane, "origin/river"]);
       put(work, "shared.txt", `${lane}\n`);
       sh(work, ["add", "-A"]);
-      sh(work, ["commit", "--quiet", "-m", `READY: HU-0${lane.length}`]);
+      sh(work, ["commit", "--quiet", "-m", `READY: HU-0${lane.length}`, "-m", PROOFS]);
       sh(work, ["push", "--quiet", "origin", `${lane}:stream/${lane}`]);
     }
     const conflicted = river(riverCheckout, "fold");
@@ -345,6 +359,25 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
     assert.equal(sh(riverCheckout, ["status", "--porcelain", "--untracked-files=no"]), "", "the aborted merge leaves a clean tree");
     assert.equal(JSON.parse(readFileSync(join(riverCheckout, ".scratch/river/fold.json"), "utf8")).conflict.lane, "people");
     assert.equal(river(riverCheckout, "promote").code, 1, "a stopped fold cannot be promoted");
+
+    // A READY without the two connection proofs is refused and sent back; nothing is folded.
+    sh(work, ["fetch", "--quiet", "origin", "+refs/heads/river:refs/remotes/origin/river"]);
+    sh(work, ["checkout", "--quiet", "-f", "-B", "auditors", "origin/river"]);
+    put(work, "auditors.txt", "ready\n");
+    sh(work, ["add", "-A"]);
+    sh(work, ["commit", "--quiet", "-m", "READY: AU-01"]);
+    const auditorsReady = sh(work, ["rev-parse", "HEAD"]);
+    sh(work, ["push", "--quiet", "origin", "auditors:stream/auditors"]);
+    sh(riverCheckout, ["checkout", "--quiet", "-f", "river-next"]);
+    const unproven = river(riverCheckout, "fold", "--lanes", "auditors");
+    assert.equal(unproven.code, 0, unproven.out);
+    assert.match(unproven.out, /REFUSED auditors .*connected end to end; still working on the next scheduled run/);
+    const refusedRecord = JSON.parse(readFileSync(join(riverCheckout, ".scratch/river/fold.json"), "utf8"));
+    assert.deepEqual(refusedRecord.lanes, []);
+    assert.deepEqual(refusedRecord.refused.map((entry: { lane: string; ready_sha: string }) => [entry.lane, entry.ready_sha]), [["auditors", auditorsReady]]);
+    const auditorsReturn = parseStatus(sh(riverCheckout, ["show", "origin/board/river:returns/auditors.md"]));
+    assert.equal(auditorsReturn.check, "connection proofs");
+    assert.equal(auditorsReturn.state, "returned");
 
     // The lock protocol on River's status file.
     const lock = (mode: string, token: string) => river(riverCheckout, "lock", mode, "--branch", "board/river", "--file", "status.md", "--token", token, "--worker", "river");

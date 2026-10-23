@@ -175,12 +175,3 @@ export function linksForMeeting(
 
   return links;
 }
-
-/** Order used when rendering. Exported so a test can pin it. */
-export const RUNG_ORDER: LinkRung[] = [
-  "AGENDA",
-  "MEETING_RECORD",
-  "AGENDA_PORTAL",
-  "BODY_HOMEPAGE",
-  "VENUE_MAP",
-];

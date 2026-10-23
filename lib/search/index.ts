@@ -184,11 +184,6 @@ export function getSearchIndex(
   return cachedIndex;
 }
 
-export function invalidateSearchIndex(): void {
-  cachedToken = null;
-  cachedIndex = [];
-}
-
 export interface SearchGroup {
   kind: SearchKind;
   items: SearchItem[];

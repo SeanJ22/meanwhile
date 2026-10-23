@@ -105,8 +105,6 @@ export interface ChatNeedsYou {
   readonly action?: string;
 }
 
-export const CHAT_NEEDS_NOTHING: ChatNeedsYou = { needed: false };
-
 export interface AnswerSource {
   readonly says: string;
   readonly at: string | null;
@@ -166,11 +164,6 @@ export interface ChatResponse {
   readonly storeRefusedBecause: string | null;
   readonly controlsConnected: boolean;
 }
-
-/** Kept here, not beside the binding, so the client transcript does not pull the server-side registry into the browser bundle. */
-export const NO_CONTROLS_CONNECTED =
-  "This view is answering from the records and is not connected to the console's controls, so it is not offering any. " +
-  "The controls it would offer come from the one place the buttons get theirs; it has none of its own to fall back on.";
 
 /** The caller class every chat submission carries. Never widened. */
 export const CHAT_CALLER: CallerAuthority = "OPERATOR_CHAT";

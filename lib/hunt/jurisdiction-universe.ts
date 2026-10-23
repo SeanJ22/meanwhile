@@ -200,12 +200,6 @@ export function sourceOf(reg: JurisdictionRegistry, j: Jurisdiction, id: string)
   return s;
 }
 
-export function countByClass(reg: JurisdictionRegistry): Map<JurisdictionClass, number> {
-  const out = new Map<JurisdictionClass, number>();
-  for (const j of reg.jurisdictions) out.set(j.govClass, (out.get(j.govClass) ?? 0) + 1);
-  return out;
-}
-
 /**
  * A jurisdiction is ADAPTED when at least one of its sources can be opened,
  * including a statewide route that carries its records. `adaptedSplit`
@@ -239,44 +233,6 @@ export function adaptedSplit(reg: JurisdictionRegistry): {
     locallyAdapted,
     notYetLocallyAdapted: reg.jurisdictions.length - locallyAdapted,
   };
-}
-
-/* ------------------------------------------------------------- the loader */
-
-/** Where a state's registry lives. One file per state, generated. */
-export function jurisdictionRegistryPath(stateCode: string): string {
-  const state = stateCode.toLowerCase();
-  return `data/states/${state}/jurisdictions/${state}.json`;
-}
-
-/**
- * Read one state's registry. `readFile` is injected. A missing file throws:
- * a failed read is never the same as a state with no governments.
- */
-export function loadRegistry(
-  stateCode: string,
-  readFile: (path: string) => string,
-  root = ".",
-): JurisdictionRegistry {
-  const path = [root, jurisdictionRegistryPath(stateCode)].join("/");
-  let text: string;
-  try {
-    text = readFile(path);
-  } catch (error) {
-    throw new Error(
-      `the ${stateCode} jurisdiction registry could not be read at ${path} ` +
-        `(${error instanceof Error ? error.message : String(error)}). Regenerate it with ` +
-        "`pnpm jurisdictions:enumerate`. A failed read of our own store is never a state with no " +
-        "local government.",
-    );
-  }
-  const reg = JSON.parse(text) as JurisdictionRegistry;
-  if (!Array.isArray(reg.jurisdictions) || reg.jurisdictions.length === 0) {
-    throw new Error(
-      `${path} parsed and holds ZERO jurisdictions. A zero-row read is a FAILED read, never an empty state.`,
-    );
-  }
-  return reg;
 }
 
 /**

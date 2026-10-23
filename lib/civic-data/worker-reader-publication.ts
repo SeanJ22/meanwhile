@@ -57,11 +57,6 @@ export interface StancesInput {
   readonly ownSiteHosts?: (personId: string) => readonly string[];
 }
 
-/** Null fields mean unacquired, never an assertion that a service is absent. */
-export function workerReaderPackage(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }): ManualProjectionPackage {
-  return workerReaderPackageWithPulls(input).package;
-}
-
 function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
   { readonly package: ManualProjectionPackage; readonly pulledMemberIds: ReadonlySet<string> } {
   if (parseStateBallotContractId(input.plan.publication?.contractId ?? "")?.family === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };

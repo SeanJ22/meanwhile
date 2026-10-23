@@ -2,24 +2,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import type { NhMemberReadModel } from "./candidate-builders.ts";
-import {
-  CivicDataStoreUnavailableError,
-  civicDataReadNotInitialized,
-  readPromotedOrBootstrap,
-  type CivicDataBootstrap,
-  type CivicDataReadResult,
-  type PromotedCivicDataReadOptions,
-} from "./read-model.ts";
+import { readPromotedOrBootstrap, type CivicDataBootstrap, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { requiredRoutineContract, routineFreshnessMs } from "./contracts.ts";
 
 const NH_CONTRACT = requiredRoutineContract("nh-members");
 const NH_SCOPE = NH_CONTRACT.scope;
-
-let readState: CivicDataReadResult<NhMemberReadModel> = civicDataReadNotInitialized(
-  "STATE_LEGISLATOR",
-  NH_SCOPE,
-  "The New Hampshire member canonical pointer has not been read for this process.",
-);
 
 function validateNhMembers(payload: NhMemberReadModel, versionId: string): void {
   if (
@@ -74,23 +61,8 @@ export async function readNhMembers(
     bootstrap: nhMembersBootstrap,
     allowUnconfiguredBootstrap: process.env.NODE_ENV !== "production",
   });
-  readState = result;
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
     validateNhMembers(result.value, result.metadata.versionId ?? result.kind);
   }
   return result;
-}
-
-export function nhMembersReadState(): CivicDataReadResult<NhMemberReadModel> {
-  return readState;
-}
-
-/** One promoted official state-member projection; never acquisition staging. */
-export async function promotedNhMembers(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<{ versionId: string; data: NhMemberReadModel } | null> {
-  const result = await readNhMembers(options);
-  if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
-  if (result.kind !== "PROMOTED") return null;
-  return { versionId: result.metadata.versionId!, data: result.value };
 }

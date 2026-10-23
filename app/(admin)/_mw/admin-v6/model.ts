@@ -1,7 +1,7 @@
 import { EASTERN_ZONE } from "../../../../lib/control-plane/eastern-time.ts";
 import type { LookView } from "../../../../lib/frontend/look-pass.ts";
 
-export type { LookScreenView, LookView } from "../../../../lib/frontend/look-pass.ts";
+export type {  LookView } from "../../../../lib/frontend/look-pass.ts";
 
 export type SourceState = "live" | "sample" | "not-connected";
 export type LoadState = "loading" | "ready" | "partial" | "failed";
@@ -25,16 +25,6 @@ export interface Sourced<T> {
   readonly problem?: "waiting" | "denied" | "incompatible" | "failed";
 
   readonly page?: { readonly total: number | null; readonly nextCursor: string | null; readonly prevCursor: string | null };
-}
-
-export function sample<T>(data: T, dependency: Dependency, asOf: string | null = null): Sourced<T> {
-  return { state: "sample", load: "ready", data, asOf, dependency };
-}
-export function live<T>(data: T, asOf: string): Sourced<T> {
-  return { state: "live", load: "ready", data, asOf };
-}
-export function notConnected<T>(dependency: Dependency): Sourced<T> {
-  return { state: "not-connected", load: "ready", data: null, asOf: null, dependency };
 }
 
 export type PlaceKind = "Country" | "State" | "County" | "ZIP" | "Area" | "Body";
@@ -690,8 +680,6 @@ export interface ScoreboardView {
   readonly learning: LearningView;
 }
 
-export type FixTab = "attention" | "fixing" | "update" | "done" | "returned";
-
 export const TASK_STAGES = ["Task created", "Engineer accepted", "Implemented", "Tested", "Released", "Workers using it", "Checked on the public page"] as const;
 
 export interface OpenFix {
@@ -769,16 +757,6 @@ export interface Lifecycle {
   readonly published: string | null;
   readonly checkedOnPublicPage: string | null;
 }
-
-export const LIFECYCLE_WORDS: readonly (readonly [keyof Lifecycle, string])[] = [
-  ["saved", "Instruction saved"],
-  ["workersReceived", "Workers received it"],
-  ["workStarted", "Work started"],
-  ["workFinished", "Work finished"],
-  ["factsChecked", "Facts checked against sources"],
-  ["published", "Published"],
-  ["checkedOnPublicPage", "Checked on the public page"],
-];
 
 export interface ReceiptItem {
   readonly name: string;

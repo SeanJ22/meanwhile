@@ -15,7 +15,6 @@ import {
 
 import { MEETING_HISTORY_SCOPE_SUFFIX } from "./meeting-history-scope.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
-import { derivedRequestedUrl } from "./derived-door.ts";
 import { meetingPartitionId } from "../meetings/body-scope.ts";
 export { meetingPartitionId } from "../meetings/body-scope.ts";
 
@@ -354,10 +353,6 @@ export function requiredMeetingPartitionContract(id: string): MeetingPartitionCo
   return contract;
 }
 
-export function meetingPartitionsForSource(sourceName: string): readonly MeetingPartitionContract[] {
-  return MEETING_PARTITION_CONTRACTS.filter((partition) => partition.meetingSource === sourceName);
-}
-
 export function meetingPartitionForRow(sourceName: string, bodyId: string): MeetingPartitionContract {
   return requiredMeetingPartitionContract(meetingPartitionId(sourceName, bodyId));
 }
@@ -407,8 +402,4 @@ export function meetingPartitionForHistoryScope(scope: string): MeetingPartition
   if (!isMeetingHistoryScope(scope)) return null;
   const partitionScope = scope.slice(0, -MEETING_HISTORY_SCOPE_SUFFIX.length);
   return MEETING_PARTITION_CONTRACTS.find((partition) => partition.scope === partitionScope) ?? null;
-}
-
-export function meetingHistoryRequestedUrl(partition: MeetingPartitionContract): string {
-  return derivedRequestedUrl(MEETING_HISTORY_SOURCE_ID, meetingHistoryScope(partition.scope));
 }

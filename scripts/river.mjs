@@ -6,7 +6,9 @@
  * commit. River folds those exact commits into `river-next`, numbers any
  * step-named migrations, runs `pnpm gates` once on the combination, fast-forwards
  * `river` to the tested SHA, and ships `river` to `main` through one
- * `release/<n>` pull request. Every decision a fresh session needs to resume is
+ * `release/<n>` pull request. A READY whose message does not state that the
+ * work is connected end to end and still works on the next scheduled run is
+ * refused and returned, never folded. Every decision a fresh session needs to resume is
  * kept on `board/river` (`integration.json`, `releases/<n>.json`) or in
  * `.scratch/river/`, so the same inputs always give the same fold.
  *
@@ -129,6 +131,20 @@ export function setStatusFields(text, updates) {
     else lines.unshift(...added, ...(lines.length ? [""] : []));
   }
   return lines.join(eol) + (lines.length && !text.length ? eol : "");
+}
+
+/**
+ * The two connection proofs every READY message carries (Sean, Oct 23): the
+ * work is connected end to end, and it still works on the next scheduled run.
+ */
+export const CONNECTION_PROOFS = Object.freeze([
+  { label: "connected end to end", pattern: /\bconnect(?:ed|ion proof)\b|end[- ]to[- ]end|\bfeeds?\b/i },
+  { label: "still working on the next scheduled run", pattern: /next (?:scheduled|configured)[- ]run|\bnext[- ]day proof|\btomorrow proof|\bcontrolled (?:next|tomorrow)\b|following scheduled (?:run|refresh|pass)|\btomorrow(?:'s)?[- ](?:clock|run|pass|tick)\b/i },
+]);
+
+/** The connection proofs a READY commit's full message lacks, by label. */
+export function missingProofs(message) {
+  return CONNECTION_PROOFS.filter((proof) => !proof.pattern.test(message)).map((proof) => proof.label);
 }
 
 /** Step ids named in a `READY:` subject, in order, without repeats. */
@@ -507,6 +523,7 @@ export function scan({ now = Date.now() } = {}) {
     const age = heartbeatAge(status.heartbeat, now);
     const locked = Boolean(status.lock && status.lock !== "none");
     const pending = pendingReady({ commits, integrated: integrated.get(lane) ?? new Set() });
+    if (pending) pending.missing_proofs = missingProofs(git(["log", "-1", "--format=%B", pending.ready_sha]));
     const entry = {
       lane,
       branch,
@@ -554,14 +571,26 @@ async function fold(flags) {
   requireClean();
   const plan = scan();
   const wanted = flags.lanes ? new Set(flags.lanes.split(",").map((lane) => lane.trim())) : null;
-  const ready = plan.lanes.filter((lane) => lane.ready && (!wanted || wanted.has(lane.lane)));
+  const offered = plan.lanes.filter((lane) => lane.ready && (!wanted || wanted.has(lane.lane)));
   if (wanted) {
     for (const lane of wanted) {
       if (!plan.lanes.some((entry) => entry.lane === lane)) throw new Refusal(`no stream/${lane} on origin`);
     }
   }
+  const refused = offered.filter((lane) => lane.ready.missing_proofs.length);
+  for (const lane of refused) {
+    const { ready_sha: sha, steps, missing_proofs: missing } = lane.ready;
+    const output = `READY ${short(sha)} refused: its message lacks ${missing.map((label) => `"${label}"`).join(" and ")}. `
+      + "Every READY message states that the work is connected end to end and that it is still working on the next scheduled run, with the evidence for each.";
+    console.log(`river fold: REFUSED ${lane.lane} ${short(sha)}: lacks ${missing.join("; ")}`);
+    await recordReturn({ lane: lane.lane, check: "connection proofs", output, readySha: sha, steps, riverSha: plan.river });
+  }
+  const ready = offered.filter((lane) => !refused.includes(lane));
   const order = foldOrder(ready.map((lane) => lane.lane), flags.order);
-  const record = { base_river_sha: plan.river, folded_at: nowIso(), order, lanes: [], head: plan.river, conflict: null };
+  const record = {
+    base_river_sha: plan.river, folded_at: nowIso(), order, lanes: [], head: plan.river, conflict: null,
+    refused: refused.map((lane) => ({ lane: lane.lane, ready_sha: lane.ready.ready_sha, missing: lane.ready.missing_proofs })),
+  };
   if (!order.length) {
     writeScratch("fold.json", record);
     console.log("river fold: nothing ready to fold; river-next not created.");

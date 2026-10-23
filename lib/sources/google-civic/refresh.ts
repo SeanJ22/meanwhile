@@ -4,7 +4,7 @@ import { processRegisteredFanOutCandidate, processRegisteredRoutineCandidate } f
 import { civicCandidate } from "./publication.ts";
 import { readCivicApi, recordCivicCatalogFailure, CivicSourceError, type CivicReadOptions } from "./acquisition.ts";
 import { civicElectionRows, type CivicStateCoverage } from "./model.ts";
-import { GOOGLE_CIVIC_CONTRACT_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_STATES, civicStateScope } from "./targets.ts";
+import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_STATES, civicStateScope } from "./targets.ts";
 import { readRegistrationProjection } from "../../registration/reader.ts";
 import { requiredRoutineContract } from "../../civic-data/contracts.ts";
 import { routineTaskFromContract } from "../../civic-data/runner.ts";
@@ -26,9 +26,9 @@ export async function refreshGoogleCivic(input: {
   const elections = civicElectionRows(catalog.raw, catalog.checkedAt, new Set(["ocd-division/country:us"]));
   const electionId = elections.find(row => row.ocdId === "ocd-division/country:us")?.electionId;
   const coverage: CivicStateCoverage[] = [];
-  const task = routineTaskFromContract(requiredRoutineContract(GOOGLE_CIVIC_CONTRACT_ID));
+  const task = routineTaskFromContract(requiredRoutineContract(GOOGLE_CIVIC_SOURCE_ID));
   const stateClocks = await Promise.all(GOOGLE_CIVIC_STATES.map(async (state, index) => {
-    const clock = await input.store.clock(GOOGLE_CIVIC_CONTRACT_ID, task.recordClass, civicStateScope(state), task.parserVersion);
+    const clock = await input.store.clock(GOOGLE_CIVIC_SOURCE_ID, task.recordClass, civicStateScope(state), task.parserVersion);
     const checked = Date.parse(clock.lastSucceededObservedAt ?? "");
     return { state, index, checked: Number.isFinite(checked) ? checked : -Infinity };
   }));
@@ -55,11 +55,11 @@ export async function refreshGoogleCivic(input: {
     const checkedAt = (options.now ?? (() => new Date().toISOString()))();
     // The state marker describes catalog/inventory coverage; it is not a voterinfo probe.
     const marker = await civicCandidate(input.vault, civicStateScope(state), { formatVersion: 1, kind: "STATE", checkedAt, rows: elections, coverage: [report] }, catalog.raw, "elections");
-    await processRegisteredFanOutCandidate(input.store, GOOGLE_CIVIC_CONTRACT_ID, marker, checkedAt);
+    await processRegisteredFanOutCandidate(input.store, GOOGLE_CIVIC_SOURCE_ID, marker, checkedAt);
   }
   const checkedAt = (options.now ?? (() => new Date().toISOString()))();
   coverage.sort((a, b) => a.state.localeCompare(b.state));
   const candidate = await civicCandidate(input.vault, GOOGLE_CIVIC_SCOPE, { formatVersion: 1, kind: "CATALOG", checkedAt, rows: elections, coverage }, catalog.raw, "elections");
-  const outcome = await processRegisteredRoutineCandidate(input.store, GOOGLE_CIVIC_CONTRACT_ID, candidate, checkedAt);
+  const outcome = await processRegisteredRoutineCandidate(input.store, GOOGLE_CIVIC_SOURCE_ID, candidate, checkedAt);
   return { candidate, outcome, coverage };
 }

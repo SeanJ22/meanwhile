@@ -15,8 +15,6 @@ import { enterHostGate, HOST_CONCURRENCY_DEFAULT, providerConcurrency } from "./
 import { RATE_LIMIT_BACKOFF_MS } from "../hunt/access-control.ts";
 import { FIRST_BACKOFF_MINUTES, MAX_BACKOFF_MINUTES } from "./scheduler/debt.ts";
 
-export const FLEET_ZONE = "America/Phoenix";
-
 /** Admin supplies the rolling spending limit. No cycle wall or night schedule limits work. */
 export interface FleetSafetyBounds {
   readonly rolling24HourModelUsd: number;

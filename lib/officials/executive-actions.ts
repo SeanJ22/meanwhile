@@ -153,8 +153,6 @@ export async function refreshExecutiveActionsFromPromoted(
 export const settleExecutiveActionsRead = (): Promise<string | null> =>
   readPromotedEdgeFirst(AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass, AZ_OFFICIAL_ACTIONS_CONTRACT.scope, refreshExecutiveActionsFromPromoted, "The Arizona executive actions");
 
-export const executiveActionsReadState = (): CivicDataReadResult<ExecutiveActionStore> => actionReadState;
-
 /** The held store, or null: "we hold no action records" is a fact about us, never about a government. */
 export function executiveActionStore(): ExecutiveActionStore | null {
   return actionReadState.kind === "PROMOTED" || actionReadState.kind === "BOOTSTRAP" ? actionReadState.value : null;

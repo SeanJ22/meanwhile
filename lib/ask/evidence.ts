@@ -1,3 +1,4 @@
+import type { FinanceDetailSource } from "./fetch-through-key.ts";
 import type { AskGapCode, AskGapRecordClass } from "./gap-codes.ts";
 import type { AskIntent, AskTemporal } from "./intent.ts";
 import type { GovernmentBudgetFact } from "../civic-data/government-budget-contract.ts";
@@ -128,7 +129,7 @@ export interface EvidenceRecord {
   /** A roll call's own fields beside its sentence. */
   rollCall?: { position: string; what: string; when: string; result: string };
   stateDetailSource?: import("../funding/finance-detail-source.ts").FinanceDoorDetailSource;
-  fecDetailSource?: import("./fetch-through-key.ts").FinanceDetailSource;
+  fecDetailSource?: FinanceDetailSource;
   /** Exact normalized totals, with the filer's registered name, agency, cycle and read date. */
   finance?: {
     jurisdiction: string; filingState: string;

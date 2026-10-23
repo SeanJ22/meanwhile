@@ -175,8 +175,3 @@ export function canonicalBodyIdentity(
   if (!bodyId) return null;
   return bodyIdentityIndex(root).get(bodyId) ?? null;
 }
-
-/** Drop the cache. For tests and for a long-lived process that regenerates. */
-export function resetBodyIdentityCache(): void {
-  cached = null;
-}

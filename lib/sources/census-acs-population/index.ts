@@ -27,9 +27,6 @@ import {
 export const AGENCY = "U.S. Census Bureau — American Community Survey";
 /** Default vintage for older saved-source callers; the national acquirer supplies its discovered release. */
 export const VINTAGE_YEAR = 2024;
-export const DATASET = "ACS 5-Year Detailed Tables, 2024 vintage (ACSDT5Y2024)";
-export const DATASET_IDENTIFIER = "https://api.census.gov/data/id/ACSDT5Y2024";
-export const DOCUMENTATION = "https://www.census.gov/developer/";
 export const BASE = `https://api.census.gov/data/${VINTAGE_YEAR}/acs/acs5`;
 export const VARIABLE = "B01003_001E";
 /** The Bureau's published margin of error, at 90% confidence, for VARIABLE. */
@@ -91,15 +88,6 @@ export interface AcsFetch {
 
 function geography(scope: AcsScope): string {
   return `${ACS_GEOGRAPHIES[scope]}:*`;
-}
-
-/** The human name of the geography a scope tabulates, for notes and the panel. */
-export const GEOGRAPHY_LABEL: Record<AcsScope, string> = { ...ACS_GEOGRAPHIES,
-  zcta: "ZIP Code Tabulation Area (ZCTA5)", state: "state, the District of Columbia and Puerto Rico" };
-
-/** The request URL with the key REDACTED, for logs and notes. */
-export function describeUrl(scope: AcsScope): string {
-  return `${BASE}?get=NAME,${VARIABLE},${MARGIN_VARIABLE}&for=${encodeURIComponent(geography(scope))}&key=<${KEY_VAR}>`;
 }
 
 /**

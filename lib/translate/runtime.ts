@@ -5,7 +5,7 @@ import { captureIntact } from "../civic-data/worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { translationHash } from "./records.ts";
 import { translateMeasure, type MeasureTranslationRepos } from "./worker.ts";
-import { publishMeasureTranslation, readTranslations } from "./publication.ts";
+import { publishTranslation, readTranslations } from "./publication.ts";
 import { priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 
@@ -44,7 +44,7 @@ export async function runMeasureTranslation(input: {
           return response;
         };
       } });
-    const published = await publishMeasureTranslation(input.store, { record: translated.record, captures: input.captures, now: input.now });
+    const published = await publishTranslation(input.store, { record: translated.record, captures: input.captures, now: input.now });
     if (!published.promoted || published.readerReadback?.status !== "PASS") throw new Error(published.candidate.failureDetail ?? "Translation has not reached its typed reader.");
     return { status: "PUBLISHED" as const, record: translated.record, usage, versionId: published.promoted.versionId };
   } catch (error) {

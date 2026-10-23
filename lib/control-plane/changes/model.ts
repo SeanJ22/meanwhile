@@ -22,14 +22,6 @@ export const CHANGE_STATUS_WORDS: Readonly<Record<ChangeStatus, string>> = {
   live: "Live",
 };
 
-/** What each status means, in the words the page prints under its heading. */
-export const CHANGE_STATUS_MEANING: Readonly<Record<ChangeStatus, string>> = {
-  building: "Still being written, or its checks are running or failing.",
-  "on-test": "Finished and passing every check. It can be tried now and is waiting to go live.",
-  deploying: "Merged. The live site has not picked it up yet.",
-  live: "Merged and running on the live site, or it changes nothing the site serves.",
-};
-
 export type ChecksState = "SUCCESS" | "FAILURE" | "ERROR" | "PENDING" | "EXPECTED" | null;
 
 /** What the page needs to know about one pull request. */

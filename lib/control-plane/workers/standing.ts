@@ -7,7 +7,7 @@ import { modelAuditReasoner } from "./model-audit.ts";
 import { modelParseReasoner } from "./model-parser.ts";
 import { createModelAuditSampler } from "./audit-sampling.ts";
 import { workerVaultResolver } from "./vault.ts";
-import { drainWorkerQueue, enqueueWorkerTask, evidenceProjection, type FleetRuntime } from "./runtime.ts";
+import { enqueueWorkerTask, evidenceProjection, type FleetRuntime } from "./runtime.ts";
 import type { GeneralizedCivicExtractionContract, LegacyCivicExtractionContract, IndependentAuditContext, OfficialRouteExpectation } from "./types.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { MethodKnowledge } from "../../method/knowledge.ts";
@@ -482,30 +482,4 @@ export async function legacyHeldWorkOwed(root: string, runtime: FleetRuntime): P
     if (!chain.some(r => r.result.role === "ADVERSARIAL_AUDITOR")) return true;
   }
   return false;
-}
-
-export async function runHeldWorkerFleetCycle(
-  root: string,
-  runtime: FleetRuntime,
-  legacyOnly = false,
-  options: {
-    readonly maximumDispatches?: number;
-    readonly admitDispatch?: (work: string) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
-    readonly onDeferred?: (reason: string) => void;
-  } = {},
-) {
-  const results = [];
-  const maximum = options.maximumDispatches ?? Infinity;
-  while (results.length < maximum) {
-    await advanceHeldWorkerFleet(root, runtime, Infinity, legacyOnly);
-    const dispatched = await drainWorkerQueue(
-      runtime,
-      maximum - results.length,
-      task => !legacyOnly || task.workerTask?.contract.schemaVersion === 1,
-      task => options.admitDispatch?.(task.id) ?? { admit: true as const },
-    );
-    results.push(...dispatched);
-    if (!dispatched.length) break;
-  }
-  return results;
 }

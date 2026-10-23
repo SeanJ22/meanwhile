@@ -20,11 +20,6 @@ export function dueAt(order: ScheduledOrder, all: readonly ScheduledOrder[], las
   return order.startAt ?? order.decidedAt;
 }
 
-/** A missed finish-by is late; it must still run and never pauses publishing. */
-export function expired(order: ScheduledOrder, nowMs: number): boolean {
-  return order.finishBy !== null && Date.parse(order.finishBy) < nowMs;
-}
-
 export interface FiredOrder { readonly id: string; readonly orderType: string; readonly occurrence: string; readonly ok: boolean }
 
 export function occurrenceKey(orderId: string, occurrence: string): string {

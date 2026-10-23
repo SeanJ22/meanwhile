@@ -4,10 +4,6 @@ import { postalArea } from "../geo/postal.ts";
 import { readZipPlace } from "./national.ts";
 import type { BodyTerritoryFile } from "../registry/body-territory.ts";
 import { bodyIdsAtPoint } from "../registry/body-territory.ts";
-import type { ReaderStatePackage } from "./state.ts";
-import { withCensusDistricts, divisionsFromZipDistricts } from "../geo/zip-census-districts.ts";
-import { zipNeedsAddress } from "../geo/postal.ts";
-import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 import { haversineKm } from "../geo/distance.ts";
 
 let territory: Promise<BodyTerritoryFile> | undefined;
@@ -29,13 +25,4 @@ export async function readerLocation(lat: number, lng: number, zip?: string | nu
 
 export function territoryBodies(lat: number, lng: number, territory: BodyTerritoryFile | null): readonly string[] {
   return [...bodyIdsAtPoint([lng, lat], territory)];
-}
-
-export async function stateZipLocation(state: ReaderStatePackage, zip: string) {
-  const raw = await readZipPlace(postalArea(zip)?.zcta ?? zip) ?? { ids: [], partial: [], samples: 0 };
-  if (zipNeedsAddress(zip)) return { entry: { ...raw, ids: raw.ids.filter(isTownOrCountyDivision) }, divisions: [] };
-  const districts = state.districts;
-  if (districts.kind !== "HELD") return { entry: raw, divisions: [] };
-  const slice = { ...districts, value: { ...districts.value, known: true } };
-  return { entry: withCensusDistricts(raw, slice, zip), divisions: divisionsFromZipDistricts(zip, slice) };
 }

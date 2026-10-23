@@ -38,7 +38,6 @@ export function meetingHeldWindowAt(anchor: string): MeetingReaderServingWindow 
 }
 
 /** The registered window a removal may name today: the held window. */
-export const meetingReaderServingWindowAt = meetingHeldWindowAt;
 
 /** The old shown (90/90) window, accepted on a `V1` removal row for one pass. */
 export function meetingLegacyServingWindowAt(anchor: string): MeetingLegacyServingWindow | null {

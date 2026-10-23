@@ -1,6 +1,5 @@
 "use client";
 
-
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { ExternalLink } from "lucide-react";
@@ -10,30 +9,9 @@ import {
   buildCommitteeTree,
   type CommitteeNode,
 } from "@/lib/officials/committee-tree";
-import {
-  battlecardSectionTitle,
-  type BattlecardSectionId,
-} from "@/lib/ballot/battlecard-sections";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import { officeDirectionsUrl } from "@/lib/registry/links";
 import type { SeatHolder } from "@/lib/officials/lookup";
-
-import { CardSection } from "./card-section";
-
-/* Titles come from the same table the ballot battlecard reads. */
-const sectionTitle = (id: BattlecardSectionId) => battlecardSectionTitle(id);
-
-/**
- * Committees and offices near the reader. Directory facts carry no per-row
- * source annotation; the card's Sources section names the project once. A
- * committee's jurisdiction, one tap down, carries its source. Keyed on the
- * holder by the parent.
- */
-
-export function MemberDirectory({ holder }: { holder: SeatHolder }) {
-  return <MemberDirectoryInner key={holder.id} holder={holder} />;
-}
-
 
 /**
  * The same two sections as content only, for the ballot battlecard's fixed
@@ -195,22 +173,6 @@ export function DirectoryRecordsContent({ holderId, state, only, directory, fail
         )}
     </>
   );
-}
-
-/** Keep only sections with held records; gaps are collected by the card frame. */
-function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
-  const { directory, failed } = useMemberDirectory(holder.id, holder.state);
-  return <>
-    {(["committees", "offices"] as const).map(only => {
-      const records = only === "committees" ? directory?.committees : directory?.districtOffices;
-      if (!memberDirectoryReaches(holder.id, only, holder.state) || failed || records?.length === 0) {
-        return <CardGapContribution key={only} id={`${only}:${holder.id}`} label={only === "committees" ? "committee assignments" : "district offices"} subject={{ type: "CANDIDATE", id: holder.id }} />;
-      }
-      return <CardSection key={only} title={sectionTitle(only)} meta={records ? String(records.length) : null}>
-        <DirectoryRecordsContent holderId={holder.id} state={holder.state} only={only} directory={directory} failed={failed} />
-      </CardSection>;
-    })}
-  </>;
 }
 
 /**

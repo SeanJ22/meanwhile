@@ -176,13 +176,3 @@ export interface OfficeholderSet {
   /** Seats the source described that could not be attached to a division, with the reason; reported, never dropped. */
   unmatched: { officeholderId: string; reason: string }[];
 }
-
-/** The contract an officials adapter implements. */
-export interface OfficialSource<Raw = unknown> {
-  readonly name: string;
-  /** The only step allowed to touch the network. */
-  fetch(): Promise<Raw[]>;
-  /** Pure. Drops nothing silently; anything unattachable lands in `unmatched`. */
-  normalize(raw: Raw[], collectedAt: string): OfficeholderSet;
-  upsert(set: OfficeholderSet): Promise<{ inserted: number; updated: number }>;
-}

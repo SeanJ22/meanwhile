@@ -183,32 +183,6 @@ export function containerStanding(codes: readonly CodeInput[], index: BodyIndex,
   };
 }
 
-export function pct(n: number, d: number): string {
-  return d === 0 ? "—" : `${Math.round((n / d) * 100)}%`;
-}
-
-export function overlapWords(whole: boolean, fraction: number | null): string {
-  if (whole) return "wholly inside";
-  if (fraction === null) return "partly inside (no land area) — whole code included";
-  const p = Math.round(fraction * 100);
-  return `${p < 1 ? "under 1" : p}% inside — whole code included`;
-}
-
-export function worstGapWords(c: ContainerStanding): string {
-  if (c.indexedCodes === 0) return "No code here is in the ZIP index this repository has geometry for, so nothing is known about its bodies. That is not a zero.";
-  const w = c.worst;
-  if (w === null || w.counts === null) return "Its indexed codes place no registered body.";
-  const k = w.counts;
-  const missing = k.bodies - k.wayIn;
-  if (missing === 0) return `${w.zcta5}: every one of its ${k.bodies} bodies has a way in recorded.`;
-  const parts: string[] = [];
-  if (k.neverWalked > 0) parts.push(`${k.neverWalked} never walked`);
-  if (k.lookedNoRoute > 0) parts.push(`${k.lookedNoRoute} looked at with no route found`);
-  if (k.other > 0) parts.push(`${k.other} whose coverage is unresolved`);
-  const who = k.bodies === 1 ? "its only body has" : missing === k.bodies ? `all ${k.bodies} of its bodies have` : `${missing} of its ${k.bodies} bodies have`;
-  return `${w.zcta5} at ${pct(k.wayIn, k.bodies)} — ${who} no way in recorded (${parts.join(", ")}).`;
-}
-
 /** Registry status codes are internal vocabulary and never render; a screen draws only the words and the tone. */
 export function coverageStatusPill(status: CoverageStatus): { readonly pill: string; readonly tone: "teal" | "gold" | "amber" | "slate" } {
   switch (status) {

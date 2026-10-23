@@ -1,0 +1,27 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "scripts/**/*.{js,mjs,ts,mts}",
+    "tests/**/*.{ts,mts,mjs,tsx}",
+    "netlify/functions/*.mts",
+    "lib/sources/platform-adapters/*.{ts,mjs}",
+    "lib/control-plane/workers/{national,route}-worker.ts",
+    "lib/control-plane/line-keeper/preview.mts"
+  ],
+  "project": [
+    "**/*.{js,mjs,ts,mts,tsx}",
+    "!.scratch/**",
+    "!data/**",
+    "!public/**"
+  ],
+  "ignoreDependencies": [
+    "server-only"
+  ],
+  "ignoreBinaries": [
+    "tasklist",
+    "taskkill.exe",
+    "openssl",
+    "pwsh"
+  ],
+  "ignoreExportsUsedInFile": true
+}

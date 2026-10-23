@@ -13,9 +13,9 @@ import {
 } from "./held-gaps.ts";
 
 export {
-  CALENDAR_READ_STALE_MS,
-  UNREAD_LOOKAHEAD_DAYS,
-  UNREAD_LOOKBACK_DAYS,
+  
+  
+  
   type UnreadSitting,
 } from "./held-gaps.ts";
 

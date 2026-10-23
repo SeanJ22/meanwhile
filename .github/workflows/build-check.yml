@@ -160,6 +160,10 @@ jobs:
           # Whole-program type check needs more than the runner's default ~2 GB heap.
           NODE_OPTIONS: --max-old-space-size=4096
         run: corepack pnpm exec tsc --noEmit
+      - name: Dead code (no unused files or exports)
+        if: always() && steps.install.outcome == 'success' && (needs.admission.outputs.tier == 'yes' || needs.admission.outputs.tier == 'draft' || needs.admission.outputs.tier == 'waiting')
+        timeout-minutes: 10
+        run: corepack pnpm exec knip --no-progress --no-config-hints
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30

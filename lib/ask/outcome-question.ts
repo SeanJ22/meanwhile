@@ -44,26 +44,3 @@ export function outcomeQuestionClass(question: string): QuestionClass | null {
   if (DECISION_PHRASES.some((p) => p.test(normalized))) return "WHAT_WAS_DECIDED";
   return null;
 }
-
-/**
- * The gap for an outcome question we hold no outcome record for: OURS, naming
- * the record class that would answer it, never a claim the government did not
- * publish.
- */
-export function outcomeGapStatement(
-  subjectName: string,
-  questionClass: QuestionClass,
-  holdsAgenda: boolean,
-): string {
-  const wanted =
-    questionClass === "HOW_DID_THEY_VOTE"
-      ? "a roll call recording how each member voted"
-      : "minutes or an action summary recording what was decided";
-  const held = holdsAgenda
-    ? `We hold the agenda for that ${subjectName} meeting, which is what was scheduled to be taken up — not what was settled. `
-    : "";
-  return (
-    `${held}We have not recorded ${wanted} for that sitting, so anything here describes what was ` +
-    `on the agenda rather than what the board did with it.`
-  );
-}

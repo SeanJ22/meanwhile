@@ -22,6 +22,10 @@ Queue:
 - Held: pb-02 (national sample). Returned: pk-01 (READY message empty, no connection proofs).
 - Not posted yet: rn-01, rn-02, vs-07, lv-01 (WIP only), bl-01, pb-03, nx-02, nb-02, dg-02, cs-01, eo-01.
 
+Sean's decisions on returns/sean.md (relayed Oct 23, ~5:15 AM EDT; FX-01 closes both):
+1. Vice President: option (a). Release 88 stays. NX-02 feeds the National section, and the Vice President shows on /national. Live check when NX-02 ships: /national shows the Vice President (and the President and Cabinet) with sources; place pages keep only place-specific officials.
+2. Planning round: RN-01 owns it. Rounds start with the states that have waited longest, each state's time is capped, and a release resumes the round where it stopped. Live check when RN-01 ships: the runner's round order follows longest-waiting states, no state passes its cap, and after a release the round resumes at the state where it stopped (no restart at ak/al/ar/as).
+
 Live checks owed once the release is live (each also on real places in 10+ states, counts by state here):
 - PB-01: Dane County #governing 37 members, Henry Fries once with its source link; Milwaukee 171 boards, 0 empty; WI, AZ, WA, CO, CA Legistar board names; plus 10+ states: boards shown, boards with members, empty boards.
 - SP-01: ten-ZIP first-visit and five-minute repeat speed; office pins on place pages (03301 13 points, 07102 9 points) and pins by state in 10+ states; database_transfer_daily on comparable traffic. Sean's cache check: load /ballot?zip=85701 twice, five minutes apart; the second Cache-Status is a Netlify edge hit and its ttl is no longer than the seconds left to midnight Phoenix time; /ballot?zip=00000 is never cached. A ttl past midnight sends SP-01 back with the headers seen.

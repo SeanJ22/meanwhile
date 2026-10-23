@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 90 LIVE (/api/build a462d38); RELEASE 91 (SP-01-FX, RN-01-FX, National label) PR #801 CI running; RELEASE 92 (VS-07-FX f48331d9d + PB-03-FX e65146583) IN GATES from 12:40 PM EDT on river-next cd82fdc4a
+build_state: RELEASE 91 LIVE (/api/build d8013db from 12:33 PM EDT): SP-01-FX, RN-01-FX, National label; RELEASE 92 (VS-07-FX + PB-03-FX) IN GATES on river-next cd82fdc4a
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -15,6 +15,15 @@ Items 1 (Vice President) and 2 (planning round) are answered above and shipped o
 ## Open data issue (from RN-02, Oct 23)
 
 NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 vs unified-school GEOID 3416500, both named "Union Township School District". Registration file identical on release 88 and release 90. Owner: the registration identity lane (to disambiguate the two districts). Not an observed live runner failure yet.
+
+## Release 91 live checks (Oct 23, from 12:33 PM EDT)
+
+Live from 12:33 PM EDT (/api/build d8013db). The sidebar link reads "National government".
+
+SP-01-FX, Sean's cache check: PASS on the cache rule. /ballot?zip=85701 at 16:39:09 UTC: "Netlify Durable"; hit; ttl=51589, age 324, with 51,648 s to Phoenix midnight (the Edge node layer itself forwards; Netlify's Durable layer serves the copy). /ballot?zip=00000, four loads: never a hit; "Netlify Durable"; fwd=stale; ttl=-18 then ttl=0; stored: always forwarded to the origin, never served from cache, though Netlify still marks it stored with ttl 0 (noted to SP-01).
+SP-01 speed: still short. First visit (16:33:53 UTC, ten ZIPs plus 85701, parallel): ballot 3.65 to 7.19 s (03301 6.9, 85711 7.1, 85701 7.1, 43215 7.2, 95814 6.6, 32301 5.1, 17101 5.0, 78701 4.9, 80202 4.6, 30334 4.6, 12207 4.4, 07102 4.4, 98501 3.7); place 3.4 to 6.7 s. Five minutes later: ballot 0.42 to 1.72 s, place 0.35 to 0.84 s (goal 300 ms; measured from River's cloud container through its proxy). First-visit speed stays open on SP-01.
+
+RN-01-FX: planning-round check runs once the runner follows d8013db and finishes a round.
 
 ## Release 90 live checks (Oct 23, from 10:24 AM EDT)
 

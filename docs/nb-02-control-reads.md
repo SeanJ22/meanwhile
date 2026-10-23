@@ -2,6 +2,8 @@
 
 Status: **not READY**. The production full-pass and next-scheduled-run proofs Sean requires remain open. Passing narrowed-read tests or a scheduler replay is insufficient. Work is on `stream/nb-02`, cut from `origin/river` at `78f82a232dd1d0545a46835e7716032ff3807425`, with NB-01 READY `637e2cb8107d4fa2fa93855d23a78f2fe4f86808` merged in `fba22176355d1aa19091ad86e57232cee185057e`.
 
+Before pushing, the remote lane was found to have advanced to integration READY `0b42253dcd9dbe29265784c859d24afcf8bd5698`. Its two documentation-only commits and separate NB-01 merge are preserved by a normal merge. Its original [integration report](nb-02.md) remains. Its sampled reader and nationwide door/manual checks do not measure a complete routine pass, and its CI run predates this follow-up's runtime changes. This branch tip therefore remains WIP.
+
 The reader goal (§0) is complete, current government information with fewer database bytes spent repeatedly finding work. Coverage, cadence, publication rules, spending settings and process admission stay as set.
 
 ## Connections and remaining plan
@@ -30,6 +32,8 @@ The preceding step is **NB-01**, which narrows census/manual/vault/method reads.
 Production access uses server-enforced read-only transactions. The reader connection is the existing `readonly` role on `tiny-hill-13996172` / `br-delicate-lab-ax02xuo5`. The control plane is `withered-sunset-39821877` / `br-tiny-frog-aeufpjeq`; it has no `readonly` role, so its existing owner connection is confined to read-only transactions in the replay. No production write, settings change, source job, model call or Neon branch is made.
 
 The baseline in [nb-01.md](nb-01.md) records **2,783,674,697** control-plane bytes in the October 23 00:00 UTC complete hour, and its later 02:00 hour read **3,291,252,800**. A fresh NB-02 observation of the 08:00 hour reports **2,844,084,762** bytes, on release 88 (`825ff1c43ff44632923f1011e9480b961aa20dbb`). Its top two callers are census **1,405,735,761** and manual saves **888,708,250**. NB-01 and NB-02 are absent from that release; this is a before observation, not realized savings.
+
+The final live recheck at October 23 06:47 Eastern (10:47 UTC) still found release 88 on both the served build and runner. Its newly complete 09:00 UTC hour read **2,073,192,857** control-plane bytes, including census **1,004,394,849** and manual `readMany` **479,401,333**. The decline while the runner remains on the old release illustrates why an hourly change alone cannot establish NB-02 savings. Output: `.scratch/nb02/before-push-live/replay.json`.
 
 At the October 23 read, the last **51 ordinary routine supervisor outcomes in 24 hours contain zero successes**. Forty-four have exact receipts (454 source task receipts altogether); the latest seven outer timeout outcomes have none. The latest five each failed with `ROUTINE_CHILD_TIMED_OUT`; their outer supervisor says `UNAVAILABLE_OUTER_SUPERVISOR`, with zero task receipts. The latest observed run started at 08:42:54 UTC and ended at 09:12:54 UTC. Its parent saw two good/two held summaries but no exact launch plan. This does not identify the underlying slow source, and does not prove what any unrecorded inner task did. The latest exact pass started at 04:48:01 UTC and ended at 05:13:04 UTC; it also failed, with entity-upsert, source-job, and reader-repair errors. A query originally looked for the wrong receipt label; grouping by the actual `EXACT`/`UNAVAILABLE_OUTER_SUPERVISOR` values corrected that reading.
 

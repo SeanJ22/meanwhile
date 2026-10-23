@@ -110,15 +110,8 @@ test("today's real whitehouse.gov pages yield the President, the Vice President 
   assert.equal(roster.officeholders.length, 23);
   assert.equal(roster.divisions.length, 23);
 
-  const country = stateCoverage(readerState(roster), [`${COUNTRY}/state:az`], 33.4, -112.1).seats.find(seat => seat.ocdId === COUNTRY)!;
-  assert.equal(country.label, "United States");
-  assert.equal(country.representatives.length, 23);
-  assert.deepEqual(country.representatives.slice(0, 2).map(holder => holder.name), ["Donald J. Trump", "JD Vance"]);
-  assert.deepEqual(country.representatives.slice(2).map(holder => holder.name), CABINET_MEMBERS.map(([name]) => name).sort((a, b) => a.localeCompare(b)));
-  for (const holder of country.representatives.slice(2)) {
-    assert.equal(holder.sourceUrl, CABINET);
-    assert.equal(holder.fieldSources?.name?.sourceUrl, CABINET);
-  }
+  const seats = stateCoverage(readerState(roster), [`${COUNTRY}/state:az`], 33.4, -112.1).seats;
+  assert.equal(seats.some(seat => seat.ocdId === COUNTRY), false, "the President, the Vice President and the Cabinet are not on any place's list of who governs there");
 });
 
 const index = (cabinetHref: string) => `<main><a href="${ADMINISTRATION_URL}jordan-example/">President Jordan Example</a>` +
@@ -170,7 +163,5 @@ test("a broken Cabinet page keeps the President and Vice President, and a new Tr
     ["Jordan Example", "President of the United States"], ["Taylor Example", "Vice President of the United States"]]);
   assert.ok(next.roster.endedMemberships?.some(membership => membership.personId === "white-house:avery-example" && membership.current === false));
   assert.ok(next.roster.endedMemberships?.some(membership => membership.personId === "white-house:casey-example" && membership.officeTitle === "Secretary of Defense"));
-  const country = stateCoverage(readerState(currentPresidentRoster(next.roster)), [`${COUNTRY}/state:az`], 33.4, -112.1).seats.find(seat => seat.ocdId === COUNTRY)!;
-  assert.deepEqual(country.representatives.map(holder => [holder.name, holder.officeTitle]), [["Jordan Example", "President of the United States"],
-    ["Taylor Example", "Vice President of the United States"], ["Casey Example", "Secretary of War"], ["Drew Example", "Secretary of the Treasury"]]);
+  assert.equal(stateCoverage(readerState(currentPresidentRoster(next.roster)), [`${COUNTRY}/state:az`], 33.4, -112.1).seats.some(seat => seat.ocdId === COUNTRY), false);
 });

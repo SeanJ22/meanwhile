@@ -55,6 +55,7 @@ import { partyColorVar } from "@/lib/officials/party-color";
 import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 import { GovernmentListings } from "./government-listings";
+import { NationalLink } from "../shell/national-link";
 import { StateOfficeContacts } from "../state-office-contacts";
 
 interface CoverageNoticeProps {
@@ -766,6 +767,8 @@ function CoverageBody({
 
         </>
       )}
+
+      <NationalLink className="national-link mt-3 block" />
 
       {stateLegislatorGaps.map(authority => (
         <CardGapContribution key={authority.scope} id={`area-state-authority:${authority.scope}`} label={`state legislators in ${authority.scope.replace(/^US-/, "")}`} />

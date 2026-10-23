@@ -47,7 +47,7 @@ test("person cards use one reading order for the sections they hold", () => {
   const card = read("components", "ui", "person-card.tsx");
   assert.match(
     card,
-    /PERSON_CARD_SECTIONS\.filter[\s\S]*?\.map/,
+    /PERSON_CARD_READING_ORDER\.filter[\s\S]*?\.map/,
     "the card must preserve the shared reading order",
   );
   assert.equal(BATTLECARD_SECTIONS.length, 7, "the seven the author named");

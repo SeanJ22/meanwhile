@@ -8,11 +8,12 @@ import { CardSection } from "./card-section";
 
 type ActionContext = { zip?: string | null; lat?: number | null; lng?: number | null } | null;
 
-export function OfficialActions({ subjectId, divisionIds = [], context }: { subjectId: string; divisionIds?: readonly string[]; context?: ActionContext }) {
-  return <ActionsForIdentity key={subjectId} subjectId={subjectId} divisionIds={divisionIds} context={context} />;
+/** `gapWhenEmpty` is false for an office whose actions are its votes and bills: nothing is missing when none are held here. */
+export function OfficialActions({ subjectId, divisionIds = [], context, gapWhenEmpty = true }: { subjectId: string; divisionIds?: readonly string[]; context?: ActionContext; gapWhenEmpty?: boolean }) {
+  return <ActionsForIdentity key={subjectId} subjectId={subjectId} divisionIds={divisionIds} context={context} gapWhenEmpty={gapWhenEmpty} />;
 }
 
-function ActionsForIdentity({ subjectId, divisionIds, context }: { subjectId: string; divisionIds: readonly string[]; context?: ActionContext }) {
+function ActionsForIdentity({ subjectId, divisionIds, context, gapWhenEmpty }: { subjectId: string; divisionIds: readonly string[]; context?: ActionContext; gapWhenEmpty: boolean }) {
   const query = new URLSearchParams([
     ...divisionIds.map(id => ["division", id]),
     ...(context?.zip ? [["zip", context.zip]] : []),
@@ -28,7 +29,7 @@ function ActionsForIdentity({ subjectId, divisionIds, context }: { subjectId: st
       .catch(() => { if (!controller.signal.aborted) setFailed(true); });
     return () => controller.abort();
   }, [subjectId, query]);
-  if (failed || (answer && !answer.count)) return <CardGapContribution id={`actions:${subjectId}`} label="official actions" subject={{ type: "CANDIDATE", id: subjectId }} />;
+  if (failed || (answer && !answer.count)) return gapWhenEmpty ? <CardGapContribution id={`actions:${subjectId}`} label="official actions" subject={{ type: "CANDIDATE", id: subjectId }} /> : null;
   if (!answer) return null;
   return <CardSection title="Official actions"><OfficialActionsContent answer={answer} /></CardSection>;
 }

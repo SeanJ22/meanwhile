@@ -35,7 +35,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
   answers.set("Office contact", { match: true, point: null, jurisdictions: [], outsideCoverage: true,
     electionOffices: [{ name: "Protocol county election office", address: "Protocol office address", phone: "(555) 010-0100",
       hours: "Monday–Friday, 8 am–5 pm", url: "https://example.gov/polling-place",
-      source: { publisher: "Protocol source", url: "https://example.gov/elections", checkedAt: "2026-10-23" } }] });
+      sources: [{ publisher: "Protocol source", url: "https://example.gov/elections", checkedAt: "2026-10-23" }] }] });
   const output = await build({
     stdin: { contents: `
       import React from "react"; import {createRoot} from "react-dom/client";

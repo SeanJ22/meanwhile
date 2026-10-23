@@ -120,8 +120,8 @@ test("a no-sites response leads with Google's local office, preserving live cont
   assert.deepEqual(answer.electionOffices?.[0], {
     name: "LANSING CITY", address: "701 W JOLLY RD, LANSING, MI 48910", phone: "5174834133",
     email: "ROBIN.STITES@LANSINGMI.GOV", hours: "Monday–Friday, 8 am–5 pm", url: "https://mvic.sos.state.mi.us/Voter/Index",
-    source: { publisher: "Google", title: "Voting information powered by the Civic Information API",
-      url: GOOGLE_CIVIC_DOCS, checkedAt: answer.electionOffices![0].source.checkedAt },
+    sources: [{ publisher: "Google", title: "Voting information powered by the Civic Information API",
+      url: GOOGLE_CIVIC_DOCS, checkedAt: answer.electionOffices![0].sources[0].checkedAt }],
   });
 });
 
@@ -134,9 +134,31 @@ test("missing Google offices use only the requested state's FEC election office,
   assert.match(office.name, /Michigan|Lansing, MI/);
   assert.ok(office.phone);
   assert.match(office.url!, /michigan.gov/);
-  assert.match(office.source.url, /fec.gov/);
+  assert.match(office.sources[0].url, /fec.gov/);
   assert.equal(office.address, undefined);
   assert.equal(office.hours, undefined);
+});
+
+test("partial Google offices retain each published field and fill only missing fields from the same state's FEC office", async () => {
+  const data = JSON.parse(fixture("mi-voterinfo"));
+  delete data.pollingLocations; delete data.earlyVoteSites; delete data.dropOffLocations;
+  const local = data.state[0].local_jurisdiction.electionAdministrationBody;
+  delete local.electionOfficials;
+  delete local.votingLocationFinderUrl; delete local.electionInfoUrl;
+  local.hours = "Monday–Friday, 8 am–5 pm";
+  const answer = await fillVotingSitesAnswer(empty, "private reader street", { ...place, states: ["MI", "TX"] }, { ...options, fetchImpl: googleFetch(JSON.stringify(data)) });
+  const office = answer.electionOffices![0];
+  assert.equal(office.name, "LANSING CITY");
+  assert.equal(office.address, "701 W JOLLY RD, LANSING, MI 48910");
+  assert.equal(office.hours, local.hours);
+  assert.match(office.phone!, /517/);
+  assert.match(office.url!, /michigan.gov/);
+  assert.equal(office.sources.length, 2);
+  assert.match(office.sources[1].url, /fec.gov/);
+  const state = answer.electionOffices![1];
+  assert.equal(state.phone, "5173353234", "a Google phone is never replaced");
+  assert.equal(state.url, "https://mvic.sos.state.mi.us/Voter/Index", "a Google finder is never replaced");
+  assert.equal(state.sources.length, 1, "FEC is cited only when it supplies a field");
 });
 
 test("anonymous counts atomically increment only day, ZIP and deduplicated divisions", async () => {

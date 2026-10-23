@@ -10,6 +10,7 @@ import { markerFromRequest } from "@/lib/db/run-marker";
 import { recordVotingLookupCount } from "@/lib/ballot/voting-sites-counts";
 import { votingSitesResponse } from "@/lib/ballot/voting-sites-stream";
 import { GOOGLE_CIVIC_STATES } from "@/lib/sources/google-civic/targets";
+import { readCivicApi } from "@/lib/sources/google-civic/acquisition";
 import type { VotingSitesAnswer, VotingSitesFile } from "@/lib/ballot/voting-sites";
 
 /** Addresses stay in the uncached request, Census geocode, and live Google fallback. */
@@ -30,7 +31,7 @@ async function heldVotingFile(state: string, precision: VotingReaderPlace["preci
 export async function POST(request: Request): Promise<Response> {
   return withReaderRoute("/api/voting-sites", async () => {
     const started = Date.now();
-    const deadline = started + 2500;
+    const deadline = started + 2400;
     let address = "";
     let stage = "input";
     try {
@@ -51,9 +52,14 @@ export async function POST(request: Request): Promise<Response> {
           const isZip = /^\d{5}$/.test(address);
           const suppliedState = /(?:^|[,\s])([A-Z]{2})(?:\s+\d{5}(?:-\d{4})?)?$/i.exec(address)?.[1]?.toUpperCase();
           const state = suppliedState && GOOGLE_CIVIC_STATES.includes(suppliedState) ? suppliedState : null;
+          const signal = AbortSignal.any([request.signal, AbortSignal.timeout(Math.max(1, deadline - Date.now()))]);
           // The state holding is the same before and after Census resolves the
           // precinct. Start that read now; project its sites only once located.
           const prefetched = state ? withReaderSelection({ states: [state], keys: new Set() }, () => heldVotingFile(state, "ADDRESS", deadline)) : null;
+          const electionCatalog = prefetched?.then(file => file.jurisdictions.length ? null : readCivicApi("elections", {}, { signal }));
+          // Observe an early rejection until the fallback consumes it. Held
+          // sites never send the address to Google or start a catalog request.
+          void electionCatalog?.catch(() => {});
           stage = "geocode";
           const located = isZip ? null : await censusVotingAddress(address);
           const zipInput = votingInputZip(address);
@@ -97,7 +103,7 @@ export async function POST(request: Request): Promise<Response> {
             stage = "precinct-match";
             const answer = await answerVotingSites(file, place);
             stage = "google-fallback";
-            return fillVotingSitesAnswer(answer, address, place, { signal: AbortSignal.any([request.signal, AbortSignal.timeout(Math.max(1, started + 2800 - Date.now()))]) });
+            return fillVotingSitesAnswer(answer, address, place, { signal, electionCatalog });
           });
           const [answer] = await Promise.all([result, counted]);
           return answer;

@@ -57,7 +57,7 @@ async function placeWithCensus(jurisdictions: VotingJurisdiction[], unplaced: Ma
 
 /** Request-only fallback after the held-source check. No cache, publication, or address retention. */
 export async function readGoogleVotingAnswer(address: string, place: VotingReaderPlace, options: CivicReadOptions = {}): Promise<{
-  jurisdictions: VotingJurisdiction[]; electionOffices: NonNullable<VotingSitesAnswer["electionOffices"]>; reason?: VotingFallbackReason;
+  jurisdictions: VotingJurisdiction[]; electionOffices: NonNullable<VotingSitesAnswer["electionOffices"]>; state: string | null; reason?: VotingFallbackReason;
 }> {
   const signal = options.signal ?? AbortSignal.timeout(2200);
   const lookup = await lookupCivicAddress(address, new Set(place.divisionIds), { ...options, signal });
@@ -66,8 +66,9 @@ export async function readGoogleVotingAnswer(address: string, place: VotingReade
   const unplaced = new Map<string, BatchAddress>();
   const jurisdictions = civicVotingJurisdictions(lookup, place, unplaced);
   if (unplaced.size) await placeWithCensus(jurisdictions, unplaced, place, options.censusFetchImpl, signal);
-  const electionOffices = lookup.state && (!place.states.length || place.states.includes(lookup.state))
+  const state = lookup.state && (!place.states.length || place.states.includes(lookup.state)) ? lookup.state : null;
+  const electionOffices = state
     ? (lookup.electionOffices ?? []).map(office => ({ ...office,
-      source: { publisher: "Google", title: GOOGLE_CIVIC_ATTRIBUTION, url: GOOGLE_CIVIC_DOCS, checkedAt: lookup.checkedAt } })) : [];
-  return { jurisdictions, electionOffices, ...(jurisdictions.some(j => j.sites.length) ? {} : { reason: lookup.failureReason ?? "NO_DATA" }) };
+      sources: [{ publisher: "Google", title: GOOGLE_CIVIC_ATTRIBUTION, url: GOOGLE_CIVIC_DOCS, checkedAt: lookup.checkedAt }] })) : [];
+  return { jurisdictions, electionOffices, state, ...(jurisdictions.some(j => j.sites.length) ? {} : { reason: lookup.failureReason ?? "NO_DATA" }) };
 }

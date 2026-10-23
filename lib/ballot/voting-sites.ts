@@ -255,7 +255,7 @@ export interface VotingSitesAnswer {
   expiresAt?: string;
 
   /** Request-only office contacts for an answer without sites; never part of a saved voting projection. */
-  electionOffices?: (VotingOfficeContact & { source: VotingSource & { checkedAt: string } })[];
+  electionOffices?: (VotingOfficeContact & { sources: (VotingSource & { checkedAt: string })[] })[];
   ballotNavigationDataState?: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
 }
 

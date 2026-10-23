@@ -1,0 +1,19 @@
+{
+  "n": 93,
+  "branch": "release/93",
+  "river_sha": "739e03665e46149120290951e0f459c02f320158",
+  "tested_sha": "5ddf41bb803664bcbadabab00ec61c682228ce42",
+  "steps": [
+    "BL-21-FX"
+  ],
+  "lanes": [
+    "ballot-parity-fx"
+  ],
+  "integration_from": 309,
+  "integration_count": 310,
+  "pr": {
+    "number": 803,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/803"
+  },
+  "at": "2026-10-23T19:14:37Z"
+}

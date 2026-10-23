@@ -1,0 +1,25 @@
+{
+  "checkedOn": "2026-10-23",
+  "captures": [
+    {"file":"treasury-bessent.html","url":"https://home.treasury.gov/about/general-information/officials/scott-bessent","usedFor":"Department profile, named portrait with unquoted attributes"},
+    {"file":"senate-vp-history.html","url":"https://www.senate.gov/about/officers-staff/vice-president/vice-presidents.htm","usedFor":"Current Vice President and party; only a start year is published"},
+    {"file":"inauguration-2025.html","url":"https://www.inaugural.senate.gov/60th-inaugural-ceremonies/","usedFor":"Named President and Vice President with inauguration date and oath"},
+    {"file":"senate-inauguration-index.html","url":"https://www.inaugural.senate.gov/past-inaugural-ceremonies/","usedFor":"Discover ceremonies across administrations"},
+    {"file":"usa-presidential-inauguration.html","url":"https://www.usa.gov/inauguration","usedFor":"Explicit next inauguration date, January 20, 2029"},
+    {"file":"constitution-amendment-20.html","url":"https://constitution.congress.gov/constitution/amendment-20/","usedFor":"President and Vice President terms end at noon January 20"},
+    {"file":"archives-president-2025.html","url":"https://www.archives.gov/electoral-college/2024","usedFor":"Named elected President and Vice President ticket parties"},
+    {"file":"whitehouse-contact.html","url":"https://www.whitehouse.gov/contact/","usedFor":"Separate President and Vice President contact form options; labelled shared White House accounts"},
+    {"file":"treasury-contact.html","url":"https://home.treasury.gov/utility/contact","usedFor":"General Treasury phone, office address and labelled department social channels"},
+    {"file":"cabinet-tenure-manual.html","url":"https://www.govinfo.gov/content/pkg/GOVMAN-1998-06-02/html/GOVMAN-1998-06-02-Pg89.htm","usedFor":"Government Manual's institutional Cabinet tenure description only; no current names, department list or fixed end dates are taken from this historical edition"}
+  ],
+  "reuse": "President, Vice President and all 21 Cabinet portraits and biographies use the pre-existing real pages in tests/fixtures/white-house; those pages were not fetched again.",
+  "routes": [
+    {"url":"https://za.usembassy.gov/official-u-s-government-websites-and-social-media-channels/","result":"HTTP 403; no social account fact published"},
+    {"url":"https://www.congress.gov/crs-product/RL30673","result":"HTTP 403; Government Manual supplied its own institutional tenure statement"},
+    {"url":"https://constitution.congress.gov/constitution/article-2/","result":"HTTP 403; the saved Twentieth Amendment page and USAGov's explicit next inauguration date establish the scheduled term end"},
+    {"url":"https://www.doi.gov/leadership","result":"HTTP 404; official homepage links to /interior-leadership"},
+    {"url":"https://www.transportation.gov/mission/leadership","result":"HTTP 404; official homepage links to /mission/meet-key-officials"},
+    {"url":"https://www.usda.gov/about-us/leadership","result":"HTTP 404; official homepage links to /about-usda/general-information/leadership-usda"},
+    {"url":"https://www.energy.gov/leadership","result":"HTTP 404; official homepage links to /leadership-organization"}
+  ]
+}

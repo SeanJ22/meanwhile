@@ -15,6 +15,7 @@ import { isTownOrCountyDivision, postalAreaNeedsAddress } from "../geo/postal-co
 import { readerMemory, serverReaderValue } from "./memory.ts";
 import { indexedZipDivisionEntry, shardEntry, type ZipDivisionShard } from "../geo/zip-division-index.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
+import { executiveCardCompleteness } from "../officials/national-executive.ts";
 export { readerMemory } from "./memory.ts";
 
 export interface NationalShelf {
@@ -111,6 +112,17 @@ export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet
   const ids = new Set(links.map(link => link.officeholderId));
   if (!ids.size) return null;
   return { ...roster, officeholders: roster.officeholders.filter(holder => ids.has(holder.id)), divisions: links, unmatched: roster.unmatched.filter(row => ids.has(row.officeholderId)) };
+}
+
+/** The National section reads this same resident roster; a partial card stays available on its place pages. */
+export function completeNationalExecutiveRoster(roster: OfficeholderSet | null): OfficeholderSet | null {
+  if (!roster) return null;
+  const current = currentPresidentRoster(roster);
+  if (!current) return null;
+  const officeholders = current.officeholders.filter(person => executiveCardCompleteness(person).complete);
+  const ids = new Set(officeholders.map(person => person.id));
+  return { ...current, officeholders, divisions: current.divisions.filter(link => ids.has(link.officeholderId)),
+    unmatched: current.unmatched.filter(row => ids.has(row.officeholderId)) };
 }
 
 /** The national roster is deliberately resident in each server, independent of runner publication copies. */

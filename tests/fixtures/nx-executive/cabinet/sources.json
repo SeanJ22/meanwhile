@@ -1,0 +1,41 @@
+{
+  "description": "Original public official responses, read with TLS verification. Congress requires a normal browser User-Agent. OPM sparse ranges preserve the original Parquet metadata and only department, agency, count columns; they contain no personal identifiers. The headcount is a sum of OPM count, not a total including contractors or military personnel.",
+  "sources": [
+    {
+      "file": "usa-agencies.json",
+      "url": "https://api.usaspending.gov/api/v2/references/toptier_agencies/",
+      "retrievedAt": "2026-10-23T02:42:43.954789Z",
+      "sha256": "e425662ed2f7a43a66df0d154efe71010d79be5da0d12fa8672cd91f531f7a1b"
+    },
+    {
+      "file": "usa-state-budget.json",
+      "url": "https://api.usaspending.gov/api/v2/agency/019/budgetary_resources/?fiscal_year=2026",
+      "retrievedAt": "2026-10-23T02:42:49.483353Z",
+      "sha256": "24a3f83fe4ab7407931e9a9e13018a97609eab60138a85a7d05e0ee3118b7cbe"
+    },
+    {
+      "file": "fr-state.json",
+      "url": "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bagencies%5D%5B%5D=state-department&per_page=3&order=newest",
+      "retrievedAt": "2026-10-23T02:42:49.656345Z",
+      "sha256": "fdf25e5976b01a88527398472b73116844824042a710f769b80c9546566ebeda"
+    },
+    {
+      "file": "opm-employment-files.json",
+      "url": "https://data.opm.gov/api/v1/files/employment?current=true",
+      "retrievedAt": "2026-10-23T02:44:02.659294Z",
+      "sha256": "536d6fbec4629921b7a2153e3e1da1c00595999ba35f96016ab5dc5d1f734803"
+    },
+    {
+      "file": "congress-bessent.json",
+      "url": "https://api.congress.gov/v3/nomination/119/11-1?format=json",
+      "retrievedAt": "2026-10-23T02:53:18.872018Z",
+      "sha256": "4d036079d298ef50bef43bc2883b9d457394b78c30895a6391879e1857b388aa"
+    },
+    {
+      "file": "congress-bessent-actions.json",
+      "url": "https://api.congress.gov/v3/nomination/119/11-1/actions?format=json",
+      "retrievedAt": "2026-10-23T02:53:18.868487Z",
+      "sha256": "568e56635552c1c9e0a9f34a12325be4a340cdb8ff972fa7b0723a93c05248e4"
+    }
+  ]
+}

@@ -3857,5 +3857,18 @@
     "tested_sha": "ac4af8d53776f66edaac50e041e14c3389c2b867",
     "gates": "pass",
     "at": "2026-10-23T03:15:52Z"
+  },
+  {
+    "lane": "cal-01",
+    "steps": [
+      "CAL-01",
+      "CAL-02"
+    ],
+    "ready_sha": "e419451697733226897e31ba47f39fa9cf6ebf9a",
+    "merge_sha": "9ae32d5cc2210c05698af1b19c3211e17648349f",
+    "river_sha": "e6cee974698fc06d8f3e794ed3aa3e6ae8c71c49",
+    "tested_sha": "e6cee974698fc06d8f3e794ed3aa3e6ae8c71c49",
+    "gates": "pass",
+    "at": "2026-10-23T04:10:07Z"
   }
 ]

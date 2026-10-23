@@ -1,11 +1,19 @@
 # River status
 
-build_state: RELEASES 72 TO 87 LIVE (/api/build 767eeba); VICE PRESIDENT STILL NOT LIVE (ds-01); CALENDAR DOORS AND ROUTINE-PASS TIME BUDGET RETURNED TO CAL-01; RELEASE 88 (pm-01 NX-PLACE-3) IN GATES
+build_state: RELEASES 72 TO 88 LIVE (/api/build 825ff1c); VICE PRESIDENT WAS LIVE ON PLACE PAGES IN RELEASES 85-87 AND IS OFF THEM IN RELEASE 88 BY PM-01'S DESIGN (NATIONAL SECTION 'COMING SOON'); NEEDS SEAN'S DECISION
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
-heartbeat: 2026-10-23T06:14:20Z
+heartbeat: 2026-10-23T06:55:00Z
+
+## Release 88 took the Vice President off the place pages (Oct 22, 11:55 PM Phoenix / 2:55 AM EDT Oct 23)
+
+- Vice President was live for about 45 minutes (releases 85 to 87; runner on 767eeba from 06:08 UTC): AZ, TX, OH, CA, NM and VT state data carried JD Vance with a White House source quote, and the page's "46 Officials Near 85016" list showed Donald J. Trump, JD Vance and the Cabinet under "United States"; his card read "Federal, Incumbent, Vice President of the United States", one source.
+- Release 88 (pm-01 NX-PLACE-1, -2, -3; PR #798, merged 825ff1c4 at 06:40 UTC, served 06:42 UTC) removes them on purpose. NX-PLACE-1: "The President, the Vice President and the Cabinet are off every place's 'Who governs here?' list. The list holds only who is specific to the place." NX-PLACE-2 adds a National section that shows a card only when the national data marks it complete; with none complete it says "National government, coming soon" (link under the Local/State/Federal filter and at the bottom of Who governs here?). Nothing connects the data yet (it waits for "NX-01"), so /national has no Vance and no Vice President today. Live now: 85016 lists 23 officials (was 46), with no Trump, no Vance, no "United States" rows; 75201 and 94110 the same; /national says coming soon.
+- So the Vice President (and the President and Cabinet) is not on the live page in any state. This is not a failed gate and nothing is broken: the lane did what it described. It contradicts "Done means the Vice President shows on the live page in AZ, TX, OH, CA and two random states", which was true 06:15 to 06:40 UTC.
+- Sean decides: (a) keep release 88 and have NX-01 feed the National section (the Vice President returns on /national, not on each place page); (b) ask pm-01 to keep the President, Vice President and Cabinet on the place list until the National section has cards; or (c) River ships a revert of NX-PLACE-1 alone. River has not reverted anything.
+- Legistar board names: 80903 (Colorado Springs) still shows the county commissioners and the school board, no City Council; Tacoma, Oklahoma City and Minneapolis show 0 bodies. Waiting for a routine pass on release 84's code (runner on 767eeba from 06:08 UTC; watch armed).
 
 ## Releases 85, 86 and 87 shipped and live (Oct 22, 10:58 PM Phoenix / 1:58 AM EDT Oct 23)
 

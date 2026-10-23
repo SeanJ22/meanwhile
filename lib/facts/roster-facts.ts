@@ -31,7 +31,7 @@ export interface RosterMember {
 }
 
 interface RosterFactsInput {
-  readonly body: { readonly id: string; readonly name: string | null; readonly state: string | null; readonly parentId: string | null };
+  readonly body: { readonly id: string; readonly name: string | null; readonly state: string | null; readonly parentId: string | null; readonly government?: string | null };
   readonly capture: WorkerPublicationCapture;
   readonly members: readonly RosterMember[];
   /** Every member row on the page was read, so a member it no longer lists has left. */
@@ -93,7 +93,7 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
 async function publishRosterFields(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: RosterFactsInput, clocks: Clocks, now: Date): Promise<RosterFactsReport> {
   const { capture } = input;
-  const bodyId = await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId });
+  const bodyId = await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId, government: input.body.government });
   const [held] = bodyId !== input.body.id ? await db.query("SELECT name, state, parent_id FROM entity WHERE id = $1", [bodyId]) : [];
   const body = held ? { id: bodyId, name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null } : input.body;
   const bodyEntity = (await readCheckEntity(db.query, bodyId))!;

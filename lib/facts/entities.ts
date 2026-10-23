@@ -18,6 +18,8 @@ interface EntityRow {
   readonly name: string;
   readonly state: string | null;
   readonly parentId: string | null;
+  /** The registered government a reviewed door names as a board's owner. */
+  readonly government?: string | null;
 }
 
 interface EntityBatch {
@@ -60,6 +62,8 @@ function schoolPlaces(state: string, name: string): string[] {
     .map(slug => `ocd-division/country:us/state:${state.toLowerCase()}/school_district:${slug}`);
 }
 
+/** A state, district or territory itself: where a board waits until its government or place is known. */
+const BARE_ROOT = "^ocd-division/country:us/(state|district|territory):[^/]+$";
 const localPlace = (id: string) => id.startsWith(`${COUNTRY}/`) && id.slice(COUNTRY.length + 1).includes("/");
 
 /** One state's places, governments and registry bodies; a special district sits on its own territory, or on the state until a boundary draws it. */
@@ -139,7 +143,7 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
   }
   const bodies = batch.entities.filter(row => row.kind === "body");
   if (bodies.length) await query(`DELETE FROM entity_place WHERE entity_id = ANY($1::text[])
-    AND place_id ~ '^ocd-division/country:us/(state|district|territory):[^/]+$'`, [bodies.map(row => row.id)]);
+    AND place_id ~ '${BARE_ROOT}'`, [bodies.map(row => row.id)]);
   for (let i = 0; i < batch.externalIds.length; i += size) {
     const rows = batch.externalIds.slice(i, i + size);
     await query(`INSERT INTO entity_external_id (entity_id, scheme, value)
@@ -255,14 +259,29 @@ export async function canonicalBodyId(query: Query, id: string): Promise<string>
   return alias ? String(alias.entity_id) : id;
 }
 
-/** Mints an entity found after the backfill and returns its durable identity; aliased boards reuse the surviving entity. */
+/** The registered government a board belongs to: the one its id names, else the one its door names; null when neither is held. */
+async function bodyGovernment(query: Query, id: string, named: string | null | undefined): Promise<string | null> {
+  for (const candidate of [splitSubject(id).root, named]) {
+    if (!candidate) continue;
+    const government = await registeredGovernment(query, candidate);
+    if ((await query("SELECT 1 FROM entity WHERE id = $1 AND kind = 'government'", [government])).length) return government;
+  }
+  return null;
+}
+
+/** Mints an entity found after the backfill and returns its durable identity; aliased boards reuse the surviving entity.
+ * A board hangs on its registered government, and a held board left on a bare state root moves to the government or local place a writer now names. */
 export async function ensureEntity(query: Query, row: EntityRow): Promise<string> {
   const id = row.kind === "body" ? await canonicalBodyId(query, row.id) : row.id;
   if (id !== row.id) return id;
+  const parentId = row.kind === "body" ? await bodyGovernment(query, id, row.government) ?? row.parentId : row.parentId;
   await query(`INSERT INTO entity (id, kind, name, state, parent_id)
     SELECT $1, $2, $3, $4, (SELECT id FROM entity WHERE id = coalesce(
-      (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $5), $5)) ON CONFLICT (id) DO NOTHING`,
-  [id, row.kind, row.name, row.state, row.parentId]);
+      (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $5), $5))
+    ON CONFLICT (id) DO UPDATE SET parent_id = EXCLUDED.parent_id
+      WHERE entity.kind = 'body' AND EXCLUDED.kind = 'body' AND entity.state IS NOT DISTINCT FROM EXCLUDED.state
+        AND entity.parent_id ~ '${BARE_ROOT}' AND EXCLUDED.parent_id !~ '${BARE_ROOT}'`,
+  [id, row.kind, row.name, row.state, parentId]);
   return id;
 }
 
@@ -383,7 +402,7 @@ export async function ensureGoverningBody(query: Query, subjectId: string): Prom
 
 async function placeBody(query: Query, id: string, place: string): Promise<void> {
   await query(`DELETE FROM entity_place WHERE entity_id = $1
-    AND place_id ~ '^ocd-division/country:us/(state|district|territory):[^/]+$'`, [id]);
+    AND place_id ~ '${BARE_ROOT}'`, [id]);
   if (localPlace(place)) await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, place]);
 }
 

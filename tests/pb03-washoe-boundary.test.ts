@@ -53,3 +53,22 @@ test("the map and every affected ZIP use one Washoe Rural territory with unchang
     assert.equal(entry.fringe?.includes(place) ?? false, zip === "89506", "a three-resident fringe must not become a claim about the whole ZIP");
   }
 });
+
+test("Oregon Metro's own boundary gives Metro a territory, so the Portland-area ZIPs it governs reach its boards", async () => {
+  const metro = "or:special:metro", territory = "ocd-division/country:us/state:or/special_district:metro";
+  const source = sources.find(s => s.id === "or-metro-boundary-0e317b")!;
+  assert.equal(districtSourceName(source, { FID: 1 }), "Metro");
+  const ref = loadRegistrationReference(root, "or").reference;
+  const [row] = ref.governments.filter(g => g[1] === metro);
+  assert.deepEqual([ref.divisions[row![4]]![0], row![5]], [territory, "BOUNDARY_SOURCE"]);
+  const shard = JSON.parse(readFileSync("data/derived/zip-divisions/97.json", "utf8")) as ZipDivisionShard;
+  const governs = (zip: string) => shardEntry(shard, zip)!.ids.includes(territory);
+  for (const zip of ["97204", "97232", "97225"]) assert.ok(governs(zip), `${zip} lies inside Metro`);
+  for (const zip of ["97301", "97401", "97701"]) assert.ok(!governs(zip), `${zip} lies outside Metro`);
+  const db = await factDb();
+  try {
+    assert.deepEqual(await ensureFactEntities(db, root, ["or"]), ["or"]);
+    assert.deepEqual(await db.query("SELECT parent_id FROM entity WHERE id=$1", [metro]), [{ parent_id: territory }]);
+    assert.deepEqual(await db.query("SELECT place_id FROM entity_place WHERE entity_id=$1", [metro]), [{ place_id: territory }]);
+  } finally { await db.pg.close(); }
+});

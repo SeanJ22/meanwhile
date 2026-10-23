@@ -8047,6 +8047,26 @@
    "unmatched": "skip"
   },
   {
+   "id": "or-metro-boundary-0e317b",
+   "state": "OR",
+   "countyFips": null,
+   "kinds": [
+    "other"
+   ],
+   "title": "Metro Boundary",
+   "publisher": "Oregon Metro (RLIS)",
+   "officialPage": "https://rlisdiscovery.oregonmetro.gov/",
+   "format": "arcgis",
+   "url": "https://services2.arcgis.com/McQ0OlIABe29rJJy/arcgis/rest/services/Metro_Boundary/FeatureServer/0",
+   "nameField": "FID",
+   "nameTemplate": "Metro",
+   "idField": null,
+   "kindField": null,
+   "kindValues": null,
+   "where": null,
+   "unmatched": "skip"
+  },
+  {
    "id": "pa-epa-community-water-systems",
    "state": "PA",
    "countyFips": null,

@@ -1,0 +1,21 @@
+{
+  "n": 92,
+  "branch": "release/92",
+  "river_sha": "dfae00f3c70444f06c95adf66c89c9b4e818827d",
+  "tested_sha": "cd82fdc4a96ea9f417b1c990658850c3687373b5",
+  "steps": [
+    "VS-07",
+    "PB-03"
+  ],
+  "lanes": [
+    "vs-07-fx",
+    "pb-03-fx"
+  ],
+  "integration_from": 307,
+  "integration_count": 309,
+  "pr": {
+    "number": 802,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/802"
+  },
+  "at": "2026-10-23T17:19:44Z"
+}

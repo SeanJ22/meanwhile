@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 90 LIVE (/api/build a462d38 from 10:24 AM EDT): CAL-01-FX, PB-03, PK-01, SRC-01, NX-02-FX, NB-02, DG-02; live checks in progress
+build_state: RELEASE 90 LIVE (/api/build a462d38); RELEASE 91 CANDIDATE (RN-01-FX ecfc8636f + River National label fix) IN GATES from 11:00 AM EDT on river-next (main merged before gates)
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS

@@ -81,12 +81,17 @@ test("normal vault resolution reads only the requested artifact, including later
   const repository = repos(records);
   let received = 0;
   repository.artifacts.readAll = async () => { throw new Error("whole artifact log read"); };
+  const keysWhere = repository.artifacts.keysWhere;
+  repository.artifacts.keysWhere = async (...args) => {
+    const keys = await keysWhere(...args); received += Buffer.byteLength(JSON.stringify(keys)); return keys;
+  };
   const read = repository.artifacts.readWhere;
   repository.artifacts.readWhere = async (...args) => {
     const rows = await read(...args); received += Buffer.byteLength(JSON.stringify(rows)); return rows;
   };
   const resolver = workerVaultResolver(repository, store, PROJECT);
   await assert.rejects(resolver(artifact.id), /WORKER_ARTIFACT_MISSING_OR_PARTIAL/);
+  received = 0;
   records.push(record(artifact));
   assert.equal((await resolver(artifact.id)).text, BODY);
   const before = Buffer.byteLength(JSON.stringify(records));

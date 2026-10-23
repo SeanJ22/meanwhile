@@ -434,7 +434,7 @@ export async function readFieldManualRows(repos: FieldManualRepos, query: FieldM
   }
 }
 
-async function sharedManualRequest<T>(kind:string,body:unknown,local:()=>Promise<T>):Promise<T> {
+export async function sharedManualRequest<T>(kind:string,body:unknown,local:()=>Promise<T>):Promise<T> {
   if (!process.env.WTP_WORKER_TOOLS_URL) return local();
   const response = await fetch(process.env.WTP_WORKER_TOOLS_URL, { method: "POST",
     headers: { "content-type": "application/json", authorization: process.env.WTP_WORKER_TOOLS_TOKEN ?? "" },

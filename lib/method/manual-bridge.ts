@@ -3,7 +3,7 @@
  * manual, and routing asks the manual which routes are learned. Pure except `readMethodVersion`.
  */
 
-import { readFieldManual, type FieldManualEntry, type FieldManualStore } from "../control-plane/field-manual.ts";
+import { sharedManualRequest, type FieldManualEntry, type FieldManualStore } from "../control-plane/field-manual.ts";
 import type { ControlPlaneRepositories, Persisted } from "../control-plane/repository/types.ts";
 import type { MethodKnowledge, MethodRoute } from "./knowledge.ts";
 
@@ -59,8 +59,7 @@ export function methodVersionFromManual(store: { entries: readonly Pick<FieldMan
 /** The current method version, read from the live manual. Null when the manual is unreadable or not seeded: the caller says so rather than guessing. */
 export async function readMethodVersion(repos: Pick<ControlPlaneRepositories, "fieldManual">): Promise<number | null> {
   if (process.env.WTP_WORKER_TOOLS_URL) {
-    const read = await readFieldManual(repos, { kinds: [ROUTE_ENTRY_KIND, METHOD_VERSION_KIND], everywhere: true });
-    return read.error ? null : methodVersionFromManual(read.store);
+    try { return (await readMethodKnowledge(repos)).version; } catch { return null; }
   }
   try {
     const rows = (await Promise.all([ROUTE_ENTRY_KIND, METHOD_VERSION_KIND].map(kind =>
@@ -100,11 +99,6 @@ export function methodKnowledgeFromManual(store: FieldManualStore): MethodKnowle
 }
 
 async function readMethodEntries(repos: Pick<ControlPlaneRepositories, "fieldManual">): Promise<readonly FieldManualEntry[]> {
-  if (process.env.WTP_WORKER_TOOLS_URL) {
-    const read = await readFieldManual(repos, { kinds: [ROUTE_ENTRY_KIND, METHOD_VERSION_KIND], everywhere: true });
-    if (read.error) throw new Error(read.error);
-    return read.store.entries;
-  }
   const versions = (await Promise.all([ROUTE_ENTRY_KIND, METHOD_VERSION_KIND].map(kind =>
     repos.fieldManual.listWhereNarrowed(["kind"], kind, {})))).flat().sort((a,b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
   const held = methodRows.get(repos.fieldManual) ?? new Map<string, Persisted<FieldManualEntry>>();
@@ -118,9 +112,18 @@ async function readMethodEntries(repos: Pick<ControlPlaneRepositories, "fieldMan
   return [...current.values()].map(row => row.value);
 }
 
+/** The shared-tools host reads its own repository, never its own HTTP endpoint. */
+export async function readMethodKnowledgeRows(repos: Pick<ControlPlaneRepositories, "fieldManual">): Promise<{ knowledge: MethodKnowledge } | { error: string }> {
+  try {
+    const knowledge = methodKnowledgeFromManual({ entries: await readMethodEntries(repos) });
+    if (!knowledge) throw new Error("the field manual holds no method version; it has not been seeded (scripts/field-manual-seed.mts). An empty store would send every route to the bounded worker.");
+    return { knowledge: structuredClone(knowledge) };
+  } catch (error) { return { error: error instanceof Error ? error.message : String(error) }; }
+}
+
 /** The method knowledge from the live manual. An unreadable or unseeded manual THROWS: an empty store would read as "we know nothing" and send every route to the bounded worker. */
 export async function readMethodKnowledge(repos: Pick<ControlPlaneRepositories, "fieldManual">): Promise<MethodKnowledge> {
-  const knowledge = methodKnowledgeFromManual({ entries: await readMethodEntries(repos) });
-  if (!knowledge) throw new Error("the field manual holds no method version; it has not been seeded (scripts/field-manual-seed.mts). An empty store would send every route to the bounded worker.");
-  return structuredClone(knowledge);
+  const read = await sharedManualRequest("methodKnowledge", null, () => readMethodKnowledgeRows(repos));
+  if ("error" in read) throw new Error(read.error);
+  return read.knowledge;
 }

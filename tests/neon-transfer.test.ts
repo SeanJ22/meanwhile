@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { PGlite } from "@electric-sql/pglite";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { pgAggregateRepository, pgFieldManualRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { canonicalJson, type AggregateRepository } from "../lib/control-plane/repository/types.ts";
 import { mergeEntry, newFieldManualEntry, saveFieldManualEntries, type FieldManualEntry } from "../lib/control-plane/field-manual.ts";
 import { openPlatformMeetingDoors, platformMeetingDoor, retireCensusDuplicates } from "../lib/doors/platform-census.ts";
@@ -157,4 +159,37 @@ test("mission marks inspect only selectors, and settlement reads only marked doo
   t.diagnostic(`mission settlement response bytes: ${before} -> ${meter.received}`);
   assert.deepEqual((await base.doors.mustRead(target.doorId)).value,
     { ...target, readNow: false, updatedAt: LATER, lastSuccessAt: LATER });
+});
+
+test("the Postgres query responses themselves exclude door captures and replaced manual payloads", async t => {
+  const db = new PGlite(); t.after(() => db.close());
+  await db.exec(`CREATE TABLE cp_doors(id text PRIMARY KEY, revision integer NOT NULL, updated_at timestamptz NOT NULL,
+    changed_at timestamptz NOT NULL DEFAULT now(), value jsonb NOT NULL);
+    CREATE TABLE cp_field_manual_entries(LIKE cp_doors INCLUDING ALL);`);
+  let received = 0;
+  const sql: Sql = { query: async (text, params = []) => {
+    const result = await db.query(text, [...params]); received += bytes(result.rows); return result.rows;
+  } };
+  const checked = checkDoorDraft(platformMeetingDoor(crosswalk)[0]); assert.ok(checked.ok);
+  const manualConfig = { ...checked.value.config }; delete manualConfig.crosswalkRowId;
+  const manual = applyDerivedRow(null, { ...checked.value, doorId: "manual", config: manualConfig }, AT, AT)!;
+  for (const door of [manual, ...Array.from({ length: 100 }, (_, n) => ({ ...manual, doorId: `other-${n}`,
+    bodyIds: [`other-${n}`], hosts: [`other-${n}.gov`], config: { capture: "saved source ".repeat(5000) } }))]) {
+    await db.query("INSERT INTO cp_doors(id, revision, updated_at, value) VALUES($1,1,$2,$3::jsonb)", [door.doorId, AT, JSON.stringify(door)]);
+  }
+  const doors = pgAggregateRepository<DoorRecord>(sql, "Door", "cp_doors");
+  await doors.list(); const beforeDoors = received; received = 0;
+  assert.deepEqual(await openPlatformMeetingDoors(doors, [crosswalk], LATER), []);
+  assert.ok(received < beforeDoors / 100);
+  t.diagnostic(`Postgres door query response bytes: ${beforeDoors} -> ${received}`);
+
+  const first = mergeEntry(null, entry());
+  await db.query("INSERT INTO cp_field_manual_entries(id, revision, updated_at, value) VALUES($1,1,$2,$3::jsonb)", [first.id, AT, JSON.stringify(first)]);
+  const fieldManual = pgFieldManualRepository(sql, {}, () => createMemoryRepositories().fixMap);
+  received = 0; await fieldManual.readMany([first.id]); const beforeManual = received; received = 0;
+  const incoming = entry({ observedAt: LATER, payload: { html: "new source ".repeat(100_000) } });
+  assert.deepEqual(await saveFieldManualEntries({ fieldManual }, [incoming], LATER), { written: 1 });
+  assert.ok(received < beforeManual / 100);
+  t.diagnostic(`Postgres manual save response bytes: ${beforeManual} -> ${received}`);
+  assert.equal(canonicalJson((await fieldManual.mustRead(first.id)).value), canonicalJson(mergeEntry(first, incoming)));
 });

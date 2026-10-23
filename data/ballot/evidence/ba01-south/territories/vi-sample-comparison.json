@@ -1,0 +1,812 @@
+{
+  "officialNameVariants": [
+    {
+      "sampleName": "Julian S. Viera",
+      "certifiedName": "Julian S. Veira",
+      "office": "LEGISLATURE OF THE VIRGIN ISLANDS",
+      "scope": "St. Croix"
+    },
+    {
+      "sampleName": "Mustasem Moe Mustafa",
+      "certifiedName": "Mutasem Moe Mustafa",
+      "office": "LEGISLATURE OF THE VIRGIN ISLANDS",
+      "scope": "St. Croix"
+    },
+    {
+      "sampleName": "Kurt Vialet",
+      "certifiedName": "Kurt A. Vialet",
+      "office": "LEGISLATURE OF THE VIRGIN ISLANDS",
+      "scope": "St. Croix"
+    },
+    {
+      "sampleName": "Franklin D. Johnson",
+      "certifiedName": "Franklin Johnson",
+      "office": "LEGISLATURE OF THE VIRGIN ISLANDS",
+      "scope": "St. Croix"
+    },
+    {
+      "sampleName": "Eugene D. Farrell",
+      "certifiedName": "Eugene D.J. Farrell",
+      "office": "LEGISLATURE OF THE VIRGIN ISLANDS",
+      "scope": "St. Thomas/St. John"
+    }
+  ],
+  "sampleDistricts": {
+    "St. Croix": {
+      "contests": 6,
+      "choices": 42,
+      "people": 47,
+      "races": [
+        {
+          "office": "DELEGATE TO THE HOUSE OF REPRESENTATIVES",
+          "scope": "Virgin Islands",
+          "voteFor": 1,
+          "candidates": [
+            {
+              "name": "Janelle K. Sarauw",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Shelley A. H. Moorhead",
+              "partyLabel": "Independent"
+            }
+          ]
+        },
+        {
+          "office": "GOVERNOR & LIEUTENANT GOVERNOR",
+          "scope": "Virgin Islands",
+          "voteFor": 1,
+          "candidates": [
+            {
+              "name": "Adlah \"Foncie\" Donastorg / Positive Nelson",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Warren Mosler / Colin Robertson",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Stacey E. Plaskett / Milton E. Potter",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Oakland Benta / Merwin Potter",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Gustav James / Randolph Bennett",
+              "partyLabel": "Independent"
+            }
+          ]
+        },
+        {
+          "office": "LEGISLATURE OF THE VIRGIN ISLANDS AT LARGE",
+          "scope": "Virgin Islands",
+          "voteFor": 1,
+          "candidates": [
+            {
+              "name": "Angel Bolques Jr.",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Hadiya Sewer",
+              "partyLabel": "Independent"
+            }
+          ]
+        },
+        {
+          "office": "LEGISLATURE OF THE VIRGIN ISLANDS",
+          "scope": "St. Croix",
+          "voteFor": 7,
+          "candidates": [
+            {
+              "name": "Nemmy Williams-Jackson",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Clifford A. Joseph",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Bianca Francis",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Elizabeth HansenWatley",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Tyler Courtland Fay",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Luz \"Lucy\" Browne",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Jose \"Besse\" Gonzalez",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Troy C. Williams Sr.",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Kenneth Kenny Gittens",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Julian S. Viera",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Mustasem Moe Mustafa",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Kurt Vialet",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Nellie Rivera O'Reilly",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Samuel Carrion",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Alvin Milligan",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Troy D. Mason",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Diane Prosper",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Raymond T. James Esq",
+              "partyLabel": "Republican"
+            },
+            {
+              "name": "Norman Bapo JnBaptiste",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Hubert L. Frederick",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Gage Edmunds",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Lisa J. Charles",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Franklin D. Johnson",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Jay Watson",
+              "partyLabel": "Independent"
+            }
+          ]
+        },
+        {
+          "office": "BOARD OF EDUCATION",
+          "scope": "St. Croix",
+          "voteFor": 2,
+          "candidates": [
+            {
+              "name": "Vincent HA GordonJr PhD",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Lucy M. Jackson PhD",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Winona A. Hendricks",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Terrence T. Joseph",
+              "partyLabel": "Democrat"
+            }
+          ]
+        },
+        {
+          "office": "BOARD OF ELECTIONS",
+          "scope": "St. Croix",
+          "voteFor": 3,
+          "candidates": [
+            {
+              "name": "Juliet L. Liburd",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Franz A. Christian, Jr.",
+              "partyLabel": "Republican"
+            },
+            {
+              "name": "Kareem T. Francis",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Mary \"Peggy\" Moorhead",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Shamari I. Haynes",
+              "partyLabel": "Democrat"
+            }
+          ]
+        }
+      ]
+    },
+    "St. Thomas/St. John": {
+      "contests": 7,
+      "choices": 37,
+      "people": 42,
+      "races": [
+        {
+          "office": "DELEGATE TO THE HOUSE OF REPRESENTATIVES",
+          "scope": "Virgin Islands",
+          "voteFor": 1,
+          "candidates": [
+            {
+              "name": "Janelle K. Sarauw",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Shelley A. H. Moorhead",
+              "partyLabel": "Independent"
+            }
+          ]
+        },
+        {
+          "office": "GOVERNOR & LIEUTENANT GOVERNOR",
+          "scope": "Virgin Islands",
+          "voteFor": 1,
+          "candidates": [
+            {
+              "name": "Adlah \"Foncie\" Donastorg / Positive Nelson",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Warren Mosler / Colin Robertson",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Stacey E. Plaskett / Milton E. Potter",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Oakland Benta / Merwin Potter",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Gustav James / Randolph Bennett",
+              "partyLabel": "Independent"
+            }
+          ]
+        },
+        {
+          "office": "LEGISLATURE OF THE VIRGIN ISLANDS AT LARGE",
+          "scope": "Virgin Islands",
+          "voteFor": 1,
+          "candidates": [
+            {
+              "name": "Angel Bolques Jr.",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Hadiya Sewer",
+              "partyLabel": "Independent"
+            }
+          ]
+        },
+        {
+          "office": "LEGISLATURE OF THE VIRGIN ISLANDS",
+          "scope": "St. Thomas/St. John",
+          "voteFor": 7,
+          "candidates": [
+            {
+              "name": "Gregory P. Smith",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Dwayne M. DeGraff",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Dr. Krishna Kilaru MD",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Eric Tillett",
+              "partyLabel": "Republican"
+            },
+            {
+              "name": "Avery L. Lewis",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Vernon Araujo",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Joel S. Browne Connors",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Ray \"PuPa\" Fonseca",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Sennai Habtes",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Rudel A. Hodge, Jr.",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Imani Daniel",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Shenelle Fina Francis",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Alma Francis Heyliger",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Derrick A. Callwood",
+              "partyLabel": "Republican"
+            },
+            {
+              "name": "Paula A. Duke",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Eugene D. Farrell",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Carla Joseph",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Collister M. Fahie",
+              "partyLabel": "Republican"
+            },
+            {
+              "name": "David Sierra",
+              "partyLabel": "ICM"
+            },
+            {
+              "name": "Marvin A. Blyden",
+              "partyLabel": "Democrat"
+            }
+          ]
+        },
+        {
+          "office": "BOARD OF EDUCATION",
+          "scope": "St. Thomas/St. John",
+          "voteFor": 2,
+          "candidates": [
+            {
+              "name": "Arah C. Lockhart",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Bruce C. Flamon",
+              "partyLabel": "Independent"
+            },
+            {
+              "name": "Judy M. Gomez",
+              "partyLabel": "Democrat"
+            }
+          ]
+        },
+        {
+          "office": "BOARD OF ELECTIONS - STJ",
+          "scope": "St. Thomas/St. John",
+          "voteFor": 1,
+          "candidates": [
+            {
+              "name": "Preston R. Evans",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Raven Phillips",
+              "partyLabel": "Independent"
+            }
+          ]
+        },
+        {
+          "office": "BOARD OF ELECTIONS - STT",
+          "scope": "St. Thomas/St. John",
+          "voteFor": 2,
+          "candidates": [
+            {
+              "name": "Barbara A. Petersen",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Kevin A. Rodriquez",
+              "partyLabel": "Democrat"
+            },
+            {
+              "name": "Harriet A. Mercer",
+              "partyLabel": "Republican"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "uniqueContests": 10,
+  "choices": 70,
+  "people": 75,
+  "races": [
+    {
+      "office": "DELEGATE TO THE HOUSE OF REPRESENTATIVES",
+      "scope": "Virgin Islands",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Janelle K. Sarauw",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Shelley A. H. Moorhead",
+          "partyLabel": "Independent"
+        }
+      ]
+    },
+    {
+      "office": "GOVERNOR & LIEUTENANT GOVERNOR",
+      "scope": "Virgin Islands",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Adlah \"Foncie\" Donastorg / Positive Nelson",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Warren Mosler / Colin Robertson",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Stacey E. Plaskett / Milton E. Potter",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Oakland Benta / Merwin Potter",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Gustav James / Randolph Bennett",
+          "partyLabel": "Independent"
+        }
+      ]
+    },
+    {
+      "office": "LEGISLATURE OF THE VIRGIN ISLANDS AT LARGE",
+      "scope": "Virgin Islands",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Angel Bolques Jr.",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Hadiya Sewer",
+          "partyLabel": "Independent"
+        }
+      ]
+    },
+    {
+      "office": "LEGISLATURE OF THE VIRGIN ISLANDS",
+      "scope": "St. Croix",
+      "voteFor": 7,
+      "candidates": [
+        {
+          "name": "Nemmy Williams-Jackson",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Clifford A. Joseph",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Bianca Francis",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Elizabeth HansenWatley",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Tyler Courtland Fay",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Luz \"Lucy\" Browne",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Jose \"Besse\" Gonzalez",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Troy C. Williams Sr.",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Kenneth Kenny Gittens",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Julian S. Viera",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Mustasem Moe Mustafa",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Kurt Vialet",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Nellie Rivera O'Reilly",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Samuel Carrion",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Alvin Milligan",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Troy D. Mason",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Diane Prosper",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Raymond T. James Esq",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Norman Bapo JnBaptiste",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Hubert L. Frederick",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Gage Edmunds",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Lisa J. Charles",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Franklin D. Johnson",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Jay Watson",
+          "partyLabel": "Independent"
+        }
+      ]
+    },
+    {
+      "office": "BOARD OF EDUCATION",
+      "scope": "St. Croix",
+      "voteFor": 2,
+      "candidates": [
+        {
+          "name": "Vincent HA GordonJr PhD",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Lucy M. Jackson PhD",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Winona A. Hendricks",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Terrence T. Joseph",
+          "partyLabel": "Democrat"
+        }
+      ]
+    },
+    {
+      "office": "BOARD OF ELECTIONS",
+      "scope": "St. Croix",
+      "voteFor": 3,
+      "candidates": [
+        {
+          "name": "Juliet L. Liburd",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Franz A. Christian, Jr.",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Kareem T. Francis",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Mary \"Peggy\" Moorhead",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Shamari I. Haynes",
+          "partyLabel": "Democrat"
+        }
+      ]
+    },
+    {
+      "office": "LEGISLATURE OF THE VIRGIN ISLANDS",
+      "scope": "St. Thomas/St. John",
+      "voteFor": 7,
+      "candidates": [
+        {
+          "name": "Gregory P. Smith",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Dwayne M. DeGraff",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Dr. Krishna Kilaru MD",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Eric Tillett",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Avery L. Lewis",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Vernon Araujo",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Joel S. Browne Connors",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Ray \"PuPa\" Fonseca",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Sennai Habtes",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Rudel A. Hodge, Jr.",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Imani Daniel",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Shenelle Fina Francis",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Alma Francis Heyliger",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Derrick A. Callwood",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "Paula A. Duke",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Eugene D. Farrell",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Carla Joseph",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Collister M. Fahie",
+          "partyLabel": "Republican"
+        },
+        {
+          "name": "David Sierra",
+          "partyLabel": "ICM"
+        },
+        {
+          "name": "Marvin A. Blyden",
+          "partyLabel": "Democrat"
+        }
+      ]
+    },
+    {
+      "office": "BOARD OF EDUCATION",
+      "scope": "St. Thomas/St. John",
+      "voteFor": 2,
+      "candidates": [
+        {
+          "name": "Arah C. Lockhart",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Bruce C. Flamon",
+          "partyLabel": "Independent"
+        },
+        {
+          "name": "Judy M. Gomez",
+          "partyLabel": "Democrat"
+        }
+      ]
+    },
+    {
+      "office": "BOARD OF ELECTIONS - STJ",
+      "scope": "St. Thomas/St. John",
+      "voteFor": 1,
+      "candidates": [
+        {
+          "name": "Preston R. Evans",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Raven Phillips",
+          "partyLabel": "Independent"
+        }
+      ]
+    },
+    {
+      "office": "BOARD OF ELECTIONS - STT",
+      "scope": "St. Thomas/St. John",
+      "voteFor": 2,
+      "candidates": [
+        {
+          "name": "Barbara A. Petersen",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Kevin A. Rodriquez",
+          "partyLabel": "Democrat"
+        },
+        {
+          "name": "Harriet A. Mercer",
+          "partyLabel": "Republican"
+        }
+      ]
+    }
+  ]
+}

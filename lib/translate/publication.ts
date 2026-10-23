@@ -1,7 +1,7 @@
 import type { ManualProjectionPackage } from "../civic-data/manual-projections.ts";
 import { prepareManualProjectionSuccessor } from "../civic-data/manual-successor.ts";
 import { processRegisteredManualCandidate } from "../civic-data/promotion.ts";
-import type { RoutineDataStore } from "../civic-data/store.ts";
+import { PromotionBaseChangedError, type RoutineDataStore } from "../civic-data/store.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { captureIntact, section3SourceReceipt } from "../civic-data/worker-publication-evidence.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
@@ -32,8 +32,26 @@ export function translationPackage(input: {
 /** One checked fact publishes through the existing Slide and typed readback. */
 export const measureTranslationPackage = translationPackage;
 export async function publishTranslation(store: RoutineDataStore, input: Parameters<typeof translationPackage>[0]) {
-  const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(translationPackage(input), store, input.now);
-  return processRegisteredManualCandidate(store, "plain-english-translations", candidate, input.now, expectedBaseVersionId);
+  const packet = translationPackage(input);
+  for (;;) {
+    const { candidate: prepared, expectedBaseVersionId } = await prepareManualProjectionSuccessor(packet, store, input.now);
+    const records = (prepared.readModel as import("./projection-contract.ts").TranslationProjection).records;
+    // The projection holds several independently captured documents. Adding an
+    // older capture must retain the newest held source date; each sentence's
+    // own retrieval date remains on its unchanged translation record.
+    const sourceThrough = records.map(record => record.retrievedAt)
+      .sort((a, b) => Date.parse(b) - Date.parse(a))[0];
+    const candidate = { ...prepared, temporal: { ...prepared.temporal, sourceThrough } };
+    try {
+      const outcome = await processRegisteredManualCandidate(store, "plain-english-translations", candidate, input.now, expectedBaseVersionId);
+      if (outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED") continue;
+      return outcome;
+    } catch (error) {
+      // Another measure in this district published first. Merge the already
+      // checked sentence evidence into that version without another model call.
+      if (!(error instanceof PromotionBaseChangedError)) throw error;
+    }
+  }
 }
 export const publishMeasureTranslation = publishTranslation;
 

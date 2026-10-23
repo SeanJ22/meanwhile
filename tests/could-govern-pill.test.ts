@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { zipDivisionEntry } from "../lib/geo/zip-division-index.ts";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,43 +19,45 @@ import { codeOf } from "./read-code.ts";
 import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { electionSelection } from "./helpers/ballot-district-fixtures.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import { readerLocation } from "../lib/reader/location.ts";
+import { stateCoverageForZip, type ReaderStateResponse } from "../lib/reader/client.ts";
+import type { CoveredBody } from "../lib/registry/coverage.ts";
 
 const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
-
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
 const districtEdge = buildCensusDistrictEdge(JSON.parse(readFileSync(join(ROOT, "lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset, "pill-qualified-fixture");
 const current = { purpose: "representation" as const, asOf: "2026-10-09" };
 const withDistricts = <T>(read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { slice: async (zip: string) => censusDistrictEdgeSlice(districtEdge, districtEdge.versionId, zip) } }, read);
+const sampledZipCertainty = (zip: string | null) => withReaderAuthorityEdge({}, () => zipCertainty(zip));
 
-test("3.2: sampled county and school overlap cannot establish whole-ZIP certainty", async () => {
-  const c = await zipCertainty("07866");
+test("3.2: a county and school district every 2020 resident lives in govern the whole ZIP", async () => {
+  const c = await sampledZipCertainty("07866");
   assert.ok(c, "07866 is inside this repo's committed geometry");
-  assert.equal(c.certaintyOf("ocd-division/country:us/state:nj/county:morris"), "AMBIGUOUS");
+  assert.equal(c.certaintyOf("ocd-division/country:us/state:nj/county:morris"), "CERTAIN");
   assert.equal(
     c.certaintyOf(
       "ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district",
     ),
-    "AMBIGUOUS",
-    "the held sample does not establish whole-ZIP school service",
+    "CERTAIN",
+    "all 22,965 residents of 07866 live in the Morris Hills district",
   );
 });
 
-test("3.2: at 07866 the two Rockaways and Denville each govern PART — pill", async () => {
-  const c = await zipCertainty("07866");
+test("3.2: at 07866 the two Rockaways each govern PART — pill; Denville, home to 1% of it, is named instead", async () => {
+  const c = await sampledZipCertainty("07866");
   assert.ok(c);
   for (const id of [
     "ocd-division/country:us/state:nj/county:morris/place:rockaway_borough",
     "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
-    "ocd-division/country:us/state:nj/county:morris/place:denville_township",
     "ocd-division/country:us/state:nj/school_district:rockaway_borough_school_district",
     "ocd-division/country:us/state:nj/school_district:rockaway_township_school_district",
-    "ocd-division/country:us/state:nj/school_district:denville_township_school_district",
   ]) {
     assert.equal(c.certaintyOf(id), "AMBIGUOUS", `${id} covers only part of 07866`);
     assert.equal(needsPill(c.certaintyOf(id)), true);
   }
+  assert.ok((await zipDivisionEntry("07866"))?.fringe?.includes("ocd-division/country:us/state:nj/county:morris/place:denville_township"));
 });
 
 test("3.7: a qualified whole-area district needs no pill while sampled local divisions stay uncertain", async () => {
@@ -65,16 +68,20 @@ test("3.7: a qualified whole-area district needs no pill while sampled local div
   assert.equal(c.certaintyOf("ocd-division/country:us/state:az/place:sierra_vista"), "AMBIGUOUS");
 });
 
-test("3.8: a sample with no observed crossing still leaves local boundaries uncertain", async () => {
-  const c = await zipCertainty("85701");
+test("3.8: a division every 2020 resident of the ZIP lives in governs it whole; one holding part of them keeps the pill", async () => {
+  const c = await sampledZipCertainty("85701");
   assert.ok(c);
-  assert.ok(c.partial.length > 0, "a finite sample cannot certify every address in 85701");
-  assert.ok(c.partial.every(id => needsPill(c.certaintyOf(id))));
-  assert.equal(c.certaintyOf("ocd-division/country:us/state:az"), "CERTAIN");
+  assert.deepEqual(c.partial, [], "the Census counts every 85701 resident inside Tucson and Tucson Unified");
+  assert.equal(c.certaintyOf("ocd-division/country:us/state:az/place:tucson"), "CERTAIN");
+  assert.equal(needsPill(c.certaintyOf("ocd-division/country:us/state:az/place:tucson")), false);
+  const vail = await sampledZipCertainty("85641");
+  assert.ok(vail);
+  assert.equal(vail.certaintyOf("ocd-division/country:us/state:az/special_district:rincon_valley_fire_district"), "AMBIGUOUS");
+  assert.equal(vail.certaintyOf("ocd-division/country:us/state:az/place:tucson"), "UNKNOWN", "124 of 29,538 residents: Tucson is named for 85641, not listed as governing it");
 });
 
 test("3.2: an UNMEASURED division gets the pill, never a certainty it never earned", async () => {
-  const c = await zipCertainty("07866");
+  const c = await sampledZipCertainty("07866");
   assert.ok(c);
   assert.equal(
     c.certaintyOf("ocd-division/country:us/state:nj/place:not_a_real_division"),
@@ -88,9 +95,9 @@ test("3.2: an UNMEASURED division gets the pill, never a certainty it never earn
 });
 
 test("3.2: a zip outside our committed geometry resolves to null, not to certainty", async () => {
-  assert.equal(await zipCertainty("99999"), null);
-  assert.equal(await zipCertainty("abc"), null);
-  assert.equal(await zipCertainty(null), null);
+  assert.equal(await sampledZipCertainty("99999"), null);
+  assert.equal(await sampledZipCertainty("abc"), null);
+  assert.equal(await sampledZipCertainty(null), null);
 });
 
 test("3.8: the index states how many zips cross, and it is a real fraction", async () => {
@@ -159,8 +166,7 @@ test("the pill attaches to a BODY, never to a candidate", () => {
 
 test("the pill never gates — the page renders every contest regardless", () => {
   const page = codeOf("app", "ballot", "page.tsx");
-  // `needsPill` may only decide a marker. If it ever decided a filter, a contest would vanish because of where a
-  // reader might live.
+
   assert.doesNotMatch(
     page,
     /\.filter\([^)]*needsPill/,
@@ -175,8 +181,7 @@ test("the pill never gates — the page renders every contest regardless", () =>
 
 test("the session store keeps the OUTCOME, never the address", () => {
   const mod = codeOf("lib", "geo", "session-address.ts");
-  // The shape is the guarantee. A field for a house number or a coordinate
-  // would make this a location record, which is the one thing it must not be.
+
   assert.doesNotMatch(
     mod,
     /\b(houseNumber|house_number|lat\??:|lng\??:|latitude|longitude)\b/,
@@ -224,7 +229,7 @@ test("an address scope stays inside its ZIP and selected election date", async (
 });
 
 test("the narrowing surface reads the session before it prompts", () => {
-  /* There is one address form across surfaces, and the session read lives in it. */
+
   const narrowing = codeOf("components", "address", "address-prompt.tsx");
   assert.match(narrowing, /sessionAddressFor\(zip,\s*selection\)/, "it reads the session for this ZIP and selection");
   assert.match(narrowing, /writeSessionAddress\(/, "and it records its own answer for the others");
@@ -236,19 +241,19 @@ test("the narrowing surface reads the session before it prompts", () => {
 });
 
 test("3.3: a statewide office is CERTAIN — every reader at this zip votes in it", async () => {
-  const nj = await zipCertainty("07866");
+  const nj = await sampledZipCertainty("07866");
   assert.ok(nj);
   assert.equal(nj.certaintyOf("ocd-division/country:us/state:nj"), "CERTAIN");
   assert.equal(nj.certaintyOf("ocd-division/country:us"), "CERTAIN");
 
-  const nh = await zipCertainty("03255");
+  const nh = await sampledZipCertainty("03255");
   assert.ok(nh);
   assert.equal(nh.certaintyOf("ocd-division/country:us/state:nh"), "CERTAIN");
 });
 
 test("3.3: a congressional district is NOT statewide and keeps the pill", async () => {
 
-  const c = await zipCertainty("07866");
+  const c = await sampledZipCertainty("07866");
   assert.ok(c);
   assert.notEqual(
     c.certaintyOf("ocd-division/country:us/state:nj/cd:11"),
@@ -259,9 +264,9 @@ test("3.3: a congressional district is NOT statewide and keeps the pill", async 
 });
 
 test("3.3: the statewide rule matches the SHAPE exactly, not a prefix", async () => {
-  const c = await zipCertainty("07866");
+  const c = await sampledZipCertainty("07866");
   assert.ok(c);
-  // A county sits under `state:nj/` and must never be swept up as statewide.
+
   assert.equal(
     c.certaintyOf("ocd-division/country:us/state:nj/county:morris/place:rockaway_borough"),
     "AMBIGUOUS",
@@ -306,22 +311,23 @@ test("3.3: couldGovern is only set on a TYPED zip, never on a panned viewport", 
   const route = codeOf("app", "api", "meetings", "route.ts");
   assert.match(
     route,
-    /coverage\s*&&\s*zipRead\.value/,
+    /if\s*\(zipRead\.value\)\s*coverage\.bodies\s*=/,
     "a reader who panned has named no place, so there is no zip for a body to be partial about",
   );
 });
 
-test("3.1: the class sweep — both zip-resolving surfaces widen to the AREA", () => {
-  /* Guards against a third surface being added on point-only behaviour. */
-  const ballot = codeOf("app", "ballot", "page.tsx");
-  const meetings = codeOf("app", "api", "meetings", "route.ts");
-  for (const [name, src] of [["ballot page", ballot], ["meetings route", meetings]] as const) {
-    assert.match(
-      src,
-      /divisionIdsForZipArea\(/,
-      `${name} must resolve a zip as an AREA — a ZCTA centroid is one point and may never resolve who governs a reader`,
-    );
+test("3.1: both zip-resolving surfaces use the whole ZIP area", async () => {
+  assert.match(codeOf("app", "ballot", "page.tsx"), /divisionIdsForZipArea\(/,
+    "the ballot resolves all qualified election districts touching the ZIP");
+  assert.match(codeOf("app", "api", "meetings", "route.ts"), /readerLocation\(lat, lng, zipRead\.value\)/,
+    "the meetings route passes the typed ZIP to the area index");
+  const location = await readerLocation(40.91, -74.51, "07866");
+  for (const place of ["rockaway_borough", "rockaway_township"]) {
+    assert.ok(location.divisionIds.includes(`ocd-division/country:us/state:nj/county:morris/place:${place}`),
+      `${place} touching 07866 must survive even when the centroid is elsewhere`);
   }
+  assert.ok(location.fringe.includes("ocd-division/country:us/state:nj/county:morris/place:denville_township"),
+    "Denville, home to 246 of its 22,965 residents, stays named for 07866");
 });
 
 test("3.1: the held election plans widen 85641 to both legislative districts and preserve independent local facts", async () => {
@@ -346,26 +352,56 @@ test("3.1: the held election plans widen 85641 to both legislative districts and
   }
 });
 
-test("3.1: a body arriving only through the widening must be GOVERNING", () => {
+function widenedCoverage(): ReaderStateResponse {
+  const own = "ocd-division/country:us/state:nj/county:morris/place:rockaway_borough";
+  const partial = "ocd-division/country:us/state:nj/county:morris/place:denville_township";
+  const body = (id: string, ocdId: string, bodyClass: CoveredBody["bodyClass"],
+    coverageStatus: CoveredBody["coverageStatus"], lookedAt: boolean): CoveredBody => ({
+    bodyId: id, ocdId, name: id, divisionLabel: id, divisionType: "place", lsad: null,
+    schoolDependency: "UNCLASSIFIED", bodyClass, coverageStatus, homepageUrl: null,
+    agendaSourceRef: null, lookedAt, tier: "local",
+  });
+  return {
+    state: "NJ", version: "area-fixture", directory: null, boundaryUrl: "/boundaries.pmtiles",
+    zipPlaces: { "07866": { ids: [own, partial], partial: [partial], samples: 1 } },
+    coverage: {
+      state: "NO_SOURCE", bodies: [
+        body("own-government", own, "GOVERNING", "LIVE", true),
+        body("partial-government", partial, "GOVERNING", "NOT_ATTEMPTED", false),
+        body("partial-advisory", partial, "ADVISORY", "MANUAL", true),
+        body("elsewhere", "ocd-division/country:us/state:nj/place:elsewhere", "GOVERNING", "LIVE", true),
+      ],
+      seats: [], stateLegislatorAuthorities: [], divisions: [], unincorporated: false,
+      senators: [], statewideExecutives: [],
+      counts: { total: 4, withSource: 3, withoutSource: 1, lookedAt: 3, governing: { total: 3, withSource: 2 } },
+      seatCounts: { total: 0, named: 0 },
+    },
+  };
+}
 
-  const route = codeOf("app", "api", "meetings", "route.ts");
-  assert.match(
-    route,
-    /pointOwnDivisionIds\.has\(body\.ocdId\)\s*\|\|\s*body\.bodyClass === "GOVERNING"/,
-    "a body on a widened-in division must be GOVERNING; a body on the point's own division is untouched",
-  );
+test("3.1: ZIP widening retains every held body and marks its partial service", () => {
+  const coverage = stateCoverageForZip(widenedCoverage(), "07866");
+  assert.ok(coverage);
+  assert.deepEqual(coverage.bodies.map(body => body.bodyId), ["own-government", "partial-government", "partial-advisory"]);
+  assert.equal(coverage.bodies.find(body => body.bodyId === "own-government")?.couldGovern, false);
+  for (const id of ["partial-government", "partial-advisory"]) {
+    assert.equal(coverage.bodies.find(body => body.bodyId === id)?.couldGovern, true,
+      "any held body serving part of the ZIP needs the street-level uncertainty label");
+  }
 });
 
-test("3.1: filtering the body list recomputes the counts it invalidates", () => {
-  /* Stated N equals rendered rows: `counts.total` goes stale the moment the filter removes a body. */
-  const route = codeOf("app", "api", "meetings", "route.ts");
-  assert.match(route, /total: kept\.length/, "total is recounted off the kept array");
-  assert.match(route, /governing: \{/, "and so is the governing pair the lead sentence reads");
+test("3.1: ZIP filtering recomputes rendered and governing body counts", () => {
+  const coverage = stateCoverageForZip(widenedCoverage(), "07866");
+  assert.ok(coverage);
+  assert.deepEqual(coverage.counts, {
+    total: 3, withSource: 2, withoutSource: 1, lookedAt: 2, governing: { total: 2, withSource: 1 },
+  });
 });
 
-test("3.1: the wired-status set is imported, never a second hand-typed copy", () => {
-  /* The real status set, not a hand-written copy of a closed enum. */
-  const route = codeOf("app", "api", "meetings", "route.ts");
-  assert.match(route, /import \{ WIRED_STATUSES \} from/, "imported from lib/registry/coverage");
-  assert.doesNotMatch(route, /\["WIRED", "PARTIAL"\]/, "and not retyped");
+test("3.1: server and client coverage share the wired-status set", () => {
+  for (const path of [["lib", "registry", "coverage.ts"], ["lib", "reader", "client.ts"]]) {
+    const source = codeOf(...path);
+    assert.match(source, /import \{ WIRED_STATUSES \} from/, "coverage composers import the shared status set");
+    assert.doesNotMatch(source, /\["WIRED", "PARTIAL"\]/, "the set is not retyped at its consumers");
+  }
 });

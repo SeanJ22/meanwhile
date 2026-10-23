@@ -1,3 +1,5 @@
+import { assignmentHistoryOf } from "./helpers/spend.ts";
+import { aggregatePricedSpend } from "../lib/control-plane/fleet-safety.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { AssignmentBudgetGate, armAssignmentBudget, assignmentMembership, type AssignmentBudgetSpec } from "../lib/control-plane/expansion/assignment-budget.ts";
@@ -147,7 +149,8 @@ test("a new same-key hunt cannot inherit the old receipt's charges or an unmarke
     {assignmentKey:key,ref:nextReceipt,relation:"REORDERED",at:started}]};
   const scoped=armAssignmentBudget({now,specs:[{key,kind:"SCOPE",label:"new hunt",ref:nextReceipt,
     budgetUsd:50,budgetStartedAt:started,sentAt:now}],membership:assignmentMembership([newlyMarked] as never),
-    charges:chargesOf([{...cost,obligationId:member.id}] as never),worstCaseUsd:1,intentsReadable:true});
+    history: assignmentHistoryOf(chargesOf([{...cost,obligationId:member.id}] as never), now, [{key,kind:"SCOPE",label:"new hunt",ref:nextReceipt,
+    budgetUsd:50,budgetStartedAt:started,sentAt:now}], assignmentMembership([newlyMarked] as never)),worstCaseUsd:1,intentsReadable:true});
   assert.equal(scoped.state(key)?.spentUsd,0,"an exact old-receipt charge does not spend the new hunt");
   assert.equal(scoped.admit(member.id).admit,true);
 });
@@ -173,10 +176,10 @@ test("shared token charges are reported once but consume every exact beneficiary
 
 test("all work ignores blackout while every hunt obeys the Admin spend dial", () => {
   const blackout = "2026-09-27T02:00:00.000Z"; // Saturday 19:00 Arizona.
-  const controller = new FleetSafetyController({ now: blackout, charges: chargesOf([{
+  const controller = new FleetSafetyController({ now: blackout, spend: aggregatePricedSpend(chargesOf([{
     source: "api.anthropic.com", role: "SCOUT", recordedAt: "2026-09-27T01:00:00.000Z",
     cost: { usd: 105, inputTokens: 1, outputTokens: 1 },
-  }] as never), rollingCeilingUsd: 105, clock: () => Date.parse(blackout),
+  }] as never), new Date(Date.parse(blackout) - 24 * 3_600_000).toISOString(), blackout), rollingCeilingUsd: 105, clock: () => Date.parse(blackout),
   lifetimeHuntWork: work => work === member.id });
   assert.equal(controller.admitDispatch(member.id).admit, true);
   assert.deepEqual(controller.rollingCeilingReached(1, member.id).reached, true);

@@ -64,7 +64,7 @@ test("an office's field is every contest of that office the reader's divisions r
     candidacies: [candidacy("c1", "sldu17", "Christopher", "King", "Republican"), candidacy("c2", "sldu17", "Edgar", "Soto", "Democratic"), candidacy("c3", "sldu17", "Removed", "Person", "Green")],
     removedCandidacyIds: new Set(["c3"]),
   });
-  assert.equal(composed?.answer, "On your ballot for the 2026 General Election on November 3rd, 2026, State Senator, District 19: Gail Griffin (Republican) and Bob Karp (Democratic); State Senator, District 17: Christopher King (Republican) and Edgar Soto (Democratic).");
+  assert.equal(composed?.answer, "State Senator, District 19: Gail Griffin (Republican) and Bob Karp (Democratic); State Senator, District 17: Christopher King (Republican) and Edgar Soto (Democratic).");
   assert.deepEqual(composed?.gaps, []);
   assert.equal(composed?.records.filter((record) => record.kind === "CANDIDACY").length, 4, "each candidate named is a record with its own source");
   assert.ok(composed?.records.every((record) => record.kind !== "CANDIDACY" || record.text.includes("filed as")), "the party is the record's own");
@@ -74,7 +74,7 @@ test("an office's field is every contest of that office the reader's divisions r
 
 test("a contest with no candidate held says so as a gap of ours; an office with no contest is the caller's", () => {
   const none = composeOfficeField({ key: "governor", contests: CONTESTS, election: ELECTION, nominees: () => [], candidacies: [], removedCandidacyIds: new Set() });
-  assert.equal(none?.answer, "On your ballot for the 2026 General Election on November 3rd, 2026, we have not recorded who is running for Governor.");
+  assert.equal(none?.answer, "We have not recorded who is running for Governor.");
   assert.deepEqual(none?.gaps, ["We have not recorded who is running for Governor."]);
   assert.equal(composeOfficeField({ key: "us_senator", contests: CONTESTS, election: ELECTION, nominees: () => [], candidacies: [], removedCandidacyIds: new Set() }), null);
 });

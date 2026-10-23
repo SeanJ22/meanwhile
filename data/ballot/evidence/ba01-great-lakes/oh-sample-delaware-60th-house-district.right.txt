@@ -1,0 +1,53 @@
+https://lookup.boe.ohio.gov/vtrapp/delaware/getballot.aspx?elect=20261103G&prsid=007___1&bpty=X
+Captured HTTP200 official November 3, 2026 sample ballot. Original PDF bytes saved as oh-sample-delaware-60th-house-district.pdf.gz. Numbered text is local pdftotext -layout output.
+L0:  oard of Elections web site.
+L1:                                  November 3, 2026
+L2:  stion will not be counted.
+L3:  d write in the candidate's name.
+L4:  hat same contest.
+L5:  official and get a new ballot.
+L6:    For State Representative
+L7:    (60th District)
+L8:    (Vote for not more than 1)
+L9:          Shelby Kimball
+L10:          Democratic
+L11:          Brian Lorenz
+L12:          Republican
+L13:    For Judge of the Court of
+L14:    Appeals (5th District)
+L15:    (Full term commencing 2-9-2027)
+L16:    (Vote for not more than 1)
+L17:          Matthew George
+L18:          Republican
+L19:    For Judge of the Court of
+L20:    Common Pleas
+L21:    (General Division)
+L22:    (Full term commencing 2-9-2027)
+L23:    (Vote for not more than 1)
+L24:          Marianne T. Hemmeter
+L25:    For Judge of the Court of
+L26:    Common Pleas
+L27:    (General Division)
+L28:    (Unexpired term ending 12-31-2030)
+L29:    (Vote for not more than 1)
+L30:          Nickolas K. McCoy
+L31:          Emma Mirles-Jones
+L32:    For Judge of the Court of
+L33:    Common Pleas
+L34:    (Probate/Juvenile Division)
+L35:    (Full term commencing 2-9-2027)
+L36:    (Vote for not more than 1)
+L37: m le     David Hejmanowski
+L38:    For County Commissioner
+L39:    (Full term commencing 1-1-2027)
+L40:    (Vote for not more than 1)
+L41:          Ryan Grissinger
+L42:          Democratic
+L43:          Reneé Vaughan
+L44:          Republican
+L45:    For County Auditor
+L46:    (Vote for not more than 1)
+L47:          George Kaitsa
+L48:          Republican
+L49:                   BOARD MEMBERS
+L50:                                         00701

@@ -1,16 +1,3 @@
-/**
- * Fleet · Now and Readiness read the fields they draw, not the whole rows.
- *
- * ```
- *   readNarrowed   an aggregate narrowed by the store, with its revision; an empty projection is
- *                  the revision alone. Every provider answers alike.
- *   the pulse      the snapshot's four counted fields and the research state's lane queue, never
- *                  the whole rows, and the same pulse, field for field
- *   Fleet · Now    its own cards alone
- *   Readiness      each state's grid, without the ZIP rows it never draws, beside its counties,
- *                  every read started before the policy row
- * ```
- */
 import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -154,7 +141,7 @@ test("the pulse from the narrowed rows is the pulse from the whole rows, field f
   assert.equal(narrowed.counts.incidents, 1);
   assert.notEqual(narrowed.lanes, null, "the lane gauges ride on the narrowed queue");
   assert.ok(narrowed.revision.startsWith("2026-09-25T22:00:00.000Z|1|1|-|1|0|0|-|admin-capabilities/1:"), "the decision count is no longer part of the pulse revision");
-  assert.match(ADMIN_V6_CAPABILITY_REVISION, /:results\/1:national\/1$/, "the last section announced has its own v6 capability revision");
+  assert.match(ADMIN_V6_CAPABILITY_REVISION, /:results\/1:national\/1:officials\/1$/, "the last section announced has its own v6 capability revision");
   assert.ok(narrowed.revision.includes(`|${ADMIN_V6_CAPABILITY_REVISION}|-`),
     "the pulse revision names the current Admin v6 contracts, including Workers");
 });
@@ -164,7 +151,7 @@ test("a saved owner policy and snapshot announce Money and Hunts on the existing
   const before = await readPulse(repos, NOW);
   assert.equal(before.v6?.sections.hunts, undefined, "an unread owner policy cannot claim a hunt list");
   assert.equal(before.v6?.sections.money, undefined, "an unread owner policy cannot claim the money read");
-  assert.deepEqual(Object.keys(before.v6?.sections ?? {}).sort(), ["agents", "checklist", "fixes", "history", "publication", "reliability", "results", "sameCause", "scoreboard", "sends", "spend", "stuck"],
+  assert.deepEqual(Object.keys(before.v6?.sections ?? {}).sort(), ["agents", "checklist", "fixes", "history", "national", "officials", "publication", "reliability", "results", "sameCause", "scoreboard", "sends", "spend", "stuck"],
     "the place score, blockers, agents and spend need only the published snapshot; saved receipts can still claim History, and the weekly learning series needs neither");
   await repos.adminConfig.put("current", any({ expansionScopes: [], fleetSpendCeiling: null }), NOW);
   const after = await readPulse(repos, NOW);
@@ -192,7 +179,7 @@ test("the pulse reads the snapshot and the research state only narrowed, and onl
     },
   });
   const pulse = await readPulse({ ...repos, ownerSnapshots: watch("the snapshot", repos.ownerSnapshots),
-    researchState: watch("the research state", repos.researchState), adminConfig: watch("the hunt policy", repos.adminConfig) }, NOW);
+    researchState: watch("the research state", repos.researchState), adminConfig: { ...repos.adminConfig, ...watch("the hunt policy", repos.adminConfig) } }, NOW);
   assert.deepEqual(pulse.unread, [], "nothing it reads was refused");
   assert.deepEqual(asked, [
     { which: "the snapshot", projection: PULSE_SNAPSHOT_FIELDS },

@@ -2,16 +2,16 @@ import type { Division } from "../registry/types.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
 import { createHash } from "node:crypto";
-import { currentReaderSelection } from "../db/reader-route.ts";
 import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
+import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, heldStatePublication, heldStatePublicationHashes, statePublicationScope } from "./state-publication.ts";
 
 import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm";
 
 import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
-import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections, civicDataPayloadParts } from "../db/schema.ts";
+import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataPayloadParts } from "../db/schema.ts";
 import { CivicPayloadParts, type CivicPayloadPartIO } from "./payload-parts.ts";
 import { isCivicPayloadPart } from "./payload-codec.ts";
 import { navigationCandidateIndex, type NavigationPublicationBase, type NavigationRecord } from "./navigation-publication-base.ts";
@@ -61,10 +61,11 @@ import {
   sourceScopedReaderReadbackProjectionId,
 } from "./reader-readback.ts";
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
-
-export function projectionKey(recordClass: RoutineRecordClass, scope: string): string {
-  return `${recordClass}:${scope}`;
-}
+import { freezeDurableJson } from "./durable-json.ts";
+import { projectionKey } from "./projection-key.ts";
+import { invalidateReaderCache, readerCacheScopeForPublication, type ReaderCachePurger } from "../reader/cache.ts";
+import { stateCalendarsCovers } from "./state-calendars.ts";
+export { projectionKey } from "./projection-key.ts";
 
 export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate" | "receipt"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope">;
@@ -94,41 +95,6 @@ export function publishedCandidateMetadata(row: CandidateVersionRecord): Publish
 export interface CandidateVersionReadback {
   readonly candidateId: string;
   readonly record: CandidateVersionRecord;
-}
-
-export interface PreparedProjectionCoupling {
-  readonly contractId: string;
-  readonly versionId: string;
-}
-
-/** A serving copy derived from the partitions in `composedFrom`, never authoritative civic truth. */
-export interface PreparedReaderProjectionRow {
-  readonly recordClass: RoutineRecordClass;
-  readonly scope: string;
-  readonly sequence: number;
-  readonly payload: unknown;
-  readonly composedFrom: readonly PreparedProjectionCoupling[];
-  readonly factSha256: string;
-  readonly generatedAt: string;
-  readonly composedAt: string;
-  readonly sourceThrough: string | null;
-  readonly retrievedAt: string | null;
-  readonly promotedThrough: string | null;
-}
-
-export type PreparedReaderProjectionCoupling = Pick<PreparedReaderProjectionRow, "recordClass" | "scope" | "sequence" | "composedFrom" | "generatedAt">;
-
-export interface PreparedReaderProjectionInput {
-  readonly recordClass: RoutineRecordClass;
-  readonly scope: string;
-  readonly payload: unknown;
-  readonly composedFrom: readonly PreparedProjectionCoupling[];
-  readonly factSha256: string;
-  readonly generatedAt: string;
-  readonly composedAt: string;
-  readonly sourceThrough: string | null;
-  readonly retrievedAt: string | null;
-  readonly promotedThrough: string | null;
 }
 
 export interface CandidateTransitionOptions {
@@ -166,23 +132,19 @@ export interface RoutineDataStore {
   readonly readPublishedCandidateMetadata: (candidateId: string) => Promise<PublishedCandidateMetadata | null>;
   readonly readCandidateProof?: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   readonly readCandidateProofs?: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
+  /** Potential bill matches only; callers still prove every selected version. */
+  readonly historicalVoteBillVersions?: (candidateIds: readonly string[], bill: string) => Promise<readonly string[]>;
   readonly confirmUnchanged?: (input: ConfirmUnchangedInput, at: string) => Promise<ConfirmUnchangedOutcome>;
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   readonly listPromotionScopes?: (recordClasses: readonly RoutineRecordClass[]) => Promise<readonly { recordClass: RoutineRecordClass; scope: string }[]>;
-  readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
-  readonly readPreparedReaderProjectionCoupling: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionCoupling | null>;
-    /** Lands only if the row is still at `expectedSequence` (null = expect absent); a stale pass gets `published:false`. */
-  readonly writePreparedReaderProjection: (
-    input: PreparedReaderProjectionInput,
-    expectedSequence: number | null,
-  ) => Promise<{ readonly published: boolean; readonly sequence: number }>;
   readonly promote: (candidateId: string, receipt: ValidationReceipt, at: string, options?: CandidateTransitionOptions) => Promise<PromotedProjection>;
   readonly appendEvidence: (candidateId: string, state: CandidateState, at: string, detail: string) => Promise<CandidateEvent>;
   readonly events: (candidateId: string) => Promise<readonly CandidateEvent[]>;
   readonly latestReaderReadbacks?: (candidateIds: readonly string[]) => Promise<readonly CandidateEvent[]>;
   readonly pointerMoveEvents?: (candidateId: string) => Promise<readonly CandidateEvent[]>;
+  readonly pointerMoveChain?: (key: string, currentId: string) => Promise<readonly CandidateEvent[]>;
   readonly clock: (
     sourceId: string,
     recordClass: RoutineRecordClass,
@@ -302,10 +264,15 @@ export function routineDataStoreCandidateAuthorityIssue(
       ? null
       : `routine supervisor cannot mutate source candidate ${contract.id}`;
   }
-  // The one-time capture conversion republishes held people, vote and directory versions, and nothing else.
-  if (authority.capability === "CAPTURE_CONVERSION") {
-    return !hasAuthorityTransferMarker && (/^(?:people-|openstates-people-|openstates-votes-)/.test(contract.id) || contract.id === "congress-bulk-roster")
-      ? null : `capture conversion cannot mutate ${contract.id}`;
+  // The one-time federal people split publishes place directories and member positions, and nothing else.
+  if (authority.capability === "FEDERAL_PEOPLE_SPLIT") {
+    return !hasAuthorityTransferMarker && (federalDirectoryStateOf(contract.id) !== null || contract.id === "congress-rollcalls")
+      ? null : `the federal people split cannot mutate ${contract.id}`;
+  }
+  // A state's calendar program writes only its own state's boards and their history.
+  if (authority.capability === "STATE_CALENDARS") {
+    return !hasAuthorityTransferMarker && contract.kind === "routine" && stateCalendarsCovers(authority.contract, contract.id)
+      ? null : `${authority.contract ?? "a state calendar program"} cannot mutate ${contract.id}`;
   }
   const expectedCapability = contract.kind === "manual" ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT";
   if (authority.capability !== expectedCapability) {
@@ -768,12 +735,18 @@ export async function routineEventObservedAt(
   return store.eventObservedAt ? store.eventObservedAt(recordClass, scope, requestedAt) : requestedAt;
 }
 
+/* A held candidate and read model are frozen JSON, so every row shares them; the small fields around them are copied. */
+function heldRecord(row: CandidateVersionRecord): CandidateVersionRecord {
+  return { ...structuredClone({ ...row, candidate: null }), candidate: freezeDurableJson(row.candidate) };
+}
+function heldProjection(row: PromotedProjection): PromotedProjection {
+  return { ...structuredClone({ ...row, payload: null }), payload: freezeDurableJson(row.payload) };
+}
+
 export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
   private readonly promotions = new Map<string, PromotedProjection>();
-  private readonly preparedProjections = new Map<string, PreparedReaderProjectionRow>();
-
   async readRegistryDivisions(state: string, labels: readonly string[]): Promise<readonly RegistryDivisionMatch[]> {
     const pointer = this.promotions.get(projectionKey("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state)));
     return pointer?.receipt.decision === "GOOD" ? registryDivisionMatches(pointer.payload, state, labels) : [];
@@ -808,7 +781,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async create(record: CandidateVersionRecord, firstEvent: CandidateEvent): Promise<void> {
     assertInitialRecord(record, firstEvent);
     if (this.candidates.has(record.candidate.id)) throw new Error(`CANDIDATE_ALREADY_EXISTS:${record.candidate.id}`);
-    this.candidates.set(record.candidate.id, structuredClone(record));
+    this.candidates.set(record.candidate.id, heldRecord(record));
     this.history.set(record.candidate.id, [structuredClone(firstEvent)]);
   }
 
@@ -832,15 +805,15 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       failureCode: failure?.code ?? prior.failureCode,
       failureDetail: failure?.detail ?? prior.failureDetail,
     };
-    this.candidates.set(candidateId, structuredClone(next));
+    this.candidates.set(candidateId, heldRecord(next));
     history.push(event);
     this.history.set(candidateId, history);
-    return structuredClone(next);
+    return heldRecord(next);
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
     const row = this.candidates.get(candidateId);
-    return row ? structuredClone(row) : null;
+    return row ? heldRecord(row) : null;
   }
 
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
@@ -873,7 +846,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const row = this.pointerRead(recordClass, scope);
-    return row ? structuredClone(row) as PromotedProjection<T> : null;
+    return row ? heldProjection(row) as PromotedProjection<T> : null;
   }
 
   async readPromotions<T = unknown>(
@@ -882,7 +855,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   ): Promise<readonly PromotedProjection<T>[]> {
     return scopes.flatMap((scope) => {
       const row = this.pointerRead(recordClass, scope);
-      return row ? [structuredClone(row) as PromotedProjection<T>] : [];
+      return row ? [heldProjection(row) as PromotedProjection<T>] : [];
     });
   }
 
@@ -930,50 +903,10 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     });
   }
 
-  async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
-    const row = this.preparedProjections.get(projectionKey(recordClass, scope));
-    return row ? structuredClone(row) : null;
-  }
-
-  async readPreparedReaderProjectionCoupling(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionCoupling | null> {
-    const row = this.preparedProjections.get(projectionKey(recordClass, scope));
-    return row
-      ? structuredClone({ recordClass: row.recordClass, scope: row.scope, sequence: row.sequence, composedFrom: row.composedFrom, generatedAt: row.generatedAt })
-      : null;
-  }
-
-  async writePreparedReaderProjection(
-    input: PreparedReaderProjectionInput,
-    expectedSequence: number | null,
-  ): Promise<{ readonly published: boolean; readonly sequence: number }> {
-    const key = projectionKey(input.recordClass, input.scope);
-    const current = this.preparedProjections.get(key);
-    // Monotonic CAS: only advance when the row is still at the sequence the
-    // caller read; otherwise a newer pass already published — don't regress it.
-    if ((current?.sequence ?? null) !== expectedSequence) {
-      return { published: false, sequence: current?.sequence ?? 0 };
-    }
-    const sequence = (expectedSequence ?? 0) + 1;
-    this.preparedProjections.set(key, structuredClone({
-      recordClass: input.recordClass,
-      scope: input.scope,
-      sequence,
-      payload: input.payload,
-      composedFrom: input.composedFrom,
-      factSha256: input.factSha256,
-      generatedAt: input.generatedAt,
-      composedAt: input.composedAt,
-      sourceThrough: input.sourceThrough,
-      retrievedAt: input.retrievedAt,
-      promotedThrough: input.promotedThrough,
-    }));
-    return { published: true, sequence };
-  }
-
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     return candidateIds.flatMap((candidateId) => {
       const row = this.candidates.get(candidateId);
-      return row ? [{ candidateId, record: structuredClone(row) }] : [];
+      return row ? [{ candidateId, record: heldRecord(row) }] : [];
     });
   }
 
@@ -985,13 +918,13 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
 
   async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
     const row = this.candidates.get(candidateId);
-    return row ? { ...structuredClone(row), candidate: candidateProofView(structuredClone(row.candidate)) } : null;
+    return row ? { ...heldRecord(row), candidate: candidateProofView(row.candidate) } : null;
   }
 
   async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     return candidateIds.flatMap((candidateId) => {
       const row = this.candidates.get(candidateId);
-      return row ? [{ candidateId, record: { ...structuredClone(row), candidate: candidateProofView(structuredClone(row.candidate)) } }] : [];
+      return row ? [{ candidateId, record: { ...heldRecord(row), candidate: candidateProofView(row.candidate) } }] : [];
     });
   }
 
@@ -1076,7 +1009,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       versionId: candidateId,
       lastKnownGoodVersionId: candidateId,
       promotedAt: at,
-      payload: structuredClone(record.candidate.readModel),
+      payload: record.candidate.readModel,
       receipt: structuredClone(persistedReceipt),
     };
     const { history, event } = this.nextEvent(
@@ -1095,7 +1028,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       promotedVersion: candidateId,
       lastKnownGoodVersion: candidateId,
     });
-    return structuredClone(projection);
+    return heldProjection(projection);
   }
 
   async events(candidateId: string): Promise<readonly CandidateEvent[]> {
@@ -1266,7 +1199,7 @@ function confirmedClock(
 }
 
 /** Only the source's promoted national marker owns the unfinished acquisition pages. */
-export function federalMoneyContinuationPending(payload: unknown, sourceId: string): boolean {
+function federalMoneyContinuationPending(payload: unknown, sourceId: string): boolean {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
   const marker = payload as { readonly state?: unknown; readonly source?: unknown; readonly states?: unknown };
   if (marker.state !== "US" || marker.source !== sourceId || !Array.isArray(marker.states)) return false;
@@ -1590,36 +1523,6 @@ export function readerEvidenceRowToRecord(
   };
 }
 
-export function preparedProjectionCouplingRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
-  return db
-    .select({
-      recordClass: civicDataReaderProjections.recordClass,
-      scope: civicDataReaderProjections.scope,
-      sequence: civicDataReaderProjections.sequence,
-      composedFrom: civicDataReaderProjections.composedFrom,
-      generatedAt: civicDataReaderProjections.generatedAt,
-    })
-    .from(civicDataReaderProjections)
-    .where(and(eq(civicDataReaderProjections.recordClass, recordClass), eq(civicDataReaderProjections.scope, scope)))
-    .limit(1);
-}
-
-function preparedRowToProjection(row: typeof civicDataReaderProjections.$inferSelect): PreparedReaderProjectionRow {
-  return {
-    recordClass: row.recordClass as RoutineRecordClass,
-    scope: row.scope,
-    sequence: row.sequence,
-    payload: row.payload,
-    composedFrom: row.composedFrom as readonly PreparedProjectionCoupling[],
-    factSha256: row.factSha256,
-    generatedAt: row.generatedAt,
-    composedAt: canonicalPostgresRoutineTimestamp(row.composedAt, "readerProjection.composedAt"),
-    sourceThrough: row.sourceThrough,
-    retrievedAt: row.retrievedAt,
-    promotedThrough: row.promotedThrough,
-  };
-}
-
 type PostgresCandidateEventRow = Pick<
   typeof civicDataCandidateEvents.$inferSelect,
   "candidateId" | "sequence" | "state" | "at" | "detail"
@@ -1656,6 +1559,41 @@ export function pointerMoveEventsRead(db: RoutineClockDb, candidateId: string) {
     .orderBy(civicDataCandidateEvents.sequence);
 }
 
+/** Follow only this pointer's anchored links in one round trip, including
+ * conflicting links so the existing history reader can reject ambiguity. */
+export function pointerMoveChainRead(db: Pick<ReturnType<typeof getDb>, "execute">, key: string, currentId: string) {
+  const prefix = `Atomic pointer ${key} moved from `;
+  return db.execute<PostgresCandidateEventRow>(sql`WITH RECURSIVE chain(id, path) AS (
+    SELECT ${currentId}::text, ARRAY[${currentId}]::text[]
+    UNION ALL
+    SELECT link.previous, chain.path || link.previous
+    FROM chain JOIN civic_data_candidate_events e ON e.candidate_id = chain.id
+    CROSS JOIN LATERAL (SELECT substring(e.detail FROM ${prefix.length + 1}
+      FOR greatest(0, length(e.detail) - ${prefix.length} - length(' to ' || chain.id || '.'))) AS previous) link
+    WHERE e.state = 'PROMOTED' AND left(e.detail, ${prefix.length}) = ${prefix}
+      AND right(e.detail, length(' to ' || chain.id || '.')) = ' to ' || chain.id || '.'
+      AND link.previous <> 'bootstrap/no-version' AND link.previous <> ''
+      AND link.previous !~ '\\s' AND NOT link.previous = ANY(chain.path)
+  )
+  SELECT DISTINCT e.candidate_id AS "candidateId", e.sequence, e.state, e.at, e.detail
+  FROM chain JOIN civic_data_candidate_events e ON e.candidate_id = chain.id
+  WHERE e.state = 'PROMOTED' AND left(e.detail, ${prefix.length}) = ${prefix}`);
+}
+
+/** Filter only the already anchored history, without transferring unrelated
+ * roll calls. Encoded payloads remain candidates for the normal full reader. */
+export function historicalVoteBillVersionsRead(db: Pick<ReturnType<typeof getDb>, "execute">, ids: readonly string[], bill: string) {
+  const parsed = /^(hr|s|hres|hconres|sres|sconres)([0-9]+)$/.exec(bill);
+  if (!parsed) throw new Error("HISTORICAL_VOTE_BILL_INVALID");
+  const titlePattern = `\\m${parsed[1].split("").join("[[:space:].]*")}[[:space:].]*${parsed[2]}\\M`;
+  return db.execute<{ id: string }>(sql`SELECT requested.id FROM unnest(${sql.param([...ids])}::text[]) requested(id)
+    LEFT JOIN civic_data_candidates USING(id) WHERE candidate IS NULL OR (
+      jsonb_path_exists(candidate->'readModel', 'strict $.**."$civicPayloadPart"', '{}'::jsonb, true)
+      OR EXISTS (SELECT 1 FROM jsonb_array_elements(coalesce(candidate#>'{readModel,votes}', candidate#>'{readModel,snapshot,votes}', '[]'::jsonb)) vote
+        WHERE regexp_replace(lower(coalesce(vote->>'legisNum','')), '[^a-z0-9]', '', 'g') = ${bill}
+          OR lower(coalesce(vote->>'title','')) ~ ${titlePattern}))`);
+}
+
 function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): CandidateEvent {
   return {
     candidateId: row.candidateId,
@@ -1667,6 +1605,8 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
 }
 
 export class PostgresRoutineDataStore implements RoutineDataStore {
+  private readonly cacheOptions: { readonly purge?: ReaderCachePurger };
+  constructor(cacheOptions: { readonly purge?: ReaderCachePurger } = {}) { this.cacheOptions = cacheOptions; }
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
   private stateReadMetadata: PublishedCandidateMetadata | null = null;
@@ -2179,75 +2119,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows.map(postgresPromotedPointerIdentity);
   }
 
-  async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
-    const selected = currentReaderSelection();
-    const columns = { ...getTableColumns(civicDataReaderProjections), ...(selected ? {
-      payload: sql<unknown>`reader_place_payload(${civicDataReaderProjections.payload}, ${sql.param([...selected.keys])}::text[], ${sql.param(selected.point ? JSON.stringify(selected.point) : null)}::jsonb)`,
-    } : {}) };
-    const [row] = await this.db.select(columns).from(civicDataReaderProjections).where(and(
-      eq(civicDataReaderProjections.recordClass, recordClass),
-      eq(civicDataReaderProjections.scope, scope),
-    )).limit(1);
-    return row ? preparedRowToProjection(row) : null;
-  }
-
-  async readPreparedReaderProjectionCoupling(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionCoupling | null> {
-    const [row] = await preparedProjectionCouplingRead(this.db, recordClass, scope);
-    return row
-      ? {
-          recordClass: row.recordClass as RoutineRecordClass,
-          scope: row.scope,
-          sequence: row.sequence,
-          composedFrom: row.composedFrom as readonly PreparedProjectionCoupling[],
-          generatedAt: row.generatedAt,
-        }
-      : null;
-  }
-
-  async writePreparedReaderProjection(
-    input: PreparedReaderProjectionInput,
-    expectedSequence: number | null,
-  ): Promise<{ readonly published: boolean; readonly sequence: number }> {
-    this.assertMutationAuthority();
-    const key = projectionKey(input.recordClass, input.scope);
-    const body = {
-      key,
-      recordClass: input.recordClass,
-      scope: input.scope,
-      payload: input.payload,
-      composedFrom: input.composedFrom,
-      factSha256: input.factSha256,
-      generatedAt: input.generatedAt,
-      composedAt: input.composedAt,
-      sourceThrough: input.sourceThrough,
-      retrievedAt: input.retrievedAt,
-      promotedThrough: input.promotedThrough,
-    };
-    if (expectedSequence === null) {
-      const inserted = await this.db.insert(civicDataReaderProjections)
-        .values({ ...body, sequence: 1 })
-        .onConflictDoNothing()
-        .returning({ sequence: civicDataReaderProjections.sequence });
-      if (inserted.length > 0) return { published: true, sequence: 1 };
-    } else {
-      // Monotonic CAS: advance only if the row is still at the read sequence.
-      const nextSequence = expectedSequence + 1;
-      const updated = await this.db.update(civicDataReaderProjections)
-        .set({ ...body, sequence: nextSequence })
-        .where(and(
-          eq(civicDataReaderProjections.key, key),
-          eq(civicDataReaderProjections.sequence, expectedSequence),
-        ))
-        .returning({ sequence: civicDataReaderProjections.sequence });
-      if (updated.length > 0) return { published: true, sequence: nextSequence };
-    }
-    const [cur] = await this.db.select({ sequence: civicDataReaderProjections.sequence })
-      .from(civicDataReaderProjections)
-      .where(eq(civicDataReaderProjections.key, key))
-      .limit(1);
-    return { published: false, sequence: cur?.sequence ?? 0 };
-  }
-
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     if (candidateIds.length === 0) return [];
     const rows = await this.candidateRows(candidateIds, "candidate", async ids =>
@@ -2402,7 +2273,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw error;
     }
-    if (eventRows[0]) return { kind: "CONFIRMED", versionId: id, at };
+    if (eventRows[0]) {
+      await invalidateReaderCache(readerCacheScopeForPublication(input.scope), this.cacheOptions.purge);
+      return { kind: "CONFIRMED", versionId: id, at };
+    }
     const [pointerRows, candidateRows] = await this.db.batch([
       this.db.select({
         sourceId: civicDataPromotions.sourceId,
@@ -2430,6 +2304,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
     const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
     if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
+      await invalidateReaderCache(readerCacheScopeForPublication(input.scope), this.cacheOptions.purge);
       return { kind: "CONFIRMED", versionId: id, at: priorConfirmation.observedAt };
     }
     throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);
@@ -2541,6 +2416,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     }
+    await invalidateReaderCache(readerCacheScopeForPublication(candidate.scope), this.cacheOptions.purge);
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       payload: candidate.readModel,
@@ -2562,6 +2438,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async pointerMoveEvents(candidateId: string): Promise<readonly CandidateEvent[]> {
     const rows = await pointerMoveEventsRead(this.db, candidateId);
     return rows.map(postgresCandidateEventRowToEvent);
+  }
+
+  async pointerMoveChain(key: string, currentId: string): Promise<readonly CandidateEvent[]> {
+    const result = await pointerMoveChainRead(this.db, key, currentId);
+    return result.rows.map(postgresCandidateEventRowToEvent);
+  }
+
+  async historicalVoteBillVersions(ids: readonly string[], bill: string): Promise<readonly string[]> {
+    if (!ids.length) return [];
+    return (await historicalVoteBillVersionsRead(this.db, ids, bill)).rows.map(row => row.id);
   }
 
   /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */

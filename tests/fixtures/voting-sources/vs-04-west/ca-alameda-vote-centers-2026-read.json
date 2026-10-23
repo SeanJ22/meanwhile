@@ -1,0 +1,4542 @@
+{
+  "doorId": "ca-alameda-vote-centers-2026",
+  "sites": [
+    {
+      "id": "voting-ff272fd307e66e8cf6715f18",
+      "name": "Independence Plaza",
+      "address": "703 Atlantic Avenue Alameda",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-890e88757b6bddf47ac7199c",
+      "name": "Central Baptist Church",
+      "address": "2133 Central Avenue Alameda",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7ae1431085eac55fa856db0f",
+      "name": "Bohol Circle Incorporated",
+      "address": "1815 Union Street Alameda",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-cfb08c6ba0135a39d15f850f",
+      "name": "1st Congregational Ch Of Alameda",
+      "address": "1912 Central Ave Alameda",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-776de610a5512423f0df1356",
+      "name": "South Shore Center",
+      "address": "2202 South Shore Center Alameda",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8a18758084cadc30c1c375f9",
+      "name": "Island High School",
+      "address": "500 Pacific Ave Alameda",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-308b805a52bb0a40d0803ba1",
+      "name": "Albany Rec & Comm Services",
+      "address": "1249 Marin Ave Albany",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-043d6d914e98c5c6b9e6b701",
+      "name": "Albany Veterans Bldg",
+      "address": "1325 Portland Ave Albany",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-1c22430e5a50146a5a54321d",
+      "name": "Eshleman Hall",
+      "address": "2465 Bancroft Way #312 Berkeley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-410f8efed76dde825ef06acd",
+      "name": "Ed Roberts Campus",
+      "address": "3075 Adeline St Berkeley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6b9a9a507858ae3bcb8c6478",
+      "name": "Berkeley Arts Magnet School",
+      "address": "2015 Virginia St Berkeley Ca",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ae6aadf7138b3be9bbf3e1c2",
+      "name": "Willard Middle School",
+      "address": "2425 Stuart St Berkeley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-83c8224679ebea34aa9af3c4",
+      "name": "Epworth United Methodist Church",
+      "address": "1953 Hopkins St Berkeley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bfec1f127a4ca904391268b5",
+      "name": "Oregon Park Senior Apartments",
+      "address": "1425 Oregon St Berkeley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-807ae6e62ef719ad388f66d6",
+      "name": "Ywca Berkeley/oakland",
+      "address": "2600 Bancroft Way Berkeley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f7a8a1f97084b6194df24dc4",
+      "name": "Berkeley Methodist United Church",
+      "address": "1710 Carleton Street Berkeley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-404efb6c7157d80c1688d6eb",
+      "name": "Berkeley Youth Alternatives",
+      "address": "1255 Allston Way Berkeley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ee00e682bde9e54d66d94ad7",
+      "name": "Kenneth C Aitken Senior Center",
+      "address": "17800 Redwood Road Castro Valley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9afbaa7abceec5ddfed75834",
+      "name": "Castro Valley Library",
+      "address": "3600 Norbridge Ave Castro Valley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2349ab4006c6d233be070f2f",
+      "name": "Palomares Hills Rec Center",
+      "address": "6811 Villareal Dr Castro Valley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-dcbfc5d14be6fcf3e12d8785",
+      "name": "Castro Valley Community Center",
+      "address": "18988 Lake Chabot Road Castro Valley",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-890bd7637854a15ac433e07f",
+      "name": "The Wave",
+      "address": "4201 Central Parkway Dublin",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-74092389ca48e69a603c4ce3",
+      "name": "Nielsen Elementary School",
+      "address": "7500 Amarillo Rd Dublin",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-aab1ef44df2cf8718dd530b1",
+      "name": "Dublin Civic Center",
+      "address": "100 Civic Plaza Dublin",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b20c3d75e044def28118cb02",
+      "name": "Santa Rita Public Works",
+      "address": "4825 Gleason Dr Dublin",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-fa12c7da177aa721a4da6745",
+      "name": "Emeryville Senior Center",
+      "address": "4321 Salem St Emeryville",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4651c99dc1666548fff21a56",
+      "name": "Veterans Memorial Hall",
+      "address": "37154 2nd St Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d8af83efe518bbd749fc7e5b",
+      "name": "United Church Of Christ Fremont",
+      "address": "38255 Blacow Rd Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3e1c00ea8e0cfc62f00f43d6",
+      "name": "Steven Millard Elementary School",
+      "address": "5200 Valpey Park Ave Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b2bfe2aa6a7c00c634696b49",
+      "name": "Our Lady Of Guadalupe",
+      "address": "40382 Fremont Blvd Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-dee8bbf7fadab07a99cd44d5",
+      "name": "Fred E Weibel Elementary School",
+      "address": "45135 S Grimmer Blvd",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f8a3ef78cfb046106fb5c59d",
+      "name": "Warm Spring Cabana Club",
+      "address": "251 Goldenrain Ave Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-aecb7d42f54b8d72b3f69ef5",
+      "name": "John Gomes Elementary School",
+      "address": "555 Lemos Ln Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-cd6a23525164ea8687a5223d",
+      "name": "Fremont Adult & Continuing Education",
+      "address": "4700 Calaveras Ave Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-00d97170166ae6eb5cca654a",
+      "name": "Mission Valley Elementary School",
+      "address": "41700 Denise St Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2f10b12e0ad23da6017314a0",
+      "name": "Islamic Center Of Fremont",
+      "address": "42412 Albrae St Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-cb68ebc914d743be95828a17",
+      "name": "Ohlone College",
+      "address": "43600 Mission Blvd Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0ef1eeb6b6ab042d6c3fa6d4",
+      "name": "Fremont Main Library",
+      "address": "2400 Stevenson Blvd Fremont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-52a20998d213d953b91c9dde",
+      "name": "Chabot College Student Center",
+      "address": "25555 Hesperian Blvd Hayward Bldg. 2300",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e24f7774fd8b801e6d9086af",
+      "name": "Alameda County Public Works",
+      "address": "951 Turner Ct, Hayward",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a2b38a89fc327a8ef3b5a4c0",
+      "name": "Hayward City Hall",
+      "address": "777 B St Hayward",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7b822bf14360c72c7eae9db4",
+      "name": "Palma Ceia Baptist Church",
+      "address": "28605 Ruus Rd Hayward",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f58ee223e4affcd63fee6d2e",
+      "name": "Weekes Community Center - Park",
+      "address": "27182 Patrick Avenue Hayward",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4cfa50d7db8fcd0f38418cb3",
+      "name": "Cal State Univ East Bay",
+      "address": "25800 W Loop Rd Hayward",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-537ec5b8effbb460c83cac81",
+      "name": "Fairview Elementary School",
+      "address": "23515 Maud Ave Hayward",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-dec1aa5c0a48f75500cd755c",
+      "name": "St Clement Catholic Church",
+      "address": "750 Calhoun St Hayward",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c682e6330724494d6ea8cd5d",
+      "name": "Hayward Adult School",
+      "address": "22100 Princeton St. Hayward",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a1673d66beec2e7640eabfd9",
+      "name": "Fairway Park Baptist Church",
+      "address": "31310 Medinah St Hayward",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d99568e935249daa2b8a7daf",
+      "name": "Holy Cross Lutheran Church",
+      "address": "1020 Mocho St Livermore",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3a54e162d48b1c6683e66ede",
+      "name": "Trinity Church",
+      "address": "557 Olivina Ave Livermore",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-12c59df728f5a8e5bdd7fa31",
+      "name": "Asbury United Methodist Church",
+      "address": "4743 East Avenue Livermore",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c5dce5989ec2f3e4327d8989",
+      "name": "Hindu Community & Cultural Ctr",
+      "address": "1232 Arrowhead Ave Livermore",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-1da70feaac6b16d8d9eee0f5",
+      "name": "Celebration Church",
+      "address": "1135 Bluebell Dr Livermore",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-83594f3fe5c5954e9e8fecfe",
+      "name": "Bothwell Arts Center",
+      "address": "2466 8th St Livermore",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-862eb575fd01e0a60c555a35",
+      "name": "Newark Public Library",
+      "address": "37055 Newark Blvd Newark",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-55067bd616f4f1206018251c",
+      "name": "The Silliman Center",
+      "address": "6800 Mowry Ave Newark",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a029cebcb7b54bdad89faa7b",
+      "name": "Whiteford Pre School",
+      "address": "35725 Cedar Blvd Newark",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-654f5cf9a1b3ac00ebc4a195",
+      "name": "St Theresa Church",
+      "address": "4850 Clarewood Dr Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-98d80bdec5bad98cfc382877",
+      "name": "Greater St. John Missionary Baptist",
+      "address": "1909 Market St Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2d4964972b8878cc5a3bc9f0",
+      "name": "Oakland Lib Rockridge Branch",
+      "address": "5366 College Ave Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d6801020e0c28b69674d7775",
+      "name": "City Of Refuge",
+      "address": "8400 Enterprise Way Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8ff39895f56f6aa1e4a2aa2d",
+      "name": "St Mary's Center",
+      "address": "925 Brockhurst St Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9fbab10311e5e256b816ea2a",
+      "name": "Montera Middle School",
+      "address": "5555 Ascot Dr Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e47d182615f8e24ff3bac5cf",
+      "name": "Oakland Tech High School",
+      "address": "4351 Broadway Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-33747786949abdcd3a9f197a",
+      "name": "Fruitvale Elementary School",
+      "address": "3200 Boston Ave Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b9bb49970bfa2ac698b668c4",
+      "name": "Oakland Public Library",
+      "address": "125 14th St Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-07392229fce6d61924870ff5",
+      "name": "Burckhalter Elem School",
+      "address": "3994 Burckhalter Ave Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3d108af62821a627d3365b71",
+      "name": "Northeastern University",
+      "address": "5000 Macarthur Blvd Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-216c08d124dfd4b93cf5d039",
+      "name": "Think College Now",
+      "address": "2725 International Blvd Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8adccc828657e267994aa73a",
+      "name": "East Oakland Pride Elementary",
+      "address": "8000 Birch St Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d29cc5e0fab4ec1c906861bd",
+      "name": "Santa Fe Campus",
+      "address": "915 54th St Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-56cd63d2bfa730946b197d3b",
+      "name": "Lakeside Park Garden",
+      "address": "666 Bellevue Ave Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9990860ed884011bf8b66bd1",
+      "name": "Prescott School",
+      "address": "920 Campbell St Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b70ee5a7f816c4ef1e483e8e",
+      "name": "Sankofa United Elem School",
+      "address": "581 61st St Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-1cdd3819c96acfe3b00c7093",
+      "name": "Parker Elementary School",
+      "address": "7929 Ney Ave Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-22d5624b1fa4eaadecf1e555",
+      "name": "Jack London Aquatic Center",
+      "address": "115 Embarcadero Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-518ae3eea0bf2b80fcaa4ac6",
+      "name": "United For Success Academy",
+      "address": "2101 35th Ave Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4d8ffd9f0a22e45395395dce",
+      "name": "81st Ave Branch Library",
+      "address": "1021 81st Ave Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6b9218777eba259573b34096",
+      "name": "Brookfield Elementary School",
+      "address": "401 Jones Ave Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6e9da31da48aae57a67ca5f2",
+      "name": "Allen Temple",
+      "address": "8501 International Blvd Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-286f999b865f53272a0b4690",
+      "name": "Parks Chapel Ame Church",
+      "address": "476 34th St Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ff3ee268d315af46f358bbb2",
+      "name": "Beth Eden Baptist Church",
+      "address": "1183 10th St Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-721ff38f412c1e63f571fe96",
+      "name": "St Columba Catholic Church",
+      "address": "6401 San Pablo Ave Oakland",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7de3960e3d8db104b9df3994",
+      "name": "Piedmont Veterans Memorial Bldg",
+      "address": "401 Highland Ave Piedmont",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a909da87f4ed84c3270b1f2a",
+      "name": "Valley View Elementary School",
+      "address": "480 Adams Way Pleasanton",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-644389afe5d2226fa2afb0ec",
+      "name": "Pleasanton Middle School",
+      "address": "5001 Case Ave Pleasanton",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-f39931769c7f7a252c190447",
+      "name": "Harvest Park Middle School",
+      "address": "4900 Valley Ave Pleasanton",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-77e14b7a23fd6222ff426d79",
+      "name": "Alisal Elementary School",
+      "address": "1454 Santa Rita Rd. Pleasanton",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-683a4d10d4ad9021fc4e15b2",
+      "name": "Pleasanton Unified School District",
+      "address": "5794 West Las Positas Blvd. Pleasanton",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d17723dc056566cdec065959",
+      "name": "First United Methodist Church",
+      "address": "1600 Bancroft Ave San Leandro",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-83e3ee51b12bf7864bf5eb87",
+      "name": "Davis Street Community Center",
+      "address": "3081 Teagarden St San Leandro",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-7633d8f75c80a9a265fcd250",
+      "name": "Halcyon Baptist Church",
+      "address": "2860 Halcyon Dr San Leandro",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-aafc116f56edfaf607974e62",
+      "name": "San Leandro Church Of Christ",
+      "address": "601 Macarthur Blvd San Leandro",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3ff14947f9d89d103b7a5eec",
+      "name": "Alameda County Fire Station #11",
+      "address": "14903 Catalina St San Leandro",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-04cca24e5c73893cdf7aa56b",
+      "name": "San Lorenzo Library",
+      "address": "395 Paseo Grande San Lorenzo",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-091b0eaddda111a69ff57a7e",
+      "name": "Df Wesleyan Church Of Tongan In America",
+      "address": "945 Paseo Grande San Lorenzo",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8ac0febeff56413ffad454ac",
+      "name": "Union City Apostolic Church",
+      "address": "33520 Western Ave Union City",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "11 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "11 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-593b5b9a96278927e60b9ad6",
+      "name": "Sdes Portuguese Hall Of Alvarado",
+      "address": "30846 Watkins St Union City",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-aef585b2c8bafa20f4820590",
+      "name": "Brown Temple Church Of God In Christ",
+      "address": "1111 H St, Union City",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4fb09bb9c9a40fb5a88fbc21",
+      "name": "Our Lady Of The Rosary Church",
+      "address": "703 C St Union City",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "November 3, 2026",
+      "electionDate": "2026-11-03",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Alameda County Registrar of Voters",
+          "url": "https://alamedacountyca.gov/rov_app/vcalist",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+          "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+        }
+      ],
+      "days": "4 Days",
+      "hours": "7:00 AM to 8:00 PM",
+      "countyFips": "06001",
+      "matchingUnit": "COUNTY",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "4 Days",
+          "hours": "7:00 AM to 8:00 PM",
+          "electionDate": "2026-11-03",
+          "source": {
+            "publisher": "Alameda County Registrar of Voters",
+            "url": "https://alamedacountyca.gov/rov_app/vcalist",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+            "documentUrl": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays="
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Alameda County Registrar of Voters",
+      "url": "https://alamedacountyca.gov/rov_app/vcalist",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://alamedacountyca.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays=",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://alamedacountyca.gov/robots.txt",
+      "contentType": "text/plain",
+      "rawHash": "f15c4b2ed6716a83ead2e8ccb7a3045867709a5895e3c654d5b52317ee6581c9",
+      "path": "tests/fixtures/voting-sources/vs-04-west/ca-30153c8f37ee-f15c4b2ed671.bin"
+    },
+    {
+      "url": "https://alamedacountyca.gov/rov_app/pollinglist/election/260?locationType=VCA&votingDays=",
+      "contentType": "text/html;charset=UTF-8",
+      "rawHash": "e91c1a5b73fd92d0a7d81bbce0f862dd7e670fb869d69d2b5bb0286cfd966438",
+      "path": "tests/fixtures/voting-sources/vs-04-west/ca-7f45f67a430d-e91c1a5b73fd.html"
+    }
+  ],
+  "contacts": []
+}

@@ -1,14 +1,7 @@
-/**
- * The runner's reads for the expansion scopes: the published Census geography
- * lookup (one load per cycle; anything but a "published" source resolves
- * nothing) and the Census unit territories from data/derived/place-reference/.
- * The territory index is returned with the plan so it is read once per cycle.
- *
- * Server-only.
- */
-
+import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
 import type { CensusGeographyLookup, GeographyType } from "../../census-geography/contract.ts";
-import { loadPublishedLookupState, type PublishedLookupSource } from "../../census-geography/reader.ts";
+import { type PublishedLookupSource } from "../../census-geography/reader.ts";
+import { loadPublishedScopeLookupState } from "../../census-geography/scope-lookup.ts";
 import { installedOperationalReferenceRegistries } from "../../civic-data/operational-references.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -29,10 +22,6 @@ import { divisionsForZip, heldDivisionsForZip, type PlaceDivision } from "./nati
 import { readStateReference } from "./state-references.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
-/**
- * Each wanted government's held, source-established ZCTA area shares.
- * Sample counts never supply a service-area claim. Only requested keys are read.
- */
 export function readZctaShares(root: string, wanted: ReadonlySet<string>, states?: readonly string[]): Map<string, Map<string, number>> {
   const selected = states ?? [...new Set([...wanted].flatMap(key => FIPS_TO_STATE[key.split(":")[1]?.slice(0, 2)]?.postal ?? []))];
   const out = new Map<string, Map<string, number>>();
@@ -48,11 +37,6 @@ export function readZctaShares(root: string, wanted: ReadonlySet<string>, states
   return out;
 }
 
-/**
- * The territory index the runner uses: the preloaded registries, the committed
- * units and source-established shares, for every unit whether or not its state has a
- * registry.
- */
 export function readTerritoryIndex(root: string, registries: readonly JurisdictionRegistry[], states = [...new Set(registries.map(registry => registry.stateCode))], zips?: ReadonlySet<string>, places: ReadonlyMap<string, readonly PlaceDivision[]> = new Map()): TerritoryIndex {
   const selected = new Set(states.map(state => state.toUpperCase()));
   const exact = new Map<string, Set<string>>();
@@ -78,7 +62,7 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
   const scopedRegistries = registries.filter(registry => selected.has(registry.stateCode.toUpperCase())).map(registry => zips ? {
     ...registry, jurisdictions: registry.jurisdictions.filter(j => j.govClass === "STATE" || Boolean(j.censusId && unitIds.has(`${j.stateCode.toUpperCase()}:${j.censusId}`)) || unitAliases.has(j.id) || Boolean(j.censusDivision && wanted.has(j.censusDivision))),
   } : registry);
-  /* A registration-read registry places each government by its body's division, by that division's own layer and GEOID. */
+
   for (const registry of scopedRegistries) {
     if (registry.registration?.kind !== "REGISTRATION") continue;
     for (const j of registry.jurisdictions) if (j.censusDivision) wanted.add(j.censusDivision);
@@ -99,7 +83,6 @@ export function readTerritoryIndex(root: string, registries: readonly Jurisdicti
   });
 }
 
-/** Read the Census unit territories. Throws with the path named; the caller turns that into a named condition. */
 export function readCensusUnitTerritories(root: string, states: readonly string[], zips?: ReadonlySet<string>, divisions?: ReadonlySet<string>): readonly CensusUnitTerritory[] {
   const selected = new Set(states.map(state => state.toUpperCase()));
   const units = [...selected].flatMap(state => {
@@ -108,11 +91,6 @@ export function readCensusUnitTerritories(root: string, states: readonly string[
   return units;
 }
 
-/**
- * A whole state is the union of its counties' ZIP areas, because the lookup has no state container and counties tile a
- * state without a gap. A ZIP that sits inside the state in more than one county is wholly in it; a ZIP in one county only keeps
- * that county's share. The state plan version follows the county plan it was built from.
- */
 export async function resolveStateScope(decision: ExpansionScopeDecision, lookup: CensusGeographyLookup): Promise<ResolvedScope> {
   const g = decision.geography;
   const counties = await lookup.enumerateGroupings("county");
@@ -137,11 +115,6 @@ export async function resolveStateScope(decision: ExpansionScopeDecision, lookup
   return { kind: "RESOLVED", decision, zctas, whole, fractions, states: [g.stateAbbr.toUpperCase()] };
 }
 
-/**
- * Resolve every selected scope's ZCTAs against the lookup the caller loaded
- * once. A scope that cannot be resolved says why, by name; it never resolves
- * to an empty set that would read as "nothing is in it".
- */
 export async function resolveScopes(
   decisions: readonly ExpansionScopeDecision[],
   state: { readonly lookup: CensusGeographyLookup; readonly source: PublishedLookupSource; readonly versionId: string } | null,
@@ -183,8 +156,7 @@ export async function resolveScopes(
         if (result.status.kind !== "OK" || !vintages.has(g.version)) {
           scopes.push({ kind: "UNRESOLVED", decision, why: result.status.kind !== "OK" ? result.status.note : "The selected Census ZCTA vintage is not published.", states: [g.stateAbbr] });
         } else {
-          // A metro can span states this ZIP does not touch. Counties partition
-          // the ZIP itself; the metro's other member states are not its scope.
+
           const states = [...new Set(result.memberships.filter(m => m.geography.type === "county").map(m => m.geography.stateAbbr.toUpperCase()))];
           if (states.length === 0) throw new Error("The published ZIP has no county membership to establish its states.");
           scopes.push({ kind: "RESOLVED", decision, zctas: new Set([g.geoid]), whole: new Set([g.geoid]), fractions: new Map(), states });
@@ -234,47 +206,37 @@ export async function resolveScopes(
 type LookupState = { readonly lookup: CensusGeographyLookup; readonly source: PublishedLookupSource; readonly versionId: string };
 
 export interface ExpansionLoad {
-  /** Held Census memberships plus acquired intersections for unheld ZIPs.
-   * Work placement inputs, not invented registry bodies. */
+
   readonly nationalPlaces?: ReadonlyMap<string, readonly PlaceDivision[]>;
-  /** Null when no scope is selected and nothing on the policy row is unreadable: the cycle runs exactly as before. */
+
   readonly plan: ExpansionPlan | null;
-  /** Named runtime conditions for the research state. Empty when nothing went wrong. */
+
   readonly conditions: readonly string[];
-  /** The territory index the plan was placed with. Null when no scope is selected, or with `territoryDetail` saying why. */
+
   readonly territory?: TerritoryIndex | null;
   readonly territoryDetail?: string | null;
 }
 
-/**
- * Everything the cycle needs to honor the owner's scopes, read once at the
- * top of the cycle. Every failure is a named condition and resolves toward
- * holding paid work back, never toward "no scope stands".
- */
 export async function loadExpansionPlan(input: {
   readonly repos: ControlPlaneRepositories;
   readonly root: string;
   readonly now: string;
   readonly obligations: readonly ScopedStandingWork[];
-  /** Injected in tests; the runner uses the published lookup. */
+
   readonly loadLookup?: () => Promise<LookupState>;
-  /** Injected in tests; the runner reads the committed territories and the preloaded registries. */
+
   readonly loadTerritory?: (states: readonly string[], zips: ReadonlySet<string>, places: ReadonlyMap<string, readonly PlaceDivision[]>) => TerritoryIndex;
   readonly loadNationalZip?: (zip: string) => Promise<readonly PlaceDivision[]>;
-  /**
-   * Called once the scopes are resolved, with every state they span (a metro's member states included), before
-   * the territory is read: the runner reads there the registration of each state with no reviewed registry
-   * (`preloadRegistrationJurisdictions`). Answers named conditions, if any.
-   */
+
   readonly beforeTerritory?: (states: readonly string[]) => Promise<readonly string[]>;
 }): Promise<ExpansionLoad> {
   const conditions: string[] = [];
   let decisions: readonly ExpansionScopeDecision[] = [];
   let malformed = 0;
   try {
-    const row = await input.repos.adminConfig.read(ADMIN_CONFIG_ID);
+    const row = await input.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:input.repos.planningState?{where:{path:["geography","stateAbbr"],value:input.repos.planningState.toUpperCase()}}:true});
     if (row !== null && !isAdminConfig(row.value)) {
-      /* A policy row that is not a policy fails closed: readable scopes are kept, and the row counts as one unreadable entry, holding paid Scout work. */
+
       const salvaged = row.value !== null && typeof row.value === "object" ? expansionScopesOf(row.value as { readonly expansionScopes?: unknown }) : null;
       decisions = salvaged?.scopes ?? [];
       malformed = 1 + (salvaged?.malformed ?? 0);
@@ -284,7 +246,7 @@ export async function loadExpansionPlan(input: {
       );
     } else {
       const held = expansionScopesOf(row !== null ? row.value : null);
-      decisions = held.scopes;
+      decisions = held.scopes.filter(scope=>scope.budgetUsd>0);
       malformed = held.malformed;
     }
   } catch (error) {
@@ -303,7 +265,7 @@ export async function loadExpansionPlan(input: {
   let unreadable: string | null = null;
   if (decisions.length > 0) {
     try {
-      state = await (input.loadLookup ?? (() => loadPublishedLookupState({ bypassCache: true })))();
+      state = await (input.loadLookup ?? (() => loadPublishedScopeLookupState(decisions.map(decision=>decision.geography))))();
     } catch (error) {
       unreadable = error instanceof Error ? error.message : String(error);
       conditions.push(`the published Census geography lookup could not be read (${unreadable}); ZIPs try the national Census source`);
@@ -311,7 +273,7 @@ export async function loadExpansionPlan(input: {
   }
   const resolved = await resolveScopes(decisions, state, unreadable);
   const nationalPlaces = new Map<string, readonly PlaceDivision[]>();
-  const scopes = await Promise.all(resolved.scopes.map(async scope => {
+  let scopes = await Promise.all(resolved.scopes.map(async scope => {
     const geography = scope.decision.geography;
     if (scope.kind !== "UNRESOLVED" || geography.type !== "zcta" || geography.version !== "zcta:2020") return scope;
     try {
@@ -326,6 +288,15 @@ export async function loadExpansionPlan(input: {
       return scope;
     }
   }));
+  if(input.repos.planningState) {
+    const reached=new Map(scopes.filter(scope=>scope.kind==="RESOLVED").map(scope=>[scope.decision.key,[...new Set(scope.states.map(state=>state.toUpperCase()))].sort()]));
+    const held=await input.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{ids:[...reached.keys()]}});
+    if(held?.value.expansionScopes?.some(scope=>JSON.stringify(scope.planningStates??[])!==JSON.stringify(reached.get(scope.key)))) {
+      await input.repos.adminConfig.save(held,{...held.value,expansionScopes:held.value.expansionScopes.map(scope=>
+        reached.has(scope.key)?{...scope,planningStates:reached.get(scope.key)!}:scope)},input.now);
+    }
+    scopes=scopes.map(scope=>({...scope,states:[input.repos.planningState!.toUpperCase()]}));
+  }
   if (state?.source === "published") {
     const heldState = state;
     const zips = [...new Set(scopes.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : []))];
@@ -381,4 +352,23 @@ export async function loadExpansionPlan(input: {
     territory,
     territoryDetail,
   };
+}
+
+export async function readExpansionScopesForZips(repos: ControlPlaneRepositories, zips: readonly string[],
+  lookup?: LookupState): Promise<{readonly scopes:readonly ExpansionScopeDecision[];readonly lookup:LookupState}> {
+  const held = lookup ?? await loadPublishedAreaLookupState(zips);
+  const states = new Set<string>();
+  for (const zip of zips) {
+    const groups = await held.lookup.groupingsForZcta(zip);
+    if (groups.status.kind !== "OK") throw new Error(`ZIP ${zip}: ${groups.status.note}`);
+    for (const membership of groups.memberships) if (membership.geography.type === "county") states.add(membership.geography.stateAbbr);
+  }
+  const scopes = new Map<string, ExpansionScopeDecision>();
+  for (const state of states) {
+    const row = await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}});
+    const decisions = expansionScopesOf(row?.value ?? null);
+    if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
+    for (const decision of decisions.scopes) scopes.set(decision.key,decision);
+  }
+  return {lookup:held,scopes:[...scopes.values()]};
 }

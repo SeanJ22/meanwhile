@@ -7,10 +7,11 @@ import test from "node:test";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { ballotInputHash, ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
-import { ballotPublicationDue, ballotPublicationSummary, parseBallotPublicationResult, readLatestBallotPublication,
+import { ballotPublicationDue, ballotPublicationLaunchOrder, ballotPublicationSummary, parseBallotPublicationResult, readLatestBallotPublication,
   readLatestBallotPublicationSummary, recordBallotPublication, type BallotPublicationResult, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
 import { admittedRuntimeChildEnvironment } from "../lib/civic-data/runtime-authority.ts";
-import { routineSerialLane } from "../lib/civic-data/runner.ts";
+import { routineSerialLane, routineBaselineOwed, routinePassLaunchOrder } from "../lib/civic-data/runner.ts";
+import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
 import { parseRoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { workerPublicationTasksFor } from "../lib/civic-data/worker-publication-tasks.ts";
 import { routineDueRequestFor } from "../lib/civic-data/routine-due-request.ts";
@@ -112,6 +113,29 @@ for (const provider of ["memory", "file", "postgres"] as const) {
   });
 }
 
+test("state files publish within the pass even when a slow unfinished network source would consume their worker slot", async () => {
+  const tasks = ["CA", "OH"].map(state => AUTOMATIC_REFRESH_TASKS.find(task => task.id === `ballot-contests:${state}`)!);
+  const clock = { lastAttemptedAt: "2026-10-15T22:39:17.629Z", lastSucceededAt: "2026-10-15T22:38:14.608Z",
+    lastSucceededObservedAt: "2026-10-15T22:39:17.629Z", lastSucceededParserVersion: tasks[0].parserVersion };
+  const ordinary = routinePassLaunchOrder([
+    { task: { ...tasks[0], id: "unfinished-network-source", sourceId: "network-source" }, baselineOwed: true },
+    ...tasks.map(task => ({ task, baselineOwed: routineBaselineOwed(task, clock) })),
+  ], Date.parse("2026-10-21T08:00:00.000Z"));
+  assert.ok(ordinary.slice(1).every(job => job.baselineOwed === false));
+  for (const ordered of [ordinary, ballotPublicationLaunchOrder(ordinary)]) {
+    let time = 0;
+    const runs = await runBoundedChildPass(ordered.map(({ task }) => ({ id: task.id, executable: process.execPath, args: [] })), {
+      cwd: process.cwd(), env: process.env, concurrency: 1,
+      onStarting: () => { if (time >= 2) throw Error("PASS_TIME_BUDGET: work remains owed"); },
+    }, async command => {
+      time += command.id === "unfinished-network-source" ? 10 : 1;
+      return { id: command.id, termination: "EXITED", status: 0, signal: null, stdout: "", stderr: "", errorMessage: null };
+    });
+    assert.equal(runs.length, 3, "every task stays in the ordinary pool");
+    assert.equal(runs.filter(run => run.id.startsWith("ballot-contests:") && run.termination === "EXITED").length, ordered === ordinary ? 0 : 2);
+  }
+});
+
 test("an unwritten state publication rejects and remains due for history retry", async () => {
   const repos = createMemoryRepositories();
   const report: BallotPublicationResult = { kind: "BALLOT_PUBLICATION", state: "TX", inputHash: "a".repeat(64), inputStamp: "git:input",
@@ -182,7 +206,10 @@ test("the runner's ballot child publishes only its state under exact authority a
     await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
     await writeFile(resolve(directory, "ak.json"), "{");
     const source = await readFile("scripts/routine-civic-data-runner.mts", "utf8");
-    const snippet = transpileModule(source.slice(source.indexOf("function sourceChildCommand("), source.indexOf("function recordSourceSettlementFailures")),
+    const flagsStart = source.indexOf("const TS_CHILD = ");
+    assert.ok(flagsStart > 0, "the extracted runner command needs its actual shared TypeScript child flags");
+    const flags = source.slice(flagsStart, source.indexOf(";", flagsStart) + 1);
+    const snippet = transpileModule(flags + "\n" + source.slice(source.indexOf("function sourceChildCommand("), source.indexOf("function recordSourceSettlementFailures")),
       { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
     const parentEnv = { ...process.env, NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
       DATABASE_URL: "postgresql://local:local@staging.invalid/reader", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control" };
@@ -225,7 +252,7 @@ test("Admin's ballot control queues the normal runner task even before its next 
   const result = await action.execute({ repos, now: () => now, currentStateVersion: null, codeSha: null },
     { at: now, receiptId: "fixture-ballot-action", request: { actorRef: "owner" } } as Parameters<typeof action.execute>[1], input);
   assert.equal(result.ok, true);
-  const requests = (await repos.adminConfig.mustRead("current")).value.routineDueRequests!;
+  const requests = (await repos.adminConfig.mustRead("current", { routineDueRequests: true })).value.routineDueRequests!;
   assert.equal(requests.length, REGISTRY_STATES.length);
   assert.equal(new Set(requests.map(row => row.contractId)).size, REGISTRY_STATES.length);
   const request = requests.find(row => row.contractId === "ballot-contests:TX")!;

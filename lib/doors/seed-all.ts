@@ -7,6 +7,7 @@ import { type DoorRecord, type DoorRepository } from "./registry.ts";
 import { seedRouteHintDoors } from "./route-hints.ts";
 import { seedFeedDoors } from "./seed-feeds.ts";
 import { seedMeetingDoors } from "./seed-meetings.ts";
+import { retireCensusDuplicates } from "./platform-census.ts";
 
 export interface SeedCounts {
   readonly created: number;
@@ -23,6 +24,8 @@ export interface SeedAllResult {
   readonly meetings: SeedCounts;
   readonly feeds: SeedCounts;
   readonly routeHints: SeedCounts;
+  /** Census doors set aside because a hand-wired door already reads the same board. */
+  readonly retired: readonly string[];
   readonly derivedNote: string;
   readonly total: number;
 }
@@ -80,8 +83,9 @@ export async function seedAllDoors(input: {
   const meetings = await seedMeetingDoors({ repo, wiring: [], derived: input.derived, deriveInputAt: input.derivedAt ?? now, at: now });
   const feeds = await seedFeedDoors({ repo, deriveInputAt: codeAt, at: now });
   const routeHints = await seedRouteHintDoors({ repo, hints: ROUTE_HINTS, deriveInputAt: codeAt, at: now });
+  const retired = await retireCensusDuplicates(input.repo, now);
   const total = rows.length + imported.created + meetings.created + feeds.created + routeHints.created;
-  return { imported, meetings, feeds, routeHints, derivedNote: input.derivedNote ?? "", total };
+  return { imported, meetings, feeds, routeHints, retired, derivedNote: input.derivedNote ?? "", total };
 }
 
 export type DoorSync =
@@ -109,11 +113,12 @@ export async function syncHeldDoors(
 /** One line for the runner log. */
 export function doorSyncLine(sync: DoorSync): string {
   if (!sync.synced) return sync.reason;
-  const { imported, meetings, feeds, routeHints, total } = sync.result;
+  const { imported, meetings, feeds, routeHints, retired, total } = sync.result;
   const parts = [imported, meetings, feeds, routeHints];
   const created = parts.reduce((sum, part) => sum + part.created, 0);
   const updated = parts.reduce((sum, part) => sum + part.updated, 0);
   const refused = [imported, meetings, feeds, routeHints].reduce((sum, part) => sum + part.refused.length, 0);
   return `${total} doors held; ${created} added, ${updated} updated this pass${refused > 0 ? `, ${refused} refused` : ""}; ` +
-    `door import: ${imported.created} added, ${imported.updated} updated, ${imported.unchanged} already there, ${imported.keptManualEdit} kept their hand edit`;
+    `door import: ${imported.created} added, ${imported.updated} updated, ${imported.unchanged} already there, ${imported.keptManualEdit} kept their hand edit` +
+    (retired.length > 0 ? `; ${retired.length} census door(s) set aside because a hand-wired door already reads the board (${retired.join(", ")})` : "");
 }

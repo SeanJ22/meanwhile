@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CNMI Law Revision Commission — Home</title>
+<meta name="description" content="Official legal resources of the Commonwealth of the Northern Mariana Islands: public laws, the Commonwealth Code, the NMI Administrative Code, judicial decisions, court rules, and the Commonwealth Register.">
+<meta name="theme-color" content="#0b3a5b">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CNMI Law Revision Commission — Home">
+<meta property="og:description" content="Official legal resources of the Commonwealth of the Northern Mariana Islands.">
+<link rel="icon" type="image/jpeg" href="/images/cnmi-seal.jpg">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-datatables/9.0.3/style.css" integrity="sha384-xnK68E/OAsSGcbvbeWEOyhjix2K7rBxt8Eytj/Ow9zuPG7WwFGGqMPQ8SbexlsL0" crossorigin="anonymous">
+<style>
+/* ---- shared data-grid (simple-datatables) ---- */
+.datatable-wrapper{font-size:1rem}
+.datatable-top,.datatable-bottom{padding:10px 0;font-size:.92em;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.datatable-bottom{justify-content:space-between}
+.datatable-input,.datatable-selector{padding:7px 11px;border:1px solid var(--line,#d8d8d8);border-radius:8px;font-size:.95rem;background:#fff}
+.datatable-table th{cursor:pointer;white-space:nowrap}
+.datatable-table td,.datatable-table th{padding:9px 12px;vertical-align:top}
+.datatable-pagination ul{display:flex;gap:4px;flex-wrap:wrap;margin:0;padding:0;list-style:none}
+.datatable-pagination li{list-style:none}
+.datatable-pagination a,.datatable-pagination button{font-size:.9rem;line-height:1.15;padding:6px 11px;min-width:34px;text-align:center;color:#d1202f;border-radius:6px;text-decoration:none;background:none;border:1px solid transparent;cursor:pointer}
+.datatable-pagination a:hover,.datatable-pagination .datatable-active a{background:#d1202f;color:#fff;border-color:#d1202f}
+.datatable-pagination .datatable-disabled a,.datatable-pagination .datatable-disabled button{color:#bbb;cursor:default}
+/* helpers */
+.cite{color:var(--muted,#555);font-size:.9em;white-space:nowrap}
+.pdf-link{color:#d1202f;text-decoration:none;font-weight:600;white-space:nowrap}
+.cr-sub{color:var(--muted,#888);margin:0 0 14px;font-size:.9em}
+.cr-section-h{margin:0 0 6px}
+.muted{color:var(--muted,#888)}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+ <div class="util"><div class="wrap">
+<span class="off">An official website of the CNMI Law Revision Commission</span>
+
+</div></div>
+<header class="site"><div class="wrap">
+<a class="sealwrap" href="/" aria-label="Home"><img src="/images/cnmi-seal.jpg" alt="Seal of the CNMI"></a>
+<div class="brand"><h1><a href="/"><span class="bfull">Law Revision Commission</span><span class="bshort">LRC</span></a></h1><p>Commonwealth of the Northern Mariana Islands &middot; cnmilaw.gov</p></div>
+</div></header>
+<nav class="main" aria-label="Primary"><div class="wrap">
+<button class="navtoggle" aria-expanded="false" aria-controls="navlist" onclick="var u=this.nextElementSibling;this.setAttribute('aria-expanded',u.classList.toggle('open'))">Menu &#9776;</button>
+<ul id="navlist">
+<li><a href="/covenant" class="">Covenant</a></li>
+<li><a href="/constitution" class="">Constitution</a></li>
+<li class="has-menu"><a href="/commonwealth-code" class="">Commonwealth Code <span class="caret" aria-hidden="true">&#9662;</span></a>
+  <ul class="submenu">
+    <li><a href="/commonwealth-code">Browse the Code</a></li>
+    <li><a href="/update-table">Update Table</a></li>
+  </ul></li>
+<li><a href="/documents?type=admin_code" class="">Administrative Code</a></li>
+<li class="has-menu"><a href="/documents?type=public_law" class="">Legislature <span class="caret" aria-hidden="true">&#9662;</span></a>
+  <ul class="submenu">
+    <li><a href="/documents?type=public_law">Public Laws</a></li>
+    <li><a href="/documents?type=local_law">Local Laws</a></li>
+    <li><a href="/ordinance">Ordinance</a></li>
+    <li><a href="https://cnmileg.net/" target="_blank" rel="noopener">Legislature Website &#8599;</a></li>
+  </ul></li>
+<li class="has-menu"><a href="/documents?type=register" class="">Register <span class="caret" aria-hidden="true">&#9662;</span></a>
+  <ul class="submenu">
+    <li><a href="/documents?type=register">By Year</a></li>
+    <li><a href="/register-index">Register Index</a></li>
+  </ul></li>
+<li class="has-menu"><a href="/documents?type=case" class="">Judiciary <span class="caret" aria-hidden="true">&#9662;</span></a>
+  <ul class="submenu">
+    <li><a href="/court-rules">Court Rules</a></li>
+    <li><a href="/documents?type=case&court=Superior">Superior Court</a></li>
+    <li><a href="/documents?type=case&court=Supreme">Supreme Court</a></li>
+    <li><a href="/documents?type=general_order">General Orders</a></li>
+    <li><a href="/documents?type=admin_order">Admin Orders</a></li>
+    <li><a href="/documents?type=reporter">Reporters</a></li>
+    <li><a href="/documents?type=digest">Family Court Digest</a></li>
+    <li><a href="https://www.nmijudiciary.gov" target="_blank" rel="noopener">Judiciary Website &#8599;</a></li>
+  </ul></li>
+<li class="has-menu"><a href="/documents?type=ttr" class="">Resources <span class="caret" aria-hidden="true">&#9662;</span></a>
+  <ul class="submenu">
+    <li><a href="/documents?type=ttr">Trust Territory</a></li>
+    <li><a href="https://governor.cnmi.gov/" target="_blank" rel="noopener">Governor's Office Website &#8599;</a></li>
+  </ul></li>
+<li class="has-menu"><a href="/about" class="">About <span class="caret" aria-hidden="true">&#9662;</span></a>
+  <ul class="submenu">
+    <li><a href="/about">About the Commission</a></li>
+    <li><a href="/docs/LRCBylaw.pdf" target="_blank" rel="noopener">Bylaws (PDF)</a></li>
+    <li><a href="/coming-soon?s=History+of+the+Commission">History</a></li>
+    <li><a href="/social">Social Media</a></li>
+  </ul></li>
+<li><a href="/search" class="">Search</a></li>
+</ul></div></nav>
+<main id="main">
+<div class="hero"><div class="wrap">
+<h2>Hafa Adai, Tirow, and Welcome!</h2>
+<div class="sub">The Commission maintains the Commonwealth Code, the NMI Administrative Code, decisions of the CNMI judiciary, and other legal resources &mdash; pursuant to 1 CMC &sect;&sect; 3801&ndash;3810.</div>
+<div class="mission">"Keeping the CNMI informed through the timely and accurate codification and publication of laws, rules, cases and other authority."</div>
+<form class="search" action="/search" method="get"><span class="ai">&#10022; AI Search</span><input name="q" placeholder="Search laws, cases, code sections..."><button>Search</button></form>
+</div></div>
+<div class="stats"><div class="wrap">
+<div><div class="n">27,800+</div><div class="l">Documents</div></div>
+<div><div class="n">14</div><div class="l">Collections</div></div>
+<div><div class="n">Free</div><div class="l">Public Access</div></div>
+</div></div>
+<section class="sec"><div class="wrap"><h3>Browse Collections</h3><div class="grid">
+<a class="card" href="/documents?type=public_law"><div class="ic">&#128220;</div><h4>Public Laws</h4></a>
+<a class="card" href="/documents?type=local_law"><div class="ic">&#127965;</div><h4>Local Laws</h4></a>
+<a class="card" href="/commonwealth-code"><div class="ic">&#128218;</div><h4>Commonwealth Code</h4></a>
+<a class="card" href="/documents?type=case"><div class="ic">&#9878;</div><h4>Judiciary</h4></a>
+<a class="card" href="/documents?type=admin_code"><div class="ic">&#128209;</div><h4>Administrative Code</h4></a>
+<a class="card" href="/documents?type=court_rule"><div class="ic">&#128451;</div><h4>Court Rules</h4></a>
+<a class="card" href="/documents?type=register"><div class="ic">&#128478;</div><h4>Register</h4></a>
+<a class="card" href="/documents?type=ttr"><div class="ic">&#128214;</div><h4>Trust Territory</h4></a>
+</div></div></section>
+
+<section class="sec"><div class="wrap">
+  <a class="home-featured" href="/docs/announcements/LRC_New_Website_Notice.pdf" target="_blank" rel="noopener" style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;text-decoration:none;background:linear-gradient(100deg,#0b3a5b,#12507d);color:#fff;border-radius:14px;padding:18px 22px;box-shadow:0 6px 20px rgba(11,58,91,.18);border-left:6px solid #d1202f">
+        <img src="/docs/announcements/LRC_New_Website_Notice.thumb.jpg" alt="" loading="lazy" style="width:92px;height:120px;object-fit:cover;object-position:top;border-radius:8px;background:#fff;flex:0 0 auto;box-shadow:0 2px 10px rgba(0,0,0,.3)">
+        <div style="flex:1 1 260px;min-width:0">
+      <span style="display:inline-block;background:#d1202f;color:#fff;font-size:.68em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:20px">&#128226; Notice</span>
+      <div style="font-size:1.4em;font-weight:700;margin:8px 0 3px;line-height:1.2">New Website Notice</div>
+      <div style="opacity:.92;font-size:.92em;line-height:1.45">Hafa Adai! The Commonwealth Law Revision Commission welcomes you to its newly redesigned website at cnmilaw.gov. The new website offers impr...</div>      <div style="margin-top:8px;font-size:.82em;opacity:.8">Jul 20, 2026</div>
+    </div>
+    <span style="flex:0 0 auto;background:#fff;color:#0b3a5b;font-weight:700;padding:11px 20px;border-radius:8px;white-space:nowrap;align-self:center">View notice &rarr;</span>
+  </a>
+  <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:9px">
+    <a href="https://www.facebook.com/commonwealthlrc" target="_blank" rel="noopener" class="muted" style="font-size:.88em">More on our Facebook page &#8599;</a>
+    <a href="/announcements" style="color:#d1202f;text-decoration:none;font-weight:600;font-size:.9em">View all announcements &rarr;</a>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap"><h3>Recent Uploads</h3><div class="grid">
+        <div class="card recent-card">
+    <h4><a href="/documents?type=public_law">Public Laws</a></h4>
+    <ul class="recent-list">
+              <li><a href="/document/28497">To establish provisions for jaywalking; and for other purposes.</a>
+            <span class="rdate">PL 24-41 · Oct 15, 2026</span></li>
+              <li><a href="/document/28496">To provide a Budget Plan of the Commonwealth of the Northern Mariana I...</a>
+            <span class="rdate">PL 24-40 · Oct 5, 2026</span></li>
+              <li><a href="/document/28490">To appropriate funds from Accounts 1501B and 1501S to support the oper...</a>
+            <span class="rdate">PL 24-39 · Sep 24, 2026</span></li>
+          </ul>
+    <a class="recent-all" href="/documents?type=public_law">View all &rarr;</a>
+  </div>
+          <div class="card recent-card">
+    <h4><a href="/documents?type=local_law">Local Laws</a></h4>
+    <ul class="recent-list">
+              <li><a href="/document/28483">To appropriate $1,571,460.00 from revenues collected for the Third Sen...</a>
+            <span class="rdate">SLL 24-31 · Aug 28, 2026</span></li>
+              <li><a href="/document/28487">To appropriate Forty-two thousand dollars ($42,000.00) from revenues c...</a>
+            <span class="rdate">TLL 24-12 · Sep 9, 2026</span></li>
+              <li><a href="/document/28023">To re-appropriate Sixty thousand dollars ($60,000.00) allotted under R...</a>
+            <span class="rdate">RLL 24-12 · Apr 29, 2026</span></li>
+          </ul>
+    <a class="recent-all" href="/documents?type=local_law">View all &rarr;</a>
+  </div>
+                <div class="card recent-card">
+      <h4><a href="/documents?type=case">Court Decisions</a></h4>
+      <div class="recent-subhead" style="font-weight:700;color:#0b3a5b;font-size:.78em;text-transform:uppercase;letter-spacing:.03em;margin:8px 0 1px">Supreme Court Opinions</div>
+      <ul class="recent-list"><li><a href="/document/28495">Chong v. Durkin</a><span class="rdate">2026 MP 10 · Oct 1, 2026</span></li><li><a href="/document/28485">Deleon Guerrero v. St. Jude Renal Care</a><span class="rdate">2026 MP 9 · Sep 9, 2026</span></li></ul>      <div class="recent-subhead" style="font-weight:700;color:#0b3a5b;font-size:.78em;text-transform:uppercase;letter-spacing:.03em;margin:8px 0 1px">Superior Court Decisions</div>
+      <ul class="recent-list"><li><a href="/document/28492">In re the Matter of the Estate of Josephus Johannes De Boer</a><span class="rdate">CV26-0135 · Sep 30, 2026</span></li><li><a href="/document/28484">Commonwealth v. Mendiola et al.</a><span class="rdate">CR26-0012 · Sep 3, 2026</span></li></ul>      <a class="recent-all" href="/documents?type=case">View all &rarr;</a>
+    </div>
+                <div class="card recent-card">
+    <h4><a href="/documents?type=register">Commonwealth Register</a></h4>
+    <ul class="recent-list">
+              <li><a href="/register/602">Commonwealth Register — October 2026 (Addendum)</a>
+            <span class="rdate">Oct 19, 2026</span></li>
+              <li><a href="/register/601">Commonwealth Register — October 2026</a>
+            <span class="rdate">Oct 15, 2026</span></li>
+              <li><a href="/register/600">Commonwealth Register — October 2026</a>
+            <span class="rdate">Oct 1, 2026</span></li>
+          </ul>
+    <a class="recent-all" href="/documents?type=register">View all &rarr;</a>
+  </div>
+          <div class="card recent-card">
+    <h4><a href="/court-rules">Court Rules</a></h4>
+    <ul class="recent-list">
+              <li><a href="/document/8984">Drug Court Program Policies and Procedures</a>
+            <span class="rdate">Dec 17, 2025</span></li>
+              <li><a href="/document/8983">Judicial Disciplinary Procedure</a>
+            <span class="rdate">Dec 10, 2025</span></li>
+              <li><a href="/document/8981">Code of Judicial Conduct</a>
+            <span class="rdate">Sep 9, 2025</span></li>
+          </ul>
+    <a class="recent-all" href="/court-rules">View all &rarr;</a>
+  </div>
+          <div class="card recent-card">
+    <h4><a href="/documents?type=admin_code">NMI Administrative Code</a></h4>
+    <ul class="recent-list">
+              <li><a href="/admin-code/361">Captive Insurance Regulations</a>
+            <span class="rdate">Title 20</span></li>
+              <li><a href="/admin-code/359">Commonwealth Development Authority Personnel Regulations</a>
+            <span class="rdate">Title 25</span></li>
+              <li><a href="/admin-code/358">Qualifying Certificate Program Rules and Regulations</a>
+            <span class="rdate">Title 25</span></li>
+          </ul>
+    <a class="recent-all" href="/documents?type=admin_code">View all &rarr;</a>
+  </div>
+          <div class="card recent-card">
+    <h4><a href="/commonwealth-code">Commonwealth Code</a></h4>
+    <ul class="recent-list">
+              <li><a href="/commonwealth-code/2286">§ 5327. Importation of Meat Products, Frozen Semen, Garbage, Animal By...</a>
+            <span class="rdate">Oct 1, 2026</span></li>
+              <li><a href="/commonwealth-code/2280">§ 5321. Purpose and Objectives.</a>
+            <span class="rdate">Oct 1, 2026</span></li>
+              <li><a href="/commonwealth-code/2283">§ 5324. Entry of Animals Without Inspection Prohibited.</a>
+            <span class="rdate">Oct 1, 2026</span></li>
+          </ul>
+    <a class="recent-all" href="/commonwealth-code">View all &rarr;</a>
+  </div>
+  </div></div></section>
+
+</main>
+<footer class="site"><div class="wrap"><div class="cols">
+<div><h5>CNMI Law Revision Commission</h5><p>Operating pursuant to 1 CMC &sect;&sect; 3801&ndash;3810. We codify and publish the laws, rules, cases, and other authority of the Commonwealth.</p><p><a href="/cdn-cgi/l/email-protection#25464b484c494452654b484c4f50414c464c44575c0b424a53"><span class="__cf_email__" data-cfemail="f89b96959194998fb8969591928d9c919b91998a81d69f978e">[email&#160;protected]</span></a> &middot; (670) 236-9820</p><p class="foot-social" style="margin-top:8px;display:flex;gap:14px;align-items:center"><span class="muted" style="font-size:.85em">Follow us:</span><a href="https://www.instagram.com/cnmilawrevisioncommission/" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram" style="display:inline-flex;color:inherit"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.3-.1 1.7-.1 4.9-.1zm0 3.6a6.2 6.2 0 100 12.4 6.2 6.2 0 000-12.4zm0 10.2a4 4 0 110-8 4 4 0 010 8zm6.4-10.4a1.4 1.4 0 11-2.8 0 1.4 1.4 0 012.8 0z"/></svg></a><a href="https://www.facebook.com/commonwealthlrc" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook" style="display:inline-flex;color:inherit"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0022 12z"/></svg></a></p></div>
+<div><h5>Collections</h5>
+<a href="/documents?type=public_law">Public Laws</a>
+<a href="/commonwealth-code">Commonwealth Code</a>
+<a href="/documents?type=admin_code">Administrative Code</a>
+<a href="/documents?type=case">Judiciary</a>
+<a href="/documents?type=register">Register</a><a href="/documents?type=ttr">Trust Territory</a><a href="/court-rules">Court Rules</a></div>
+<div><h5>Site</h5>
+<a href="/about">About the Commission</a>
+<a href="/search">Search</a>
+<a href="/documents">All Documents</a>
+<a href="/announcements">Announcements</a>
+<a href="/login" rel="nofollow">Sign in</a><a href="/commonwealth-code">Browse the Code</a>
+<a href="/cdn-cgi/l/email-protection#f4979a999d989583b49a999d9e81909d979d95868dda939b82">Contact</a></div>
+</div><p class="disclaimer"><strong>Disclaimer:</strong> The information, documents, and publications available on this website are provided by the Commonwealth Law Revision Commission as a public service. While the Commission strives, within its limited staffing and budget, to maintain accurate and timely content, some materials may not be current between updates and may be incomplete, outdated, or contain errors. The Commission makes no warranties regarding the accuracy, reliability, completeness, or timeliness of any content on this website. Users rely on such content at their own risk. The Commission shall not be liable for any loss or damage resulting from reliance on information made available through this website.</p><div class="legal">&copy; 2026 CNMI Law Revision Commission &middot; An official website of the Commonwealth of the Northern Mariana Islands</div></div></footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/simple-datatables/9.0.3/simple-datatables.min.js" integrity="sha384-RwezHidMSVCO+wlu/hSxStVlTwx2aN4RD3kF1EseSBW6Fd4D6eLKWyPGAyFLqGBA" crossorigin="anonymous"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll("table.doctable:not(.js-grid)").forEach(function (t) {
+    if (t.parentElement && t.parentElement.classList.contains("table-scroll")) { return; }
+    var w = document.createElement("div"); w.className = "table-scroll";
+    t.parentNode.insertBefore(w, t); w.appendChild(t);
+  });
+  if (typeof simpleDatatables === "undefined") { return; }
+  document.querySelectorAll("table.js-grid").forEach(function (el) {
+    var d = el.dataset;
+    new simpleDatatables.DataTable(el, {
+      searchable: d.search !== "false",
+      sortable: true,
+      paging: d.paging !== "false",
+      perPage: parseInt(d.perpage || "25", 10),
+      perPageSelect: [10, 25, 50, 100],
+      labels: { placeholder: "Search…", perPage: "per page", noRows: "No matching records", info: "{start}–{end} of {rows}" }
+    });
+  });
+});
+</script>
+<script id="aioa-adawidget" src="https://www.skynettechnologies.com/accessibility/js/all-in-one-accessibility-js-widget-minify.js?colorcode=#d1202f&token=ADAAIOA-88B259486A4F15B6AD6DA5EFC6BC846D&position=bottom_right"></script>
+</body>
+</html>

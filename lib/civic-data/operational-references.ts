@@ -20,6 +20,7 @@ import {
   type JurisdictionReferenceState,
 } from "./reviewed-registry-states.ts";
 import { sourceProjectionEvidence, type CivicRecordMember, type RoutineCandidate } from "./types.ts";
+import { readOperationalReferenceState } from "./operational-reference-state-read.ts";
 import {
   applicableWebsiteCorrections,
   registryIsTheSitesOwn,
@@ -50,6 +51,7 @@ export interface AzOperationalReferenceBundle {
 
 let installedBundle: OperationalReferenceBundle | null = null;
 let installedAzBundle: AzOperationalReferenceBundle | null = null;
+let installedStateRegistries: Readonly<Record<string, JurisdictionRegistry>> = {};
 
 function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
@@ -183,6 +185,7 @@ export function installOperationalReferenceBundle(bundle: OperationalReferenceBu
 export function clearOperationalReferenceBundle(): void {
   installedBundle = null;
   installedAzBundle = null;
+  installedStateRegistries = {};
   installReviewedRegistryStates([]);
 }
 
@@ -196,7 +199,7 @@ export function installAzOperationalReferenceBundle(bundle: AzOperationalReferen
 }
 
 export function installedOperationalReferenceRegistries(states?: Iterable<string>): Readonly<Record<string, JurisdictionRegistry>> {
-  const held = { ...installedBundle?.registries, ...installedAzBundle?.registries };
+  const held = { ...installedBundle?.registries, ...installedAzBundle?.registries, ...installedStateRegistries };
   const wanted = states ? new Set([...states].map(state => state.toLowerCase())) : null;
   return structuredClone(Object.fromEntries(Object.entries(held).filter(([state]) => !wanted || wanted.has(state))));
 }
@@ -261,6 +264,20 @@ export function installedRegistrationJurisdictionRegistries(): {
   return { registries: new Map(installedRegistration), refused: new Map(refusedRegistration) };
 }
 
+/** A state planner borrows its one immutable registry. Registration is sufficient
+ * when that state has no reviewed bundle; another state's absence is irrelevant. */
+export function planningJurisdictionRegistries(state: string): {
+  readonly registries: ReadonlyMap<string, JurisdictionRegistry>;
+  readonly refused: ReadonlyMap<string, string>;
+} {
+  const key = state.toLowerCase();
+  if (key === "system") return { registries: new Map(), refused: new Map() };
+  const reviewed = installedStateRegistries[key] ?? installedAzBundle?.registries[key as "az"] ?? installedBundle?.registries[key];
+  const registry = reviewed ?? installedRegistration.get(key);
+  return registry ? { registries: new Map([[key, registry]]), refused: new Map() }
+    : { registries: new Map(), refused: new Map([[key, refusedRegistration.get(key) ?? `JURISDICTION_REGISTRY_NOT_READ:${key}`]]) };
+}
+
 /** The reviewed registry, else the one installed from registration; otherwise throws by name, never an empty registry. */
 export function requiredJurisdictionRegistry(state: string): JurisdictionRegistry {
   const key = state.toLowerCase();
@@ -273,6 +290,24 @@ export function requiredJurisdictionRegistry(state: string): JurisdictionRegistr
       ? `JURISDICTION_REGISTRY_NOT_READ:${state}: no reviewed registry, and its registration was not read by this process`
       : `REGISTRATION_NOT_READ:${state}: ${why}`,
   );
+}
+
+/** A planner holds one state. A successful absence leaves registration in charge;
+ * a transport or publication failure remains an error, never an empty registry. */
+export async function preloadOperationalReferenceState(state: string, query?: Parameters<typeof readOperationalReferenceState>[1]) {
+  const key = state.toLowerCase();
+  const result = await readOperationalReferenceState(key, query);
+  if (result.registry) {
+    const issues = registryIssues({ [key]: result.registry }, [key]);
+    if (issues.length) throw new Error(`OPERATIONAL_REFERENCE_BUNDLE_INVALID:${issues.join(",")}`);
+    installedStateRegistries = { [key]: structuredClone(result.registry) };
+    installReviewedRegistryStates([key]);
+    installedRegistration.delete(key);
+    refusedRegistration.delete(key);
+  } else if (hasReviewedRegistry(key)) {
+    throw new Error(`OPERATIONAL_REFERENCE_STATE_NOT_PROMOTED:${key}`);
+  }
+  return { ...result, registry: installedStateRegistries[key] ?? null };
 }
 
 export async function preloadOperationalReferenceBundle(

@@ -46,7 +46,7 @@ export async function publishOfficialBallotCandidacies(input: {
     return office === "us_senator" || office === "us_representative";
   }));
   if (federalContests) {
-    const federal = await readFederalDirectoryProjection({ store: input.store, now: input.now, bypassCache: true }).catch(() => null);
+    const federal = await readFederalDirectoryProjection([state], { store: input.store, now: input.now, bypassCache: true }).catch(() => null);
     if (federal && (federal.kind === "PROMOTED" || federal.kind === "BOOTSTRAP")) {
       holders.push(...statePeopleCandidacyHolders(federal.value.roster).map(holder => ({ ...holder, authority: "FEDERAL_DIRECTORY" as const })));
     }

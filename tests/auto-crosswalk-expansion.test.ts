@@ -1,5 +1,4 @@
-import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
-/** A Send to a county in a state no one has worked before reaches readers with no person and no code change: every step is the production path on in-memory stores, with no network and no model. */
+import { recordFreeDiscoveryWalks } from "./helpers/free-discovery-walk.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -47,7 +46,7 @@ import {
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { meetingsDiscoveryNeeds } from "../lib/hunt/meetings-discovery.ts";
-import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS, registrationTarget } from "../lib/registration/publication.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
@@ -55,6 +54,7 @@ import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
 import { ics, localStart as localStartFrom, reviewedIds } from "./helpers/expansion-fixtures.ts";
+import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
 import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -77,6 +77,7 @@ const CITY_HOST = "www.franklin.oh.example.gov";
 const COUNTY_ROUTE = `https://${COUNTY_HOST}/calendar/commissioners.ics`;
 const CITY_ROUTE = `https://${CITY_HOST}/events.ics`;
 const COUNTY_BODY = "ocd-division/country:us/state:oh/county:franklin#governing";
+const COUNTY_DIVISION = "ocd-division/country:us/state:oh/county:franklin";
 const ALLOW: RecordedReply = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" };
 
 /** `DTSTART;TZID=America/New_York` a whole number of days from now, at a wall-clock hour. */
@@ -144,7 +145,7 @@ async function promoteVenues(store: MemoryRoutineDataStore): Promise<void> {
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
 }
 
-test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why", async () => {
+test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why", async (t) => {
   assert.ok(DERIVED_MEETING_FAMILY_STATES.includes("US-OH"), "Ohio has a derived family with no code change");
 
   /* 1. The owner's Send creates the work. */
@@ -190,8 +191,8 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   };
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
-  await runCensusState({
-    repos, state: "OH", needs,
+  await recordFreeDiscoveryWalks({
+    repos, needs,
     runtime: {
       open: recordedDiscoveryOpen(site),
       spaceOut: async () => {},
@@ -338,7 +339,16 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.equal(familyOutcome.candidate.state, "PROMOTED", `${familyOutcome.candidate.failureCode ?? ""} ${familyOutcome.candidate.failureDetail ?? ""}`);
 
   /* 6. The Reader. */
-  const reader = await readMeetingsProjection({ store, now: T_READER, bypassCache: true });
+  let factReads = 0;
+  installFactReader(async () => {
+    factReads++;
+    assert.fail("published meeting composition must not query facts");
+  });
+  t.after(() => installFactReader(undefined));
+  const edge = freshEdge();
+  assert.equal((await publishPass(store, edge, T_READER)).status, "PUBLISHED");
+  const reader = await readPlace(edge, store, [COUNTY_DIVISION, "ocd-division/country:us/state:oh/place:franklin"], T_READER);
+  assert.equal(factReads, 0, "published meeting composition does not query facts");
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
   const sittings = reader.value.meetings.filter((m) => m.bodyId === COUNTY_BODY);
@@ -350,7 +360,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     assert.equal(m.timeZone, "America/New_York");
   }
   assert.equal(reader.value.meetings.some((m) => m.ocdId === "ocd-division/country:us/state:oh/place:franklin"), false, "the held city publishes nothing");
-  assert.equal(reader.partitions.find((p) => p.contractId === derivedMeetingFamilyId("US-OH"))?.kind, "PROMOTED");
+  assert.ok(await store.readPromotion("MEETING", partition.scope), "the state's derived family is promoted");
   assert.equal(
     reader.value.sources.some((s) => s.source === "derived" && !s.ok),
     false,
@@ -380,9 +390,9 @@ test("A STATE WITH NO CONNECTED CALENDAR: its family reads the wiring first and 
   assert.equal(prepared, 0, "a family with no member never loads the registry and venue projections (about 24 MB a run)");
   assert.equal(await store.readPromotion("MEETING", partition.scope), null, "nothing is published for a state with no member");
   const ingest = readFileSync(join(ROOT, "scripts", "ingest.ts"), "utf8");
-  const main = ingest.slice(ingest.indexOf("async function main()"));
+  const program = ingest.slice(ingest.indexOf("async function readStateCalendars("));
   assert.ok(
-    main.indexOf("promoteDerivedMeetingFamily(") < main.indexOf("await preloadCanonicalMeetingDependencies({ sourceName: name, state });"),
+    program.indexOf("promoteDerivedMeetingFamily(store, partition, prepare") < program.indexOf("await prepare();"),
     "the child routes a family before the preload every source/body partition needs",
   );
 });

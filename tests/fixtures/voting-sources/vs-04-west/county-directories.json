@@ -1,0 +1,2728 @@
+[
+  {
+    "url": "https://www.elections.alaska.gov/Core/votinglocations.php",
+    "finalUrl": "https://www.elections.alaska.gov/Core/votinglocations.php",
+    "status": 503,
+    "contentType": "text/plain",
+    "capturedAt": "2026-10-21T04:27:42.104Z",
+    "rawHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-a392b1175d45.bin",
+    "savedHash": "b5b660bc2bb92e97199b4b045f7e21eca39307fa087b8be85bb006cc7d83b34b",
+    "redactions": 0,
+    "links": []
+  },
+  {
+    "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+    "finalUrl": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:27:42.173Z",
+    "rawHash": "5a78a1561c74f52ca26956082df05d7ccd359f66d0756cc4ddd37cf9b27901cd",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ca-78d2ab135660.html",
+    "savedHash": "5a78a1561c74f52ca26956082df05d7ccd359f66d0756cc4ddd37cf9b27901cd",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+        "label": "Top of Page"
+      },
+      {
+        "url": "https://www.sos.ca.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration",
+        "label": "About"
+      },
+      {
+        "url": "https://www.sos.ca.gov/business-programs",
+        "label": "Business"
+      },
+      {
+        "url": "https://www.sos.ca.gov/notary",
+        "label": "Notary & Apostille"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections",
+        "label": "Elections"
+      },
+      {
+        "url": "https://www.sos.ca.gov/voters-choice-act",
+        "label": "VCA"
+      },
+      {
+        "url": "https://www.sos.ca.gov/campaign-lobbying",
+        "label": "Campaign & Lobbying"
+      },
+      {
+        "url": "https://www.sos.ca.gov/archives",
+        "label": "State Archives"
+      },
+      {
+        "url": "https://www.sos.ca.gov/registries",
+        "label": "Registries"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/news-releases-and-advisories",
+        "label": "News"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/events",
+        "label": "Events"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/contact-information",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.sos.ca.gov/contact-information",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.facebook.com/CaliforniaSOS",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://twitter.com/CASOSvote",
+        "label": "Twitter"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/multimedia/available-rss-feeds",
+        "label": "RSS Feed"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources",
+        "label": "Voting Resources"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/map",
+        "label": "California Counties Map"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/early-voting-site.htm",
+        "label": "County Early Voting Site"
+      },
+      {
+        "url": "https://acvote.alamedacountyca.gov/index",
+        "label": "acvote.alamedacountyca.gov"
+      },
+      {
+        "url": "http://www.alpinecountyca.gov/index.aspx?NID=388",
+        "label": "Alpine"
+      },
+      {
+        "url": "https://www.alpinecountyca.gov/index.aspx?NID=388",
+        "label": "www.alpinecountyca.gov"
+      },
+      {
+        "url": "https://www.amadorcounty.gov/government/elections",
+        "label": "www.amadorgov.org/government/elections"
+      },
+      {
+        "url": "https://buttevotes.net/35/Elections",
+        "label": "Butte"
+      },
+      {
+        "url": "https://www.buttevotes.ca.gov/35/Elections",
+        "label": "www.buttevotes.ca.gov/35/Elections"
+      },
+      {
+        "url": "http://elections.calaverasgov.us",
+        "label": "Calaveras"
+      },
+      {
+        "url": "https://elections.calaverasgov.us",
+        "label": "elections.calaverasgov.us"
+      },
+      {
+        "url": "http://www.countyofcolusa.org/index.aspx?NID=197",
+        "label": "Colusa"
+      },
+      {
+        "url": "https://www.countyofcolusaca.gov/197/Elections",
+        "label": "www.countyofcolusaca.gov/197/Elections"
+      },
+      {
+        "url": "https://www.contracostavote.gov/elections",
+        "label": "www.contracostavote.gov/"
+      },
+      {
+        "url": "https://www.co.del-norte.ca.us/departments/Elections",
+        "label": "www.co.del-norte.ca.us/departments/Elections"
+      },
+      {
+        "url": "https://www.eldoradocounty.ca.gov/County-Government/Elections",
+        "label": "www.eldoradocounty.ca.gov/County-Government/Elections"
+      },
+      {
+        "url": "https://www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections",
+        "label": "www.fresnocountyca.gov/Departments/County-ClerkRegistrar-of-Voters/Elections"
+      },
+      {
+        "url": "https://www.countyofglenn.net/dept/elections/welcome",
+        "label": "www.countyofglenn.net/dept/elections/welcome"
+      },
+      {
+        "url": "https://humboldtgov.org/890/Elections-Voter-Registration",
+        "label": "humboldtgov.org/890/Elections-Voter-Registration"
+      },
+      {
+        "url": "https://elections.imperialcounty.org",
+        "label": "elections.imperialcounty.org/"
+      },
+      {
+        "url": "https://elections.inyocounty.us",
+        "label": "elections.inyocounty.us"
+      },
+      {
+        "url": "https://www.kernvote.com",
+        "label": "www.kernvote.com"
+      },
+      {
+        "url": "https://www.countyofkings.com/departments/administration/elections",
+        "label": "Kings"
+      },
+      {
+        "url": "https://www.countyofkingsca.gov/departments/administration/elections",
+        "label": "www.countyofkingsca.gov/departments/administration/elections"
+      },
+      {
+        "url": "https://www.lakecountyca.gov/818/Registrar-of-Voters",
+        "label": "www.lakecountyca.gov/818/Registrar-of-Voters"
+      },
+      {
+        "url": "http://www.lassencounty.org/dept/county-clerk-recorder/elections",
+        "label": "www.lassencounty.org/dept/county-clerk-recorder/elections/"
+      },
+      {
+        "url": "https://www.lavote.gov/home/voting-elections",
+        "label": "www.lavote.gov/home/voting-elections"
+      },
+      {
+        "url": "https://votemadera.com",
+        "label": "votemadera.com"
+      },
+      {
+        "url": "https://www.marincounty.gov/departments/elections",
+        "label": "www.marincounty.gov/departments/elections"
+      },
+      {
+        "url": "http://www.mariposacounty.org/87/Elections",
+        "label": "www.mariposacounty.org/87/Elections"
+      },
+      {
+        "url": "https://www.mendocinocounty.gov/government/assessor-county-clerk-recorder-elections/elections",
+        "label": "/www.mendocinocounty.gov/government/assessor-county-clerk-recorder-elections/elections"
+      },
+      {
+        "url": "https://www.countyofmerced.com/3878/Elections",
+        "label": "www.countyofmerced.com/3878/Elections"
+      },
+      {
+        "url": "https://www.countyofmodoc.gov/554/Elections",
+        "label": "www.countyofmodoc.gov/554/Elections"
+      },
+      {
+        "url": "https://monocounty.ca.gov/elections",
+        "label": "monocounty.ca.gov/elections"
+      },
+      {
+        "url": "https://www.countyofmonterey.gov/government/departments-a-h/elections/home",
+        "label": "www.countyofmonterey.gov/government/departments-a-h/elections/home"
+      },
+      {
+        "url": "https://www.napacounty.gov/396/Elections",
+        "label": "www.napacounty.gov/396/Elections"
+      },
+      {
+        "url": "https://www.nevadacountyca.gov/3446/Elections",
+        "label": "Nevada"
+      },
+      {
+        "url": "https://www.nevadacountyca.gov/3490/Current-Elections",
+        "label": "www.nevadacountyca.gov/3446/Elections"
+      },
+      {
+        "url": "https://ocvote.gov",
+        "label": "ocvote.gov"
+      },
+      {
+        "url": "http://www.placercountyelections.gov",
+        "label": "www.placercountyelections.gov"
+      },
+      {
+        "url": "https://www.plumascounty.us/142/Elections-Division-Home",
+        "label": "www.plumascounty.us/142/Elections-Division-Home"
+      },
+      {
+        "url": "https://www.voteinfo.net",
+        "label": "www.voteinfo.net"
+      },
+      {
+        "url": "https://elections.saccounty.gov/Pages/default.aspx",
+        "label": "Sacramento"
+      },
+      {
+        "url": "https://elections.saccounty.gov",
+        "label": "elections.saccounty.gov"
+      },
+      {
+        "url": "https://www.sanbenitocounty-ca-cre.gov/elections",
+        "label": "www.sanbenitocounty-ca-cre.gov/elections"
+      },
+      {
+        "url": "https://elections.sbcounty.gov",
+        "label": "elections.sbcounty.gov/"
+      },
+      {
+        "url": "https://www.sdvote.com",
+        "label": "www.sdvote.com"
+      },
+      {
+        "url": "https://sf.gov/departments/department-elections",
+        "label": "San Francisco"
+      },
+      {
+        "url": "https://sfelections.sfgov.org",
+        "label": "sf.gov/departments/department-elections"
+      },
+      {
+        "url": "https://www.sjgov.org/department/rov",
+        "label": "www.sjgov.org/department/rov/"
+      },
+      {
+        "url": "https://www.slocounty.ca.gov/Departments/Clerk-Recorder.aspx",
+        "label": "www.slocounty.ca.gov/Departments/Clerk-Recorder"
+      },
+      {
+        "url": "https://smcacre.gov/elections",
+        "label": "smcacre.gov/elections"
+      },
+      {
+        "url": "https://www.countyofsb.org/164/Elections",
+        "label": "www.countyofsb.org/164/Elections"
+      },
+      {
+        "url": "https://vote.santaclaracounty.gov/home",
+        "label": "vote.santaclaracounty.gov/home"
+      },
+      {
+        "url": "https://votescount.santacruzcountyca.gov",
+        "label": "votescount.santacruzcountyca.gov/"
+      },
+      {
+        "url": "https://elections.shastacounty.gov",
+        "label": "elections.shastacounty.gov/"
+      },
+      {
+        "url": "https://www.sierracounty.ca.gov/214/Elections",
+        "label": "www.sierracounty.ca.gov/214/Elections"
+      },
+      {
+        "url": "https://www.siskiyoucounty.gov/elections",
+        "label": "www.siskiyoucounty.gov/elections"
+      },
+      {
+        "url": "https://www.solanocounty.gov/government/registrar-voters",
+        "label": "www.solanocounty.gov/government/registrar-voters"
+      },
+      {
+        "url": "https://sonomacounty.ca.gov/administrative-support-and-fiscal-services/clerk-recorder-assessor-registrar-of-voters/registrar-of-voters",
+        "label": "sonomacounty.ca.gov/administrative-support-and-fiscal-services/clerk-recorder-assessor-registrar-of-voters/registrar-of-voters"
+      },
+      {
+        "url": "http://stanvote.gov",
+        "label": "stanvote.gov"
+      },
+      {
+        "url": "https://www.sutter.gov/government/county-departments/clerk-recorder/elections",
+        "label": "www.sutter.gov/government/county-departments/clerk-recorder/elections"
+      },
+      {
+        "url": "https://www.tehama.gov/government/departments/elections",
+        "label": "www.tehama.gov/government/departments/elections/"
+      },
+      {
+        "url": "https://www.trinitycounty.org/214/Elections",
+        "label": "www.trinitycounty.org/214/Elections"
+      },
+      {
+        "url": "https://tularecounty.ca.gov/elections",
+        "label": "tularecounty.ca.gov/elections"
+      },
+      {
+        "url": "https://www.tuolumnecounty.ca.gov/194/Election-Information",
+        "label": "www.tuolumnecounty.ca.gov/194/Election-Information"
+      },
+      {
+        "url": "https://clerkrecorder.venturacounty.gov/elections/elections",
+        "label": "Ventura"
+      },
+      {
+        "url": "https://clerkrecorder.venturacounty.gov/elections",
+        "label": "clerkrecorder.venturacounty.gov/elections/"
+      },
+      {
+        "url": "https://www.yoloelections.org",
+        "label": "Yolo"
+      },
+      {
+        "url": "https://elections.yolocounty.gov/35/Elections",
+        "label": "elections.yolocounty.gov/"
+      },
+      {
+        "url": "https://www.yuba.gov/departments/elections/current_election.php",
+        "label": "www.yuba.gov/departments/elections/current_election.php"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/about-elections-division",
+        "label": "About Elections Division"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/prior-elections/statewide-election-results",
+        "label": "Statewide Election Results"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voter-registration",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/pre-register-16-vote-18",
+        "label": "Pre-Register to Vote"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/cavoter",
+        "label": "Voter Registration Status"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voter-registration/voter-registration-statistics",
+        "label": "Voter Registration Statistics"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/ballot-measures",
+        "label": "Ballot Measures"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/voting-california",
+        "label": "Voting In California"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/political-parties",
+        "label": "Political Parties"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/upcoming-elections",
+        "label": "Upcoming Elections"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/publications-and-resources",
+        "label": "Publications & Resources"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/ovsta",
+        "label": "Voting Technology"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/site-map",
+        "label": "Elections Site Map"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/contact",
+        "label": "Contact Information"
+      },
+      {
+        "url": "https://visitor.r20.constantcontact.com/manage/optin?v=001mD8-WrHxKkJtq_d8ACgTG49fXSDgx5uBiT91-C1ejqYPoUkLY_ROK502nJXQNRcv-ONLp1372yy69JLhnvHxwM-PIw9e7v4xseQlc7hSQRk%3D",
+        "label": "Sign up for e-updates"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/current-career-and-job-opportunities/contracting-opportunities",
+        "label": "Contracting Opportunities"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/current-career-contracting-opportunities/career-opportunities",
+        "label": "Career Opportunities"
+      },
+      {
+        "url": "https://www.sos.ca.gov/site-maintenance",
+        "label": "Site Maintenance"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/risk-audits-and-investigations-bureau",
+        "label": "Risk, Audits & Investigations Bureau"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/language-access-complaint-form",
+        "label": "Language Access Complaint Form"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/guidelines-access-public-records",
+        "label": "Public Records Act Requests"
+      },
+      {
+        "url": "https://www.sos.ca.gov/free-doc-readers",
+        "label": "Free Document Readers"
+      },
+      {
+        "url": "https://www.sos.ca.gov/sitemap",
+        "label": "Sitemap"
+      },
+      {
+        "url": "https://www.ca.gov",
+        "label": "California Home Page"
+      },
+      {
+        "url": "https://x.com/casosvote",
+        "label": "Twitter"
+      },
+      {
+        "url": "https://www.youtube.com/user/CaliforniaSOS",
+        "label": "Youtube"
+      },
+      {
+        "url": "https://www.snapchat.com/add/californiasos",
+        "label": "Snapchat"
+      },
+      {
+        "url": "https://www.instagram.com/CaliforniaSOS_",
+        "label": "Instagram"
+      },
+      {
+        "url": "https://www.sos.ca.gov/administration/privacy-policy",
+        "label": "Privacy Policy"
+      },
+      {
+        "url": "https://www.sos.ca.gov/website-help",
+        "label": "Website Help"
+      },
+      {
+        "url": "https://www.sos.ca.gov/accessibility",
+        "label": "Accessibility"
+      }
+    ]
+  },
+  {
+    "url": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+    "finalUrl": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+    "status": 200,
+    "contentType": "text/html",
+    "capturedAt": "2026-10-21T04:27:42.223Z",
+    "rawHash": "383175ea051aa5d0e5682753922f619db126efcba6799d4f2d3c0637ba7bd075",
+    "path": "tests/fixtures/voting-sources/vs-04-west/co-885c7e22f424.html",
+    "savedHash": "383175ea051aa5d0e5682753922f619db126efcba6799d4f2d3c0637ba7bd075",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/Resources/CountyElectionOffices.html",
+        "label": "Menu"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/biography.html",
+        "label": "Secretary Griswold"
+      },
+      {
+        "url": "https://www.coloradosos.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/bingo_raffles/bingoHome.html",
+        "label": "Bingo & raffles"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/business/businessHome.html",
+        "label": "Business organizations"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/charities/charitableHome.html",
+        "label": "Charities & fundraisers"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/main.html",
+        "label": "Elections & voting"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/notary/home.html",
+        "label": "Notary public"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/search",
+        "label": "Search"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/CCR/CCRHome.html",
+        "label": "Administrative rules of state agencies"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/apostilles/home.html",
+        "label": "Apostille & authentications"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/bingo_raffles/bingoForms.html",
+        "label": "Bingo & Raffles Forms"
+      },
+      {
+        "url": "https://www.coloradosos.gov/bingo/auth/login.xhtml",
+        "label": "Bingo & Raffles Renew a license"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/bingo_raffles/bingoFAQ.html",
+        "label": "Bingo & Raffles FAQs"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/bingo_raffles/apply.html",
+        "label": "Bingo & Raffles Apply for license"
+      },
+      {
+        "url": "https://www.coloradosos.gov/biz/BusinessEntityCriteriaExt.do",
+        "label": "Business organizations Search"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/business/fileAForm.html",
+        "label": "Business organizations File a document"
+      },
+      {
+        "url": "https://www.coloradosos.gov/biz/BusinessEntityCriteria.do",
+        "label": "Certificate of Good Standing"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/BIC/home.html",
+        "label": "Intelligence Center - Business data"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/business/FAQ.html",
+        "label": "Business organizations FAQs"
+      },
+      {
+        "url": "https://www.coloradosos.gov/biz/businessFunctionsEmailNotification.do",
+        "label": "Business organizations Email notifications"
+      },
+      {
+        "url": "https://www.coloradosos.gov/ccsa/pages/search/basic.xhtml",
+        "label": "Charities & fundraisers Search"
+      },
+      {
+        "url": "https://www.coloradosos.gov/ccsa/auth/login.xhtml",
+        "label": "Charities & fundraisers Log in to eFile"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/charities/filings.html",
+        "label": "Charities & fundraisers File a form"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/charities/FAQs.html",
+        "label": "Charities & fundraisers FAQs"
+      },
+      {
+        "url": "https://www.coloradosos.gov/ccsa/auth/forgotPassword.xhtml",
+        "label": "Charities & fundraisers Reset your password"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/DME/home.html",
+        "label": "DME suppliers"
+      },
+      {
+        "url": "https://www.coloradosos.gov/dme/pages/search/criteria.xhtml",
+        "label": "DME suppliers Search"
+      },
+      {
+        "url": "https://www.coloradosos.gov/dme/pages/share/intro.xhtml",
+        "label": "DME suppliers Apply"
+      },
+      {
+        "url": "https://www.coloradosos.gov/dme/pages/secure/home.xhtml?faces-redirect=true",
+        "label": "DME suppliers Log in"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/DME/FAQs/general.html",
+        "label": "DME suppliers FAQs"
+      },
+      {
+        "url": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+        "label": "Voters"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/CampaignFinance/home.html",
+        "label": "Campaign finance"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/Candidates/CandidateHome.html",
+        "label": "Candidates"
+      },
+      {
+        "url": "https://www.coloradosos.gov/ccorner",
+        "label": "Clerk's corner"
+      },
+      {
+        "url": "https://www.coloradosos.gov/voter/pages/secured/voterSearch.xhtml",
+        "label": "Election administrator login"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/Initiatives/InitiativesHome.html",
+        "label": "Initiatives"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/UOCAVA.html",
+        "label": "Military & overseas"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/NVRA/NVRAHome.html",
+        "label": "NVRA agency resources"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/Initiatives/titleBoard/index.html",
+        "label": "Title board"
+      },
+      {
+        "url": "https://tracer.sos.colorado.gov/PublicSite/homepage.aspx",
+        "label": "TRACER"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/VoterRegDrive/VRDhome.html",
+        "label": "Voter registration drives"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/elections/VotingSystems/VSHomePage1.html",
+        "label": "Voting systems"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/spanish/spanishHome.html",
+        "label": "Español"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/audioBroadcasts.html",
+        "label": "Events & audio broadcasts"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/feeSchedule.html",
+        "label": "Fee schedules"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/lobby/lobby_home.html",
+        "label": "Lobbyist"
+      },
+      {
+        "url": "https://www.coloradosos.gov/lobby/Home.do",
+        "label": "Lobbyist Search"
+      },
+      {
+        "url": "https://www.coloradosos.gov/lobby/RequestUserId.do",
+        "label": "New lobbyist registration / request login"
+      },
+      {
+        "url": "https://www.coloradosos.gov/lobby/login/Home.do",
+        "label": "Lobbyist Log in to eFile"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/lobby/FAQ.html",
+        "label": "Lobbyist FAQs"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/newsRoom/index.html",
+        "label": "Newsroom"
+      },
+      {
+        "url": "https://www.coloradosos.gov/notary/pages/public/verifyNotary.xhtml",
+        "label": "Verify a notary"
+      },
+      {
+        "url": "https://www.coloradosos.gov/notary/pages/secure/secureHome.xhtml",
+        "label": "Renew notary commission"
+      },
+      {
+        "url": "https://www.coloradosos.gov/notary/pages/common/intro.xhtml",
+        "label": "Become a notary"
+      },
+      {
+        "url": "https://www.coloradosos.gov/notary/login.xhtml",
+        "label": "Notary Log in"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/notary/FAQs.html",
+        "label": "Notary FAQs"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/performingRights/index.html",
+        "label": "Performing rights societies"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/rule_making/rules.html",
+        "label": "Rules & notices of rulemaking"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/UCC/uccHome.html",
+        "label": "Uniform Commercial Code (UCC)"
+      },
+      {
+        "url": "https://www.coloradosos.gov/ucc",
+        "label": "UCC eFile"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/UCC/FAQ.html",
+        "label": "UCC FAQs"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/contact.html",
+        "label": "Contact us"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/holidayCalendar.html",
+        "label": "Holiday calendar"
+      },
+      {
+        "url": "https://www.sos.state.co.us/pubs/elections/Resources/files/CountyClerkRosterWebsite.pdf",
+        "label": "Roster of County Clerks and Recorders (PDF)"
+      },
+      {
+        "url": "https://www.adamscountycoelections.gov",
+        "label": "Adams"
+      },
+      {
+        "url": "https://www.arapahoevotes.gov",
+        "label": "Arapahoe"
+      },
+      {
+        "url": "https://www.alamosacounty.org/166/Elections-Department",
+        "label": "Alamosa"
+      },
+      {
+        "url": "https://www.archuletacounty.gov/county-government/elected-offices/clerk-recorder/elections",
+        "label": "Archuleta"
+      },
+      {
+        "url": "https://www.bacacountyco.gov/government/clerk-and-recorder/elections",
+        "label": "Baca"
+      },
+      {
+        "url": "https://www.bentcounty.net/government/clerk.php",
+        "label": "Bent"
+      },
+      {
+        "url": "https://bouldercountyvotes.gov",
+        "label": "Boulder"
+      },
+      {
+        "url": "https://www.broomfield.org/index.aspx?nid=191",
+        "label": "Broomfield"
+      },
+      {
+        "url": "https://chaffeeclerk.colorado.gov/elections/elections-general-information",
+        "label": "Chaffee"
+      },
+      {
+        "url": "https://www.co.cheyenne.co.us/departments/clerk_recorder.html",
+        "label": "Cheyenne"
+      },
+      {
+        "url": "https://www.clearcreekcounty.us/104/Clerk-Recorder",
+        "label": "Clear Creek"
+      },
+      {
+        "url": "https://conejoscounty.colorado.gov/elected-officials/clerk-and-recorder",
+        "label": "Conejos"
+      },
+      {
+        "url": "https://www.costillacounty.gov/clerk-recorder",
+        "label": "Costilla"
+      },
+      {
+        "url": "https://crowleycounty.colorado.gov/government-offices/clerk-and-recorder-elections",
+        "label": "Crowley"
+      },
+      {
+        "url": "https://www.custercounty-co.gov/elections",
+        "label": "Custer"
+      },
+      {
+        "url": "https://www.deltacounty.com/325/Elections",
+        "label": "Delta"
+      },
+      {
+        "url": "https://www.denvergov.org/content/denvergov/en/denver-elections-divison.html",
+        "label": "Denver"
+      },
+      {
+        "url": "https://dolocnty.colorado.gov/clerk-and-recorder",
+        "label": "Dolores"
+      },
+      {
+        "url": "https://www.douglas.co.us/elections",
+        "label": "Douglas"
+      },
+      {
+        "url": "https://www.eaglecounty.us/vote",
+        "label": "Eagle"
+      },
+      {
+        "url": "https://www.elbertcounty-co.gov/290/Elections",
+        "label": "Elbert"
+      },
+      {
+        "url": "https://clerkandrecorder.elpasoco.com",
+        "label": "El Paso"
+      },
+      {
+        "url": "https://www.fremontcountyelectionsco.gov",
+        "label": "Fremont"
+      },
+      {
+        "url": "https://www.garfieldcountyco.gov/clerk-recorder/elections",
+        "label": "Garfield"
+      },
+      {
+        "url": "https://gilpincounty.colorado.gov/elected-officials/clerk-recorder",
+        "label": "Gilpin"
+      },
+      {
+        "url": "https://www.co.grand.co.us/147/Elections",
+        "label": "Grand"
+      },
+      {
+        "url": "https://www.gunnisoncounty.org/143/Clerk-Recorders-Office",
+        "label": "Gunnison"
+      },
+      {
+        "url": "https://hinsdalecounty.colorado.gov/hinsdale-county-clerk",
+        "label": "Hinsdale"
+      },
+      {
+        "url": "https://huerfano.us/departments/clerk-recorder",
+        "label": "Huerfano"
+      },
+      {
+        "url": "https://jacksoncounty.colorado.gov/clerk",
+        "label": "Jackson"
+      },
+      {
+        "url": "https://jeffco.us/elections",
+        "label": "Jefferson"
+      },
+      {
+        "url": "https://kiowacounty.colorado.gov/government/elected-officials/clerk-and-recorder",
+        "label": "Kiowa"
+      },
+      {
+        "url": "https://kitcarsoncounty.colorado.gov/clerk-recorder/elections",
+        "label": "Kit Carson"
+      },
+      {
+        "url": "https://www.lakecountyco.gov/354/Elections",
+        "label": "Lake"
+      },
+      {
+        "url": "https://www.co.laplata.co.us/services/elections/index.php",
+        "label": "La Plata"
+      },
+      {
+        "url": "https://www.co.larimer.co.us/clerk",
+        "label": "Larimer"
+      },
+      {
+        "url": "https://lasanimascounty.colorado.gov/elected-officials/clerk-and-recorder",
+        "label": "Las Animas"
+      },
+      {
+        "url": "https://lincolncounty.colorado.gov/elections-legislators",
+        "label": "Lincoln"
+      },
+      {
+        "url": "https://www.logancountyco.gov/186/Elections-Voter-Registration-Information",
+        "label": "Logan"
+      },
+      {
+        "url": "https://www.mesacounty.us/departments-and-services/clerk-and-recorder/elections",
+        "label": "Mesa"
+      },
+      {
+        "url": "https://www.mineralcountycolorado.com/clerk-recorder/page/elections",
+        "label": "Mineral"
+      },
+      {
+        "url": "https://moffatcounty.colorado.gov/government/elected-officials/county-clerk-and-recorder/elections",
+        "label": "Moffat"
+      },
+      {
+        "url": "https://montezumacounty.org/elections-office",
+        "label": "Montezuma"
+      },
+      {
+        "url": "https://www.montrosecounty.net/73/Elections",
+        "label": "Montrose"
+      },
+      {
+        "url": "https://morgancounty.colorado.gov/elections-department",
+        "label": "Morgan"
+      },
+      {
+        "url": "https://oterocounty.colorado.gov/elected-officials/clerk-recorder/elections",
+        "label": "Otero"
+      },
+      {
+        "url": "https://ouraycountyco.gov/328/Election-Information",
+        "label": "Ouray"
+      },
+      {
+        "url": "https://www.parkco.us/index.aspx?nid=72",
+        "label": "Park"
+      },
+      {
+        "url": "https://phillipscounty.colorado.gov/elections",
+        "label": "Phillips"
+      },
+      {
+        "url": "https://www.pitkinvotes.com",
+        "label": "Pitkin"
+      },
+      {
+        "url": "https://www.prowersco.gov/departments/elections",
+        "label": "Prowers"
+      },
+      {
+        "url": "https://pueblovotes.com",
+        "label": "Pueblo"
+      },
+      {
+        "url": "https://www.rbc.us/176/Clerk-Recorder",
+        "label": "Rio Blanco"
+      },
+      {
+        "url": "https://riograndecounty.colorado.gov/how-do-i/elections/voter-information",
+        "label": "Rio Grande"
+      },
+      {
+        "url": "https://www.co.routt.co.us/221/Elections",
+        "label": "Routt"
+      },
+      {
+        "url": "https://www.colorado.gov/saguachecoclerk",
+        "label": "Saguache"
+      },
+      {
+        "url": "https://sanjuancounty.colorado.gov/elections",
+        "label": "San Juan"
+      },
+      {
+        "url": "https://www.sanmiguelcountyco.gov/163/Clerk-Recorder",
+        "label": "San Miguel"
+      },
+      {
+        "url": "https://sedgwickcounty.colorado.gov/elected-officials/clerk-recorder",
+        "label": "Sedgwick"
+      },
+      {
+        "url": "https://www.summitcountyco.gov/services/clerk_recorder/elections/index.php",
+        "label": "Summit"
+      },
+      {
+        "url": "https://www.tellercounty.gov/Elections",
+        "label": "Teller"
+      },
+      {
+        "url": "https://washingtoncounty.colorado.gov/departments/elections",
+        "label": "Washington"
+      },
+      {
+        "url": "https://www.weldgov.com/Government/Departments/Clerk-and-Recorder/Elections-Department",
+        "label": "Weld"
+      },
+      {
+        "url": "https://yumacounty.net/clerk-and-recorder",
+        "label": "Yuma"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/terms.html",
+        "label": "Terms & conditions"
+      },
+      {
+        "url": "https://coloradosos.gov/pubs/info_center/accessibility.html",
+        "label": "Accessibility statement"
+      },
+      {
+        "url": "https://www.coloradosos.gov/pubs/info_center/compatibility.html",
+        "label": "Browser compatibility"
+      }
+    ]
+  },
+  {
+    "url": "https://voteidaho.gov/county-clerk/",
+    "finalUrl": "https://voteidaho.gov/county-clerk/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:27:42.021Z",
+    "rawHash": "3d2a48a16dfc85865bd886b0120d401686241abf0aee8203e24f8e5d88a4f57e",
+    "path": "tests/fixtures/voting-sources/vs-04-west/id-5765c0e9768e.html",
+    "savedHash": "3d2a48a16dfc85865bd886b0120d401686241abf0aee8203e24f8e5d88a4f57e",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://voteidaho.gov/county-clerk",
+        "label": "Mailchimp"
+      },
+      {
+        "url": "https://voteidaho.gov",
+        "label": ""
+      },
+      {
+        "url": "https://voteidaho.gov/voter-registration",
+        "label": "Registering To Vote"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/electionlink/electionlink/VoterSearch.aspx",
+        "label": "Check Your Voter Record"
+      },
+      {
+        "url": "https://voteidaho.gov/casting-your-ballot",
+        "label": "Absentee Voting"
+      },
+      {
+        "url": "https://voteidaho.gov/guide-to-vote-in-person",
+        "label": "Guide to Voting in Person"
+      },
+      {
+        "url": "https://voteidaho.gov/on-the-ballots",
+        "label": "What’s on the Ballot?"
+      },
+      {
+        "url": "https://voteidaho.gov/making-voting-secure",
+        "label": "Making Voting Secure"
+      },
+      {
+        "url": "https://voteidaho.gov/accessible-voting",
+        "label": "Accessible Voting"
+      },
+      {
+        "url": "https://voteidaho.gov/election-results",
+        "label": "Election Results"
+      },
+      {
+        "url": "https://voteidaho.gov/election-information",
+        "label": "Election Information"
+      },
+      {
+        "url": "https://voteidaho.gov/data-and-dashboards",
+        "label": "Data & Dashboards"
+      },
+      {
+        "url": "https://voteidaho.gov/initiatives-amendments",
+        "label": "Initiatives & Amendments"
+      },
+      {
+        "url": "https://voteidaho.gov/election-results/election-audits",
+        "label": "Election Audits"
+      },
+      {
+        "url": "https://voteidaho.gov/12-principles-of-idaho-elections",
+        "label": "12 Principles of Idaho Elections"
+      },
+      {
+        "url": "https://voteidaho.gov/candidate-filing",
+        "label": "Candidate Filing"
+      },
+      {
+        "url": "https://sunshine.voteidaho.gov",
+        "label": "Campaign Finance Portal"
+      },
+      {
+        "url": "https://voteidaho.gov/campaign-finance-portal",
+        "label": "Campaign Finance 101"
+      },
+      {
+        "url": "https://voteidaho.gov/how-to-run-for-office",
+        "label": "How to Run for Office"
+      },
+      {
+        "url": "https://voteidaho.gov/idaho-elected-officials",
+        "label": "Idaho Elected Officials"
+      },
+      {
+        "url": "https://votertools.voteidaho.gov/TEDElectionLink/ElectionVault/login",
+        "label": "Candidate VAULT"
+      },
+      {
+        "url": "https://voteidaho.gov/become-an-election-worker",
+        "label": "Become an Election Worker"
+      },
+      {
+        "url": "https://voteidaho.gov/training-resources",
+        "label": "Training Resources"
+      },
+      {
+        "url": "https://press.voteidaho.gov",
+        "label": "Press Releases"
+      },
+      {
+        "url": "https://voteidaho.gov/media",
+        "label": "Media"
+      },
+      {
+        "url": "https://voteidaho.gov/frequently-asked-questions",
+        "label": "Frequently Asked Questions"
+      },
+      {
+        "url": "https://sosidaho.justfoia.com/publicportal/home/newrequest",
+        "label": "Public Records Requests"
+      },
+      {
+        "url": "https://voteidaho.gov/calendar",
+        "label": "Calendar"
+      },
+      {
+        "url": "https://voteidaho.gov/registrate-para-votar",
+        "label": "Regístrate para Votar"
+      },
+      {
+        "url": "https://voteidaho.gov/informacion-electoral",
+        "label": "Información Electoral"
+      },
+      {
+        "url": "https://voteidaho.gov/emite-tu-voto",
+        "label": "Emite tu Voto"
+      },
+      {
+        "url": "https://voteidaho.gov/votacion-accesible",
+        "label": "Votación Accesible"
+      },
+      {
+        "url": "https://voteidaho.gov/encuentra-a-tu-secretario-del-condado",
+        "label": "Encuentra a tu secretario/a del Condado"
+      },
+      {
+        "url": "https://voteidaho.gov/preguntas-frecuentes-faq",
+        "label": "Preguntas Frecuentes (FAQ)"
+      },
+      {
+        "url": "https://archive.voteidaho.gov/data/county_clerk_contact_list.csv",
+        "label": "Download a complete contact list of Idaho County Clerks"
+      },
+      {
+        "url": "https://voteidaho.gov/cdn-cgi/l/email-protection",
+        "label": "[email protected]"
+      },
+      {
+        "url": "https://adacounty.id.gov/elections",
+        "label": "Website"
+      },
+      {
+        "url": "http://co.adams.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.bannockcounty.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.bearlakecounty.info",
+        "label": "Website"
+      },
+      {
+        "url": "https://www.benewahcountyid.gov",
+        "label": "Website"
+      },
+      {
+        "url": "https://www.binghamid.gov",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.co.blaine.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.boisecounty.us",
+        "label": "Website"
+      },
+      {
+        "url": "https://www.bonnercountyid.gov",
+        "label": "Website"
+      },
+      {
+        "url": "http://bonnevillecountyidaho.gov",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.boundarycountyid.org",
+        "label": "Website"
+      },
+      {
+        "url": "https://buttecountyid.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://camascounty.id.gov",
+        "label": "Website"
+      },
+      {
+        "url": "https://www.canyoncounty.id.gov",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.cariboucounty.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.cassia.gov",
+        "label": "Website"
+      },
+      {
+        "url": "https://www.clark-co.id.gov",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.clearwatercounty.org",
+        "label": "Website"
+      },
+      {
+        "url": "https://custercountyidaho.org",
+        "label": "Website"
+      },
+      {
+        "url": "https://elmorecounty.org",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.franklincountyidaho.org",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.co.fremont.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "https://www.gemcounty.org",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.goodingcounty.org",
+        "label": "Website"
+      },
+      {
+        "url": "http://idahocounty.org",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.co.jefferson.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.jeromecountyid.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.kcgov.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://latahcountyid.gov",
+        "label": "Website"
+      },
+      {
+        "url": "http://lemhicountyidaho.org",
+        "label": "Website"
+      },
+      {
+        "url": "http://lewiscountyid.us",
+        "label": "Website"
+      },
+      {
+        "url": "https://lincolncountyid.gov",
+        "label": "Website"
+      },
+      {
+        "url": "https://co.madison.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.minidoka.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.co.nezperce.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "https://oneidaid.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.owyheecounty.net",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.payettecounty.org",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.co.power.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.shoshonecounty.id.gov",
+        "label": "Website"
+      },
+      {
+        "url": "http://tetoncountyidaho.gov",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.twinfallscounty.org",
+        "label": "Website"
+      },
+      {
+        "url": "http://www.co.valley.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "http://co.washington.id.us",
+        "label": "Website"
+      },
+      {
+        "url": "https://voteidaho.gov/election-audits",
+        "label": "Election Audits"
+      },
+      {
+        "url": "https://voteidaho.gov/press-releases",
+        "label": "Press Releases"
+      },
+      {
+        "url": "https://www.facebook.com/IDSecOfState",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://www.instagram.com/idsecofstate",
+        "label": "Instagram"
+      },
+      {
+        "url": "https://twitter.com/IDSecOfState",
+        "label": "X-twitter"
+      },
+      {
+        "url": "https://voteidaho.gov/calendar?ical=1",
+        "label": "VoteIdaho.Gov &raquo; iCal Feed"
+      },
+      {
+        "url": "https://voteidaho.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvoteidaho.gov%2Fcounty-clerk%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://voteidaho.gov/wp-json/tribe/events/v1",
+        "label": ""
+      }
+    ]
+  },
+  {
+    "url": "https://www.washoecounty.gov/voters/",
+    "finalUrl": "https://www.washoecounty.gov/voters/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:27:42.602Z",
+    "rawHash": "9ae935e2b95b1f39cb71e7f02ce450284d32410af9bd25e3e830a75376465c14",
+    "path": "tests/fixtures/voting-sources/vs-04-west/nv-376f46cbfd47.html",
+    "savedHash": "9ae935e2b95b1f39cb71e7f02ce450284d32410af9bd25e3e830a75376465c14",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.washoecounty.gov/voters",
+        "label": "Menu"
+      },
+      {
+        "url": "https://www.washoecounty.gov/living_here/index.php",
+        "label": "Your Home"
+      },
+      {
+        "url": "https://www.washoecounty.gov/doing_business/index.php",
+        "label": "Doing Business"
+      },
+      {
+        "url": "https://www.washoecounty.gov/health_safety/index.php",
+        "label": "Law"
+      },
+      {
+        "url": "https://www.washoecounty.gov/homes_and_property/index.php",
+        "label": "Homes & Property"
+      },
+      {
+        "url": "https://www.washoecounty.gov/your_government/index.php",
+        "label": "Your Government"
+      },
+      {
+        "url": "https://www.washoecounty.gov/your_government/departments.php",
+        "label": "Departments"
+      },
+      {
+        "url": "https://www.washoecounty.gov/contact.php",
+        "label": "Learn More »"
+      },
+      {
+        "url": "https://twitter.com/washoecounty",
+        "label": "Washoe County Twitter"
+      },
+      {
+        "url": "https://www.facebook.com/washoecounty",
+        "label": "Washoe County Facebook"
+      },
+      {
+        "url": "https://www.washoecounty.gov/mgrsoff/divisions/Communications/WCTV/index.php",
+        "label": "Washoe County Communications"
+      },
+      {
+        "url": "https://www.washoecounty.gov/index.php",
+        "label": ""
+      },
+      {
+        "url": "https://www.washoecounty.gov/bcc/index.php",
+        "label": "Board of County Commissioners"
+      },
+      {
+        "url": "https://www.washoecountylibrary.us",
+        "label": "Library System"
+      },
+      {
+        "url": "https://www.washoecounty.gov/parks/index.php",
+        "label": "Parks and Open Space"
+      },
+      {
+        "url": "https://www.washoecounty.gov/animal/index.php",
+        "label": "Animal Services"
+      },
+      {
+        "url": "https://www.washoecounty.gov/animal/Services%20and%20Resources/index.php",
+        "label": "Events and Clinics"
+      },
+      {
+        "url": "https://www.washoecounty.gov/animal/Licenses/index.php",
+        "label": "Licenses"
+      },
+      {
+        "url": "https://www.washoecounty.gov/animal/lost_and_found/Index.php",
+        "label": "Lost and Found"
+      },
+      {
+        "url": "https://www.washoecounty.gov/recorder/index.php",
+        "label": "Recorder's Office"
+      },
+      {
+        "url": "https://www.washoecounty.gov/hsa/index.php",
+        "label": "Human Services Agency"
+      },
+      {
+        "url": "https://www.washoecounty.gov/hsa/adult_services/index.php",
+        "label": "Adult Services"
+      },
+      {
+        "url": "https://www.washoecounty.gov/hsa/childrens_services/index.php",
+        "label": "Children's Services"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/index.php",
+        "label": "Registrar of Voters"
+      },
+      {
+        "url": "https://registertovote.nv.gov",
+        "label": "Register to Vote"
+      },
+      {
+        "url": "https://www.washoecounty.gov/assessor/index.php",
+        "label": "Assessor's Office"
+      },
+      {
+        "url": "https://www.washoecounty.gov/treas/index.php",
+        "label": "Treasurer's Office"
+      },
+      {
+        "url": "https://nv-washoe.publicaccessnow.com",
+        "label": "Pay Property Taxes"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/utility/utility_payment_options.php",
+        "label": "Pay Utility Bill"
+      },
+      {
+        "url": "https://www.washoecounty.gov/homeless/index.php",
+        "label": "Housing and Homeless Services"
+      },
+      {
+        "url": "https://www.washoecounty.gov/arpa/index.php",
+        "label": "ARPA Recovery Funds"
+      },
+      {
+        "url": "https://www.washoecounty.gov/humanresources/Careers/index.php",
+        "label": "Job Opportunities"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/planning_and_development/business_license/index.php",
+        "label": "Business Licenses"
+      },
+      {
+        "url": "https://www.washoecounty.gov/building/getting_started/index.php",
+        "label": "Building Permits"
+      },
+      {
+        "url": "https://www.washoecounty.gov/assessor/BusinessPersonalProperty/index.php",
+        "label": "Business Personal Property"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/planning_and_development/applications/index.php",
+        "label": "Land Use Permits"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/planning_and_development/business_license/bl_special_events/index.php",
+        "label": "Special Events Permit"
+      },
+      {
+        "url": "https://www.washoecounty.gov/comptroller/Divisions/purchasing/bids.php",
+        "label": "Open Bids"
+      },
+      {
+        "url": "https://gis.washoecounty.us/wrms",
+        "label": "Mapping"
+      },
+      {
+        "url": "https://www.washoesheriff.com",
+        "label": "Sheriff's Office"
+      },
+      {
+        "url": "https://www.washoecounty.gov/da/index.php",
+        "label": "District Attorney's Office"
+      },
+      {
+        "url": "https://www.washoecounty.gov/defender/index.php",
+        "label": "Public Defender's Office"
+      },
+      {
+        "url": "https://www.washoecounty.gov/apd/index.php",
+        "label": "Alternate Public Defender's Office"
+      },
+      {
+        "url": "https://www.washoecounty.gov/health_safety/courts.php",
+        "label": "Courts"
+      },
+      {
+        "url": "https://www.nnph.org/index.php",
+        "label": "Northern Nevada Public Health"
+      },
+      {
+        "url": "https://www.nnph.org/programs-and-services/cchs/immunization-program/index.php",
+        "label": "Vaccinations"
+      },
+      {
+        "url": "https://www.nnph.org/programs-and-services/cchs/immunization-program/flu-season-information.php",
+        "label": "Flu Information"
+      },
+      {
+        "url": "https://www.nnph.org/resources/food-inspections.php",
+        "label": "Restaurant Inspections"
+      },
+      {
+        "url": "https://www.nnph.org/programs-and-services/phd/birth-and-death-records/index.php",
+        "label": "Birth & Death Records"
+      },
+      {
+        "url": "https://tmfpd.us",
+        "label": "Truckee Meadows Fire Protection District"
+      },
+      {
+        "url": "http://www.nltfpd.org",
+        "label": "North Lake Tahoe Fire District"
+      },
+      {
+        "url": "https://www.washoecounty.gov/assessor/cama/index.php",
+        "label": "Parcel Search"
+      },
+      {
+        "url": "https://www.washoecounty.gov/assessor/online_data/index.php",
+        "label": "Reports and Data"
+      },
+      {
+        "url": "https://www.washoecounty.gov/gis/addresses.php",
+        "label": "Get a New Address"
+      },
+      {
+        "url": "https://icris.washoecounty.us/ssrecorder/user/disclaimer",
+        "label": "Search Property Records"
+      },
+      {
+        "url": "https://www.washoecounty.gov/about/index.php",
+        "label": "About Washoe County"
+      },
+      {
+        "url": "https://www.washoecounty.gov/your_government/board_committees/index.php",
+        "label": "Boards and Committees"
+      },
+      {
+        "url": "https://www.washoecounty.gov/mgrsoff/about/leadership.php",
+        "label": "Leadership"
+      },
+      {
+        "url": "https://washoe-county-nv.civilspace.io/en/projects/understanding-the-washoe-county-budget-washoe-checkbook",
+        "label": "Budget 101"
+      },
+      {
+        "url": "https://www.washoecounty.gov/311/public-records-request.php",
+        "label": "Public Records Request"
+      },
+      {
+        "url": "https://www.washoecounty.gov/mgrsoff/about/strategic_plan/index.php",
+        "label": "Strategic Planning"
+      },
+      {
+        "url": "https://www.washoecounty.gov/bcc/board_committees/index.php",
+        "label": "Agendas & Minutes"
+      },
+      {
+        "url": "https://www.washoecounty.gov/mgrsoff/divisions/Communications/WCTV/wctv-vod.php",
+        "label": "Watch a Meeting"
+      },
+      {
+        "url": "https://www.washoecounty.gov/your_government/faq/index.php",
+        "label": "Frequent Questions"
+      },
+      {
+        "url": "https://www.washoecounty.gov/citizens/volunteer_opportunities.php",
+        "label": "Volunteer Opportunities"
+      },
+      {
+        "url": "https://washoelife.washoecounty.us",
+        "label": "Newsroom"
+      },
+      {
+        "url": "https://www.washoecounty.gov/311/index.php",
+        "label": "311"
+      },
+      {
+        "url": "https://www.washoecounty.gov/budget/index.php",
+        "label": "Budget Division"
+      },
+      {
+        "url": "https://www.washoecounty.gov/building/index.php",
+        "label": "Building"
+      },
+      {
+        "url": "https://www.washoecounty.gov/CABS/index.php",
+        "label": "CABS"
+      },
+      {
+        "url": "https://www.washoecounty.gov/clerks/index.php",
+        "label": "Clerk's Office"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/planning_and_development/code_enforcement/index.php",
+        "label": "Code Enforcement"
+      },
+      {
+        "url": "https://www.washoecounty.gov/mgrsoff/divisions/Communications/index.php",
+        "label": "Communications and Media"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/index.php",
+        "label": "Community Services Department"
+      },
+      {
+        "url": "https://www.washoecounty.gov/comptroller/index.php",
+        "label": "Comptroller's Office"
+      },
+      {
+        "url": "https://www.washoecourts.com",
+        "label": "District Court"
+      },
+      {
+        "url": "https://www.washoecounty.gov/em/index.php",
+        "label": "Emergency Management"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/engineering_capitalprojects/index.php",
+        "label": "Engineering and Capital Projects"
+      },
+      {
+        "url": "https://www.washoecounty.gov/finance/index.php",
+        "label": "Finance"
+      },
+      {
+        "url": "https://www.washoecounty.gov/gis/index.php",
+        "label": "Geographic Information Systems (GIS)"
+      },
+      {
+        "url": "https://www.washoecounty.gov/humanresources/index.php",
+        "label": "Human Resources"
+      },
+      {
+        "url": "https://www.washoecounty.gov/ijc/index.php",
+        "label": "Incline Village Justice Court"
+      },
+      {
+        "url": "https://www.washoecounty.gov/juvenilesvs/index.php",
+        "label": "Juvenile Services"
+      },
+      {
+        "url": "http://www.washoecourts.com",
+        "label": "Law Library"
+      },
+      {
+        "url": "https://www.washoecounty.gov/lepc/index.php",
+        "label": "LEPC"
+      },
+      {
+        "url": "https://www.washoecounty.gov/coroner/index.php",
+        "label": "Medical Examiner"
+      },
+      {
+        "url": "https://www.washoecounty.gov/mgrsoff/index.php",
+        "label": "Office of the County Manager"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/planning_and_development/index.php",
+        "label": "Planning"
+      },
+      {
+        "url": "https://www.washoecounty.gov/pubadmin/index.php",
+        "label": "Public Administrator's Office"
+      },
+      {
+        "url": "https://www.washoecounty.gov/guardian/index.php",
+        "label": "Public Guardian's Office"
+      },
+      {
+        "url": "https://www.washoecounty.gov/comptroller/Divisions/purchasing/index.php",
+        "label": "Purchasing Division"
+      },
+      {
+        "url": "https://www.washoecounty.gov/rjc/index.php",
+        "label": "Reno Justice Court"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/operations/index.php",
+        "label": "Roads Operations"
+      },
+      {
+        "url": "https://www.washoecounty.gov/seniorsrv/index.php",
+        "label": "Senior Services"
+      },
+      {
+        "url": "https://www.washoecounty.gov/sjc/index.php",
+        "label": "Sparks Justice Court"
+      },
+      {
+        "url": "https://www.washoecounty.gov/technology/index.php",
+        "label": "Technology Services"
+      },
+      {
+        "url": "https://www.washoecounty.gov/csd/utility/index.php",
+        "label": "Utility Services"
+      },
+      {
+        "url": "https://nvcourts.gov/find_a_court/justice_courts/wadsworth_township_justice_court",
+        "label": "Wadsworth Justice Court"
+      },
+      {
+        "url": "https://electionresults.washoecounty.gov",
+        "label": "Results Dashboard"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/results/results.php",
+        "label": "2026 Primary Results Files"
+      },
+      {
+        "url": "https://www.nvsos.gov/vivid",
+        "label": "Turnout Tracker"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/results/2026data.php",
+        "label": "2026 Election Data"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/results/archivedresults.php",
+        "label": "Archived Election Results"
+      },
+      {
+        "url": "https://www.nvsos.gov/votersearch",
+        "label": "Check your Registration"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/register/confidential.php",
+        "label": "Confidential Voters"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/register/uoacava.php",
+        "label": "Military and Overseas Citizens"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/register/homeless.php",
+        "label": "Voters Experiencing Homelessness"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/register/convicted.php",
+        "label": "Voters with Criminal Convictions"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/voting/index.php",
+        "label": "Explore Voting Options"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/voting/vote-in-person.php",
+        "label": "Vote Centers"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/voting/mail/index.php",
+        "label": "Voting by Mail"
+      },
+      {
+        "url": "https://nv.omniballot.us/sites/32031/site/app/home",
+        "label": "View your Sample Ballot"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/voting/accessibility/index.php",
+        "label": "Accessible Voting"
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=oOI0Azk3Kvg",
+        "label": "How to use a BMD"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/work/index.php",
+        "label": "Be a Poll Worker"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/work/students.php",
+        "label": "Student Election Workers"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/electeds/index.php",
+        "label": "Justices of the Peace"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/contact/index.php",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/contact/candidacy/index.php",
+        "label": "File for Candidacy"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/contact/eivr.php",
+        "label": "Report an Election Integrity Violation"
+      },
+      {
+        "url": "https://washoecountynv.nextrequest.com",
+        "label": "Submit a Public Records Request"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/contact/media.php",
+        "label": "Media Inquiries"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/data/index.php",
+        "label": "Registrar Data"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/data/maps.php",
+        "label": "Election District Maps"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/data/data%20transparency.php",
+        "label": "Project Plainsight"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/observation/index.php",
+        "label": "Observation"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/observation/livestream.php",
+        "label": "Livestream"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/observation/questions.php",
+        "label": "Observation Questions"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/about/index.php",
+        "label": "About Us"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/about/security.php",
+        "label": "Election Security"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/about/rolls.php",
+        "label": "Registration List Maintenance"
+      },
+      {
+        "url": "https://www.nvsos.gov/sos/elections/vrems-project",
+        "label": "VREMS Project"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/about/restructuring.php",
+        "label": "Elections Group Audit"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/voting/mail/challenged.php",
+        "label": "Signature Curing"
+      },
+      {
+        "url": "https://myballot.nv.gov",
+        "label": "Track your Mail Ballot"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/voting/accessibility/curbside.php",
+        "label": "ADA Curbside Voting"
+      },
+      {
+        "url": "https://www.nvsos.gov/EASE",
+        "label": "NVEASE"
+      },
+      {
+        "url": "https://www.nvsos.gov/SOSCandidateServices/AnonymousAccess/CEFDSearchUU/CertCandList.aspx",
+        "label": "Who has Filed?"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/voters/early-voting-begins-in-washoe-county",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov",
+        "label": "View All News »"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/mail-ballots-begin-arriving-early-voting-starts-next-weekend-dont-wait-washoe",
+        "label": "Mail ballots begin arriving, early voting starts next weekend – Don’t Wait, Washoe!"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/washoe-county-launches-dont-wait-washoe-campaign-to-encourage-early-voting-in-person-or-by-mail",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/find-the-list-of-vote-centers-for-the-2026-general-election-now-available",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/registrar-of-voters-announces-results-of-post-primary-voter-roll-maintenance",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/registrar-of-voters-to-begin-post-primary-election-voter-list-maintenance-efforts",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/2026-primary-final-stages",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/2026-primary-last-day-to-cure",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/2026-primary-election-update-june-12",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/2026-primary-election-night-update-june-11-2",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/2026-primary-election-mid-day-update-june-11",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/primary-election-day-begins-in-washoe-county",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/registrar-of-voters-announces-results-of-off-year-voter-roll-maintenance",
+        "label": "Read More"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/2026-non-judicial-candidate-filing-begins-march-2",
+        "label": "Read More"
+      },
+      {
+        "url": "https://www.washoecounty.gov/voters/information/index.php",
+        "label": "2026 Election Information"
+      },
+      {
+        "url": "https://www.google.com/maps/embed?pb=%211m18%211m12%211m3%211d457.3871623408672%212d-119.80226106987898%213d39.53881804815751%212m3%211f0%212f0%213f0%213m2%211i1024%212i768%214f13.1%213m3%211m2%211s0x8099474f8c008747%3A0x84ea48a8314ec233%212sRegistrar+of+Voters+Office%215e0%213m2%211sen%212sus%214v1741890647751%215m2%211sen%212sus",
+        "label": ""
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/top-headlines-from-the-board-of-county-commissioners-meeting-20-36",
+        "label": "Top headlines from the Board of County Commissioners meeting"
+      },
+      {
+        "url": "https://washoelife.washoecounty.gov/washoe-county/washoe-county-and-washoe-little-league-to-break-ground-on-new-softball-fields",
+        "label": "Washoe County and Washoe Little League to break ground on new softball fields"
+      },
+      {
+        "url": "https://www.washoecounty.gov/mgrsoff/civil-rights/title-vi-civil-rights-act/index.php",
+        "label": "Learn more about our commitment to Title VI"
+      },
+      {
+        "url": "https://www.washoecounty.gov/accessibility/index.php",
+        "label": "Learn more about our accessibility guidelines"
+      },
+      {
+        "url": "https://washoecountynv.qscend.com/311/request/add",
+        "label": "Submit a Service Request Online"
+      },
+      {
+        "url": "https://www.washoecounty.gov/subscribe.php",
+        "label": "Sign up"
+      },
+      {
+        "url": "https://www.washoecounty.gov/gallery/photo_submission_form.php",
+        "label": "Submit a photo"
+      },
+      {
+        "url": "https://www.washoecounty.gov/Privacy",
+        "label": "Privacy Policy"
+      }
+    ]
+  },
+  {
+    "url": "https://www.sos.nm.gov/voting-and-elections/voter-information-portal/county-clerk-information/",
+    "finalUrl": "https://www.sos.nm.gov/voting-and-elections/county-clerk-information/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:27:42.624Z",
+    "rawHash": "e8d45ae023edb06e5cd06d62ff22ff4e115f1c86372da77d94c91b980d5e32cd",
+    "path": "tests/fixtures/voting-sources/vs-04-west/nm-618f41758008.html",
+    "savedHash": "e8d45ae023edb06e5cd06d62ff22ff4e115f1c86372da77d94c91b980d5e32cd",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/county-clerk-information",
+        "label": ""
+      },
+      {
+        "url": "https://www.facebook.com/NMSecOfState",
+        "label": "Follow"
+      },
+      {
+        "url": "https://twitter.com/NMSecOfState",
+        "label": "Follow Us on Twitter"
+      },
+      {
+        "url": "https://www.sos.nm.gov",
+        "label": "Home"
+      },
+      {
+        "url": "https://www.sos.nm.gov/contact-us",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://www.sos.nm.gov/online-services",
+        "label": "Online Services"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections",
+        "label": "Voting & Elections"
+      },
+      {
+        "url": "https://www.sos.nm.gov/legislation-and-lobbying",
+        "label": "Go"
+      },
+      {
+        "url": "https://www.sos.nm.gov/business-services",
+        "label": "Go"
+      },
+      {
+        "url": "https://www.sos.nm.gov/notary-and-apostille",
+        "label": "Go"
+      },
+      {
+        "url": "https://www.sos.nm.gov/safe-at-home",
+        "label": "Go"
+      },
+      {
+        "url": "https://www.sos.nm.gov/about-new-mexico",
+        "label": "Go"
+      },
+      {
+        "url": "https://www.sos.nm.gov/about-the-office",
+        "label": "About the Office"
+      },
+      {
+        "url": "https://www.sos.nm.gov/about-the-office/about-the-secretary",
+        "label": "About the Secretary"
+      },
+      {
+        "url": "https://www.sos.nm.gov/about-the-office/newsroom",
+        "label": "Newsroom"
+      },
+      {
+        "url": "https://www.sos.nm.gov/about-the-office/office-initiatives",
+        "label": "Office Initiatives"
+      },
+      {
+        "url": "https://www.sos.nm.gov/about-the-office/request-for-proposals",
+        "label": "Request for Proposals"
+      },
+      {
+        "url": "https://www.sos.nm.gov/about-the-office/job-openings-at-the-secretary-of-states-office",
+        "label": "Join Our Team"
+      },
+      {
+        "url": "https://www.sos.nm.gov/about-the-office/accessibility-statement",
+        "label": "Accessibility Statement"
+      },
+      {
+        "url": "https://www.sos.nm.gov/sos-archive",
+        "label": "SOS Archive"
+      },
+      {
+        "url": "https://www.sos.nm.gov/candidate-and-campaigns",
+        "label": "Candidates & Campaigns"
+      },
+      {
+        "url": "https://www.sos.nm.gov/commercial-services",
+        "label": "Go"
+      },
+      {
+        "url": "https://www.sos.nm.gov/CyberSecurity",
+        "label": "Go"
+      },
+      {
+        "url": "https://electionresults.sos.state.nm.us/resultsSW.aspx?eid=2796&map=CTY&type=FED",
+        "label": "Election Results Homepage"
+      },
+      {
+        "url": "https://electionresults.sos.state.nm.us/resultsSW.aspx?eid=2791&map=CTY&type=FED",
+        "label": "Congressional District  l"
+      },
+      {
+        "url": "https://nmresults.azurewebsites.net/resultsSW.aspx?map=CTY&type=SW",
+        "label": "Statewide"
+      },
+      {
+        "url": "https://nmresults.azurewebsites.net/resultsSW.aspx?map=CTY&type=LGX",
+        "label": "Legislative"
+      },
+      {
+        "url": "https://nmresults.azurewebsites.net/resultsSW.aspx?map=CTY&type=PRX",
+        "label": "Public Regulation Commission"
+      },
+      {
+        "url": "https://nmresults.azurewebsites.net/resultsSW.aspx?map=CTY&type=ECX",
+        "label": "Public Education Commission"
+      },
+      {
+        "url": "https://nmresults.azurewebsites.net/resultsSW.aspx?map=CTY&type=JDX",
+        "label": "District Judges"
+      },
+      {
+        "url": "https://nmresults.azurewebsites.net/resultsSW.aspx?map=CTY&type=DAX",
+        "label": "District Attorneys"
+      },
+      {
+        "url": "https://nmresults.azurewebsites.net/resultsSW.aspx?map=CTY&type=MGX",
+        "label": "Magistrate Judges"
+      },
+      {
+        "url": "https://nmresults.azurewebsites.net/resultsList.aspx?map=CTY&type=cty",
+        "label": "County Office"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/voter-information-portal",
+        "label": "NMVOTE.ORG"
+      },
+      {
+        "url": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+        "label": "View your voter registration"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/voting-faqs",
+        "label": "Voting FAQs"
+      },
+      {
+        "url": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?cty=99&eid=2796",
+        "label": "2021 Regular Local Election Candidate List"
+      },
+      {
+        "url": "https://www.nmvote.org",
+        "label": "NMVOTE"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/how-we-secure-your-vote",
+        "label": "How We Secure Your Vote"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/voting-and-domestic-violence",
+        "label": "Voting & Domestic Violence"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/native-american-election-information-program",
+        "label": "Native American Election Information Program"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/traveling-or-living-abroad",
+        "label": "Traveling or Living Abroad"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/data-and-maps/voter-data-information",
+        "label": "Voting Data & Maps"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/election-results",
+        "label": "Election Results"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/voter-registration-information",
+        "label": "Voter Registration Information"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/nm-political-party-information",
+        "label": "NM Political Party Information"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/public-official-address-confidentiality-request-form",
+        "label": "Public Official Address Confidentiality Request Form"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/voter-bill-of-rights",
+        "label": "Voter Bill of Rights"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/absentee-and-early-voting",
+        "label": "Absentee and Early Voting"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/same-day-voter-registration",
+        "label": "Same Day Voter Registration"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/military-and-overseas-voting",
+        "label": "Military and Overseas Voting"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/voters-with-disabilities",
+        "label": "Voters with Disabilities"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/2026-voter-address-confirmation-mailer",
+        "label": "2026 Voter Address Confirmation Mailer"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/voter-cancellation-request-form",
+        "label": "Voter Cancellation Request Form"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/election-ethics-and-voter-complaints",
+        "label": "Election, Ethics, and Voter Complaints"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/eric-project-faqs",
+        "label": "ERIC Project FAQs"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/election-challengers-watchers-observers-information",
+        "label": "Election Challengers, Watchers & Observers Information"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/guidance-on-voter-intimidation-and-discriminatory-conduct",
+        "label": "Guidance on Voter Intimidation and Discriminatory Conduct"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/election-laws-and-codes",
+        "label": "Election Laws & Codes"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/third-party-voter-registration-agents",
+        "label": "Third Party Voter Registration Agents"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/local-election-act-information",
+        "label": "Local Election Act Information"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/election-audits",
+        "label": "Election Audits"
+      },
+      {
+        "url": "https://www.sos.nm.gov/voting-and-elections/rumor-vs-reality",
+        "label": "Rumor vs. Reality"
+      },
+      {
+        "url": "http://www.bernco.gov/clerk",
+        "label": "www.bernco.gov/clerk"
+      },
+      {
+        "url": "https://www.catroncounty.us/government/county_clerk_s_office/index.php",
+        "label": "https://www.catroncounty.us/government/county_clerk_s_office/index.php"
+      },
+      {
+        "url": "https://www.chavescounty.gov/your-county/departments/clerk-s-office",
+        "label": "https://www.chavescounty.gov/your-county/departments/clerk-s-office"
+      },
+      {
+        "url": "http://www.cibolacountynm.com/elected_officials/clerk_s_office.php",
+        "label": "http://www.cibolacountynm.com/elected_officials/clerk_s_office.php"
+      },
+      {
+        "url": "https://www.co.colfax.nm.us/government/county_clerk.php",
+        "label": "https://www.co.colfax.nm.us/government/county_clerk.php"
+      },
+      {
+        "url": "https://www.currycountynm.gov",
+        "label": "https://www.currycountynm.gov"
+      },
+      {
+        "url": "https://www.donaanacountyelections.com",
+        "label": "https://www.donaanacountyelections.com/"
+      },
+      {
+        "url": "http://www.co.eddy.nm.us/185/County-Clerk",
+        "label": "http://www.co.eddy.nm.us/185/County-Clerk"
+      },
+      {
+        "url": "https://grantcountynm.gov",
+        "label": "https://grantcountynm.gov/"
+      },
+      {
+        "url": "https://www.guadalupecountynm.org/clerk-s-office",
+        "label": "https://www.guadalupecountynm.org/clerk-s-office​"
+      },
+      {
+        "url": "https://www.hardingcounty.org/elected_officials/clerk/index.php",
+        "label": "http://hardingcounty.org/clerk.html"
+      },
+      {
+        "url": "https://hidalgocounty.org/clerk",
+        "label": "https://hidalgocounty.org/clerk/"
+      },
+      {
+        "url": "https://www.leacounty.net/177/Lea-County-Clerk",
+        "label": "http://www.leacounty.net/clerk.htm"
+      },
+      {
+        "url": "http://www.lincolncountynm.gov",
+        "label": "http://www.lincolncountynm.gov"
+      },
+      {
+        "url": "http://www.losalamosnm.us/clerk",
+        "label": "http://www.losalamosnm.us/clerk"
+      },
+      {
+        "url": "https://www.lunacountynm.us/departments/clerk/index.php",
+        "label": "https://www.lunacountynm.us/departments/clerk/index.php"
+      },
+      {
+        "url": "http://www.co.mckinley.nm.us/190/County-Clerk",
+        "label": "http://www.co.mckinley.nm.us/190/County-Clerk"
+      },
+      {
+        "url": "https://countyofmora.com/departments/county-clerk",
+        "label": "https://countyofmora.com/departments/county-clerk/"
+      },
+      {
+        "url": "http://co.otero.nm.us/225/Clerk",
+        "label": "http://co.otero.nm.us/225/Clerk"
+      },
+      {
+        "url": "http://quaycounty-nm.gov/elected-officals/county-clerk",
+        "label": "http://quaycounty-nm.gov/elected-officals/county-clerk/"
+      },
+      {
+        "url": "http://www.rio-arriba.org/departments_and_divisions/clerk",
+        "label": "http://www.rio-arriba.org/departments_and_divisions/clerk’s_office/clerk_.html"
+      },
+      {
+        "url": "http://www.rooseveltcounty.com?page_id=844",
+        "label": "http://www.rooseveltcounty.com"
+      },
+      {
+        "url": "http://www.sjcclerk.net",
+        "label": "http://www.sjcclerk.net"
+      },
+      {
+        "url": "https://co.sanmiguel.nm.us/clerk/index.php",
+        "label": "https://co.sanmiguel.nm.us/clerk/index.php"
+      },
+      {
+        "url": "https://www.sandovalcountynm.gov/elected-officials/county-clerk",
+        "label": "https://www.sandovalcountynm.gov/elected-officials/county-clerk/"
+      },
+      {
+        "url": "https://www.santafecountynm.gov/clerk/elections",
+        "label": "https://www.santafecountynm.gov/clerk/elections"
+      },
+      {
+        "url": "http://www.santafecountynm.gov/clerk",
+        "label": ""
+      },
+      {
+        "url": "https://www.sierraco.org/department/clerk",
+        "label": "https://www.sierraco.org/department/clerk/"
+      },
+      {
+        "url": "https://www.socorrocounty.net/elected-officials/clerks-office",
+        "label": "https://www.socorrocounty.net/elected-officials/clerks-office"
+      },
+      {
+        "url": "http://www.taoscounty.org/170/Clerk",
+        "label": "http://www.taoscounty.org/170/Clerk"
+      },
+      {
+        "url": "http://www.torrancecountynm.org/index.php?page=county-clerk",
+        "label": "http://www.torrancecountynm.org"
+      },
+      {
+        "url": "https://unionnm.us/clerks-office-1",
+        "label": "https://unionnm.us/clerks-office-1"
+      },
+      {
+        "url": "http://www.co.valencia.nm.us/235/County-Clerk",
+        "label": "http://www.co.valencia.nm.us/235/County-Clerk"
+      },
+      {
+        "url": "https://www.instagram.com/nm_sos",
+        "label": "Follow"
+      },
+      {
+        "url": "https://x.com/NMSecOfState?lang=en",
+        "label": "Follow"
+      },
+      {
+        "url": "https://www.sos.nm.gov/helpful-web-browsing-tips",
+        "label": "Get Help"
+      },
+      {
+        "url": "https://www.sos.nm.gov/disclaimer",
+        "label": "Disclaimer"
+      },
+      {
+        "url": "https://www.sos.nm.gov/legislation-and-lobbying/legal-resources/ipra-request-information",
+        "label": "IPRA Request"
+      },
+      {
+        "url": "https://www.googletagmanager.com/ns.html?id=GTM-MSV86L2R",
+        "label": ""
+      },
+      {
+        "url": "https://www.sos.nm.gov/feed",
+        "label": "Maggie Toulouse Oliver - New Mexico Secretary of State &raquo; Feed"
+      },
+      {
+        "url": "https://www.sos.nm.gov/comments/feed",
+        "label": "Maggie Toulouse Oliver - New Mexico Secretary of State &raquo; Comments Feed"
+      },
+      {
+        "url": "https://www.sos.nm.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.sos.nm.gov%2Fvoting-and-elections%2Fcounty-clerk-information%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://www.sos.nm.gov/wp-json/wp/v2/pages/1410",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "url": "https://vote.utah.gov/county-clerk-contact-information/",
+    "finalUrl": "https://vote.utah.gov/county-clerk-contact-information/",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:27:42.073Z",
+    "rawHash": "5a55f0226d73d7366bbc45e1cd81dad0bc5f2f7139f7f7886602b06c3d20976a",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ut-933b8fe584d5.html",
+    "savedHash": "5a55f0226d73d7366bbc45e1cd81dad0bc5f2f7139f7f7886602b06c3d20976a",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.googletagmanager.com/ns.html?id=GTM-TFBDJFF",
+        "label": ""
+      },
+      {
+        "url": "https://vote.utah.gov/county-clerk-contact-information",
+        "label": "Back to Top"
+      },
+      {
+        "url": "https://vote.utah.gov",
+        "label": "Welcome To Vote.Utah.gov"
+      },
+      {
+        "url": "https://vote.utah.gov/cdn-cgi/l/email-protection",
+        "label": "[email protected]"
+      },
+      {
+        "url": "https://www.beaver.utah.gov/87/Elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.boxeldercountyut.gov/320/Elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.cachecounty.org/elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.carbon.utah.gov",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.daggettcounty.org/90/Elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.daviscountyutah.gov/clerk/election/elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://duchesne.utah.gov/gov/elected-officials/clerk-auditor/elections-home",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://emerycounty.com/home/offices/clerk-auditor/election",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.garfield.utah.gov/departments/auditor-clerk",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.grandcountyutah.net/612/Elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.ironcountyut.gov/clerk",
+        "label": "Visit Site"
+      },
+      {
+        "url": "http://www.co.juab.ut.us/County/clerk/election.html",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://kane.utah.gov/311/Elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://millardcounty.gov/your-government/elected-officials/clerk/elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.morgancountyutah.gov/election-information",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://piute.gov/your-government/elected-officials/clerk-auditor",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.richcounty.gov/election",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://slco.org/clerk/elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://sanjuancountyut.gov/clerk/page/candidates-application-general-election-information",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.sanpete.com/elections.html",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.sevier.utah.gov/departments/clerk___auditor/index.php",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.summitcountyutah.gov/281/Voter-Registration-Elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://tooeleco.gov/departments/elections",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.uintah.gov/departments/a_-_e_departments/clerk_auditor/election_information.php",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://vote.utahcounty.gov/home",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.wasatchcounty.gov/ClerkAuditor",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.washco.utah.gov/departments/clerk-auditor/election-info",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://waynecountyutah.gov/pages/county-offices",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.weberelections.gov",
+        "label": "Visit Site"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor",
+        "label": "Lt. Governor Home"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/about",
+        "label": "About Lt. Governor"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/initiatives",
+        "label": "Lt. Governor Initiatives"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/news",
+        "label": "Lt. Governor Newsroom"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/staff",
+        "label": "Lt. Governor Staff"
+      },
+      {
+        "url": "https://www.utah.gov/ltgovernor/contact",
+        "label": "Contact Lt. Governor"
+      },
+      {
+        "url": "https://www.utah.gov",
+        "label": "Utah.gov Home"
+      },
+      {
+        "url": "https://www.utah.gov/disclaimer.html",
+        "label": "Utah.gov Terms of Use"
+      },
+      {
+        "url": "https://www.utah.gov/privacypolicy.html",
+        "label": "Utah.gov Privacy Policy"
+      },
+      {
+        "url": "https://www.utah.gov/accessibility.html",
+        "label": "Utah.gov Accessibility Policy"
+      },
+      {
+        "url": "https://www.utah.gov/translate.html",
+        "label": "Translate Utah.gov"
+      },
+      {
+        "url": "https://vote.utah.gov/feed",
+        "label": "Utah Voter Information &raquo; Feed"
+      },
+      {
+        "url": "https://vote.utah.gov/comments/feed",
+        "label": "Utah Voter Information &raquo; Comments Feed"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fvote.utah.gov%2Fcounty-clerk-contact-information%2F",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://vote.utah.gov/wp-json/wp/v2/pages/437",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "url": "https://sos.wyo.gov/Elections/CountyClerks.aspx",
+    "finalUrl": "https://sos.wyo.gov/Elections/CountyClerks.aspx",
+    "status": 404,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:27:42.103Z",
+    "rawHash": "98dc20135f9c3503b44d20850ce1ad2f7756406716a8c18982a099d11e369f34",
+    "path": "tests/fixtures/voting-sources/vs-04-west/wy-bf637c34c81b.html",
+    "savedHash": "98dc20135f9c3503b44d20850ce1ad2f7756406716a8c18982a099d11e369f34",
+    "redactions": 0,
+    "links": []
+  }
+]

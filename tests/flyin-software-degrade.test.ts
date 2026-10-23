@@ -7,6 +7,7 @@ import test from "node:test";
 import {
   SOFTWARE_RENDERER_NAMES,
   classifyRenderer,
+  detectRaster,
 } from "../components/map/raster-capability.ts";
 import {
   judgeSoftware,
@@ -50,22 +51,27 @@ test("an unreadable renderer is unknown, and unknown is NOT software", () => {
   assert.notEqual(classifyRenderer(null), "software");
 });
 
+test("the map identifies its existing graphics context without constructing another canvas", () => {
+  let reads=0;
+  const context={RENDERER:1,getExtension:()=>({UNMASKED_RENDERER_WEBGL:2}),getParameter:()=>"SwiftShader"};
+  const canvas={getContext:(kind:string)=>{assert.equal(kind,"webgl2");reads++;return context;}} as unknown as HTMLCanvasElement;
+  assert.deepEqual(detectRaster(canvas),{kind:"software",renderer:"SwiftShader"});
+  assert.equal(reads,1);
+});
+
 const PRESENTATION = readFileSync(join(ROOT, "lib", "map", "flight-presentation.ts"), "utf8");
 const MAP_ENTRY = readFileSync(join(ROOT, "components", "map", "map-entry.tsx"), "utf8");
 
 test("the motion hold is scoped to a software rasteriser, not every renderer", () => {
   /* The motion hold runs only on a positively identified CPU rasteriser; hardware and unknown hide nothing. */
-  assert.match(CANVAS, /const degradeInMotion = detectRaster\(\)\.kind === "software";/);
+  assert.match(CANVAS, /const raster = detectRaster\(map\.getCanvas\(\)\);/);
+  assert.match(CANVAS, /const degradeInMotion = raster\.kind === "software";/);
   const enter = CANVAS.slice(
     CANVAS.indexOf("const enterMotionDegrade"),
     CANVAS.indexOf("const onPresentationIdle"),
   );
   assert.match(enter, /if \(!degradeInMotion\) return;/, "enterMotionDegrade must no-op off a software rasteriser");
-  /*
-   * The mount-time hold and its first-idle reveal stay UNCONDITIONAL, so every
-   * renderer still reveals its overlays once the first style has drawn — the
-   * scoping is on the motion re-hold, never on the one-time reveal.
-   */
+
   assert.match(CANVAS, /map\.on\("idle", onPresentationIdle\);/);
   const idle = CANVAS.slice(CANVAS.indexOf("const onPresentationIdle"), CANVAS.indexOf('map.on("idle", onPresentationIdle)'));
   assert.match(idle, /map\.isMoving\(\) \|\| !mapPresentationHeld\(map\)/);
@@ -89,7 +95,7 @@ test("holding keeps sources cached, hides application layers, and removes the DO
   assert.match(PRESENTATION, /setLayoutProperty\(layer.id, "visibility", visible \? "visible" : "none"\)/);
   assert.ok(!PRESENTATION.includes("removeLayer") && !PRESENTATION.includes("removeSource"));
   assert.ok(!CANVAS.includes("<StateFocusOverlay"));
-  assert.match(CANVAS, /if \(!map \|\| mapPresentationHeld\(map\)/);
+  assert.match(CANVAS, /if \(mapPresentationHeld\(map\)\) return;/);
   assert.match(CANVAS, /shellRef\.current\?\.setAttribute\("data-camera-moving", "1"\)/);
   assert.match(CANVAS, /shellRef\.current\?\.removeAttribute\("data-camera-moving"\)/);
 });

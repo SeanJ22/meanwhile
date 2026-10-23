@@ -16,9 +16,9 @@ import {
   type ErrorEvent as MapErrorEvent,
   type MapMouseEvent,
 } from "maplibre-gl";
-import { Protocol } from "pmtiles";
+import { boundaryProtocol } from "@/lib/map/boundary-protocol";
 import { startMap } from "@/lib/map/start-map";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
 import { detectRaster } from "@/components/map/raster-capability";
@@ -28,6 +28,8 @@ type ProjectPoint = (point: [number, number]) => { x: number; y: number };
 import {
   CONUS_BOUNDS,
   FALLBACK_STYLE,
+  basemapStyle,
+  prefetchRasterOverview,
   METRO_ZOOM,
   resolveBasemap,
 } from "@/lib/map/style";
@@ -43,6 +45,7 @@ import {
   withDistricts,
   preserveDistrictStyle,
   addDistrictLayer,
+  setDistrictState,
   boundsOfDistrict,
   fullBoundsOfDistrict,
   districtLayerPresent,
@@ -57,6 +60,10 @@ import {
 } from "@/lib/map/districts";
 import {
   filterStateAbbr,
+  loadStateOutlines,
+  stateAbbrFromOcdId,
+  stateOcdIdAt,
+  type StateOutlines,
 } from "@/lib/map/state-focus";
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
@@ -98,6 +105,15 @@ import type { MapBounds, OfficeSite } from "@/lib/map/office-pins";
 
 const NO_OFFICE_SITES: readonly OfficeSite[] = [];
 
+let workersPrepared = false;
+/** Download and initialize the map's existing worker pool while the ZIP reads run. */
+export function prepareMapWorkers(): void {
+  if (workersPrepared) return;
+  setWorkerUrl("/maplibre-gl-worker.mjs");
+  prewarm();
+  workersPrepared = true;
+}
+
 interface MapCanvasProps {
   officeSites?: readonly OfficeSite[];
   onSelectOffice?: (id: string) => void;
@@ -105,14 +121,12 @@ interface MapCanvasProps {
   /** The settled view's edges, after every camera move. */
   onBoundsChange?: (bounds: MapBounds) => void;
   onPresentationReadyChange?: (ready: boolean) => void;
-  /**
-   * Every venue the data contains, not the filtered list: this drives the
-   * marker pool. {@link MapCanvasProps.visibleVenueKeys} drives what is shown.
-   */
+
   venues: Venue[];
   /** The keys the current filters leave visible, a subset of `venues`. `null` shows every venue. */
   visibleVenueKeys?: ReadonlySet<string> | null;
   camera: CameraTarget | null;
+  here: CameraTarget | null;
   focus: MapFocus | null;
   /** The districts drawn; the stats card counts this list and the districts door renders it. */
   onDrawnDistricts: (districts: DrawnDistrict[]) => void;
@@ -131,15 +145,9 @@ interface MapCanvasProps {
   frameAllVenues: boolean;
   /** Basemap follows the UI theme; changing it restyles the map in place. */
   theme: Theme;
-  /**
-   * Pixels of the map's left edge covered by the floating rail (0 when
-   * hidden), applied as camera padding so framing centres on the visible area.
-   */
+
   leftInset?: number;
-  /**
-   * The unobstructed map area. When present it replaces `leftInset` as camera
-   * padding, and the selected boundary refits when it changes.
-   */
+
   insets?: { top: number; right: number; bottom: number; left: number };
   /** Bumped by "Fit boundary": re-fit the selected district. */
   fitNonce?: number;
@@ -147,10 +155,7 @@ interface MapCanvasProps {
   onTileError: () => void;
   /** The basemap is drawing again after a tile error, so the error notice can clear. */
   onTilesRecovered?: () => void;
-  /**
-   * The reader panned or zoomed and the map came to rest. Fired only for
-   * gestures, after a debounce; never for camera moves the app issued.
-   */
+
   onViewportSettle?: (view: {
     lat: number;
     lng: number;
@@ -161,10 +166,7 @@ interface MapCanvasProps {
   allowAutoFrame: boolean;
   /** The reader's state OCD-ID, raised out of the map. Null before a zip resolves: nothing raised or muted. */
   focusStateOcdId?: string | null;
-  /**
-   * Voting locations, drawn as their own pin class with a separate colour
-   * token and marker set (no pooling), never folded into `venues`.
-   */
+
   votingSites?: VotingSitePin[];
   /** The point the reader's typed address resolved to; the address never reaches the map. */
   votingAddressPoint?: { lat: number; lng: number } | null;
@@ -206,6 +208,7 @@ export function MapCanvas({
   venues,
   visibleVenueKeys = null,
   camera,
+  here,
   focus,
   selectedVenueKey,
   frameAllVenues,
@@ -252,10 +255,7 @@ export function MapCanvas({
   const onBoundsChangeRef = useRef(onBoundsChange);
   useEffect(() => { onBoundsChangeRef.current = onBoundsChange; }, [onBoundsChange]);
   const votePinsRef = useRef(new Map<string, Marker>());
-  /**
-   * Whether the reader has taken the camera by hand. A ref so pans do not
-   * re-render. Lowered only by a new `camera` or a new `focus`.
-   */
+
   const userMovedRef = useRef(false);
 
   // Handlers live in a ref so re-renders don't tear down and rebuild markers.
@@ -293,6 +293,13 @@ export function MapCanvas({
     onViewportSettleRef.current = onViewportSettle;
   }, [onViewportSettle]);
 
+  const outlinesRef = useRef<StateOutlines | null>(null);
+  useEffect(() => {
+    let live = true;
+    loadStateOutlines().then(data => { if (live) outlinesRef.current = data; }).catch(() => undefined);
+    return () => { live = false; };
+  }, []);
+
   const focusOcdRef = useRef<string | null>(focusStateOcdId ?? null);
   useEffect(() => {
     focusOcdRef.current = focusStateOcdId ?? null;
@@ -317,23 +324,24 @@ export function MapCanvas({
     }
 
     for (const type of wanted) {
-      try { addDistrictLayer(map, type); }
+      try { addDistrictLayer(map, type, stateAbbrFromOcdId(focusOcdRef.current)); }
       catch { onDistrictErrorRef.current(); }
     }
+    setDistrictState(map, stateAbbrFromOcdId(focusOcdRef.current));
     } finally { attachingDistrictsRef.current = false; }
   }, []);
+
+  useEffect(() => {
+    ensureDistricts();
+  }, [focusStateOcdId, ensureDistricts]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
     // MapLibre 6 resolves its worker URL dynamically, which no bundler emits;
     // scripts/build-map-worker.mjs bundles a copy here. Must precede the first map.
-    setWorkerUrl("/maplibre-gl-worker.mjs");
-    addProtocol("pmtiles", new Protocol().tile);
-
-    // Keeps the shared worker pool alive across Strict Mode's remount. Must
-    // follow setWorkerUrl and precede the first map.
-    prewarm();
+    prepareMapWorkers();
+    addProtocol("pmtiles", boundaryProtocol);
 
     // No key: fall through to the plain ground colour and say so, never another provider.
     const basemap = resolveBasemap(documentTheme());
@@ -346,8 +354,6 @@ export function MapCanvas({
     const container = containerRef.current;
     const map = startMap(() => new MapLibreMap({
       container,
-      // Districts start without any dependency on the basemap provider.
-      style: withDistricts(FALLBACK_STYLE, districtTypesRef.current),
       ...(camera
         ? { center: [camera.lng, camera.lat] as [number, number], zoom: initialZoomForZip(camera.zip) }
         : remembered
@@ -361,13 +367,32 @@ export function MapCanvas({
       attributionControl: false,
       pitchWithRotate: false,
       dragRotate: false,
+      // Labels appear in their first complete frame, including the automatic ZIP fit.
+      fadeDuration: 0,
     }));
     if (!map) {
+      document.documentElement.dataset.raster = "unknown";
       const frame = window.requestAnimationFrame(() => {
         setGraphicsUnavailable(true);
         setPresentationReady(true);
       });
       return () => window.cancelAnimationFrame(frame);
+    }
+
+    const raster = detectRaster(map.getCanvas());
+    document.documentElement.dataset.raster = raster.kind;
+    // A software renderer paints on the CPU. Retain every feature and label
+    // while avoiding four canvas pixels per CSS pixel on a 2x display.
+    if (raster.kind === "software" && map.getPixelRatio() > 1) map.setPixelRatio(1);
+
+    // Start CPU graphics with its final style, rather than compile a fallback
+    // frame and then discard it. The district source remains independent.
+    const initialStyle = basemap && raster.kind === "software" ? basemapStyle(basemap, true) : FALLBACK_STYLE;
+    if (typeof initialStyle !== "string") map.setStyle(withDistricts(initialStyle, districtTypesRef.current, stateAbbrFromOcdId(focusOcdRef.current)));
+    const overview = new AbortController();
+    if (basemap && raster.kind === "software" && camera) {
+      void prefetchRasterOverview(basemap, camera, initialZoomForZip(camera.zip),
+        AbortSignal.any([overview.signal, AbortSignal.timeout(3000)])).catch(() => {});
     }
 
     holdMapPresentation(map);
@@ -400,10 +425,6 @@ export function MapCanvas({
       // Keep the usable style; resetting on each tile error restarts the failing requests.
     });
 
-    /**
-     * The tile-error notice clears once the map goes idle with a real style.
-     * `idle` fires at every rest, so a later recovery is caught too.
-     */
     map.on("idle", () => {
       if (!map.isStyleLoaded()) return;
       // Recovering into the fallback would clear the notice with no basemap.
@@ -422,7 +443,7 @@ export function MapCanvas({
     map.on("styledata", ensureDistricts);
     map.once("style.load", () => {
       ensureDistricts();
-      if (basemap) map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
+      if (basemap && raster.kind !== "software") map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
     });
 
     /* Click to select a district: one hit selects, several open a picker, none keeps the selection. */
@@ -432,6 +453,11 @@ export function MapCanvas({
       /* A press on the map puts a fanned pin group back; pin presses never reach here. */
       clearSpiderfy(pool);
 
+      const clicked = stateOcdIdAt(outlinesRef.current, event.lngLat.lat, event.lngLat.lng);
+      if (clicked && clicked !== focusOcdRef.current) {
+        map.easeTo({ center: event.lngLat, duration: prefersReducedMotion() ? 0 : 300 }, { originalEvent: event.originalEvent });
+        return;
+      }
       const hits = districtsAt(map, event.point, districtTypesRef.current);
       if (hits.length === 0) return;
       onDistrictClickRef.current(hits, { x: event.point.x, y: event.point.y });
@@ -445,7 +471,7 @@ export function MapCanvas({
     };
     window.addEventListener("keydown", onKeyDown);
 
-    const degradeInMotion = detectRaster().kind === "software";
+    const degradeInMotion = raster.kind === "software";
     const enterMotionDegrade = () => {
       if (!degradeInMotion) return;
       holdMapPresentation(map);
@@ -472,8 +498,8 @@ export function MapCanvas({
 
     let userMoved = false;
     let settleTimer: number | undefined;
-    const onMoveStart = (event: { originalEvent?: unknown }) => {
-      enterMotionDegrade();
+    const onMoveStart = (event: { originalEvent?: unknown; instant?: boolean }) => {
+      if (!event.instant) enterMotionDegrade();
       if (event.originalEvent) {
         userMoved = true;
         // The reader has taken the camera until an explicit action hands it back.
@@ -482,10 +508,7 @@ export function MapCanvas({
       window.clearTimeout(settleTimer);
     };
     const onMoveEnd = () => {
-      /*
-       * The camera is remembered on any settled arrival, including the end of
-       * an app fly-to. Only the re-query below is gated on a user gesture.
-       */
+
       // Movement ending does not imply tiles have settled; idle owns reveal.
       const wasUserMove = userMoved;
       userMoved = false;
@@ -605,6 +628,7 @@ export function MapCanvas({
       };
 
     return () => {
+      overview.abort();
       window.clearTimeout(settleTimer);
       map.off("idle", onPresentationIdle);
       map.off("sourcedata", onBoundaryData);
@@ -627,33 +651,35 @@ export function MapCanvas({
   }, []);
 
   // Mark the zip's centroid.
-  useEffect(() => {
+  useLayoutEffect(() => {
     const map = mapRef.current;
-    if (!map || !camera || !presentationReady) return;
+    if (!map) return;
+    if (!here) {
+      hereRef.current?.remove();
+      hereRef.current = null;
+      return;
+    }
+    if (!presentationReady) return;
 
     if (!hereRef.current) {
       hereRef.current = new Marker({
-        element: createHereElement(camera.zip),
+        element: createHereElement(here.zip),
         anchor: "center",
       })
-        .setLngLat([camera.lng, camera.lat])
+        .setLngLat([here.lng, here.lat])
         .addTo(map);
       return;
     }
 
-    hereRef.current.setLngLat([camera.lng, camera.lat]);
+    hereRef.current.setLngLat([here.lng, here.lat]);
     hereRef.current
       .getElement()
-      .setAttribute("aria-label", `Center of zip code ${camera.zip}`);
-  }, [camera, presentationReady]);
+      .setAttribute("aria-label", `Center of zip code ${here.zip}`);
+  }, [here, presentationReady]);
 
-  /*
-   * Voting-site pins, reconciled by id. Unplaceable sites never reach here
-   * (`isPinnable` filters upstream); they are listed with their address.
-   */
-  useEffect(() => {
+  useLayoutEffect(() => {
     const map = mapRef.current;
-    if (!map || mapPresentationHeld(map)) return;
+    if (!map) return;
     const pins = votePinsRef.current;
     const wanted = new Map((votingSites ?? []).map((s) => [s.id, s]));
 
@@ -662,6 +688,8 @@ export function MapCanvas({
       marker.remove();
       pins.delete(id);
     }
+
+    if (mapPresentationHeld(map)) return;
 
     for (const [id, site] of wanted) {
       const existing = pins.get(id);
@@ -688,13 +716,12 @@ export function MapCanvas({
     }
   }, [votingSites, presentationReady]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     const SOURCE = "voting-address-ring";
     const FILL = "voting-address-ring-fill";
     const LINE = "voting-address-ring-line";
-    if (mapPresentationHeld(map)) return;
 
     const clear = () => {
       if (map.getLayer(LINE)) map.removeLayer(LINE);
@@ -707,6 +734,7 @@ export function MapCanvas({
       return;
     }
 
+    if (mapPresentationHeld(map)) return;
     const { lat, lng } = votingAddressPoint;
     const STEPS = 96;
     const milesPerDegLat = 69.0;
@@ -765,17 +793,13 @@ export function MapCanvas({
     }
   }, [selectedVotingSiteId, votingSites]);
 
-  /*
-   * Rail and inset padding via `setPadding`, which every later flyTo, jumpTo
-   * and fitBounds honours. Not animated.
-   */
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.setPadding(
-      insets ?? { top: 0, bottom: 0, left: leftInset, right: 0 },
-      { duration: 0 },
-    );
+    const padding = insets ?? { top: 0, bottom: 0, left: leftInset, right: 0 };
+    const current = map.getPadding();
+    if ((["top","bottom","left","right"] as const).every(side=>(current[side]??0)===padding[side])) return;
+    map.setPadding(padding, { instant: true });
   }, [leftInset, insets]);
 
   const cameraMapRef = useRef<MapLibreMap | null>(null);
@@ -795,21 +819,21 @@ export function MapCanvas({
     };
 
     if (cameraMapRef.current !== map || prefersReducedMotion()) {
-      map.jumpTo(options);
+      map.jumpTo(options, { instant: true });
     } else {
       map.flyTo({ ...options, duration: 350, essential: true, curve: 1.5 });
     }
     cameraMapRef.current = map;
   }, [camera]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    /*
-     * A press on a pin that collides with another fans the group and selects
-     * nothing; the next press on a fanned pin selects it.
-     */
+    if (!venues.length) {
+      destroyMarkerPool(poolRef.current);
+      return;
+    }
     if (mapPresentationHeld(map)) return;
     rebuildMarkerPool(poolRef.current, map, venues, (venue) => {
       const pool = poolRef.current;
@@ -845,10 +869,6 @@ export function MapCanvas({
       ).length;
   }, [venues, presentationReady]);
 
-  /*
-   * Visibility depends on the filtered keys only, so a filter change touches
-   * just the pins whose visibility changed. Null shows the whole pool.
-   */
   useEffect(() => {
     if (!mapRef.current || mapPresentationHeld(mapRef.current)) return;
     applyVisibility(
@@ -871,7 +891,7 @@ export function MapCanvas({
     if (appliedStyleRef.current === basemap.styleUrl) return;
     appliedStyleRef.current = basemap.styleUrl;
 
-    map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
+    map.setStyle(basemapStyle(basemap, detectRaster(map.getCanvas()).kind === "software"), { transformStyle: preserveDistrictStyle });
   }, [theme]);
 
   // National boundaries depend on the chosen kinds, never an active state.
@@ -889,10 +909,6 @@ export function MapCanvas({
       selectedDistrict?.ocdId ?? null,
     );
 
-    /*
-     * A click centres the selected district. An explicit action, so
-     * `userMovedRef` is not consulted. Deselect moves nothing.
-     */
     if (!selectedDistrict) return;
     const rendered = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
     // The whole boundary, from the source geometry, when it can be read;
@@ -906,7 +922,7 @@ export function MapCanvas({
         padding: insets ? 24 : { top: 96, bottom: 128, left: 64, right: 64 },
         maxZoom: METRO_ZOOM,
         duration: prefersReducedMotion() ? 0 : 900,
-      });
+      }, { instant: prefersReducedMotion() });
     });
     return () => {
       cancelled = true;
@@ -939,7 +955,7 @@ export function MapCanvas({
         padding: 24,
         maxZoom: METRO_ZOOM,
         duration: prefersReducedMotion() ? 0 : 600,
-      });
+      }, { instant: prefersReducedMotion() });
     });
     return () => {
       cancelled = true;
@@ -973,7 +989,7 @@ export function MapCanvas({
       zoom: focus.zoom ?? 13,
     };
 
-    if (prefersReducedMotion()) map.jumpTo(options);
+    if (prefersReducedMotion()) map.jumpTo(options, { instant: true });
     else map.flyTo({ ...options, duration: 900, essential: true });
   }, [focus]);
 
@@ -996,23 +1012,18 @@ export function MapCanvas({
     });
   }, [districtTypes]);
 
-  /*
-   * Selection is a data attribute on the marker element. `venues` is not a
-   * dependency: the pool tracks the selected key, and new markers start unset.
-   */
   useEffect(() => {
     applySelection(poolRef.current, selectedVenueKey);
   }, [selectedVenueKey]);
 
-  /**
-   * Frame the visible pins with the centroid.
-   * `framed` uses the same key set as the visibility effect.
-   */
   const framed = useMemo(
     () =>
       visibleVenueKeys ? venues.filter((v) => visibleVenueKeys.has(v.key)) : venues,
     [venues, visibleVenueKeys],
   );
+
+  const framedMapRef = useRef<MapLibreMap | null>(null);
+  const framedBoundsRef = useRef("");
 
   useEffect(() => {
     const map = mapRef.current;
@@ -1024,9 +1035,7 @@ export function MapCanvas({
     /* Once the reader pans or zooms, no automatic reframe until an explicit action clears the flag. */
     if (userMovedRef.current) return;
 
-    // Let the fly-to land before overriding where it went.
-    const timer = window.setTimeout(() => {
-      // Re-checked inside the timer: the pan usually lands during the delay.
+    const frameVenues = () => {
       if (userMovedRef.current) return;
       if (!frameAllVenues) {
         const anyVisible = framed.some((venue) =>
@@ -1039,14 +1048,33 @@ export function MapCanvas({
       bounds.extend([camera.lng, camera.lat]);
       for (const venue of framed) bounds.extend([venue.lng, venue.lat]);
 
+      const signature = `${camera.zip}:${bounds.toArray().flat().join(",")}`;
+      if (framedMapRef.current === map && framedBoundsRef.current === signature) return;
+      framedMapRef.current = map;
+      framedBoundsRef.current = signature;
+
+      // Arrival already positioned the ZIP. Keep that view when every venue
+      // fits inside its unobstructed area instead of loading a second tile set.
+      const padding = map.getPadding(), canvas = map.getCanvas();
+      const inside = (lng: number, lat: number) => {
+        const point = map.project([lng, lat]);
+        return point.x >= (padding.left ?? 0) + 24 && point.x <= canvas.clientWidth - (padding.right ?? 0) - 24
+          && point.y >= (padding.top ?? 0) + 24 && point.y <= canvas.clientHeight - (padding.bottom ?? 0) - 24;
+      };
+      if (inside(camera.lng, camera.lat) && framed.every(venue => inside(venue.lng, venue.lat))) return;
+
       map.fitBounds(bounds, {
         padding: { top: 96, bottom: 128, left: 64, right: 64 },
         maxZoom: METRO_ZOOM,
-        duration: prefersReducedMotion() ? 0 : 1400,
-      });
-    }, 2800);
+        duration: 0,
+      }, { instant: true });
+    };
 
-    return () => window.clearTimeout(timer);
+    // Initial ZIP arrival is a jump. Later choices wait for the actual flight,
+    // rather than leaving a fixed delay after an already usable camera.
+    if (map.isMoving()) map.once("moveend", frameVenues);
+    else frameVenues();
+    return () => { map.off("moveend", frameVenues); };
   }, [framed, camera, frameAllVenues, allowAutoFrame]);
 
   // The inner div is the MapLibre container; maplibre-gl.css's `position: relative`

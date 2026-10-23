@@ -25,13 +25,14 @@ import { readerOfficeholders } from "../lib/ask/server-sources.ts";
 import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
 import { sourceProjectionEvidence, type ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import {
-  FEDERAL_DIRECTORY_SCOPE,
+  federalDirectoryForState,
+  federalDirectoryScope,
   FEDERAL_DIRECTORY_SOURCE_ID,
   failedFederalDirectoryCandidate,
   federalDirectoryCandidate,
   type FederalDirectoryAcquisition,
 } from "../lib/officials/federal-directory-data-plane.ts";
-import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
+import { readStateFederalDirectory } from "../lib/officials/federal-directory-read-model.ts";
 import {
   readRegistryRuntimePrior,
   acceptedRegistryPrior,
@@ -108,13 +109,11 @@ function registryFixtureForState(state: string, value: RegistryRuntimeReadModel 
       [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
 }
 
-
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
-/** The synthetic federal directory over the registry's own districts (the bundled first seed is gone). */
 async function federalSeed() {
   return structuredClone(syntheticFederalDirectory());
 }
@@ -250,37 +249,40 @@ test("Ask reads native state people beside a partitioned registry without revivi
   }
 });
 
-test("federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer", async () => {
+test("a place's federal roster/directory promotes once and failed acquisition preserves its exact GOOD pointer", async () => {
   const store = new MemoryRoutineDataStore();
-  const projection = await federalSeed();
-  const good = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection });
-  const promoted = await processRegisteredManualCandidate(store, "congress-bulk-roster", good, T0);
+  const national = await federalSeed(), state = national.roster.officeholders[0]!.state!, scope = federalDirectoryScope(state);
+  const projection = federalDirectoryForState(national, state), contract = `congress-bulk-roster:${state}` as "congress-bulk-roster:AZ";
+  const good = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection });
+  const promoted = await processRegisteredManualCandidate(store, contract, good, T0);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
   assert.deepEqual((await store.events(good.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
-  const read = await readFederalDirectoryProjection({ store, bypassCache: true, now: T0 });
+  const read = await readStateFederalDirectory(state, { store, bypassCache: true, now: T0 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.versionId, good.id);
 
   const alteredProjection = structuredClone(projection);
   alteredProjection.roster.officeholders[0]!.name = `${alteredProjection.roster.officeholders[0]!.name} Altered`;
-  const altered = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: alteredProjection });
+  const altered = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: alteredProjection });
   assert.notEqual(altered.id, good.id, "the federal candidate identity binds the exact normalized projection");
+  const elsewhere = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "good"), retrievedAt: T0, projection: national });
+  assert.ok(national.roster.officeholders.some((holder) => holder.state !== state) ? elsewhere.semantics.violations.includes("OFFICEHOLDER_OUTSIDE_PLACE") : true);
 
   const oneFile = federalAcquisitions(projection.sourceSha, "duplicate")[0]!;
-  const incomplete = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: Array.from({ length: 5 }, () => oneFile), retrievedAt: T1, projection });
-  const incompleteOutcome = await processRegisteredManualCandidate(store, "congress-bulk-roster", incomplete, T1);
+  const incomplete = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: Array.from({ length: 5 }, () => oneFile), retrievedAt: T1, projection });
+  const incompleteOutcome = await processRegisteredManualCandidate(store, contract, incomplete, T1);
   assert.equal(incompleteOutcome.candidate.state, "SOURCE_BLOCKED");
-  assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE))?.versionId, good.id);
+  assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", scope))?.versionId, good.id);
 
-  const failed = failedFederalDirectoryCandidate(T1, "directory source unavailable");
-  const refused = await processRegisteredManualCandidate(store, "congress-bulk-roster", failed, T1);
+  const failed = failedFederalDirectoryCandidate(state, T1, "directory source unavailable");
+  const refused = await processRegisteredManualCandidate(store, contract, failed, T1);
   assert.equal(refused.candidate.state, "SOURCE_BLOCKED");
-  assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE))?.versionId, good.id);
+  assert.equal((await store.readPromotion("FEDERAL_DIRECTORY", scope))?.versionId, good.id);
 });
 
 test("federal civic member ordering is independent of source-map insertion order", async () => {
-  const projection = await federalSeed();
+  const national = await federalSeed(), state = national.roster.officeholders[0]!.state!, projection = federalDirectoryForState(national, state);
   const reordered = structuredClone(projection);
   reordered.directory.byMember = Object.fromEntries(
     Object.entries(reordered.directory.byMember).reverse(),
@@ -289,8 +291,9 @@ test("federal civic member ordering is independent of source-map insertion order
     Object.entries(reordered.directory.committees).reverse(),
   );
   const acquisitions = federalAcquisitions(projection.sourceSha, "stable-order");
-  const original = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions, retrievedAt: T0, projection });
+  const original = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions, retrievedAt: T0, projection });
   const roundTripped = await federalDirectoryCandidate({
+    state,
     vault: new MemoryEvidenceStore(),
     acquisitions,
     retrievedAt: T0,
@@ -451,7 +454,7 @@ test("one blocked registry publisher holds only its dependent members while an u
     payload: changedPayload,
     sourceReceipt: partialReceipt,
   }, { prior });
-  // A receipted base carries its members' sources forward; nothing is inherited on authority alone.
+
   assert.equal(next.manualPriorAuthority, undefined);
   const outcome = await processRegisteredManualCandidate(
     store,
@@ -476,7 +479,6 @@ test("one blocked registry publisher holds only its dependent members while an u
   );
 });
 
-/** The frozen first seed still holds the two bodies once minted on Census placeholders (Arizona, New Hampshire). */
 function frozenPlaceholders(state?: string) {
   const frozen = JSON.parse(readFileSync("lib/registry/registry.json", "utf8")) as Registry;
   const divisions = frozen.divisions.filter((division) => (!state || division.state === state) && isCensusPlaceholderDivision(division));
@@ -491,8 +493,7 @@ test("a Census placeholder division is geography: no body is derived on it and n
   for (const division of placeholders.divisions) {
     assert.deepEqual(slotsFor(division), { slots: [], skipped: "census-placeholder-not-a-government" });
   }
-  // Known by the Census's own code whatever its slug or label says, the slug
-  // standing in only where no code is held; never a division of another layer.
+
   const seed = servedRegistry();
   const real = seed.registry.divisions.find((division) => division.divisionType === "school_district" && !isCensusPlaceholderDivision(division));
   assert.ok(real);
@@ -501,11 +502,8 @@ test("a Census placeholder division is geography: no body is derived on it and n
   assert.equal(isCensusPlaceholderDivision({ ocdId: placeholders.divisions[0]!.ocdId }), true);
   assert.equal(isCensusPlaceholderDivision({ ...placeholders.divisions[0]!, divisionType: "place" }), false);
 
-  // The served registry keeps both places as geography.
   assert.equal(seed.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).length, 2);
 
-  // One view of the frozen file for everything that counts its bodies: it drops exactly the two boards
-  // and keeps every place.
   const frozen = JSON.parse(readFileSync("lib/registry/registry.json", "utf8")) as Registry;
   const counted = withoutPlaceholderBodies(frozen);
   assert.equal(counted.divisions.length, frozen.divisions.length);
@@ -521,7 +519,7 @@ test("a Census placeholder division is geography: no body is derived on it and n
 
 test("a promotion drops placeholder bodies whichever side holds them, names why, and translates the placeholder's name", async () => {
   const placeholders = frozenPlaceholders("AZ");
-  // A prior holding both bodies and a raw Census name.
+
   const base = await registryPackage(T0, "placeholder-prior");
   const priorPayload = structuredClone(base.payload);
   priorPayload.registry.bodies = [...priorPayload.registry.bodies, ...placeholders.bodies].sort((left, right) => left.id.localeCompare(right.id));
@@ -539,7 +537,6 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
     (candidate.excludedFacts ?? []).filter((fact) => fact.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT").map((fact) => fact.key ?? "").sort();
   const expectedRemovals = placeholders.bodies.map((body) => `body:${body.id}`).sort();
 
-  // Omitted by the package: this open family would otherwise keep a prior member forever.
   const next = await registryPackage(T1, "placeholder-next");
   const fromPrior = registryRuntimeCandidate(next, { prior });
   const fromPriorModel = fromPrior.readModel as RegistryRuntimeReadModel;
@@ -548,10 +545,9 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
   assert.deepEqual(plainNames(fromPriorModel), ["No unified school district here"]);
   assert.deepEqual(removals(fromPrior), expectedRemovals);
   assert.equal((fromPrior.excludedFacts ?? []).some((fact) => fact.code === "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING" && expectedRemovals.includes(fact.key ?? "")), false);
-  // The removals it proves to the plane are the prior's, named by their division.
+
   assert.deepEqual(fromPrior.removalEvidence, placeholders.bodies.map((body) => ({ key: `body:${body.id}`, code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT", divisionOcdId: body.ocdId })).sort((left, right) => left.key.localeCompare(right.key)));
 
-  // Carried by the package itself, raw name and all.
   const carryingPayload = structuredClone(priorPayload);
   const carrying: RegistryRuntimePackage = { ...next, payload: carryingPayload, sourceReceipt: receipt(carryingPayload, T1, "placeholder-carrying") };
   const fromPackage = registryRuntimeCandidate(carrying);
@@ -575,7 +571,6 @@ async function transferImportedRegistry(store: MemoryRoutineDataStore, at: strin
   return { imported, base, placeholders: frozenPlaceholders("AZ"), record, projection };
 }
 
-/** A correction that re-reviews only the two placeholder divisions against the Census directory they cite. */
 function placeholderCorrection(base: RegistryRuntimeReadModel, placeholderIds: ReadonlySet<string>, at: string): RegistryRuntimePackage {
   const divisions = base.registry.divisions
     .filter((division) => placeholderIds.has(division.ocdId))
@@ -675,7 +670,6 @@ test("the owner door builds on the transfer-time import: untouched members keep 
   assert.equal(served.registry.bodies.length, base.registry.bodies.length - 1);
   assert.deepEqual(served.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).map((division) => division.label), ["No unified school district here"]);
 
-  // The next correction builds on that one; what is still carried from the import keeps carrying.
   const secondPrior = await readRegistryRuntimePrior(store, T1, "AZ");
   assert.equal(secondPrior?.versionId, next.id);
   const later = "2026-09-08T12:02:00.000Z";
@@ -706,17 +700,14 @@ test("the plane refuses what the registry door does not prove: a changed carried
       .filter((check) => check.verdict !== "PASS").map((check) => check.code);
   assert.deepEqual(codes(next), []);
 
-  // A member carried on the import's authority may not change.
   const changed = structuredClone(next) as RoutineCandidate & { readModel: RegistryRuntimeReadModel };
   const carriedBody = changed.readModel.registry.bodies.find((body) => next.manualPriorAuthority!.retainedMembers.some((member) => member.key === `body:${body.id}`))!;
   carriedBody.name = `${carriedBody.name ?? "A body"} (unreviewed)`;
   assert.ok(codes(changed).includes("MANUAL_PRIOR_AUTHORITY_INVALID"), JSON.stringify(codes(changed)));
 
-  // A removal with no evidence stays unexplained.
   const unexplained = { ...next, removalEvidence: undefined };
   assert.deepEqual(codes(unexplained), ["INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED"]);
 
-  // A real board removed under the placeholder code is refused.
   const realBoard = base.registry.bodies.find((body) => body.id.endsWith("#board") && body.ocdId !== null && !placeholders.ids.has(body.ocdId))!;
   const disguised = structuredClone(next) as RoutineCandidate & { readModel: RegistryRuntimeReadModel };
   disguised.readModel.registry.bodies = disguised.readModel.registry.bodies.filter((body) => body.id !== realBoard.id);
@@ -740,10 +731,10 @@ test("the recorded state remains readable until its correction promotes", async 
 });
 
 test("both Reader projections reject cross-source proof and never bootstrap on store failure", async () => {
-  const projection = await federalSeed();
-  const candidate = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(projection.sourceSha, "proof"), retrievedAt: T0, projection });
+  const national = await federalSeed(), state = national.roster.officeholders[0]!.state!;
+  const candidate = await federalDirectoryCandidate({ state, vault: new MemoryEvidenceStore(), acquisitions: federalAcquisitions(national.sourceSha, "proof"), retrievedAt: T0, projection: federalDirectoryForState(national, state) });
   const mismatched = { ...candidate, id: `${candidate.id}-bad-proof`, sourceProjectionEvidence: sourceProjectionEvidence(FEDERAL_DIRECTORY_SOURCE_ID, "FEDERAL_DIRECTORY", "US:wrong-scope") };
-  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "congress-bulk-roster", mismatched, T0);
+  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), `congress-bulk-roster:${state}` as "congress-bulk-roster:AZ", mismatched, T0);
   assert.equal(outcome.candidate.state, "DEPENDENT_CONSUMER_INVALID");
   assert.equal(outcome.promoted, null);
 
@@ -753,7 +744,7 @@ test("both Reader projections reject cross-source proof and never bootstrap on s
     async readCandidate() { candidateReads += 1; return null; },
   };
   const reads = await Promise.all([
-    readFederalDirectoryProjection({ store: brokenStore, bypassCache: true }),
+    readStateFederalDirectory(state, { store: brokenStore, bypassCache: true }),
     readRegistryRuntimeProjection(["AZ"], { store: brokenStore, bypassCache: true }),
   ]);
   assert.deepEqual(reads.map((read) => read.kind), ["STORE_UNREACHABLE", "STORE_UNREACHABLE"]);
@@ -761,7 +752,7 @@ test("both Reader projections reject cross-source proof and never bootstrap on s
 });
 
 test("manual contracts have no clock and retired tracked writers cannot be invoked", () => {
-  const ids = new Set(["congress-bulk-roster", "registry-runtime:AZ"]);
+  const ids = new Set(["congress-bulk-roster:AZ", "registry-runtime:AZ"]);
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
   assert.equal(contracts.length, 2);
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY" && !("cadence" in contract)));
@@ -808,7 +799,6 @@ test("a receiptless ordinary state version cannot become inherited registry auth
     promotions: new Map([[projection.key, { ...projection, receipt }]]) });
   await assert.rejects(readRegistryRuntimePrior(store, T0, "AZ"), /REGISTRY_RUNTIME_BASE_PROOF_INVALID:MANUAL_SOURCE_RECEIPT_INVALID/);
 });
-
 
 test("a sparse state registry successor preserves every held roster, member, disposition, contact and photo", async () => {
   const store = stateRegistryRuntimeStore("AZ"), prior = (await readRegistryRuntimePrior(store, T1, "AZ"))!;

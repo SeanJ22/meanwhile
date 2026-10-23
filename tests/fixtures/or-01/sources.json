@@ -1,0 +1,76 @@
+{
+  "formatVersion": 1,
+  "description": "Unmodified official roster responses saved for OR-01 on 2026-10-13. The House Clerk and Senate lists check each member of Congress's seat; the legislature pages state their own vacant seats.",
+  "sources": [
+    {
+      "file": "senate-current.xml",
+      "url": "https://www.senate.gov/general/contact_information/senators_cfm.xml",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:14:55.743Z",
+      "sha256": "01459d6977e9b5590e7d27cb333ff062cf9cf0783c934373393512fe2542b5e2",
+      "bytes": 52533
+    },
+    {
+      "file": "house-current.xml",
+      "url": "https://clerk.house.gov/xml/lists/MemberData.xml",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:14:57.175Z",
+      "sha256": "01833c6c646873b2247950e8ab9c7ecc2c57fd2bf019d1014bd64a58b496ed3d",
+      "bytes": 557203
+    },
+    {
+      "file": "la-house.html.gz",
+      "url": "https://house.louisiana.gov/H_Reps/H_Reps_FullInfo",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:16:32.799819+00:00",
+      "sha256": "be1ef41e9b489c668e4a572d97f109afc6201a3f373ce41f40d82ac18e45ea3b",
+      "bytes": 305377,
+      "encoding": "gzip"
+    },
+    {
+      "file": "md-house.html.gz",
+      "url": "https://mgaleg.maryland.gov/mgawebsite/Members/Index/house",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:20:11.247937+00:00",
+      "sha256": "c8288d867e8d1caa6c993345360e27cd56b20e771b2cf15a5acccc8e2f18e5cd",
+      "bytes": 220136,
+      "encoding": "gzip"
+    },
+    {
+      "file": "mo-senate.html.gz",
+      "url": "https://www.senate.mo.gov/Senators",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:16:33.035497+00:00",
+      "sha256": "6975c1f64cfa6cb6526f8d7e3c41c3020c6c0e731a64fb62cd95fb732f5ebc9c",
+      "bytes": 36029,
+      "encoding": "gzip"
+    },
+    {
+      "file": "va-house.html.gz",
+      "url": "https://house.vga.virginia.gov/members",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:16:28.476268+00:00",
+      "sha256": "adc6cf0d8f756994ffd44a4a21333c1fe21c10daf66e3a0454082bcd325a7bfe",
+      "bytes": 275176,
+      "encoding": "gzip"
+    },
+    {
+      "file": "oh-house.html.gz",
+      "url": "https://ohiohouse.gov/members/directory",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:24:34.658265+00:00",
+      "sha256": "1d2243ce4a75db9a16eaca903ae3dfd4bcdb387f352c30f7ff3e1452d1fe4a3b",
+      "bytes": 111120,
+      "encoding": "gzip"
+    },
+    {
+      "file": "oh-senate.html.gz",
+      "url": "https://ohiosenate.gov/members/directory",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-13T04:24:33.611415+00:00",
+      "sha256": "41393138d243164cbbf7955bbf92ca39bcf8eb9416c4f2783d587fc6bdde1991",
+      "bytes": 64153,
+      "encoding": "gzip"
+    }
+  ]
+}

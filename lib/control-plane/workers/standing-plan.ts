@@ -3,12 +3,13 @@ import { reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import type { RouteTask } from "../route-task.ts";
 
-/** Held work joins the same lease queue as acquisition. Planning invokes no worker or model. */
 export async function planHeldWorkerFleet(root: string, runtime: FleetRuntime, legacyOnly = false): Promise<readonly RouteTask[]> {
   await advanceHeldWorkerFleet(root, runtime, Infinity, legacyOnly);
-  const attempts = (await runtime.repos.attempts.list()).map(row => row.value);
+  const snapshot = await runtime.repos.dispatchState.readOpen();
+  const workIds = [...new Set([...snapshot.routeTasks.values()].map(row => row.value.workItemId))];
+  const attempts = (await Promise.all(workIds.map(id => runtime.repos.attempts.listWhere(["workItemId"], id)))).flat().map(row => row.value);
   const tasks: RouteTask[] = [];
-  for (const { value: task } of await runtime.repos.routeTasks.list()) {
+  for (const { value: task } of snapshot.routeTasks.values()) {
     if (!task.workerTask || (legacyOnly && task.workerTask.contract.schemaVersion !== 1)) continue;
     const now = (runtime.now ?? (() => new Date().toISOString()))();
     const admission = workerTaskAdmission(task, attempts, now);

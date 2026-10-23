@@ -12,6 +12,8 @@ export function applicationLayer(id: string): boolean {
 /** Called once at motion start and once after idle, never by move/zoom/render. */
 export function setPresentationVisible(map: MapLibreMap, visible: boolean): void {
   for (const layer of map.getStyle()?.layers ?? []) {
-    if (applicationLayer(layer.id)) map.setLayoutProperty(layer.id, "visibility", visible ? "visible" : "none");
+    if (applicationLayer(layer.id) && (map.getLayoutProperty(layer.id, "visibility") ?? "visible") !== (visible ? "visible" : "none")) {
+      map.setLayoutProperty(layer.id, "visibility", visible ? "visible" : "none");
+    }
   }
 }

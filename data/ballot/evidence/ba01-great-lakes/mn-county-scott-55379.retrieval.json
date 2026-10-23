@@ -1,0 +1,11 @@
+{
+  "streetUrl": "https://myballotmn.sos.mn.gov/api/Streets/GetStreets?ZipCode=55379",
+  "ballotUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=330942",
+  "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/761C5230-E219-4EB2-9512-E46590D058ED.pdf",
+  "httpStatus": 200,
+  "sampleBytes": 98008,
+  "county": "Scott",
+  "zip": "55379",
+  "judicialDistrict": "01",
+  "precinct": "0045"
+}

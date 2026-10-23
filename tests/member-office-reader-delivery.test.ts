@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { federalDirectoryEdge } from "./helpers/promoted-fixtures.ts";
 import { createElement } from "react";
 import { readFileSync } from "node:fs";
 import { parse } from "yaml";
 import { renderToStaticMarkup } from "react-dom/server";
 import { GET } from "../app/api/directory/route.ts";
 import { DirectoryRecordsContent } from "../components/officials/member-directory.tsx";
-import { loadMemberDirectory } from "../hooks/use-member-directory.ts";
+import { loadMemberDirectory, primeMemberDirectories, primeStateMemberDirectories } from "../hooks/use-member-directory.ts";
 import { officeContactsForMember } from "../lib/ask/office-contacts.ts";
 import { contactRecord } from "../lib/ask/contacts.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
@@ -48,21 +49,28 @@ test("one state shard supplies directory mailto links and distinct sourced Ask o
 test("a federal member's existing edge directory also supplies Ask office contacts",async()=>{
   const value=normalizeCongressDirectory({"legislators-current":[{id:{bioguide:"A000001"},name:{first:"Federal",last:"Example"},terms:[{type:"rep",state:"AZ",district:1,start:"2025-01-03",end:"2027-01-03"}]}],
     "legislators-district-offices":[{id:{bioguide:"A000001"},offices:[{address:"100 Main St",city:"Phoenix",state:"AZ",zip:"85001",phone:"602-555-0100"}]}]},"a".repeat(40),at);
-  const contacts=await withReaderAuthorityEdge({edgeOnly:true,federalDirectory:{value,versionId:"federal-held"}},()=>officeContactsForMember({id:"congress:A000001",name:"Federal Example",state:"AZ"}));
+  const contacts=await withReaderAuthorityEdge({edgeOnly:true,...federalDirectoryEdge(value,"federal-held")},()=>officeContactsForMember({id:"congress:A000001",name:"Federal Example",state:"AZ"}));
   assert.equal(contacts.length,1);assert.equal(contacts[0].phone,"602-555-0100");assert.equal(contacts[0].retrievedAt,at);
   assert.match(contacts[0].sourceUrl ?? "",/legislators-district-offices\.yaml$/);
 });
 
-test("the shared directory fetch carries and caches the native person's state scope",async()=>{
+test("the shared directory fetch shares in-flight state reads and retains completed payloads briefly",async()=>{
   const original=globalThis.fetch,urls:string[]=[],key="plural:00000000-0000-4000-8000-000000000012";
   globalThis.fetch=async input=>{urls.push(String(input));return Response.json({districtOffices:[],committees:[]});};
   try {
     const one=loadMemberDirectory(key,"OH"),same=loadMemberDirectory(key,"US-OH"),other=loadMemberDirectory(key,"NC");
     assert.equal(one,same);assert.notEqual(one,other);await Promise.all([one,other]);
     assert.equal(urls.length,2);assert.ok(urls[0].endsWith("&state=OH"));assert.ok(urls[1].endsWith("&state=NC"));
+    await loadMemberDirectory(key,"OH");
+    assert.equal(urls.length,2,"repeated card opens reuse the state payload for thirty seconds");
+    const now=Date.now;
+    try {
+      Date.now=()=>now()+31_000;
+      await loadMemberDirectory(key,"OH");
+      assert.equal(urls.length,3,"a new card open refreshes expired data");
+    } finally { Date.now=now; }
   } finally {globalThis.fetch=original;}
 });
-
 
 test("the committed congress-legislators sample shows held office fields with no missing-field rows", () => {
   const fixture = JSON.parse(readFileSync(new URL("./fixtures/ui-01-congress-legislators-hinson.json", import.meta.url), "utf8"));
@@ -78,4 +86,43 @@ test("the committed congress-legislators sample shows held office fields with no
   assert.doesNotMatch(markup, /working on getting|Want us|no published page|<summary[^>]*>Sources/);
   const missing = renderToStaticMarkup(createElement(DirectoryRecordsContent, { holderId: "congress:H001091", state: "IA", only: "offices", directory: { districtOffices: [], committees: [] }, failed: false }));
   assert.equal(missing, "", "the empty directory contributes to the card gap without rendering field rows");
+});
+
+
+test("state package directories supply federal offices before any contact-card fetch",async()=>{
+  const value=normalizeCongressDirectory({"legislators-current":[{id:{bioguide:"T009991"},name:{first:"Federal",last:"Example"},terms:[{type:"rep",state:"AZ",district:7,start:"2025-01-03",end:"2027-01-03"}]}],
+    "legislators-district-offices":[{id:{bioguide:"T009991"},offices:[{address:"100 Main St",city:"Tucson",state:"AZ",zip:"85701",phone:"520-555-0100"}]}]},"a".repeat(40),at);
+  primeMemberDirectories(value.directory,"AZ");
+  const original=globalThis.fetch;
+  globalThis.fetch=async()=>{throw new Error("primed directory must not fetch");};
+  try {
+    for (const scope of ["AZ","US-AZ",undefined]) {
+      const directory=await loadMemberDirectory("congress:T009991",scope);
+      assert.equal(directory.districtOffices[0].phone,"520-555-0100");
+    }
+  } finally {globalThis.fetch=original;}
+});
+
+test("a federal directory request carries the caller's state",async()=>{
+  const original=globalThis.fetch;
+  let url="";
+  globalThis.fetch=async input=>{url=String(input);return Response.json({districtOffices:[],committees:[]});};
+  try {
+    await loadMemberDirectory("congress:T009992","US-AZ");
+    assert.ok(url.endsWith("&state=AZ"));
+  } finally {globalThis.fetch=original;}
+});
+
+test("state package offices prime exact global and state-native aliases without a card request", async () => {
+  const id = "plural:00000000-0000-4000-8000-000000000077", alias = "az-legislature:7777";
+  const directory = { source: null, districtOffices: [{ city: "Tucson", state: "AZ", address: "100 Main St", zip: "85701", phone: "520-555-0100", lat: 32.2, lng: -110.9 }], committees: [],
+    officeDetails: [{ officeKind: "DISTRICT" as const, sourceUrl: "https://www.azleg.gov/member", sourceOrg: "Arizona Legislature", collectedAt: at, official: true }] };
+  primeStateMemberDirectories([{ ids: [id, alias], directory }], "AZ");
+  const original = globalThis.fetch;
+  globalThis.fetch = async () => { throw new Error("state offices must come from the package"); };
+  try {
+    const first = loadMemberDirectory(id, "AZ"), second = loadMemberDirectory(alias, "US-AZ");
+    assert.equal(first, second, "source-native aliases share the same held office payload");
+    assert.deepEqual(await first, directory);
+  } finally { globalThis.fetch = original; }
 });

@@ -9,6 +9,6 @@ export function isPeopleSource(sourceId: string): sourceId is PeopleSourceId {
 export function peopleSourceScope(jurisdiction: string, sourceId: string): string {
   return `${jurisdiction}:people:${sourceId === "people-portraits" ? "portraits" : sourceId}:v1`;
 }
-export function peopleSourceRecordClass(jurisdiction: string, sourceId: string): RoutineRecordClass {
-  return sourceId === "congress-api" || sourceId === "govinfo" || jurisdiction === "US" ? "FEDERAL_DIRECTORY" : "STATE_LEGISLATOR";
+export function peopleSourceRecordClass(sourceId: string): RoutineRecordClass {
+  return sourceId === "congress-api" || sourceId === "govinfo" ? "FEDERAL_DIRECTORY" : "STATE_LEGISLATOR";
 }

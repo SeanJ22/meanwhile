@@ -7,6 +7,7 @@ export async function readCivicProjection(scope = GOOGLE_CIVIC_SCOPE, options: P
   if (result.kind === "PROMOTED") {
     if (result.metadata.sourceId !== GOOGLE_CIVIC_SOURCE_ID) throw new Error("Google Civic pointer names another publisher.");
     assertCivicProjection(result.value);
+    if (result.value.kind === "LOOKUP") throw new Error("Stored Google voting answers cannot be used; request a live answer.");
   }
   return result;
 }

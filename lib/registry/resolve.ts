@@ -1,5 +1,5 @@
 import type { Body, Division } from "./types.ts";
-import { bodyIdsAtPoint, type BodyTerritoryFile } from "./body-territory.ts";
+import { bodyIdsAtPoint, bodyIdsWithTerritory, type BodyTerritoryFile } from "./body-territory.ts";
 import { polygonContains } from "../geo/polygon.ts";
 
 
@@ -125,10 +125,11 @@ export function bodiesAt(
   const hit = resolved ?? divisionsAt(point, features, divisions);
   const ids = new Set(hit.map((d) => d.ocdId));
   const territoryHits = bodyIdsAtPoint(point, territory ?? null);
+  // A body with its own polygons is decided by them alone, whatever division it was filed on.
+  const territorial = bodyIdsWithTerritory(territory ?? null);
 
   const serves = (b: Body): boolean =>
-    (b.ocdId !== null && ids.has(b.ocdId)) ||
-    (b.alsoServesOcdIds ?? []).some((id) => ids.has(id)) ||
-    territoryHits.has(b.id);
+    territoryHits.has(b.id) || (!territorial.has(b.id) &&
+      ((b.ocdId !== null && ids.has(b.ocdId)) || (b.alsoServesOcdIds ?? []).some((id) => ids.has(id))));
   return { divisions: hit, bodies: bodies.filter(serves) };
 }

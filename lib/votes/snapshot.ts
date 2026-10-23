@@ -8,9 +8,11 @@ import {
 import type { BillSummariesFile } from "./bill-summaries.ts";
 import {
   FEDERAL_ROLLCALL_SCOPE,
+  federalMemberVotesScope,
+  type FederalMemberVotesReadModel,
+  type FederalRollCallWindow,
   type FederalRollCallsReadModel,
 } from "./data-plane.ts";
-import type { VotesSnapshot } from "./types.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 let cache: FederalRollCallsReadModel | null = null;
@@ -26,13 +28,25 @@ function validateProjection(value: FederalRollCallsReadModel, versionId: string)
     value.snapshot?.congress <= 0 ||
     value.snapshot?.session <= 0 ||
     !Array.isArray(value.snapshot?.votes) ||
-    !Array.isArray(value.snapshot?.positions) ||
+    typeof value.partyBreakdowns !== "object" || value.partyBreakdowns === null ||
     !value.billSummaries ||
     typeof value.billSummaries.summaries !== "object" ||
     !Array.isArray(value.billSummaries.pending)
   ) {
     throw new Error(`Federal roll-call projection ${versionId} does not satisfy the Reader contract.`);
   }
+}
+
+/** One member's recorded positions, each answering a roll call the record itself carries. */
+export async function readFederalMemberVotes(officeholderId: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<FederalMemberVotesReadModel>> {
+  const result = await readPromotedCivicData<FederalMemberVotesReadModel>("FEDERAL_ROLL_CALL", federalMemberVotesScope(officeholderId), options);
+  if (result.kind !== "PROMOTED" && result.kind !== "BOOTSTRAP") return result;
+  const value = result.value, votes = new Set(Array.isArray(value.votes) ? value.votes.map(vote => vote.id) : []);
+  if (value.formatVersion !== 1 || value.officeholderId !== officeholderId || !Array.isArray(value.positions) || value.positions.length === 0 ||
+      value.positions.some(row => row.officeholderId !== officeholderId || !votes.has(row.voteId))) {
+    throw new Error(`Federal member positions ${result.metadata.versionId ?? result.kind} do not satisfy the Reader contract.`);
+  }
+  return result;
 }
 
 /** The promoted bill summaries carried into a new roll-call acquisition. */
@@ -82,7 +96,7 @@ export function getFederalVotesReadModel(): FederalRollCallsReadModel {
   return cache;
 }
 
-export function getVotesSnapshot(): VotesSnapshot {
+export function getVotesSnapshot(): FederalRollCallWindow {
   return getFederalVotesReadModel().snapshot;
 }
 

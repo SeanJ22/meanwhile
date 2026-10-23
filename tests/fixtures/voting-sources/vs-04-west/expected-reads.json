@@ -1,0 +1,881 @@
+[
+  {
+    "id": "mt-statewide-polling-2026",
+    "state": "MT",
+    "scope": "Montana",
+    "sites": 304,
+    "blanks": [
+      {
+        "reason": "missing-sites",
+        "owed": "Current official election-page association for this list"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Beaverhead"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Big Horn"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Blaine"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Broadwater"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Carbon"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Carter"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Cascade"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Chouteau"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Custer"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Daniels"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Dawson"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Deer Lodge"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Fallon"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Fergus"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Flathead"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Gallatin"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Garfield"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Glacier"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Golden Valley"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Granite"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Hill"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Jefferson"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Judith Basin"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Lake"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Lewis & Clark"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Liberty"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Lincoln"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Madison"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for McCone"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Meagher"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Mineral"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Missoula"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Musselshell"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Park"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Petroleum"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Phillips"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Pondera"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Powder River"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Powell"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Prairie"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Ravalli"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Richland"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Roosevelt"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Rosebud"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Sanders"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Sheridan"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Silver Bow"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Stillwater"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Sweet Grass"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Teton"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Toole"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Treasure"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Valley"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Wheatland"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Wibaux"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Yellowstone"
+      }
+    ]
+  },
+  {
+    "id": "mt-statewide-satellite-2026",
+    "state": "MT",
+    "scope": "Montana",
+    "sites": 31,
+    "blanks": [
+      {
+        "reason": "missing-sites",
+        "owed": "Current official election-page association for this list"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Big Horn"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Blaine"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Chouteau"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Gallatin"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Glacier"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Hill"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Lake"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Missoula"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Pondera"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Rosebud"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Roosevelt"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Sanders"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Valley"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Census tribal area for Crow Nation satellite office"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Census tribal area for Northern Cheyenne satellite office"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Census tribal area for Assiniboine and Gros Ventre satellite office"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Census tribal area for Chippewa Cree satellite office"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Census tribal area for Blackfeet Nation satellite office"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Census tribal area for Chippewa Creek satellite office"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Census tribal area for Confederated Salish, Pend d'Oreille and Kootenai satellite office"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Census tribal area for Assiniboine and Sioux satellite office"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Census tribal area for Salish and Kootenai satellite office"
+      }
+    ]
+  },
+  {
+    "id": "wa-statewide-dropboxes-2026",
+    "state": "WA",
+    "scope": "Washington",
+    "sites": 627,
+    "blanks": [
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Adams"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Asotin"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Benton"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Chelan"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Clallam"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Clark"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Columbia"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Cowlitz"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Douglas"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Ferry"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Franklin"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Garfield"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Grant"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Grays Harbor"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Island"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Jefferson"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for King"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Kitsap"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Kittitas"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Klickitat"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Lewis"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Lincoln"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Mason"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Okanogan"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Pacific"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Pend Oreille"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Pierce"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for San Juan"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Skagit"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Skamania"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Snohomish"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Spokane"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Stevens"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Thurston"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Wahkiakum"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Walla Walla"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Whatcom"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Whitman"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Yakima"
+      }
+    ]
+  },
+  {
+    "id": "or-statewide-drop-sites-2026",
+    "state": "OR",
+    "scope": "Oregon",
+    "sites": 334,
+    "blanks": [
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Baker"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Benton"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Clackamas"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Clatsop"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Columbia"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Coos"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Crook"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Curry"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Deschutes"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Douglas"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Gilliam"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Grant"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Harney"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Hood River"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Jackson"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Jefferson"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Josephine"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Klamath"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Lake"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Lane"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Lincoln"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Linn"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Malheur"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Marion"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Morrow"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Multnomah"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Polk"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Sherman"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Tillamook"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Umatilla"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Union"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Wallowa"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Wasco"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Washington"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Wheeler"
+      },
+      {
+        "reason": "missing-sites",
+        "owed": "Registered county match for Yamhill"
+      }
+    ]
+  },
+  {
+    "id": "hi-hawaii-centers-1",
+    "state": "HI",
+    "scope": "Hawaii",
+    "sites": 2,
+    "blanks": []
+  },
+  {
+    "id": "hi-maui-centers-2",
+    "state": "HI",
+    "scope": "Maui",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "hi-maui-centers-3",
+    "state": "HI",
+    "scope": "Maui",
+    "sites": 3,
+    "blanks": []
+  },
+  {
+    "id": "hi-maui-centers-4",
+    "state": "HI",
+    "scope": "Maui",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "hi-kauai-centers-5",
+    "state": "HI",
+    "scope": "Kauai",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "hi-honolulu-centers-6",
+    "state": "HI",
+    "scope": "Honolulu",
+    "sites": 2,
+    "blanks": []
+  },
+  {
+    "id": "hi-honolulu-centers-7",
+    "state": "HI",
+    "scope": "Honolulu",
+    "sites": 2,
+    "blanks": []
+  },
+  {
+    "id": "hi-hawaii-dropboxes-8",
+    "state": "HI",
+    "scope": "Hawaii",
+    "sites": 10,
+    "blanks": []
+  },
+  {
+    "id": "hi-hawaii-dropboxes-9",
+    "state": "HI",
+    "scope": "Hawaii",
+    "sites": 2,
+    "blanks": []
+  },
+  {
+    "id": "hi-maui-dropboxes-10",
+    "state": "HI",
+    "scope": "Maui",
+    "sites": 17,
+    "blanks": []
+  },
+  {
+    "id": "hi-maui-dropboxes-11",
+    "state": "HI",
+    "scope": "Maui",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "hi-kauai-dropboxes-12",
+    "state": "HI",
+    "scope": "Kauai",
+    "sites": 10,
+    "blanks": []
+  },
+  {
+    "id": "hi-kauai-dropboxes-13",
+    "state": "HI",
+    "scope": "Kauai",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "hi-kauai-dropboxes-14",
+    "state": "HI",
+    "scope": "Kauai",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "hi-honolulu-dropboxes-15",
+    "state": "HI",
+    "scope": "Honolulu",
+    "sites": 15,
+    "blanks": []
+  },
+  {
+    "id": "hi-honolulu-dropboxes-16",
+    "state": "HI",
+    "scope": "Honolulu",
+    "sites": 2,
+    "blanks": []
+  },
+  {
+    "id": "nv-washoe-vote-centers-2026",
+    "state": "NV",
+    "scope": "Washoe County",
+    "sites": 48,
+    "blanks": [
+      {
+        "reason": "missing-sites",
+        "owed": "Published Address: site name"
+      }
+    ]
+  },
+  {
+    "id": "ut-utah-county-vote_center-1",
+    "state": "UT",
+    "scope": "Utah County",
+    "sites": 13,
+    "blanks": []
+  },
+  {
+    "id": "ut-utah-county-vote_center-2",
+    "state": "UT",
+    "scope": "Utah County",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "ut-utah-county-early_voting-3",
+    "state": "UT",
+    "scope": "Utah County",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "ut-utah-county-drop_box-4",
+    "state": "UT",
+    "scope": "Utah County",
+    "sites": 27,
+    "blanks": []
+  },
+  {
+    "id": "ca-alameda-vote-centers-2026",
+    "state": "CA",
+    "scope": "Alameda County",
+    "sites": 100,
+    "blanks": []
+  },
+  {
+    "id": "id-canyon-early-voting-2026",
+    "state": "ID",
+    "scope": "Canyon County",
+    "sites": 2,
+    "blanks": []
+  },
+  {
+    "id": "nm-santa-fe-early_voting-2026",
+    "state": "NM",
+    "scope": "Santa Fe County",
+    "sites": 8,
+    "blanks": []
+  },
+  {
+    "id": "nm-santa-fe-vote_center-2026",
+    "state": "NM",
+    "scope": "Santa Fe County",
+    "sites": 34,
+    "blanks": []
+  },
+  {
+    "id": "co-arapahoe-drop-boxes-2026",
+    "state": "CO",
+    "scope": "Arapahoe County",
+    "sites": 39,
+    "blanks": []
+  },
+  {
+    "id": "wy-natrona-early-voting-2026",
+    "state": "WY",
+    "scope": "Natrona County",
+    "sites": 1,
+    "blanks": []
+  },
+  {
+    "id": "legacy:cochise:vote-center-pdf",
+    "state": "AZ",
+    "scope": "Cochise County",
+    "sites": 18,
+    "blanks": [
+      {
+        "reason": "missing-sites",
+        "owed": "Current official election-page association for this list"
+      }
+    ]
+  },
+  {
+    "id": "cochise:ballot-box-table",
+    "state": "AZ",
+    "scope": "Cochise County",
+    "sites": 5,
+    "blanks": []
+  },
+  {
+    "id": "co-arapahoe-vote-centers-2026",
+    "state": "CO",
+    "scope": "Arapahoe County",
+    "sites": 34,
+    "blanks": []
+  },
+  {
+    "id": "wy-natrona-polling-precincts",
+    "state": "WY",
+    "scope": "Natrona County",
+    "sites": 22,
+    "blanks": []
+  }
+]

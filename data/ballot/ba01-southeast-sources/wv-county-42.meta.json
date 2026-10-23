@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Ritchie%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Ritchie%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:38.116782+00:00",
+  "rawHash": "c7c574a985d38a95fab792f8e1043cd7cd0e175d1da3c07ec1e6434e9a634314",
+  "httpStatus": 200,
+  "bytes": 729518,
+  "extractedTextHash": "234841aaa56c7c8a055711646628b47d219198501c273652ae76fca564ee4843",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

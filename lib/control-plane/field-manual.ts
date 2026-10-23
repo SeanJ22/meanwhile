@@ -7,9 +7,8 @@ import { hereNote, mergePlaceResults, placeResultsOf, type MethodHere, type Plac
 import { recordAttemptsKeepingHistory } from "./fix-history.ts";
 import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "./repository/types.ts";
 import { flushBankWriteFailures, recordBankWriteFailure } from "./bank-write-health.ts";
-import { jobCostProfiles } from "./bank-job-cost.ts";
+import type { FieldManualSourceHint,FieldManualSourceScope } from "./field-manual-sources.ts";
 
-/** Every worker role whose learnings the manual carries. SHARED = every role reads it. */
 export const FIELD_MANUAL_ROLES = [
   "HUNTER",
   "SCOUT",
@@ -30,60 +29,58 @@ export type FieldManualRole = (typeof FIELD_MANUAL_ROLES)[number];
 
 export type FieldManualOutcome = "YIELDED" | "ZERO" | "FAILED" | "BLOCKED" | "REFERENCE";
 
-/** Where an entry applies. Each part only grows. */
 export interface FieldManualReach {
-  /** `ocd-division/...` scopes (they cover their descendants) and `body:<id>`. */
+
   readonly places: readonly string[];
-  /** Lowercase two-letter states it applies across. */
+
   readonly states: readonly string[];
-  /** Platforms it applies on, in any state. */
+
   readonly platforms: readonly string[];
-  /** Applies to every job of its role and record class. */
+
   readonly everywhere: boolean;
-  /** A method offered anywhere it fits, ranked by where it has worked. */
+
   readonly method?: boolean;
 }
 
 export interface FieldManualEntry {
-  /** Deterministic from (source, key): a re-import updates rather than duplicates. */
+
   readonly id: string;
   readonly role: FieldManualRole;
-  /** ROUTE | METHOD | PLATFORM_FINGERPRINT | BODY_RUNG | VENDOR_TENANT | SOURCE_REGISTER | PLAYBOOK | SCOUT_DISCOVERY | ... */
+
   readonly kind: string;
   readonly title: string;
-  /** ONE short line a worker reads. No newlines. */
+
   readonly summary: string;
-  /** Lowercase two-letter states it was learned in. */
+
   readonly states: readonly string[];
-  /** Record classes / fields this bears on (e.g. "meetings", "campaignSite"). Empty = any. */
+
   readonly recordClasses: readonly string[];
-  /** Vendor platforms this is about (e.g. "legistar", "civicplus"). */
+
   readonly platforms: readonly string[];
-  /** Place scope. Division prefixes apply to their descendants; body IDs are exact. */
+
   readonly ocdIds?: readonly string[];
   readonly bodyIds?: readonly string[];
-  /** The writer's word that this applies to every job of its role and record class, wherever it is. */
+
   readonly portable?: boolean;
-  /** Where it applies; set when the entry is saved. */
+
   readonly reach?: FieldManualReach;
   readonly foundBy?: "SCOUT" | "DETECTIVE";
-  /** The latest result anywhere, for display. What happened in each place is `placeResults`. */
+
   readonly outcome: FieldManualOutcome;
-  /** One result per place, so a result in one place never overwrites another's. */
+
   readonly placeResults?: readonly PlaceResult[];
-  /** The door itself, when the entry is one. */
+
   readonly url: string | null;
-  /** Which original store this came from (path or table name). Provenance, never dropped. */
+
   readonly source: string;
-  /** UTC YYYY-MM-DD or ISO, when known. Freshness only; never scheduling authority. */
+
   readonly observedAt: string | null;
-  /** A0/A1/B/C tier where the source states one. */
+
   readonly tier: string | null;
-  /** THE ORIGINAL RECORD, VERBATIM. */
+
   readonly payload: unknown;
 }
 
-/** The rows one read returned. */
 export interface FieldManualStore {
   readonly entries: readonly FieldManualEntry[];
 }
@@ -92,7 +89,6 @@ export function emptyFieldManual(): FieldManualStore {
   return { entries: [] };
 }
 
-/** A stable id, derived so a re-import of the same fact updates one row instead of forking it. */
 export function fieldManualEntryId(source: string, key: string): string {
   return `fm-${createHash("sha256").update(`${source}|::|${key}`).digest("hex").slice(0, 24)}`;
 }
@@ -101,23 +97,16 @@ function lower(values: readonly string[]): string[] {
   return [...new Set(values.map((v) => v.trim().toLowerCase()).filter((v) => v !== ""))].sort();
 }
 
-/** A measured attempt cost: bookkeeping that feeds the platform cost profiles. */
-export const JOB_COST_KIND = "JOB_COST";
+export const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set(["JOB_COST", "WRITE_HEALTH", "COPY_REPORT", "PLAYBOOK_RETIREMENT", "PLATFORM_CENSUS_CHECK", "PLATFORM_CENSUS_REFERENCE", "PLATFORM_CENSUS_RUN"]);
 
-/** Kinds that hold bookkeeping rather than lessons; no worker is shown them. */
-const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set([JOB_COST_KIND, "WRITE_HEALTH", "COPY_REPORT", "PLAYBOOK_RETIREMENT", "PLATFORM_CENSUS_CHECK", "PLATFORM_CENSUS_REFERENCE", "PLATFORM_CENSUS_RUN"]);
-
-/** Reusable ways in: a method from one place is offered wherever it could apply, ranked by where it has worked. */
 export const TRANSFERABLE_METHOD_KINDS: ReadonlySet<string> = new Set(["METHOD", "ROUTE", "MANIFEST_BRANCH"]);
 
-/** A method that is not tied to one source: a procedure (no door of its own), one shaped by a platform, or a step offered anywhere it fits. */
 export function isTransferableMethod(entry: Pick<FieldManualEntry, "kind" | "url" | "platforms" | "reach">): boolean {
   return (TRANSFERABLE_METHOD_KINDS.has(entry.kind) && (entry.url === null || entry.platforms.length > 0)) || entry.reach?.method === true;
 }
 
 const OCD = /ocd-division\/[^\s"'<>#,;)]+/i;
 
-/** The place a record names, read from the fields writers use for it. */
 export function fieldManualPlaceHints(payload: unknown): { states: string[]; ocdIds: string[]; bodyIds: string[] } {
   const p = payload && typeof payload === "object" ? payload as Record<string, unknown> : {};
   const outcomes = Array.isArray(p.outcomes) ? p.outcomes : [];
@@ -155,7 +144,6 @@ function unionReach(a: FieldManualReach | undefined, b: FieldManualReach): Field
   };
 }
 
-/** Normalise one observation: hints read from its record, arrays order-insensitive, and its reach. */
 export function normalizeEntry(entry: FieldManualEntry): FieldManualEntry {
   const place = fieldManualPlaceHints(entry.payload);
   const ocdIds = lower([...(entry.ocdIds ?? []), ...place.ocdIds]);
@@ -206,14 +194,13 @@ function mergePayload(prior: FieldManualEntry, next: FieldManualEntry, newerWins
   return kept;
 }
 
-/** Fold many observations by id, in order. Pure. */
 export function foldEntries(entries: readonly FieldManualEntry[]): FieldManualEntry[] {
   const byId = new Map<string, FieldManualEntry>();
   for (const entry of entries) byId.set(entry.id, mergeEntry(byId.get(entry.id) ?? null, entry));
   return [...byId.values()];
 }
 
-const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
+export const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
   YIELDED: 0,
   REFERENCE: 1,
   ZERO: 2,
@@ -223,46 +210,43 @@ const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
 
 export interface FieldManualQuery {
   readonly withinState?: string;
-  /** Exact research subject for saved exhausted walks; they are never portable failures. */
   readonly subjectId?: string;
-  /** The reading worker's role; SHARED entries always match. Omit to match every role. */
+
   readonly role?: FieldManualRole;
-  /** Lowercase two-letter state of the job. */
+
   readonly state?: string;
   readonly recordClass?: string;
-  /** The job's platform, when known; platform lessons for other platforms are left out. */
+
   readonly platform?: string;
-  /** The job's place: its division and bodies. */
+
   readonly ocdIds?: readonly string[];
   readonly bodyIds?: readonly string[];
-  /** Only these kinds. */
+
   readonly kinds?: readonly string[];
-  /** Every row of the role, class and kinds asked, wherever it applies: for passes that cover the whole country. */
+
   readonly everywhere?: boolean;
-  /** Hard cap on projected lines, so a walk's context stays a page, never the whole manual. */
+
   readonly limit?: number;
+  readonly preferredRecordClasses?: readonly string[];
+  readonly requiredExhaustedClasses?: readonly string[];
+  readonly excludedKinds?: readonly string[];
 }
 
-/** What the fix map holds for the methods in one read. */
 export interface MethodEvidence {
-  /** The fix map's rows for the job's place. */
+
   readonly here: readonly FixMapRow[];
-  /** Where each method works. */
+
   readonly works: Readonly<Record<string, MethodWorks>>;
 }
 
 export interface FieldManualProjection {
-  /** The projectable lines, most-applicable first. What the worker reads. */
+
   readonly lines: readonly string[];
-  /** The entry ids offered: the inherited half of the inherited-versus-newly-built pair. */
+
   readonly entryIds: readonly string[];
-  /** Each offered entry's rank: 1 this place, 2 its state (or its platform), 3 national, 4 worked elsewhere, 5 not yet worked anywhere. */
+
   readonly tiers: readonly number[];
-  /** Methods left out because they fail in this place. */
-  readonly leftOutFailingHere: number;
-  /** How many entries applied before the limit; total how many the read returned. */
-  readonly matched: number;
-  readonly total: number;
+
 }
 
 function divisionApplies(scope: string, subject: string): boolean {
@@ -270,16 +254,15 @@ function divisionApplies(scope: string, subject: string): boolean {
   return place === scope || place.startsWith(scope + "/");
 }
 
-/** The job's own places: its divisions and `body:<id>`s. */
 function jobPlaces(query: FieldManualQuery): string[] {
   return [...(query.ocdIds ?? []).map((id) => id.toLowerCase().split("#")[0]!), ...(query.bodyIds ?? []).map((id) => `body:${id}`)];
 }
 
-/** Every division scope that covers the job's divisions (the divisions themselves and their ancestors). */
 export function coveringPlaces(query: Pick<FieldManualQuery, "ocdIds" | "bodyIds">): string[] {
   const out = new Set<string>();
   for (const id of query.ocdIds ?? []) {
     const parts = id.toLowerCase().split("#")[0]!.split("/");
+    if(parts.length===1)out.add(parts[0]);
     for (let n = 2; n <= parts.length; n += 1) out.add(parts.slice(0, n).join("/"));
   }
   for (const id of query.bodyIds ?? []) out.add(`body:${id}`);
@@ -291,7 +274,6 @@ function placeMatches(places: readonly string[], query: FieldManualQuery): boole
   return places.some((scope) => job.some((place) => scope.startsWith("body:") ? scope === place : divisionApplies(scope, place)));
 }
 
-/** The job's state: asked, or read from its division. */
 export function queryState(query: Pick<FieldManualQuery, "state" | "ocdIds">): string | undefined {
   return query.state?.toLowerCase() ?? (query.ocdIds ?? []).map(stateOfPlace).find((s): s is string => s !== null);
 }
@@ -300,13 +282,13 @@ function reachOfStored(entry: FieldManualEntry): FieldManualReach {
   return entry.reach ?? reachOf(entry);
 }
 
-/** Whether a stored row is one the job could use: the read's exact rule (the stores may return more). */
 export function entryInSlice(entry: FieldManualEntry, query: FieldManualQuery): boolean {
   if (query.withinState !== undefined && !entry.states.includes(query.withinState.toLowerCase())) return false;
   if (query.role !== undefined && entry.role !== "SHARED" && entry.role !== query.role) return false;
   if (query.kinds !== undefined && !query.kinds.includes(entry.kind)) return false;
+  if (query.excludedKinds?.includes(entry.kind)) return false;
   if (query.recordClass !== undefined && entry.recordClasses.length > 0 && !entry.recordClasses.includes(query.recordClass.toLowerCase())) return false;
-  // A job on a known platform takes platform lessons and methods for that platform only.
+
   const platform = query.platform?.toLowerCase();
   const onPlatform = (platforms: readonly string[]) => platform === undefined || platforms.length === 0 || platforms.includes(platform);
   if (query.everywhere === true) return onPlatform(entry.platforms);
@@ -318,7 +300,6 @@ export function entryInSlice(entry: FieldManualEntry, query: FieldManualQuery): 
   return state !== undefined && reach.states.includes(state);
 }
 
-/** A place in plain words: "pima AZ". */
 export const placeLabel = (place: string): string => {
   const parts = place.split("/");
   const last = parts.at(-1) ?? place;
@@ -367,7 +348,6 @@ function methodRank(entry: FieldManualEntry, query: FieldManualQuery, evidence: 
   return { entry, tier: 5, note: hereNote(untried) };
 }
 
-/** An entry's rank for the job, with the words a worker reads after its line; null when it is left out here. */
 export function rankEntry(entry: FieldManualEntry, query: FieldManualQuery, evidence?: MethodEvidence): Ranked | null {
   if (isTransferableMethod(entry)) return methodRank(entry, query, evidence);
   const reach = reachOfStored(entry);
@@ -381,10 +361,18 @@ export function rankEntry(entry: FieldManualEntry, query: FieldManualQuery, evid
 export function projectFieldManual(store: FieldManualStore, query: FieldManualQuery = {}, evidence?: MethodEvidence): FieldManualProjection {
   const limit = query.limit ?? 40;
   const applicable = store.entries.filter((e) => !BOOKKEEPING_KINDS.has(e.kind) && entryInSlice(e, query) &&
-    (e.kind !== "EXHAUSTED_RUNGS" || (query.subjectId !== undefined && (e.payload as { subjectId?: string } | null)?.subjectId === query.subjectId)));
+    (e.kind !== "EXHAUSTED_RUNGS" || (query.subjectId !== undefined && (e.payload as { subjectId?: string } | null)?.subjectId === query.subjectId &&
+      (!query.requiredExhaustedClasses?.length || e.recordClasses.some(value=>query.requiredExhaustedClasses!.includes(value))))));
   const ranked = applicable.map((e) => rankEntry(e, query, evidence));
   const open = ranked.filter((r): r is Ranked => r !== null).sort((a, b) => {
+    if(query.preferredRecordClasses!==undefined) {
+      const helps=(entry:FieldManualEntry)=>entry.recordClasses.some(value=>query.preferredRecordClasses!.includes(value))?0:1;
+      const preferred=helps(a.entry)-helps(b.entry);if(preferred)return preferred;
+    }
     if (a.tier !== b.tier) return a.tier - b.tier;
+    if(query.preferredRecordClasses!==undefined) {
+      const anyClass=Number(a.entry.recordClasses.length>0)-Number(b.entry.recordClasses.length>0);if(anyClass)return anyClass;
+    }
     const exhausted = Number(b.entry.kind === "EXHAUSTED_RUNGS") - Number(a.entry.kind === "EXHAUSTED_RUNGS");
     if (exhausted !== 0) return exhausted;
     const outcome = OUTCOME_RANK[a.entry.outcome] - OUTCOME_RANK[b.entry.outcome];
@@ -398,13 +386,9 @@ export function projectFieldManual(store: FieldManualStore, query: FieldManualQu
     lines: chosen.map((r) => fieldManualLine(r.entry) + r.note),
     entryIds: chosen.map((r) => r.entry.id),
     tiers: chosen.map((r) => r.tier),
-    leftOutFailingHere: ranked.length - open.length,
-    matched: open.length,
-    total: store.entries.length,
   };
 }
 
-/** The exact one-line rendering a worker sees for one entry. */
 export function fieldManualLine(entry: FieldManualEntry): string {
   const where = entry.states.length > 0 ? entry.states.join("/").toUpperCase() : "portable";
   const on = entry.recordClasses.length > 0 ? ` [${entry.recordClasses.join(",")}]` : "";
@@ -413,97 +397,69 @@ export function fieldManualLine(entry: FieldManualEntry): string {
   return `${entry.role}/${entry.kind} ${entry.outcome} (${where})${on}: ${entry.title}${door} — ${entry.summary}${seen}`.replace(/\s+/g, " ").trim();
 }
 
-/** The repositories the two calls need: the manual's rows, and the fix map and fix list where the store has them. */
 export type FieldManualRepos = Pick<ControlPlaneRepositories, "fieldManual"> & Partial<Pick<ControlPlaneRepositories, "fixMap" | "adminConfig">>;
 
 export interface FieldManualRead {
-  /** What applies to the asking job: the lines to put in front of the worker and the ids offered. */
+
   readonly projection: FieldManualProjection;
-  /** The rows the read returned, for a caller that narrows them further (a scout's catalog, a used-door check). */
+
   readonly store: FieldManualStore;
-  /** What the fix map held for the methods read, so a caller re-ranking the rows ranks them the same way. */
+
   readonly evidence?: MethodEvidence;
-  /** Set when the manual could not be read. The projection is then empty: a failed read is a fact about our store, never a crash in the worker. */
+
   readonly error?: string;
 }
 
-/** Original entries for this source, across every worker role. A dead route
- * remains knowledge, not a permanent ban on its host or other routes. */
-export function fieldManualForSource(read: FieldManualRead, url: string): readonly FieldManualEntry[] {
-  let origin: string;
-  try { origin = new URL(url).origin; } catch { return []; }
-  return read.store.entries.filter(entry => {
-    try { return entry.url !== null && new URL(entry.url).origin === origin; }
-    catch { return false; }
-  });
+export function methodEvidencePlaces(query:FieldManualQuery):string[] {
+  return [...new Set([...jobPlaces(query).filter(place=>!place.startsWith("body:")),...(query.ocdIds??[]).map(id=>id.split("#")[0])])];
 }
 
-/** What the fix map says of the methods a read returned, for the job's place. */
 export async function readMethodEvidence(repos: FieldManualRepos, entries: readonly FieldManualEntry[], query: FieldManualQuery): Promise<MethodEvidence | undefined> {
   if (!repos.fixMap) return undefined;
   const methods = entries.filter(isTransferableMethod).map((e) => e.id);
-  const places = jobPlaces(query).filter((p) => !p.startsWith("body:"));
+  const places = methodEvidencePlaces(query);
   const [here, works] = await Promise.all([
-    Promise.all(places.map((p) => repos.fixMap!.forPlace(p, 1000))).then((rows) => rows.flat()),
+    Promise.all(methods.map(method => repos.fixMap!.forPlaces(method, places))).then(rows => rows.flat()),
     methods.length === 0 ? new Map<string, MethodWorks>() : repos.fixMap.worksFor(methods),
   ]);
   return { here, works: Object.fromEntries(works) };
 }
 
-/** The read against the store itself. */
 export async function readFieldManualRows(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
   try {
-    const rows = (await repos.fieldManual.slice(query)).map((row) => row.value).filter((entry) => entryInSlice(entry, query));
-    const store = { entries: rows };
-    const evidence = await readMethodEvidence(repos, rows, query);
-    return { projection: projectFieldManual(store, query, evidence), store, ...(evidence ? { evidence } : {}) };
+    return await repos.fieldManual.select(query);
   } catch (error) {
     const store = emptyFieldManual();
     return { projection: projectFieldManual(store, query), store, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
-export async function readFieldManualForPlaces(
-  repos: FieldManualRepos,
-  covering: FieldManualQuery,
-  queries: readonly FieldManualQuery[],
-): Promise<FieldManualRead[]> {
-  const failed = (query: FieldManualQuery, error: unknown): FieldManualRead => {
-    const store = emptyFieldManual();
-    return { projection: projectFieldManual(store, query), store, error: error instanceof Error ? error.message : String(error) };
-  };
-  let rows: readonly FieldManualEntry[];
-  try {
-    rows = (await repos.fieldManual.slice(covering)).map((row) => row.value).filter((entry) => entryInSlice(entry, covering));
-  } catch (error) {
-    return queries.map((query) => failed(query, error));
-  }
-  return Promise.all(queries.map(async (query): Promise<FieldManualRead> => {
-    try {
-      const store = { entries: rows.filter((entry) => entryInSlice(entry, query)) };
-      const evidence = await readMethodEvidence(repos, store.entries, query);
-      return { projection: projectFieldManual(store, query, evidence), store, ...(evidence ? { evidence } : {}) };
-    } catch (error) {
-      return failed(query, error);
-    }
-  }));
+async function sharedManualRequest<T>(kind:string,body:unknown,local:()=>Promise<T>):Promise<T> {
+  if (!process.env.WTP_WORKER_TOOLS_URL) return local();
+  const response = await fetch(process.env.WTP_WORKER_TOOLS_URL, { method: "POST",
+    headers: { "content-type": "application/json", authorization: process.env.WTP_WORKER_TOOLS_TOKEN ?? "" },
+    body: JSON.stringify({kind,body}), signal: AbortSignal.timeout(30_000) });
+  if (!response.ok) throw new Error(`SHARED_MANUAL_FAILED:${response.status}`);
+  return await response.json() as T;
+}
+
+export async function readLearnedManualRoutes(repos:FieldManualRepos,routeIds:readonly string[]):Promise<{present:boolean;routeIds:readonly string[]}> {
+  return sharedManualRequest("manualRoutes",routeIds,()=>repos.fieldManual.learnedRoutes(routeIds));
+}
+
+export async function readFieldManualSourceHints(repos:FieldManualRepos,scope:FieldManualSourceScope,url:string):Promise<readonly FieldManualSourceHint[]> {
+  return sharedManualRequest("manualSources",{scope,url},()=>repos.fieldManual.sourceHints(scope,url));
 }
 
 export async function readFieldManual(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
-  if (!process.env.WTP_WORKER_TOOLS_URL) return readFieldManualRows(repos, query);
   try {
-    const response = await fetch(process.env.WTP_WORKER_TOOLS_URL, { method: "POST",
-      headers: { "content-type": "application/json", authorization: process.env.WTP_WORKER_TOOLS_TOKEN ?? "" },
-      body: JSON.stringify({ kind: "manual", body: query }), signal: AbortSignal.timeout(30_000) });
-    if (!response.ok) throw new Error(`SHARED_MANUAL_FAILED:${response.status}`);
-    return await response.json() as FieldManualRead;
+    return await sharedManualRequest("manual",query,()=>readFieldManualRows(repos,query));
   } catch (error) {
     const store = emptyFieldManual();
     return { projection: projectFieldManual(store, query), store, error: error instanceof Error ? error.message : String(error) };
   }
 }
 
-/** Build one entry from the few fields a role actually has; everything else takes the neutral default. */
 export function newFieldManualEntry(
   source: string,
   key: string,
@@ -523,10 +479,8 @@ export function newFieldManualEntry(
   };
 }
 
-/** Each lost race lets another writer through, so this many attempts outlast that many writers on one row. */
 const MERGE_ATTEMPTS = 32;
 
-/** Save one entry: merged into its row under the row's own compare-and-set; a lost race re-reads that row only. */
 async function saveEntry(repos: FieldManualRepos, entry: FieldManualEntry, held: Persisted<FieldManualEntry> | null, now: string): Promise<void> {
   let current = held;
   for (let attempt = 0; ; attempt += 1) {
@@ -544,7 +498,6 @@ async function saveEntry(repos: FieldManualRepos, entry: FieldManualEntry, held:
   }
 }
 
-/** Save entries row by row; returns how many saved and the first failure. */
 export async function saveFieldManualEntries(repos: FieldManualRepos, entries: readonly FieldManualEntry[], now: string): Promise<{ written: number; error?: string }> {
   const folded = foldEntries(entries);
   const held = new Map((await repos.fieldManual.readMany(folded.map((e) => e.id))).map((row) => [row.id, row] as const));
@@ -565,7 +518,6 @@ const TRIED: Readonly<Record<FieldManualOutcome, MethodAttempt["outcome"]>> = {
   YIELDED: "SUCCEEDED", FAILED: "FAILED", BLOCKED: "FAILED", ZERO: "FAILED", REFERENCE: "INCONCLUSIVE",
 };
 
-/** The fix-map results a saved method carries: one per place it records a result for. */
 export function methodAttemptsOf(entry: FieldManualEntry, now: string): MethodAttempt[] {
   if (!isTransferableMethod(entry)) return [];
   const p = entry.payload as { places?: unknown; outcomes?: unknown } | null;
@@ -619,19 +571,6 @@ export async function writeFieldManual(
   if (entries.length === 0) return { written: 0 };
   try {
     const saved = await saveFieldManualEntries(repos, entries, now);
-    const costs = entries.filter((e) => e.kind === JOB_COST_KIND);
-    if (costs.length > 0 && saved.error === undefined) {
-      const keys = new Map(costs.map((e) => {
-        const p = e.payload as { platform: string; recordClass: string };
-        return [`${p.platform}|${p.recordClass}`, p] as const;
-      }));
-      const held = (await Promise.all([...keys.values()].map((p) =>
-        repos.fieldManual.slice({ kinds: [JOB_COST_KIND], platform: p.platform, recordClass: p.recordClass, everywhere: true }))))
-        .flat().map((row) => row.value);
-      const profiles = jobCostProfiles(foldEntries([...held, ...costs]), costs, now);
-      const profiled = await saveFieldManualEntries(repos, profiles, now);
-      if (profiled.error !== undefined) throw new Error(profiled.error);
-    }
     await recordMethodResults(repos, entries, now);
     if (saved.error !== undefined) {
       await recordBankWriteFailure(repos, now);

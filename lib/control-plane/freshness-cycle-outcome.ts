@@ -21,6 +21,9 @@ import {
   parseIntakeRuntimeObservation,
   type IntakeRuntimeObservation,
 } from "../ops/intake-runtime.ts";
+import { boundedRoutineSupervisorDigest, writeRoutineSupervisorFailureSummary } from "./routine-outcome-summary.ts";
+import { markRoutineOutcomeSaved, saveRoutineOutcomeLocal } from "./routine-outcome-local.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 export interface FreshnessCycleDigestInput {
   readonly outcome: FreshnessCycleOutcome;
@@ -76,7 +79,6 @@ interface RoutineCivicDataSupervisorOutcomeInput {
   readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly ballotNavigationPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly lane?: "routine-civic-data" | "publish-now";
-  readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;
   readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly cycleId: string;
   readonly startedAt: string;
@@ -90,9 +92,9 @@ interface RoutineCivicDataSupervisorOutcomeInput {
   readonly verifiedSourceFailures: number;
   readonly failures: RoutineCivicDataSupervisorOutcome["failures"];
   readonly crashedTasks?: RoutineCivicDataSupervisorOutcome["crashedTasks"];
-  /** Omitted only by the outer crash/timeout fallback that cannot recover exact child JSON. */
+
   readonly taskReceipts?: readonly RoutineCivicDataTaskReceiptReference[];
-  /** Omitted only by an outer fallback that never received the child's exact registry pass. */
+
   readonly readerReadback?: RoutineCivicDataReaderReadbackOutcomeInput;
 }
 
@@ -102,10 +104,10 @@ type RuntimeDigestInput =
   | IntakeRuntimeObservationDigestInput
   | MapTilerUsageCollectionDigestInput;
 
-/** Append-only: the record identity makes an uncertain retry idempotent. */
 async function appendRuntimeDigest(
   repos: ControlPlaneRepositories,
   input: RuntimeDigestInput,
+  logKey=DIGEST_LOG_KEY,
 ): Promise<OwnerDigestRecord> {
   const record: OwnerDigestRecord = {
     formatVersion: OWNER_SURFACE_FORMAT_VERSION,
@@ -121,7 +123,7 @@ async function appendRuntimeDigest(
     runtimeOutcome: input.outcome,
   };
   assertAggregateOnly(record, "runtime outcome digest");
-  await repos.ownerDigests.append(DIGEST_LOG_KEY, record.digestId, record, record.writtenAt);
+  await repos.ownerDigests.append(logKey, record.digestId, record, record.writtenAt);
   return record;
 }
 
@@ -129,17 +131,26 @@ export async function appendFreshnessCycleDigest(
   repos: ControlPlaneRepositories,
   input: FreshnessCycleDigestInput,
 ): Promise<OwnerDigestRecord> {
-  return appendRuntimeDigest(repos, input);
+  return appendRuntimeDigest(repos, input,repos.planningState?`${DIGEST_LOG_KEY}:${repos.planningState}`:DIGEST_LOG_KEY);
 }
 
 export async function appendRoutineCivicDataSupervisorDigest(
   repos: ControlPlaneRepositories,
   input: RoutineCivicDataSupervisorDigestInput,
 ): Promise<OwnerDigestRecord> {
-  return appendRuntimeDigest(repos, input);
+  const bounded = boundedRoutineSupervisorDigest(input);
+  if (input.outcome.lane === "publish-now") {
+    writeRoutineSupervisorFailureSummary(bounded);
+    if (repos.durable) {
+      try { console.log(`RCD_OUTCOME_LOCAL=${saveRoutineOutcomeLocal(bounded)}`); }
+      catch (error) { console.error(`RCD_OUTCOME_LOCAL_FAILED ${sanitizedErrorDiagnostic(error)}; saving the canonical outcome`); }
+    }
+  }
+  const record = await appendRuntimeDigest(repos, bounded);
+  if (input.outcome.lane === "publish-now") markRoutineOutcomeSaved();
+  return record;
 }
 
-/** Append intake runtime truth before updating the replaceable heartbeat projection. */
 export async function appendIntakeRuntimeObservationDigest(
   repos: ControlPlaneRepositories,
   input: IntakeRuntimeObservationDigestInput,
@@ -147,7 +158,6 @@ export async function appendIntakeRuntimeObservationDigest(
   return appendRuntimeDigest(repos, input);
 }
 
-/** Append every provider attempt before replacing the current/LKG projection. */
 export async function appendMapTilerUsageCollectionDigest(
   repos: ControlPlaneRepositories,
   input: MapTilerUsageCollectionDigestInput,
@@ -341,10 +351,8 @@ export function routineSupervisorCycleIsolationIssue(
   return null;
 }
 
-/** The fields of the newest cycle outcome that the owner snapshot shows. */
 export type LatestFreshnessCycle = Pick<FreshnessCycleOutcome, "kind" | "cycleId" | "registry" | "risk" | "incidents">;
 
-/** The newest freshness cycle only, narrowed by the store; on the runner a held copy answers it. */
 export async function readLatestFreshnessCycleOutcome(
   repos: ControlPlaneRepositories,
 ): Promise<{ readonly digestId: string; readonly outcome: LatestFreshnessCycle } | null> {

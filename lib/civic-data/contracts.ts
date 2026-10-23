@@ -12,6 +12,7 @@ import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGE
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 import { FEDERAL_MONEY_SOURCES, FEDERAL_MONEY_PARSER } from "../federal-money/model.ts";
 import { FEDERAL_MONEY_CONFIG } from "../federal-money/sources.ts";
+import { CAMPAIGN_FINANCE_PARSER, CAMPAIGN_MONEY_SOURCE_ID, CAMPAIGN_MONEY_SCOPE } from "../funding/state-sources.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
@@ -39,12 +40,30 @@ export interface SittingWindowSchedule {
   readonly follows?: readonly { readonly meetingSource: string; readonly bodyId: string }[];
 }
 
-export const MEETING_SITTING_WINDOW = {
-  kind: "SITTING_WINDOW",
-  windowMs: 7 * DAY,
-  hotEveryMs: HOUR,
-  baseEveryMs: 12 * HOUR,
-} as const satisfies SittingWindowSchedule;
+/** The meeting check clock before Admin sets one. */
+export const MEETING_CLOCK_DEFAULTS = { windowMs: 7 * DAY, hotEveryMs: HOUR, baseEveryMs: 12 * HOUR } as const;
+export type MeetingClock = { readonly windowMs: number; readonly hotEveryMs: number; readonly baseEveryMs: number };
+let meetingClock: MeetingClock = MEETING_CLOCK_DEFAULTS;
+
+/** Installs the clock Admin's settings state; every meeting schedule reads it where it is used. */
+export function installMeetingClock(clock: MeetingClock): void {
+  meetingClock = { windowMs: clock.windowMs, hotEveryMs: clock.hotEveryMs, baseEveryMs: clock.baseEveryMs };
+}
+
+export const currentMeetingClock = (): MeetingClock => meetingClock;
+
+/** The sitting-window schedule whose intervals are always the installed clock's. */
+export function meetingSittingWindow(follows?: SittingWindowSchedule["follows"]): SittingWindowSchedule {
+  return {
+    kind: "SITTING_WINDOW",
+    get windowMs() { return meetingClock.windowMs; },
+    get hotEveryMs() { return meetingClock.hotEveryMs; },
+    get baseEveryMs() { return meetingClock.baseEveryMs; },
+    ...(follows ? { follows } : {}),
+  };
+}
+
+export const MEETING_SITTING_WINDOW = meetingSittingWindow();
 
 export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
 /** A routine pass ends within this; a source read it could not finish stays due for the next pass. */
@@ -390,13 +409,10 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    schedule: {
-      ...MEETING_SITTING_WINDOW,
-      follows: [
-        { meetingSource: "legistar", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
-        { meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
-      ],
-    },
+    schedule: meetingSittingWindow([
+      { meetingSource: "legistar", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+      { meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+    ]),
     retry: { afterMs: HOUR, description: "one hour after a failed events, items, or votes attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "pima-legistar-outcomes" },
     validationContract: CHECKS,
@@ -424,10 +440,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    schedule: {
-      ...MEETING_SITTING_WINDOW,
-      follows: [{ meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/place:mesa#governing" }],
-    },
+    schedule: meetingSittingWindow([{ meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/place:mesa#governing" }]),
     retry: { afterMs: HOUR, description: "one hour after a failed calendar or minutes read" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "mesa-legistar-minutes-outcomes" },
     validationContract: CHECKS,
@@ -556,6 +569,20 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   } as const)),
+  {
+    id: CAMPAIGN_MONEY_SOURCE_ID, sourceId: CAMPAIGN_MONEY_SOURCE_ID,
+    recordClass: "CAMPAIGN_FINANCE", scope: CAMPAIGN_MONEY_SCOPE,
+    acquisitionFailureDomain: "routine-source:campaign-money",
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/state-campaign-finance.mts", "--promote"] },
+    parserNormalizerVersion: CAMPAIGN_FINANCE_PARSER,
+    cadence: { description: "Each routine pass checks the states' hourly clocks; one state worker at a time", defaultEveryMs: ROUTINE_DATA_ADMISSION_MS },
+    retry: { afterMs: HOUR, description: "Keep each missing person's money open for the next hourly scan" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: CAMPAIGN_MONEY_SOURCE_ID },
+    validationContract: CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: "person-campaign-money", consumers: ["government, official and candidate cards", "Ask", "Admin"] },
+    lkgBehavior: "Source failures retain each person's verified cycle totals and record the missing work.",
+    autoPromotable: true, childTimeoutMs: 0, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: ["tests/fixtures/campaign-finance/"],
+  },
   ...FEDERAL_MONEY_SOURCES.map((source): RoutineSourceContract => ({
     id: source, sourceId: source, recordClass: "FEDERAL_MONEY", scope: `${source}:US`, fanOut: true,
     acquisitionFailureDomain: `routine-source:${source}`,

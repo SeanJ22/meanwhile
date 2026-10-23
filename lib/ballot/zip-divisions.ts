@@ -1,4 +1,4 @@
-import { zipDivisionEntry } from "../geo/zip-division-index.ts";
+import { zipDivisionEntry, type ZipDivisionEntry } from "../geo/zip-division-index.ts";
 import { zipNeedsAddress } from "../geo/postal.ts";
 import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 import { districtFamilyKey } from "../census-geography/division-id.ts";
@@ -17,12 +17,14 @@ export async function divisionIdsForZipArea(
   pointDivisionIds: readonly string[],
   selection: GeographySelection = currentRepresentationSelection(),
   pointPlans?: PointPlans,
+  supplied?: ZipDivisionEntry | null,
 ): Promise<string[]> {
-  const entry = zip && /^\d{5}$/.test(zip) ? await zipDivisionEntry(zip, selection) : null;
+  const entry = supplied === undefined ? zip && /^\d{5}$/.test(zip) ? await zipDivisionEntry(zip, selection) : null : supplied;
   if (zip && zipNeedsAddress(zip)) {
     return [...new Set([...pointDivisionIds, ...(entry?.ids ?? [])].filter(isTownOrCountyDivision))];
   }
-  const areaIds = new Set(entry?.ids ?? []);
+  // A ballot keeps the divisions few of the ZIP's residents live in: a missing contest costs more than a hedged one.
+  const areaIds = new Set([...entry?.ids ?? [], ...entry?.fringe ?? []]);
   const qualified = new Set(entry?.qualifiedDistricts ?? []);
   const out = new Set([...pointDivisionIds, ...areaIds]);
   for (const id of out) {

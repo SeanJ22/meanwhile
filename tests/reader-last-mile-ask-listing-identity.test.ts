@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import { POST } from "../app/api/ask/grounded/route.ts";
 import { resetGroundedState } from "../lib/ask/grounded-state.ts";
@@ -10,25 +11,40 @@ import { meetingListingKnowledgeFor, minutesSummaryEvidenceFor, noticeSummaryEvi
 import { MINUTES_SUMMARIES } from "../lib/meetings/minutes-summaries.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
-import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
-import { ambiguousListingPairs, dateOnlyListings, installMeetings, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+import type { Meeting } from "../lib/sources/types.ts";
+import { installRegistryAuthority, registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import { withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { ambiguousListingPairs, dateOnlyListings, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { localDate } from "../lib/ask/meeting-time.ts";
-import { readMeetingsProjection, requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
+import { requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
+import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
+import { readEveryBody } from "./helpers/meeting-body-national.ts";
 import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
+import { readSelectedMeetingOutcomes } from "../lib/outcomes/store.ts";
+import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
+import { installCanonicalEntries } from "./helpers/canonical-reader-fixtures.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
-delete process.env.DATABASE_URL;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 await installRegistryAuthority();
-// The recorded 85701 calendar, three of its Tucson Unified sittings each listed a second time, and three date-only listings.
 const { meetings: listed, pairs } = ambiguousListingPairs(3);
-const installed = recordedMeetingsSnapshot([...listed, ...dateOnlyListings(3)]);
-installMeetings(installed.meetings, installed.agendaDocuments);
-// What the reader composes from those promoted partitions (each row stamped with its door).
-const snapshot = requireMeetingsProjection(await readMeetingsProjection());
+// A copied listing cannot cite its original's attribution rows: a promoted snapshot's rows each cite only themselves.
+const ownRows = (rows: readonly Meeting[]) => rows.map(({ actingBodies: _acting, ...row }) => row as Meeting);
+const installed = recordedMeetingsSnapshot(ownRows([...listed, ...dateOnlyListings(3)]));
+// Each recorded sitting is promoted through the partition that owns it, then published as its body's record on the edge the routes read.
+const PUBLISHED_AT = "2026-09-25T12:00:00.000Z";
+const { store: meetingStore, edge, promoted } = await publishRecordedEdge(installed.meetings, installed.agendaDocuments, PUBLISHED_AT);
+// What a reader is served from those published bodies (each row stamped with its door).
+const snapshot = requireMeetingsProjection((await readEveryBody(meetingStore, PUBLISHED_AT, { edge })).read);
+assert.ok(promoted.length >= 6, "the Tucson Unified calendar and its listings are held by a partition");
 const headers = { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-listing-identity-control" };
 
-test("each date with two equal calendar listings retains both, with an unresolved distinct-meeting count, in real Ask", async () => {
+// Each Node test runs in its own async context, just as each reader request does.
+const registryTest = (name: string, read: () => void | Promise<void>) => test(name, () =>
+  withRegistryRuntimeProjection(registryTransferImport().projection.payload, ["AZ"], read));
+
+registryTest("each date with two equal calendar listings retains both, with an unresolved distinct-meeting count, in real Ask", async () => {
   assert.equal(meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity).groups.length, pairs.length);
   for (const pair of pairs) {
     const ids = pair.map(meeting => meeting.id);
@@ -66,7 +82,7 @@ test("each date with two equal calendar listings retains both, with an unresolve
     assert.equal(payload.trace.retrieval.recordCount, payload.records.length);
     assert.deepEqual(payload.meetings.map(meeting => meeting.id).sort(), ids.sort());
     for (const id of ids) {
-      const answer = await agendaPOST(new Request("https://wtp.test/api/ask/agenda", { method: "POST", headers, body: JSON.stringify({ meetingId: id }) }));
+      const answer = await agendaPOST(new Request("https://wtp.test/api/ask/agenda", { method: "POST", headers, body: JSON.stringify({ meetingId: id, bodyId: held[0].bodyId }) }));
       const agenda = await answer.json();
       assert.equal(answer.status, 200);
       assert.equal(agenda.meetingId, id);
@@ -74,9 +90,11 @@ test("each date with two equal calendar listings retains both, with an unresolve
       const documents = snapshot.agendaDocuments?.filter(document => document.meetingId === id) ?? [];
       assert.equal(agenda.documentsHeld, documents.length, "Equal listing fields never copy a sibling's attachment");
       if (!documents.length) { assert.deepEqual(agenda.items, []); assert.equal(agenda.documentUrl, null); }
-      const readerResponse = await agendaGET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(id)}`));
+      const readerResponse = await agendaGET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(id)}&bodyId=${encodeURIComponent(held[0].bodyId!)}`));
       const reader = await readerResponse.json();
-      assert.equal(readerResponse.status, 200);
+      assert.equal(readerResponse.status, 200, JSON.stringify(reader));
+      assert.equal(reader.supportingHoldingStatus, "HELD");
+      assert.deepEqual(reader.unavailableAuthorities, []);
       assert.equal(reader.meetingId, id);
       assert.deepEqual(reader.listingIdentity.groups, [group]);
       // Another body's notice page held for this sitting is never shown for it;
@@ -91,7 +109,18 @@ test("each date with two equal calendar listings retains both, with an unresolve
   }
 });
 
-test("date-only listing identities remain date-only records without an invented shared time or multiplicity claim", () => {
+registryTest("the socket reader selects proved outcome rows from the canonical fixture without a network fallback", async () => {
+  const source = JSON.parse(readFileSync(new URL("./fixtures/legistar-outcome-store/data/outcomes/legistar-outcomes.json", import.meta.url), "utf8")) as OutcomeSnapshot;
+  const sitting = source.sittings.find(row => row.agenda.length && row.rollCalls.length)!;
+  installCanonicalEntries([provenEdgeEntry({ recordClass: "MEETING_OUTCOME", scope: "US-AZ:fixture:listing-identity-outcomes",
+    sourceId: "listing-identity-outcome-source", versionId: "listing-identity-outcomes", value: source })]);
+  const selected = await readSelectedMeetingOutcomes(["AZ"], sitting.bodyId, [sitting.meetingId]);
+  assert.deepEqual(selected.sittings, [sitting]);
+  assert.deepEqual(selected.sittings[0].agenda, sitting.agenda);
+  assert.deepEqual(selected.sittings[0].rollCalls, sitting.rollCalls);
+});
+
+registryTest("date-only listing identities remain date-only records without an invented shared time or multiplicity claim", () => {
   const dateOnly = installed.meetings.filter(meeting => meeting.startPrecision === "DAY");
   assert.equal(dateOnly.length, 3);
   const reading = meetingListingKnowledgeFor(installed.meetings, dateOnly.map(meeting => meeting.id)).readback;
@@ -100,7 +129,7 @@ test("date-only listing identities remain date-only records without an invented 
   assert.deepEqual([...reading.unresolvedTimeSourceIds].sort(), dateOnly.map(meeting => meeting.id).sort());
 });
 
-test("listing knowledge cannot borrow a summary or notice through equal body/time fields", () => {
+registryTest("listing knowledge cannot borrow a summary or notice through equal body/time fields", () => {
   for (const [id, question, readEvidence] of [
     [MINUTES_SUMMARIES[0].meetingId, "What happened?", minutesSummaryEvidenceFor],
     [NOTICE_SUMMARIES[0].meetingId, "What is in the notice?", noticeSummaryEvidenceFor],

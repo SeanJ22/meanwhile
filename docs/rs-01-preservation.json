@@ -1,0 +1,123 @@
+{
+  "step": "RS-01",
+  "checkedAt": "2026-10-18T05:59:00.972Z",
+  "productionAccess": "read-only",
+  "productionWrites": 0,
+  "compared": {
+    "preparedMeetingRows": 264,
+    "rowsWithMeetingArrays": 205,
+    "nationalSnapshotMeetings": 1247,
+    "uniqueCopiedMeetingIds": 1271,
+    "copiedBodies": 175,
+    "method": "Compared every retained national/body meeting array with direct source/fact packages, matching primary and merged IDs. Historical reads include canonical promoted source versions. Coverage checks use the current canonical registry and local registration divisions."
+  },
+  "states": [
+    {
+      "state": "AZ",
+      "copiedMeetings": 465,
+      "directMeetingRecords": 457,
+      "copiedBodies": 46,
+      "missingMeetingIds": [],
+      "missingHeldFields": [],
+      "missingBodyIds": [],
+      "sourceOnlyBodyCards": 8,
+      "missingSourceOnlyCards": [],
+      "canceledRowsCompared": 7,
+      "changedCancellations": [],
+      "missingProvenance": []
+    },
+    {
+      "state": "NH",
+      "copiedMeetings": 576,
+      "directMeetingRecords": 618,
+      "copiedBodies": 88,
+      "missingMeetingIds": [],
+      "missingHeldFields": [],
+      "missingBodyIds": [],
+      "sourceOnlyBodyCards": 27,
+      "missingSourceOnlyCards": [],
+      "canceledRowsCompared": 11,
+      "changedCancellations": [],
+      "missingProvenance": []
+    },
+    {
+      "state": "NJ",
+      "copiedMeetings": 230,
+      "directMeetingRecords": 252,
+      "copiedBodies": 41,
+      "missingMeetingIds": [],
+      "missingHeldFields": [],
+      "missingBodyIds": [],
+      "sourceOnlyBodyCards": 33,
+      "missingSourceOnlyCards": [],
+      "canceledRowsCompared": 2,
+      "changedCancellations": [],
+      "missingProvenance": []
+    }
+  ],
+  "checkedFields": [
+    "agendaUrl",
+    "minutesUrl",
+    "videoUrl",
+    "location",
+    "online",
+    "venueGap",
+    "publishedLinks",
+    "startPrecision",
+    "eventType",
+    "publicationConflicts",
+    "canceled status",
+    "source URL",
+    "source organization",
+    "collection date"
+  ],
+  "corrections": [
+    {
+      "problem": "The direct query omitted state-family calendars.",
+      "cause": "Canonical family scopes contain US-AZ, US-NH and US-NJ; the query omitted the US- prefix.",
+      "result": "All currently shown IDs and venue details are retained."
+    },
+    {
+      "problem": "Three older calendar records were absent from current partitions and durable history.",
+      "cause": "Existing history movement excludes calendar-only rows without agendas or outcomes.",
+      "result": "Explicit history reads recover verified records from prior PROMOTED canonical source versions, without reading prepared copies.",
+      "recoveredIds": [
+        "ical:warner-energy-solar-committee:1e5pob546cbplljfd09a7aeot3@google.com/20260618T200000Z",
+        "ical:warner-warner-river-local-advisory-committee:3mk1ko7kkosq1vqtkut055qbc5@google.com",
+        "ical:wilmot-planning-board:10001079-1781807400-1781814600@www.wilmotnh.org"
+      ],
+      "targetedHistoryReadMs": 1054
+    },
+    {
+      "problem": "68 independently sourced bodies were absent from the reviewed registry.",
+      "result": "Their published calendar body name and provenance reach the existing coverage-card model. Live body-name facts retain precedence. Derived metadata uses the DERIVED dataset label."
+    }
+  ],
+  "bodyWithoutHeldServiceBoundary": {
+    "id": "curated:az/pima-community-college#governing",
+    "result": "The direct package retains its body and meetings. It is not assigned to a ZIP body card without a held service division or territory; it was also absent from the saved old 85701 body-card response."
+  },
+  "changedPrimarySourceUrls": {
+    "total": 42,
+    "missingSourceFields": 0,
+    "reasons": [
+      {
+        "count": 20,
+        "reason": "Pima Legistar source links changed to current canonical meeting-detail URLs; old links remain in field receipts."
+      },
+      {
+        "count": 20,
+        "reason": "Vail Apptegy uses the same official endpoint with a newer rolling start_date parameter and source-check date."
+      },
+      {
+        "count": 1,
+        "reason": "Tucson Unified reissued an official meeting from portal record 510 to 520."
+      },
+      {
+        "count": 1,
+        "reason": "A Tucson Unified record cites the canonical official service feed. Its agenda link remains present."
+      }
+    ]
+  },
+  "regressionTests": "tests/reader-place-package.test.ts: real PostgreSQL queries cover all three canonical family scopes, full venue/online/cancellation metadata, source-only coverage cards, retained historical calendar/agenda records, current-value precedence, and refusal of unpublished historical candidates."
+}

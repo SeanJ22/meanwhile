@@ -564,25 +564,6 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
     },
   },
 
-  civic_data_reader_projections: {
-    storeClass: "OPERATIONAL",
-    columns: {
-      ...nonIdentifying(
-        "record_class",
-        "scope",
-        "sequence",
-        "composed_from",
-        "fact_sha256",
-        "generated_at",
-        "composed_at",
-        "source_through",
-        "retrieved_at",
-        "promoted_through",
-      ),
-      key: { space: "OPAQUE_HANDLE", why: "A record-class/scope projection key minted by the routine data plane." },
-      payload: { space: "CIVIC_IDENTIFIER", why: "The prepared public civic serving copy composed from the promoted partitions; it contains no reader data." },
-    },
-  },
 
 };
 

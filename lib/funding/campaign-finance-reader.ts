@@ -1,15 +1,10 @@
 import { validFinanceDoorDetailSource } from "./finance-detail-source.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { currentReaderAuthorityEdge, ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import type { StateMoneyRecord } from "./state-money.ts";
 import { stateMoneyFundingIssue } from "./state-money-funding.ts";
+import { campaignFinanceStateScope, isCampaignFinanceStateScope, CAMPAIGN_MONEY_SOURCE_ID, CAMPAIGN_MONEY_SCOPE, campaignFinancePublicationIssue, type CampaignFinancePublication } from "./state-sources.ts";
 
-export const CAMPAIGN_FINANCE_SCOPE = "US:campaign-finance";
-export const campaignFinanceScope = (ocdId: string) => {
-  if (!jurisdictionFromOcdId(ocdId)) throw new Error("Campaign finance requires an exact state/local jurisdiction.");
-  return `${CAMPAIGN_FINANCE_SCOPE}:${ocdId}`;
-};
 export interface CampaignFinanceRecord extends Readonly<Record<string, unknown>> {
   readonly kind: "CAMPAIGN_FINANCE_FILING" | "CAMPAIGN_FINANCE_DOCUMENT";
   readonly id: string;
@@ -53,42 +48,17 @@ export function campaignFinanceRecordIssue(value: unknown): string | null {
 }
 
 export async function readCampaignFinance(ocdId: string, options: PromotedCivicDataReadOptions = {}) {
-  const scope = campaignFinanceScope(ocdId);
+  const scope = isCampaignFinanceStateScope(ocdId) ? ocdId : campaignFinanceStateScope(ocdId);
   const result = await readPromotedCivicData<CampaignFinanceProjection>("CURATED_READER_RECORD", scope, options);
   if (result.kind === "PROMOTED" && (result.value.kind !== "campaign-finance" || !Array.isArray(result.value.records) ||
-      result.value.records.some(row => row.ocdId !== ocdId || campaignFinanceRecordIssue(row)) ||
+      result.value.records.some(row => campaignFinanceStateScope(row.ocdId) !== scope || campaignFinanceRecordIssue(row)) ||
       new Set(result.value.records.map(row => row.id)).size !== result.value.records.length)) throw new Error("Campaign finance projection is invalid or crosses its jurisdiction.");
-  return result;
+  return result.kind === "PROMOTED" && !isCampaignFinanceStateScope(ocdId)
+    ? { ...result, value: { ...result.value, records: result.value.records.filter(row => row.ocdId === ocdId) } } : result;
 }
 
-const checkedEntries = new WeakMap<object, readonly CampaignFinanceRecord[]>();
-export async function settleCampaignFinanceReads(divisions?: readonly string[]): Promise<string[]> {
-  if (divisions) await Promise.all(divisions.map(division => ensurePromotedEdge("CURATED_READER_RECORD", `${CAMPAIGN_FINANCE_SCOPE}:${division}`)));
-  const entries = [...currentReaderAuthorityEdge()?.promoted ?? []].filter(([key]) =>
-    key.startsWith(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`) &&
-    (!divisions || divisions.includes(key.slice(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`.length))));
-  const read = await Promise.allSettled(entries.map(async ([key, entry]) => {
-    checkedEntries.delete(entry);
-    const division = key.slice(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`.length);
-    const result = await readCampaignFinance(division, { edge: entry });
-    if (result.kind === "STORE_UNREACHABLE") throw new Error(result.detail);
-    if (result.kind !== "PROMOTED") return null;
-    checkedEntries.set(entry, result.value.records);
-    return `${key}:${result.metadata.versionId}`;
-  }));
-  const failures = read.filter(result => result.status === "rejected");
-  if (failures.length) throw new AggregateError(failures.map(result => result.reason), "Applicable campaign-finance holdings could not be read.");
-  return read.flatMap(result => result.status === "fulfilled" && result.value ? [result.value] : []);
-}
-export function campaignFinanceForTarget(targetKey: string): StateMoneyRecord[] {
-  const records: StateMoneyRecord[] = [];
-  for (const [key, entry] of currentReaderAuthorityEdge()?.promoted ?? []) {
-    if (!key.startsWith(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`) || entry.kind !== "PROMOTED") continue;
-    const scope = key.slice("CURATED_READER_RECORD:".length);
-    for (const row of checkedEntries.get(entry) ?? []) if (campaignFinanceScope(row.ocdId) === scope && row.record.targetKeys.includes(targetKey)) {
-      records.push(row.kind === "CAMPAIGN_FINANCE_DOCUMENT" ? { ...row.record,
-        funding: undefined, totals: { ...row.record.totals, receipts: null, expenditures: null, cashOnHand: null } } : row.record);
-    }
-  }
-  return records;
+export async function readCampaignMoneyWork(options: PromotedCivicDataReadOptions = {}) {
+  const result = await readPromotedCivicData<CampaignFinancePublication>("CAMPAIGN_FINANCE", CAMPAIGN_MONEY_SCOPE, options);
+  if (result.kind === "PROMOTED" && (result.metadata.sourceId !== CAMPAIGN_MONEY_SOURCE_ID || campaignFinancePublicationIssue(result.value, "US"))) throw new Error("Campaign work report does not match its registered publisher.");
+  return result;
 }

@@ -1,0 +1,930 @@
+{
+  "state": "MI",
+  "before": [
+    172,
+    455
+  ],
+  "after": [
+    340,
+    707
+  ],
+  "officialJudicialContests": 168,
+  "officialJudicialCandidates": 252,
+  "verifiedContests": [
+    {
+      "office": "1st District Judge of Court of Appeals Incumbent 6 Year Terms (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+      "candidates": 3
+    },
+    {
+      "office": "1st District Judge of Court of Appeals Incumbent Partial Term Ending 01/01/2031 (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1",
+      "candidates": 1
+    },
+    {
+      "office": "2nd District Judge of Court of Appeals Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:2",
+      "candidates": 2
+    },
+    {
+      "office": "3rd District Judge of Court of Appeals Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:3",
+      "candidates": 2
+    },
+    {
+      "office": "4th District Judge of Court of Appeals Incumbent 6 Year Terms (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:4",
+      "candidates": 3
+    },
+    {
+      "office": "2nd Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:2",
+      "candidates": 1
+    },
+    {
+      "office": "3rd Circuit Judge of Circuit Court Incumbent 6 Year Terms (16) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+      "candidates": 16
+    },
+    {
+      "office": "3rd Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+      "candidates": 1
+    },
+    {
+      "office": "3rd Circuit Judge of Circuit Court Incumbent Partial Term - 4 Years Ending 01/01/2031 (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:3",
+      "candidates": 1
+    },
+    {
+      "office": "4th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:4",
+      "candidates": 1
+    },
+    {
+      "office": "4th Circuit Judge of Circuit Court Incumbent Partial Term Ending 01/01/2031 (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:4",
+      "candidates": 1
+    },
+    {
+      "office": "5th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:5",
+      "candidates": 1
+    },
+    {
+      "office": "6th Circuit Judge of Circuit Court Incumbent 6 Year Terms (6) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:6",
+      "candidates": 6
+    },
+    {
+      "office": "6th Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:6",
+      "candidates": 2
+    },
+    {
+      "office": "7th Circuit Judge of Circuit Court Incumbent 6 Year Terms (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:7",
+      "candidates": 3
+    },
+    {
+      "office": "8th Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:8",
+      "candidates": 2
+    },
+    {
+      "office": "9th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:9",
+      "candidates": 1
+    },
+    {
+      "office": "10th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:10",
+      "candidates": 1
+    },
+    {
+      "office": "11th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:11",
+      "candidates": 2
+    },
+    {
+      "office": "12th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:12",
+      "candidates": 1
+    },
+    {
+      "office": "13th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:13",
+      "candidates": 1
+    },
+    {
+      "office": "14th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:14",
+      "candidates": 1
+    },
+    {
+      "office": "15th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:15",
+      "candidates": 1
+    },
+    {
+      "office": "16th Circuit Judge of Circuit Court Incumbent 6 Year Terms (4) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:16",
+      "candidates": 4
+    },
+    {
+      "office": "16th Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:16",
+      "candidates": 2
+    },
+    {
+      "office": "17th Circuit Judge of Circuit Court Incumbent 6 Year Terms (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:17",
+      "candidates": 3
+    },
+    {
+      "office": "18th Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:18",
+      "candidates": 1
+    },
+    {
+      "office": "19th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:19",
+      "candidates": 1
+    },
+    {
+      "office": "20th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:20",
+      "candidates": 1
+    },
+    {
+      "office": "22nd Circuit Judge of Circuit Court Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:22",
+      "candidates": 2
+    },
+    {
+      "office": "24th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:24",
+      "candidates": 1
+    },
+    {
+      "office": "25th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:25",
+      "candidates": 1
+    },
+    {
+      "office": "26th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:26",
+      "candidates": 1
+    },
+    {
+      "office": "28th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:28",
+      "candidates": 1
+    },
+    {
+      "office": "29th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:29",
+      "candidates": 1
+    },
+    {
+      "office": "30th Circuit Judge of Circuit Court Incumbent 6 Year Terms (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:30",
+      "candidates": 3
+    },
+    {
+      "office": "30th Circuit Judge of Circuit Court Incumbent Partial Term - 2 Years Ending 01/01/2029 (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:30",
+      "candidates": 1
+    },
+    {
+      "office": "31st Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:31",
+      "candidates": 1
+    },
+    {
+      "office": "32nd Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:32",
+      "candidates": 1
+    },
+    {
+      "office": "33rd Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:33",
+      "candidates": 1
+    },
+    {
+      "office": "35th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:35",
+      "candidates": 1
+    },
+    {
+      "office": "36th Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:36",
+      "candidates": 1
+    },
+    {
+      "office": "37th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:37",
+      "candidates": 1
+    },
+    {
+      "office": "38th Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:38",
+      "candidates": 2
+    },
+    {
+      "office": "39th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:39",
+      "candidates": 1
+    },
+    {
+      "office": "40th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:40",
+      "candidates": 1
+    },
+    {
+      "office": "41st Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:41",
+      "candidates": 1
+    },
+    {
+      "office": "42nd Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:42",
+      "candidates": 1
+    },
+    {
+      "office": "44th Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:44",
+      "candidates": 2
+    },
+    {
+      "office": "46th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:46",
+      "candidates": 1
+    },
+    {
+      "office": "48th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:48",
+      "candidates": 1
+    },
+    {
+      "office": "49th Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:49",
+      "candidates": 1
+    },
+    {
+      "office": "51st Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:51",
+      "candidates": 1
+    },
+    {
+      "office": "52nd Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:52",
+      "candidates": 1
+    },
+    {
+      "office": "55th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:55",
+      "candidates": 1
+    },
+    {
+      "office": "56th Circuit Judge of Circuit Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/circuit_court:56",
+      "candidates": 1
+    },
+    {
+      "office": "BERRIEN Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:berrien",
+      "candidates": 1
+    },
+    {
+      "office": "CHIPPEWA Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:chippewa",
+      "candidates": 1
+    },
+    {
+      "office": "GENESEE Judge of Probate Court Non-Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:genesee",
+      "candidates": 2
+    },
+    {
+      "office": "HURON Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:huron",
+      "candidates": 2
+    },
+    {
+      "office": "INGHAM Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:ingham",
+      "candidates": 1
+    },
+    {
+      "office": "KALAMAZOO Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:kalamazoo",
+      "candidates": 1
+    },
+    {
+      "office": "KENT Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:kent",
+      "candidates": 1
+    },
+    {
+      "office": "MACOMB Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:macomb",
+      "candidates": 1
+    },
+    {
+      "office": "MONROE Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:monroe",
+      "candidates": 1
+    },
+    {
+      "office": "OAKLAND Judge of Probate Court Incumbent Partial Term Ending 01/01/2029 (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland",
+      "candidates": 1
+    },
+    {
+      "office": "OAKLAND Judge of Probate Court Non-Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:oakland",
+      "candidates": 2
+    },
+    {
+      "office": "SAGINAW Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:saginaw",
+      "candidates": 1
+    },
+    {
+      "office": "ST. CLAIR Judge of Probate Court Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:st_clair",
+      "candidates": 1
+    },
+    {
+      "office": "SANILAC Judge of Probate Court Non-Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:sanilac",
+      "candidates": 1
+    },
+    {
+      "office": "WASHTENAW Judge of Probate Court Non-Incumbent 6 Year Term (1) Position Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:washtenaw",
+      "candidates": 2
+    },
+    {
+      "office": "WAYNE Judge of Probate Court Non-Incumbent 6 Year Terms (3) Positions Files With County",
+      "ocdId": "ocd-division/country:us/state:mi/county:wayne",
+      "candidates": 3
+    },
+    {
+      "office": "1st District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:1",
+      "candidates": 1
+    },
+    {
+      "office": "2A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:2a",
+      "candidates": 1
+    },
+    {
+      "office": "2B District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:2b",
+      "candidates": 1
+    },
+    {
+      "office": "3A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:3a",
+      "candidates": 1
+    },
+    {
+      "office": "3B District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:3b",
+      "candidates": 1
+    },
+    {
+      "office": "4th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:4",
+      "candidates": 1
+    },
+    {
+      "office": "5th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:5",
+      "candidates": 1
+    },
+    {
+      "office": "5th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:5",
+      "candidates": 2
+    },
+    {
+      "office": "7th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:7",
+      "candidates": 1
+    },
+    {
+      "office": "8th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:8",
+      "candidates": 1
+    },
+    {
+      "office": "8th District Judge of District Court Non-Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:8",
+      "candidates": 2
+    },
+    {
+      "office": "10th District Judge of District Court Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:10",
+      "candidates": 2
+    },
+    {
+      "office": "12th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:12",
+      "candidates": 2
+    },
+    {
+      "office": "12th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:12",
+      "candidates": 2
+    },
+    {
+      "office": "14A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:14a",
+      "candidates": 1
+    },
+    {
+      "office": "14B District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:14b",
+      "candidates": 1
+    },
+    {
+      "office": "15th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:15",
+      "candidates": 1
+    },
+    {
+      "office": "16th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:16",
+      "candidates": 1
+    },
+    {
+      "office": "17th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:17",
+      "candidates": 1
+    },
+    {
+      "office": "18th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:18",
+      "candidates": 1
+    },
+    {
+      "office": "19th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:19",
+      "candidates": 1
+    },
+    {
+      "office": "20th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:20",
+      "candidates": 1
+    },
+    {
+      "office": "21st District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:21",
+      "candidates": 1
+    },
+    {
+      "office": "23rd District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:23",
+      "candidates": 1
+    },
+    {
+      "office": "24th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:24",
+      "candidates": 1
+    },
+    {
+      "office": "25th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:25",
+      "candidates": 2
+    },
+    {
+      "office": "28th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:28",
+      "candidates": 1
+    },
+    {
+      "office": "31st District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:31",
+      "candidates": 1
+    },
+    {
+      "office": "32A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:32a",
+      "candidates": 1
+    },
+    {
+      "office": "34th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:34",
+      "candidates": 1
+    },
+    {
+      "office": "35th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:35",
+      "candidates": 1
+    },
+    {
+      "office": "36th District Judge of District Court Incumbent 6 Year Terms (6) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+      "candidates": 6
+    },
+    {
+      "office": "36th District Judge of District Court Non-Incumbent 6 Year Terms (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+      "candidates": 4
+    },
+    {
+      "office": "36th District Judge of District Court Incumbent Partial Term Ending 01/01/2031 (3) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:36",
+      "candidates": 3
+    },
+    {
+      "office": "37th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:37",
+      "candidates": 1
+    },
+    {
+      "office": "38th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:38",
+      "candidates": 2
+    },
+    {
+      "office": "39th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:39",
+      "candidates": 2
+    },
+    {
+      "office": "40th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:40",
+      "candidates": 1
+    },
+    {
+      "office": "41A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:41a",
+      "candidates": 1
+    },
+    {
+      "office": "41B District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:41b",
+      "candidates": 1
+    },
+    {
+      "office": "42nd District - 1st Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:42/division:1",
+      "candidates": 1
+    },
+    {
+      "office": "43rd District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:43",
+      "candidates": 1
+    },
+    {
+      "office": "45th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:45",
+      "candidates": 1
+    },
+    {
+      "office": "46th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:46",
+      "candidates": 1
+    },
+    {
+      "office": "47th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:47",
+      "candidates": 2
+    },
+    {
+      "office": "48th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:48",
+      "candidates": 1
+    },
+    {
+      "office": "50th District Judge of District Court Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:50",
+      "candidates": 2
+    },
+    {
+      "office": "51st District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:51",
+      "candidates": 2
+    },
+    {
+      "office": "52nd District - 1st Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:1",
+      "candidates": 1
+    },
+    {
+      "office": "52nd District - 2nd Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:2",
+      "candidates": 1
+    },
+    {
+      "office": "52nd District - 3rd Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:3",
+      "candidates": 1
+    },
+    {
+      "office": "52nd District - 4th Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:52/division:4",
+      "candidates": 1
+    },
+    {
+      "office": "53rd District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:53",
+      "candidates": 1
+    },
+    {
+      "office": "54A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:54a",
+      "candidates": 1
+    },
+    {
+      "office": "55th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:55",
+      "candidates": 1
+    },
+    {
+      "office": "56A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:56a",
+      "candidates": 1
+    },
+    {
+      "office": "56A District Judge of District Court Incumbent Partial Term - 2 Years Ending 01/01/2029 (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:56a",
+      "candidates": 1
+    },
+    {
+      "office": "57th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:57",
+      "candidates": 2
+    },
+    {
+      "office": "57th District Judge of District Court Incumbent Partial Term Ending 01/01/2031 (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:57",
+      "candidates": 2
+    },
+    {
+      "office": "58th District Judge of District Court Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:58",
+      "candidates": 3
+    },
+    {
+      "office": "60th District Judge of District Court Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:60",
+      "candidates": 2
+    },
+    {
+      "office": "61st District Judge of District Court Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:61",
+      "candidates": 2
+    },
+    {
+      "office": "62A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:62a",
+      "candidates": 1
+    },
+    {
+      "office": "62B District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:62b",
+      "candidates": 1
+    },
+    {
+      "office": "63rd District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:63",
+      "candidates": 1
+    },
+    {
+      "office": "63rd District Judge of District Court Incumbent Partial Term Ending 01/01/2029 (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:63",
+      "candidates": 1
+    },
+    {
+      "office": "64A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:64a",
+      "candidates": 1
+    },
+    {
+      "office": "64B District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:64b",
+      "candidates": 1
+    },
+    {
+      "office": "65A District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:65a",
+      "candidates": 1
+    },
+    {
+      "office": "65B District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:65b",
+      "candidates": 1
+    },
+    {
+      "office": "67th District - 1st Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:67/division:1",
+      "candidates": 1
+    },
+    {
+      "office": "67th District - 2nd Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:67/division:2",
+      "candidates": 1
+    },
+    {
+      "office": "67th District - 3rd Division Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:67/division:3",
+      "candidates": 1
+    },
+    {
+      "office": "67th District - 4th Division Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:67/division:4",
+      "candidates": 2
+    },
+    {
+      "office": "67th District - 5th Division Judge of District Court Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:67/division:5",
+      "candidates": 2
+    },
+    {
+      "office": "70th District - 2nd Division Judge of District Court Incumbent 6 Year Terms (2) Positions",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:70/division:2",
+      "candidates": 2
+    },
+    {
+      "office": "71A District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:71a",
+      "candidates": 2
+    },
+    {
+      "office": "71B District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:71b",
+      "candidates": 2
+    },
+    {
+      "office": "72nd District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:72",
+      "candidates": 1
+    },
+    {
+      "office": "74th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:74",
+      "candidates": 2
+    },
+    {
+      "office": "75th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:75",
+      "candidates": 1
+    },
+    {
+      "office": "76th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:76",
+      "candidates": 1
+    },
+    {
+      "office": "77th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:77",
+      "candidates": 1
+    },
+    {
+      "office": "78th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:78",
+      "candidates": 1
+    },
+    {
+      "office": "79th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:79",
+      "candidates": 1
+    },
+    {
+      "office": "80th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:80",
+      "candidates": 1
+    },
+    {
+      "office": "82nd District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:82",
+      "candidates": 1
+    },
+    {
+      "office": "84th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:84",
+      "candidates": 1
+    },
+    {
+      "office": "89th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:89",
+      "candidates": 1
+    },
+    {
+      "office": "90th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:90",
+      "candidates": 1
+    },
+    {
+      "office": "92nd District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:92",
+      "candidates": 1
+    },
+    {
+      "office": "94th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:94",
+      "candidates": 2
+    },
+    {
+      "office": "95A District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:95a",
+      "candidates": 2
+    },
+    {
+      "office": "95B District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:95b",
+      "candidates": 1
+    },
+    {
+      "office": "96th District Judge of District Court Non-Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:96",
+      "candidates": 2
+    },
+    {
+      "office": "97th District Judge of District Court Incumbent 6 Year Term (1) Position",
+      "ocdId": "ocd-division/country:us/state:mi/district_court:97",
+      "candidates": 1
+    }
+  ],
+  "excludedFilingRows": [
+    {
+      "office": "7th District Representative in Congress 2 Year Term (1) Position",
+      "name": "Thibodeau, Felix",
+      "status": "DISQ"
+    },
+    {
+      "office": "13th District Representative in Congress 2 Year Term (1) Position Files In WAYNE County",
+      "name": "Wilcoxon, D. Etta",
+      "status": "DISQ"
+    },
+    {
+      "office": "13th District Representative in Congress 2 Year Term (1) Position Files In WAYNE County",
+      "name": "Campbell, Shelby",
+      "status": "DISQ"
+    },
+    {
+      "office": "13th District Representative in Congress 2 Year Term (1) Position Files In WAYNE County",
+      "name": "Morton, Maurice",
+      "status": "DISQ"
+    },
+    {
+      "office": "3rd District Representative in State Legislature 2 Year Term (1) Position Files In WAYNE County",
+      "name": "Davis, Debra",
+      "status": "DISQ"
+    },
+    {
+      "office": "9th District Representative in State Legislature 2 Year Term (1) Position Files In WAYNE County",
+      "name": "Simpson, Danetta L.",
+      "status": "DISQ"
+    },
+    {
+      "office": "63rd District Representative in State Legislature 2 Year Term (1) Position",
+      "name": "DeBoyer, Jay",
+      "status": "WITHD"
+    },
+    {
+      "office": "WAYNE Judge of Probate Court Non-Incumbent 6 Year Terms (3) Positions Files With County",
+      "name": "Hubbard, Susan L.",
+      "status": "DISQ"
+    },
+    {
+      "office": "WAYNE Judge of Probate Court Non-Incumbent 6 Year Terms (3) Positions Files With County",
+      "name": "Leggs, Shalanda C.",
+      "status": "DISQ"
+    }
+  ],
+  "verifiedMemberships": 169,
+  "unresolvedCircuitMemberships": [
+    {
+      "district": "circuit_court:5",
+      "reason": "Statutory composition is conditional on local creation/reformation resolutions; current jurisdiction confirmation still owed."
+    },
+    {
+      "district": "circuit_court:33",
+      "reason": "Statutory composition is conditional on local creation/reformation resolutions; current jurisdiction confirmation still owed."
+    },
+    {
+      "district": "circuit_court:40",
+      "reason": "Statutory composition is conditional on local creation/reformation resolutions; current jurisdiction confirmation still owed."
+    },
+    {
+      "district": "circuit_court:54",
+      "reason": "Statutory composition is conditional on local creation/reformation resolutions; current jurisdiction confirmation still owed."
+    },
+    {
+      "district": "circuit_court:56",
+      "reason": "Statutory composition is conditional on local creation/reformation resolutions; current jurisdiction confirmation still owed."
+    },
+    {
+      "district": "circuit_court:57",
+      "reason": "Statutory composition is conditional on local creation/reformation resolutions; current jurisdiction confirmation still owed."
+    }
+  ],
+  "remaining": "Other district-court electoral boundaries, city/county/school races and local measures remain open. This official-roster/catalog replay is not live or ZIP sample completeness."
+}

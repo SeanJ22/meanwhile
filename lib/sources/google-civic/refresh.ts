@@ -48,7 +48,7 @@ export async function refreshGoogleCivic(input: {
       report.addresses = targets.length;
       report.withoutAddress = governments.length - targets.length;
       report.reason = electionId
-        ? "Google voterinfo is queried only for an explicit reader fallback where no official voting source is loaded."
+        ? "Google voterinfo is queried live for a reader where no held voting locations are available."
         : "Google Civic has not published the November 3 national election.";
     }
     coverage.push(report);

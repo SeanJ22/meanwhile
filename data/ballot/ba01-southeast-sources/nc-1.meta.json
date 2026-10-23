@@ -1,0 +1,9 @@
+{
+  "url": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+  "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/Candidate_Listing_2026.csv",
+  "httpStatus": 200,
+  "contentType": "binary/octet-stream",
+  "retrievedAt": "2026-10-20T22:52:21.488912+00:00",
+  "rawHash": "2f1c1b932dff920bc690c3e5fc1813ff4389cb5a28ef0b99d4bb06c9fef09cbe",
+  "bytes": 2079875
+}

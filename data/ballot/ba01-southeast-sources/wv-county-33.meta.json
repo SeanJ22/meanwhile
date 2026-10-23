@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Nicholas%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Nicholas%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:37.563719+00:00",
+  "rawHash": "a100843571edd9c9affa20f98b72e448caf1c7bb2ea9a44b6b72acaedbde1904",
+  "httpStatus": 200,
+  "bytes": 946735,
+  "extractedTextHash": "b4c1e1de7a3f58ba0625073888fabde3538ef57e7a3ab517eeec03b14655d1ee",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

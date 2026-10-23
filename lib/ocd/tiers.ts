@@ -39,6 +39,9 @@ export const TIER_SEGMENTS: Readonly<Record<Tier, readonly string[]>> = {
     "town",
     "city",
     "precinct",
+    // Minted for special districts drawn by their own official boundary layer, and for Census tribal areas.
+    "special_district",
+    "aiannh",
   ],
 } as const;
 

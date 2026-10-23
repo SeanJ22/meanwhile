@@ -1,0 +1,62 @@
+# Last Updated: 03/12/21 by MCS, NIC Oregon
+
+# ---------------------- Statewide ----------------------
+
+# Note: Site-stored robots.txt are not honored, except on host-header sites / subdomains
+#	All directives for www.oregon.gov are to be stored here
+#	To remove an indexed SERP, submit a 'Remove URL' request in Webmaster Tools
+
+# Note: The Allow directives are added for many Google-specific Mobile Tests to fully render the page.
+#	Without these directives, the state sites could get poor grades for mobile-friendliness which
+#	can result is a lower Page Rank and other SEO scores, as well as incorrect analytics in
+#	the Google Analytics product.
+
+
+User-agent: *
+#updated at 07102026
+Disallow: /_vti_bin/
+Disallow: /_layouts/
+Disallow: /_catalogs/
+Disallow: /_cts/
+Disallow: /_private/
+Disallow: /Lists/
+Disallow: /m/
+Disallow: /ReusableContent/
+Disallow: /WorkflowTasks/
+Disallow: /SiteCollectionDocuments/
+Disallow: /SiteCollectionImages/
+Disallow: /SiteAssets/
+Disallow: /Documents/Forms/
+Disallow: /Pages/Forms/
+Disallow: /Search/
+Disallow: /testing/
+Disallow: /admin/
+Disallow: /packages/
+Disallow: /Pages/404.aspx
+Disallow: /Pages/upgrade.aspx
+Disallow: /Pages/system-upgrade.aspx
+Disallow: /Pages/browser-update.aspx
+Disallow: /audits/Pages/application-down-for-maintenance.aspx
+Disallow: /business/Documents/sba-get-help-widget.html
+Disallow: /Pages/blocked-web-page.aspx
+Disallow: /pages/down-for-maintenance.aspx
+Disallow: /Pages/down-for-maintenance.aspx
+Disallow: /Pages/maintenance.aspx
+Disallow: /Pages/system-down.aspx
+Disallow: /business/Pages/notary-training-acknowledgment.aspx
+Disallow: /archives/Pages/orms-training.aspx
+Disallow: /elections/Pages/SEL-352-Statement-of-Justification.aspx
+Disallow: /elections/Pages/SEL-222-Statement-of-Organization-for-Petition-Committee.aspx
+Disallow: /elections/Pages/SEL-324-Notice-Ballot-Title-Challenge-State-Initiative-Referendum-Referral.aspx
+Disallow: /elections/Pages/SEL-220-statement-organization-candidate-committee.aspx
+Disallow: /business/Pages/corporation-llc-information-change.aspx
+Disallow: /audits/Pages/Waiver-of-Confidentiality.aspx
+Disallow: /elections/Pages/election-worker-exempt-address.aspx
+Disallow: /elections/Pages/2024-irr.aspx
+Disallow: /archives/Pages/M365Retention.aspx
+Disallow: /elections/Pages/Oregon-Votes-County-Portal.aspx
+Disallow: /elections/Pages/county-portal.aspx
+Allow: /_layouts/OID.SharePoint.StarterTemplate/scripts/data-tables-web-part.js
+Allow: */_layouts/OID.SharePoint.StarterTemplate/scripts/data-tables-web-part.js
+Allow: /*/_layouts/OID.SharePoint.StarterTemplate/scripts/data-tables-web-part.js
+Sitemap: https://sos.oregon.gov/sitemap.xml

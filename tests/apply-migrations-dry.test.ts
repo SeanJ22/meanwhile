@@ -216,6 +216,23 @@ test("concurrent migration reuse reports no statements applied and keeps the loc
   assert.match(events.find(event => event.kind === "transaction-query")?.statement ?? "", /IF NOT EXISTS[\s\S]*EXECUTE[\s\S]*INSERT INTO/);
 });
 
+test("production contracts bound exclusive reader locks inside their journal transaction", () => {
+  const committed = journal().entries;
+  const contract = committed.find(entry => declaredPhase(entry.tag)?.phase === "contract")!;
+  const result = run(["--target=production", "--phase=contract", `--upto=${contract.tag}`], {
+    WTP_RUNTIME_MODE: "production",
+    WTP_PRODUCTION_DATABASE_URL_WRITE: "postgresql://writer:fixture@ep-dry-river-axwtolzc.c-4.us-east-2.aws.neon.tech/neondb",
+    APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: committed.filter(entry => entry.when < contract.when).map(entry => entry.when).join(","),
+  }, "async () => {}");
+  assert.equal(result.status, 0, result.output);
+  const queries = (result.events as { statement?: string }[]).map(event => event.statement ?? "");
+  const apply = queries.findIndex(text => /^DO\b/.test(text));
+  assert.ok(apply > 1);
+  assert.ok(queries.indexOf("SET LOCAL lock_timeout = '250ms'") < apply);
+  assert.ok(queries.indexOf("SET LOCAL statement_timeout = '1000ms'") < apply);
+  assert.match(result.output, /Applied 1 migration/);
+});
+
 test("the runtime refuses a contract before the exact commit is loaded, records the refusal and redacts failure output", async () => {
   const sha = "a".repeat(40);
   const env: NodeJS.ProcessEnv = { NODE_ENV: "test", WTP_RUNTIME_MODE: "production", WTP_DB_ROLE: "production", PRIVATE_TOKEN: "private-token-value" };

@@ -6,13 +6,13 @@ import type { LocationOrigin } from "@/lib/ask/residency";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useRecentZips } from "@/hooks/use-recent-zips";
-import { lookupZctaAsync, warmZctaTable } from "@/lib/geo/zcta-table";
+import { lookupReaderZip } from "@/lib/reader/zip";
 import { ZIP_AREA_MISSING } from "@/lib/geo/postal-core";
 import { ZipAddressPrompt } from "./zip-address-prompt";
 
 /**
  * Changing zip from the floater: five digits of input with the device's recent
- * zips underneath. Resolves through the same `lookupZcta` and `onPick` as the
+ * zips underneath. Resolves through the same server ZIP shelf and `onPick` as the
  * welcome card; recents are device-local (`use-recent-zips.ts`).
  */
 export function ZipSwitcher({
@@ -34,6 +34,7 @@ export function ZipSwitcher({
   const [addressZip, setAddressZip] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const choiceRequest = useRef(0);
   const recents = useRecentZips();
 
   useDismissOnOutside(rootRef, onClose, !embedded);
@@ -42,6 +43,9 @@ export function ZipSwitcher({
     // preventScroll: inside a popup over an overflow-hidden map, a scrolling
     // focus shifts the whole screen sideways on a phone.
     inputRef.current?.focus({ preventScroll: true });
+    // This ref is a request generation, not a DOM node: invalidate its latest value.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => { choiceRequest.current++; };
   }, []);
 
   useEffect(() => {
@@ -53,13 +57,10 @@ export function ZipSwitcher({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose, embedded]);
 
-  // Warm the lookup on open, while the reader is choosing.
-  useEffect(() => {
-    warmZctaTable();
-  }, []);
-
   const take = async (zip: string, origin: LocationOrigin = "TYPED_ZIP") => {
-    const found = await lookupZctaAsync(zip).catch(() => null);
+    const request = ++choiceRequest.current;
+    const found = await lookupReaderZip(zip).catch(() => null);
+    if (request !== choiceRequest.current) return;
     if (!found) {
       // A fact about our data, not about the zip.
       setError(ZIP_AREA_MISSING);
@@ -103,6 +104,7 @@ export function ZipSwitcher({
           placeholder={current ?? "zip code"}
           aria-label="Zip code"
           onChange={(e) => {
+            choiceRequest.current++;
             setText(e.target.value.replace(/\D/g, "").slice(0, 5));
             setError(null);
             setAddressZip(null);
@@ -121,7 +123,7 @@ export function ZipSwitcher({
 
       {others.length > 0 && (
         <>
-          <p className="zip-switcher-label">{embedded ? "Recent" : "Recent on this device"}</p>
+          <p className="zip-switcher-label">Recent</p>
           <div className="zip-switcher-recents">
             {others.map((zip) => (
               /* Recents mix origins and nothing recorded which. */
@@ -131,11 +133,6 @@ export function ZipSwitcher({
             ))}
           </div>
         </>
-      )}
-      {embedded && (
-        <p className="mw-pop-note">
-          A ZIP is orientation, not your exact districts or ballot.
-        </p>
       )}
     </div>
   );

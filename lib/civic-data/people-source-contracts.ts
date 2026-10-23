@@ -17,9 +17,21 @@ export const peopleSourceContractId = (state: string, sourceId: StandingPeopleSo
 
 /** Each invocation holds one state. The upstream transport owns shared release and host pacing. */
 export const PEOPLE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
+  {
+    id: peopleSourceContractId("us", "statewide-executive-sources"), sourceId: "statewide-executive-sources", recordClass: "STATE_LEGISLATOR",
+    scope: peopleSourceScope("US", "statewide-executive-sources"), acquisitionFailureDomain: "routine-source:statewide-executive-sources:us",
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/national-people-refresh.mts", "--promote", "--state=us", "--source=statewide-executive-sources"] },
+    parserNormalizerVersion: sourceAuthority("statewide-executive-sources")!.parserVersion,
+    cadence: { description: "daily current President refresh from the White House administration", defaultEveryMs: DAY },
+    retry: { afterMs: HOUR, description: "retry the White House; failed reads preserve the verified President" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "statewide-executive-sources" }, validationContract: VALIDATION_CHECKS,
+    canonicalProductionStore: STORE, readerProjection: { id: "us-current-president", consumers: ["registry", "people", "representation", "map", "Ask", "Admin"] },
+    lkgBehavior: "The administration's current President link and the captured own page establish the holder. Failed reads preserve the last verified record.",
+    autoPromotable: true, childTimeoutMs: 0, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
+  },
   ...PEOPLE_SOURCE_STATES.flatMap(state => STANDING_PEOPLE_SOURCE_IDS.map((sourceId): RoutineSourceContract => ({
     id: peopleSourceContractId(state, sourceId), sourceId,
-    recordClass: peopleSourceRecordClass(`US-${state.toUpperCase()}`, sourceId),
+    recordClass: peopleSourceRecordClass(sourceId),
     scope: peopleSourceScope(`US-${state.toUpperCase()}`, sourceId),
     acquisitionFailureDomain: `routine-source:${sourceId}:${state}`,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: [
@@ -35,20 +47,19 @@ export const PEOPLE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     lkgBehavior: "A failed source leaves this state's last verified people live. Complementary sources publish independently; missing pages leave standing gaps.",
     autoPromotable: true, childTimeoutMs: 0, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
   }))),
-  ...[...PEOPLE_SOURCE_STATES, "US"].map((state): RoutineSourceContract => ({
-    id: state === "US" ? "people-portraits-federal" : `people-portraits-${state}`,
+  ...PEOPLE_SOURCE_STATES.map((state): RoutineSourceContract => ({
+    id: `people-portraits-${state}`,
     sourceId: "people-portraits",
-    recordClass: peopleSourceRecordClass(state === "US" ? "US" : `US-${state.toUpperCase()}`, "people-portraits"),
-    scope: peopleSourceScope(state === "US" ? "US" : `US-${state.toUpperCase()}`, "people-portraits"),
-    acquisitionFailureDomain: `routine-source:people-portraits:${state.toLowerCase()}`,
-    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/people-portraits-refresh.mts", "--promote",
-      state === "US" ? "--federal" : `--state=${state}`] },
+    recordClass: peopleSourceRecordClass("people-portraits"),
+    scope: peopleSourceScope(`US-${state.toUpperCase()}`, "people-portraits"),
+    acquisitionFailureDomain: `routine-source:people-portraits:${state}`,
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/people-portraits-refresh.mts", "--promote", `--state=${state}`] },
     parserNormalizerVersion: "people-portraits/1",
     cadence: { description: "standing verification of every missing or due official portrait", defaultEveryMs: HOUR },
     retry: { afterMs: HOUR, description: "retry the state's remaining portraits independently of roster refresh" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "people-portraits" },
     validationContract: VALIDATION_CHECKS, canonicalProductionStore: STORE,
-    readerProjection: { id: `${state.toLowerCase()}-verified-portraits`, consumers: ["registry", "people", "representation", "map", "ballot", "Ask", "Admin"] },
+    readerProjection: { id: `${state}-verified-portraits`, consumers: ["registry", "people", "representation", "map", "ballot", "Ask", "Admin"] },
     lkgBehavior: "Each person's verified photo survives another person's failed read. Every missing photo or expired check remains standing work with its recorded reason.",
     autoPromotable: true, childTimeoutMs: 0, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
   })),

@@ -3,7 +3,7 @@ import test from "node:test";
 import { createHash } from "node:crypto";
 import { MemoryEvidenceStore, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { acquireKnownRelease, type KnownRelease } from "../lib/sources/known-release.ts";
+import { acquireKnownRelease, SOURCE_CHECK_AFTER_ENV, type KnownRelease } from "../lib/sources/known-release.ts";
 import { RepositoryLockHeld, type LockManager } from "../lib/control-plane/repository/types.ts";
 import { isSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 
@@ -186,4 +186,25 @@ test("vault, index, lock, and parser program failures escape unchanged rather th
     return object && key === indexKey ? { ...object, bytes: new TextEncoder().encode("broken index JSON") } : object;
   };
   await assert.rejects(acquireKnownRelease(h.options), error => error instanceof SyntaxError && !isSourceAcquisitionFailure(error));
+});
+test("an owner's read-now request reaches the publisher even inside the cache interval, and keeps the bytes' original date", async t => {
+  t.after(() => { delete process.env[SOURCE_CHECK_AFTER_ENV]; });
+  const h = harness(); await acquireKnownRelease(h.options);
+  h.time("2026-10-01T06:00:00.000Z");
+  h.response(headers => headers.get("if-none-match") === '"one"' ? new Response(null, { status: 304 }) : new Response("unexpected"));
+  const cached = await acquireKnownRelease(h.options);
+  assert.equal(h.requests(), 1, "an ordinary read inside the interval reuses the held check");
+  const requested = await acquireKnownRelease({ ...h.options, checkedAfter: "2026-10-01T05:00:00.000Z" });
+  assert.equal(h.requests(), 2, "a request made after the last check is a new conditional read");
+  assert.equal(requested.lastCheckStatus, 304); assert.equal(requested.checkedAt, "2026-10-01T06:00:00.000Z"); assert.equal(requested.retrievedAt, T0);
+  assert.equal((await acquireKnownRelease({ ...h.options, checkedAfter: "2026-10-01T05:00:00.000Z" })).checkedAt, "2026-10-01T06:00:00.000Z");
+  assert.equal(h.requests(), 2, "once observed after the request, the same request is spent");
+  process.env[SOURCE_CHECK_AFTER_ENV] = "2026-10-01T05:30:00.000Z";
+  h.time("2026-10-01T07:00:00.000Z");
+  await acquireKnownRelease(h.options);
+  assert.equal(h.requests(), 2, "the runner's request time is already satisfied by the 06:00 check");
+  process.env[SOURCE_CHECK_AFTER_ENV] = "2026-10-01T06:30:00.000Z";
+  await acquireKnownRelease(h.options);
+  assert.equal(h.requests(), 3, "the runner hands its request time to every source read in the child");
+  assert.equal(cached.checkedAt, T0);
 });

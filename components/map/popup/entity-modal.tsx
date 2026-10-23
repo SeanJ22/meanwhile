@@ -4,6 +4,7 @@ import { CardSubjectContext } from "@/components/ui/card-subject-context";
 import { CheckedLink } from "@/components/ui/checked-link";
 import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { StateCampaignSection } from "@/components/funding/state-campaign-section";
 import { FederalMoneySection } from "@/components/funding/federal-money-section";
 import { CardGapContext, CardGapContribution, useCardGapRegistry } from "@/components/ui/card-gap-context";
 import { CardFooter } from "@/components/ui/card-footer";
@@ -12,6 +13,7 @@ import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
 import { PlacePublicRecords } from "../public-records";
 import { PlaceOpenData } from "../open-data";
+import { MeetingRow } from "@/components/ui/meeting-row";
 import { MeetingCard } from "@/components/ui/meeting-card";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -163,6 +165,7 @@ export interface ModalSubject {
   /** A meeting's stored agenda content, rendered in the overview. */
   agenda?: {
     meetingId: string;
+    bodyId: string;
     agendaUrl: string | null;
     /* The publisher observation travels to the surface that renders the sentence. */
     agendaSlotObservedEmpty?: boolean;
@@ -179,11 +182,13 @@ export interface ModalSubject {
   /** The office title of whoever represents the district, for that office's explainer. */
   representedByOfficeTitle?: string | null;
   representation: SeatHolder[];
+  vacancy?: import("@/lib/officials/types").SeatVacancy;
   /** Each legislative district at the clicked point and its statewide offices. */
   spotRepresentation?: {
     ocdId: string;
     label: string;
     holders: SeatHolder[];
+    vacancy?: import("@/lib/officials/types").SeatVacancy;
     rosterGaps?: RosterReaderGap[];
     note: string;
   }[];
@@ -274,7 +279,7 @@ function PlaceSections({
         </ul>
       )}
       <PublicRecordSection subject={subject} zip={homeZip} />
-        <FederalRecordSection subject={subject} />
+        <MoneyRecordSection subject={subject} />
     </div>
   );
 }
@@ -288,10 +293,11 @@ function PublicRecordSection({ subject, zip }: { subject: ModalSubject; zip?: st
   </CardSection>;
 }
 
-function FederalRecordSection({ subject }: { subject: ModalSubject }) {
+function MoneyRecordSection({ subject }: { subject: ModalSubject }) {
   const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
-  if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):/.test(divisionId)) return null;
-  return <CardSection title="Federal money and records">
+  if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):|\/(?:state|district|territory):[a-z]{2}$/.test(divisionId)) return null;
+  return <CardSection title="Money and records">
+    <StateCampaignSection key={`campaign:${divisionId}`} divisionId={divisionId} />
     <FederalMoneySection key={`${divisionId}:${subject.bodyCard ? subject.subjectId : "place"}`} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
   </CardSection>;
 }
@@ -312,6 +318,9 @@ function BodySections({
   // The flat ordering gives the count; <Meetings> groups the raw list.
   const meetings = orderByUpcomingFirst(subject.meetings, now);
   const upcoming = meetings.filter((m) => !hasConcluded(m, now)).length;
+  const next = meetings.find((m) => m.status === "SCHEDULED" && Number.isFinite(Date.parse(m.startsAt)) && !hasConcluded(m, now));
+  const last = meetings.find((m) => m.status !== "CANCELED" && hasConcluded(m, now));
+  const otherMeetings = meetings.filter((m) => m !== next && m !== last);
 
   const sections: BodyCardSection[] = [
     {
@@ -379,7 +388,20 @@ function BodySections({
       id: "meetings",
       title: listingCount.heading,
       meta: meetings.length > 0 ? `${upcoming} upcoming${listingCount.unresolved ? " listings" : ""}` : undefined,
-      content: meetings.length > 0 ? <Meetings meetings={meetings} /> : null,
+      content: meetings.length > 0 ? (
+        <>
+          {next ? <MeetingRow meeting={next} compact title="Next meeting" sourcesInParent />
+            : <CardGapContribution id="body:next-meeting" label="the next meeting" />}
+          {last ? <MeetingRow meeting={last} compact title="Last meeting" sourcesInParent />
+            : <CardGapContribution id="body:last-meeting" label="the last meeting" />}
+          {otherMeetings.length > 0 && (
+            <details>
+              <summary className="mt-3 cursor-pointer t-detail text-muted">More meetings ({otherMeetings.length})</summary>
+              <Meetings meetings={otherMeetings} />
+            </details>
+          )}
+        </>
+      ) : null,
     },
     {
       id: "contact",
@@ -434,10 +456,10 @@ function BodySections({
       {/* One group, one open pill. */}
       <CardSectionGroup>
         {sections.map((section) => section.content ? (
-          <CardSection key={section.id} title={section.title} meta={section.meta}>{section.content}</CardSection>
+          <CardSection key={section.id} title={section.title} meta={section.meta} defaultOpen={section.id === "meetings"}>{section.content}</CardSection>
         ) : <CardGapContribution key={section.id} id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />)}
         <PublicRecordSection subject={subject} zip={homeZip} />
-        <FederalRecordSection subject={subject} />
+        <MoneyRecordSection subject={subject} />
       </CardSectionGroup>
     </div>
   );
@@ -517,6 +539,7 @@ export function EntityModal({
                     <PopupSectionLabel>What this meeting is about</PopupSectionLabel>
                     <AgendaSection
                       meetingId={subject.agenda.meetingId}
+                      bodyId={subject.agenda.bodyId}
                       agendaUrl={subject.agenda.agendaUrl}
                       agendaSlotObservedEmpty={subject.agenda.agendaSlotObservedEmpty}
                       provenance={subject.agenda.provenance}
@@ -642,7 +665,7 @@ export function EntityModal({
           <CardSectionGroup independent={embedded}>
             <CardSection title="What this body does">{overview}{meetingLinks}</CardSection>
             <CardSection title={subject.subjectKind === "MEETING" || subject.divisionOcdId == null ? "Who sits on it" : "Representation"}>
-              <Representation holders={subject.representation} gaps={subject.rosterGaps} note={subject.representationNote}
+              <Representation holders={subject.representation} vacancy={subject.vacancy} gaps={subject.rosterGaps} note={subject.representationNote}
                 onOpenHolder={onOpenHolder} showTopOffices={runsSomething(subject.divisionKind)} />
             </CardSection>
             {subject.spotRepresentation && subject.spotRepresentation.length > 0 && (
@@ -650,7 +673,7 @@ export function EntityModal({
                 {subject.spotRepresentation.map(division => (
                   <div key={division.ocdId} data-spot-division={division.ocdId} className="mb-4 last:mb-0">
                     <PopupSectionLabel>{division.label}</PopupSectionLabel>
-                    <Representation holders={division.holders} gaps={division.rosterGaps} note={division.note}
+                    <Representation holders={division.holders} vacancy={division.vacancy} gaps={division.rosterGaps} note={division.note}
                       onOpenHolder={onOpenHolder} showTopOffices={false} />
                   </div>
                 ))}
@@ -658,7 +681,7 @@ export function EntityModal({
             )}
             {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
             <PublicRecordSection subject={subject} zip={homeZip} />
-        <FederalRecordSection subject={subject} />
+        <MoneyRecordSection subject={subject} />
           </CardSectionGroup>
         </div>
         )}
@@ -683,17 +706,20 @@ export function EntityModal({
 
 export function Representation({
   holders,
+  vacancy,
   gaps = [],
   onOpenHolder,
   /** Lead with the top offices. False only where the list already is the top office. */
   showTopOffices = true,
 }: {
   holders: SeatHolder[];
+  vacancy?: import("@/lib/officials/types").SeatVacancy;
   note: string;
   gaps?: readonly RosterReaderGap[];
   onOpenHolder?: (holder: SeatHolder) => void;
   showTopOffices?: boolean;
 }) {
+  if (holders.length === 0 && vacancy) return <p className="t-detail leading-relaxed">This seat is vacant.</p>;
   if (holders.length === 0) return <><RosterCompletenessGaps gaps={gaps} /><CardGapContribution id="representation" label="who sits on it" /></>;
 
   // The appointed executive leads the list.

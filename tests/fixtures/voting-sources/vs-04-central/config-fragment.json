@@ -1,0 +1,629 @@
+[
+  {
+    "id": "nd-statewide-general-2026",
+    "publisher": "Office of the Secretary of State, Bismarck, ND",
+    "url": "https://vip.sos.nd.gov/Precincts.aspx?eid=348",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY",
+      "VOTE_CENTER",
+      "EARLY_VOTING",
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "ND",
+      "ocdId": "ocd-division/country:us/state:nd",
+      "name": "North Dakota"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sos.nd.gov/elections/voter/elections-currentpast",
+    "discoveredFrom": "https://www.sos.nd.gov/elections/voter/elections-currentpast",
+    "access": {
+      "status": "open",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
+      "checkedAt": "2026-10-13"
+    },
+    "title": "2026 General Election Statewide Polling Places and Precincts",
+    "extraction": {
+      "format": "html"
+    },
+    "delegation": "county",
+    "rules": [
+      {
+        "text": "Absentee ballots must be received by close of polls on Election Day. Return by mail, county drop box, or directly to the county auditor. Polling locations do not accept absentee ballots on Election Day.",
+        "source": {
+          "publisher": "North Dakota Secretary of State",
+          "url": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/how-do-i-vote/absentee-voting",
+          "checkedAt": "2026-10-13"
+        }
+      }
+    ]
+  },
+  {
+    "id": "tx-el-paso-vote-centers-2026",
+    "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+    "url": "https://epcountyvotestx.gov/voter-information/election-day-vote-centers",
+    "shape": "list-page",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "TX",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "name": "El Paso County",
+      "countyFips": "48141"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://epcountyvotestx.gov/",
+    "discoveredFrom": "https://epcountyvotestx.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
+      "checkedAt": "2026-10-13"
+    },
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "kind": "VOTE_CENTER",
+      "textAssertions": [
+        "All Vote Centers will be open from 7:00 a.m. to 7:00 p.m."
+      ],
+      "records": {
+        "pattern": "var content = (\"(?:\\\\.|[^\"\\\\])*\")",
+        "group": 1,
+        "jsonString": true,
+        "fields": {
+          "name": {
+            "pattern": "<strong[^>]*>([\\s\\S]*?)</strong>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<strong[^>]*>[\\s\\S]*?</strong>[\\s\\S]*?<strong[^>]*>([\\s\\S]*?)</strong>",
+            "group": 1
+          },
+          "room": {
+            "pattern": "</strong>[\\s\\S]*?</strong>([\\s\\S]*?)<em",
+            "group": 1
+          }
+        }
+      },
+      "constants": {
+        "hours": "7:00 a.m. to 7:00 p.m."
+      }
+    },
+    "title": "November 2026 General & Special Election"
+  },
+  {
+    "id": "tx-el-paso-early-voting-2026",
+    "publisher": "Elections Division, Office of the Secretary of State, Austin, TX",
+    "url": "https://epcountyvotestx.gov/voter-information/early-voting-locations",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "TX",
+      "ocdId": "ocd-division/country:us/state:tx/county:el_paso",
+      "name": "El Paso County",
+      "countyFips": "48141"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://epcountyvotestx.gov/",
+    "discoveredFrom": "https://epcountyvotestx.gov/",
+    "access": {
+      "status": "open",
+      "detail": "Original source HTTP response captured October 13, 2026 after robots permission; see fixture manifest for hash and limitations.",
+      "checkedAt": "2026-10-13"
+    },
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "kind": "EARLY_VOTING",
+      "records": {
+        "pattern": "var content = (\"(?:\\\\.|[^\"\\\\])*\")",
+        "group": 1,
+        "jsonString": true,
+        "fields": {
+          "name": {
+            "pattern": "<strong[^>]*>([\\s\\S]*?)</strong>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<strong[^>]*>[\\s\\S]*?</strong>[\\s\\S]*?<strong[^>]*>([\\s\\S]*?)</strong>",
+            "group": 1
+          },
+          "room": {
+            "pattern": "</strong>[\\s\\S]*?</strong>([\\s\\S]*?)<em",
+            "group": 1
+          }
+        }
+      },
+      "constants": {
+        "days": "Monday, October 19, 2026 - Friday, October 30, 2026",
+        "election": "November 2026 General & Special Election"
+      }
+    },
+    "title": "November 2026 General & Special Election"
+  },
+  {
+    "id": "sd-statewide-general-polling-2026",
+    "publisher": "South Dakota Secretary of State",
+    "url": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026%20Election%20Assets/General/PrecinctPollingPlaces_10.06.2026.pdf",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "SD",
+      "ocdId": "ocd-division/country:us/state:sd",
+      "name": "South Dakota"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026-Election-Polling-Places.aspx",
+    "extraction": {
+      "format": "pdf",
+      "pdfColumns": [
+        {
+          "name": "county",
+          "x": 7.8
+        },
+        {
+          "name": "precinct",
+          "x": 54.84
+        },
+        {
+          "name": "name",
+          "x": 149.64
+        },
+        {
+          "name": "street",
+          "x": 342.48
+        },
+        {
+          "name": "city",
+          "x": 438.6
+        },
+        {
+          "name": "notes",
+          "x": 496.2
+        }
+      ],
+      "pdfRecordStart": {
+        "column": "county",
+        "pattern": "^(?!County$)[A-Z][a-z]"
+      },
+      "constants": {
+        "election": "General Election - November 3rd, 2026"
+      },
+      "columns": {
+        "countyName": "county",
+        "precinct": "precinct",
+        "name": "name",
+        "address": [
+          "street",
+          "city"
+        ],
+        "locationNotes": "notes"
+      }
+    },
+    "electionAssociationVerified": false
+  },
+  {
+    "id": "ok-statewide-early-voting-2026",
+    "publisher": "Oklahoma State Election Board",
+    "url": "https://hosting.okelections.gov/earlyvote.html",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "OK",
+      "ocdId": "ocd-division/country:us/state:ok",
+      "name": "Oklahoma"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://hosting.okelections.gov/earlyvote.html",
+    "extraction": {
+      "format": "html",
+      "kind": "EARLY_VOTING",
+      "records": {
+        "within": {
+          "pattern": "<font size=\"5\"[^>]*>[\\s\\S]*?<A NAME=\\d+>[^<]+</A>[\\s\\S]*?(?=<font size=\"5\"|$)",
+          "fields": {
+            "countyName": {
+              "pattern": "<A NAME=\\d+>([^<]+)</A>",
+              "group": 1
+            }
+          }
+        },
+        "pattern": "(<TABLE\\b[^>]*><TR><TD WIDTH=10></TD><TD WIDTH=10></TD><TD WIDTH=10></TD><TD WIDTH=970>\\s*<B>(?!Early Voting)[\\s\\S]*?)(?=<p id=\"goback\"|<BR>)",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "<B>([^<]+)</B>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "</B></TD></TR></TABLE>\\s*([\\s\\S]*?)<B>Early Voting Dates/Times:",
+            "group": 1
+          },
+          "hours": {
+            "pattern": "Early Voting Dates/Times:</B>[\\s\\S]*?</TABLE>([\\s\\S]*)",
+            "group": 1
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "la-statewide-early-voting",
+    "publisher": "Louisiana Secretary of State",
+    "url": "https://voterportal.sos.la.gov/earlyvoting",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "LA",
+      "ocdId": "ocd-division/country:us/state:la",
+      "name": "Louisiana"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://voterportal.sos.la.gov/earlyvoting",
+    "extraction": {
+      "format": "html",
+      "kind": "EARLY_VOTING",
+      "records": {
+        "within": {
+          "pattern": "<tr>\\s*<td\\b[^>]*>\\s*<strong>[\\s\\S]*?</strong>[\\s\\S]*?<td class=\"location\">[\\s\\S]*?</td>\\s*</tr>",
+          "fields": {
+            "countyName": {
+              "pattern": "<strong>([A-Z .]+)\\s+\\(\\d+\\)</strong>",
+              "group": 1
+            }
+          }
+        },
+        "pattern": "<div>([\\s\\S]*?)</div>",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "^\\s*(?:\\*\\s*)?([^<\\r\\n]+?)(?:<br|$)",
+            "group": 1
+          },
+          "address": {
+            "pattern": "(\\d[^<]*(?:<br\\s*/?>\\s*[^<]*){1,3}\\bLA\\s+\\d{5}(?:-\\d{4})?)",
+            "group": 1
+          },
+          "phone": {
+            "pattern": "(\\d{3}[- ]\\d{3}[- ]\\d{4})",
+            "group": 1
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "ia-scott-precinct-polling",
+    "publisher": "Scott County Auditor",
+    "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+    "shape": "list-page",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "IA",
+      "ocdId": "ocd-division/country:us/state:ia/county:scott",
+      "name": "Scott County",
+      "countyFips": "19163"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://elections.scottcountyiowa.gov/vote/precincts/",
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "<b class=\"precName\">[\\s\\S]*?<div class=\"corePrecinctInfo\">[\\s\\S]*?</div>",
+        "fields": {
+          "precinct": {
+            "pattern": "<b class=\"precName\">([^<]+)</b>",
+            "group": 1
+          },
+          "name": {
+            "pattern": "<div class=\"corePrecinctInfo\">\\s*([^<]+)",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<br>\\s*([^<]+\\s*<br>\\s*[^<]+\\bIA\\s+\\d{5})",
+            "group": 1
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "mn-renville-polling",
+    "publisher": "Renville County GIS",
+    "url": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+    "shape": "map-service",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "MN",
+      "ocdId": "ocd-division/country:us/state:mn/county:renville",
+      "name": "Renville County",
+      "countyFips": "27129"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://gis.renvillecountymn.gov/arcgis/rest/services/Elections/FeatureServer/0",
+    "extraction": {
+      "columns": {
+        "name": "NAME",
+        "address": [
+          "FULLADD",
+          "CITY",
+          "STATE",
+          "Zip"
+        ],
+        "locationNotes": "Voters"
+      },
+      "filters": {
+        "Government_Desg": "State_Federal"
+      }
+    }
+  },
+  {
+    "id": "ne-douglas-drop-boxes",
+    "publisher": "Douglas County Election Commission",
+    "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+    "shape": "list-page",
+    "covers": [
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "NE",
+      "ocdId": "ocd-division/country:us/state:ne/county:douglas",
+      "name": "Douglas County",
+      "countyFips": "31055"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+    "extraction": {
+      "format": "html",
+      "kind": "DROP_BOX",
+      "constants": {
+        "hours": "24/7"
+      },
+      "filters": {
+        "status": "Open"
+      },
+      "records": {
+        "pattern": "<li>\\s*<b>[^<]+</b>[\\s\\S]*?</li>",
+        "fields": {
+          "name": {
+            "pattern": "<b>([^<]+)</b>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "(?:<br>|\\n)\\s*(\\d[^<]+,\\s*(?:Omaha|Valley|Bennington|Waterloo|Elkhorn|Ralston))\\s*<br>",
+            "group": 1
+          },
+          "status": {
+            "pattern": "<span class\\s*=\\s*\"open\">([^<]+)</span>",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "Located:([\\s\\S]*?)(?=\\d[^<]+,\\s*(?:Omaha|Valley|Bennington|Waterloo|Elkhorn|Ralston))",
+            "group": 1
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "mo-st-louis-current-polling-centers",
+    "publisher": "City of St. Louis Board of Election Commissioners",
+    "url": "https://services6.arcgis.com/HZXbCkpCSqbGd0vK/arcgis/rest/services/Polling_Centers_WFL1/FeatureServer/1",
+    "shape": "map-service",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "MO",
+      "ocdId": "ocd-division/country:us/state:mo/county:st_louis_city",
+      "name": "St. Louis city",
+      "countyFips": "29510"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://services6.arcgis.com/HZXbCkpCSqbGd0vK/arcgis/rest/services/Polling_Centers_WFL1/FeatureServer/1",
+    "extraction": {
+      "columns": {
+        "name": "pollingPlace",
+        "address": [
+          "pollingPlaceAddress",
+          "pollingPlaceZipCode"
+        ],
+        "hours": "Operational_Hours",
+        "accessibilityNotes": "disabledentry",
+        "locationNotes": "entrydetails"
+      },
+      "filters": {
+        "status": "1"
+      },
+      "kind": "VOTE_CENTER"
+    },
+    "officialLinkingPage": {
+      "url": "https://stlcity.maps.arcgis.com/sharing/rest/content/items/e5fdb4148a5e4134b6defe4e59f4366e/data?f=json",
+      "html": "<!-- Normalized observed operationalLayers[0].url from the exact saved map JSON, not original HTML. -->\n<a href=\"https://services6.arcgis.com/HZXbCkpCSqbGd0vK/arcgis/rest/services/Polling_Centers_WFL1/FeatureServer/1\">Polling Centers</a>",
+      "linkingPage": {
+        "url": "https://www.stlouis-mo.gov/government/departments/board-election-commissioners/voter/polling-places/index.cfm",
+        "html": "<!DOCTYPE html> <html lang=\"en\"> <!-- Content Copyright City of St. Louis -->\n<!-- Page generated 2026-10-20 23:37:13 on server 1 by CommonSpot Build 11.0.0.670 (2025-02-20 18:25:07) -->\n<!-- JavaScript & DHTML Code Copyright &copy; 1998-2025, PaperThin, Inc. All Rights Reserved. --> <head>\n<meta charset=\"UTF-8\">\n<meta name=\"Description\" id=\"Description\" content=\"Active St. Louis City polling places and city-wide and no excuse absentee polling place locations. On election day polls open at 6 AM and close at 7 PM.\" />\n<meta name=\"Generator\" id=\"Generator\" content=\"CommonSpot Build 11.0.0.670\" />\n<title>Voting Locations (Polling Places)</title> <style id=\"cs_antiClickjack\">body{display:none !important;position:absolute !important;top:-5000px !important;}</style><script>(function(){var chk=0;try{if(self!==top){var ts=top.document.location.href.split('/');var ws=window.document.location.href.split('/');if(ts.length<3||ws.length<3)chk=1;else if(ts[2]!==ws[2])chk=2;else if(ts[0]!==ws[0])chk=3;}}catch(e){chk=4;}if(chk===0){var stb=document.getElementById(\"cs_antiClickjack\");stb.parentNode.removeChild(stb);}else{top.location = self.location}})();</script> <script>\nvar jsDlgLoader = '/government/departments/board-election-commissioners/voter/polling-places/loader.cfm';\nvar jsSiteResourceLoader = '/cs-resources.cfm?r=';\nvar jsSiteResourceSettings = {canCombine: false, canMinify: false};\n</script>\n<!-- beg (1) PrimaryResources -->\n<script src=\"/commonspot/javascript/browser-all.js\"></script>\n<!-- end (1) PrimaryResources -->\n<!-- beg (2) SecondaryResources -->\n<link rel=\"stylesheet\" type=\"text/css\" href=\"/style/magnific-popup.css?v=1\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/style/spinner.css?v=1.1\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/style/jump-link-styles.css?v=1.4\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/style/horizontal-subnav-subfooter.css?v=1.3\"><link rel=\"dns-prefetch\" href=\"https://js.arcgis.com\"><link rel=\"stylesheet\" type=\"text/css\" href=\"https://js.arcgis.com/4.33/esri/themes/light/main.css\"><link rel=\"dns-prefetch\" href=\"https://www.stlouis-mo.gov\"><link rel=\"stylesheet\" type=\"text/css\" href=\"https://www.stlouis-mo.gov/templates/lib/ckeditor-current/ckeditor5/custom-css/ckeditor5.css\">\n<!-- end (2) SecondaryResources -->\n<!-- beg (3) StyleTags -->\n<!-- end (3) StyleTags -->\n<!-- beg (4) JavaScript -->\n<script>\n<!--\nvar gMenuControlID = 0;\nvar menus_included = 0;\nvar jsSiteID = 1;\nvar jsSubSiteID = 1544;\nvar js_gvPageID = 981662;\nvar jsPageID = 981662;\nvar jsPageSetID = 0;\nvar jsPageType = 0;\nvar jsSiteSecurityCreateControls = 0;\nvar jsShowRejectForApprover = 1;\n// -->\n</script><script>\nvar jsDlgLoader = '/government/departments/board-election-commissioners/voter/polling-places/loader.cfm';\nvar jsSiteResourceLoader = '/cs-resources.cfm?r=';\nvar jsSiteResourceSettings = {canCombine: false, canMinify: false};\n</script>\n<!-- end (4) JavaScript -->\n<!-- beg (5) CustomHead -->\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<meta name=\"twitter:site\" content=\"@STLCityGov\" />\n<meta name=\"twitter:title\" content=\"Voting Locations (Polling Places)\" />\n<meta name=\"twitter:description\" content=\"Active St. Louis City polling places and city-wide and no excuse absentee polling place locations. On election day polls open at 6 AM and close at 7 PM.\" />\n<meta name=\"twitter:image\" content=\"\" />\n<meta property=\"og:site_name\" content=\"stlouis-mo.gov\" />\n<meta property=\"og:type\" content=\"website\" />\n<meta property=\"og:title\" content=\"Voting Locations (Polling Places)\" />\n<meta property=\"og:description\" content=\"Active St. Louis City polling places and city-wide and no excuse absentee polling place locations. On election day polls open at 6 AM and close at 7 PM.\" />\n<meta property=\"og:url\" content=\"https://www.stlouis-mo.gov/government/departments/board-election-commissioners/voter/polling-places/index.cfm\" />\n<meta property=\"og:updated_time\" content=\"2026-09-30:08:09\" />\n<meta property=\"og:image\" content=\"\" />\n<meta property=\"og:image:url\" content=\"\" />\n<meta property=\"og:image:secure_url\" content=\"\" />\n<meta property=\"og:image:width\" content=\"\" />\n<meta property=\"og:image:height\" content=\"\" />\n<script type=\"application/ld+json\">\n{\n\"@context\" : \"https://schema.org\",\n\"@type\" : \"WebSite\",\n\"name\" : \"City of St. Louis, MO\",\n\"alternateName\": [\"City of St. Louis\", \"City of Saint Louis\", \"St. Louis City\"],\n\"url\" : \"https://www.stlouis-mo.gov/\"\n}\n</script>\n<!-- Tell IE not to use compatibility mode -->\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\" />\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n<meta name=\"google-site-verification\" content=\"v1wiQd5XNIGq8gxzwaKmoOHtPWwGoNO2uCIIMrghXrw\" />\n<meta name=\"theme-color\" content=\"#1e526b\" />\n<!-- Google Analytics -->\n<script>\nlet pageBasicMetadata = {\n'page_audience': 'Residents',\n'page_topic': '',\n'page_department': 'Board\\x20of\\x20Election\\x20Commissioners',\n'page_content_type': 'Maps\\x20and\\x20GIS',\n'page_ward': 'Many\\x20Wards',\n'page_neighborhood': 'City\\x2DWide'\n}\nconst analyticsConfig = {\n'enabled': true,\n'measurementId': 'G\\x2D2TM7JCE9F9'\n}\nfunction beforeSendHandler(type, payload) {\nif (!payload.data) {\npayload.data = {};\n}\npayload.data = {\n...payload.data,\n...pageBasicMetadata\n}\nreturn payload;\n}\n</script>\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-2TM7JCE9F9\"></script>\n<script defer src=\"/templates/js/analyticsToolTracking.js?v=2.6\"></script>\n<script defer src=\"https://cloud.umami.is/script.js\"\ndata-website-id=\"e71eb73c-5d38-42f3-bf9e-47dfa7f180a7\"\ndata-before-send=\"beforeSendHandler\"\ndata-performance=\"true\"></script>\n<!-- End Google Analytics -->\n<link href=\"/style/screen.css?v=3.20\" rel=\"stylesheet prefetch\" type=\"text/css\" media=\"all\" />\n<link href=\"/style/print.css?v=2.5\" rel=\"stylesheet prefetch\" type=\"text/css\" media=\"print\" />\n<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700|Merriweather:400,700' rel='stylesheet prefetch' type='text/css'>\n<!--[if lte IE 6]>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"/style/ie.css\"/>\n<meta http-equiv=\"Imagetoolbar\" content=\"no\"/>\n<![endif]-->\n<!--[if lt IE 6]>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"/style/ie5.css\"/>\n<![endif]-->\n<!-- IE -->\n<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"/favicon1.ico\" />\n<!-- other browsers -->\n<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon1.ico\" />\n<style type=\"text/css\">\n#UploadDocSpan {display:none; !important}\n</style>\n<meta name=\"DC.Date.Created\" scheme=\"DCTERMS.W3CDTF\" content=\"2022-08-30 17:11:52\" />\n<meta name=\"DC.Type\" content=\"22\" />\n<meta name=\"DC.Language\" scheme=\"DCTERMS.ISO639-2\" content=\"en\" />\n<meta name=\"DC.Title\" lang=\"en\" content=\"Voting Locations (Polling Places)\" />\n<meta name=\"DC.Description\" lang=\"en\" content=\"Active St. Louis City polling places and city-wide and no excuse absentee polling place locations. On election day polls open at 6 AM and close at 7 PM.\" />\n<meta name=\"DC.Coverage.Ward\" lang=\"en\" content=\"Many Wards\" />\n<meta name=\"DC.Coverage.NeighBorhood\" lang=\"en\" content=\"City-Wide\" />\n<meta name=\"DC.Subject\" lang=\"en\" content=\"\" />\n<meta name=\"DC.Publisher\" lang=\"en\" content=\"\" />\n<meta name=\"DC.Audience\" lang=\"en\" content=\"Residents\" />\n<link rel=\"canonical\" href=\"https://www.stlouis-mo.gov/government/departments/board-election-commissioners/voter/polling-places/index.cfm\" />\n<!-- end (5) CustomHead -->\n<!-- beg (6) TertiaryResources -->\n<link rel=\"stylesheet\" type=\"text/css\" href=\"/style/toast.css\"><style type=\"text/css\">\n.map-embed-header {\nbackground-color: #174054;\ncolor:#ffffff;\ndisplay:flex;\njustify-content:space-between;\npadding:8px 10px;\nalign-items:center;\n}\n.map-embed-title {\nfont-size:1.2em;\nmargin-bottom:5px;\n}\n.map-embed-tools {\ndisplay: flex;\nflex-shrink: 0;\nmargin-left: 5px;\nflex-direction: column;\nalign-self: flex-end;\n}\na.map-embed-button {\ncolor: white;\ntext-decoration: none;\npadding: 5px 8px;\nmargin: 3px;\nborder-radius: 5px;\nborder: 1px solid rgba(255,255,255,.3);\n}\na.map-embed-button:hover {\nborder-color: #fff;\n}\na.map-embed-button .glyphicons {\nmargin-top:2px;\n}\n.map-embed-container {\nwidth: 100%;\nheight:500px;\nmargin:0;\npadding:0 3px 3px 3px;\nbackground-color: #174054;\n}\n@media(max-width:600px) {\n.map-embed-button-text {\ndisplay: none;\n}\n}\n</style>\n<!-- end (6) TertiaryResources -->\n<!-- beg (7) authormode_inlinestyles -->\n<link rel=\"stylesheet\" type=\"text/css\" href=\"/commonspot/commonspot.css\" id=\"cs_maincss\"> <link rel=\"stylesheet\" type=\"text/css\" href=\"/commonspot/cs-control-styles.css\" id=\"cs_main_controlcss\">\n<!-- end (7) authormode_inlinestyles -->\n<meta name=\"twitter:title\" content=\"Voting&#x20;Locations&#x20;&#x28;Polling&#x20;Places&#x29;\" /><meta name=\"twitter:description\" content=\"Active&#x20;St.&#x20;Louis&#x20;City&#x20;polling&#x20;places&#x20;and&#x20;city-wide&#x20;and&#x20;no&#x20;excuse&#x20;absentee&#x20;polling&#x20;place&#x20;locations.&#x20;On&#x20;election&#x20;day&#x20;polls&#x20;open&#x20;at&#x20;6&#x20;AM&#x20;and&#x20;close&#x20;at&#x20;7&#x20;PM.\" /><meta property=\"og:title\" content=\"Voting&#x20;Locations&#x20;&#x28;Polling&#x20;Places&#x29;\" /><meta property=\"og:description\" content=\"Active&#x20;St.&#x20;Louis&#x20;City&#x20;polling&#x20;places&#x20;and&#x20;city-wide&#x20;and&#x20;no&#x20;excuse&#x20;absentee&#x20;polling&#x20;place&#x20;locations.&#x20;On&#x20;election&#x20;day&#x20;polls&#x20;open&#x20;at&#x20;6&#x20;AM&#x20;and&#x20;close&#x20;at&#x20;7&#x20;PM.\" /><meta name=\"DC.Title\" lang=\"en\" content=\"Voting&#x20;Locations&#x20;&#x28;Polling&#x20;Places&#x29;\" /><meta name=\"DC.Description\" lang=\"en\" content=\"Active&#x20;St.&#x20;Louis&#x20;City&#x20;polling&#x20;places&#x20;and&#x20;city-wide&#x20;and&#x20;no&#x20;excuse&#x20;absentee&#x20;polling&#x20;place&#x20;locations.&#x20;On&#x20;election&#x20;day&#x20;polls&#x20;open&#x20;at&#x20;6&#x20;AM&#x20;and&#x20;close&#x20;at&#x20;7&#x20;PM.\" /></head><body class=\"CS_Document\"><span role=\"navigation\" aria-label=\"Top of page\" id=\"__topdoc__\"></span>\n<div  role=\"banner\">\n<!-- Begin accessibility skip links -->\n<ul id=\"skip-links\">\n<li>\n<a href=\"#siteSearch\">\nSkip to search\n</a>\n</li>\n<li>\n<a href=\"#content\">\nSkip to content\n</a>\n</li>\n</ul>\n<!-- End accessibility skip links -->\n<!-- Toolbar -->\n<div class=\"toolbar-container\" aria-label=\"Tool Bar\">\n<div class=\"container\">\n<ul class=\"toolbar\">\n<li class=\"has-dropdown\">\n<button class=\"js-toolbar-menu-button\" data-target=\"translateMenuOptions\" aria-controls=\"translateMenuOptions\" aria-expanded=\"false\">\n<span class=\"material-svg material-svg-translate svg-outline invert\"></span>\n<span>Translate</span>\n</button>\n<ul id=\"translateMenuOptions\" class=\"js-toolbar-menu\">\n<li>\n<button class=\"toolbar-menu-action\" onclick=\"return removeTranslation()\">\nEnglish\n</button>\n</li>\n<li>\n<button class=\"toolbar-menu-action\"\nonclick=\"translatePage('es')\">\nEspañol\n</button>\n</li>\n<li>\n<button class=\"toolbar-menu-action\"\nonclick=\"translatePage('fr')\">\nFrançais\n</button>\n</li>\n<li>\n<button class=\"toolbar-menu-action\"\nonclick=\"translatePage('vi')\">\nTiếng Việt\n</button>\n</li>\n<li>\n<button class=\"toolbar-menu-action\"\nonclick=\"translatePage('ps')\">\nپښتو\n</button>\n</li>\n<li>\n<button class=\"toolbar-menu-action\"\nonclick=\"translatePage('bs')\">\nBosanski\n</button>\n</li>\n<li>\n<button class=\"toolbar-menu-action\"\nonclick=\"translatePage('fa')\">\nفارسی\n</button>\n</li>\n<li>\n<a href=\"/government/departments/information-technology/web-development/web-accessibility/translate.cfm\" class=\"toolbar-menu-action\">\nMore\n</a>\n</li>\n</ul>\n</li>\n<li class=\"to-right has-dropdown\">\n<button class=\"js-toolbar-menu-button\"  data-target=\"myCityMenuOptions\" aria-controls=\"myCityMenuOptions\" aria-expanded=\"false\">\n<span>My City</span>\n<span class=\"desktop-only\"> Account</span>\n</button>\n<ul id=\"myCityMenuOptions\" class=\"js-toolbar-menu\">\n<li>\n<button class=\"toolbar-menu-action\" form=\"myCitySignInOutForm\" formaction=\"/customcf/endpoints/auth/log-in/\" type=\"submit\">\nSign In\n<span class=\"sr-only\">\nto your City of St. Louis account\n</span>\n</button>\n</li>\n<li>\n<button class=\"toolbar-menu-action\" form=\"myCitySignInOutForm\" formaction=\"/customcf/endpoints/auth/sign-up/\" type=\"submit\">\nSign Up\n<span class=\"sr-only\">\nfor a new City of St. Louis account\n</span>\n</button>\n</li>\n<li>\n<a href=\"/my/city/\" class=\"toolbar-menu-action\">\nLearn More\n</a>\n</li>\n</ul>\n<form id=\"myCitySignInOutForm\" method=\"post\" action=\"\" style=\"display:none;\">\n<input type=\"hidden\" name=\"csrfToken\" value=\"5DDE5D2145FBC8A525D95B09534FB80E75F7BB3A\">\n<input type=\"hidden\" name=\"pageId\" value=\"981662\">\n<input type=\"hidden\" name=\"queryString\" value=\"\">\n<input type=\"hidden\" name=\"queryStringCode\" value=\"\">\n</form>\n</li>\n</ul>\n</div>\n</div>\n<!-- End Toolbar -->\n<!-- Header -->\n<div class=\"header government\">\n<div class=\"container\">\n<div class=\"header-items\">\n<div class=\"header-logo-column\">\n<div class=\"logo\">\n<a href=\"/\" class=\"logo-top-line\" title=\"stlouis-mo.gov home page\">\n<strong>STLOUIS</strong>-MO<img src=\"data:image/svg+xml;base64,DQo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDIwMS42OCAyMDAuNjYiPg0KICAgIDx0aXRsZT5GbGV1ciBEZSBMaXM8L3RpdGxlPg0KICAgIDxnIGlkPSJMYXllcl8yIiBkYXRhLW5hbWU9IkxheWVyIDIiPg0KICAgICAgICA8ZyBpZD0iTGF5ZXJfMS0yIiBkYXRhLW5hbWU9IkxheWVyIDEiIGZpbGwgPSAiI0MwMzIyMSI+DQogICAgICAgICAgICA8cGF0aCBjbGFzcz0iZmxldXItZGUtbGlzIiBkPSJNMTAwLjcxLDEyNy45MWMtNC4yMywwLTQuMjgsMC00Ljc5LTQuNTFBMTEzLjEyLDExMy4xMiwwLDAsMCw4MS4yNyw3OS4xOGMtMy44NS02LjY1LTcuNTQtMTMuMzctOS41NS0yMC44OS00LjA2LTE1LjIuMTItMjguNTEsOS4xMS00MC43NUE2NC40OSw2NC40OSwwLDAsMSw5OS4zNi40LDMuMDYsMy4wNiwwLDAsMSwxMDIsLjIyYzE0LjY3LDkuNDcsMjUuMzEsMjIsMjguODksMzkuNTIsMi4xMiwxMC40LS41MSwyMC4yMS01LjEyLDI5LjUxLTMuODUsNy43Ny04LjI3LDE1LjI3LTExLjg2LDIzLjE2QTEwMC4wNywxMDAuMDcsMCwwLDAsMTA1LjU3LDEyNmMtLjEyLDEuNS0uNjgsMi0yLjA4LDEuOTJDMTAyLjU2LDEyNy44NiwxMDEuNjQsMTI3LjksMTAwLjcxLDEyNy45MVoiIC8+DQogICAgICAgICAgICA8cGF0aCBjbGFzcz0iZmxldXItZGUtbGlzIiBkPSJNMjYuODQsMTMxYTI1LjQ5LDI1LjQ5LDAsMCwxLTEyLjUzLTIuODZDMy4wOCwxMjIuNTYtNC40MiwxMDUuMzUsMi45Miw5My42NSw4LjM1LDg1LDE2LjA2LDc5LjA4LDI2LjEyLDc3LjcyYzE3LjA5LTIuMywzMS40OCwzLjEzLDQxLjc3LDE3LjUxLDYuODMsOS41NSwxMC4yNiwyMC41MywxMi42NCwzMS44OSwwLC4xMiwwLC4yNy0uMTYuNzFhNjEuNDcsNjEuNDcsMCwwLDEtNi42NC0uMDljLS43Mi0uMDctMS40MS0xLjA5LTItMS43OC01LjE4LTYuNDEtMTAuODMtMTIuMjgtMTguMzUtMTZhMjEuNzEsMjEuNzEsMCwwLDAtMTQuMDktMi4xNmMtOS4yMSwxLjgtMTQuMjUsOS0xMy4xLDE4LjQ4QzI2LjM5LDEyNy43NCwyNi42LDEyOS4yMSwyNi44NCwxMzFaIiAvPg0KICAgICAgICAgICAgPHBhdGggY2xhc3M9ImZsZXVyLWRlLWxpcyIgZD0iTTE3NS4yMiwxMzFjMC0zLjY3LjQxLTcuMTItLjA4LTEwLjQ0LTEuMS03LjUxLTYuNjEtMTIuMjgtMTQuMi0xMy02LjM2LS42NC0xMS45LDEuNDQtMTcuMDYsNC45YTU3LjIyLDU3LjIyLDAsMCwwLTEzLjQ3LDEzYy0xLjQsMS44NC0yLjg1LDIuNzctNS4xNiwyLjVhMzcuNzEsMzcuNzEsMCwwLDAtNC4yOSwwYy40My0yLC43My0zLjU1LDEuMTItNS4xMSwyLjQzLTkuNzIsNS44Mi0xOSwxMS41LTI3LjM4LDExLjUyLTE3LDMxLjMtMjAuMzEsNDQtMTcuMzVBMzMuNDksMzMuNDksMCwwLDEsMTk2LjgsOTAuNzVjNi44Myw4LjksNi40MywyMC40LS44NiwzMEEyNS40MSwyNS40MSwwLDAsMSwxNzcuNDgsMTMxQzE3Ni43MiwxMzEuMSwxNzUuOTQsMTMxLDE3NS4yMiwxMzFaIiAvPg0KICAgICAgICAgICAgPHBhdGggY2xhc3M9ImZsZXVyLWRlLWxpcyIgZD0iTTE0NS42LDE0Ny4zNkg1OWMtMi43NiwwLTIuNzYsMC0yLjc3LTIuOCwwLTIuMDYsMC00LjEzLDAtNi4xOSwwLTEuMjkuNDktMS44MywxLjc2LTEuNzQuNDIsMCwuODUsMCwxLjI4LDBIMTQyLjdjMi44OSwwLDIuODksMCwyLjksM1oiIC8+DQogICAgICAgICAgICA8cGF0aCBjbGFzcz0iZmxldXItZGUtbGlzIiBkPSJNMTAwLjg1LDE1Ni4xYzQuMjIsMCw0LjI2LDAsNSw0YTUwLjc1LDUwLjc1LDAsMCwwLDkuOTQsMjEuOTQsNCw0LDAsMCwxLC40Nyw0LjgyLDI4Ljc0LDI4Ljc0LDAsMCwxLTE0LDEzLjQ5LDMuNTIsMy41MiwwLDAsMS0yLjU5LjA3LDI4LjA2LDI4LjA2LDAsMCwxLTE0LjUxLTE0LjQsMi44OCwyLjg4LDAsMCwxLC4zNC0zLjNjNS42Mi03LjQzLDkuNjYtMTUuNTgsMTAuNzMtMjUsLjE0LTEuMTkuNi0xLjgxLDEuOS0xLjY5Qzk5LDE1Ni4xNyw5OS45MywxNTYuMSwxMDAuODUsMTU2LjFaIiAvPg0KICAgICAgICAgICAgPHBhdGggY2xhc3M9ImZsZXVyLWRlLWxpcyIgZD0iTTEzNy45LDE3Mi43NCwxMzIsMTc3LjljLTYuMDctNi0xMC41NS0xMi43NC0xMi4xNS0yMS42OCwyLjQzLDAsNC43LDAsNywwLC4yMSwwLC41MS40OC42Ljc5LDEuNjQsNS45Myw1LjY4LDEwLjI2LDkuNjgsMTQuNjJDMTM3LjMyLDE3MS45MiwxMzcuNTEsMTcyLjIyLDEzNy45LDE3Mi43NFoiIC8+DQogICAgICAgICAgICA8cGF0aCBjbGFzcz0iZmxldXItZGUtbGlzIiBkPSJNODEuOCwxNTYuMTFjLTEuNDIsOC44OS02LDE1LjU4LTEyLjA3LDIxLjc4bC02LTUuMThjLjg3LTEsMS42My0xLjkxLDIuNDItMi43OCwzLjQxLTMuNzYsNi41OC03LjY3LDguMDYtMTIuNjhhMi4wNywyLjA3LDAsMCwxLDEuNDktMS4wOUM3Ny42MiwxNTYsNzkuNTMsMTU2LjExLDgxLjgsMTU2LjExWiIgLz4NCiAgICAgICAgPC9nPg0KICAgIDwvZz4NCjwvc3ZnPg0K\" alt=\".\" width=20>GOV\n</a>\n<a href=\"/government/departments/mayor/\" class=\"logo-bottom-line\" title=\"Mayor Cara Spencer' home page\">\nMayor Cara Spencer\n</a>\n</div>\n</div>\n<div class=\"text-right header-nav-column\">\n<div role=\"navigation\" aria-label=\"Main menu\">\n<ul class=\"mobile-nav-buttons\">\n<li>\n<button id=\"viewMenu\" class=\"js-mobile-menu-button\" data-target=\"topNav\">\n<span class=\"glyphicons glyphicons-menu-hamburger\"></span>\n<span class=\"button-text\">\nMenu\n</span>\n</button>\n</li>\n<li>\n<button id=\"viewSearch\" class=\"js-mobile-menu-button\" data-target=\"siteSearchContainer\">\n<span class=\"glyphicons glyphicons-search\"></span>\n<span class=\"button-text\">\nSearch\n</span>\n</button>\n</li>\n</ul>\n<ul class=\"top-nav js-mobile-menu\" id=\"topNav\">\n<li>\n<a class=\"link-button service-button\" href=\"/services/\">\nServices\n</a>\n</li>\n<li>\n<a class=\"link-button government-button\" href=\"/government/\">\nGovernment\n</a>\n</li>\n<li>\n<a class=\"link-button news-button\" href=\"/news-media/\">\nNews\n</a>\n</li>\n</ul>\n</div>\n<form class=\"site-search js-mobile-menu\" action=\"/searchresults.cfm\" role=\"search\" aria-label=\"Site-wide search\" id=\"siteSearchContainer\">\n<label for=\"siteSearch\" class=\"sr-only\">\nSite Search\n</label>\n<input type=\"text\" name=\"q\" id=\"siteSearch\" class=\"\">\n<input type=\"submit\" value=\"Search\">\n</form>\n</div>\n</div>\n</div>\n</div>\n</div>\n<div role=\"navigation\" aria-label=\"breadcrumbs\">\n<div id=\"cs_control_966\" class=\"cs_control CS_Element_LinkBar\">\n<div class=\"full-row full-row-breadcrumbs generic-breadcrumbs\">\n<div class=\"container\">\n<ul class=\"breadcrumbs\">\n<li>\n<a href=\"/government/\">Government</a>\n</li>\n<li>\n<a href=\"/government/departments/\">Departments and Agencies</a>\n</li>\n<li>\n<a href=\"/government/departments/board-election-commissioners/\">Board of Election Commissioners</a>\n</li>\n<li>\n<a href=\"/government/departments/board-election-commissioners/voter/\">Voter Info</a>\n</li>\n</ul>\n</div>\n</div>\n</div>\n</div>\n<!-- Main Content -->\n<div id=\"content\" role=\"main\" tabindex=\"0\">\n<div id=\"cs_control_1172642\" class=\"cs_control full-row-subnav\"> </div>\n<div class=\"full-row full-row-white\">\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-sm-12\">\n<div class=\"row page-title-row\">\n<div class=\"col-sm-12\">\n<div>\n<h1>Voting Locations (Polling Places)</h1>\n<p class=\"page-summary\">\nActive St. Louis City polling places and city-wide and no excuse absentee polling place locations. On election day polls open at 6 AM and close at 7 PM.\n</p>\n</div>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-md-8\">\n<div id=\"cs_control_5408\" class=\"cs_control CS_Element_Schedule\"> <div  title=\"\" id=\"CS_Element_column1container\"> <div id=\"gridRow_1_1_5408\" class=\"cs_GridRow\"> <div id=\"gridCol_1_1_1_1_5408\" class=\"cs_GridColumn\"> <div id=\"cs_control_985932\" class=\"cs_control CS_Element_Custom\">\n<h2 id=\"address-search\">\nAssigned Polling Place Lookup\n</h2>\n<div class=\"content-block\">\n<div role=\"alert\"  aria-relevant=\"all\" class=\"checkAddress alert\" style=\"position: absolute; left: -999em;\">\n</div>\n<form  method=\"post\" action=\"#address-search\">\n<input type=\"hidden\" name=\"PollingPlace\" value=\"Polling Place\" />\n<input type=\"hidden\" name=\"everyWhere\" value=\"everyWhere\" />\n<p>\n<label for=\"streetAddress\">Street Address or Parcel: </label>\n<br>\n<input type=\"text\" name=\"streetAddress\" id=\"streetAddress\" size=\"40\" maxlength=\"60\" value=\"\"  required>\n</p>\n<p>\n<input type=\"submit\" value=\"Search\" name=\"findByAddress\" class=\"findByAddress\" />\n</p>\n</form>\n</div>\n<div class=\"mfp-hide mfp-loading-container\"\nid=\"loadingScreen\"\nrole=\"dialog\"\naria-labelledby=\"loadingTitle\"\naria-describedby=\"loadingDescription\">\n<h2 class=\"header\" id=\"loadingTitle\">\nProcessing, please wait...\n</h2>\n<div class=\"spinner\">\n<div class=\"bounce1\"></div>\n<div class=\"bounce2\"></div>\n<div class=\"bounce3\"></div>\n</div>\n<p id=\"loadingDescription\">\nThis may take a few seconds to process...</span>\n</p>\n</div>\n</div> <div id=\"cs_control_1008779\" class=\"cs_control CS_Element_Textblock\">  <div class=\"ck-content CS_Textblock_Text\"><p>St. Louis <strong>County</strong> voters visit the <a href=\"https://stlouiscountymo.gov/st-louis-county-government/board-of-elections/\">St. Louis County Board of Elections</a>.</p></div> </div>  </div> </div> </div> </div>\n</div>\n<div class=\"col-md-4\">\n<div id=\"cs_control_5303\" class=\"cs_control CS_Element_Schedule\"> <div  title=\"\" id=\"CS_Element_column2container\"> <div id=\"gridRow_1_1_5303\" class=\"cs_GridRow\"> <div id=\"gridCol_1_1_1_1_5303\" class=\"cs_GridColumn\"> <div id=\"cs_control_1125819\" class=\"cs_control CS_Element_Custom\">\n<jump-link-page-navigation-component\nheading-level=2\nheading-text=\"On This Page\"\nlist-type=ul\nincluded-headings=h2\nincluded-ids=\"content\"\nincluded-classes=\"\"\nexcluded-ids=\"\"\nexcluded-classes=\"nav-container\"\nexclude-overview=\"yes\"\ncondense-links=\"\"\n>\n</jump-link-page-navigation-component>\n</div>  </div> </div> </div> </div>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-md-12\">\n<div id=\"cs_control_11019\" class=\"cs_control CS_Element_Schedule\"> <div  title=\"\" id=\"CS_Element_row2column1container\"> <div id=\"gridRow_1_1_11019\" class=\"cs_GridRow\"> <div id=\"gridCol_1_1_1_1_11019\" class=\"cs_GridColumn\"> <div id=\"cs_control_1127675\" class=\"cs_control CS_Element_Textblock\">  </div> <a id=\"Polling_Places_Map\"></a><a id=\"CP_JUMP_982051\"></a><div id=\"cs_control_982051\" class=\"cs_control CS_Element_Textblock\">  <div class=\"ck-content CS_Textblock_Text\"><h2>Polling Places Map</h2></div> </div> <div id=\"cs_control_982052\" class=\"cs_control CS_Element_Custom\">\n<div class=\"map-embed-header\">\n<div>\n<div class=\"map-embed-title\">\nActive Polling Places\n</div>\n<div>Polling Centers</div>\n</div>\n<div class=\"map-embed-tools\">\n<a href=\"#\" class=\"map-embed-button js-toggle-legend\" data-action=\"remove\" aria-label=\"Toggle map legend\">\n<span class=\"glyphicons glyphicons-list\"></span>\n<span class=\"map-embed-button-text\">Legend</span>\n</a>\n</div>\n</div>\n<div id=\"map-982053\" class=\"map-embed-container\"></div>\n<p>\n<a href=\"https://stlcity.maps.arcgis.com/apps/mapviewer/index.html?webmap=e5fdb4148a5e4134b6defe4e59f4366e\">\nView larger map\n</a>\n</p>\n</div> <a id=\"Active_Polling_Places\"></a><a id=\"CP_JUMP_981731\"></a><div id=\"cs_control_981731\" class=\"cs_control CS_Element_Textblock\">  <div class=\"ck-content CS_Textblock_Text\"><h2 id=\"activePP\">City-Wide Polling Places</h2><p>The locations listed below are the designated polling places for the November 3, 2026 General Election.  Any voter who is registered to vote at an address within the boundaries of St. Louis City can vote at any of the listed locations on November 3, 2026.</p></div> </div> <div id=\"cs_control_981732\" class=\"cs_control CS_Element_CustomCF\"> <div id=\"CS_CCF_981662_981732\">\n<TABLE class=\"data sripted\" id=\"jsPP\">\n<CAPTION>Total 56 polling places\n<thead>\n<TR>\n<TH>Polling Place</TH>\n<th>Zip</th>\n<TH>Polling Address</TH>\n</TR>\n</thead>\n<tbody>\n<TR>\n<TD>12th &amp; Park Recreation Center</TD>\n<td>63104</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=1410%20S%20TUCKER%20BLVD%2063104\" target=\"_blank\" rel=\"noopener noreferrer\">1410 S TUCKER BLVD</a>\n</td>\n</TR>\n<TR>\n<TD>Adams Elementary School</TD>\n<td>63110</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=1311%20TOWER%20GROVE%20AVE%2063110\" target=\"_blank\" rel=\"noopener noreferrer\">1311 TOWER GROVE AVE</a>\n<br>\nAccessible Entrance: Door #13 off Norfolk.\n</td>\n</TR>\n<TR>\n<TD>American-Czech Educational Center</TD>\n<td>63116</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4690%20LANSDOWNE%20AVE%2063116\" target=\"_blank\" rel=\"noopener noreferrer\">4690 LANSDOWNE AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Association of Survivors of the Srebrenica Genocide</TD>\n<td>63116</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5039%20GRAVOIS%20AVE%2063116\" target=\"_blank\" rel=\"noopener noreferrer\">5039 GRAVOIS AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Atlas Elementary School - IHM</TD>\n<td>63116</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4092%20BLOW%20ST%2063116\" target=\"_blank\" rel=\"noopener noreferrer\">4092 BLOW ST</a>\n<br>\nAccessible Entrance: Enter thru lot.\n</td>\n</TR>\n<TR>\n<TD>Better Family Life</TD>\n<td>63112</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5415%20PAGE%20BLVD%2063112\" target=\"_blank\" rel=\"noopener noreferrer\">5415 PAGE BLVD</a>\n<br>\nAccessible Entrance: Enter thru lot off Arlington\n</td>\n</TR>\n<TR>\n<TD>Boy's &amp; Girls Club - Mathews Dickey</TD>\n<td>63115</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4245%20N%20KINGSHIGHWAY%20BLVD%2063115\" target=\"_blank\" rel=\"noopener noreferrer\">4245 N KINGSHIGHWAY BLVD</a>\n</td>\n</TR>\n<TR>\n<TD>Bryan Hill Elementary School</TD>\n<td>63107</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=2128%20GANO%20AVE%2063107\" target=\"_blank\" rel=\"noopener noreferrer\">2128 GANO AVE</a>\n<br>\nAccessible Entrance: Door #8 off John Ave.\n</td>\n</TR>\n<TR>\n<TD>Buder Library</TD>\n<td>63109</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4401%20HAMPTON%20AVE%2063109\" target=\"_blank\" rel=\"noopener noreferrer\">4401 HAMPTON AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Buder School</TD>\n<td>63109</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5319%20LANSDOWNE%20AVE%2063109\" target=\"_blank\" rel=\"noopener noreferrer\">5319 LANSDOWNE AVE</a>\n<br>\nAccessible Entrance: Door #6 off Sutherland\n</td>\n</TR>\n<TR>\n<TD>Busch Student Center</TD>\n<td>63103</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=20%20N%20GRAND%20BLVD%2063103\" target=\"_blank\" rel=\"noopener noreferrer\">20 N GRAND BLVD</a>\n</td>\n</TR>\n<TR>\n<TD>Carondelet Branch Library</TD>\n<td>63111</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=6800%20MICHIGAN%20AVE%2063111\" target=\"_blank\" rel=\"noopener noreferrer\">6800 MICHIGAN AVE</a>\n<br>\nAccessible Entrance: Entry from lot side\n</td>\n</TR>\n<TR>\n<TD>Carpenter Branch Library</TD>\n<td>63118</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=3309%20S%20GRAND%20BLVD%2063118\" target=\"_blank\" rel=\"noopener noreferrer\">3309 S GRAND BLVD</a>\n</td>\n</TR>\n<TR>\n<TD>Carr Lane VPA Middle School</TD>\n<td>63106</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=1004%20N%20JEFFERSON%20AVE%2063106\" target=\"_blank\" rel=\"noopener noreferrer\">1004 N JEFFERSON AVE</a>\n<br>\nAccessible Entrance: Door #10 off Carr St.\n</td>\n</TR>\n<TR>\n<TD>Central Library</TD>\n<td>63103</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=1301%20OLIVE%20ST%2063103\" target=\"_blank\" rel=\"noopener noreferrer\">1301 OLIVE ST</a>\n<br>\nAccessible Entrance: Disabled thru Locust St.\n</td>\n</TR>\n<TR>\n<TD>Christ Southern Missionary Baptist</TD>\n<td>63112</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5630%20PAGE%20BLVD%2063112\" target=\"_blank\" rel=\"noopener noreferrer\">5630 PAGE BLVD</a>\n<br>\nAccessible Entrance: Entry thru Temple lot.\n</td>\n</TR>\n<TR>\n<TD>Deaconess Foundation</TD>\n<td>63113</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=1000%20N%20VANDEVENTER%20AVE%2063113\" target=\"_blank\" rel=\"noopener noreferrer\">1000 N VANDEVENTER AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Dewey School</TD>\n<td>63139</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=6746%20CLAYTON%20AVE%2063139\" target=\"_blank\" rel=\"noopener noreferrer\">6746 CLAYTON AVE</a>\n<br>\nAccessible Entrance: Door #7 Central Ave.\n</td>\n</TR>\n<TR>\n<TD>Friendly Temple Missionary Church (Fellowship Hall) </TD>\n<td>63112</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5544%20DR%20MARTIN%20LUTHER%20KING%20DR%2063112\" target=\"_blank\" rel=\"noopener noreferrer\">5544 DR MARTIN LUTHER KING DR</a>\n<br>\nAccessible Entrance: Door #7 Central Ave.\n</td>\n</TR>\n<TR>\n<TD>Froebel Elementary School </TD>\n<td>63118</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=3709%20NEBRASKA%20AVE%2063118\" target=\"_blank\" rel=\"noopener noreferrer\">3709 NEBRASKA AVE</a>\n<br>\nAccessible Entrance: Door #3 off Pennsylvania.\n</td>\n</TR>\n<TR>\n<TD>Gateway Science Academy - Sorrows</TD>\n<td>63109</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5020%20RHODES%20AVE%2063109\" target=\"_blank\" rel=\"noopener noreferrer\">5020 RHODES AVE</a>\n<br>\nEntrance: Enter thru lot.\n</td>\n</TR>\n<TR>\n<TD>Gene Slay's Boys &amp; Girls Club</TD>\n<td>63104</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=2524%20S%2011TH%20ST%2063104\" target=\"_blank\" rel=\"noopener noreferrer\">2524 S 11TH ST</a>\n</td>\n</TR>\n<TR>\n<TD>Greater Leonard MB Church - Education Building</TD>\n<td>63106</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=2501%20N%2011TH%20ST%2063106\" target=\"_blank\" rel=\"noopener noreferrer\">2501 N 11TH ST</a>\n<br>\nAccessible Entrance: Enter off Benton St.\n</td>\n</TR>\n<TR>\n<TD>Hamilton Elementary School</TD>\n<td>63112</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5819%20WESTMINSTER%20PL%2063112\" target=\"_blank\" rel=\"noopener noreferrer\">5819 WESTMINSTER PL</a>\n<br>\nAccessible Entrance: Door #5 Laurel.\n</td>\n</TR>\n<TR>\n<TD>Hickey School</TD>\n<td>63115</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=3111%20CORA%20AVE%2063115\" target=\"_blank\" rel=\"noopener noreferrer\">3111 CORA AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Hodgen CBA Elementary School</TD>\n<td>63104</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=1616%20CALIFORNIA%20AVE%2063104\" target=\"_blank\" rel=\"noopener noreferrer\">1616 CALIFORNIA AVE</a>\n<br>\nAccessible Entrance: Door #3 from California Ave.\n</td>\n</TR>\n<TR>\n<TD>Il Monastero</TD>\n<td>63103</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=3050%20OLIVE%20ST%2063103\" target=\"_blank\" rel=\"noopener noreferrer\">3050 OLIVE ST</a>\n</td>\n</TR>\n<TR>\n<TD>International Institute</TD>\n<td>63118</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=3401%20ARSENAL%20ST%2063118\" target=\"_blank\" rel=\"noopener noreferrer\">3401 ARSENAL ST</a>\n<br>\nAccessible Entrance: Lot off Louisiana Ave.\n</td>\n</TR>\n<TR>\n<TD>Jubilee Community Church</TD>\n<td>63107</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4231%20N%20GRAND%20BLVD%2063107\" target=\"_blank\" rel=\"noopener noreferrer\">4231 N GRAND BLVD</a>\n</td>\n</TR>\n<TR>\n<TD>Julia Davis Library</TD>\n<td>63115</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4415%20NATURAL%20BRIDGE%20AVE%2063115\" target=\"_blank\" rel=\"noopener noreferrer\">4415 NATURAL BRIDGE AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Kingshighway Branch Library</TD>\n<td>63110</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=2260%20S%20VANDEVENTER%20AVE%2063110\" target=\"_blank\" rel=\"noopener noreferrer\">2260 S VANDEVENTER AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Lexington Elementary School</TD>\n<td>63115</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5030%20LEXINGTON%20AVE%2063115\" target=\"_blank\" rel=\"noopener noreferrer\">5030 LEXINGTON AVE</a>\n<br>\nAccessible Entrance: Door # 4 off Kingshighway Blvd.\n</td>\n</TR>\n<TR>\n<TD>Machacek Library</TD>\n<td>63139</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=6424%20SCANLAN%20AVE%2063139\" target=\"_blank\" rel=\"noopener noreferrer\">6424 SCANLAN AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Mann Elementary School </TD>\n<td>63116</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4047%20JUNIATA%20ST%2063116\" target=\"_blank\" rel=\"noopener noreferrer\">4047 JUNIATA ST</a>\n<br>\nAccessible Entrance: Door #8 off Juniata\n</td>\n</TR>\n<TR>\n<TD>Mason School</TD>\n<td>63139</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=6031%20SOUTHWEST%20AVE%2063139\" target=\"_blank\" rel=\"noopener noreferrer\">6031 SOUTHWEST AVE</a>\n<br>\nAccessible Entrance: Door #3 off lot.\n</td>\n</TR>\n<TR>\n<TD>McDonnell Medical Sciences Building</TD>\n<td>63110</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4565%20MCKINLEY%20AVE%2063110\" target=\"_blank\" rel=\"noopener noreferrer\">4565 MCKINLEY AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Mullanphy Elementary School </TD>\n<td>63110</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4221%20SHAW%20AVE%2063110\" target=\"_blank\" rel=\"noopener noreferrer\">4221 SHAW AVE</a>\n<br>\nAccessible Entrance: Door #6 from Tower Grove Ave.\n</td>\n</TR>\n<TR>\n<TD>Nance Elementary School</TD>\n<td>63147</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=8959%20RIVERVIEW%20BLVD%2063147\" target=\"_blank\" rel=\"noopener noreferrer\">8959 RIVERVIEW BLVD</a>\n<br>\nAccessible Entrance: Door #2 off lot\n</td>\n</TR>\n<TR>\n<TD>Neighborhood Innovation Center-STL</TD>\n<td>63118</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=3207%20MERAMEC%20ST%2063118\" target=\"_blank\" rel=\"noopener noreferrer\">3207 MERAMEC ST</a>\n</td>\n</TR>\n<TR>\n<TD>New Sunny Mount Church</TD>\n<td>63115</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4700%20W%20FLORISSANT%20AVE%2063115\" target=\"_blank\" rel=\"noopener noreferrer\">4700 W FLORISSANT AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Newstead Missionary Baptist Church</TD>\n<td>63113</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4370%20N%20MARKET%20ST%2063113\" target=\"_blank\" rel=\"noopener noreferrer\">4370 N MARKET ST</a>\n</td>\n</TR>\n<TR>\n<TD>Nottingham CAJT High School </TD>\n<td>63109</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4915%20DONOVAN%20AVE%2063109\" target=\"_blank\" rel=\"noopener noreferrer\">4915 DONOVAN AVE</a>\n<br>\nAccessible Entrance: Door #4 off lot\n</td>\n</TR>\n<TR>\n<TD>Salvation Army Temple Corps</TD>\n<td>63118</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=2740%20ARSENAL%20ST%2063118\" target=\"_blank\" rel=\"noopener noreferrer\">2740 ARSENAL ST</a>\n</td>\n</TR>\n<TR>\n<TD>Schlafly Library</TD>\n<td>63108</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=225%20N%20EUCLID%20AVE%2063108\" target=\"_blank\" rel=\"noopener noreferrer\">225 N EUCLID AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Shaw VPA Elementary School</TD>\n<td>63139</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5329%20COLUMBIA%20AVE%2063139\" target=\"_blank\" rel=\"noopener noreferrer\">5329 COLUMBIA AVE</a>\n<br>\nAccessible Entrance: Door #3 Macklind Ave.\n</td>\n</TR>\n<TR>\n<TD>Shenandoah Elementary School</TD>\n<td>63104</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=3412%20SHENANDOAH%20AVE%2063104\" target=\"_blank\" rel=\"noopener noreferrer\">3412 SHENANDOAH AVE</a>\n<br>\nAccessible Entrance: Door #6 Tennessee Ave\n</td>\n</TR>\n<TR>\n<TD>Sigel Elementary School</TD>\n<td>63104</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=2039%20RUSSELL%20BLVD%2063104\" target=\"_blank\" rel=\"noopener noreferrer\">2039 RUSSELL BLVD</a>\n<br>\nAccessible Entrance: Door #8 off Russell\n</td>\n</TR>\n<TR>\n<TD>St. Joan of Arc</TD>\n<td>63139</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5821%20PERNOD%20AVE%2063139\" target=\"_blank\" rel=\"noopener noreferrer\">5821 PERNOD AVE</a>\n<br>\nEntrance: Gym\n</td>\n</TR>\n<TR>\n<TD>The Youth &amp; Family Center</TD>\n<td>63106</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=818%20CASS%20AVE%2063106\" target=\"_blank\" rel=\"noopener noreferrer\">818 CASS AVE</a>\n<br>\nAccessible Entrance: Enter off lot\n</td>\n</TR>\n<TR>\n<TD>Walnut Park Library</TD>\n<td>63120</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=5760%20W%20FLORISSANT%20AVE%2063120\" target=\"_blank\" rel=\"noopener noreferrer\">5760 W FLORISSANT AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Washington Montessori School</TD>\n<td>63113</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=1130%20N%20EUCLID%20AVE%2063113\" target=\"_blank\" rel=\"noopener noreferrer\">1130 N EUCLID AVE</a>\n<br>\nAccessible Entrance: Door #11 off Euclid\n</td>\n</TR>\n<TR>\n<TD>West Side MB Church</TD>\n<td>63113</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=4675%20PAGE%20BLVD%2063113\" target=\"_blank\" rel=\"noopener noreferrer\">4675 PAGE BLVD</a>\n<br>\nAccessible Entrance: Enter from back lot\n</td>\n</TR>\n<TR>\n<TD>Wild Carrot</TD>\n<td>63110</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=3901%20SHAW%20BLVD%2063110\" target=\"_blank\" rel=\"noopener noreferrer\">3901 SHAW BLVD</a>\n</td>\n</TR>\n<TR>\n<TD>Wilkinson Early Childhood Center</TD>\n<td>63139</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=1921%20PRATHER%20AVE%2063139\" target=\"_blank\" rel=\"noopener noreferrer\">1921 PRATHER AVE</a>\n<br>\nAccessible Entrance: Door #5 off Mitchell\n</td>\n</TR>\n<TR>\n<TD>Woerner School</TD>\n<td>63116</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=6131%20LEONA%20ST%2063116\" target=\"_blank\" rel=\"noopener noreferrer\">6131 LEONA ST</a>\n<br>\nAccessible Entrance: Door #4 off Ray\n</td>\n</TR>\n<TR>\n<TD>Woodward Elementary School</TD>\n<td>63111</td>\n<TD>\n<a href=\"https://www.google.com/maps?q=725%20BELLERIVE%20BLVD%2063111\" target=\"_blank\" rel=\"noopener noreferrer\">725 BELLERIVE BLVD</a>\n<br>\nAccessible Entrance: Door #6 off Bates St.\n</td>\n</TR>\n</tbody>\n</TABLE>\n</div> </div> <a id=\"All_Access_Absentee_Polling_Places\"></a><a id=\"CP_JUMP_981733\"></a><div id=\"cs_control_981733\" class=\"cs_control CS_Element_Textblock\">  <div class=\"ck-content CS_Textblock_Text\"><h2 id=\"allAbsentee\">No Excuse Absentee Polling Places</h2>\n<p><a href=\"/government/departments/board-election-commissioners/voter/absentee/no-excuse-absentee.cfm\" data-id=\"CP___PAGEID_981768\" onmouseout=\"\" onmouseover=\"\">No Excuse Absentee Voting</a> is an in-person absentee option for all voters during the two weeks before each election. No absentee voting excuse is necessary, and you do not need to apply for a ballot. You can cast your vote at any of the locations below. Call libraries to confirm hours of operations.</p></div> </div> <div id=\"cs_control_981734\" class=\"cs_control CS_Element_CustomCF\"> <div id=\"CS_CCF_981662_981734\">\n<TABLE class=\"data sripted\" id=\"jsPP\">\n<thead>\n<TR>\n<TH>Polling Place</TH>\n<th>Zip</th>\n<TH>Polling Address</TH>\n</TR>\n</thead>\n<tbody>\n<TR>\n<TD>Buder Library</TD>\n<td>63109</td>\n<TD>\n<a href=\"http://maps.google.com/maps?q=from: 4401%20HAMPTON%20AVE 63109 to: 4401%20HAMPTON%20AVE 63109\" target=\"_blank\" rel=\"noopener noreferrer\">4401 HAMPTON AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Carpenter Branch Library</TD>\n<td>63118</td>\n<TD>\n<a href=\"http://maps.google.com/maps?q=from: 3309%20S%20GRAND%20BLVD 63118 to: 3309%20S%20GRAND%20BLVD 63118\" target=\"_blank\" rel=\"noopener noreferrer\">3309 S GRAND BLVD</a>\n</td>\n</TR>\n<TR>\n<TD>Julia Davis Library</TD>\n<td>63115</td>\n<TD>\n<a href=\"http://maps.google.com/maps?q=from: 4415%20NATURAL%20BRIDGE%20AVE 63115 to: 4415%20NATURAL%20BRIDGE%20AVE 63115\" target=\"_blank\" rel=\"noopener noreferrer\">4415 NATURAL BRIDGE AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Kingshighway Branch Library</TD>\n<td>63110</td>\n<TD>\n<a href=\"http://maps.google.com/maps?q=from: 2260%20S%20VANDEVENTER%20AVE 63110 to: 2260%20S%20VANDEVENTER%20AVE 63110\" target=\"_blank\" rel=\"noopener noreferrer\">2260 S VANDEVENTER AVE</a>\n</td>\n</TR>\n<TR>\n<TD>Schlafly Library</TD>\n<td>63108</td>\n<TD>\n<a href=\"http://maps.google.com/maps?q=from: 225%20N%20EUCLID%20AVE 63108 to: 225%20N%20EUCLID%20AVE 63108\" target=\"_blank\" rel=\"noopener noreferrer\">225 N EUCLID AVE</a>\n</td>\n</TR>\n<TR>\n<TD>St. Joan of Arc</TD>\n<td>63139</td>\n<TD>\n<a href=\"http://maps.google.com/maps?q=from: 5821%20PERNOD%20AVE 63139 to: 5821%20PERNOD%20AVE 63139\" target=\"_blank\" rel=\"noopener noreferrer\">5821 PERNOD AVE</a>\n<br>\nEntrance: Gym\n</td>\n</TR>\n<TR>\n<TD>St. Louis City Election Board </TD>\n<td>63101</td>\n<TD>\n<a href=\"http://maps.google.com/maps?q=from: 300%20N%20TUCKER%20BLVD 63101 to: 300%20N%20TUCKER%20BLVD 63101\" target=\"_blank\" rel=\"noopener noreferrer\">300 N TUCKER BLVD</a>\n</td>\n</TR>\n<TR>\n<TD>Walnut Park Library</TD>\n<td>63120</td>\n<TD>\n<a href=\"http://maps.google.com/maps?q=from: 5760%20W%20FLORISSANT%20AVE 63120 to: 5760%20W%20FLORISSANT%20AVE 63120\" target=\"_blank\" rel=\"noopener noreferrer\">5760 W FLORISSANT AVE</a>\n</td>\n</TR>\n</tbody>\n</TABLE>\n</div> </div> <div id=\"cs_control_985894\" class=\"cs_control CS_Element_Textblock\">  <div class=\"ck-content CS_Textblock_Text\"><h3>Hours</h3><h4>Hours for Carpenter Library, Kingshighway Branch Library, and Walnut Park Library No Excuse Absentee Voting Locations:</h4><ul style=\"list-style-type:disc;\"><li>Monday: 1 PM-4PM</li><li>Tuesday-Thursday: 11AM-5PM</li><li>Friday and Saturday: 11 AM-4:30 PM</li><li>Sunday: Closed</li></ul><h4>Hours for Buder Library, Schlafly Library, and Julia Davis Library No Excuse Absentee Voting Locations:</h4><ul style=\"list-style-type:disc;\"><li>Monday: 1 PM-4PM</li><li>Tuesday: 11AM-5PM</li><li>Wednesday and Thursday: 11AM-7PM</li><li>Friday and Saturday: 11 AM-4:30 PM</li><li>Sunday: Closed</li></ul><h4>St. Joan of Arc No Excuse Absentee Voting Hours (Oct. 27-Nov. 2 ONLY):</h4><ul style=\"list-style-type:disc;\"><li>Monday, Nov 2: 1 PM-4PM</li><li>Tuesday, Oct. 27: 11AM-5PM</li><li>Wednesday, Oct 28 and Thursday, Oct. 29: 11AM-7PM</li><li>Friday, Oct. 30 and Saturday, Oct. 31 11 AM-4:30 PM</li><li>Sunday: Closed</li></ul><h4>Hours for the St. Louis City Election Board:</h4><ul style=\"list-style-type:disc;\"><li>Monday-Friday: 8 AM–5 PM</li><li>Last Saturday Before Election Day: 9 AM-1 PM</li></ul><p> </p></div> </div>  </div> </div> </div> </div>\n</div>\n</div>\n<div class=\"row\">\n<div class=\"col-xs-12\">\n<div id=\"feedbackSection\" class=\"no_print\">\n<h2 class=\"no-jump-link\">\nHelp Us Improve This Page\n</h2>\n<p>\nDid you notice an error? Is there information that you expected to find on this page, but didn't? Let us know below, and we'll work on it.\n</p>\n<div style=\"display:none;\" id=\"feedbackError\" class=\"error\">\n<p>\nYour feedback was <strong>not sent</strong>.\n</p>\n<p id=\"feedbackErrorMessage\">\n</p>\n</div>\n<div class=\"content-block\" id=\"feedbackForm\" name=\"feedbackForm\">\n<form method=\"post\" action=\"#feedbackSection\">\n<label for=\"theEmail\" class=\"formHP\">\nLeave this field blank!\n</label>\n<input type=\"text\" id=\"theEmail\" name=\"theEmail\" class=\"formHP\" />\n<fieldset>\n<legend>\nWas this page helpful?\n</legend>\n<ul class=\"list-group list-group-form-flex\">\n<li>\n<input type=\"radio\" name=\"helpful\" id=\"yesHelpful\" value=\"yes\"/>\n<label for=\"yesHelpful\">Yes</label>\n</li>\n<li>\n<input type=\"radio\" name=\"helpful\" id=\"notHelpful\" value=\"no\"/>\n<label for=\"notHelpful\">No</label>\n</li>\n</ul>\n</fieldset>\n<div id=\"whySubmit\">\n<p id=\"lookingForContainer\">\n<label for=\"lookingFor\" id=\"lookingForLabel\">\nWhat were you looking for?\n<span class=\"small\">\n(required)\n</span>\n</label>\n<br>\n<input type=\"text\" name=\"lookingFor\" id=\"lookingFor\" size=\"60\">\n</p>\n<p>\n<label for=\"comments\" id=\"whyLabel\">Why?</label>\n<br>\n<span class=\"small\" id=\"whyDescription\">\nComments are helpful!\n</span>\n<br />\n<textarea style=\"display:block; max-width:100%\" id=\"comments\" name=\"comments\" rows=\"3\" cols=\"20\"></textarea>\n<span id=\"feedbackCharacterLimit\" class=\"small\">\n500 character limit\n</span>\n</p>\n<p>\n<input type=\"hidden\" name=\"messageAction\" value=\"sendFeedback\" />\n<div class=\"cf-turnstile\" data-appearance=\"interaction-only\" data-sitekey=\"0x4AAAAAAAMu9AGNXXiT5eeC\" data-callback=\"enableFormSubmission\"\ndata-response-field-name=\"cfTurnstileResponse\" data-action=\"feedback-form-bottom-prod\">\n</div>\n<input type=\"submit\" value=\"Submit Feedback\" />\n</p>\n</div>\n</form>\n<p>\n<span class=\"small\">\nFeedback is anonymous.\n</span>\n</p>\n</div>\n<p>\n<span class=\"glyphicons glyphicons-thumbs-up\"></span>\n<strong>\n25\ncomments\nfrom\npeople\nlike you\n</strong>\nhave\nhelped us improve this page. Keep the feedback coming!\n</p>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n</div>\n<div class=\"full-row full-row-dark footer\" role=\"contentinfo\" aria-label=\"Footer\">\n<div class=\"full-row full-row-arrow full-row full-row-arrow-white\"></div>\n<div class=\"container\">\n<h2 class=\"sr-only\">Social Media and Feeds</h2>\n<div class=\"footer-social-media-icons\">\n<a href=\"https://www.facebook.com/CityofStLouis/\" title=\"Facebook\" class=\"js-external-popup\"><img src=\"/images/icons/social-media/facebook-white-48px.png\" width=\"25\" height=\"25\" border=\"0\" alt=\"Facebook\"></a>\n<a href=\"https://instagram.com/stlcitygov/\" title=\"Instagram\" class=\"js-external-popup\"><img src=\"/images/icons/social-media/instagram-white-48px.png\" width=\"25\" height=\"25\" border=\"0\" alt=\"Instagram\"></a>\n<a href=\"/subscriptions/#CP_JUMP_180825\" title=\"X\"><img src=\"/images/icons/social-media/x-white-48px.png\" width=\"25\" height=\"25\" border=\"0\" alt=\"X\"></a>\n<a href=\"https://www.youtube.com/user/CityofStLouisMO/\" title=\"YouTube\" class=\"js-external-popup\"><img src=\"/images/icons/social-media/youtube-white-48px.png\" width=\"35\" height=\"25\" border=\"0\" alt=\"YouTube\"></a>\n<a href=\"https://nextdoor.com/agency-detail/mo/st-louis/city-of-st-louis/\" title=\"Nextdoor\" class=\"js-external-popup\"><img src=\"/images/icons/social-media/nextdoor-white-48px.png\" width=\"31\" height=\"25\" border=\"0\" alt=\"Nextdoor\"></a>\n<a href=\"/subscriptions/#CP_JUMP_606533\" title=\"RSS Feeds\"><img src=\"/images/icons/social-media/rss-white-48px.png\" width=\"25\" height=\"25\" border=\"0\" alt=\"RSS Feeds\"></a>\n</div>\n<div class=\"row\">\n<div class=\"col-sm-4\">\n<h2>Site Navigation</h2>\n<div class=\"content-block\">\n<ul class=\"list-group\">\n<li>\n<a href=\"/services/\">Services</a>\n</li>\n<li>\n<a href=\"/government/\">Government</a>\n</li>\n<li>\n<a href=\"/news-media/\">News</a>\n</li>\n<li>\n<a href=\"/events/\">Calendar</a>\n</li>\n<li>\n<a href=\"/visit-play/\">Visit and Play</a>\n</li>\n<li>\n<a href=\"/government/departments/personnel/jobs/\">Employment Opportunities</a>\n</li>\n</ul>\n</div>\n<div class=\"content-block\">\n<ul class=\"list-group\">\n<li>\n<a href=\"login.cfm\">Employee Login</a>\n</li>\n</ul>\n</div>\n</div>\n<div class=\"col-sm-4\">\n<h2>Assistance</h2>\n<div class=\"content-block\">\n<ul class=\"list-group\">\n<li>\n<a href=\"/government/departments/information-technology/web-development/web-accessibility/accessibility.cfm\">\nChange Site Fonts and Colors\n</a>\n</li>\n<li>\n<a href=\"/government/departments/information-technology/web-development/privacy.cfm\">\nPrivacy and Security\n</a>\n</li>\n<li>\n<a href=\"/government/departments/information-technology/web-development/website-policies.cfm\">\nPolicies and Notices\n</a>\n</li>\n<li>\n<div id=\"google_translate_element\"></div>\n</li>\n</ul>\n</div>\n</div>\n<div class=\"col-sm-4\">\n<h2>Contact Us</h2>\n<div class=\"content-block\">\n<ul class=\"list-group\">\n<li>\nCity of St. Louis\n<br>\nCity Hall\n<br>\n1200 Market Street\n<br>\nSaint Louis, MO 63103\n</li>\n<li>\n314-622-4800\n</li>\n<li>\n<a href=\"/government/contact.cfm\">\nContact Us\n</a>\n</li>\n<li>\n<a href=\"/government/departments/\">\nDepartments and Agencies\n</a>\n</li>\n<li>\n<a href=\"/government/about/access-government-information.cfm\">\nRequest Government Information\n</a>\n</li>\n</ul>\n</div>\n</div>\n</div>\n<div class=\"footer-seal\"></div>\n<div class=\"row\">\n<div class=\"col-xs-6\">\nBuilt by the\n<a href=\"/government/departments/information-technology/web-development/\">\nITSA Web Development Team\n</a>\n</div>\n<div class=\"col-xs-6 text-right\">\n© 2011 - 2026 City of St. Louis\n</div>\n</div>\n</div>\n</div>\n<style>\n.scroll-top-panel {\nposition: fixed;\nbottom: 10px;\ndisplay: none;\npadding: 0rem;\nz-index: 99999999;\nright: 10px;\n}\n.scroll-top-panel button {\npadding: 8px;\nbackground: #1e526b;\ncolor: #fff;\n}\n.scroll-top-panel button:hover {\nbackground: #a61c00;\n}\n</style>\n<div class=\"scroll-top-panel\">\n<button class=\"glyphicon glyphicon-circle-arrow-up scroll-top\"> ▲ Top </button>\n</div>\n<div class=\"mfp-hide mfp-loading-container\"\nid=\"externalLinkLightbox\"\nrole=\"dialog\"\naria-labelledby=\"externalLinkTitle\"\naria-describedby=\"externalLinkDescription\">\n<h2 class=\"h3\" id=\"externalLinkTitle\">\nYou are leaving the City of St. Louis website\n</h2>\n<p id=\"externalLinkDescription\">\nYou should be redirected in a few seconds. If this fails, here's the link:\n</p>\n<p>\n<a href=\"#\" id=\"externalLinkFallback\">external link</a>\n</p>\n</div>\n<!-- beg (1) PrimaryResources -->\n<script src=\"/ADF/thirdParty/jquery/jquery-3.7.js\"></script><script src=\"/commonspot/javascript/lightbox/overrides.js\"></script><script src=\"/commonspot/javascript/lightbox/window_ref.js\"></script><script src=\"/commonspot/pagemode/always-include-common.js\"></script>\n<!-- end (1) PrimaryResources -->\n<!-- beg (2) SecondaryResources -->\n<script src=\"/templates/lib/jquery.magnific-popup.min.js\"></script><script src=\"/templates/js/magnificGallery.js\"></script><link rel=\"dns-prefetch\" href=\"https://cdn.datatables.net\"><script src=\"https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js\"></script><script src=\"/templates/js/breadcrumbs.js\"></script><script src=\"/templates/lib/proj4js-compressed.js\"></script><script src=\"/templates/lib/defs/EPSG102695.js\"></script><script src=\"/templates/lib/defs/EPSG102696.js\"></script><script src=\"/templates/lib/defs/ESRI102696.js\"></script><script src=\"/templates/js/components/jump-link-page-navigation-component.js?v=1.4\"></script><link rel=\"dns-prefetch\" href=\"https://challenges.cloudflare.com\"><script src=\"https://challenges.cloudflare.com/turnstile/v0/api.js\"  ></script><script src=\"/templates/js/turnstile-token-validation.js\"></script><script src=\"/templates/js/truncatedList.js\"></script><link rel=\"dns-prefetch\" href=\"https://js.arcgis.com/4.33/\"><script src=\"https://js.arcgis.com/4.33/\"></script><script type=\"module\" src=\"https://js.arcgis.com/calcite-components/3.2.1/calcite.esm.js\"></script><link rel=\"dns-prefetch\" href=\"https://js.arcgis.com/4.33/map-components/\"><script type=\"module\" src=\"https://js.arcgis.com/4.33/map-components/\"></script><script type=\"text/javascript\">\n// Fire this function when triggering the thing that is loading\nfunction openLoadingLightBox() {\n// Set modal to true to disable closing the lightbox\n$.magnificPopup.open({\nitems: {\nsrc: '#loadingScreen',\ntype: 'inline'\n},\nmodal: true\n});\n}\n$(document).ready( function (){\n$('.findByAddress').click(function( event ){\nconsole.log('hi');\n// Open the lightbox\nopenLoadingLightBox();\n});\n});\n</script>\n<script>\n$(function(){\nvar sessionTable = $('#jsPP').DataTable({\norder: [[ 0, 'asc' ], [1, 'asc']],\n\"lengthMenu\": [[100, 150, 200, -1], [100, 150, 200, \"All\"]],\npaging: false,\nsearching: false,\nlengthChange: false,\ninfo: false\n});\n});\n</script>\n<script type=\"text/javascript\">\n$(document).ready(function() {\ndocument.getElementById('whySubmit').style.display = \"none\";\ndocument.getElementById('notHelpful').addEventListener('click',showElementInline,false);\ndocument.getElementById('yesHelpful').addEventListener('click',showElementInline,false);\n});\nfunction showElementInline() {\nvar whySubmit = document.getElementById('whySubmit');\nvar whyLabel = $('#whyLabel');\nvar $lookingForContainer = $('#lookingForContainer');\nvar $lookingFor = $('#lookingFor');\nwhySubmit.style.display = \"block\";\nif(this.id == 'yesHelpful') {\n$(whyLabel).text('What did you like?');\n$(whyDescription).text('Comments are helpful!');\n$lookingFor.val('');\n$lookingForContainer.hide();\n} else {\n$(whyLabel).text('What can we improve on this page?');\n$(whyDescription).text('Help us make improvements. Is something missing, broken, or incorrect?');\n$lookingForContainer.show();\n}\n}\n// Character count-down\n$('#comments').keyup(function () {\nvar left = 500 - $(this).val().length;\nif (left < 0) {\n$('#feedbackCharacterLimit').text(left + ' characters left (' + Math.abs(left) + ' characters will be cut off)');\n} else {\n$('#feedbackCharacterLimit').text(left + ' characters left');\n}\nif (left <= 30) {\n$('#feedbackCharacterLimit').css('color', 'red');\n$('#feedbackCharacterLimit').css('font-weight', '800');\n$('#feedbackCharacterLimit').removeClass('small');\n} else if (left <= 50) {\n$('#feedbackCharacterLimit').css('color', '#DA7A02');\n$('#feedbackCharacterLimit').css('font-weight', '800');\n$('#feedbackCharacterLimit').removeClass('small');\n} else {\n$('#feedbackCharacterLimit').css('color', 'inherit');\n$('#feedbackCharacterLimit').css('font-weight', '400');\n$('#feedbackCharacterLimit').addClass('small');\n}\n});\n// Validation\n$(\"#feedbackForm\").submit(function() {\n// Negative feedback with no comment\nif($('input[name=helpful]:checked', '#feedbackForm').val() == 'no' & $('#lookingFor').val().length == 0) {\nevent.preventDefault();\n$('#feedbackError').css('display', 'block');\n$('#feedbackErrorMessage').text('Please tell us what you were looking for so we can improve the website.');\nreturn false;\n}\n// Nothing was selected\nif(!$('input[name=helpful]:checked', '#feedbackForm').val()) {\nevent.preventDefault();\n$('#feedbackError').css('display', 'block');\n$('#feedbackErrorMessage').text('Please select either \"yes\" or \"no\" to submit feedback.');\nreturn false;\n}\n// If the above didn't trigger, submit the form\n});\n</script>\n<script>\n$(function(){\nvar externalLinkFallback = $('#externalLinkFallback');\n$('.js-external-popup').click(function(evt){\nevt.preventDefault();\nvar externalURL = $(this).attr('href');\nexternalLinkFallback.attr('href', externalURL);\nexternalLinkFallback.text(externalURL);\n$.magnificPopup.open({\nitems: {\nsrc: '#externalLinkLightbox',\ntype: 'inline'\n},\nmodal: true\n});\nsetTimeout(() => {\nwindow.location.assign(externalURL);\n}, 3000);\n});\n});\n</script>\n<script type=\"text/javascript\">\n// Setup for caching ajax requests using jquery\n// cache for 30 days\n$.ajaxSetup({\ncache: true,\nheaders: {'Cache-Control': 'max-age=2592000'}\n});\n// Get cookieFunctions file for site wide cookie functions\n$.getScript( \"/templates/js/cookieFunctions.js\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n//console.log( \"Loaded cookieFunctions.js\" );\n});\n// Get Scroll to Top of page functions\n$.getScript( \"/templates/js/scrollTop.js\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n//console.log( \"Loaded scrollTop.js\" );\n});\n// Get Responsive tables function\n$.getScript( \"/templates/js/responsiveTables.js\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n//console.log( \"Loaded responsiveTables.js\" );\n});\n// Get Tab Box Menu function\n$.getScript( \"/templates/js/tabBoxMenu.js\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n//console.log( \"Loaded tabBoxMenu.js\" );\n});\n// Get show / Hide function\n$.getScript( \"/templates/js/showHide.js\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n//console.log( \"Loaded showHide.js\" );\n});\n// Get iOS Fixes  function\n$.getScript( \"/templates/js/iosFix.js\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n//console.log( \"Loaded iosFix.js\" );\n});\n// Get detect and mark external links  function\n$.getScript( \"/templates/js/detectMarkExternalLinks.js?v=1.1\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n// console.log( \"Loaded detectMarkExternalLinks.js\" );\n});\n// Get Mobile Menu function\n$.getScript( \"/templates/js/mobileMenu.js?v=1.2\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n//console.log( \"Loaded mobileMenu.js\" );\n});\n// Get multiple breadcrumbs  functions\n// $.getScript( \"/templates/js/breadcrumbs.js\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n//console.log( \"Loaded breadcrumbs.js\" );\n// });\n// Get alertDismiss functions\n$.getScript( \"/templates/js/alertDismiss.js\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n//console.log( \"Loaded alertDismiss.js\" );\n});\nwindow.onload = function(){\n$.getScript( \"/templates/js/googleTranslateElement.js?v=1.4\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n// console.log( \"Loaded googleTranslateElementInit.js\" );\n});\n$.getScript( \"//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\", function( data, textStatus, jqxhr ) {\n// console.log( data ); // Data returned  console.log( textStatus ); // Success console.log( jqxhr.status ); // 200\n// console.log( \"Loaded translate.google.com \" );\n});\n};\n</script>\n<!-- end (2) SecondaryResources -->\n<!-- beg (3) CustomFoot -->\n<!-- end (3) CustomFoot -->\n<!-- beg (4) TertiaryResources -->\n<script type=\"text/javascript\">\nvar mapData = {\"showPoint\":false,\"webmapID\":\"e5fdb4148a5e4134b6defe4e59f4366e\",\"height\":500,\"portalUrl\":\"https://stlcity.maps.arcgis.com\",\"center\":[-90.1994,38.65],\"showSearch\":true,\"snippet\":\"Polling Centers\",\"description\":\"\",\"zoom\":\"12\",\"title\":\"Active Polling Places\",\"id\":\"map-982053\",\"openLayerLegendDesktop\":false,\"openLayersDesktop\":true};\nvar mapContainer = document.querySelector('#' + mapData.id);\nvar defaultView = 'desktop';\nvar currentView = defaultView;\nvar mobileDefaults = {\nbreakPoint: 600,\nheight: 450,\nopenLayerLegend: false\n};\nvar thisSpatialReference = {\nwkid: 102696,\nlatestWkid: 102696\n};\nif (\nmapData.center[0] > 180\n|| mapData.center[0] < -180\n|| mapData.center[1] > 90\n|| mapData.center[1] < -90\n) {\n// Convert projection system\nvar sourceProjection = new Proj4js.Proj('EPSG:102696');\nvar destinationProjection = new Proj4js.Proj('WGS84');\nvar sourcePoint = new Proj4js.Point(\nmapData.center[0],\nmapData.center[1]\n);\nvar destinationPoint = Proj4js.transform(\nsourceProjection,\ndestinationProjection,\nsourcePoint\n);\nmapData.center = [destinationPoint.x, destinationPoint.y];\n}\nwindow.addEventListener('load', event => {\n// Map\nrequire([\n'esri/config',\n'esri/WebMap',\n'esri/views/MapView',\n'esri/widgets/LayerList',\n'esri/widgets/Expand',\n'esri/Graphic'\n], function(esriConfig, WebMap, MapView, LayerList, Expand, Graphic) {\nesriConfig.portalUrl = mapData.portalUrl;\nvar map = new WebMap({\nportalItem: {\nid: mapData.webmapID\n}\n});\nvar view = new MapView({\ncontainer: mapData.id,\nmap: map,\nzoom: mapData.zoom,\ncenter: mapData.center\n});\nvar layerList = new LayerList({\nlabel: 'Legend & Layers',\nview: view,\nlistItemCreatedFunction: function(event) {\nvar item = event.item;\nif (item.layer.type != 'group') {\n// don't show legend twice\nitem.panel = {\ncontent: 'legend',\nopen: mapData.openLayerLegendDesktop\n};\n}\n}\n});\nvar expandList = new Expand ({\nexpandIconClass: 'esri-icon-layers',\nview: view,\ncontent: layerList,\nexpanded: mapData.openLayersDesktop\n});\nview.popup.collapseEnabled = false; // Prevent collapsed popup on mobile\nif (mapData.showSearch) {\n// Wait for the view to be ready\nview.when(async function() {\nconst searchComponent = document.createElement('arcgis-search');\nsearchComponent.view = view;\nview.ui.add(searchComponent, { position: \"top-right\", index: 0 });\n});\n}\nif (mapData.showPoint) {\nvar point = {\ntype: \"point\",\nlongitude: mapData.center[0],\nlatitude: mapData.center[1]\n};\nvar markerSymbol = {\ntype: \"simple-marker\",\ncolor: [226, 119, 40]\n};\nvar pointGraphic = new Graphic({\ngeometry: point,\nsymbol: markerSymbol\n});\nview.graphics.add(pointGraphic);\n}\nvar legendToggle = document.querySelector('.js-toggle-legend');\nfunction showLayers() {\nview.ui.add(layerList, { position: 'top-right', index: 1 });\nlegendToggle.setAttribute('data-action', 'remove');\n}\nfunction removeLayers() {\nview.ui.remove(layerList);\nlegendToggle.setAttribute('data-action', 'add');\n}\nif (mapData.openLayersDesktop) {\nshowLayers();\n}\nlegendToggle.addEventListener('click', event => {\nif (legendToggle.getAttribute('data-action') === 'add') {\nshowLayers();\n}\nelse {\nremoveLayers();\n}\nevent.preventDefault();\n});\nfunction mobileDesktopToggle() {\nif (window.innerWidth > mobileDefaults.breakPoint) {\nif (currentView !== 'desktop') {\ncurrentView = 'desktop';\nmapContainer.style.height = mapData.height + 'px';\nif (mapData.openLayersDesktop) {\nshowLayers();\n}\nelse {\nremoveLayers();\n}\n}\n}\nelse {\nif (currentView !== 'mobile') {\ncurrentView = 'mobile';\nmapContainer.style.height = mobileDefaults.height + 'px';\nif (mobileDefaults.openLayerLegend) {\nshowLayers();\n}\nelse {\nremoveLayers();\n}\n}\n}\n}\nmobileDesktopToggle();\nwindow.onresize = mobileDesktopToggle;\n});\n});\n</script>\n<!-- end (4) TertiaryResources --><script>\r\n<!--\r\nvar jsPageContributeMode = 'read';\r\nvar jsPageSessionContributeMode = 'read';\r\n\r\nvar jsPageAuthorMode = 0;\r\nvar jsPageEditMode = 0;\r\n\r\n\r\nif(!commonspot)\r\nvar commonspot = {};\r\ncommonspot.csPage = {};\r\n\r\n\r\ncommonspot.csPage.url = '/government/departments/board-election-commissioners/voter/polling-places/index.cfm';\r\n\r\n\r\ncommonspot.csPage.id = 981662;\r\n\r\ncommonspot.csPage.siteRoot = '/';\r\ncommonspot.csPage.subsiteRoot = '/government/departments/board-election-commissioners/voter/polling-places/';\r\n\r\n\r\n// -->\r\n</script>\r\n\r\n<script>\r\n<!--\r\n\tif (typeof parent.commonspot == 'undefined' || typeof parent.commonspot.lview == 'undefined' || typeof parent.commonspot.lightbox == 'undefined')\r\n\t\tloadNonDashboardFiles();\r\n\telse if (parent.commonspot && typeof newWindow == 'undefined')\r\n\t{\r\n\t\tvar arrFiles = [\r\n\t\t\t\t\t{fileName: '/commonspot/javascript/lightbox/overrides.js', fileType: 'script', fileID: 'cs_overrides'},\r\n\t\t\t\t\t{fileName: '/commonspot/javascript/lightbox/window_ref.js', fileType: 'script', fileID: 'cs_windowref'}\r\n\t\t\t\t\t];\r\n\t\t\r\n\t\tloadDashboardFiles(arrFiles);\r\n\t}\r\n//-->\r\n</script>\r\n</body></html>"
+      }
+    }
+  },
+  {
+    "id": "ar-sebastian-general-election-notice-2026",
+    "publisher": "Sebastian County Election Commission",
+    "url": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+    "shape": "file",
+    "covers": [
+      "ELECTION_DAY",
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "AR",
+      "ocdId": "ocd-division/country:us/state:ar/county:sebastian",
+      "name": "Sebastian County",
+      "countyFips": "05131"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.sebastiancountyar.gov/Portals/0/Content/Election/2026/2026%20Nov%203%20Notice%20of%20General%20Election.pdf",
+    "extraction": {
+      "format": "pdf"
+    }
+  },
+  {
+    "id": "ks-johnson-general-advance-2026",
+    "publisher": "Johnson County Election Office",
+    "url": "https://www.jocoelection.org/voting-election-info/advance-voting",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING",
+      "DROP_BOX"
+    ],
+    "scope": {
+      "state": "KS",
+      "ocdId": "ocd-division/country:us/state:ks/county:johnson",
+      "name": "Johnson County",
+      "countyFips": "20091"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.jocoelection.org/voting-election-info/advance-voting",
+    "extraction": {
+      "format": "html",
+      "constants": {
+        "election": "2026 November General"
+      },
+      "records": {
+        "within": {
+          "pattern": "<button class=\"image-text__title\">\\s*(?:Early In-Person Voting Locations for the 2026 November General|Mail Ballot Drop Box Locations)[\\s\\S]*?(?=<button class=\"image-text__title\">|$)",
+          "fields": {
+            "kind": {
+              "pattern": "((?:Early In-Person Voting Locations)|(?:Mail Ballot Drop Box Locations))",
+              "group": 1
+            }
+          }
+        },
+        "pattern": "<tr>\\s*<td>[^<]+</td>\\s*<td>[^<]+</td>\\s*</tr>",
+        "fields": {
+          "name": {
+            "pattern": "<td>([^<]+)</td>",
+            "group": 1
+          },
+          "address": {
+            "pattern": "<td>[^<]+</td>\\s*<td>([^<]+)</td>",
+            "group": 1
+          }
+        }
+      }
+    },
+    "officialLinkingPage": {
+      "url": "https://www.gardnerkansas.gov/government/clerk/elections.php",
+      "html": "<!-- Exact anchor excerpt from the captured government page; full original response saved in captures.json. -->\n<a rel=\"noopener\" href=\"https://www.jocoelection.org/voting-election-info/advance-voting\" target=\"_blank\">Advance Voting and Voting Options</a>"
+    }
+  },
+  {
+    "id": "ar-benton-county-gis-early",
+    "publisher": "Benton County Clerk GIS",
+    "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+    "shape": "map-service",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "AR",
+      "ocdId": "ocd-division/country:us/state:ar/county:benton",
+      "name": "Benton County",
+      "countyFips": "05007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/0",
+    "extraction": {
+      "columns": {
+        "name": "SITE_NAME",
+        "address": "SITE_ADDRESS",
+        "precinct": "EV_PRECINCT"
+      },
+      "kind": "EARLY_VOTING"
+    }
+  },
+  {
+    "id": "ar-benton-county-gis-election-day",
+    "publisher": "Benton County Clerk GIS",
+    "url": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+    "shape": "map-service",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "scope": {
+      "state": "AR",
+      "ocdId": "ocd-division/country:us/state:ar/county:benton",
+      "name": "Benton County",
+      "countyFips": "05007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://gis.bentoncountyar.gov/arcgis/rest/services/CoClerk/VotingLocations/MapServer/1",
+    "extraction": {
+      "columns": {
+        "name": "SITE_NAME",
+        "address": "SITE_ADDRESS",
+        "precinct": "VC_PRECINCT"
+      },
+      "kind": "ELECTION_DAY"
+    }
+  },
+  {
+    "id": "ar-benton-general-vote-centers-2026",
+    "publisher": "Benton County Election Commission",
+    "url": "https://bentoncountyar.gov/vote/wp-content/documents/sites/37/2026/09/Web-Order-Vote-Centers.pdf",
+    "shape": "file",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "AR",
+      "ocdId": "ocd-division/country:us/state:ar/county:benton",
+      "name": "Benton County",
+      "countyFips": "05007"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://bentoncountyar.gov/vote/elections/",
+    "extraction": {
+      "format": "pdf",
+      "kind": "VOTE_CENTER",
+      "constants": {
+        "election": "2026 GENERAL ELECTION",
+        "hours": "7:30 AM - 7:30 PM"
+      },
+      "templates": {
+        "address": "{streetNumber} {streetRest}"
+      },
+      "records": {
+        "pattern": "(?:^|\\n\\n)[A-Za-z][^\\n]+\\n+(?:ADDRESS\\n+)?A?\\d+[^\\n]+\\n+(?:ELECTION DAY HOURS\\n+)?7:30[^\\n]+",
+        "fields": {
+          "name": {
+            "pattern": "^\\s*([A-Za-z][^\\n]+)",
+            "group": 1
+          },
+          "streetNumber": {
+            "pattern": "\\nA?(\\d+)[^\\n]*\\n",
+            "group": 1
+          },
+          "streetRest": {
+            "pattern": "\\nA?\\d+\\s+\\.?([^\\n]+)\\n",
+            "group": 1
+          }
+        }
+      }
+    }
+  }
+]

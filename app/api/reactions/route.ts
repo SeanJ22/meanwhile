@@ -34,7 +34,7 @@ import {
   refreshFundingFromPromoted,
 } from "@/lib/funding/snapshot";
 import { getVoteIds, refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
-import { settleStateMoneyRead, stateMoneyForTarget } from "@/lib/funding/state-snapshot";
+import { readCampaignMoneyForTarget } from "@/lib/funding/state-reader";
 
 
 
@@ -54,13 +54,7 @@ const reactionAuthorityReaders = (divisions: readonly string[]): ReactionAuthori
   },
   refreshFunding: refreshFundingFromPromoted,
   fundingTargets: getFundingTargetIds,
-  refreshStateMoney: (state) => settleStateMoneyRead(state),
-  stateMoneyTargets: (targetId) =>
-    stateMoneyForTarget(targetId).some(
-      (r) => r.filingState === "FILED" || r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED",
-    )
-      ? new Set([targetId])
-      : new Set(),
+  stateMoneyTargets: async targetId => (await readCampaignMoneyForTarget(targetId,divisions))?.records.length ? new Set([targetId]) : new Set(),
   contributorTargets: getContributorReactionTargetIds,
   refreshVotes: refreshFederalVotesFromPromoted,
   voteTargets: getVoteIds,
@@ -242,4 +236,4 @@ async function postWithSettings(request: Request) {
 
 export const POST = readerRoute("/api/reactions", async function POST(request: Request) {
   return withReaderFeatures(() => postWithSettings(request));
-}, ["state-money", "registry-runtime", "ballot-contests"]);
+});

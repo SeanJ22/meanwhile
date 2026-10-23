@@ -1,23 +1,22 @@
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
-import { prepareStateEdgeFamily, selectedStateEdgePointers } from "../lib/civic-data/promoted-edge-publication.ts";
 import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtemp, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
 import { publishElectionFields } from "../lib/civic-data/election-field-publication.ts";
 import type { ElectionFieldInput, PublishedElectionField } from "../lib/civic-data/election-fields.ts";
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
-import { authorityPointerKey, ensureReaderAuthorityEdge, readServedPointer } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { publishPointers } from "./helpers/edge-pointers.ts";
+import { readBallotNavigationProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+import { stateAuthorityPointers } from "../lib/civic-data/state-reader.ts";
+import { withReaderSelection } from "../lib/db/reader-route.ts";
+import { primeReaderCanonicalStore } from "../lib/reader/canonical-context.ts";
+import { readCanonicalPackages } from "../lib/reader/canonical.ts";
+import { readerDatabaseQuery } from "../lib/reader/database.ts";
+import { installReaderValues } from "./helpers/canonical-reader-fixtures.ts";
 import { manualEdgeEntry, promotedFamily } from "./helpers/promoted-edge-entry.ts";
 import { createHash } from "node:crypto";
 
@@ -58,38 +57,29 @@ test("streamed fields are verified before the next source is produced", async ()
     verify: input => { verified++; return section3Record(input); } });
   assert.equal(result.fields.length, 2);
   assert.equal(result.gaps.length, 0);
-  const directory = await mkdtemp(join(tmpdir(), "navigation-state-publication-"));
-  try {
-    const unit = selectedStateEdgePointers([{ recordClass: "CURATED_READER_RECORD", scope: "US-OH:official-ballot-navigation" }])[0]!;
-    const published = await prepareStateEdgeFamily({ store, now, unit, artifactStore: new LocalFileArtifactStore(directory) });
-    assert.deepEqual(published.skipped, []);
-    assert.deepEqual([unit.family, unit.state], ["ballot-navigation", "OH"]);
-    assert.ok(published.entry.artifact.key);
-  } finally { await rm(directory, { recursive: true, force: true }); }
+  const ohio = await readBallotNavigationProjection("OH", { store, now, bypassCache: true });
+  assert.equal(ohio.kind, "PROMOTED");
+  assert.equal(ohio.kind === "PROMOTED" && ohio.projection.scope, "US-OH:official-ballot-navigation");
+  assert.equal(ohio.kind === "PROMOTED" && ohio.value.records.length, 2);
+  assert.equal((await readBallotNavigationProjection("MI", { store, now, bypassCache: true })).kind, "NOT_RECORDED");
 });
 
-test("the edge serves one state's navigation without fetching other state artifacts", async () => {
-  const directory = await mkdtemp(join(tmpdir(), "navigation-state-edge-"));
-  try {
-    const store = new LocalFileArtifactStore(directory);
-    const stateNavigation = (stateCode: string) => {
-      const row = field(stateCode); Object.assign(row, { value: { ...row.value, state: stateCode, divisionId: `ocd-division/country:us/state:${stateCode.toLowerCase()}` } });
-      return { versionId: stateCode, value: promotedFamily([manualEdgeEntry("ballot-navigation", { kind: "ballot-navigation", records: [row] }, stateCode)], stateCode).value };
-    };
-    assert.deepEqual(await publishPointers(store, { stateAuthorities: { "ballot-navigation": { OH: stateNavigation("OH"), MI: stateNavigation("MI") } } }),
-      ["ballot-navigation/OH", "ballot-navigation/MI"]);
-    const reads: string[] = [], read = store.readBytes.bind(store);
-    store.readBytes = async key => { reads.push(key); return read(key); };
-    const bundle = (await ensureReaderAuthorityEdge(null, store, ["ballot-navigation"]))!;
-    assert.equal(reads.length, 0);
-    const first = await withReaderAuthorityEdge(bundle, async () => {
-      const loaded = await bundle.stateAuthorities!.load("ballot-navigation", "OH");
-      assert.equal(await bundle.stateAuthorities!.load("ballot-navigation", "OH"), loaded);
-      return loaded;
-    });
-    assert.equal(first?.entries[0]?.kind, "PROMOTED");
-    assert.deepEqual(reads, [(await readServedPointer(store, authorityPointerKey("ballot-navigation", "OH")))!.ref.key]);
-  } finally { await rm(directory, { recursive: true, force: true }); }
+test("a reader request reads its own state's navigation pointer and no other state's", async () => {
+  const stateNavigation = (stateCode: string) => {
+    const row = field(stateCode); Object.assign(row, { value: { ...row.value, state: stateCode, divisionId: `ocd-division/country:us/state:${stateCode.toLowerCase()}` } });
+    return { versionId: stateCode, value: promotedFamily([manualEdgeEntry("ballot-navigation", { kind: "ballot-navigation", records: [row] }, stateCode)], stateCode).value };
+  };
+  installReaderValues({ stateAuthorities: { "ballot-navigation": { OH: stateNavigation("OH"), MI: stateNavigation("MI") } } });
+  const asked: unknown[] = [], query = readerDatabaseQuery()!;
+  const read = await withReaderSelection({ states: ["OH"], keys: new Set() }, async () => {
+    const pointers = stateAuthorityPointers("ballot-navigation", "OH");
+    await primeReaderCanonicalStore(pointers, readCanonicalPackages([pointers], statements => { asked.push(statements); return query(statements); }));
+    return readBallotNavigationProjection("OH");
+  });
+  assert.equal(read.kind, "PROMOTED");
+  assert.equal(read.kind === "PROMOTED" && (read.value.records[0].value as { state: string }).state, "OH");
+  const keys = JSON.stringify(asked).match(/CURATED_READER_RECORD:[A-Z:-]*official-ballot-navigation/g) ?? [];
+  assert.deepEqual([...new Set(keys)], ["CURATED_READER_RECORD:US-OH:official-ballot-navigation"]);
 });
 
 test("navigation admission reserves the largest state after a small state's measured run", async () => {

@@ -1,0 +1,1006 @@
+[
+  {
+    "id": "fec-as-chief",
+    "publisher": "Election Office, Pago Pago, AS",
+    "url": "https://www.aselectionoffice.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "AS",
+      "ocdId": "ocd-division/country:us/territory:as",
+      "name": "American Samoa"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.aselectionoffice.gov/",
+    "title": "American Samoa chief election office discovery root",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://aselectionoffice.gov\">https://aselectionoffice.gov</a>"
+    },
+    "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Fresh official chief-office page and the exact FEC authority link are saved in the VS-04 territory fixtures."
+    }
+  },
+  {
+    "id": "fec-gu-chief",
+    "publisher": "Guam Election Commission, Hagatna, GU",
+    "url": "https://gec.guam.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "GU",
+      "ocdId": "ocd-division/country:us/territory:gu",
+      "name": "Guam"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://gec.guam.gov/",
+    "title": "Guam chief election office discovery root",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"http://gec.guam.gov/\">http://gec.guam.gov/</a>"
+    },
+    "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+    "access": {
+      "status": "unreachable",
+      "checkedAt": "2026-10-21",
+      "detail": "Official FEC/EAC route returned HTTP 503; captured upstream TLS certificate verification failure. Public alternatives remain acquisition work."
+    }
+  },
+  {
+    "id": "fec-mp-chief",
+    "publisher": "Commonwealth Election Commission, Saipan, MP",
+    "url": "https://www.votecnmi.gov.mp/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "MP",
+      "ocdId": "ocd-division/country:us/territory:mp",
+      "name": "Northern Mariana Islands"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votecnmi.gov.mp/",
+    "title": "Northern Mariana Islands chief election office discovery root",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+    },
+    "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Fresh official chief-office page and the exact FEC authority link are saved in the VS-04 territory fixtures."
+    }
+  },
+  {
+    "id": "fec-vi-chief",
+    "publisher": "Elections System of the Virgin Islands",
+    "url": "https://www.vivote.gov/",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "VI",
+      "ocdId": "ocd-division/country:us/territory:vi",
+      "name": "United States Virgin Islands"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.vivote.gov/",
+    "title": "United States Virgin Islands chief election office discovery root",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://www.vivote.gov/\">https://www.vivote.gov/</a>"
+    },
+    "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Fresh official chief-office page and the exact FEC authority link are saved in the VS-04 territory fixtures."
+    }
+  },
+  {
+    "publisher": "Commonwealth Election Commission",
+    "url": "https://www.votecnmi.gov.mp/polling-places.php",
+    "shape": "list-page",
+    "scope": {
+      "state": "MP",
+      "ocdId": "ocd-division/country:us/territory:mp/county:saipan",
+      "name": "Saipan",
+      "countyFips": "69110"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
+    "title": "2026 General Election",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+    },
+    "discoveredFrom": "https://www.votecnmi.gov.mp/",
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Published inline JavaScript records render the public polling list. No registration lookup is submitted. Northern Islands combined entry is excluded until individual sites are published; village/facility location wording is retained without invented street numbers."
+    },
+    "id": "mp-election-day-saipan-2026",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "\\{\\s*ids:\\[(?!'4D')[^\\]]+\\],[^}]+\\}",
+        "fields": {
+          "precinct": {
+            "pattern": "ids:\\[([^\\]]+)\\]",
+            "group": 1
+          },
+          "island": {
+            "pattern": "island:'([^']+)'",
+            "group": 1
+          },
+          "area": {
+            "pattern": "area:'([^']+)'",
+            "group": 1
+          },
+          "site": {
+            "pattern": "site:'([^']+)'",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "door:'([^']+)'",
+            "group": 1
+          },
+          "lat": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 1
+          },
+          "lng": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 2
+          }
+        }
+      },
+      "splitRows": {
+        "column": "precinct",
+        "pattern": "[',\\s]+"
+      },
+      "columns": {
+        "name": "site",
+        "address": [
+          "site",
+          "area",
+          "island"
+        ],
+        "precinct": "precinct"
+      },
+      "transforms": {
+        "precinct": {
+          "column": "precinct",
+          "pattern": "^'?([^']+)'?$",
+          "group": 1
+        }
+      },
+      "constants": {
+        "election": "2026 General Election",
+        "days": "Tuesday, November 3",
+        "hours": "7:00 AM – 7:00 PM ChST"
+      },
+      "textAssertions": [
+        "2026 General Election",
+        "Election Day polling places",
+        "November 3"
+      ],
+      "filters": {
+        "island": "saipan"
+      }
+    }
+  },
+  {
+    "publisher": "Commonwealth Election Commission",
+    "url": "https://www.votecnmi.gov.mp/polling-places.php",
+    "shape": "list-page",
+    "scope": {
+      "state": "MP",
+      "ocdId": "ocd-division/country:us/territory:mp/county:tinian",
+      "name": "Tinian",
+      "countyFips": "69120"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
+    "title": "2026 General Election",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+    },
+    "discoveredFrom": "https://www.votecnmi.gov.mp/",
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Published inline JavaScript records render the public polling list. No registration lookup is submitted. Northern Islands combined entry is excluded until individual sites are published; village/facility location wording is retained without invented street numbers."
+    },
+    "id": "mp-election-day-tinian-2026",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "\\{\\s*ids:\\[(?!'4D')[^\\]]+\\],[^}]+\\}",
+        "fields": {
+          "precinct": {
+            "pattern": "ids:\\[([^\\]]+)\\]",
+            "group": 1
+          },
+          "island": {
+            "pattern": "island:'([^']+)'",
+            "group": 1
+          },
+          "area": {
+            "pattern": "area:'([^']+)'",
+            "group": 1
+          },
+          "site": {
+            "pattern": "site:'([^']+)'",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "door:'([^']+)'",
+            "group": 1
+          },
+          "lat": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 1
+          },
+          "lng": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 2
+          }
+        }
+      },
+      "splitRows": {
+        "column": "precinct",
+        "pattern": "[',\\s]+"
+      },
+      "columns": {
+        "name": "site",
+        "address": [
+          "site",
+          "area",
+          "island"
+        ],
+        "precinct": "precinct"
+      },
+      "transforms": {
+        "precinct": {
+          "column": "precinct",
+          "pattern": "^'?([^']+)'?$",
+          "group": 1
+        }
+      },
+      "constants": {
+        "election": "2026 General Election",
+        "days": "Tuesday, November 3",
+        "hours": "7:00 AM – 7:00 PM ChST"
+      },
+      "textAssertions": [
+        "2026 General Election",
+        "Election Day polling places",
+        "November 3"
+      ],
+      "filters": {
+        "island": "tinian"
+      }
+    }
+  },
+  {
+    "publisher": "Commonwealth Election Commission",
+    "url": "https://www.votecnmi.gov.mp/polling-places.php",
+    "shape": "list-page",
+    "scope": {
+      "state": "MP",
+      "ocdId": "ocd-division/country:us/territory:mp/county:rota",
+      "name": "Rota",
+      "countyFips": "69100"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
+    "title": "2026 General Election",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+    },
+    "discoveredFrom": "https://www.votecnmi.gov.mp/",
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Published inline JavaScript records render the public polling list. No registration lookup is submitted. Northern Islands combined entry is excluded until individual sites are published; village/facility location wording is retained without invented street numbers."
+    },
+    "id": "mp-election-day-rota-2026",
+    "covers": [
+      "ELECTION_DAY"
+    ],
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "\\{\\s*ids:\\[(?!'4D')[^\\]]+\\],[^}]+\\}",
+        "fields": {
+          "precinct": {
+            "pattern": "ids:\\[([^\\]]+)\\]",
+            "group": 1
+          },
+          "island": {
+            "pattern": "island:'([^']+)'",
+            "group": 1
+          },
+          "area": {
+            "pattern": "area:'([^']+)'",
+            "group": 1
+          },
+          "site": {
+            "pattern": "site:'([^']+)'",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "door:'([^']+)'",
+            "group": 1
+          },
+          "lat": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 1
+          },
+          "lng": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 2
+          }
+        }
+      },
+      "splitRows": {
+        "column": "precinct",
+        "pattern": "[',\\s]+"
+      },
+      "columns": {
+        "name": "site",
+        "address": [
+          "site",
+          "area",
+          "island"
+        ],
+        "precinct": "precinct"
+      },
+      "transforms": {
+        "precinct": {
+          "column": "precinct",
+          "pattern": "^'?([^']+)'?$",
+          "group": 1
+        }
+      },
+      "constants": {
+        "election": "2026 General Election",
+        "days": "Tuesday, November 3",
+        "hours": "7:00 AM – 7:00 PM ChST"
+      },
+      "textAssertions": [
+        "2026 General Election",
+        "Election Day polling places",
+        "November 3"
+      ],
+      "filters": {
+        "island": "rota"
+      }
+    }
+  },
+  {
+    "publisher": "Commonwealth Election Commission",
+    "url": "https://www.votecnmi.gov.mp/polling-places.php",
+    "shape": "list-page",
+    "scope": {
+      "state": "MP",
+      "ocdId": "ocd-division/country:us/territory:mp/county:saipan",
+      "name": "Saipan",
+      "countyFips": "69110"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
+    "title": "2026 General Election",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+    },
+    "discoveredFrom": "https://www.votecnmi.gov.mp/",
+    "model": "ASSIGNED",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Published inline JavaScript records render the public polling list. No registration lookup is submitted. Northern Islands combined entry is excluded until individual sites are published; village/facility location wording is retained without invented street numbers."
+    },
+    "id": "mp-early-voting-saipan-2026",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "\\{\\s*island:'[^']+',\\s*site:'[^']+'[^}]*\\}",
+        "fields": {
+          "island": {
+            "pattern": "island:'([^']+)'",
+            "group": 1
+          },
+          "site": {
+            "pattern": "site:'([^']+)'",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "note:'([^']+)'",
+            "group": 1
+          },
+          "lat": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 1
+          },
+          "lng": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 2
+          }
+        }
+      },
+      "columns": {
+        "name": "site",
+        "address": [
+          "site",
+          "island"
+        ]
+      },
+      "constants": {
+        "election": "2026 General Election",
+        "days": "2026-10-27 to 2026-11-02",
+        "hours": "8:30 AM – 4:00 PM ChST"
+      },
+      "textAssertions": [
+        "Early voting sites",
+        "2026 General Election",
+        "Early voting for General"
+      ],
+      "filters": {
+        "island": "Saipan"
+      }
+    }
+  },
+  {
+    "publisher": "Commonwealth Election Commission",
+    "url": "https://www.votecnmi.gov.mp/polling-places.php",
+    "shape": "list-page",
+    "scope": {
+      "state": "MP",
+      "ocdId": "ocd-division/country:us/territory:mp/county:tinian",
+      "name": "Tinian",
+      "countyFips": "69120"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
+    "title": "2026 General Election",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+    },
+    "discoveredFrom": "https://www.votecnmi.gov.mp/",
+    "model": "ASSIGNED",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Published inline JavaScript records render the public polling list. No registration lookup is submitted. Northern Islands combined entry is excluded until individual sites are published; village/facility location wording is retained without invented street numbers."
+    },
+    "id": "mp-early-voting-tinian-2026",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "\\{\\s*island:'[^']+',\\s*site:'[^']+'[^}]*\\}",
+        "fields": {
+          "island": {
+            "pattern": "island:'([^']+)'",
+            "group": 1
+          },
+          "site": {
+            "pattern": "site:'([^']+)'",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "note:'([^']+)'",
+            "group": 1
+          },
+          "lat": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 1
+          },
+          "lng": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 2
+          }
+        }
+      },
+      "columns": {
+        "name": "site",
+        "address": [
+          "site",
+          "island"
+        ]
+      },
+      "constants": {
+        "election": "2026 General Election",
+        "days": "2026-10-27 to 2026-11-02",
+        "hours": "8:30 AM – 4:00 PM ChST"
+      },
+      "textAssertions": [
+        "Early voting sites",
+        "2026 General Election",
+        "Early voting for General"
+      ],
+      "filters": {
+        "island": "Tinian"
+      }
+    }
+  },
+  {
+    "publisher": "Commonwealth Election Commission",
+    "url": "https://www.votecnmi.gov.mp/polling-places.php",
+    "shape": "list-page",
+    "scope": {
+      "state": "MP",
+      "ocdId": "ocd-division/country:us/territory:mp/county:rota",
+      "name": "Rota",
+      "countyFips": "69100"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
+    "title": "2026 General Election",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+    },
+    "discoveredFrom": "https://www.votecnmi.gov.mp/",
+    "model": "ASSIGNED",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Published inline JavaScript records render the public polling list. No registration lookup is submitted. Northern Islands combined entry is excluded until individual sites are published; village/facility location wording is retained without invented street numbers."
+    },
+    "id": "mp-early-voting-rota-2026",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "extraction": {
+      "format": "html",
+      "records": {
+        "pattern": "\\{\\s*island:'[^']+',\\s*site:'[^']+'[^}]*\\}",
+        "fields": {
+          "island": {
+            "pattern": "island:'([^']+)'",
+            "group": 1
+          },
+          "site": {
+            "pattern": "site:'([^']+)'",
+            "group": 1
+          },
+          "locationNotes": {
+            "pattern": "note:'([^']+)'",
+            "group": 1
+          },
+          "lat": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 1
+          },
+          "lng": {
+            "pattern": "mapQ:'(-?[0-9.]+),(-?[0-9.]+)'",
+            "group": 2
+          }
+        }
+      },
+      "columns": {
+        "name": "site",
+        "address": [
+          "site",
+          "island"
+        ]
+      },
+      "constants": {
+        "election": "2026 General Election",
+        "days": "2026-10-27 to 2026-11-02",
+        "hours": "8:30 AM – 4:00 PM ChST"
+      },
+      "textAssertions": [
+        "Early voting sites",
+        "2026 General Election",
+        "Early voting for General"
+      ],
+      "filters": {
+        "island": "Rota"
+      }
+    }
+  },
+  {
+    "id": "vi-early-st-croix-2026",
+    "publisher": "Elections System of the Virgin Islands",
+    "url": "https://vivote.gov/elections/early-voting/",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "VI",
+      "ocdId": "ocd-division/country:us/territory:vi/county:st_croix",
+      "name": "St. Croix",
+      "countyFips": "78010"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vivote.gov/elections/early-voting/",
+    "title": "2026 General Election early voting",
+    "discoveredFrom": "https://vivote.gov/",
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "Early Voting for the 2026 General Election",
+        "Sunny Isle Shopping Center Unit 26",
+        "9:00 AM to 6:00 PM"
+      ],
+      "constants": {
+        "name": "Elections Office-Sunny Isle Shopping Center Unit 26",
+        "address": "Sunny Isle Shopping Center Unit 26",
+        "town": "St. Croix",
+        "hours": "9:00 AM to 6:00 PM",
+        "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+        "election": "2026 General Election"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "The territory publishes each election office physical location and island-specific hours on the saved current early-voting page. Street numbers absent from that page are not invented."
+    }
+  },
+  {
+    "id": "vi-early-st-thomas-2026",
+    "publisher": "Elections System of the Virgin Islands",
+    "url": "https://vivote.gov/elections/early-voting/",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "VI",
+      "ocdId": "ocd-division/country:us/territory:vi/county:st_thomas",
+      "name": "St. Thomas",
+      "countyFips": "78030"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vivote.gov/elections/early-voting/",
+    "title": "2026 General Election early voting",
+    "discoveredFrom": "https://vivote.gov/",
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "Early Voting for the 2026 General Election",
+        "Lockhart Gardens (above Banco Popular)",
+        "9:00 AM to 6:00 PM"
+      ],
+      "constants": {
+        "name": "St. Thomas Elections Office",
+        "address": "Lockhart Gardens (above Banco Popular)",
+        "town": "St. Thomas",
+        "hours": "9:00 AM to 6:00 PM",
+        "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+        "election": "2026 General Election"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "The territory publishes each election office physical location and island-specific hours on the saved current early-voting page. Street numbers absent from that page are not invented."
+    }
+  },
+  {
+    "id": "vi-early-st-john-2026",
+    "publisher": "Elections System of the Virgin Islands",
+    "url": "https://vivote.gov/elections/early-voting/",
+    "shape": "list-page",
+    "covers": [
+      "EARLY_VOTING"
+    ],
+    "scope": {
+      "state": "VI",
+      "ocdId": "ocd-division/country:us/territory:vi/county:st_john",
+      "name": "St. John",
+      "countyFips": "78020"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vivote.gov/elections/early-voting/",
+    "title": "2026 General Election early voting",
+    "discoveredFrom": "https://vivote.gov/",
+    "model": "VOTE_CENTER",
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "Early Voting for the 2026 General Election",
+        "The Market Place Suite II",
+        "9:00 AM to 4:00 PM"
+      ],
+      "constants": {
+        "name": "Elections Office – The Market Place Suite II",
+        "address": "The Market Place Suite II",
+        "town": "St. John",
+        "hours": "9:00 AM to 4:00 PM",
+        "days": "Friday, October 16, 2026, to Saturday, October 31, 2026",
+        "election": "2026 General Election"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "The territory publishes each election office physical location and island-specific hours on the saved current early-voting page. Street numbers absent from that page are not invented."
+    }
+  },
+  {
+    "id": "vi-general-st-croix-2026",
+    "publisher": "Elections System of the Virgin Islands",
+    "url": "https://vivote.gov/wp-content/uploads/2026/08/2026-GENERAL-PUBLIC-NOTICE-OF-VOTING-CENTERS-ST.-CROIX-DISTRICT.pdf",
+    "shape": "file",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "VI",
+      "ocdId": "ocd-division/country:us/territory:vi/county:st_croix",
+      "name": "St. Croix",
+      "countyFips": "78010"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vivote.gov/?elections=2026-general-election",
+    "electionAssociationVerified": true,
+    "title": "2026 General Election Voting Centers - St. Croix",
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "extraction": {
+      "format": "pdf",
+      "pdfColumns": [
+        {
+          "name": "name",
+          "x": 90
+        }
+      ],
+      "pdfRecordStart": {
+        "column": "name",
+        "pattern": "^[A-Z][A-Z0-9 .’()&/-]{11,}$"
+      },
+      "pdfTop": 500,
+      "pdfBottom": 260,
+      "columns": {
+        "name": "name"
+      },
+      "templates": {
+        "address": "{name}, ST. CROIX"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Current election page links the official facility list. Each printed facility plus island is retained as the location string. Street numbers, coordinates and unpublished hours remain acquisition work; election-office mailing headers are excluded."
+    }
+  },
+  {
+    "id": "vi-general-st-thomas-2026",
+    "publisher": "Elections System of the Virgin Islands",
+    "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+    "shape": "file",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "VI",
+      "ocdId": "ocd-division/country:us/territory:vi/county:st_thomas",
+      "name": "St. Thomas",
+      "countyFips": "78030"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vivote.gov/?elections=2026-general-election",
+    "electionAssociationVerified": true,
+    "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "extraction": {
+      "format": "pdf",
+      "records": {
+        "within": {
+          "pattern": "(ST\\.\\s+THOMAS|ST\\.\\s+JOHN)([\\s\\S]*?)(?=ST\\.\\s+JOHN\\s+•|NOTE\\s*:|$)",
+          "group": 2,
+          "fields": {
+            "island": {
+              "pattern": "(ST\\.\\s+THOMAS|ST\\.\\s+JOHN)",
+              "group": 1
+            }
+          }
+        },
+        "pattern": "•\\s+([A-Z][A-Z0-9 .’()&/,-]+?)(?=\\s+•|\\s+ST\\.\\s+JOHN|\\s+NOTE\\s*:|$)",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "([\\s\\S]+)",
+            "group": 1
+          }
+        }
+      },
+      "filters": {
+        "island": "ST. THOMAS"
+      },
+      "columns": {
+        "name": "name"
+      },
+      "templates": {
+        "address": "{name}, {island}"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "The current election page links this newer September notice; its extra Tutu Park Mall center replaces the shorter August listing. Facility and island are the exact published physical location; street numbers and coordinates remain open."
+    }
+  },
+  {
+    "id": "vi-general-st-john-2026",
+    "publisher": "Elections System of the Virgin Islands",
+    "url": "https://vivote.gov/wp-content/uploads/2026/09/2026-GENERAL-ELECTION-VOTING-CENTERS-1.pdf",
+    "shape": "file",
+    "covers": [
+      "VOTE_CENTER"
+    ],
+    "scope": {
+      "state": "VI",
+      "ocdId": "ocd-division/country:us/territory:vi/county:st_john",
+      "name": "St. John",
+      "countyFips": "78020"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vivote.gov/?elections=2026-general-election",
+    "electionAssociationVerified": true,
+    "title": "2026 General Election Voting Centers - St. Thomas and St. John",
+    "model": "VOTE_CENTER",
+    "matchingUnit": "COUNTY",
+    "extraction": {
+      "format": "pdf",
+      "records": {
+        "within": {
+          "pattern": "(ST\\.\\s+THOMAS|ST\\.\\s+JOHN)([\\s\\S]*?)(?=ST\\.\\s+JOHN\\s+•|NOTE\\s*:|$)",
+          "group": 2,
+          "fields": {
+            "island": {
+              "pattern": "(ST\\.\\s+THOMAS|ST\\.\\s+JOHN)",
+              "group": 1
+            }
+          }
+        },
+        "pattern": "•\\s+([A-Z][A-Z0-9 .’()&/,-]+?)(?=\\s+•|\\s+ST\\.\\s+JOHN|\\s+NOTE\\s*:|$)",
+        "group": 1,
+        "fields": {
+          "name": {
+            "pattern": "([\\s\\S]+)",
+            "group": 1
+          }
+        }
+      },
+      "filters": {
+        "island": "ST. JOHN"
+      },
+      "columns": {
+        "name": "name"
+      },
+      "templates": {
+        "address": "{name}, {island}"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "The current election page links this newer September notice; its extra Tutu Park Mall center replaces the shorter August listing. Facility and island are the exact published physical location; street numbers and coordinates remain open."
+    }
+  },
+  {
+    "id": "as-local-absentee-2026",
+    "publisher": "Election Office, Pago Pago, AS",
+    "url": "https://www.aselectionoffice.gov/absentee-voting",
+    "shape": "list-page",
+    "covers": [],
+    "scope": {
+      "state": "AS",
+      "ocdId": "ocd-division/country:us/territory:as",
+      "name": "American Samoa"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://www.aselectionoffice.gov/absentee-voting",
+    "title": "American Samoa local absentee voting rules",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://aselectionoffice.gov\">https://aselectionoffice.gov</a>"
+    },
+    "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Fresh official chief-office page and the exact FEC authority link are saved in the VS-04 territory fixtures."
+    },
+    "office": {
+      "name": "American Samoa Election Office",
+      "phone": "684-699-3570",
+      "email": "Info@eo.as.gov",
+      "url": "https://www.aselectionoffice.gov/"
+    },
+    "rules": [
+      {
+        "text": "Voters under this category are required to provide proof of travel and must vote at the election office before traveling.",
+        "source": {
+          "publisher": "Election Office, Pago Pago, AS",
+          "url": "https://www.aselectionoffice.gov/absentee-voting",
+          "checkedAt": "2026-10-21"
+        }
+      }
+    ],
+    "extraction": {
+      "format": "html",
+      "textAssertions": [
+        "LOCAL ABSENTEE BALLOT VOTING",
+        "must vote at the election office before traveling."
+      ]
+    }
+  },
+  {
+    "id": "pr-general-election-cycle",
+    "publisher": "Comisión Estatal de Elecciones de Puerto Rico",
+    "url": "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf",
+    "shape": "file",
+    "covers": [],
+    "scope": {
+      "state": "PR",
+      "ocdId": "ocd-division/country:us/territory:pr",
+      "name": "Puerto Rico"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf",
+    "title": "Puerto Rico general-election calendar",
+    "officialLinkingPage": {
+      "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "html": "<a href=\"https://ceepur.org/\">https://ceepur.org/</a>"
+    },
+    "discoveredFrom": "https://ww2.ceepur.org/",
+    "publication": {
+      "status": "NO_GENERAL_ELECTION",
+      "text": "Puerto Rico holds general elections every four years, beginning November 3, 2020. The next general election is in 2028. This notice concerns the November 3, 2026 general-election scope.",
+      "source": {
+        "publisher": "Comisión Estatal de Elecciones de Puerto Rico",
+        "url": "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf",
+        "checkedAt": "2026-10-21"
+      }
+    },
+    "extraction": {
+      "format": "pdf",
+      "textAssertions": [
+        "Artículo 9.1",
+        "Las Elecciones Generales se realizarán cada cuatro (4) años",
+        "la primera Elección General a partir de la aprobación de esta Ley, se realizará el martes, 3 de noviembre de 2020."
+      ]
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-21",
+      "detail": "Electoral Code Article 9.1 states four-year cycle from November 3, 2020; fresh CEE page links its 2028 general-election guide. This does not establish the absence of separately scheduled special elections."
+    }
+  }
+]

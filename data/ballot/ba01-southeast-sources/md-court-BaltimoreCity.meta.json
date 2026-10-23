@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/BaltimoreCity.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:55:49.365375+00:00",
+  "rawHash": "92a39e26b808bdfb8b36e12f19d79ab52bdd5b3d6c70e0c392d1c7f3a24956b6",
+  "bytes": 8328322,
+  "convertedTextHash": "240078939bc0ca1d2e7acc8f72e5dee95c7db870f2d75c07f01de0936535dbed",
+  "extraction": "pdftotext -layout; exact official certified ballot source text; original PDF identified by rawHash"
+}

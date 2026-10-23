@@ -22,8 +22,13 @@ export interface BodyFacts {
 }
 
 async function bodyFields(query: Query, bodyIds: readonly string[]): Promise<Record<string, Partial<Body>>> {
+  return bodyFieldsFromRows(await query(SCHEDULE_SQL, [bodyIds]));
+}
+
+/** Body fields from already selected live facts. */
+export function bodyFieldsFromRows(rows: readonly Record<string, unknown>[]): Record<string, Partial<Body>> {
   const byBody: Record<string, Partial<Body>> = {};
-  for (const row of await query(SCHEDULE_SQL, [bodyIds])) {
+  for (const row of rows) {
     const held = byBody[String(row.entity_id)] ??= {};
     const at = new Date(row.checked_at as string).toISOString();
     const source = { sourceUrl: String(row.url), sourceOrg: new URL(String(row.url)).hostname, collectedAt: at, verifiedAt: at };

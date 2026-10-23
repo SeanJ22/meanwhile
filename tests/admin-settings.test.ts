@@ -1,14 +1,10 @@
-/**
- * Settings with a log and undo, and the Settings view: the gateway action, the log, undo, the runner's
- * acknowledgement, the reader-edge publication, and the view's rows and sends.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { submit } from "../lib/control-plane/gateway/gateway.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import {
-  meetingCheckInterval, readSetting, registerSetting, runnerSettingsEcho, SETTING_HISTORY_MAX,
+  meetingCheckInterval, readSetting, registerSetting, runnerSettingsEcho,
   settingUndo, withSetting,
 } from "../lib/control-plane/settings.ts";
 import {
@@ -55,7 +51,7 @@ test("settings gateway survives a fresh read, replays once and undoes through th
   assert.equal(first.ok, true);
   assert.equal(first.receipt.says, "Failures before a test pause is now 5 failures in a row.");
   assert.equal((await submit(request, deps)).replayed, true);
-  const config = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
+  const config = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value;
   assert.equal(readSetting(config, RUNNER_KEY, 3), 5);
   assert.equal(config.settingHistory?.length, 1);
   assert.equal(config.settingHistory?.[0].before, 3);
@@ -63,7 +59,7 @@ test("settings gateway survives a fresh read, replays once and undoes through th
   assert.equal(config.settingHistory?.[0].factory, undefined, "Sean's own change carries no name");
   const undo = settingUndo(config, config.settingHistory![0].id)!;
   assert.equal((await submit({ ...request, input: undo, idempotencyKey: "setting-undo" }, deps)).ok, true);
-  const undone = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
+  const undone = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value;
   assert.equal(readSetting(undone, RUNNER_KEY, 3), 3);
   assert.equal(undone.settingHistory?.[1].before, 5);
   assert.equal(undone.settingHistory?.[1].undoOf, config.settingHistory![0].id);
@@ -96,7 +92,7 @@ test("the runner re-reads each pass and its heartbeat echo shows the new value i
   assert.equal(before.values[COPY_KEY], undefined, "reader-facing keys are not the runner's");
   await submit({ type: "config.setSetting", subject: RUNNER_KEY, input: { key: RUNNER_KEY, value: 6, why: "" },
     stateVersion: null, idempotencyKey: "six-failures", caller: "OWNER_SESSION", actorRef: "test" }, deps);
-  const config = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
+  const config = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value;
   const row = (heartbeat: RunnerHeartbeat | null) => projectSettings({ config, heartbeat, published: null, observedAt: at }).rows
     .find((r) => r.key === RUNNER_KEY)!;
   assert.deepEqual(row(null).inForce, { where: "runner", yes: null, since: null });
@@ -135,12 +131,12 @@ test("reader settings publish only public values, purge on replay, cannot regres
   assert.deepEqual(view.inForce, { where: "readers", yes: true, since: null });
 });
 
-test("the log keeps the newest changes only, and the newest can always be undone", () => {
+test("the log preserves every change, and only the newest can be undone", () => {
   let config: AdminConfig = defaultAdminConfig(at);
-  for (let n = 0; n < SETTING_HISTORY_MAX + 5; n++) config = withSetting(config, { id: `c${n}`, key: RUNNER_KEY, after: (n % 9) + 1, at, why: "" });
-  assert.equal(config.settingHistory?.length, SETTING_HISTORY_MAX);
-  assert.ok(settingUndo(config, `c${SETTING_HISTORY_MAX + 4}`));
-  assert.equal(settingUndo(config, `c${SETTING_HISTORY_MAX + 3}`), null);
+  for (let n = 0; n < 505; n++) config = withSetting(config, { id: `c${n}`, key: RUNNER_KEY, after: (n % 9) + 1, at, why: "" });
+  assert.equal(config.settingHistory?.length, 505);
+  assert.ok(settingUndo(config, "c504"));
+  assert.equal(settingUndo(config, "c503"), null);
 });
 
 test("BR-06: changing the daily budget and pressing Undo restores the old value; the log shows both with times and values", async () => {
@@ -152,16 +148,16 @@ test("BR-06: changing the daily budget and pressing Undo restores the old value;
   };
   assert.equal(projectSettings({ config: null, heartbeat: null, published: null, observedAt: at }).rows[0].label, "Most the workers may spend in any rolling 24 hours");
   assert.equal((await send("25", "ceiling-first", "2026-10-04T05:00:00Z")).ok, true);
-  const first = projectSettings({ config: (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value, heartbeat: null, published: null, observedAt: at }).rows[0];
+  const first = projectSettings({ config: (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value, heartbeat: null, published: null, observedAt: at }).rows[0];
   assert.equal(first.undo, null, "the $0 default cannot be set by the ceiling control, so there is nothing to undo to");
   assert.equal((await send("40", "ceiling-forty", "2026-10-04T06:00:00Z")).ok, true);
-  const afterChange = projectSettings({ config: (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value, heartbeat: null, published: null, observedAt: at }).rows[0];
+  const afterChange = projectSettings({ config: (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value, heartbeat: null, published: null, observedAt: at }).rows[0];
   assert.equal(afterChange.valueWords, "$40.00 a day");
   const undoSend = settingActions(afterChange).find((a) => a.label?.startsWith("Undo"))!;
   assert.equal(undoSend.kind, "global-ceiling");
   assert.equal(undoSend.label, "Undo (back to $25.00 a day)");
   assert.equal((await send(undoSend.payload!.amount, "ceiling-undo", "2026-10-04T06:05:00Z")).ok, true);
-  const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
+  const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value;
   const row = projectSettings({ config, heartbeat: null, published: null, observedAt: at }).rows[0];
   assert.equal(row.valueWords, "$25.00 a day", "Undo restored the value before the change");
   assert.deepEqual(row.log.slice(0, 2).map((e) => [e.at, e.beforeWords, e.afterWords]), [
@@ -181,14 +177,14 @@ test("the Settings view's sends carry the exact gateway input, with no machine k
   const input = actionInput("setting-set", { target: change.target, scopeKey: "us", option: null, words: " Fewer walks ", amount: "7", selected: [], payload: change.payload });
   assert.deepEqual(input, { key: RUNNER_KEY, value: 7, why: "Fewer walks" });
   assert.equal((await submit({ type: "config.setSetting", subject: change.target, input, stateVersion: null, idempotencyKey: "ui-change-seven", caller: "OWNER_SESSION", actorRef: "t" }, deps)).ok, true);
-  const config = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value;
+  const config = (await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value;
   const changed = projectSettings({ config, heartbeat: null, published: null, observedAt: at }).rows.find((r) => r.key === RUNNER_KEY)!;
   const undo = settingActions(changed)[1];
   assert.equal(undo.kind, "setting-undo");
   assert.equal(undo.label, "Undo (back to 3 failures in a row)");
   const undoInput = actionInput("setting-undo", { target: undo.target, scopeKey: "us", option: null, words: "", amount: "", selected: [], payload: undo.payload });
   assert.equal((await submit({ type: "config.setSetting", subject: undo.target, input: undoInput, stateVersion: null, idempotencyKey: "ui-undo-seven", caller: "OWNER_SESSION", actorRef: "t" }, deps)).ok, true);
-  assert.equal(readSetting((await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value, RUNNER_KEY, 3), 3);
+  assert.equal(readSetting((await deps.repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value, RUNNER_KEY, 3), 3);
   assert.equal(gatewayActionKind("config.setSetting"), "setting-set", "history maps setting receipts to their own kind");
   assert.equal(settingValueFromInput("number", "x", null), undefined);
   assert.equal(settingValueFromInput("boolean", "", "on"), true);

@@ -104,10 +104,11 @@ test("A CORRUPT ROW NEVER TURNS PAID SEARCH ON, and turning it off over one writ
   assert.equal(stored?.value.discoverySearch?.enabled, false);
 });
 
-test("the census reads the owner's search switch before building a search caller", () => {
-  const runner = readFileSync(join(ROOT, "scripts/platform-census-runner.mts"), "utf8");
-  assert.match(runner, /config.discoverySearch\?\.enabled \? makeDiscoverySearch/);
-  assert.match(runner, /search \? \{ search \} : \{\}/);
+test("the plain-code census has no paid caller and removes an inherited search seam", () => {
+  const runtime = readFileSync(join(ROOT, "lib/control-plane/discovery/platform-census-runtime.ts"), "utf8");
+  const government = readFileSync(join(ROOT, "lib/control-plane/discovery/platform-government.ts"), "utf8");
+  assert.doesNotMatch(runtime, /makeDiscoverySearch\(/);
+  assert.match(government, /search: undefined/);
 });
 
 test("THE CONSOLE POSTS IT: the switch rides the search line, and turning it on posts the confirmation", () => {
@@ -155,10 +156,15 @@ test("NO SILENT RESUME: only the owner's action writes the switch; no env var ca
   );
   assert.doesNotMatch(runner, /process\.env\.[A-Z_]*SEARCH_(ENABLED|ON)\b/, "never from the environment");
 
-  assert.deepEqual(files.filter((f) => read(f).includes("makeDiscoverySearch(") && !f.endsWith("search-runtime.ts")), ["scripts/platform-census-runner.mts"]);
-  assert.match(read("scripts/platform-census-runner.mts"), /config.discoverySearch\?\.enabled \? makeDiscoverySearch\(\{/, "discovery search exists only while the switch is on");
+  assert.deepEqual(files.filter((f) => read(f).includes("makeDiscoverySearch(") && !f.endsWith("search-runtime.ts")), [], "the census paid-search factory was deleted, not moved behind an unguarded call");
   /* The standing hunter lane builds the hunters' search too, from the same owner's row (armHunterLane reads the switch), only while it is on and paid work is open. */
-  assert.deepEqual(files.filter((f) => read(f).includes("makeHuntSearch(") && !f.endsWith("hunt/search.ts")), ["scripts/freshness-shadow.mts", "scripts/hunter-lane.mts"]);
+  assert.deepEqual(files.filter((f) => read(f).includes("makeHuntSearch(") && !f.endsWith("hunt/search.ts")), ["lib/translate/routine-paid-work.ts", "scripts/freshness-shadow.mts", "scripts/hunter-lane.mts"]);
+  /* The standing measure explainer clock finds a blank measure's own page the same way: only while the owner's row has search on, paid work is open and the fleet guard admits each request. */
+  const routineSearch = read("lib/translate/routine-paid-work.ts");
+  assert.match(routineSearch, /searchOn: !holdPaidWork && discoverySearchEnabled\(config\)/);
+  assert.match(routineSearch, /if \(!open\.searchOn \|\| !open\.fleetSafety\) return null;/);
+  assert.match(routineSearch, /admitProviderRequest\("discovery-search", "paid-search"\)/);
+  assert.doesNotMatch(routineSearch, /process\.env\.[A-Z_]*SEARCH_(ENABLED|ON)\b/, "never from the environment");
   assert.match(read("scripts/hunter-lane.mts"), /if \(!paidOpen \|\| !armed\.discoverySearchOn \|\| armed\.fleetSafety === null\) return null;/);
   assert.match(read("lib/control-plane/workers/hunter-lane-arming.ts"), /const discoverySearchOn = configHold === null && discoverySearchEnabled\(config\);/);
   assert.doesNotMatch(read("scripts/hunter-lane.mts"), /process\.env\.[A-Z_]*SEARCH_(ENABLED|ON)\b/, "never from the environment");

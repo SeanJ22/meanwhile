@@ -1,0 +1,30 @@
+[
+  {
+    "name": "kings-0.json",
+    "url": "https://findmypollsite.vote.nyc/api/nycsettings?ts=1792543198549",
+    "retrievedAt": "2026-10-21T00:39:59.070Z",
+    "httpStatus": 200,
+    "rawHash": "75e11f2739e1364b8eb774df4385ec01525a8c4fa74b05e752f4d6464155fca4"
+  },
+  {
+    "name": "kings-1.json",
+    "url": "https://electionstreet.com/api/nyc/addresses?streetnumber=209&streetname=Joralemon%20Street&postalcode=11201&callback=jQuery35104032844294618271_1792543198480&_=1792543198481",
+    "retrievedAt": "2026-10-21T00:40:00.250Z",
+    "httpStatus": 200,
+    "rawHash": "71ce94ffb357ca22979f2d14459d512aa01f3081da6c28ca0415a78f010d2ab9"
+  },
+  {
+    "name": "kings-2.json",
+    "url": "https://findmypollsite.vote.nyc/api/pollsiteinfo?latitude=40.69247530793299&longitude=-73.99048725326499&county=Kings&streetnumber=209&streetname=Joralemon%20Street&postalcode=11201&districtkey=010/52",
+    "retrievedAt": "2026-10-21T00:40:00.425Z",
+    "httpStatus": 200,
+    "rawHash": "9f396256dd2f3925f5335cb64ccb9cff81fa9ea44d453added98dc75f74f8f16"
+  },
+  {
+    "name": "kings-3.json",
+    "url": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=52010&electionid=387209&lang_code=eng",
+    "retrievedAt": "2026-10-21T00:40:00.977Z",
+    "httpStatus": 200,
+    "rawHash": "11124af05064c00b6ea73d6eda5f0b86ca953defdace157d5aea0e282af53289"
+  }
+]

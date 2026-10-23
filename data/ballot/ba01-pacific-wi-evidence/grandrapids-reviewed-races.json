@@ -1,0 +1,68 @@
+[
+  [
+    "Representative in Congress District 3",
+    "ocd-division/country:us/state:wi/cd:3",
+    [
+      [
+        "Derrick Van Orden",
+        "Republican"
+      ],
+      [
+        "Rebecca Cooke",
+        "Democratic"
+      ],
+      [
+        "Alexander Valiensi Kent",
+        "Independent"
+      ],
+      [
+        "Rustin Provance",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 72",
+    "ocd-division/country:us/state:wi/sldl:72",
+    [
+      [
+        "Scott Krug",
+        "Republican"
+      ],
+      [
+        "Christine Maltese",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Wood County Sheriff",
+    "ocd-division/country:us/state:wi/county:wood",
+    [
+      [
+        "Shawn Becker",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Wood County Coroner",
+    "ocd-division/country:us/state:wi/county:wood",
+    [
+      [
+        "David A. Patton",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Wood County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:wood",
+    [
+      [
+        "Kimberly A. Stimac",
+        "Republican"
+      ]
+    ]
+  ]
+]

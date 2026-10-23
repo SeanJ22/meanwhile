@@ -1,0 +1,911 @@
+{
+  "doorId": "legacy:cochise:vote-center-pdf",
+  "sites": [
+    {
+      "id": "voting-7ae731a79527b21b9628ab11",
+      "name": "Cochise County Douglas Service Center",
+      "address": "1012 N. G Ave",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Douglas",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-fae1c414262b174f7c878eae",
+      "name": "Cochise County (BOS) Room",
+      "address": "1415 Melody Ln Blgd G",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Bisbee",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-69bb3abc2616fa87efdb6a99",
+      "name": "American Legion Hall",
+      "address": "225 E. Allen St.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Tombstone",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d39aa22b354c3b017442750d",
+      "name": "Willcox Community Center",
+      "address": "312 W. Stewart St.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Willcox",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bc14af53476486af874e24c7",
+      "name": "Benson School District Board Room",
+      "address": "360 S. Patagonia St.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Benson",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9769a2d1acc5a53999e1d5a2",
+      "name": "Huachuca City Community Center",
+      "address": "201 Yuma St.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Huachuca City & Whetstone",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bb3632aa9cf56c90867be1ca",
+      "name": "St Andrews Catholic Church – Kino Hall",
+      "address": "800 Taylor Dr. NW",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Sierra Vista West",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ba459d1fa3aa28cbb2803164",
+      "name": "Shiloh Christian Ministries",
+      "address": "1519 Avenida Del Sol",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Sierra Vista East (Mega VC)",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-99b5d67386e37e0d663cad5d",
+      "name": "Sierra Vista United Methodist Church",
+      "address": "3225 S. St. Andrews Dr.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Sierra Vista Central (Mega VC)",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-51f3774439e0fb2b66f1a219",
+      "name": "Mountain Vista Baptist Church",
+      "address": "5499 S. Moson Rd.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Sierra Vista Southeast",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9fe46e156ddd084082ef0d4a",
+      "name": "Palominas Fire District Training Center",
+      "address": "9222 S. Kings Ranch Road",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Palominas",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-179f6886f27af4563c81c183",
+      "name": "Bowie Unified School District Office",
+      "address": "315 W. 5th St.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Bowie & San Simon",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-fe1c6937c97e78fecaaf48c7",
+      "name": "Sunsites Community Center",
+      "address": "1216 Treasure Rd.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Cochise Stronghold & Sunizona",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-55543e19b487806fb8759800",
+      "name": "Valley Bible Church",
+      "address": "4188 Double Adobe Rd.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "McNeal",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a40993212eda4fac490cd7d4",
+      "name": "Elfrida Elementary School District (Cafeteria)",
+      "address": "4070 Jefferson Road",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Webb",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3efbfd603655c594b080b742",
+      "name": "St. David High School – Multipurpose Room",
+      "address": "70 E. Patton Hwy",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Saint David",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5d027e36e6b3c13ea3040f24",
+      "name": "Peace in the Valley Lutheran Church",
+      "address": "551 S. J-Six Ranch Rd.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "Mescal / J-Six",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e8257a5ad0d008df6e3673d9",
+      "name": "First Baptist Church of San Simon (Fellowship Hall)",
+      "address": "2907 Cochise Ave.",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "VOTE_CENTER",
+      "election": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Cochise County Elections Department",
+          "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+          "title": "COCHISE COUNTY ELECTIONS – 2026",
+          "checkedAt": "2026-10-21T04:41:50.991Z",
+          "official": true,
+          "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+          "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+        }
+      ],
+      "days": "Election Day",
+      "hours": "6:00 a.m. to 7:00 p.m.",
+      "locationNotes": "San Simon & Surrounding Areas",
+      "countyFips": "04003",
+      "kinds": [
+        "VOTE_CENTER"
+      ],
+      "schedules": [
+        {
+          "kind": "VOTE_CENTER",
+          "days": "Election Day",
+          "hours": "6:00 a.m. to 7:00 p.m.",
+          "source": {
+            "publisher": "Cochise County Elections Department",
+            "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+            "title": "COCHISE COUNTY ELECTIONS – 2026",
+            "checkedAt": "2026-10-21T04:41:50.991Z",
+            "official": true,
+            "documentHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+            "documentUrl": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+          }
+        }
+      ]
+    }
+  ],
+  "office": {
+    "name": "Cochise County Elections Department",
+    "phone": "520-432-8970",
+    "url": "https://cochise.az.gov/Elections"
+  },
+  "rules": [
+    {
+      "text": "Voters may vote at any of the Vote Centers listed below.",
+      "source": {
+        "publisher": "Cochise County Elections Department",
+        "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "Cochise County Elections Department",
+      "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+      "title": "COCHISE COUNTY ELECTIONS – 2026",
+      "checkedAt": "2026-10-21T04:41:50.991Z",
+      "official": true
+    }
+  ],
+  "blanks": [
+    {
+      "id": "legacy:cochise:vote-center-pdf:missing-sites:1f11d399f2ef",
+      "doorId": "legacy:cochise:vote-center-pdf",
+      "scope": {
+        "state": "AZ",
+        "ocdId": "ocd-division/country:us/state:az/county:cochise",
+        "name": "Cochise County",
+        "countyFips": "04003"
+      },
+      "status": "open",
+      "reason": "missing-sites",
+      "owed": "Current official election-page association for this list",
+      "tried": [
+        "https://www.cochise.az.gov/292/Elections",
+        "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF"
+      ],
+      "next": [
+        "Follow the chief election office's current election files and map services",
+        "Read the delegated county or town election office's public lists and files"
+      ]
+    }
+  ],
+  "attempts": [
+    {
+      "url": "https://www.cochise.az.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.cochise.az.gov/292/Elections",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://cochise.az.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "rawBodies": [
+    {
+      "url": "https://www.cochise.az.gov/robots.txt",
+      "contentType": "text/plain; charset=utf-8",
+      "rawHash": "5b62a1edb7fa94b783cd675a6c9aebb3c155136845b36c14eb49d5e420646311",
+      "path": "tests/fixtures/voting-sources/vs-04-west/az-6dac89d02674-5b62a1edb7fa.bin"
+    },
+    {
+      "url": "https://www.cochise.az.gov/292/Elections",
+      "contentType": "text/html; charset=utf-8",
+      "rawHash": "723aaa16361c39504e0da7493f129aa77f67cc9c406c98d7bbdb0ebb950ba3a2",
+      "path": "tests/fixtures/voting-sources/vs-04-west/az-29b49e44902a-04d6e8adcd16.html"
+    },
+    {
+      "url": "https://cochise.az.gov/robots.txt",
+      "contentType": "text/plain; charset=utf-8",
+      "rawHash": "5b62a1edb7fa94b783cd675a6c9aebb3c155136845b36c14eb49d5e420646311",
+      "path": "tests/fixtures/voting-sources/vs-04-west/az-b3cb97d4cef0-5b62a1edb7fa.bin"
+    },
+    {
+      "url": "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF",
+      "contentType": "application/pdf",
+      "rawHash": "f6d1a5aea11ed5869989aba7532ebfe481cf0321d6f451470f6e2907ace3270c",
+      "path": "tests/fixtures/voting-sources/vs-04-west/az-34a867e3c7fb-f6d1a5aea11e.pdf"
+    }
+  ],
+  "fileTitle": "COCHISE COUNTY ELECTIONS – 2026",
+  "contacts": []
+}

@@ -43,7 +43,7 @@ test("OS-killed Hunter leaves Attempt and vaulted bytes; external lease reclaim 
     assert.equal((await repos.dispositions.read(message.routeTaskId)).length,0);
     for(let index=0;index<2;index++) { const run=await runAutonomousCoordinator(h.runtime,{maximum:1,concurrency:1}); assert.equal(run.dispatches[0].outcome,"WORKED",run.dispatches[0].detail); }
     assert.equal((await nextAutonomousOperation(h.runtime,h.item.id)).action,"STAGED");
-    const activity=(await readAutonomousActivity(repos,undefined,{observedAt:h.now()}))[0];
+    const activity=(await readAutonomousActivity(repos,[h.item.id],{observedAt:h.now()}))[0];
     assert.deepEqual(activity.accounting.attemptIds,(await repos.attempts.list()).map(row=>row.id).sort());
     assert.ok(activity.accounting.terminalAttemptIds.includes(attempt.id)); assert.ok(activity.timeline.some(event=>event.kind==="ARTIFACT"&&event.attemptId===attempt.id));
     assert.equal(activity.timeline.filter(event=>event.kind==="WORKER_RESULT").length,3); assert.deepEqual(activity.evidenceGaps,[]);

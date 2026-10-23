@@ -7,7 +7,7 @@ import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
-import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { readRegistryRuntimeProjection } from "@/lib/reader/authority-reads";
 import { statesForRegistryDivisions } from "@/lib/civic-data/state-scopes";
 
 
@@ -54,14 +54,14 @@ export const POST = readerRoute("/api/ask/agenda", async function POST(request: 
     return Response.json({ error: "payload too large" }, { status: 413 });
   }
 
-  let body: { meetingId?: unknown };
+  let body: { meetingId?: unknown; bodyId?: unknown };
   try {
     body = JSON.parse(raw);
   } catch {
     return Response.json({ error: "body must be JSON" }, { status: 400 });
   }
-  if (typeof body.meetingId !== "string" || !body.meetingId) {
-    return Response.json({ error: "this route answers one meeting's agenda; pass meetingId" }, { status: 400 });
+  if (typeof body.meetingId !== "string" || !body.meetingId || typeof body.bodyId !== "string" || !body.bodyId) {
+    return Response.json({ error: "this route answers one meeting's agenda; pass meetingId and bodyId" }, { status: 400 });
   }
 
   if (!ripcordPulled("ripcord.rateLimits")) {
@@ -77,10 +77,7 @@ export const POST = readerRoute("/api/ask/agenda", async function POST(request: 
 
   let read;
   try {
-    read = await readReaderEdgeMeetings({
-      meetingId: typeof body.meetingId === "string" ? body.meetingId.slice(0, 200) : undefined,
-      window: "HELD",
-    });
+    read = await readReaderEdgeMeetings({ bodyIds: [body.bodyId.slice(0, 400)], neighbors: true, window: "HELD" });
   } catch (error) {
     return Response.json(
       {
@@ -165,4 +162,4 @@ export const POST = readerRoute("/api/ask/agenda", async function POST(request: 
     { error: "this route answers one meeting's agenda; pass meetingId" },
     { status: 400 },
   );
-}, ["registry-runtime"]);
+});

@@ -1,0 +1,956 @@
+[
+  {
+    "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/Default.aspx",
+    "finalUrl": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/Default.aspx",
+    "status": 200,
+    "responseHeaders": {},
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:33:34.541Z",
+    "rawHash": "e1f2172b5231e70a3cdccdea6618da280943dd34319fbe6dcd2f0099e1b9f8c1",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-cb48be4d715f-e1f2172b5231.html",
+    "savedHash": "e1f2172b5231e70a3cdccdea6618da280943dd34319fbe6dcd2f0099e1b9f8c1",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://www.googletagmanager.com/ns.html?id=GTM-PL3KPC",
+        "label": ""
+      },
+      {
+        "url": "https://www.muni.org/Pages/default.aspx",
+        "label": "Muni.org"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Pages/default.aspx",
+        "label": "Departments"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Pages/default.aspx",
+        "label": "Assembly"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Pages/default.aspx",
+        "label": "Municipal Clerk"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/ResultsAndHistory.aspx",
+        "label": "ELECTION ​RESULTS"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/https&",
+        "label": "View Petition Information ​​"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/VoterInfo.aspx",
+        "label": "VOT​​​ERS"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/CandidateInfo.aspx",
+        "label": "CANDIDATES"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/Media-Center.aspx",
+        "label": "View Public Notices"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Documents/Calendar/2027%20Election%20Calendar.pdf",
+        "label": "Election Calendar"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/PromotionalMaterials.aspx",
+        "label": "Click here to go to the Elections Promotional Page"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/FrequentlyAskedQuestions.aspx",
+        "label": "Click here to go to the FAQs"
+      },
+      {
+        "url": "https://anchorage.ballottrax.net/voter",
+        "label": "TRACK YOUR BALLOT ​"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/Pages/mailto&",
+        "label": "[email protected]"
+      },
+      {
+        "url": "https://www.muni.org/Departments/Assembly/Clerk/Elections/_vti_bin/spsdisco.aspx",
+        "label": ""
+      }
+    ]
+  },
+  {
+    "url": "https://juneau.org/clerk/elections",
+    "finalUrl": "https://juneau.org/clerk/elections",
+    "status": 200,
+    "responseHeaders": {},
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-21T04:33:36.428Z",
+    "rawHash": "42ecd955badf3566f888dfb0d3696f7dc0b73417429f968923e83e080d602d47",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-5e1554f0ac47-42ecd955badf.html",
+    "savedHash": "42ecd955badf3566f888dfb0d3696f7dc0b73417429f968923e83e080d602d47",
+    "redactions": 0,
+    "links": [
+      {
+        "url": "https://juneau.org/clerk/elections",
+        "label": "Instagram"
+      },
+      {
+        "url": "https://juneau.org/emergency/emergency-flood-response",
+        "label": "Flood Preparedness"
+      },
+      {
+        "url": "https://juneau.org",
+        "label": ""
+      },
+      {
+        "url": "https://juneau.org/assembly",
+        "label": "Assembly"
+      },
+      {
+        "url": "https://juneau.org/assembly/assembly-members",
+        "label": "Assembly"
+      },
+      {
+        "url": "https://juneau.org/assembly/assembly-calendar",
+        "label": "Assembly Calendar"
+      },
+      {
+        "url": "https://juneau.org/grants",
+        "label": "Assembly Grants"
+      },
+      {
+        "url": "https://www.youtube.com/channel/UCbC37ygkTn7MdlLadv92kaQ",
+        "label": "CBJ YouTube Channel"
+      },
+      {
+        "url": "https://juneauak.portal.civicclerk.com",
+        "label": "Minutes and Agendas"
+      },
+      {
+        "url": "https://juneau.org/clerk/boards-committees",
+        "label": "General Information"
+      },
+      {
+        "url": "https://juneau.org/clerk/appeals-to-the-assembly",
+        "label": "Appeals to the Assembly"
+      },
+      {
+        "url": "https://juneau.org/community-development/planning-commission",
+        "label": "Planning Commission"
+      },
+      {
+        "url": "https://juneau.org/clerk/public-notices",
+        "label": "Public Notices"
+      },
+      {
+        "url": "https://juneau.org/contact-directory",
+        "label": "Employee Directory"
+      },
+      {
+        "url": "https://juneau.org/airport",
+        "label": "Airport"
+      },
+      {
+        "url": "http://www.bartletthospital.org",
+        "label": "Bartlett Regional Hospital"
+      },
+      {
+        "url": "https://juneaucapitaltransit.org",
+        "label": "Capital Transit"
+      },
+      {
+        "url": "https://juneau.org/clerk",
+        "label": "General Information"
+      },
+      {
+        "url": "https://juneau.org/clerk/municipal-records",
+        "label": "Municipal Records"
+      },
+      {
+        "url": "https://juneau.org/manager",
+        "label": "City Manager"
+      },
+      {
+        "url": "https://juneau.org/manager/ada-information",
+        "label": "ADA Information"
+      },
+      {
+        "url": "https://juneau.org/homeless-services",
+        "label": "Housing"
+      },
+      {
+        "url": "https://juneau.org/community-compass",
+        "label": "CBJ Community Compass"
+      },
+      {
+        "url": "https://juneau.org/emergency",
+        "label": "Emergency Management"
+      },
+      {
+        "url": "https://juneau.org/lands",
+        "label": "Lands & Resources"
+      },
+      {
+        "url": "https://juneau.org/manager/str-task-force",
+        "label": "Short-Term Rental Task Force"
+      },
+      {
+        "url": "https://juneau.org/manager/t49rewrite",
+        "label": "Title 49 Rewrite"
+      },
+      {
+        "url": "https://juneau.org/community-development",
+        "label": "Community Development"
+      },
+      {
+        "url": "https://juneau.org/community-development/do-i-need-a-permit",
+        "label": "Do I Need a Permit"
+      },
+      {
+        "url": "https://juneau.org/community-development/record-requests",
+        "label": "Records Requests"
+      },
+      {
+        "url": "https://juneau.org/community-development/cdd-inspection-request",
+        "label": "Request an Inspection"
+      },
+      {
+        "url": "https://juneau.org/harbors",
+        "label": "Docks & Harbors"
+      },
+      {
+        "url": "https://skieaglecrest.com",
+        "label": "Eaglecrest"
+      },
+      {
+        "url": "https://juneau.org/engineering-public-works",
+        "label": "Engineering – Public Works"
+      },
+      {
+        "url": "https://juneau.org/engineering-public-works/engineering-department",
+        "label": "Engineering"
+      },
+      {
+        "url": "https://juneau.org/engineering-public-works/glacial-lake-outburst-flood-mitigation",
+        "label": "Glacial Lake Outburst Flood Mitigation"
+      },
+      {
+        "url": "https://juneau.org/engineering-public-works/jcos",
+        "label": "JCOS"
+      },
+      {
+        "url": "https://juneau.org/engineering-public-works/solid-waste",
+        "label": "Solid Waste Planning"
+      },
+      {
+        "url": "https://juneau.org/engineering-public-works/recycleworks",
+        "label": "Recycleworks"
+      },
+      {
+        "url": "https://juneau.org/engineering-public-works/streets",
+        "label": "Streets & Fleet Maintenance"
+      },
+      {
+        "url": "https://juneau.org/engineering-public-works/utilities-division",
+        "label": "Utilities Division"
+      },
+      {
+        "url": "https://juneau.org/finance",
+        "label": "Finance"
+      },
+      {
+        "url": "https://juneau.org/fire",
+        "label": "Fire Department"
+      },
+      {
+        "url": "https://juneau.org/human-resources",
+        "label": "Human Resources & Risk Management"
+      },
+      {
+        "url": "https://juneau.org/human-resources/safety-program",
+        "label": "Safety & Health Program"
+      },
+      {
+        "url": "https://juneau.org/law-department",
+        "label": "Law Department"
+      },
+      {
+        "url": "https://juneau.org/library",
+        "label": "Libraries"
+      },
+      {
+        "url": "https://juneau.org/library/museum",
+        "label": "City Museum"
+      },
+      {
+        "url": "https://juneau.org/parks-recreation",
+        "label": "Parks & Recreation"
+      },
+      {
+        "url": "https://juneau.org/parks-recreation/juneau-pools",
+        "label": "Juneau Pools"
+      },
+      {
+        "url": "https://juneau.org/parks-recreation/treadwell-arena",
+        "label": "Treadwell Arena"
+      },
+      {
+        "url": "https://juneau.org/parks-recreation/zach-gordon",
+        "label": "Zach Gordon Youth Services"
+      },
+      {
+        "url": "https://juneau.org/police",
+        "label": "Police Department"
+      },
+      {
+        "url": "http://www.juneauschools.org",
+        "label": "School District"
+      },
+      {
+        "url": "https://juneau.org/police/citation-appeals",
+        "label": "Appeal A Citation"
+      },
+      {
+        "url": "https://property.juneau.org",
+        "label": "Assessor’s Database"
+      },
+      {
+        "url": "http://www.juneau.org/avalanche",
+        "label": "Avalanche Advisory"
+      },
+      {
+        "url": "https://juneau.org/finance/purchasing/bids-publicpurchase",
+        "label": "Bids & RFPs"
+      },
+      {
+        "url": "https://cityandboroughofjuneauak-energovweb.tylerhost.net/apps/selfservice",
+        "label": "Building Permits"
+      },
+      {
+        "url": "https://cbj.openbook.questica.com",
+        "label": "City Budget"
+      },
+      {
+        "url": "https://library.municode.com/ak/juneau/codes/code_of_ordinances",
+        "label": "City Code"
+      },
+      {
+        "url": "https://juneau.org/archive",
+        "label": "Document Archive"
+      },
+      {
+        "url": "https://juneau.org/human-resources/employment-opportunities",
+        "label": "Employment Opportunities"
+      },
+      {
+        "url": "https://juneau.org/finance/make-a-payment",
+        "label": "Make a Payment"
+      },
+      {
+        "url": "https://juneau.org/newsroom",
+        "label": "Newsroom"
+      },
+      {
+        "url": "https://juneau.org/parks-recreation/parking",
+        "label": "Parking"
+      },
+      {
+        "url": "https://juneau.org/finance/sales-tax",
+        "label": "Sales Tax Office"
+      },
+      {
+        "url": "https://juneau.org/site-search",
+        "label": "Search"
+      },
+      {
+        "url": "https://juneau.org/manager/tbmp",
+        "label": "Visitors"
+      },
+      {
+        "url": "https://juneau.org/photos-webcams",
+        "label": "Photos & Webcams"
+      },
+      {
+        "url": "https://jahc.org",
+        "label": "Juneau Arts & Humanities Council"
+      },
+      {
+        "url": "http://www.choosejuneau.org",
+        "label": "Choose Juneau"
+      },
+      {
+        "url": "https://www.traveljuneau.com",
+        "label": "Travel Juneau"
+      },
+      {
+        "url": "http://www.juneau.org/library/museum",
+        "label": "Juneau-Douglas City Museum"
+      },
+      {
+        "url": "http://museums.alaska.gov",
+        "label": "Alaska State Museum"
+      },
+      {
+        "url": "http://dnr.alaska.gov/parks/units/southeast/juneau.htm",
+        "label": "Juneau Area State Parks"
+      },
+      {
+        "url": "https://www.fs.usda.gov/detail/tongass/about-forest/offices?cid=stelprdb5400800",
+        "label": "Mendenhall Glacier"
+      },
+      {
+        "url": "http://dnr.alaska.gov/parks/cabins/south",
+        "label": "State Cabins"
+      },
+      {
+        "url": "https://www.fs.usda.gov/recarea/tongass/recreation/camping-cabins/recarea?recid=78617",
+        "label": "Federal Cabins"
+      },
+      {
+        "url": "https://www.wunderground.com/forecast/us/ak/99801---juneau/99801",
+        "label": "Juneau Weather"
+      },
+      {
+        "url": "https://juneau.org/manager/connect-with-city-hall",
+        "label": "Connect with City Hall"
+      },
+      {
+        "url": "https://juneau.org/manager/contact-information",
+        "label": "City Manager"
+      },
+      {
+        "url": "https://juneau.org/social-media",
+        "label": "Social Media"
+      },
+      {
+        "url": "https://juneau.org/cbj-newsletters",
+        "label": "CBJ Newsletters"
+      },
+      {
+        "url": "https://juneau.org?page_id=3475",
+        "label": "Add Adopted Legislation"
+      },
+      {
+        "url": "https://juneau.org/document-database-add-entry",
+        "label": "Add to Document Archive"
+      },
+      {
+        "url": "http://www.juneau.org/beta_transfer/clerk/updates/BCF_entirelist.php",
+        "label": "Factsheet Admin"
+      },
+      {
+        "url": "https://juneau.org/clerk/adopted-legislation",
+        "label": "Adopted Legislation"
+      },
+      {
+        "url": "https://juneau.org/clerk/how-do-i",
+        "label": "How Do I"
+      },
+      {
+        "url": "https://juneau.org/clerk/municipal-calendars",
+        "label": "Municipal Calendars"
+      },
+      {
+        "url": "https://juneau.org/clerk/notice-of-public-hearing",
+        "label": "Notice of Public Hearing"
+      },
+      {
+        "url": "https://juneau.org/clerk/boards-committees/boards-archive",
+        "label": "Boards Archive"
+      },
+      {
+        "url": "https://juneau.org/clerk/elections-faq",
+        "label": "Election FAQs"
+      },
+      {
+        "url": "https://juneau.org/clerk/clerk-contact",
+        "label": "Contact Us"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/10/2026-10-20-Certified-Results-for-October-6-2026-Regular-Municipal-Election.pdf",
+        "label": "final election results."
+      },
+      {
+        "url": "https://juneau.org/clerk/elections-policies",
+        "label": "POLICIES & PROCEDURE"
+      },
+      {
+        "url": "https://juneau.org/category/elections",
+        "label": "ELECTION NEWS ARCHIVE"
+      },
+      {
+        "url": "https://juneau.org/clerk/elections/elections-archive",
+        "label": "PAST RESULTS"
+      },
+      {
+        "url": "https://myvoterportal.alaska.gov",
+        "label": "CHECK MY VOTER REGISTRATION"
+      },
+      {
+        "url": "https://voterregistration.alaska.gov",
+        "label": "update your mailing address"
+      },
+      {
+        "url": "https://www.elections.alaska.gov/Core/cancelyouralaskavoterregistration.php",
+        "label": "CANCEL YOUR VOTER REGISTRATION"
+      },
+      {
+        "url": "https://juneau.org/news-item/preliminary-unofficial-results-10-07-2026-2-2-2/10/20/2026",
+        "label": "[…]"
+      },
+      {
+        "url": "https://juneau.org/index.php?entry-id=126461&field-id=35&form-id=185&gf-download=2026%2F08%2F2026-10-06_Notice-of-Election.pdf&hash=a5d62aa63a0606ba96b744b28d4e1dac8c44b535b3d90ca6ac5e76231016dfbd",
+        "label": "Notice of Regular Municipal Election - October 6, 2026"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/10/2026-CBJ-Municipal-Election-Unofficial-Results-as-of-2026-10-09.pdf",
+        "label": "As of 10/09/2026"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/10/2026-CBJ-Municipal-Election-Unofficial-Results-as-of-2026-10-06.pdf",
+        "label": "As of 10/06/2026"
+      },
+      {
+        "url": "https://www.elections.alaska.gov/voter-information/absentee-and-early-voting",
+        "label": "Absentee and Early Voting – Division of Elections"
+      },
+      {
+        "url": "https://juneau.org/clerk/certified-municipal-candidates-2026",
+        "label": "Certified Candidates"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/08/SAMPLE-BALLOT.pdf",
+        "label": "Available HERE"
+      },
+      {
+        "url": "https://voterregistration.alaska.gov/Registration/RegistrationDetails?haveValidAKDL=true",
+        "label": "register"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/06/2026-Temporary-Address-Application-CBJ-Municipal-Election.pdf",
+        "label": "apply"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/06/2026-eballot-application-CBJ-Municipal-Election.pdf",
+        "label": "apply"
+      },
+      {
+        "url": "https://apoc.doa.alaska.gov/forms/candidate",
+        "label": "Alaska Public Offices Commission"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/08/2026-write-in-candidate-packet-Assembly.pdf",
+        "label": "Write-in Candidate Filing Packet – Assembly"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/08/2026-write-in-candidate-packet-School-Board.pdf",
+        "label": "Write-in Candidate Filing Packet – Board of Education"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/05/2026-HtRfLO-Toolkit.pdf",
+        "label": "How to Run for Local Office Toolkit"
+      },
+      {
+        "url": "http://doa.alaska.gov/apoc/training/index.html",
+        "label": "APOC Candidate Training Resources"
+      },
+      {
+        "url": "https://gcc02.safelinks.protection.outlook.com?data=05%7C02%7CBreckan.Hendricks%40juneau.gov%7C75842accea3b4f72f4c208decccc70d9%7C6f0a853afffa4a3795198a444a54a282%7C0%7C0%7C639173375730925211%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&reserved=0&sdata=5asgvAAV3X5PF38tAiNyu6dsZZxw0ecNbDsUHNBTHHM%3D&url=https%3A%2F%2Fapoc.doa.alaska.gov%2Fmedia%2F0uznqvui%2Fcandidate-manual.pdf",
+        "label": "APOC Training Manual"
+      },
+      {
+        "url": "http://doa.alaska.gov/apoc/FilerResources/campaignDisclosure.html",
+        "label": "APOC Campaign Disclosure Form"
+      },
+      {
+        "url": "http://doa.alaska.gov/apoc/FilerResources/financialDisclosure.html",
+        "label": "APOC Public Officials Financial Disclosure Form"
+      },
+      {
+        "url": "https://www.youtube.com/embed/3ge1RUuoTkc?autoplay=0&wmode=transparent",
+        "label": "YouTube video player"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/05/Initiative-Petition-Affidavit-1-Seasonal-Sales-Tax-with-amendment_Redacted-1.pdf",
+        "label": "Updated Full Text"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/05/2026-05-06-Clerk-Letter-Response-to-Petitioner-Committee.pdf",
+        "label": "Clerk’s letter approving signature gathering"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/05/Initiative-1-Seasonal-Sales-Tax-Law-Review-5.4.2026.pdf",
+        "label": "Legal review"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/06/2026-06-12_Final-Certification-of-1-Seasonal-Sales-Tax-Initiative-Petition-Letter.pdf",
+        "label": "Final Cert. Letter"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/06/2026-06-12_1-Seasonal-Sales-Tax-Initiative-Petition-Certificate-of-Petition.pdf",
+        "label": "Certificate of Petition"
+      },
+      {
+        "url": "https://library.municode.com/ak/juneau/codes/code_of_ordinances?nodeId=PTIHORUCH_ARTVIIINRE_S7.10ACPE",
+        "label": "CBJ Charter § 7.10"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/04/2026-04-28-Charter-Amendment-Mill-Rate-Cap-Change_Redacted.pdf",
+        "label": "Full Text"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/05/2026-05-12_Response-to-Petitioner-Committee-Mill-Rate-Cap-Change-Affidavit.pdf",
+        "label": "Clerk’s letter approving signature gathering"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/05/2026_Mill-Rate-Law-Review.pdf",
+        "label": "Legal review"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/06/2026-06-25_Final-Certification-of-Mill-Rate-Cap-Change-Charter-Amendment.pdf",
+        "label": "Final Cert. Letter"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/06/2026-06-25-Clerk-Certification-for-Mill-Rate-Cap-Change.pdf",
+        "label": "Certificate of Petition"
+      },
+      {
+        "url": "https://juneau.org/index.php?field-id=11&form-id=22&gf-download=2025%2F03%2FOrd-2025-14am-Election-Code-Rewrite-Final-signed.pdf&hash=41a7f51a7cc0fa441121137ed87a0bb213a0fb72411c1cbd50ca3fe4c1917e71",
+        "label": "Ordinance 2025-14 An Ordinance Amending the CBJ Title 29 Code Relating to Elections Processes and Procedures."
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/03/2026-Municipal-Election-Overview-and-Deadlines-Memo.pdf",
+        "label": "Timeline Memo"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/03/Quick-Dates-October-6-2026-CBJ-Election.pdf",
+        "label": "Quick Dates"
+      },
+      {
+        "url": "http://library.municode.com/HTML/13307/level2/PTIICOOR_TIT29EL.html",
+        "label": "Elections Code Link"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2025/04/1.4-Petition-Flowchart.pdf",
+        "label": "Petition Process Flow Chart"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2026/01/ELECTIONS-Historic_Turnout-and-Ballot-Issues-1990-Present.pdf",
+        "label": "Juneau Voter Turnout Statistics 1990-2025"
+      },
+      {
+        "url": "https://cbj-gis.maps.arcgis.com/apps/webappviewer/index.html?id=fe70589b26af497da493f129b8f41213",
+        "label": "Assembly District Maps"
+      },
+      {
+        "url": "https://juneau.org/wp-content/uploads/2017/05/UncleSam.jpg",
+        "label": ""
+      },
+      {
+        "url": "http://www.juneau.org/library/contact_branch.php",
+        "label": "http://www.juneau.org/library/contact_branch.php"
+      },
+      {
+        "url": "https://dot.alaska.gov/stwddes/dcsrow/campaignsigns.shtml",
+        "label": "https://dot.alaska.gov/stwddes/dcsrow/campaignsigns.shtml"
+      },
+      {
+        "url": "https://juneau.org/cdn-cgi/l/email-protection",
+        "label": "Email"
+      },
+      {
+        "url": "https://www.youtube.com/embed/Oy3wrrc3EBA?autoplay=0&wmode=transparent",
+        "label": "YouTube video player"
+      },
+      {
+        "url": "https://www.facebook.com/cbjuneau",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://www.facebook.com/TreadwellIceArena",
+        "label": "Facebook"
+      },
+      {
+        "url": "https://juneau.org/feed",
+        "label": "City and Borough of Juneau &raquo; Feed"
+      },
+      {
+        "url": "https://juneau.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fjuneau.org%2Fclerk%2Felections",
+        "label": "oEmbed (XML)"
+      },
+      {
+        "url": "https://juneau.org/wp-json/wp/v2/pages/305808",
+        "label": "JSON"
+      }
+    ]
+  },
+  {
+    "url": "https://www.fnsb.gov/269/Elections",
+    "finalUrl": "https://www.fnsb.gov/269/Election-Information",
+    "status": 200,
+    "responseHeaders": {},
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-21T04:33:35.098Z",
+    "rawHash": "192c74979029144451507a267150c4181e040a76db42652374f8e29b0af3bf49",
+    "path": "tests/fixtures/voting-sources/vs-04-west/ak-ad0b30ea0374-192c74979029.html",
+    "savedHash": "c1dab21c22918e2e2e561ed7a840153ec8cc72d06a8a626d2312d1ea923e1a06",
+    "redactions": 1,
+    "links": [
+      {
+        "url": "https://www.fnsb.gov/269/Election-Information",
+        "label": "Election Information"
+      },
+      {
+        "url": "https://www.fnsb.gov",
+        "label": ""
+      },
+      {
+        "url": "https://www.fnsb.gov/Search/Results",
+        "label": ""
+      },
+      {
+        "url": "https://www.fnsb.gov/27/Government",
+        "label": "Government"
+      },
+      {
+        "url": "https://www.fnsb.gov/31/Community",
+        "label": "Community"
+      },
+      {
+        "url": "https://www.fnsb.gov/157/Enjoying-FNSB",
+        "label": "Enjoying FNSB"
+      },
+      {
+        "url": "https://www.fnsb.gov/35/Doing-Business",
+        "label": "Doing Business"
+      },
+      {
+        "url": "https://www.fnsb.gov/9/How-Do-I",
+        "label": "How Do I..."
+      },
+      {
+        "url": "https://www.fnsb.gov/101/Services",
+        "label": "Services"
+      },
+      {
+        "url": "https://www.fnsb.gov/158/Departments",
+        "label": "Departments"
+      },
+      {
+        "url": "https://www.fnsb.gov/170/Borough-Clerks-Office",
+        "label": "Borough Clerk's Office"
+      },
+      {
+        "url": "https://nam10.safelinks.protection.outlook.com?data=05%7C02%7CApril.Trickey%40fnsb.gov%7C1533571e73a044a5ceb108df233bd0cb%7C3318927c30f645b48bdc6497ed045df5%7C0%7C0%7C639268411994802357%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&reserved=0&sdata=yB0O4tSAuNUFZ57fdxVWptxH0R%2FfTECpq1SQdsJZ%2FA4%3D&url=https%3A%2F%2Fexperience.arcgis.com%2Fexperience%2F5f079e7dcacf4b43b042325bab53ca2f",
+        "label": "Click here to view the Unofficial Election Results Mapping Dashboard UNOFFICIAL ELECTION RESULTS UNOFFICIAL ELECTION RESULTS UNOFFICIAL ELECTION RESULTS UNOFFICIAL ELECTION RESULTS"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/29574/UNOFFICIAL-ELECTION-RESULTS-PDF-SUMMARY-",
+        "label": "Click here to view the Unofficial Election Results PDF Summar"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/29575/UNOFFICIAL-ELECTION-RESULTS-BY-PRECINCT",
+        "label": "Click here to view the Unofficial Results PDF by Precinct"
+      },
+      {
+        "url": "https://www.fairbanks.gov/clerks/municipal-election",
+        "label": "City of Fairbanks"
+      },
+      {
+        "url": "https://www.northpolealaska.com/departments/city_clerk/elections.php",
+        "label": "City of North Pole"
+      },
+      {
+        "url": "https://fnsb.borough.codes/FNSBC/5.12.010",
+        "label": "Candidate Qualifications and Declaration of Candidacy"
+      },
+      {
+        "url": "https://www.elections.alaska.gov/voter-information",
+        "label": "State of Alaska - Register or Update Voter Registration"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/468/Polling-Places-by-District-PDF",
+        "label": "Polling Locations (PDF)"
+      },
+      {
+        "url": "https://www.fnsb.gov/QuickLinks.aspx?CID=42",
+        "label": "View All Links"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/29012/Notice-of-Election-PDF",
+        "label": "Notice of Election (PDF)"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/28017/How-to-Vote-Local---Ways-to-Cast-Your-Ballot-PDF",
+        "label": "How to Vote Local - Ways to Cast Your Ballot (PDF)"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/28941/FNSB-Sample-Ballot-PDF",
+        "label": "FNSB Sample Ballot (PDF)"
+      },
+      {
+        "url": "https://www.fnsb.gov/1310/How-We-Run-Elections",
+        "label": "How We Run Elections"
+      },
+      {
+        "url": "https://www.elections.alaska.gov",
+        "label": "Register to Vote or Update Voter Registration"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/463/Polling-Place-Maps-and-Locations-PDF",
+        "label": "Precinct Maps (PDF)"
+      },
+      {
+        "url": "https://experience.arcgis.com/experience/e1f953fb724d4487a3976c5effebff8a",
+        "label": "Find my Polling Place (Interactive GIS Map)"
+      },
+      {
+        "url": "https://experience.arcgis.com/experience/e83634050a17469ba43768d88c3f8bfa",
+        "label": "Find My Representative (Interactive GIS Map)"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/27765/Municipal-Election-Information-Pamphlet-PDF",
+        "label": "Municipal Election Information Pamphlet (PDF)"
+      },
+      {
+        "url": "https://www.fnsb.gov/173/Election-History",
+        "label": "Election History"
+      },
+      {
+        "url": "https://www.fnsb.gov/413/Service-Area-Election-Information",
+        "label": "Service Area Election Information"
+      },
+      {
+        "url": "https://www.fnsb.gov/QuickLinks.aspx?CID=43",
+        "label": "View All"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/7995/FNSB-Poll-Watcher-Guide-PDF",
+        "label": "Poll Watcher Guide (PDF)"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/7994/Poll-Watcher-Form-PDF",
+        "label": "Poll Watcher Designation and Request Form (PDF)"
+      },
+      {
+        "url": "https://www.fnsb.gov/QuickLinks.aspx?CID=115",
+        "label": "View All Links"
+      },
+      {
+        "url": "https://www.fnsb.gov/DocumentCenter/View/9984/Election-Judge-Flyer-PDF",
+        "label": "Be a Civic Superstar - Become an Election Worker! (PDF)"
+      },
+      {
+        "url": "https://www.fnsb.gov/171",
+        "label": "Assembly"
+      },
+      {
+        "url": "https://www.fnsb.gov/174/Borough-Published-Announcements",
+        "label": "Borough Published Announcements"
+      },
+      {
+        "url": "https://fnsb.borough.codes",
+        "label": "FNSB Code of Ordinances"
+      },
+      {
+        "url": "https://www.fnsb.gov/property",
+        "label": "Property Search"
+      },
+      {
+        "url": "https://www.fnsb.gov/171/Borough-Assembly",
+        "label": "Borough Assembly"
+      },
+      {
+        "url": "https://www.fnsb.gov/1119/Library",
+        "label": "Public Libraries"
+      },
+      {
+        "url": "https://www.fnsb.gov/349/Metropolitan-Area-Commuter-System-MACS",
+        "label": "Bus Routes"
+      },
+      {
+        "url": "https://www.fnsb.gov/812/Parks-Recreation",
+        "label": "Parks & Recreation"
+      },
+      {
+        "url": "https://www.fnsb.gov/160/Animal-Control",
+        "label": "Animal Control"
+      },
+      {
+        "url": "https://www.fnsb.gov/QuickLinks.aspx?CID=63",
+        "label": "Quick Links"
+      },
+      {
+        "url": "http://www.fnsb.gov/roads",
+        "label": "FNSB Roads Service Area Reporting Center"
+      },
+      {
+        "url": "https://www.fnsb.gov/444/Air-Quality-Forecast",
+        "label": "Air Quality Forecast"
+      },
+      {
+        "url": "https://www.fnsb.gov/faq.aspx",
+        "label": "Frequently Asked Questions"
+      },
+      {
+        "url": "https://www.fnsb.gov/510/Forms",
+        "label": "Forms & Permits"
+      },
+      {
+        "url": "https://www.fnsb.gov/433/Geographic-Information-Services-GIS",
+        "label": "Maps & GIS"
+      },
+      {
+        "url": "https://www.officialpayments.com/pc_template_standard.jsp?OWASP_CSRFTOKEN=DNA5-VA4R-IPIZ-SXXT-7CCS-D6HR-GJEX-BH7X&body=pc_step2_amount_body.jsp",
+        "label": "Pay Property Tax Online"
+      },
+      {
+        "url": "https://www.fnsb.gov/288/Solid-Waste",
+        "label": "Trash, Recycling, and Hazardous Waste"
+      },
+      {
+        "url": "https://www.fnsb.gov/QuickLinks.aspx?CID=11",
+        "label": "Helpful Links"
+      },
+      {
+        "url": "https://bit.ly/40PzDRb",
+        "label": "Bus Routes, Maps & Schedules"
+      },
+      {
+        "url": "https://fnsb.gov/1119/Library",
+        "label": "Libraries"
+      },
+      {
+        "url": "https://www.fnsb.gov/969/We-Are-Hiring",
+        "label": "Careers"
+      },
+      {
+        "url": "https://www.fnsb.gov/accessibility",
+        "label": "Accessibility"
+      },
+      {
+        "url": "https://www.fnsb.gov/sitemap",
+        "label": "FNSB Site Map"
+      },
+      {
+        "url": "https://www.facebook.com/FNSBGov",
+        "label": ""
+      },
+      {
+        "url": "https://www.instagram.com/fairbanks_north_star_borough",
+        "label": ""
+      },
+      {
+        "url": "https://www.linkedin.com/company/fairbanks-north-star-borough",
+        "label": ""
+      },
+      {
+        "url": "https://www.youtube.com/channel/UCFNtLIZFwr5y3ckSJtzEQiQ",
+        "label": ""
+      },
+      {
+        "url": "https://connect.civicplus.com/referral",
+        "label": "CivicPlus&reg;"
+      }
+    ]
+  }
+]

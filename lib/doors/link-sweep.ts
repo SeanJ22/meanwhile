@@ -1,5 +1,5 @@
 /**
- * A plain-code sweep of the outbound links in the published reader edge:
+ * A plain-code sweep of the outbound links in current reader data:
  * sources, official sites, join links and agenda PDFs. A known small publisher
  * gets at most its hourly request limit, counted with every other reader of
  * that website; others are read at full speed.
@@ -11,7 +11,7 @@ import type { WebsiteSize } from "../control-plane/scheduler/host-supervision.ts
 import { websiteRequestLimit } from "../control-plane/scheduler/host-supervision.ts";
 import { upsertSystemDoor } from "./link-sweep-store.ts";
 import { admitWebsiteRequest, holdWebsiteAfter, type WebsitePacing } from "../control-plane/website-pacing.ts";
-import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
+import { readMeetingBodies } from "../meetings/edge-serving.ts";
 import type { DoorRepository } from "./registry.ts";
 
 export const LINK_SURFACES = ["sources", "official sites", "join links", "agenda PDFs", "other links"] as const;
@@ -22,7 +22,7 @@ export interface OutboundLink {
   readonly surface: LinkSurface;
 }
 
-/** A key name tells which surface a link is on; the edge's JSON is walked, not parsed by a fixed schema. */
+/** A key name tells which surface a link is on; the reader's data is walked, not parsed by a fixed schema. */
 function surfaceOf(path: readonly string[], url: string): LinkSurface {
   const key = (path.at(-1) ?? "").toLowerCase();
   if (/join|zoom|webex|teams|livestream|video|stream/.test(key) || /(zoom\.us|webex\.com|teams\.microsoft\.com|meet\.google\.com)/i.test(url)) return "join links";
@@ -32,8 +32,8 @@ function surfaceOf(path: readonly string[], url: string): LinkSurface {
   return "other links";
 }
 
-/** Every distinct https link in the published edge's JSON, tagged with the surface its key names. */
-export function collectOutboundLinks(artifacts: readonly unknown[], limit = 200_000): OutboundLink[] {
+/** Every distinct https link in current reader data, tagged with the surface its key names. */
+export async function collectOutboundLinks(artifacts: AsyncIterable<unknown> | Iterable<unknown>, limit = 200_000): Promise<OutboundLink[]> {
   const found = new Map<string, LinkSurface>();
   const visit = (value: unknown, path: string[], depth: number): void => {
     if (found.size >= limit || depth > 24) return;
@@ -59,7 +59,7 @@ export function collectOutboundLinks(artifacts: readonly unknown[], limit = 200_
       for (const [k, v] of Object.entries(value as Record<string, unknown>)) visit(v, [...path, k], depth + 1);
     }
   };
-  for (const artifact of artifacts) visit(artifact, [], 0);
+  for await (const artifact of artifacts) visit(artifact, [], 0);
   return [...found].map(([url, surface]) => ({ url, surface })).sort((a, b) => (a.url < b.url ? -1 : 1));
 }
 
@@ -192,15 +192,11 @@ export async function recordSweep(repo: DoorRepository, results: readonly LinkRe
   return summaries;
 }
 
-/** What the sweep reads of the published edge: the manifest itself (source reports, comment access, routing) and every scope artifact it lists. */
-export async function readEdgeForSweep(store: Pick<ReaderArtifactStore, "readManifest" | "readArtifact">): Promise<unknown[]> {
-  const stored = await store.readManifest();
-  if (stored === null) return [];
-  const { scopes, ...rest } = stored.manifest;
-  const artifacts: unknown[] = [rest];
-  for (const scope of scopes) {
-    const artifact = await store.readArtifact(scope.key);
-    if (artifact !== null) artifacts.push(artifact);
+/** Current source calendars and agenda text, read one state and body at a time. */
+export async function* readReaderForSweep(): AsyncGenerator<unknown> {
+  for await (const body of readMeetingBodies({ window: "HELD" })) {
+    const held = await body.load();
+    if (held === null) throw new Error(`MEETING_BODY_UNREADABLE:${body.state}:${body.bodyId}`);
+    yield held.snapshot;
   }
-  return artifacts;
 }

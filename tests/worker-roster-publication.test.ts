@@ -18,7 +18,7 @@ import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../lib/regis
 import { CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "../lib/registry/census-placeholders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 
-import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
+import { readEveryAssignmentSource } from "./helpers/assignment-sources.ts";
 import { buildAssignments } from "../lib/control-plane/assignment-view.ts";
 import { owedFactItems } from "../lib/civic-data/worker-publication-tasks.ts";
 import { collectWorkerRosterReadback, type PublishedWorkerRead } from "../lib/control-plane/worker-reader-readback.ts";
@@ -85,14 +85,12 @@ function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataS
   return store;
 }
 
-
 const ROOT = join(import.meta.dirname, "..");
 
 async function proveRosterPublication(partial = false) {
   const store = stateRegistryRuntimeStore("AZ");
   const imported = (await readRegistryRuntimePrior(store, "2026-09-08T12:00:01.000Z", "AZ"))!;
-  // Replay the already deployed placeholder correction before this worker test:
-  // the recorded transfer fixture predates it, unlike the production base.
+
   const divisions = imported.payload.registry.divisions.filter(isCensusPlaceholderDivision).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] ?? row.label }));
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime:AZ", version: "fixture-census-correction", sourceThrough: "2026-09-08T12:00:02.000Z",
     sourceReceipt: { contractVersion: 1, reviewedAt: "2026-09-08T12:00:02.000Z", reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: "2026-09-08T12:00:02.000Z", httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district; retained transfer correction control." })) },
@@ -106,7 +104,7 @@ async function proveRosterPublication(partial = false) {
   const rows = existing.members.map(member => ({ id: member.id, name: member.name, office: member.officeTitle }));
   rows.push({ id: "fixture-new-holder", name: "Morgan Example", office: "Fixture Board Member" });
   if (partial) {
-    rows.shift(); // An incomplete update must not erase this prior verified person.
+    rows.shift();
     rows.push({ id: "fixture-unresolved-holder", name: "Contact us", office: "Contact information" });
   }
   const text = JSON.stringify({ body: body.name, records: rows });
@@ -130,7 +128,7 @@ async function proveRosterPublication(partial = false) {
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
   const runtime = { ...h.runtime,
     independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({ ...await h.runtime.independentContext(scope), authorityEvidence: [authorityEvidence] }) };
-  // The Validator is the last stage for a roster; no auditor is dispatched.
+
   for (const role of ["ACQUIRER", "PARSER", "VALIDATOR"]) {
     const next = await nextAutonomousOperation(runtime, h.item.id);
     assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
@@ -162,11 +160,11 @@ async function proveRosterPublication(partial = false) {
   assert.equal(delivered.sourceUrl, FIXTURE_URL);
   assert.deepEqual(delivered.members.map(member => member.name).sort(), rows.filter(row => row.name !== "Contact us").map(row => row.name).sort());
   for (const member of delivered.members) assert.equal(member.fieldSources?.name?.sourceUrl, FIXTURE_URL, "every seat cites the saved page it was read from");
-  const deliveredAdmin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
+  const deliveredAdmin = buildAssignments(await readEveryAssignmentSource(h.repos, h.now()));
   assert.deepEqual(deliveredAdmin.find(row => row.id === h.item.id)?.delivery.records, published[0]!.outcome.records);
   let observations = 0;
   const collector = { items: [(await h.repos.workItems.mustRead(h.item.id)).value], store, now: h.now(), previous: null,
-    zipForDivision: async (division: string) => { assert.equal(division, body.ocdId); return "99999"; }, // isolated destination dependency; no geographic proof claimed
+    zipForDivision: async (division: string) => { assert.equal(division, body.ocdId); return "99999"; },
     observe: async (input: PublishedWorkerRead) => {
       observations++;
       assert.ok("roster" in input);
@@ -176,7 +174,7 @@ async function proveRosterPublication(partial = false) {
     } };
   const readback = await collectWorkerRosterReadback(collector);
   assert.equal(readback.witnesses[0]?.approvalId, published[0]!.outcome.workerResultId);
-  const deliveredSources = await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] });
+  const deliveredSources = await readEveryAssignmentSource(h.repos, h.now());
   assert.equal(buildAssignments({ ...deliveredSources, servedReader: readback }).find(row => row.id === h.item.id)!.delivery.publiclyAvailable.held, true,
     "actual observation joins this exact worker publication in Admin");
   const wrong = { ...readback, witnesses: readback.witnesses.map(w => ({ ...w, versionId: "different-version" })) };
@@ -202,7 +200,7 @@ async function proveRosterPublication(partial = false) {
   await h.repos.workItems.compareAndSet(held.id, held.revision, { ...held.value, publicationOutcome: { ...held.value.publicationOutcome!,
     code: "ROSTER_AUTHORITY_REPLAY_FAILED", recovery: "WORKER" } }, h.now());
   assert.notEqual((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "unfinished verification re-enters automatic repair");
-  const admin = buildAssignments(await readAllAssignmentSources(h.repos, { nowIso: h.now(), activation: null, pilotZips: [] }));
+  const admin = buildAssignments(await readEveryAssignmentSource(h.repos, h.now()));
   const assignment = admin.find(row => row.id === h.item.id)!;
   assert.ok(assignment, "the normal Admin assignment read includes the worker");
   assert.equal(assignment.state, "WAITING");

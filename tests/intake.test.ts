@@ -24,7 +24,7 @@ delete process.env.DATABASE_URL;
 // pointer: the route's own refresh reads this copy (no database in tests).
 const promotedVotes = provenEdgeEntry({
   recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "cv-intake-votes",
-  value: { formatVersion: 1, snapshot: { congress: 119, session: 1, votes: [{ id: "house:119-1:1" }], positions: [] }, billSummaries: { summaries: {}, pending: [] } },
+  value: { formatVersion: 1, snapshot: { congress: 119, session: 1, votes: [{ id: "house:119-1:1" }] }, partyBreakdowns: {}, billSummaries: { summaries: {}, pending: [] } },
 });
 const votesEdge = { promoted: new Map([[`FEDERAL_ROLL_CALL:${FEDERAL_ROLLCALL_SCOPE}`, promotedVotes]]) };
 await readFederalRollCallsProjection({ edge: promotedVotes });

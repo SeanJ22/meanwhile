@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/Wicomico.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Wicomico.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-21T00:16:24.016357+00:00",
+  "rawHash": "d1addca6da49f5c2382c1c44dba0945ec506d97b61906567d20dbfced479565a",
+  "bytes": 1325197,
+  "convertedTextHash": "8a614ce0dcbbf6e688069ecfe5d096d5981c1a5282a25613ccacd9622834a790",
+  "extraction": "pdftotext -raw; exact official certified ballot source text; original PDF identified by rawHash"
+}

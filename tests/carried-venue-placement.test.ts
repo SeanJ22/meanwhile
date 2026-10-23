@@ -4,8 +4,9 @@ import test from "node:test";
 
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import type { VenueEntry } from "../lib/meetings/venue-cache.ts";
-import { readMeetingsProjection, snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import {
@@ -13,6 +14,7 @@ import {
   promoteMeetingPartition,
   reconcileSuccessfulMeetingPartition,
 } from "../scripts/ingest.ts";
+import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
 
 const PARTITION = MEETING_PARTITION_CONTRACTS.find((partition) =>
   partition.meetingSource === "official-page-events" &&
@@ -170,14 +172,23 @@ test("CARRIED-PLACE · (c) only the row's own division places it; unstated, onli
   assert.equal(read, 0, "the venue projection is read only for a row that needs it");
 });
 
-test("CARRIED-PLACE · (d) the promotion door accepts the placed carried row, and a reader is served its pin", async () => {
+test("CARRIED-PLACE · (d) the promotion door accepts the placed carried row, and a reader is served its pin", async (t) => {
   const store = new MemoryRoutineDataStore();
   const seeded = await promoteMeetingPartition(store, PARTITION, partitionSnapshot(LAST_LISTED, [SEPT_23]));
   assert.equal(seeded.outcome.candidate.state, "PROMOTED", seeded.outcome.candidate.failureDetail ?? "");
   const reconciled = reconcile(venues(CHOLLA));
   const accepted = await promoteMeetingPartition(store, PARTITION, partitionSnapshot(NEXT_READ, reconciled.meetings), [], reconciled.removalEvidence);
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
-  const read = await readMeetingsProjection({ store, bypassCache: true, now: NEXT_READ });
+  const factReads: string[] = [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
+  });
+  t.after(() => installFactReader(undefined));
+  const edge = freshEdge();
+  await publishPass(store, edge, NEXT_READ);
+  const read = await readPlace(edge, store, [PARTITION.ocdId!], NEXT_READ);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   const served = (read as { value: MeetingsSnapshot }).value.meetings.find(({ id }) => id === SEPT_23.id)!;
   assert.deepEqual(served.location, { name: CHOLLA.name, address: CHOLLA.address, lat: CHOLLA.lat, lng: CHOLLA.lng });

@@ -25,16 +25,23 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
     return held;
   };
   const byOffice = new Map<string,number[]>();
-  const index = (holder:SeatHolder,at:number)=>{ const key=infoOf(holder).office; const rows=byOffice.get(key); if (rows) rows.push(at); else byOffice.set(key,[at]); };
+  const byIdentity = new Map<string,Set<number>>();
+  const indexIdentities = (holder:SeatHolder,at:number)=>{ for (const key of infoOf(holder).keys) { const rows=byIdentity.get(key) ?? new Set<number>(); rows.add(at); byIdentity.set(key,rows); } };
+  const replace = (at:number,holder:SeatHolder)=>{
+    for (const key of infoOf(holders[at]).keys) { const rows=byIdentity.get(key); rows?.delete(at); if (!rows?.size) byIdentity.delete(key); }
+    holders[at]=holder; indexIdentities(holder,at);
+  };
+  const index = (holder:SeatHolder,at:number)=>{ const key=infoOf(holder).office; const rows=byOffice.get(key); if (rows) rows.push(at); else byOffice.set(key,[at]); indexIdentities(holder,at); };
   holders.forEach((holder,at)=>index(holder,at));
   for (const holder of additional) {
     const mine = infoOf(holder);
     // Only a single-seat office is a person's identity: two councilmembers with one name are two seats, never one person.
     const singleSeat = SINGLE_OFFICES.has(officeIdentity(holder.officeTitle) ?? "");
     const sameOffice = byOffice.get(mine.office) ?? [];
-    const matching = sameOffice.find(at=>{
+    const candidates = singleSeat ? sameOffice : [...new Set([...mine.keys].flatMap(key=>[...byIdentity.get(key) ?? []]))].sort((a,b)=>a-b);
+    const matching = candidates.find(at=>{
       const row = holders[at], theirs = infoOf(row);
-      return samePlace(row,holder) && ([...mine.keys].some(key=>theirs.keys.has(key)) || singleSeat && theirs.name === mine.name &&
+      return mine.office === theirs.office && samePlace(row,holder) && ([...mine.keys].some(key=>theirs.keys.has(key)) || singleSeat && theirs.name === mine.name &&
         Boolean(theirs.state && mine.state && theirs.state === mine.state));
     }) ?? -1;
     if (matching >= 0) {
@@ -55,7 +62,7 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
         }
       }
       if (newer && holder.provenance) {merged.provenance=holder.provenance;merged.sourceUrl=holder.sourceUrl;}
-      holders[matching] = merged;
+      replace(matching,merged);
       continue;
     }
     // A complete newer official single-seat source replaces the older holder.
@@ -63,7 +70,7 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
     const sameSeat = key && SINGLE_OFFICES.has(key) ? sameOffice.find(at=>samePlace(holders[at],holder) && infoOf(holders[at]).state === mine.state) ?? -1 : -1;
     if (sameSeat >= 0) {
       const prior = holders[sameSeat];
-      if (holder.provenance?.sourceUrl && (holder.provenance.kind === "OFFICIAL" || isOfficialSource(holder.provenance.sourceUrl)) && (holder.provenance.collectedAt > (prior.provenance?.collectedAt ?? ""))) holders[sameSeat]=holder;
+      if (holder.provenance?.sourceUrl && (holder.provenance.kind === "OFFICIAL" || isOfficialSource(holder.provenance.sourceUrl)) && (holder.provenance.collectedAt > (prior.provenance?.collectedAt ?? ""))) replace(sameSeat,holder);
       continue;
     }
     holders.push(holder);

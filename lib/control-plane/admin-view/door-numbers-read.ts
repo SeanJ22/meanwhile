@@ -1,41 +1,25 @@
 /** Each read fails alone to null, so its row says why it is not measured instead of showing a zero. */
-import { MEETING_PARTITION_CONTRACTS } from "../../civic-data/meeting-partitions.ts";
-import { readPostingToLive, type PostingToLiveRow } from "../../civic-data/posting-to-live.ts";
-import { MEETINGS_RECORD_CLASS } from "../../meetings/snapshot.ts";
-import { readPreparedMeetingsProjection } from "../../meetings/prepared-snapshot.ts";
-import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
-import { meetingFactsByDoor, overdueDoors, type OverdueDoor } from "../../doors/overdue.ts";
-import { readOnSchedule, type DoorRecord } from "../../doors/registry.ts";
-import { ensureMeetingDoors } from "../../doors/meeting-doors.ts";
+import { neon } from "@neondatabase/serverless";
+import type { PostingToLiveRow } from "../../civic-data/posting-to-live.ts";
+import { readPostingWindow } from "../line-keeper/posting.ts";
+import { type DoorRecord } from "../../doors/registry.ts";
 import { fixItems } from "../fix-list.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { DoorNumberReadings } from "./door-numbers.ts";
+import type { LineState } from "../line-keeper/model.ts";
 
 async function attempt<T>(read: () => Promise<T>): Promise<T | null> {
   try { return await read(); } catch { return null; }
 }
 
-/** Open doors past their check. Live facts per door come from the live meeting snapshot; when it cannot be read they are left uncounted ("—"), not zero. */
-export async function readOverdueDoors(doors: readonly DoorRecord[], now: string): Promise<readonly OverdueDoor[]> {
-  const snapshot = await attempt(async () => { const r = await readPreparedMeetingsProjection({ now }); return r.kind === "PROMOTED" ? r.value : null; });
-  const late = overdueDoors(doors, snapshot === null ? new Map() : meetingFactsByDoor(snapshot, now), now);
-  return snapshot === null ? late.map((d) => ({ ...d, liveFacts: null })) : late;
-}
-
 export async function readRecentPostingToLive(): Promise<readonly PostingToLiveRow[]> {
-  await ensureMeetingDoors();
-  const store = new PostgresRoutineDataStore();
-  const identities = await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, MEETING_PARTITION_CONTRACTS.map((p) => p.scope));
-  const rows: PostingToLiveRow[] = [];
-  for (const identity of identities) rows.push(...(await readPostingToLive(store, identity.versionId) ?? []));
-  return rows;
+  const url=process.env.DATABASE_URL;
+  if(!url) throw Error("The reader database is not configured");
+  const now=new Date();
+  return readPostingWindow(neon(url,{readOnly:true}),new Date(now.getTime()-7*86_400_000).toISOString(),now.toISOString());
 }
 
-export async function readDoorNumbers(input: { readonly now: string; readonly doors: readonly DoorRecord[] | null; readonly config: AdminConfig | null }): Promise<Omit<DoorNumberReadings, "shutDoors">> {
-  const [overdue, posting] = await Promise.all([
-    input.doors === null ? null : attempt(() => readOverdueDoors(input.doors!, input.now)),
-    attempt(() => readRecentPostingToLive()),
-  ]);
-  const scheduled = input.doors === null ? null : input.doors.filter((door) => door.status === "OPEN" && readOnSchedule(door)).length;
-  return { now: input.now, overdue, scheduled, posting, fixes: input.config === null ? null : fixItems(input.config) };
+export async function readDoorNumbers(input: { readonly now: string; readonly doors: readonly DoorRecord[] | null; readonly config: AdminConfig | null;readonly keeper?:LineState|null }): Promise<Omit<DoorNumberReadings, "shutDoors">> {
+  const posting=input.keeper?.posting??await attempt(() => readRecentPostingToLive());
+  return {now:input.now,overdue:null,scheduled:null,posting,fixes:input.config===null?null:fixItems(input.config)};
 }

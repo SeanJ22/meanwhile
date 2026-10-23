@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import type { VotingFallbackReason } from "../../ballot/voting-sites.ts";
 import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_ELECTION_DAY, GOOGLE_CIVIC_STATES } from "./targets.ts";
 
 export type CivicJson = Record<string, unknown>;
@@ -29,8 +30,10 @@ export interface CivicLookup {
   checkedAt: string;
   status: "AVAILABLE" | "NO_DATA" | "OUTAGE";
   reason: string | null;
+  failureReason?: VotingFallbackReason;
   rows: CivicFact[];
   counts: { loaded: number; joined: number; unjoined: number };
+  electionOffices?: { name: string; url: string }[];
 }
 export interface CivicStateCoverage {
   state: string;
@@ -104,12 +107,23 @@ export function civicLookupFromRaw(raw: string, electionId: string, checkedAt: s
       value: row, sources: civicSources(row, checkedAt, "voterinfo") });
   }
   const joined = rows.filter(row => row.joinedDivisionId !== null).length;
+  const electionOffices: { name: string; url: string }[] = [];
+  for (const jurisdiction of civicArray(data.state)) {
+    const local = jurisdiction.local_jurisdiction ?? jurisdiction.localJurisdiction;
+    for (const area of [jurisdiction, ...(local ? [civicObject(local)] : [])]) {
+      if (!area.electionAdministrationBody) continue;
+      const office = civicObject(area.electionAdministrationBody);
+      const url = string(office.electionInfoUrl) || string(office.votingLocationFinderUrl);
+      if (/^https?:\/\//i.test(url)) electionOffices.push({ name: string(office.name) || string(area.name) || "Election office", url });
+    }
+  }
   return { formatVersion: 1, kind: "LOOKUP", electionId, state, checkedAt, status: rows.length ? "AVAILABLE" : "NO_DATA",
     reason: rows.length ? null : "Google Civic has not supplied contests or voting sites for this address.", rows,
-    counts: { loaded: rows.length, joined, unjoined: rows.length - joined } };
+    counts: { loaded: rows.length, joined, unjoined: rows.length - joined }, electionOffices };
 }
-export function unavailableCivicLookup(reason: string, checkedAt: string, electionId = ""): CivicLookup {
-  return { formatVersion: 1, kind: "LOOKUP", electionId, state: null, checkedAt, status: "OUTAGE", reason, rows: [], counts: { loaded: 0, joined: 0, unjoined: 0 } };
+export function unavailableCivicLookup(reason: string, checkedAt: string, electionId = "", failureReason: VotingFallbackReason = "GOOGLE_UNAVAILABLE"): CivicLookup {
+  return { formatVersion: 1, kind: "LOOKUP", electionId, state: null, checkedAt, status: failureReason === "NO_DATA" ? "NO_DATA" : "OUTAGE", reason, failureReason,
+    rows: [], counts: { loaded: 0, joined: 0, unjoined: 0 } };
 }
 export function assertCivicProjection(value: CivicProjection): void {
   if (value.formatVersion !== 1 || !["LOOKUP", "CATALOG", "STATE"].includes(value.kind) || !Number.isFinite(Date.parse(value.checkedAt)) || !Array.isArray(value.rows)) throw new Error("Invalid Google Civic projection.");

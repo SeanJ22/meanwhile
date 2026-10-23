@@ -8,11 +8,11 @@ export interface PeopleSourceReadModel extends Omit<OfficialStateLegislatorReadM
   readonly jurisdiction: "US" | `US-${string}`;
 }
 export function peopleJurisdiction(state: string): PeopleSourceReadModel["jurisdiction"] {
-  return state === "US" ? "US" : `US-${state.replace(/^US-/i, "").toUpperCase()}`;
+  return state.toUpperCase() === "US" ? "US" : `US-${state.replace(/^US-/i, "").toUpperCase()}`;
 }
 export async function readPeopleSourceProjection(jurisdiction: PeopleSourceReadModel["jurisdiction"], sourceId: string, options: PromotedCivicDataReadOptions = {}) {
   if (!isPeopleSource(sourceId)) throw Error("PEOPLE_SOURCE_UNREGISTERED");
-  const result = await readPromotedCivicData<PeopleSourceReadModel>(peopleSourceRecordClass(jurisdiction, sourceId), peopleSourceScope(jurisdiction, sourceId), options);
+  const result = await readPromotedCivicData<PeopleSourceReadModel>(peopleSourceRecordClass(sourceId), peopleSourceScope(jurisdiction, sourceId), options);
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
     const value = result.value, roster = value.roster;
     const ids = new Set(roster.officeholders.map(row=>row.id));

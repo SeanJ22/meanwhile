@@ -1,7 +1,6 @@
-/** The research lane's numbers: capacity, queue order, funnel, model share, cache hit rate and cost per useful outcome, each with its denominator. */
-
 import { MODELS, canonicalModelId, modelTierFor } from "../models.ts";
-import { cacheMeteringOf, costPortionsByModel, type MeteredCharge } from "./cost.ts";
+import { addMeasured, cacheMeteringOf, costPortionsByModel, measuredSum, type MeasuredSum, type MeteredCharge } from "./cost.ts";
+import { exactValue } from "./exact-sum.ts";
 import { CACHE_RATE_MULTIPLIERS, cacheSavingUsd } from "./model-cost.ts";
 import type { ScoutResult, ScoutStep } from "./scheduler/scout-result.ts";
 import { SCOUT_PREWARM_ROUTE_ID } from "./scheduler/research-policy.ts";
@@ -27,31 +26,38 @@ export function scoutCapacity(input: {
   readonly ceilingUsd: number;
 }): ScoutCapacity {
   const since = Date.parse(input.nowIso) - input.windowHours * 3_600_000;
-  let total = 0;
-  let measured = 0;
-  let unmeasured = 0;
-  for (const c of input.costs) {
-    if (c.role !== "SCOUT") continue;
-    /* A pre-warm request is a cache write for the cycle's Attempts, never an Attempt itself. */
-    if (c.routeId === SCOUT_PREWARM_ROUTE_ID) continue;
-    if (Date.parse(c.recordedAt) < since) continue;
-    if (c.cost.usd === null || c.cost.usd === undefined || Number.isNaN(c.cost.usd)) {
-      unmeasured += 1;
-      continue;
-    }
-    total += c.cost.usd;
-    measured += 1;
-  }
-  const mean = measured === 0 ? null : total / measured;
+  const tally = measuredSum();
+  /* An unreadable stamp is never before the window, so it counts. */
+  for (const c of input.costs) if (countsAsScoutAttempt(c) && !(Date.parse(c.recordedAt) < since)) addMeasured(tally, c.cost.usd);
+  return scoutCapacityOf(tally, input.windowHours, input.ceilingUsd);
+}
+
+/** A pre-warm request is a cache write for the cycle's Attempts, never an Attempt itself. */
+export function countsAsScoutAttempt(c: Pick<MeteredCharge, "role" | "routeId">): boolean {
+  return c.role === "SCOUT" && c.routeId !== SCOUT_PREWARM_ROUTE_ID;
+}
+
+export function scoutCapacityOf(tally: MeasuredSum, windowHours: number, ceilingUsd: number): ScoutCapacity {
+  const { measured, unmeasured } = tally;
+  const mean = measured === 0 ? null : exactValue(tally.sum) / measured;
   return {
     meanUsdPerAttempt: mean,
     measuredAttempts: measured,
     unmeasuredAttempts: unmeasured,
-    windowHours: input.windowHours,
-    ceilingUsd: input.ceilingUsd,
-    attemptsPerDayAtCap: mean === null || mean <= 0 ? null : Math.floor((input.ceilingUsd / mean) * (24 / input.windowHours)),
-    denominator: `measured SCOUT cost-ledger entries in the trailing ${input.windowHours}h window (${measured} measured, ${unmeasured} unmeasured)`,
+    windowHours,
+    ceilingUsd,
+    attemptsPerDayAtCap: mean === null || mean <= 0 ? null : Math.floor((ceilingUsd / mean) * (24 / windowHours)),
+    denominator: `measured SCOUT cost-ledger entries in the trailing ${windowHours}h window (${measured} measured, ${unmeasured} unmeasured)`,
   };
+}
+
+export function scoutCapacityFromTotals(input: { readonly totals: { readonly usd: number; readonly measured: number; readonly unmeasured: number };
+  readonly windowHours: number; readonly ceilingUsd: number }): ScoutCapacity {
+  const tally = measuredSum();
+  addMeasured(tally, input.totals.usd);
+  tally.measured = input.totals.measured;
+  tally.unmeasured = input.totals.unmeasured;
+  return scoutCapacityOf(tally, input.windowHours, input.ceilingUsd);
 }
 
 export type ReaderImpactBand = 1 | 2 | 3;
@@ -381,9 +387,25 @@ export function cacheHitRateByRole(input: {
       byRole.set(role, acc);
     }
   }
-  return [...byRole.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([role, a]) => {
+  return cacheReadingsFromTotals([...byRole].map(([role, a]) => ({ role, read: a.read, write: a.write, uncached: a.uncached,
+    attempts: a.attempts, measured: a.measured, predating: a.predating, unreported: a.unreported,
+    uncachedMax: a.uncachedPerRow.length ? Math.max(...a.uncachedPerRow) : 0,
+    requests: a.requests, batched: a.batched, saved: a.saved, aggregatePriced: a.aggregatePriced,
+    turns: a.turns, misses: a.misses, stationary: a.stationary })));
+}
+
+export interface CacheRoleTotals {
+  readonly role: string; readonly read: number; readonly write: number; readonly uncached: number;
+  readonly attempts: number; readonly measured: number; readonly predating: number; readonly unreported: number;
+  readonly uncachedMax: number; readonly requests: number; readonly batched: number; readonly saved: number | null;
+  readonly aggregatePriced: number; readonly turns: number | null; readonly misses: number | null; readonly stationary: number | null;
+}
+
+export function cacheReadingsFromTotals(rows: readonly CacheRoleTotals[]): CacheHitRate[] {
+  return [...rows].sort((a, b) => a.role.localeCompare(b.role)).map(a => {
+    const role = a.role;
     const total = a.read + a.write + a.uncached;
-    const mean = a.uncachedPerRow.length === 0 ? null : a.uncachedPerRow.reduce((n, v) => n + v, 0) / a.uncachedPerRow.length;
+    const mean = a.measured === 0 ? null : a.uncached / a.measured;
     return {
       role,
       cacheRead: a.read,
@@ -397,7 +419,7 @@ export function cacheHitRateByRole(input: {
       measuredRows: a.measured,
       predatingRows: a.predating,
       unreportedRows: a.unreported,
-      uncachedPerAttempt: mean === null ? null : { mean, max: Math.max(...a.uncachedPerRow) },
+      uncachedPerAttempt: mean === null ? null : { mean, max: a.uncachedMax },
       batchShare: a.requests === 0 ? null : a.batched / a.requests,
       savedUsd: a.measured === 0 ? null : a.saved,
       aggregatePricedRows: a.aggregatePriced,

@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/Howard.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Howard.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:55:38.011191+00:00",
+  "rawHash": "ff59a3d2f2da9f257c646c5bbde83d73a60e5d33fd93904429b971d8b127e0af",
+  "bytes": 1133308,
+  "convertedTextHash": "cbd371fa7ec60ca01a27d4c5b1591840e86729271e9baa38b562635672662aee",
+  "extraction": "pdftotext -raw; exact official certified ballot source text; original PDF identified by rawHash"
+}

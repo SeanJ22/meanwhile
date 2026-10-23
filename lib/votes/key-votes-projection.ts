@@ -12,8 +12,9 @@ import {
 import { KEY_VOTES_CRITERIA } from "./key-votes.ts";
 import { federalKeyVoteSelectionV1Issue } from "./key-vote-selection-v1.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
+import { currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 
-let cache: FederalKeyVotesReadModel | null = null;
+const requestReads = new WeakMap<ReaderSelection, CivicDataReadResult<FederalKeyVotesReadModel>>();
 let readState: CivicDataReadResult<FederalKeyVotesReadModel> = civicDataReadNotInitialized(
   "FEDERAL_KEY_VOTE",
   FEDERAL_KEY_VOTE_SCOPE,
@@ -54,13 +55,12 @@ export async function readFederalKeyVotesProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<FederalKeyVotesReadModel>> {
   const result = await readPromotedCivicData<FederalKeyVotesReadModel>("FEDERAL_KEY_VOTE", FEDERAL_KEY_VOTE_SCOPE, options);
-  readState = result;
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
     validateProjection(result.value, result.metadata.versionId ?? result.kind);
-    cache = result.value;
-  } else {
-    cache = null;
   }
+  const selected = currentReaderSelection();
+  if (selected) requestReads.set(selected, result);
+  else readState = result;
   return result;
 }
 
@@ -76,10 +76,13 @@ export const settleFederalKeyVotesRead = (): Promise<string | null> =>
   readPromotedEdgeFirst("FEDERAL_KEY_VOTE", FEDERAL_KEY_VOTE_SCOPE, refreshFederalKeyVotesFromPromoted, "The federal key votes");
 
 export function federalKeyVotesReadState(): CivicDataReadResult<FederalKeyVotesReadModel> {
-  return readState;
+  const selected = currentReaderSelection();
+  return selected ? requestReads.get(selected) ?? civicDataReadNotInitialized("FEDERAL_KEY_VOTE", FEDERAL_KEY_VOTE_SCOPE,
+    "This request's key-vote records have not been read.") : readState;
 }
 
 export function getFederalKeyVotesReadModel(): FederalKeyVotesReadModel {
-  if (!cache) throw new Error(`Federal key votes are ${readState.kind}; call readFederalKeyVotesProjection before using the synchronous projection.`);
-  return cache;
+  const held = federalKeyVotesReadState();
+  if (held.kind !== "PROMOTED" && held.kind !== "BOOTSTRAP") throw new Error(`Federal key votes are ${held.kind}; call readFederalKeyVotesProjection before using the synchronous projection.`);
+  return held.value;
 }

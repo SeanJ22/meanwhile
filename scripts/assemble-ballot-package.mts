@@ -104,10 +104,22 @@ export async function runBallotPublication(options: { state: BallotState; direct
     const outcome = await processRegisteredManualCandidate(store, contractId, result.candidate, at, result.priorVersionId);
     options.onStage?.("promotion", "end");
     receipt = { source: contractId, ...routineReceiptFields(result.candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
+    if (outcome.confirmed && outcome.promoted) {
+      const pointer = await store.readPromotionIdentity("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state));
+      if (pointer?.versionId !== receipt.promotedVersion || pointer.lastKnownGoodVersionId !== receipt.promotedVersion ||
+        pointer.sourceId !== result.candidate.sourceId) throw new Error(`BALLOT_REUSED_POINTER_MOVED:${state}`);
+      if (pointer.latestConfirmation?.observedAt !== receipt.confirmedAt) {
+        if (outcome.confirmed.at !== pointer.promotedAt) throw new Error(`BALLOT_CONFIRMATION_MISSING:${state}`);
+        // State reuse retains the verified version without writing a new confirmation event.
+        const { confirmedAt: _confirmedAt, ...reused } = receipt;
+        receipt = reused;
+      }
+    }
     report = { kind: "BALLOT_PUBLICATION", state, inputHash, inputStamp, at, merged, skipped, heldContests,
       status: outcome.promoted || outcome.confirmed ? "PUBLISHED" : "HELD", versionId: receipt.promotedVersion,
       reason: outcome.promoted || outcome.confirmed ? null : outcome.candidate.failureDetail ?? "Ballot validation held the published prior." };
   } catch (error) {
+    receipt = null;
     let reason = error instanceof Error ? error.message : String(error);
     let status: BallotPublicationResult["status"] = "HELD", versionId: string | null = null;
     const missing = error as NodeJS.ErrnoException;

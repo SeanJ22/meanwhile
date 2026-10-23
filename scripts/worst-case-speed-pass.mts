@@ -74,8 +74,7 @@ async function visit(browser: GuardedBrowser, target: SpeedTarget): Promise<Spee
     const path = target.surface === "ballot" ? `/ballot?zip=${target.zip}` : `/?zip=${target.zip}`;
     await page.goto(`${BASE}${path}`, { waitUntil: "commit", timeout: 60_000 });
     if (target.surface === "ask") {
-      await page.waitForFunction(() => document.readyState !== "loading", undefined, { timeout: WAIT_MS });
-      await page.evaluate(() => window.dispatchEvent(new CustomEvent("mw:open-pop", { detail: "ask" })));
+      await page.locator(".ask-pill").filter({ visible: true }).first().click({ timeout: WAIT_MS });
       const box = page.locator("[data-ask-panel] [data-ask-box]").first();
       try { await box.waitFor({ state: "visible", timeout: WAIT_MS }); } catch { return { ...target, ms: null, note: "the Ask box did not open" }; }
       await box.fill(target.question ?? "");

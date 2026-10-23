@@ -55,9 +55,11 @@ import { partyColorVar } from "@/lib/officials/party-color";
 import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 import { GovernmentListings } from "./government-listings";
+import { NationalLink } from "../shell/national-link";
 import { StateOfficeContacts } from "../state-office-contacts";
 
 interface CoverageNoticeProps {
+  localPending?: boolean;
   tier: CoverageTier;
   zip: string;
   listingCount?: ReturnType<typeof readerMeetingCount>;
@@ -161,7 +163,7 @@ function marksOverlap(standing: BodyStanding | undefined): boolean {
 function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; onOpenOfficial?: OpenOfficial }) {
   return <>
     {!seat.label && seat.sourcing !== "looking" && <CardGapContribution id={`seat-name:${seat.ocdId}`} label="district names" unit="district" />}
-    {seat.representatives.length === 0 && seat.sourcing !== "looking" && <CardGapContribution id={`seat-representatives:${seat.ocdId}`} label="representatives" unit="district" />}
+    {seat.representatives.length === 0 && !seat.vacancy && seat.sourcing !== "looking" && <CardGapContribution id={`seat-representatives:${seat.ocdId}`} label="representatives" unit="district" />}
     {(seat.label || seat.representatives.length > 0) && <li
       data-seat-standing={seat.standing}
       data-seat-sourcing={seat.sourcing}
@@ -169,6 +171,7 @@ function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; 
     >
       {seat.label && <span className={TYPE_LABEL_CLASS}>{seat.label}</span>}
       {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
+      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">{seat.vacancy.since ? `Vacant since ${new Date(`${seat.vacancy.since}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}` : "Seat vacant"} · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">{seat.vacancy.sourceOrg}</a></span>}
       {seat.representatives.length > 0 && <span className="block person-under-heading">
         <HolderList holders={[...seat.representatives]} seatLabel={seat.label ?? ""} seatOcdId={seat.ocdId} tier={seat.tier} onOpenOfficial={onOpenOfficial} />
       </span>}
@@ -270,6 +273,7 @@ function HolderList({
  * calendar held must not read "no meetings".
  */
 function CoverageBody({
+  localPending = false,
   zip,
   coverage,
   failedSourceOcdIds = [],
@@ -281,6 +285,7 @@ function CoverageBody({
   onAddressResolved,
   onAddressCleared,
 }: {
+  localPending?: boolean;
   zip: string;
   coverage: CoverageSummary;
   failedSourceOcdIds?: string[];
@@ -370,7 +375,7 @@ function CoverageBody({
     g.total > 0 ? `${g.total} local ${g.total === 1 ? "body" : "bodies"}${g.withSource > 0 ? `, with ${g.withSource === 1 ? "one calendar" : `${g.withSource} calendars`}` : ""}` : null,
   ].filter(Boolean);
 
-  const lead = kind === "unmapped" ? null : kind === "none-scheduled" ? (
+  const lead = localPending || kind === "unmapped" ? null : kind === "none-scheduled" ? (
     <>We don&apos;t have upcoming meetings for the {counts.total === 1 ? "body" : `${counts.total} bodies`} covering {zip} yet.</>
   ) : g.total > 0 ? (
     <>
@@ -405,10 +410,10 @@ function CoverageBody({
       )}
 
       {lead && <p className="mt-1.5 t-body leading-relaxed text-voice">{lead}</p>}
-      {missingCalendars > 0 && <CardGapContribution id={`area-calendars:${zip}`} label="calendars" count={missingCalendars} unit="body" />}
+      {!localPending && missingCalendars > 0 && <CardGapContribution id={`area-calendars:${zip}`} label="calendars" count={missingCalendars} unit="body" />}
       {!hasFederalOfficials && <CardGapContribution id={`area-federal-officials:${zip}`} label="federal officials" />}
       {!hasStateOfficials && <CardGapContribution id={`area-state-officials:${zip}`} label="state officials" />}
-      {g.total === 0 && <CardGapContribution id={`area-local-bodies:${zip}`} label="local bodies" />}
+      {!localPending && g.total === 0 && <CardGapContribution id={`area-local-bodies:${zip}`} label="local bodies" />}
 
       {/* Counts come from the same arrays the sections below render. */}
       {heldCoverage.length > 0 && <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-covers>
@@ -421,8 +426,11 @@ function CoverageBody({
 
       {coverage.federalDirectoryUnavailable && <p className="mt-1 t-detail text-voice">We could not load the federal directory just now.</p>}
       <GovernmentListings records={coverage.governments ?? []} states={coverage.governmentInventoryStates ?? []} unavailableStates={coverage.governmentInventoryUnavailableStates} />
+      {coverage.fringeDivisions && coverage.fringeDivisions.length > 0 && <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-fringe>
+        A small part of {zip} is in {coverage.fringeDivisions.map(division => division.label).join(", ")}. Enter your street address to see if one of them is yours.
+      </p>}
 
-      {othersLine && (
+      {!localPending && othersLine && (
         <p className="mt-1 t-detail leading-relaxed text-voice">
           {othersLine}
         </p>
@@ -650,7 +658,7 @@ function CoverageBody({
         </p>
       ))}
 
-      {collapseFootnotes(shown, (body) =>
+      {collapseFootnotes(localPending ? [] : shown, (body) =>
         agendaAbsenceNote(body.ocdId, body.coverageStatus),
       ).map((footnote) => (
         <p
@@ -662,7 +670,7 @@ function CoverageBody({
         </p>
       ))}
 
-      {seats.length > 0 && seatCounts.named === 0 && statewideExecutives.length === 0 && senators.length === 0 ? (
+      {seats.length > 0 && !seats.some(seat => seat.vacancy) && seatCounts.named === 0 && statewideExecutives.length === 0 && senators.length === 0 ? (
         // Nothing sourced for any seat — the original wording, still true.
         <p className="mt-2.5 t-detail leading-relaxed text-voice">
           You&apos;re also represented in {seatLine}.
@@ -760,6 +768,8 @@ function CoverageBody({
         </>
       )}
 
+      <NationalLink className="national-link mt-3 block" />
+
       {stateLegislatorGaps.map(authority => (
         <CardGapContribution key={authority.scope} id={`area-state-authority:${authority.scope}`} label={`state legislators in ${authority.scope.replace(/^US-/, "")}`} />
       ))}
@@ -782,6 +792,7 @@ function CoverageBody({
 }
 
 export function CoverageNotice({
+  localPending = false,
   tier,
   zip,
   listingCount,
@@ -809,14 +820,14 @@ export function CoverageNotice({
   // The gate lives in lib/registry/representation.ts.
   if (!shouldRenderNotice(tier, coverage)) return null;
 
-  const isEmpty = tier === "none";
-  const label = noticeLabel(tier, coverage);
+  const isEmpty = tier === "none" && !localPending;
+  const label = localPending ? "Who governs here" : noticeLabel(tier, coverage);
 
   // Amber marks missing meeting coverage.
   const accent =
-    tier === "concluded"
+    !localPending && tier === "concluded"
       ? "text-concluded"
-      : tier === "exact"
+      : localPending || tier === "exact"
         ? "text-muted"
         : "text-signal";
 
@@ -895,10 +906,11 @@ export function CoverageNotice({
           </ul>
         </section>
       )}
-      {tier === "concluded" && <p className="mt-2 t-body text-paper-dim">Recent meetings for this place.</p>}
+      {!localPending && tier === "concluded" && <p className="mt-2 t-body text-paper-dim">Recent meetings for this place.</p>}
 
       {coverage && hasRepresentation(coverage) ? (
         <CoverageBody
+          localPending={localPending}
           zip={zip}
           coverage={coverage}
           failedSourceOcdIds={failedSourceOcdIds}

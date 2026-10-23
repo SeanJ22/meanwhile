@@ -1,0 +1,180 @@
+ (https://columbiana.boe.ohio.gov/wp-content/uploads/2026/09/46-Day-FWAB-Nov-3-2026-General.pdf)
+【turn639812view0】 [wordlim: 200] Crawled: yesterday; Content type: application/pdf; Number of pages: 6; Source: click({"ref_id":"turn599770view0","id":1}); Total lines: 178
+L0@P0: Form No. 120 Prescribed by Secretary of State (01-22)
+L1@P0: Election Notice for use With the Federal Write-In Absentee Ballot
+L2@P0: (“FWAB”)
+L3@P0: R.C. 3511.16
+L4@P0: Initial notification for Nov 3, 2026, General Election
+L5@P0: (Posted 46 days prior to the date of the election)
+L6@P0: Issued by the Columbiana County Board of Elections
+L7@P0: State Executive Offices
+L8@P0: (Governor, Attorney General, Auditor of State, Secretary of State, Treasurer of State)
+L9@P0: Name of Candidate Office Party Precincts
+L10@P0: Amy Action
+L11@P0: David Pepper
+L12@P0: Governor
+L13@P0: Lieutenant Governor
+L14@P0: Dem All Columbiana County Precincts
+L15@P0: Vivek Ramaswamy
+L16@P0: Robert A. McColley
+L17@P0: Governor
+L18@P0: Lieutenant Governor
+L19@P0: Rep All Columbiana County Precincts
+L20@P0: Don C. Kissick
+L21@P0: James L Mills
+L22@P0: Governor
+L23@P0: Lieutenant Governor
+L24@P0: Lib All Columbiana County Precincts
+L25@P0: Timothy Grady
+L26@P0: Andrea Neutzling
+L27@P0: Governor
+L28@P0: Lieutenant Governor
+L29@P0: Write-in All Columbiana County Precincts
+L30@P0: Heather Hill
+L31@P0: Patrick Manley
+L32@P0: Governor
+L33@P0: Lieutenant Governor
+L34@P0: Write-in All Columbiana County Precincts
+L35@P0: Renea Turner
+L36@P0: Jalen Turner
+L37@P0: Governor
+L38@P0: Lieutenant Governor
+L39@P0: Write-in All Columbiana County Precincts
+L40@P0: Ron Ula
+L41@P0: Michael C. Lehnerd
+L42@P0: Governor
+L43@P0: Lieutenant Governor
+L44@P0: Write-in All Columbiana County Precincts
+L45@P0: Keith Faber Attorney General Rep All Columbiana County Precincts
+L46@P0: John J. Kulewicz Attorney General Dem All Columbiana County Precincts
+L47@P0: Frank LaRose Auditor of State Rep All Columbiana County Precincts
+L48@P0: Annette Blackwell Auditor of State Dem All Columbiana County Precincts
+L49@P0: Allison Russo Secretary of State Dem All Columbiana County Precincts
+L50@P0: Robert Sprague Secretary of State Rep All Columbiana County Precincts
+L51@P0-1: Tom Pruss Secretary of State Lib All Columbiana County Precincts Seth Walsh Treasurer of State Dem All Columbiana County Precincts
+L52@P1: Jay Edwards Treasurer of State Rep All Columbiana County Precincts
+L53@P1: Ohio Supreme Court
+L54@P1: Name of Candidate Office / Term Party Precincts
+L55@P1: Marilyn Zayas Justices of the
+L56@P1: Supreme Court Term
+L57@P1: Commencing 01/01/27
+L58@P1: Dem All Columbiana County Precincts
+L59@P1: Daniel R. Hawkins Justices of the
+L60@P1: Supreme Court Term
+L61@P1: Commencing 01/01/27
+L62@P1: Rep All Columbiana County Precincts
+L63@P1: Jennifer Brunner Justices of the
+L64@P1: Supreme Court Term
+L65@P1: Commencing 01/02/27
+L66@P1: Dem All Columbiana County Precincts
+L67@P1: Colleen O’Donnell Justices of the
+L68@P1: Supreme Court Term
+L69@P1: Commencing 01/02/27
+L70@P1: Rep All Columbiana County Precincts
+L71@P1: U.S. Senate
+L72@P1: Name of Candidate Office / Term Party Precincts
+L73@P1: Sherrod Brown U.S Senate Dem All Columbiana County Precincts
+L74@P1: John Husted U.S Senate Rep All Columbiana County Precincts
+L75@P1: William B. Redpath U.S Senate Lib All Columbiana County Precincts
+L76@P1: Greg Levy U.S Senate Other party
+L77@P1: candidate
+L78@P1: All Columbiana County Precincts
+L79@P1: Stephen Faris U.S Senate Write-in All Columbiana County Precincts
+L80@P1: Anthony Holliman U.S Senate Write-in All Columbiana County Precincts
+L81@P1-2: Timothy Telymonde U.S Senate Write-in All Columbiana County PrecinctsU.S. Representative to Congress
+L82@P2: Name of Candidate Office / Term Party Precincts
+L83@P2: Michael A. Rulli U.S. Representative to
+L84@P2: Congress 6th District
+L85@P2: REP All Columbiana County Precincts
+L86@P2: Elizabeth Kirtley U.S. Representative to
+L87@P2: Congress 6th District
+L88@P2: Dem All Columbiana County Precincts
+L89@P2: Ohio General Assembly (Ohio Senate and Ohio House of Representatives)
+L90@P2: Name of Candidate Office / Term Party Precincts
+L91@P2: Monica Robb Blasdel State Representative
+L92@P2: 79th District
+L93@P2: REP All Columbiana County Precincts
+L94@P2: Bob Guy State Representative
+L95@P2: 79th District
+L96@P2: Dem All Columbiana County Precincts
+L97@P2: Al Cutrona State Senator 33rd
+L98@P2: District
+L99@P2: REP All Columbiana County Precincts
+L100@P2: Michael Kripchak State Senator 33rd
+L101@P2: District
+L102@P2: DEM All Columbiana County Precincts
+L103@P2: Tex Fischer State Representative 59th
+L104@P2: District
+L105@P2: REP All Butler Twp Precincts and All Knox Twp
+L106@P2: Precincts
+L107@P2: Wayne Penny Jr State Representative 59th
+L108@P2: District
+L109@P2: DEM All Butler Twp Precincts and All Knox Twp
+L110@P2-3: Precincts Ohio Court of Appeals (7
+L111@P3: th District)
+L112@P3: Name of Candidate Office / Term Party Precincts
+L113@P3: Molly K. Johnson Judge Feb 9th Term REP All Columbiana County Precincts
+L114@P3: Mark Anthony Hanni Judge Feb 10th Term REP All Columbiana County Precincts
+L115@P3: Katherine Rudzik Judge Feb 10th Term Dem All Columbiana County Precincts
+L116@P3: County Administrative Offices (County Commissioner or County Council, Prosecuting
+L117@P3: Attorney, Clerk of the Court of Common Pleas, Sheriff, County Recorder, County Treasurer,
+L118@P3: County Engineer, Coroner, County Auditor, and Municipal Court Clerk)
+L119@P3: Name of Candidate Office / District / Term Party Precincts
+L120@P3: Mike Halleck Commissioner, Jan. 1st REP All Columbiana County Precincts
+L121@P3: Nancy Gause Milliken Auditor REP All Columbiana County Precincts
+L122@P3: County Court of Common Pleas or County Court
+L123@P3: Name of Candidate Office / Division /
+L124@P3: Term
+L125@P3: Party Precincts
+L126@P3: Thomas M. Baronzzi Probate/Juvenile
+L127@P3: Division
+L128@P3: REP All Columbiana County Precincts
+L129@P3: State Questions and Issues
+L130@P3: Number Title Precincts
+L131@P3: State Issue 3 Proposed Constitutional Amendment to
+L132@P3: Require Voters to Present Photo Identification
+L133@P3: in Order to Vote.
+L134@P3-4: All Columbiana County Precincts Local Questions and Issues
+L135@P4: Number Title Precincts
+L136@P4: 1. East Palestine 2.0 Mills Police Levy (Renewal) 5 Years All East Palestine Precincts
+L137@P4: 2. Fairfield Twp 1.6 Road Levy (Renewal) 5 Years All Fairfield Twp Precincts
+L138@P4: 3. West Twp 3.0 Mills Road Levy (Renewal) 5 Years All West Twp Precincts
+L139@P4: 4. Salem City 1.3 Mills Parks Levy (Renewal 5 Years All Salem City Precincts
+L140@P4: 5. East Palestine City Schools 1% Income Tax (Additional) All East Palestine City School Precincts
+L141@P4: 6. West Branch School District 1 Mill General Permanent
+L142@P4: Improvements Levy (additional) 5 Years
+L143@P4: All West Branch School District Precincts
+L144@P4: 7. Butler Twp 3.0 Mills Road Levy (Renewal) 5 Years All Butler Twp Precincts
+L145@P4: 8. Center Twp 0.286 Mill Fire Levy (Renewal) 5 Years All Center Twp Precincts
+L146@P4: 9. Liverpool Twp 1.45 Mills Fire Levy (Additional) Continuous All Liverpool Twp Precincts
+L147@P4: 10. Wayne Twp 3.0 Mills Fire Levy (Additional) 5 Years 068 Wayne Twp
+L148@P4: 11. Perry Twp 1.5 Mills Police Levy (Additional) 5 Years All Perry Twp Precincts
+L149@P4: 12. Knox Twp 1.5 Mills Road Levy (Renewal) 5 Years All Knox Twp Precincts
+L150@P4: 13. East Palestine Charter Amendment Section 4.13, 4.15, 18.05,
+L151@P4: 10.05
+L152@P4: All East Palestine Precincts
+L153@P4: 14. East Palestine Charter Amendment Section 3.03 All East Palestine Precincts
+L154@P4: 15. Middleton Twp 3.22 Mills Fire Levy (Renewal) 5 Years All Middleton Twp Precincts
+L155@P4: 16. Salineville American Legion John Adams Post 0442
+L156@P4: D6 Sunday Sales
+L157@P4: 066 Salineville
+L158@P4: 17. Quaker Beverage dba Gene’s Drive-thru D6 Sunday Sales 012 Salem City 2A
+L159@P4: 18. Alliance City School District 2 Mills Building Levy (Renewal)
+L160@P4: 5 Years
+L161@P4-5: 40/2 Knox Twp Northwest INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L162@P5: FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L163@P5: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of
+L164@P5: downloading a blank, hard copy FWAB to complete by hand, or proceeding through electronic completion of
+L165@P5: the FWAB using the website’s FWAB Wizard.
+L166@P5: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to
+L167@P5: count.
+L168@P5: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before
+L169@P5: the election and the updated election notice issued on the 46
+L170@P5: th day before the election as a guide to:
+L171@P5: (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L172@P5: (2) write the name of your choice of candidate or choice for or against an issue.
+L173@P5: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of
+L174@P5: elections at this address: 7989 Dickey Drive, Suite 3, Lisbon, OH 44432.
+L175@P5: A complete listing of all county board of elections mailing addresses and contact information is available at:
+L176@P5: https://ohiosos.gov/SOS/elections/electionsofficials/boeDirectory.aspx#dir.
+L177@P5: Do not send your ballot via e-mail or fax; Ohio law prohibits electronic transmission of a voted ballot.

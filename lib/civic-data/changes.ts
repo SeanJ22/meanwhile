@@ -196,6 +196,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           : [row.chamber, row.seatNo, row.district].filter((part) => typeof part === "string" && part).join(":");
         return { key: `member:${identity || `row-${index}`}`, record };
       });
+    case "CAMPAIGN_FINANCE":
+      return keyed("campaign-finance", array(root.records), ["id"]);
     case "FEDERAL_MONEY":
       return root.state === "US"
         ? keyed("federal-money-state", array(root.states), ["state"])
@@ -223,6 +225,11 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           })
         : [{ key: `session-marker:${textKey(root, ["jurisdiction"]) ?? "state"}`, record: root }];
     case "FEDERAL_ROLL_CALL": {
+      if (typeof root.officeholderId === "string" && root.officeholderId) return [
+        { key: "projection:member-session", record: { officeholderId: root.officeholderId, congress: root.congress, session: root.session } },
+        ...keyed("roll", array(root.votes), ["id"]),
+        ...array(root.positions).map((record, index) => ({ key: `position:${textKey(record, ["voteId"]) ?? `row-${index}`}:${root.officeholderId as string}`, record })),
+      ].sort((left, right) => left.key.localeCompare(right.key));
       const snapshot = object(root.snapshot) ?? root;
       const billSummaries = object(root.billSummaries) ?? {};
       const summaries = object(billSummaries.summaries) ?? {};
@@ -238,12 +245,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         },
         { key: "projection:bill-summary-note", record: billSummaries.note ?? null },
         ...keyed("roll", array(snapshot.votes), ["id"]),
-        ...array(snapshot.positions).map((record, index) => {
-          const row = object(record) ?? {};
-          const roll = textKey(row, ["voteId"]);
-          const person = textKey(row, ["officeholderId"]);
-          return { key: `position:${roll && person ? `${roll}:${person}` : `row-${index}`}`, record };
-        }),
+        ...Object.entries(object(root.partyBreakdowns) ?? {}).map(([voteId, record]) => ({ key: `party-breakdown:${voteId}`, record })),
         ...Object.entries(summaries).map(([billUrl, record]) => ({
           key: `bill-summary:${billUrl}`,
           record: { billUrl, ...(object(record) ?? {}) },
@@ -286,6 +288,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           return { key: `division:${person && division ? `${person}:${division}` : `row-${index}`}`, record };
         }),
         ...Object.entries(byMember).map(([key, record]) => ({ key: `directory:${key}`, record })),
+        ...keyed("vacancy", array(root.vacancies), ["ocdId"]),
         ...Object.entries(committees).map(([key, record]) => ({ key: `committee:${key}`, record })),
       ].sort((left, right) => left.key.localeCompare(right.key));
     }
@@ -475,8 +478,10 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ...keyed("federal", array(root.records), ["id"]),
       ].sort((a, b) => a.key.localeCompare(b.key));
     case "CURATED_READER_RECORD":
-      return keyed("curated-reader", [...array(root.records), ...(root.kind === "open-data" ? [...array(root.reports),...array(root.partitions)] : [])], ["id"])
-        .sort((left, right) => left.key.localeCompare(right.key));
+      return [
+        ...keyed("curated-reader", [...array(root.records), ...(root.kind === "open-data" ? [...array(root.reports),...array(root.partitions)] : [])], ["id"]),
+        ...(root.kind === "meeting-doors" ? keyed("meeting-door", array(root.doors), ["doorId"]) : []),
+      ].sort((left, right) => left.key.localeCompare(right.key));
     case "STATE_CAMPAIGN_FINANCE":
       return array(root.records).map((record, index) => {
         const row = object(record) ?? {};
@@ -526,6 +531,37 @@ export function canonicalCivicDataJson(value: unknown): string {
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, child]) => `${JSON.stringify(key)}:${canonicalCivicDataJson(child)}`)
     .join(",")}}`;
+}
+
+/** sha256 of canonicalCivicDataJson(value), fed as it walks so no whole string is built. */
+export function canonicalCivicDataHash(value: unknown): string {
+  const hash = createHash("sha256");
+  let pending = "";
+  const out = (text: string) => { pending += text; if (pending.length > 1 << 20) { hash.update(pending); pending = ""; } };
+  const walk = (node: unknown): string | undefined => {
+    if (node === null || typeof node !== "object") return JSON.stringify(node);
+    if (Array.isArray(node)) {
+      out("[");
+      for (let index = 0; index < node.length; index++) {
+        if (index) out(",");
+        const text = index in node ? walk(node[index]) : undefined;
+        if (text !== undefined) out(text);
+      }
+      out("]");
+      return "";
+    }
+    out("{");
+    Object.entries(node as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)).forEach(([key, child], index) => {
+      out(`${index ? "," : ""}${JSON.stringify(key)}:`);
+      const text = walk(child);
+      out(text === undefined ? "undefined" : text);
+    });
+    out("}");
+    return "";
+  };
+  const top = walk(value);
+  if (top) out(top);
+  return hash.update(pending).digest("hex");
 }
 
 export interface CivicChangeContract {

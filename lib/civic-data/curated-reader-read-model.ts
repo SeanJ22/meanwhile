@@ -15,6 +15,8 @@ import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import { readStateAuthorityProjection } from "./state-reader.ts";
 import { ballotNavigationFor } from "../ballot/navigation.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
+import { readerRecordsWithOwnerChoices } from "../facts/owner-flags.ts";
+import { factReader } from "../facts/db.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
@@ -75,20 +77,24 @@ export async function readCuratedReaderProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<CuratedReaderProjection>> {
   const contract = requiredManualProductionContract(id);
-  const result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, options);
+  let result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, options);
   if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown");
+  if (result.kind === "PROMOTED") result = { ...result,value:{...result.value,
+    records:await readerRecordsWithOwnerChoices(factReader(),id,result.value.records)} };
   readerStates().set(id, result);
   return result;
 }
 
-/** One state's navigation records. A request-scoped read takes the state family's edge artifact; an injected store reads its pointer. */
+/** One state's navigation records, with Sean's choices applied. A request reads its state pointer; an injected store reads that pointer directly. */
 export async function readBallotNavigationProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<CuratedReaderProjection>> {
   const scope = ballotNavigationScope(state);
   const result = Object.keys(options).length
     ? await readPromotedCivicData<CuratedReaderProjection>(BALLOT_NAVIGATION.recordClass, scope, options)
     : (await readStateAuthorityProjection<CuratedReaderProjection>("ballot-navigation", state)).result;
-  if (result.kind === "PROMOTED") ballotNavigationFor(state, result.value, result.metadata.versionId!, []);
-  return result;
+  if (result.kind !== "PROMOTED") return result;
+  // Validate the government's own version, which may become empty after an owner removal.
+  ballotNavigationFor(state, result.value, result.metadata.versionId!, []);
+  return { ...result, value: { ...result.value, records: await readerRecordsWithOwnerChoices(factReader(), "ballot-navigation", result.value.records) } };
 }
 
 export async function refreshCuratedReaderProjection(
@@ -109,6 +115,10 @@ export function primeCuratedReaderProjection(
   versionId: string,
 ): void {
   validateOnce(id, value, versionId, () => validate(id, value, versionId));
+  storeCuratedReaderProjection(id,value,versionId);
+}
+
+function storeCuratedReaderProjection(id:CuratedReaderContractId,value:CuratedReaderProjection,versionId:string):void {
   const contract = requiredManualProductionContract(id);
   readerStates().set(id, {
     kind: "BOOTSTRAP",
@@ -128,6 +138,14 @@ export function primeCuratedReaderProjection(
     },
     detail: `Served from the ${id} edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
   });
+}
+
+/** Apply the owner's edge choices before the request primes its serving projection. */
+export async function primeCuratedReaderProjectionWithOwnerChoices(id: CuratedReaderContractId,value:CuratedReaderProjection,versionId:string):Promise<void> {
+  const records=await readerRecordsWithOwnerChoices(null,id,value.records);
+  // Validate the government's original projection, which may become empty after an owner removal.
+  validateOnce(id,value,versionId,()=>validate(id,value,versionId));
+  storeCuratedReaderProjection(id,{...value,records},versionId);
 }
 export const readOfficialFilingsForReader = (): Promise<CivicDataReadResult<CuratedReaderProjection>> => {
   const contract = requiredManualProductionContract("official-filings");

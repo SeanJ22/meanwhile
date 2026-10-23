@@ -1,0 +1,50 @@
+{
+  "state": "OH",
+  "before": [
+    218,
+    3
+  ],
+  "after": [
+    223,
+    8
+  ],
+  "verifiedLocalMeasures": 5,
+  "measures": [
+    {
+      "contestId": "oh-ba01-cincinnati-csd-issue-4",
+      "title": "Cincinnati City School District Issue 4 \u2014 Proposed Tax Levy (Additional)",
+      "scope": "school_district:cincinnati_city_school_district",
+      "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+      "question": "An additional tax for the benefit of the Cincinnati City School District for the purpose of current expenses that the county auditor estimates will collect $66,336,723 annually, at a rate not exceeding 7 mills for each $1 of taxable value, which amounts to $245 for each $100,000 of the county auditor's market value, for 5 years, commencing in 2026, first due in calendar year 2027. The county auditor has certified that the amount by which the carry-over balance in the district's general operating budget from the preceding fiscal year exceeds the district's general fund expenditures made in the preceding fiscal year is $37,352,861, which is 6% of those expenditures."
+    },
+    {
+      "contestId": "oh-ba01-hamilton-issue-10",
+      "title": "Hamilton County Issue 10 \u2014 Proposed Tax Levy (Renewal and Increase)",
+      "scope": "county:hamilton",
+      "sourceUrl": "https://votehamiltoncountyohio.gov/files/ballots/N06020.pdf",
+      "question": "A renewal of 4.51 mills and an increase of 1.1 mill for each $1 of taxable value to constitute a tax for the benefit of Hamilton County for the purpose of support for children's services and care and placement of children that the county auditor estimates will collect $116,888,718 annually, at a rate not exceeding 5.61 mills for each $1 of taxable value, which amounts to $121 for each $100,000 of the county auditor's market value, for 4 years, commencing in 2026, first due in calendar year 2027."
+    },
+    {
+      "contestId": "oh-ba01-akron-issue-11",
+      "title": "Akron Issue 11 \u2014 Proposed Charter Amendment",
+      "scope": "place:akron",
+      "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+      "question": "Shall the Charter of the City of Akron be amended to enact Section 101b so as to require property owners or operators to permit security deposits for residential rentals to be paid over three or six month periods; to require operators to inform tenants or prospective tenants of their right to make security deposit payments over three or six months; criminalizing the failure to provide the notification; banning fees, charges, deposits or other payments prior to executing rental agreements for residential rental properties; and criminalizing the collection of an application fee for residential rentals?"
+    },
+    {
+      "contestId": "oh-ba01-akron-issue-12",
+      "title": "Akron Issue 12 \u2014 Proposed Charter Amendment",
+      "scope": "place:akron",
+      "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+      "question": "Shall the Charter of the City of Akron be amended to enact Section 100a to add the City of Akron's existing codified anti-discrimination protections in the Charter; to, with exceptions for sex offenders and arson offenders, prohibit owners and operators from declining to rent to, or engage in real estate transaction with, an individual on the basis of that individual's criminal history such as arrests, convictions, incarceration; making individuals with criminal histories a protected class similar to race, gender, sexual orientation, and other existing protected classes as it relates to renting, home sales, and other real estate transactions; giving Akron Civil Rights Commission jurisdiction over all real estate discrimination claims arising in Akron; and requiring City Council to enact implementing legislation within ninety (90) days of the effective date of this amendment?"
+    },
+    {
+      "contestId": "oh-ba01-akron-issue-13",
+      "title": "Akron Issue 13 \u2014 Proposed Charter Amendment",
+      "scope": "place:akron",
+      "sourceUrl": "https://lookup.boe.ohio.gov/vtrapp/summit/getballot.aspx?elect=20261103G&prsid=001___1&bpty=X",
+      "question": "Shall Section 68a of the Charter of the City of Akron be amended to change the composition and board member-appointment process of the citizen's police oversight board by reducing the number of members appointed by City Council and requiring the Board to select one-third of its own members from a preselected list provided by a committee comprised of individuals who are members of a \"qualifying civil rights organization\"; to establish procedures and timing requirements for the Mayor, Chief of Police, and City Council to respond to recommendations made by the Office of the Independent Police Auditor; to explicitly authorize the Office of the Independent Police Auditor to issue subpoenas compelling production of records in the possession of public or private entities or individuals; and to authorize the Office of Independent Police Auditor to compel attendance and testimony from private citizens and public employees?"
+    }
+  ],
+  "remaining": "Saved official source/catalog replay only. Other precinct/local measures and full43215 paper/live reconciliation remain open."
+}

@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { searchMeetings } from "../lib/meetings/query.ts";
-import { snapshotSourceFor } from "../lib/meetings/registry.ts";
+import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
+import { snapshotSourceFor } from "../lib/meetings/snapshot-source.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 /** The instant the fixture is judged at. */
@@ -71,8 +71,13 @@ function served(meetings: Meeting[]) {
 
 const ids = (meetings: readonly Meeting[]) => meetings.map((m) => m.id);
 
+const COUNTY = "ocd-division/country:us/state:az/county:pima";
+const BODY_ID = "curated:az/pima-community-college#governing";
+/** The college's board is registered for the county, as the registry names it. */
+const COLLEGE = [{ id: BODY_ID, ocdId: COUNTY }];
+
 test("a place keeps its physical and online meetings together", async () => {
-  const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 25, NOW, DIVISIONS_AT_85701, served(PCC));
+  const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 25, NOW, DIVISIONS_AT_85701, served(PCC), undefined, meetingBodyIds(COLLEGE, DIVISIONS_AT_85701));
   assert.equal(result.tier, "exact");
   assert.equal(result.radiusKm, 25);
   assert.deepEqual(ids(result.meetings), PCC_IDS);
@@ -81,32 +86,31 @@ test("a place keeps its physical and online meetings together", async () => {
 
 test("a nearby venue cannot bring another government's online meetings into the place", async () => {
   const outside = new Set(["ocd-division/country:us/state:az/county:cochise"]);
-  const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 150, NOW, outside, served(PCC));
+  const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 150, NOW, outside, served(PCC), undefined, meetingBodyIds(COLLEGE, outside));
   assert.equal(result.tier, "none");
   assert.deepEqual(result.meetings, []);
 });
 
 test("online meetings remain visible without any physical sitting", async () => {
   const rows = PCC.filter(m => m.location === null);
-  const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 25, NOW, DIVISIONS_AT_85701, served(rows));
+  const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 25, NOW, DIVISIONS_AT_85701, served(rows), undefined, meetingBodyIds(COLLEGE, DIVISIONS_AT_85701));
   assert.equal(result.tier, "exact");
   assert.deepEqual(ids(result.meetings), ids(rows));
 });
 
 test("a body with no recorded division is never inferred from its venue", async () => {
   const rows = PCC.map(m => ({ ...m, ocdId: null }));
-  const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 25, NOW, DIVISIONS_AT_85701, served(rows));
+  const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 25, NOW, DIVISIONS_AT_85701, served(rows), undefined, meetingBodyIds([{ id: BODY_ID, ocdId: null }], DIVISIONS_AT_85701));
   assert.equal(result.tier, "none");
   assert.deepEqual(result.meetings, []);
 });
 
 test("canonical body divisions and shared territories keep their online calendars visible", async () => {
   const rows = PCC.map(m => ({ ...m, ocdId: null }));
-  const county = "ocd-division/country:us/state:az/county:pima";
   const shared = "ocd-division/country:us/state:az/county:cochise";
-  const bodies = [{ id: rows[0].bodyId!, ocdId: county, alsoServesOcdIds: [shared] }];
+  const bodies = [{ id: rows[0].bodyId!, ocdId: COUNTY, alsoServesOcdIds: [shared] }];
   for (const own of [DIVISIONS_AT_85701, new Set([shared])]) {
-    const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 25, NOW, own, served(rows), undefined, bodies);
+    const result = await searchMeetings(AT_85701.lat, AT_85701.lng, 25, NOW, own, served(rows), undefined, meetingBodyIds(bodies, own));
     assert.equal(result.tier, "exact");
     assert.deepEqual(ids(result.meetings), PCC_IDS);
   }

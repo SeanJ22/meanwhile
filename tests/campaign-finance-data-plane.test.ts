@@ -19,7 +19,7 @@ import {
   readStateMoneyProjections,
   refreshStateMoneyFromPromoted,
   resetStateMoneyCache,
-  stateMoneyForTarget,
+  stateMoneyReadState,
   stateMoneyProofInventory,
 } from "../lib/funding/state-snapshot.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
@@ -165,7 +165,9 @@ test("state Reader follows promoted pointers and never selects a tracked fixture
   assert.equal(reads.get("AZ")?.kind, "PROMOTED");
   const target = (good.readModel as StateMoneySnapshot).records[0].targetKeys[0];
   assert.ok(target);
-  assert.equal(stateMoneyForTarget(target)[0]?.committeeId, (good.readModel as StateMoneySnapshot).records[0].committeeId);
+  const saved = stateMoneyReadState("AZ");
+  assert.equal(saved.kind, "PROMOTED");
+  if (saved.kind === "PROMOTED") assert.equal(saved.value.records[0]?.committeeId, (good.readModel as StateMoneySnapshot).records[0].committeeId);
 
   const brokenStore = {
     async readPromotion() { throw new Error("database unavailable"); },
@@ -173,7 +175,7 @@ test("state Reader follows promoted pointers and never selects a tracked fixture
   };
   const failedReads = await readStateMoneyProjections({ store: brokenStore, bypassCache: true, now: T1 });
   assert.ok([...failedReads.values()].every((read) => read.kind === "STORE_UNREACHABLE"));
-  assert.throws(() => stateMoneyForTarget(target), /Canonical state-money holding unavailable/);
+  assert.equal(stateMoneyReadState("AZ").kind, "STORE_UNREACHABLE");
 });
 
 test("documentary state-money proof inventory binds every promoted authority and fails closed otherwise", async () => {
@@ -258,6 +260,8 @@ test("one invalid state projection cannot suppress or erase another state's Read
   const azTarget = (az.readModel as StateMoneySnapshot).records[0]?.targetKeys[0];
   assert.ok(nhTarget);
   assert.ok(azTarget);
-  assert.equal(stateMoneyForTarget(nhTarget)[0]?.jurisdiction, "NH");
-  assert.throws(() => stateMoneyForTarget(azTarget), /unavailable for AZ \(PROJECTION_INVALID\)/);
+  const savedNh = stateMoneyReadState("NH");
+  assert.equal(savedNh.kind, "PROMOTED");
+  if (savedNh.kind === "PROMOTED") assert.equal(savedNh.value.records[0]?.jurisdiction, "NH");
+  assert.equal(stateMoneyReadState("AZ").kind, "PROJECTION_INVALID");
 });

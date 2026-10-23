@@ -6,7 +6,77 @@ import { doorPartitionIds } from "../doors/mission-refresh.ts";
 import { owedFactItems, owedWorkerPublications, workerPublicationTasks, workerPublicationTasksFor, type HeldInputs, type OwedWorkerPublication, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../control-plane/repository/pg-store.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
-import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
+import { stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
+import type { FactDb, Query } from "../facts/publish.ts";
+
+export const PUBLISH_NOW_CURSOR = "publish-now";
+const RETRY_CURSOR_PREFIX = `${PUBLISH_NOW_CURSOR}:retry:`;
+export const PUBLISH_NOW_RETRY_MS = 15 * 60_000;
+
+/** Unknown held inputs use the existing hourly fallback; its backoff must survive advancing the scan too. */
+export function publishNowRetryItemIds(items: readonly WorkerPublicationItem[], owedItemIds: readonly string[], heldInputs: HeldInputs | null): string[] {
+  const fallback = heldInputs === null ? items.filter(item => {
+    const target = item.autonomousPlan?.publication?.contractId;
+    const recordClass = item.autonomousPlan?.contract.recordClass;
+    return stateFromRegistryRuntimeContractId(target ?? "") ? recordClass === "OFFICIAL_ROSTER" || recordClass === "OFFICIAL_BOARD_DIRECTORY"
+      : target === "ballot-navigation" && recordClass === "VOTER_ACCESS_ROUTE";
+  }).map(item => item.id) : [];
+  return [...new Set([...owedItemIds, ...fallback])];
+}
+
+/** A failed or unstarted item has its own persisted retry clock, independent of the changed-since window. */
+export async function readPublishNowRetryIds(query: Query, now: string): Promise<string[]> {
+  const ids: string[] = [];
+  let after = RETRY_CURSOR_PREFIX;
+  for (;;) {
+    const rows = await query(`SELECT name FROM pass_cursor WHERE name > $1 AND name < $2 AND position <= $3
+      ORDER BY name LIMIT ${AGGREGATE_LIST_READ_PAGE}`, [after, `${PUBLISH_NOW_CURSOR}:retry;`, now]);
+    for (const row of rows) {
+      if (typeof row.name !== "string" || !row.name.startsWith(RETRY_CURSOR_PREFIX) || row.name <= after) {
+        throw new Error("PUBLISH_NOW_RETRY_PAGE_INVALID");
+      }
+      ids.push(row.name.slice(RETRY_CURSOR_PREFIX.length));
+    }
+    if (rows.length < AGGREGATE_LIST_READ_PAGE) return ids;
+    const next = String(rows.at(-1)!.name);
+    if (next <= after) throw new Error("PUBLISH_NOW_RETRY_PAGE_NOT_ADVANCING");
+    after = next;
+  }
+}
+
+/**
+ * Save every owed item before executing it, then advance the scan in the same transaction. A crash after this
+ * point leaves the item owed on its own clock; a failed save leaves the previous scan position intact.
+ * The next read clears a retry only after publication admission says that item is no longer owed.
+ */
+export async function savePublishNowProgress(db: FactDb, input: {
+  readonly startedAt: string;
+  readonly selectedItemIds: readonly string[];
+  readonly owedItemIds: readonly string[];
+}): Promise<void> {
+  const at = Date.parse(input.startedAt);
+  if (!Number.isFinite(at) || new Date(at).toISOString() !== input.startedAt) throw new Error("PUBLISH_NOW_PROGRESS_TIME_INVALID");
+  const selected = new Set(input.selectedItemIds);
+  const owed = new Set(input.owedItemIds);
+  if ([...selected, ...owed].some(id => !id.trim()) || [...owed].some(id => !selected.has(id))) {
+    throw new Error("PUBLISH_NOW_PROGRESS_ITEM_INVALID");
+  }
+  const pending = [...owed].map(id => RETRY_CURSOR_PREFIX + id);
+  const settled = [...selected].filter(id => !owed.has(id)).map(id => RETRY_CURSOR_PREFIX + id);
+  const next = new Date(at + PUBLISH_NOW_RETRY_MS).toISOString();
+  await db.transaction(async query => {
+    for (let offset = 0; offset < pending.length; offset += AGGREGATE_LIST_READ_PAGE) {
+      await query(`INSERT INTO pass_cursor (name, position) SELECT unnest($1::text[]), $2
+        ON CONFLICT (name) DO UPDATE SET position = EXCLUDED.position WHERE pass_cursor.position <= $3`,
+      [pending.slice(offset, offset + AGGREGATE_LIST_READ_PAGE), next, input.startedAt]);
+    }
+    for (let offset = 0; offset < settled.length; offset += AGGREGATE_LIST_READ_PAGE) {
+      await query("DELETE FROM pass_cursor WHERE name = ANY($1::text[])", [settled.slice(offset, offset + AGGREGATE_LIST_READ_PAGE)]);
+    }
+    await query(`INSERT INTO pass_cursor (name, position) VALUES ($1, $2)
+      ON CONFLICT (name) DO UPDATE SET position = greatest(pass_cursor.position, EXCLUDED.position)`, [PUBLISH_NOW_CURSOR, input.startedAt]);
+  });
+}
 
 export const PUBLISH_NOW_INTERVAL_MS = 60_000;
 /** A publish-now pass ends within this; what it did not finish stays owed to the next minute. */
@@ -16,47 +86,9 @@ export function publishNowLane(run: (deadlineMs: number) => Promise<void>): Inde
   return { id: "publish-now", everyMs: PUBLISH_NOW_INTERVAL_MS, budgetMs: PUBLISH_NOW_PASS_BUDGET_MS, run };
 }
 
-/** An unchanged minute with no source work ends quietly; a copied pointer or failed copy still owes its existing supervisor receipt. */
-export function publishNowHasNothingOwed(publishNow: boolean, selectedTasks: number, failures: number, edge: ReaderEdgePublicationOutcome): boolean {
-  return publishNow && selectedTasks === 0 && failures === 0 && edge.ok &&
-    (edge.readerEdge === "CURRENT" || edge.readerEdge === "SKIPPED_OWNER_PAUSE");
-}
-
-/** Keep the existing publication minute moving during a long outbox pass. Concurrent ticks share one sweep. */
-export function startPublishNowEdgeChecks(input: {
-  readonly check: () => Promise<ReaderEdgePublicationOutcome>;
-  readonly readPaused: () => Promise<boolean>;
-  readonly store: ReaderEdgePublicationOutcome["store"];
-  readonly onError: (error: unknown) => void;
-  readonly schedule?: (tick: () => void, everyMs: number) => () => void;
-}): { run: () => Promise<ReaderEdgePublicationOutcome>; stop: () => Promise<ReaderEdgePublicationOutcome | null> } {
-  const schedule = input.schedule ?? ((tick, everyMs) => {
-    const timer = setInterval(tick, everyMs);
-    timer.unref();
-    return () => clearInterval(timer);
-  });
-  let inFlight: Promise<ReaderEdgePublicationOutcome> | null = null;
-  let outcome: ReaderEdgePublicationOutcome | null = null;
-  let stopped = false;
-  const run = (): Promise<ReaderEdgePublicationOutcome> => {
-    if (inFlight) return inFlight;
-    inFlight = Promise.resolve().then(async (): Promise<ReaderEdgePublicationOutcome> => await input.readPaused()
-      ? { ok: true, readerEdge: "SKIPPED_OWNER_PAUSE", store: input.store, sequence: null,
-        detail: "The owner paused publication; no source pointers were copied." }
-      : input.check()).catch((error): ReaderEdgePublicationOutcome => {
-      input.onError(error);
-      return { ok: false, readerEdge: "FAILED", store: input.store, sequence: outcome?.sequence ?? null,
-        detail: "The publication check could not read its owner control or copy source pointers; retry remains owed." };
-    }).then(next => {
-      // A quiet later check must not erase an earlier publication or failure from this pass's receipt.
-      if (!["CURRENT", "SKIPPED_OWNER_PAUSE"].includes(next.readerEdge) || outcome === null ||
-          ["CURRENT", "SKIPPED_OWNER_PAUSE"].includes(outcome.readerEdge)) outcome = next;
-      return next;
-    }).finally(() => { inFlight = null; });
-    return inFlight;
-  };
-  const cancel = schedule(() => { if (!stopped) void run().catch(input.onError); }, PUBLISH_NOW_INTERVAL_MS);
-  return { run, stop: async () => { stopped = true; cancel(); if (inFlight) await inFlight; return outcome; } };
+/** An unchanged minute with no source work ends quietly. */
+export function publishNowHasNothingOwed(publishNow: boolean, selectedTasks: number, failures: number): boolean {
+  return publishNow && selectedTasks === 0 && failures === 0;
 }
 
 /** Parser results and held-page fallbacks share this outbox; publicationOutcome keeps each retry clock durable. */
@@ -67,28 +99,30 @@ export function publishNowWorkerTasks(items: readonly WorkerPublicationItem[], r
 /* Work changed since the cursor: the item itself, its worker results, or a page saved for its body or place;
    every held ballot route too when an input they all share moved. Each branch reads an index. */
 const CHANGED_SINCE = `WITH due(id) AS (
-    SELECT id FROM cp_work_items WHERE changed_at > $2::timestamptz
+    SELECT id FROM cp_work_items_history WHERE changed_at > $2::timestamptz
     UNION SELECT log_key FROM cp_log_worker_results WHERE changed_at > $2::timestamptz
-    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items s ON s.id = a.log_key
-      JOIN cp_work_items p ON p.value #>> '{autonomousPlan,publication,bodyId}' = s.value #>> '{autonomousPlan,publication,bodyId}' WHERE a.changed_at > $2::timestamptz
-    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items s ON s.id = a.log_key
-      JOIN cp_work_items p ON p.value #>> '{subject}' = s.value #>> '{subject}' WHERE a.changed_at > $2::timestamptz
-    UNION SELECT id FROM cp_work_items WHERE $3::boolean AND value #>> '{autonomousPlan,publication,contractId}' = 'ballot-navigation')`;
+    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items_history s ON s.id = a.log_key
+      JOIN cp_work_items_history p ON p.value #>> '{autonomousPlan,publication,bodyId}' = s.value #>> '{autonomousPlan,publication,bodyId}' WHERE a.changed_at > $2::timestamptz
+    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items_history s ON s.id = a.log_key
+      JOIN cp_work_items_history p ON p.value #>> '{subject}' = s.value #>> '{subject}' WHERE a.changed_at > $2::timestamptz
+    UNION SELECT id FROM cp_work_items_history WHERE $3::boolean AND value #>> '{autonomousPlan,publication,contractId}' = 'ballot-navigation')`;
 
 /** The publication outbox reads only its registered work and acknowledgement scalars: everything on a first pass, then only what changed since `since`. */
 export async function readWorkerPublicationItems(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
   contractIds: readonly string[] = WORKER_PUBLICATION_TASK_IDS,
   since: { readonly at: string; readonly sharedInputsMoved: boolean } | null = null,
+  retryIds: readonly string[] = [],
 ): Promise<WorkerPublicationItem[]> {
   const registered = new Set(WORKER_PUBLICATION_TASK_IDS);
   if (contractIds.some(id => !registered.has(id))) throw new Error("PUBLICATION_CONTRACT_SELECTION_INVALID");
   if (contractIds.length === 0) return [];
   const items: WorkerPublicationItem[] = [];
   let afterId: string | null = null;
-  const window = since === null ? [] : [since.at, since.sharedInputsMoved];
+  const window = since === null ? [] : [since.at, since.sharedInputsMoved, ...(retryIds.length ? [[...new Set(retryIds)]] : [])];
   for (;;) {
-    const rows = await query(`${since === null ? "" : CHANGED_SINCE} SELECT id, value #>> '{subject}' AS subject,
+    const changed = retryIds.length ? CHANGED_SINCE.slice(0, -1) + " UNION SELECT unnest($4::text[]))" : CHANGED_SINCE;
+    const rows = await query(`${since === null ? "" : changed} SELECT id, value #>> '{subject}' AS subject,
       value #>> '{autonomousPlan,publication,contractId}' AS contract_id,
       value #>> '{autonomousPlan,publication,bodyId}' AS body_id,
       value #>> '{autonomousPlan,contract,recordClass}' AS record_class,
@@ -100,7 +134,7 @@ export async function readWorkerPublicationItems(
         'sourceObservedAt', value #> '{publicationOutcome,sourceObservedAt}',
         'code', value #> '{publicationOutcome,code}'
       )) ELSE NULL END AS publication_outcome
-      FROM cp_work_items
+      FROM cp_work_items_history
       WHERE value #>> '{autonomousPlan,publication,contractId}' = ANY($1::text[])
         ${since === null ? "" : "AND id IN (SELECT id FROM due)"} ${afterId === null ? "" : `AND id > $${2 + window.length}`}
       ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`, [contractIds, ...window, ...(afterId === null ? [] : [afterId])]);

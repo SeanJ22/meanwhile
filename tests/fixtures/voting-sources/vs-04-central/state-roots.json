@@ -1,0 +1,57 @@
+[
+  {
+    "state": "ND",
+    "url": "https://www.sos.nd.gov/elections",
+    "status": 200
+  },
+  {
+    "state": "SD",
+    "url": "https://sdsos.gov/elections-voting/upcoming-elections/general-information/2026%20Election%20Information/2026-Election-Polling-Places.aspx",
+    "status": 200
+  },
+  {
+    "state": "NE",
+    "url": "https://sos.nebraska.gov/elections/general-voter-information",
+    "status": 200
+  },
+  {
+    "state": "KS",
+    "url": "https://www.sos.ks.gov/elections/advance-voting.html",
+    "status": 200
+  },
+  {
+    "state": "OK",
+    "url": "https://oklahoma.gov/elections/voters/early-voting.html",
+    "status": 200
+  },
+  {
+    "state": "TX",
+    "url": "https://www.votetexas.gov/voting/where.html",
+    "status": 200
+  },
+  {
+    "state": "MN",
+    "url": "https://www.sos.mn.gov/election-administration-campaigns/data-maps/polling-place-list-requests/",
+    "status": 200
+  },
+  {
+    "state": "IA",
+    "url": "https://sos.iowa.gov/",
+    "status": 200
+  },
+  {
+    "state": "MO",
+    "url": "https://www.sos.mo.gov/elections/",
+    "status": 403
+  },
+  {
+    "state": "AR",
+    "url": "https://www.sos.arkansas.gov/elections/voter-information",
+    "status": 200
+  },
+  {
+    "state": "LA",
+    "url": "https://www.sos.la.gov/elections-voting/polling-locations",
+    "status": 200
+  }
+]

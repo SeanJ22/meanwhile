@@ -15,7 +15,7 @@ import { federalCsvRecords, federalJsonRecords, FEDERAL_MONEY_CHUNK_ROWS, type F
 
 export interface FederalBulkContext { readonly root: string; readonly vault: EvidenceStore; readonly signal?: AbortSignal }
 export const federalBulkMemory = channel("federal-money:memory");
-export interface FederalBulkMetadata { readonly count: number; readonly archiveId: string; readonly total: number | null }
+interface FederalBulkMetadata { readonly count: number; readonly archiveId: string; readonly total: number | null }
 export const federalBulkId = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const indexKey = (id: string, suffix: string) => {
   if (!/^[a-f0-9]{64}$/.test(id) || !/^(complete|[A-Z]{2}\/(metadata|\d+))$/.test(suffix)) throw new Error("Invalid federal bulk index identity.");
@@ -37,7 +37,7 @@ const immutable = async (vault: EvidenceStore, bytes: Uint8Array, type: string) 
   const hash = createHash("sha256").update(bytes).digest("hex"), key = `project/meanwhile/source/federal-money/raw/${hash}`;
   await vault.put(key, bytes, { contentHash: `sha256-${hash}`, byteLength: bytes.byteLength, contentType: type }); return key;
 };
-export function federalBulkDirectory(ctx: FederalBulkContext, id: string): string {
+function federalBulkDirectory(ctx: FederalBulkContext, id: string): string {
   if (!/^[a-f0-9]{64}$/.test(id)) throw new Error("Invalid federal bulk cache identity.");
   return join(ctx.root, id);
 }
@@ -136,7 +136,7 @@ export async function saveFederalBulkBytes(ctx: FederalBulkContext, request: () 
   return { path, archiveId: await vaultFederalBulkBytes(ctx, path, sourceUrl) };
 }
 
-export function federalChunkWriter(ctx: FederalBulkContext, directory: string, state: string, metadata: Omit<FederalMoneyCapture, "vaultKey" | "rawHash" | "byteLength">, start = 0) {
+function federalChunkWriter(ctx: FederalBulkContext, directory: string, state: string, metadata: Omit<FederalMoneyCapture, "vaultKey" | "rawHash" | "byteLength">, start = 0) {
   let count = start, rows = 0, length = 0, buffer: Buffer | null = null;
   const capacity = 2 * 1024 * 1024;
   async function flush() {

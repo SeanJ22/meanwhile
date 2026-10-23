@@ -11,11 +11,9 @@ import {
 } from "./runner.ts";
 import {
   ROUTINE_CHILD_CONCURRENCY,
-  ROUTINE_CHILD_TIMEOUT_MS,
   ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS,
   ROUTINE_RUNNER_OUTER_GRACE_MS,
   ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
-  routineChildPassWorstCaseMs,
   routineRunnerBoundedWorkMs,
   routineRunnerOuterTimeoutMs,
   type RoutineRunnerOuterBounds,
@@ -53,10 +51,13 @@ export const HOT_READ_CATCH_UP_CONCURRENCY = Math.max(1, Math.floor(ROUTINE_CHIL
  */
 export const HOT_READ_CATCH_UP_RECHECK_MS = 60_000;
 
-/** The longest one catch-up read can take: the child's ceiling and its settlement. */
+/** A single board's 120-second acquisition plus bounded bootstrap and evidence work. */
+export const HOT_READ_CATCH_UP_READ_BUDGET_MS = 5 * 60_000;
+
+/** The enforced child wall budget plus the parent's durable settlement. */
 export function hotReadCatchUpReadWorstCaseMs(): number {
   const settlementMs = ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS * STANDING_NEON_REQUEST_DEADLINE_MS;
-  return routineChildPassWorstCaseMs(1, ROUTINE_CHILD_TIMEOUT_MS + settlementMs, 1, 1);
+  return HOT_READ_CATCH_UP_READ_BUDGET_MS + settlementMs;
 }
 
 export interface HotReadCatchUpAdmission {

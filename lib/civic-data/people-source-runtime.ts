@@ -1,5 +1,7 @@
 import type { OfficeholderSet } from "../officials/types.ts";
 import { acquirePeopleSource } from "../sources/people/acquisition.ts";
+import { acquirePresidentPeople, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
+import { readPeopleSourceProjection } from "./people-source-read.ts";
 import { acquireStatewidePeople } from "../sources/statewide/acquisition.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { peopleSourceContractId, PEOPLE_SOURCE_STATES, STANDING_PEOPLE_SOURCE_IDS, type StandingPeopleSourceId } from "./people-source-contracts.ts";
@@ -41,7 +43,7 @@ export function parsePeopleSourceArguments(args: readonly string[]): { state: st
   }
   const state = states[0]!.slice("--state=".length).toLowerCase();
   const sourceId = sources[0]!.slice("--source=".length);
-  if (!PEOPLE_SOURCE_STATES.includes(state)) throw new Error("PEOPLE_SOURCE_STATE_UNSUPPORTED");
+  if (!PEOPLE_SOURCE_STATES.includes(state) && !(state === "us" && sourceId === "statewide-executive-sources")) throw new Error("PEOPLE_SOURCE_STATE_UNSUPPORTED");
   if (!(STANDING_PEOPLE_SOURCE_IDS as readonly string[]).includes(sourceId)) throw new Error("PEOPLE_SOURCE_UNSUPPORTED");
   return { state, sourceId: sourceId as StandingPeopleSourceId };
 }
@@ -61,7 +63,8 @@ export interface PeopleSourceRuntimeDependencies {
 }
 
 async function readHeld(state: string, store: RoutineDataStore, now: string): Promise<OfficeholderSet | undefined> {
-  const held = await readStatePeopleProjection(`US-${state.toUpperCase()}`, { store, now, bypassCache: true });
+  const held = state.toLowerCase() === "us" ? await readPeopleSourceProjection("US", "statewide-executive-sources", { store, now, bypassCache: true })
+    : await readStatePeopleProjection(`US-${state.toUpperCase()}`, { store, now, bypassCache: true });
   if (held.kind === "STORE_UNREACHABLE") throw new Error("PEOPLE_SOURCE_HELD_STATE_UNAVAILABLE");
   return held.kind === "PROMOTED" || held.kind === "BOOTSTRAP" ? held.value.roster : undefined;
 }
@@ -104,13 +107,14 @@ export async function runPeopleSourceRefresh(input: {
     ]);
     const options = { state: input.state, sourceId: input.sourceId, asOf, signal, roster, divisions, now };
     acquired = dependencies.acquire ? await dependencies.acquire(options)
+      : input.state.toLowerCase() === "us" && input.sourceId === "statewide-executive-sources" ? await acquirePresidentPeople(options)
       : input.sourceId === "statewide-executive-sources"
         ? await acquireStatewidePeople({ ...options, heldPeople: roster })
         : await acquirePeopleSource({ ...options, sourceId: input.sourceId });
     signal.throwIfAborted();
   } catch (error) {
     const failed = await recordRegisteredSourceAcquisitionFailure({ store: input.store, contractId,
-      requestedUrl: PEOPLE_SOURCE_FAILURE_ROUTES[input.sourceId], attemptedAt: now(),
+      requestedUrl: input.state.toLowerCase() === "us" ? ADMINISTRATION_URL : PEOPLE_SOURCE_FAILURE_ROUTES[input.sourceId], attemptedAt: now(),
       failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", error instanceof Error ? error.message : String(error)),
     });
     writeLine(failed.line);

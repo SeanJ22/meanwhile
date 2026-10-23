@@ -1,38 +1,27 @@
 import assert from "node:assert/strict";
-import { mkdtempSync } from "node:fs";
-import { tmpdir } from "node:os";
+
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { authorityPointerKey, ensureReaderAuthorityEdge, readServedPointer } from "../lib/meetings/edge-serving.ts";
-import { publishPointers } from "./helpers/edge-pointers.ts";
 import type { RegistrationSourceReceipt } from "../lib/registration/acquire.ts";
 import { registrationCandidate, type RegistrationReadModel, type ReviewedRegistryIds } from "../lib/registration/candidate.ts";
-import { REGISTRATION_SCOPES } from "../lib/registration/edge.ts";
+
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-
-
-
-
-
-
-
-
+import { installCanonicalEntries, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
-
 
 const ROOT = join(import.meta.dirname, "..");
 const RECEIPT: RegistrationSourceReceipt = {
@@ -50,42 +39,12 @@ function model(state: string): RegistrationReadModel {
   return registrationCandidate({ target: registrationTarget(state), reference: loadRegistrationReference(ROOT, state), receipt: RECEIPT, reviewed: REVIEWED }).readModel as RegistrationReadModel;
 }
 
-test("each state's registration is its own compressed artifact at its own pointer, read back losslessly and only when named", async () => {
-  assert.equal(REGISTRATION_SCOPES.length, 56);
-  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
-  const oh = model("OH");
-  const nh = model("NH");
-  assert.deepEqual(await publishPointers(store, { registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } }),
-    ["registrations/oh", "registrations/nh"]);
-  assert.equal(await store.readManifest(), null, "registrations write no manifest");
-  assert.match((await readServedPointer(store, authorityPointerKey("registrations", "oh")))!.ref.key, /^reader\/artifacts\/[a-f0-9]{64}\.json\.gz$/);
-
-  const edge = (await ensureReaderAuthorityEdge(null, store))!;
-  const loaded = await edge.registrations!.load("oh");
-  assert.equal(loaded?.versionId, "reg-oh-1");
-  assert.deepEqual(loaded?.value, oh, "the reader gets exactly what the runner published");
-  assert.equal(await edge.registrations!.load("wy"), null, "a state with no pointer loads nothing");
-});
-
-test("an unchanged state writes nothing and a moved state rewrites only its own pointer", async () => {
-  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
-  const oh = model("OH");
-  const nh = model("NH");
-  await publishPointers(store, { registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } });
-  const first = await store.readJsonPointer(authorityPointerKey("registrations", "nh"));
-  assert.deepEqual(await publishPointers(store, { registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } }), [],
-    "nothing moved: nothing is written");
-  assert.deepEqual(await publishPointers(store, { registrations: { oh: { value: oh, versionId: "reg-oh-2" }, nh: { value: nh, versionId: "reg-nh-1" } } }), ["registrations/oh"]);
-  assert.deepEqual(await store.readJsonPointer(authorityPointerKey("registrations", "nh")), first, "the unchanged state keeps its pointer");
-  assert.equal((await readServedPointer(store, authorityPointerKey("registrations", "oh")))!.ref.version, "reg-oh-2");
-});
-
-test("a state published with nothing promoted answers absent from the edge", async () => {
-  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
-  await publishPointers(store, { registrations: { wy: { value: null, versionId: "none" } } });
-  const edge = (await ensureReaderAuthorityEdge(null, store))!;
-  assert.deepEqual(await edge.registrations!.load("wy"), { value: null, versionId: "none" });
-});
+function installRegistration(state: string, value: RegistrationReadModel): void {
+  const target = registrationTarget(state), source = requiredRoutineContract(target.contractId);
+  installCanonicalEntries([provenEdgeEntry({ recordClass: "REGISTRATION", scope: target.scope, sourceId: source.sourceId,
+    versionId: `registration-fixture:${state}`, value })]);
+  activateCanonicalFixture("default");
+}
 
 test("the reader composes a state's registration from the edge, and a state published absent opens no database read", async () => {
   await installRegistryAuthority();
@@ -112,6 +71,8 @@ test("a DC division and a Puerto Rico division reach their registrations on the 
   const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const dc = model("DC");
   const pr = model("PR");
+  installRegistration("DC", dc);
+  installRegistration("PR", pr);
   const loads: string[] = [];
   const edge = promotedFixtureBundle({
     registrations: {
@@ -141,6 +102,7 @@ test("a native county listing reaches the normal coverage card without a fabrica
   await installRegistryAuthority();
   const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const oh = model("OH");
+  installRegistration("OH", oh);
   const government = oh.governments!.find(row => row.governmentClass === "COUNTY" && row.associations.length)!;
   enterReaderAuthorityEdge(promotedFixtureBundle({ registrations: { load: async state => state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null } }));
   const resolved = await divisionsByOcdIds([government.associations[0].divisionId]);

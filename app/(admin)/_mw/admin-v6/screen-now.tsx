@@ -4,6 +4,7 @@ import { Fragment, useMemo, useState } from "react";
 
 import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
 
+import { useKeeperScoreboard } from "./use-keeper-scoreboard.ts";
 import { useV6 } from "./context.tsx";
 import { count, mst, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
 import { TILE_LAYOUT } from "./national-layout.ts";
@@ -39,6 +40,7 @@ export function NowScreen() {
       </header>
       {nationalDepth(v.scopeKey) !== null && <National />}
       <DirectWork />
+      <OfficialsChecks />
       <IsItWorking />
       <OrdersInMotion />
       <NeedsMe />
@@ -46,11 +48,39 @@ export function NowScreen() {
   );
 }
 
+function officialSeatLabel(title: string, division: string): string {
+  const district = /\/(?:cd|sldl|sldu):([^/]+)$/.exec(division)?.[1];
+  const office = title || "Seat";
+  return district ? `${office} · District ${district === "at-large" ? "at large" : district.toUpperCase()}` : office;
+}
+
+const FEED_WORDS = { waiting: "Waiting for the runner", checked: "Checked", changed: "Changes found", failed: "Could not read source", paused: "Paused or closed" } as const;
+
+function OfficialsChecks() {
+  const v = useV6();
+  if (v.scopeKey === COUNTRY_KEY) return null;
+  const result = v.data.officials?.data;
+  return <Card title="Officials" aside={<Actions actions={[{ kind: "officials-check", target: v.scopeKey }]} />}>
+    {result?.requestedAt && <p className={s.meta}>Requested {mst(result.requestedAt)}</p>}
+    {!result && <Empty>—</Empty>}
+    {result?.requestedAt && result.status === "done" && result.changes.length === 0 && <p className={s.small}>No seat changes found.</p>}
+    {!!result?.changes.length && <div className={s.stack}>{result.changes.map((change, n) => <div className={s.row} key={`${change.divisionId}:${change.officeTitle}:${n}`}>
+      <strong className={s.small}>{officialSeatLabel(change.officeTitle, change.divisionId)}</strong>
+      <span className={s.small}>{change.kind === "vacant" ? `Vacant${change.since ? ` since ${change.since}` : ""}` : change.kind === "departed" ? `${change.name ?? "Previous holder"} left office` : change.name ?? "Holder changed"}</span>
+      {change.sourceUrl && <a className={s.btnLink} href={change.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a>}
+    </div>)}</div>}
+    {!!result?.feeds.length && <div className={s.stack}>{result.feeds.map(feed => <div className={s.row} key={feed.id}>
+      <span className={s.spread}><strong className={s.small}>{feed.name}</strong><Pill tone={feed.state === "failed" ? "warn" : feed.state === "checked" || feed.state === "changed" ? "good" : "slate"}>{FEED_WORDS[feed.state]}</Pill></span>
+      <span className={s.meta}>{feed.checkedAt ? `Checked ${mst(feed.checkedAt)}` : "—"}{feed.sourceUrl && <> · <a className={s.btnLink} href={feed.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a></>}</span>
+    </div>)}</div>}
+    {result?.lead && <p className={s.small}>What I heard: {result.lead.state === "checked" ? "Scout checked the official sources" : result.lead.state === "working" ? "Scout is checking official sources" : "Waiting for a Scout within the current paid-work controls"}.</p>}
+  </Card>;
+}
+
 const MOTION_KINDS = new Set(["order", "scheduled", "send", "hunt"]);
 
 interface MotionRow { readonly key: string; readonly what: string; readonly chip: string; readonly tone: QueueRow["tone"]; readonly lines: readonly string[] }
 
-/** Orders one by one; hunts that share a status and a reason are one row with a count, so a pause is said once. */
 export function motionRows(rows: readonly QueueRow[]): MotionRow[] {
   const moving = rows.filter((r) => MOTION_KINDS.has(r.kind) && (r.filter === "in-progress" || r.filter === "scheduled" || r.filter === "waiting"));
   const out: MotionRow[] = [];
@@ -111,15 +141,15 @@ function NeedsMe() {
 const gb = (n: number | null): string => (n === null ? "—" : `${n.toFixed(2)} GB`);
 const orDash = (n: number | null, f: (n: number) => string): string => (n === null ? "—" : f(n));
 
-/** The five numbers that say whether the system is working, for the last full hour against the hour before. */
 function IsItWorking() {
   const v = useV6();
-  const hours = v.data.scoreboard.data?.vital ?? null;
+  const board=useKeeperScoreboard();
+  const hours = board?.vital ?? null;
   const last = hours?.[0] ?? null, before = hours?.[1] ?? null;
   const rows: readonly { readonly name: string; readonly says: string; readonly of: (h: NonNullable<typeof last>) => { readonly text: string; readonly bad?: boolean } }[] = [
-    { name: "Facts live", says: "New or changed reader records that went live. Higher is better.", of: (h) => ({ text: orDash(h.factsLive, count) }) },
+    { name: "Facts live", says: "New or changed facts that reach reader views. Higher is better.", of: (h) => ({ text: orDash(h.factsLive, n=>`${count(n)}${h.factsLiveConfirmed?" confirmed":""}`) }) },
     { name: "Cost per fact", says: "Money spent divided by facts live. Lower is better.", of: (h) => ({ text: orDash(h.costPerFactUsd, (n) => (n >= 1 ? usd(n) : `$${n.toFixed(4)}`)) }) },
-    { name: "Data read from the database", says: "Target: under 0.7 GB an hour.", of: (h) => ({ text: gb(h.neonGb), bad: h.overNeonTarget === true }) },
+    { name: "Data read from the database", says: "Target: under 0.7 GB an hour.", of: (h) => ({ text: `${h.neonAtLeast&&h.neonGb!==null?"at least ":""}${gb(h.neonGb)}`, bad: h.overNeonTarget === true }) },
     { name: "Research rounds", says: "Finished, against killed by the watchdog.", of: (h) => ({ text: h.roundsFinished === null || h.roundsKilled === null ? "—" : `${count(h.roundsFinished)} finished · ${count(h.roundsKilled)} killed` }) },
     { name: "Paid jobs that ended with nothing", says: "Must be none.", of: (h) => ({ text: orDash(h.paidJobsEndedEmpty, (n) => (h.paidJobsEnded === null ? count(n) : `${count(n)} of ${count(h.paidJobsEnded)}`)), bad: (h.paidJobsEndedEmpty ?? 0) > 0 }) },
   ];
@@ -127,6 +157,7 @@ function IsItWorking() {
     <Card title="Is it working" aside={<button type="button" className={s.btnLink} onClick={() => v.go("scoreboard")}>Open the scoreboard →</button>}>
       <div className={s.stack}>
         <p className={s.small}>{last !== null ? `${mst(last.hour)}${before !== null ? ` · the hour before: ${mst(before.hour)}` : ""}` : hours === null ? "Not measured yet." : "The hour has not been recorded yet."}</p>
+        <p className={s.small}>{board?.lineKeeper ?? "The line keeper has not reported yet."}</p>
         {rows.map((r) => {
           const now = last === null ? { text: "—" } : r.of(last), earlier = before === null ? null : r.of(before);
           return (
@@ -153,7 +184,6 @@ const NAT_COLUMNS: readonly { readonly key: NatKey; readonly label: string; read
   { key: "stuck", label: "Stuck", num: true },
 ];
 
-/** How much readers have in a place, as the map shades it. */
 export function holdingBand(score: number | null | undefined): "none" | "some" | "half" | "most" | "unknown" {
   if (score === null || score === undefined) return "unknown";
   return score >= 75 ? "most" : score >= 40 ? "half" : score > 0 ? "some" : "none";
@@ -165,7 +195,6 @@ function natNumber(r: StateRow, key: Exclude<NatKey, "name">): number | null {
   return (key === "population" ? r.population?.population : key === "hunts" ? r.hunts : key === "zips" ? r.zipsWorked : key === "score" ? r.score : r.stuck) ?? null;
 }
 
-/** A row with no figure for the sorted column goes last, whichever way it sorts. */
 function compareRows(sort: NatSort, a: StateRow, b: StateRow): number {
   const byName = a.name.localeCompare(b.name, "en", { numeric: true });
   if (sort.key === "name") return sort.down ? -byName : byName;
@@ -188,7 +217,7 @@ function National() {
   const rows = (v.data.national.data ?? []).filter((r) => (r.parentKey ?? COUNTRY_KEY) === v.scopeKey);
   const byCode = new Map(rows.map((r) => [r.code, r]));
   const sorted = [...rows].sort((a, b) => compareRows(sort, a, b));
-  // Every state and territory is listed, tracked or not; only the longer district and ZIP lists start at the top rows.
+
   const shown = all || depth === "states" ? sorted : sorted.slice(0, NAT_TOP);
   const tracked = rows.filter((r) => r.tracked).length;
   const live = v.data.hunts.state === "not-connected" ? null : v.hunts.filter((h) => h.status !== "stopped");
@@ -302,8 +331,6 @@ function National() {
   );
 }
 
-/* ------------------------------------------------------------ instruction */
-
 export function ResultRow(props: { readonly r: ReaderResult; readonly shared?: boolean }) {
   const v = useV6();
   const r = props.r;
@@ -367,7 +394,6 @@ function HuntCard(props: { readonly h: Hunt }) {
   );
 }
 
-/** A state's hunts as one line with a count; opening it lists each hunt. */
 function StateHuntRow(props: { readonly group: StateHunts }) {
   const { group } = props;
   const running = group.hunts.filter((h) => h.status === "running").length;
@@ -394,7 +420,7 @@ function DirectWork() {
   const groups = hunt ? [] : huntsByState(v.index, huntsWithin(v.index, v.hunts, v.scopeKey));
   const [open, setOpen] = useState(true);
   const total = groups.reduce((n, g) => n + g.hunts.length, 0);
-  // A pause you set over all paid work or the runner is said once, above the hunts it holds.
+
   const held = v.hunts.find((h) => h.status === "paused" && (h.pause?.kind === "paid-work" || h.pause?.kind === "runner"));
   const ownerPause = held ? huntStatus(held).next : null;
   return (
@@ -403,13 +429,14 @@ function DirectWork() {
       <div className={s.stack} style={{ marginTop: 12 }}>
         {ownerPause && <p className={cx(s.p, s.small, s.textWarn)}>Paused. {ownerPause}</p>}
         {!!hunt && <HuntCard h={hunt} />}
+        {v.scopeKey.startsWith("st:") && <Actions actions={[{kind:"hunt-stop-state",target:v.scopeKey,label:`Stop every hunt in ${v.place.name}`}]} />}
         <div className={s.row}>
           <strong className={s.small}>Start a hunt</strong>
           <Actions actions={[{ kind: "hunt-start", target: v.scopeKey }]} primaryFirst />
         </div>
         <div className={cx(s.row, s.cardGlobal)}>
           <strong className={s.small}>Whole system</strong>
-          <Actions actions={[{ kind: "global-paid", target: "system" }, { kind: "global-paid-resume", target: "system" }, { kind: "global-ceiling", target: "system" }, { kind: "global-search-on", target: "system" }, { kind: "global-search-off", target: "system" }, { kind: "global-runner-pause", target: "runner" }, { kind: "global-runner-resume", target: "runner" }]} />
+          <Actions actions={[{ kind: "hunt-stop-all", target: "us" }, { kind: "global-paid", target: "system" }, { kind: "global-paid-resume", target: "system" }, { kind: "global-ceiling", target: "system" }, { kind: "global-search-on", target: "system" }, { kind: "global-search-off", target: "system" }, { kind: "global-runner-pause", target: "runner" }, { kind: "global-runner-resume", target: "runner" }]} />
         </div>
         {!!groups.length && (
           <div className={s.stack}>

@@ -24,7 +24,7 @@ import {
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // Voting routes and election scope use the JSON reference loader; county clocks are a static JSON import.
 // Both retain the same required provenance pairing as the CSV tables.
-const JSON_REFERENCE_DATASETS = [...REFERENCE_JSON_DATASETS, "national_county_time_zones", "statewide-executive-sources", "us-jurisdiction-labels"] as const;
+const JSON_REFERENCE_DATASETS = [...REFERENCE_JSON_DATASETS, "district-boundary-sources", "national_county_time_zones", "official-legislature-rosters", "statewide-executive-sources", "us-jurisdiction-labels"] as const;
 const REFERENCE_DATA_FILES = [
   ...REFERENCE_DATASETS.map(dataset => `${dataset}.csv`),
   ...JSON_REFERENCE_DATASETS.map(dataset => `${dataset}.json`),

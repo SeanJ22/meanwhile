@@ -1,0 +1,149 @@
+{
+  "checkedAt": "2026-10-21T01:03:15.759554+00:00",
+  "owner": "BA-01 west",
+  "delivery": "Additional western county/regional batch adds813verified occupied contests,1008named choices,2measures and6explicit empty-official-list held contests. Source replay,schema andactual-reader focused checks pass. No live publication or all-ZIP completeness claim.",
+  "states": {
+    "AZ": {
+      "core": "77 contests/218 raw candidacies match checked official sources; see az-comparison.json certification limit.",
+      "verifiedCountywide": {
+        "Maricopa": 59,
+        "Pima": 14
+      },
+      "knownRemaining": {
+        "Maricopa": "40 additional district contests with47 certified candidacies are in the official county candidate and write-in lists:18 justice precinct races(19 candidates),18 constable precinct races(19 candidates),two community-college district races(five candidates),two healthcare district races(four candidates). These require district eligibility resolution; Canyon Trails justice is write-in-only Christopher Sumner. Four Phoenix council districts have16 certified candidates; school districts and local measures also remain. The actual85003 precinct sample has not been retrieved.",
+        "Pima": "All14countywide offices/retention choices imported from complete official general list and qualified write-ins. District Supervisor5,justice/constable,school/fire/municipal contests and measures still require exact scope and sample comparison.",
+        "federalCertification": "Official general printed samples confirmCD1/2/5/6/7/9. CD3/4/8 match current officialCCEC roster, but exhaustive certified general source/sample remains unavailable. A normal Playwright request still returns403; no bypass attempted."
+      },
+      "verifiedMunicipal": {
+        "Scottsdale": "Councilmember,3names,voteFor2",
+        "Peoria": "Mayor2names and Proposition417",
+        "Tempe": "Proposition424 full official text and vote meanings"
+      }
+    },
+    "CO": {
+      "core": "113 raw candidate contests/277 candidacies match complete state table. Seven Governor/LG ticket choices preserve all14 raw lead/mate candidacies.",
+      "verifiedCountywide": {
+        "Denver": 22,
+        "El Paso": 17
+      },
+      "knownRemaining": {
+        "Denver": "Master sample includes RTD Director DistrictB (John Glenn,Bianka Emerson), DistrictC (Joe Meyer), Denver Public Schools4A, and RTD7A. They have not been imported; correct electorates must be resolved. The county master is a union of styles, not proof of80202 completeness.",
+        "El Paso": "Imported five occupied countywide offices(eight candidates),ten district/county retention decisions,and county Issue1A. Surveyor is held with explicit official no-candidate reason. Commissioner Districts1/5,municipal choices,and district-specific measures remain. Decoded custom PDF font and visually checked all imported names/question."
+      },
+      "nextSource": "https://epc-assets.elpasoco.com/wp-content/uploads/sites/5/SampleBallot_EN_Prod.pdf"
+    },
+    "NM": {
+      "core": "90 contests/136 candidacies match complete Qualified state list.",
+      "knownRemaining": "OfficialQualifiedgeneral roster nowmeasured103countywide offices/140names across33counties plus45district-court elections/retentions/46names across13districts; imported withofficialNMCourts exact whole-county memberships. Bernalillo26previousoffices/judicial choices retained. Excluded92district-only commissioner candidate rows and77magistrate candidate rows until exact electorates verified. Alllocalmeasures,municipalchoices andexactprecinctsamples remain.",
+      "nextSource": "https://www.bernco.gov/clerk/elections/",
+      "verifiedCountywide": {
+        "counties": 33,
+        "contests": 103,
+        "candidates": 140,
+        "districtJudicialContests": 45,
+        "districtJudicialCandidates": 46,
+        "Bernalillo": 26
+      }
+    },
+    "NV": {
+      "core": "70 contests/137 candidacies match statewide certified master.",
+      "knownRemaining": "Clark six countywide contests/fifteen candidates imported. Complete general source still has county-commission districts, regional district/family court departments,township justice/constable,school and municipal contests,plus Boulder City questions. Correct local electorates and all styles remain to compare.",
+      "nextSource": "https://www.clarkcountynv.gov/government/departments/elections/26g-info",
+      "verifiedCountywide": {
+        "Clark": 6
+      }
+    },
+    "UT": {
+      "core": "109 contests/232 candidacies match amended certification and three certified write-ins.",
+      "knownRemaining": "All25regional district/juvenile retention decisions/25names added from state amended general certification pages19-21,which explicitly names each district whole-county membership. SevenThirdDistrict names also match officialSaltLakeBT1 sample. County/municipal justice decisions remain pending exact20A-12-201(7) political-subdivision election scope; district council andother sample styles also remain. Undercurrent2026law towns/class4/5municipal judges appearcountywide; class1/2/3judges appearonlyforservicedmunicipality. Never inferplace-onlyscopefromcourtname.",
+      "nextSource": "https://www.saltlakecounty.gov/clerk/elections/2026-general-election/ballots/",
+      "verifiedCountywide": {
+        "Salt Lake": 6
+      },
+      "verifiedRegionalJudicial": {
+        "contests": 25,
+        "candidates": 25,
+        "districts": 7,
+        "source": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf"
+      }
+    },
+    "WY": {
+      "core": "89 contests/133 candidacies match complete current general CSV.",
+      "knownRemaining": "Laramie eight countywide offices/thirteen candidates imported. County commissioner vote count still unknown in candidate roster; county sample must supply it. Regional district/circuit courts,municipal/school/fire/conservation contests and local tax questions remain. Municipal/district final PDFs captured.",
+      "nextSource": "https://www.laramiecountywy.gov/County-Government/Elected-Officials/County-Clerk/Elections/Candidates",
+      "verifiedCountywide": {
+        "Laramie": 8
+      }
+    },
+    "MT": {
+      "core": "131 contests/256 candidacies match actual portal general CSV export.",
+      "knownRemaining": "All12regional district-court contests/13FILED general candidates imported; ten unopposed marked incumbents are retention choices under ConstitutionVII8(3), with whole-county statutory memberships. Yellowstone4retention decisions included. County/city/specialdistrict candidacies and jail bond/levy measures remain; official sample page offers only voter-name/DOBlookup, not public address search. No authentication bypass attempted.",
+      "nextSource": "https://www.yellowstonecountymt.gov/Elections/",
+      "verifiedRegionalJudicial": {
+        "contests": 12,
+        "candidates": 13
+      }
+    },
+    "ID": {
+      "core": "115 contests/231 candidacies match all Approved federal/statewide/legislative rows of final-list API.",
+      "knownRemaining": "Final state API now measured for all44counties:301countywide offices/334Approved candidates,2AdaCountywideHighway races/7names,and1FourthDistrict judicial contest/2names imported. Every original candidate/status/party row preserved; magistrate retentions countywide perIC1-2220. All city/school/special-district races and local measures still require exact scope and sample comparison; Ada public page403.",
+      "nextSource": "https://adacounty.id.gov/elections/",
+      "verifiedCountywide": {
+        "counties": 44,
+        "contests": 301,
+        "candidates": 334,
+        "additionalCountywideHighway": {
+          "contests": 2,
+          "candidates": 7
+        },
+        "regionalJudicial": {
+          "contests": 1,
+          "candidates": 2
+        }
+      }
+    },
+    "ND": {
+      "core": "61 contests/148 candidacies match full official state table.",
+      "knownRemaining": "FargoCityHall2254thStN inZIP58102 official sample09440101 nowmatches26/26contests,35/35printed choices,3/3measures in saveddata and actualreader divisions. This is one public address,not allZIPaddresses orlive. Official fullgeneral countylist measured331countywide offices/Garrison races,443names and6empty rows across53counties; all occupied imported,empty keptheld. All19district-court races/20names imported withSupremeCourt Rule6whole-county memberships. Excluded40district-only commissioner races/56names and55unverifiedsoil rows; otherlocalmeasures/sample styles remain.",
+      "nextSource": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+      "verifiedCountywide": {
+        "counties": 53,
+        "occupiedContests": 325,
+        "candidates": 443,
+        "heldEmptyContests": 6,
+        "judicialContests": 19,
+        "judicialCandidates": 20
+      }
+    },
+    "SD": {
+      "core": "81 contests/178 candidacies match complete official general export.",
+      "knownRemaining": "Minnehaha four countywide offices/nine candidates imported. Three conservation supervisor candidates remain until district eligibility/vote count is resolved. County commissioner vote count remains unknown; county/city sample comparisons and local measures remain.",
+      "nextSource": "https://www.minnehahacounty.gov/dept/au/electionInfo/electionInfo.php",
+      "verifiedCountywide": {
+        "Minnehaha": 4
+      }
+    }
+  },
+  "failedRoutes": [
+    {
+      "name": "nd-cass",
+      "sourceUrl": "https://www.casscountynd.gov/our-county/finance-office/elections",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "nm-bernalillo",
+      "sourceUrl": "https://www.bernco.gov/clerk/elections/",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "mt-yellowstone-master",
+      "sourceUrl": "https://www.yellowstonecountymt.gov/elections/sampleballots/General2026/UniversalSampleBallot2026.pdf",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "name": "id-ada-page",
+      "sourceUrl": "https://adacounty.id.gov/elections/",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ]
+}

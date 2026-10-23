@@ -1,0 +1,70 @@
+[
+  {
+    "url": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+    "label": "Skip to main content"
+  },
+  {
+    "url": "https://www.sos.ms.gov/yall-vote",
+    "label": "Y'all Vote"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting",
+    "label": "-->Visit Election & Voting Home"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/voter-registration-information",
+    "label": "Voter Registration Information"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/candidate-referenda-information",
+    "label": "Candidate & Referenda Information"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/campaign-finance",
+    "label": "Campaign Finance & Lobbying"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/military-overseas-voter-information",
+    "label": "Military & Overseas Voter Information"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/election-results/2020-election-results",
+    "label": "Election Results"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/initiatives",
+    "label": "Initiatives"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/publications",
+    "label": "Publications"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/election-results",
+    "label": "Election Results"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/election-officials-training",
+    "label": "Election Officials Training"
+  },
+  {
+    "url": "https://www.sos.ms.gov/themes/custom/frontier_ms_sub/pdf/charity_guide_master.pdf",
+    "label": "Report on Charitable Giving"
+  },
+  {
+    "url": "https://www.sos.ms.gov/elections-voting/county-election-information",
+    "label": "local election officials"
+  },
+  {
+    "url": "https://myelectionday.sos.state.ms.us/VoterOutreach/Telerik.Web.UI.WebResource.axd?guid=76b1b5f0-a553-44ab-9c20-802e3fa31bad&isc=true&type=cah",
+    "label": "Get Audio Code"
+  },
+  {
+    "url": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VoterRegistrationCheck.aspx",
+    "label": "Track my Absentee or Affidavit ballot"
+  },
+  {
+    "url": "https://www.sos.ms.gov/content/documents/about_us/PRR%20Form%20(Blank).pdf",
+    "label": "Public Records Request"
+  }
+]

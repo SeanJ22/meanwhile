@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://webapi.legistar.com/v1/seattle/persons?$top=1000",
+  "state": "WA",
+  "retrievedAt": "2026-10-13T19:21:39.867412+00:00",
+  "sha256": "931211e52f594d3f9acce26a39444d4ef3abfa43c501f02af309f6961d554a59",
+  "records": 629
+}

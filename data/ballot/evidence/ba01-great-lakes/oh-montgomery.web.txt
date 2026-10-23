@@ -1,0 +1,144 @@
+Candidates (https://www.montgomery.boe.ohio.gov/wp-content/uploads/2023/10/10.16.2026-Candidate-Petition-Report.pdf)
+【turn709290view0】 [wordlim: 200] Crawled: today; Content type: application/pdf; Number of pages: 4; Source: open({"ref_id":"turn519125view0","lineno":null}); Total lines: 142
+L0@P0: 2026 Montgomery County Candidate Report
+L1@P0: Candidate
+L2@P0: Incumbent
+L3@P0: Address
+L4@P0: Petition
+L5@P0: Filed
+L6@P0: Filing
+L7@P0: Deadline
+L8@P0: Office
+L9@P0: Part
+L10@P0: y
+L11@P0: Petition
+L12@P0: Certified
+L13@P0:  Date of
+L14@P0: Election
+L15@P0: Governor & Lt. Governor (1)
+L16@P0: Timothy Grady and Andrea Neutzling Write-In 8/24/2026 8/24/2026 11/3/2026
+L17@P0: Heather Hill and Patrick Manley Write-In 8/24/2026 8/24/2026 11/3/2026Renea Turner and Jalen Turner Write-In 8/24/2026 8/24/2026 11/3/2026Ron Ula and Michael C. Lehnerd Write-In 8/24/2026 8/24/2026 11/3/2026
+L18@P0: DEM Amy Acton and David Pepper 2/4/2026 2/19/2026 11/3/2026LIB Don Kissick and James L. Mills 2/4/2026 2/19/2026 11/3/2026REP Vivek Ramaswamy and Robert A. McColley 2/4/2026 2/19/2026 11/3/2026
+L19@P0: Attorne
+L20@P0: y General (1)
+L21@P0: DEM John J. Kulewicz 2/4/2026 2/19/2026 11/3/2026
+L22@P0: REP Keith Faber 2/4/2026 2/19/2026 11/3/2026
+L23@P0: State Auditor (1)
+L24@P0: DEM Annette Blackwell 2/4/2026 2/19/2026 11/3/2026
+L25@P0: REP Frank LaRose 2/4/2026 2/19/2026 11/3/2026
+L26@P0: Secretar
+L27@P0: y of State (1)
+L28@P0: DEM Allison Russo 2/4/2026 2/19/2026 11/3/2026
+L29@P0: LIB Tom Pruss 2/4/2026 2/19/2026 11/3/2026REP Robert Sprague 2/4/2026 2/19/2026 11/3/2026
+L30@P0: Treasurer of State (1)
+L31@P0: DEM Seth Walsh 2/4/2026 2/19/2026 11/3/2026
+L32@P0: REP Jay Edwards 2/4/2026 2/19/2026 11/3/2026
+L33@P0: Justice of the Supreme Court (1) Term Begins 1/1/2027
+L34@P0: DEM Marilyn Zayas 2/4/2026 2/19/2026 11/3/2026
+L35@P0: REP Daniel R. Hawkins 2/4/2026 2/19/2026 11/3/2026
+L36@P0: Page 1 of 4
+L37@P0: The information provided in this document is by the Montgomery County Board of Elections. The information is believed to be accurate, but is not guaranteed. The Board of Elections disclaims liability for any errors or omissions. *Ballots will reflect contests active in that precinct only. No ballot will reflect every contest on this report. This publication will be updated weekly. ** Any votes cast will not be counted.
+L38@P0: Friday, October 16, 2026
+L39@P0-1: **Candidate
+L40@P1: Incumbent
+L41@P1: Address
+L42@P1: Petition
+L43@P1: Filed
+L44@P1: Filing
+L45@P1: Deadline
+L46@P1: Office
+L47@P1: Party
+L48@P1: Petition
+L49@P1: Certified
+L50@P1:  Date of
+L51@P1: Election
+L52@P1: Justice of the Supreme Court (1) Term Begins 1/2/2027
+L53@P1: DEM Jennifer Brunner 2/4/2026 2/19/2026 11/3/2026
+L54@P1: REP Colleen O'Donnell 2/4/2026 2/19/2026 11/3/2026
+L55@P1: U.S. Senator (1) Unexpired Term Ending 1/3/2029
+L56@P1: Stephen Faris Write-In 2/4/2026 8/24/2026 11/3/2026
+L57@P1: Anthony Holliman Write-In 2/4/2026 8/24/2026 11/3/2026Timothy Telymonde Write-In 2/4/2026 8/24/2026 11/3/2026
+L58@P1: DEM Sherrod Brown 2/4/2026 2/19/2026 11/3/2026LIB William B. Redpath 2/4/2026 2/19/2026 11/3/2026Other Party Greg Levy 5/4/2026 7/15/2026 11/3/2026REP Jon Husted 2/4/2026 2/19/2026 11/3/2026
+L59@P1: Representative to Congress- 10th District (1)
+L60@P1: DEM Kristina Knickerbocker 2678 Sutton Rd. Yellow Springs 45387 2/4/2026 2/3/2026 2/17/2026 11/3/2026
+L61@P1: LIB Thomas F. McMasters 6934 Sylmar Ct. Huber Heights 45424 2/4/2026 2/3/2026 2/17/2026 11/3/2026REP Mike Turner 109 N Main St. Apt. 1103 Dayton 45402 2/4/2026 1/12/2026 1/20/2026 11/3/2026
+L62@P1: State Senator- 5th District (1)
+L63@P1: DEM Jeffrey Harris 1062 Linwood Dr. Troy 45373 2/4/2026 2/20/2026 2/20/2026 11/3/2026
+L64@P1: REP Phil Plummer 1831 Kershner Rd. Dayton 45414 2/4/2026 1/22/2026 2/17/2026 11/3/2026
+L65@P1: State Representative- 36th District (1)
+L66@P1: Chuck Horn 1482 Willamette Rd. Kettering 45429 5/4/2026 1/23/2026 2/17/2026 11/3/2026
+L67@P1: DEM Rose Lounsbury 222 Wonderly Ave. Dayton 45419 2/4/2026 12/4/2025 1/20/2026 11/3/2026REP Andrea White 4744 Bokay Dr. Kettering 45440 2/4/2026 2/2/2026 2/17/2026 11/3/2026
+L68@P1: State Representative- 37th District (1)
+L69@P1: DEM Tom Herner 9409 Trail Stone Pt. Centerville 45458 2/4/2026 2/4/2026 2/17/2026 11/3/2026
+L70@P1: REP Tom Young 1121 Cedar Creek Cir. Centerville 45459 2/4/2026 1/30/2026 2/17/2026 11/3/2026
+L71@P1: State Representative- 38th District (1)
+L72@P1: DEM Desiree Tims 4636 Sumac Ct. Dayton 45417 2/4/2026 2/3/2026 2/18/2026 11/3/2026
+L73@P1: Friday, October 16, 2026 Page 2 of 4
+L74@P1: The information provided in this document is by the Montgomery County Board of Elections. The information is believed to be accurate, but is not guaranteed. The Board of Elections disclaims liability for any
+L75@P1-2: errors or omissions. *Ballots will reflect contests active in that precinct only. No ballot will reflect every contest on this report. This publication will be updated weekly.Candidate
+L76@P2: Incumbent
+L77@P2: Address
+L78@P2: Petition
+L79@P2: Filed
+L80@P2: Filing
+L81@P2: Deadline
+L82@P2: Office
+L83@P2: Party
+L84@P2: Petition
+L85@P2: Certified
+L86@P2:  Date of
+L87@P2: Election
+L88@P2: State Representative- 39th District (1)
+L89@P2: DEM Daquan Neal 3841 Carroll Ave. Apt. 2 Dayton 45405 2/4/2026 12/8/2025 1/20/2026 11/3/2026
+L90@P2: REP Mark Campbell 5260 Heather Way Huber Heights 45424 2/4/2026 2/4/2026 2/17/2026 11/3/2026
+L91@P2: State Representative-40th District (1)
+L92@P2: DEM Timothy B. Hornbacker 11868 State Route 121 N. New Paris 45347 2/4/2026 2/3/2026 2/17/2026 11/3/2026
+L93@P2: LIB Joshua A. Umbaugh 737 E. Pearl St. Miamisburg 45342 2/4/2026 2/3/2026 2/17/2026 11/3/2026REP Rodney Creech 5062 Bantas Creek Rd. West Alexandria 45381 2/4/2026 1/30/2026 2/17/2026 11/3/2026
+L94@P2: Judge of the Court of Appeals- 2nd Dist (1) Term Begins 2/9/2027
+L95@P2: REP Chris Epley On File 2/4/2026 11/20/2025 2/17/2026 11/3/2026
+L96@P2: Judge of the Court of Common Pleas (1) Term Begins 1/1/2027
+L97@P2: Susan D. Solle 6622 Bellefontaine Rd. Huber Heights 45424 2/4/2026 1/21/2026 2/17/2026 11/3/2026
+L98@P2: Judge of the Court of Common Pleas (1) Term Begins 1/2/2027
+L99@P2: Anne Keeton 817 Schrubb Dr. Kettering 45429 2/4/2026 1/7/2026 1/20/2026 11/3/2026
+L100@P2: Derek Muncy 6511 Taywood Rd. Englewood 45322 2/4/2026 2/4/2026 2/17/2026 11/3/2026
+L101@P2: Judge of the Court of Common Pleas (1) Term Begins 1/3/2027
+L102@P2: Michele S.H. Henne 414 Wiltshire Blvd. Dayton 45419 2/4/2026 1/30/2026 2/17/2026 11/3/2026
+L103@P2: Kelly D. Madzey 2858 Ramblingwood Ln. Centerville 45458 2/4/2026 2/3/2026 2/17/2026 11/3/2026
+L104@P2: Judge of the Court of Common Pleas (1) Term Begins 7/1/2027
+L105@P2: Steve Abshire 5663 Mark Dale Dr. Centerville 45459 2/4/2026 2/3/2026 2/17/2026 11/3/2026
+L106@P2: Richard Glennon 1908 Coolidge Dr. Dayton 45419 2/4/2026 2/3/2026 2/17/2026 11/3/2026
+L107@P2: Judge of the Court of Common Pleas (1) Term Begins 7/2/2027
+L108@P2: Elizabeth A. Ellis On File 2/4/2026 1/16/2026 2/17/2026 11/3/2026
+L109@P2: Judge of the Court of Common Pleas- Probate Division (1) Term Begins 2/9/2027
+L110@P2: David Brannon 10112 Benham Dr. Centerville 45458 2/4/2026 12/19/2025 1/20/2026 11/3/2026
+L111@P2: Cassandra A. Rice 1502 E. Schantz Ave. Dayton 45419 2/4/2026 2/4/2026 2/17/2026 11/3/2026
+L112@P2: Judge of the Court of Common Pleas- Juvenile Division (1) UTE 12/31/2028
+L113@P2: Hope L. Smalls 226 McDaniel St. Apt. 150 Dayton 45405 3/4/2026 11/3/2026
+L114@P2: Nicholas Sylvain 4200 Maricarr Dr. Kettering 45429 5/22/2026 11/3/2026
+L115@P2: Friday, October 16, 2026 Page 3 of 4
+L116@P2: The information provided in this document is by the Montgomery County Board of Elections. The information is believed to be accurate, but is not guaranteed. The Board of Elections disclaims liability for any
+L117@P2-3: errors or omissions. *Ballots will reflect contests active in that precinct only. No ballot will reflect every contest on this report. This publication will be updated weekly.Candidate
+L118@P3: Incumbent
+L119@P3: Address
+L120@P3: Petition
+L121@P3: Filed
+L122@P3: Filing
+L123@P3: Deadline
+L124@P3: Office
+L125@P3: Party
+L126@P3: Petition
+L127@P3: Certified
+L128@P3:  Date of
+L129@P3: Election
+L130@P3: County Commissioner (1) Term Begins 1/1/2027
+L131@P3: DEM Carolyn Rice 1135 Green Tree Dr. Kettering 45429 2/4/2026 12/30/2025 1/20/2026 11/3/2026
+L132@P3: REP Margie Christie 5074 Benner Rd. Miamisburg 45342 2/4/2026 1/12/2026 2/17/2026 11/3/2026
+L133@P3: County Auditor (1)
+L134@P3: DEM Karl Keith 221 Watervliet Ave. Dayton 45420 2/4/2026 1/27/2026 2/17/2026 11/3/2026
+L135@P3: REP Tammy L. Murphy 8951 Deep Forest Ln. Centerville 45458 2/4/2026 2/4/2026 2/17/2026 11/3/2026
+L136@P3: New Lebanon Council (1) UTE 12/31/2029
+L137@P3: Nicole Adkins 1651 W. Main St. New Lebanon 45345 8/5/2026 7/31/2026 8/25/2026 11/3/2026
+L138@P3: Rob Dennis 432 Holderman Dr. New Lebanon 45345 8/5/2026 7/29/2026 8/25/2026 11/3/2026
+L139@P3: Friday, October 16, 2026 Page 4 of 4
+L140@P3: The information provided in this document is by the Montgomery County Board of Elections. The information is believed to be accurate, but is not guaranteed. The Board of Elections disclaims liability for any
+L141@P3: errors or omissions. *Ballots will reflect contests active in that precinct only. No ballot will reflect every contest on this report. This publication will be updated weekly.

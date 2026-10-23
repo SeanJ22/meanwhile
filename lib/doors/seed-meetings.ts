@@ -26,7 +26,7 @@ export function doorsFromWiringRow(row: BodySourceWiring): DoorDraft[] {
     // Some adapters read one fixed host that no setting names; the partition's upstream boundary is the host actually contacted.
     const upstream = meetingAcquisitionFailureDomain(source, row).replace(/^meeting-upstream:/, "").split("/")[0];
     return {
-      doorId: meetingPartitionId(source, row.bodyId),
+      doorId: meetingPartitionId(source, row.bodyId, row.config.partitionRoute),
       kind: source,
       ocdId: row.ocdId,
       bodyIds: [row.bodyId],

@@ -1,0 +1,99 @@
+{
+  "checkedAt": "2026-10-21T01:03:15.760139+00:00",
+  "batchAdded": {
+    "contests": 813,
+    "candidacies": 1008,
+    "measures": 2,
+    "heldContests": 6
+  },
+  "states": {
+    "AZ": {
+      "contests": 169,
+      "candidacies": 297,
+      "measures": 7,
+      "heldContests": 0
+    },
+    "CO": {
+      "contests": 165,
+      "candidacies": 321,
+      "measures": 20,
+      "heldContests": 1
+    },
+    "NM": {
+      "contests": 255,
+      "candidacies": 333,
+      "measures": 7,
+      "heldContests": 0
+    },
+    "NV": {
+      "contests": 78,
+      "candidacies": 152,
+      "measures": 2,
+      "heldContests": 0
+    },
+    "UT": {
+      "contests": 142,
+      "candidacies": 267,
+      "measures": 3,
+      "heldContests": 0
+    },
+    "WY": {
+      "contests": 98,
+      "candidacies": 146,
+      "measures": 1,
+      "heldContests": 0
+    },
+    "MT": {
+      "contests": 146,
+      "candidacies": 269,
+      "measures": 3,
+      "heldContests": 0
+    },
+    "ID": {
+      "contests": 423,
+      "candidacies": 574,
+      "measures": 4,
+      "heldContests": 0
+    },
+    "ND": {
+      "contests": 409,
+      "candidacies": 612,
+      "measures": 3,
+      "heldContests": 6
+    },
+    "SD": {
+      "contests": 89,
+      "candidacies": 187,
+      "measures": 4,
+      "heldContests": 0
+    }
+  },
+  "tests": {
+    "pythonActualTests": 25,
+    "nodeActualSubtests": 17,
+    "focusedAzPublicationSubtests": 2,
+    "focusedAzProductionMigrations": 46
+  },
+  "zipSamples": {
+    "58102": {
+      "address": "Fargo City Hall,2254thStN",
+      "precinct": "09440101",
+      "officialContests": 26,
+      "readerContests": 26,
+      "officialNamedChoices": 35,
+      "readerNamedChoices": 35,
+      "officialMeasures": 3,
+      "readerMeasures": 3,
+      "liveChecked": false,
+      "allZipAddressesChecked": false
+    },
+    "85003": {
+      "status": "PARTIAL",
+      "remaining": "No exact precinct sample; justice/constable,Phoenix council,school/specialdistrict/localmeasures unresolved."
+    },
+    "80202": {
+      "status": "PARTIAL",
+      "remaining": "Denver master unionofstyles includes unresolvedRTDdistrict andschool/transitmeasure eligibility; noexactaddresssample."
+    }
+  }
+}

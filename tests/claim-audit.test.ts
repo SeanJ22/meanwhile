@@ -19,7 +19,7 @@ const PLACES = ["az/county:a", "az/county:b", "nm/county:c", "nm/county:d", "nm/
 const T = "2026-09-07T12:00:00.000Z";
 const attempt = (place: string, outcome: "SUCCEEDED" | "FAILED", at = T): MethodAttempt =>
   ({ kind: "ROUTE_RUN", attemptId: `${place}:${at}`, placeId: place, methodIds: ["m-1"], outcome, cause: outcome === "FAILED" ? "The page moved." : null, at });
-const config = async (repos: ReturnType<typeof createMemoryRepositories>) => (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value as AdminConfig;
+const config = async (repos: ReturnType<typeof createMemoryRepositories>) => (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { updates: true, methodStandings: true, fixList: true })).value as AdminConfig;
 
 test("a true Proven claim and its Proven label are confirmed from the fix map", async () => {
   const repos = createMemoryRepositories();

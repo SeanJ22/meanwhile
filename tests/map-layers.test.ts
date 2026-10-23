@@ -14,18 +14,18 @@ import { initialZoomForZip } from "../lib/map/initial-zoom.ts";
 import { withDistricts, NATIONAL_BOUNDARIES_SOURCE, boundarySource, BOUNDARY_ARCHIVE_FALLBACK, onSettledDistrictChange } from "../lib/map/districts.ts";
 import { holdMapPresentation, releaseMapPresentation } from "../lib/map/flight-presentation.ts";
 import type { Map as MapLibreMap } from "maplibre-gl";
-import { CONUS_BOUNDS, FALLBACK_STYLE, METRO_ZOOM, resolveBasemap } from "../lib/map/style.ts";
+import { CONUS_BOUNDS, FALLBACK_STYLE, METRO_ZOOM, basemapStyle, prefetchRasterOverview, resolveBasemap } from "../lib/map/style.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { Venue } from "../lib/meetings/venues.ts";
 
 test("initial style requests boundary tiles without basemap or glyph readiness", () => {
-  const style = withDistricts(FALLBACK_STYLE, ["county", "state-house"]);
+  const style = withDistricts(FALLBACK_STYLE, ["county", "state-house"], "AZ");
   assert.deepEqual(style.sources[NATIONAL_BOUNDARIES_SOURCE], boundarySource());
   assert.deepEqual(style.layers.filter(layer => layer.id.startsWith("district-")).map(layer => layer.id), [
     "district-county-fill", "district-county-line", "district-state-house-fill", "district-state-house-line",
   ]);
   assert.ok(boundarySource(BOUNDARY_ARCHIVE_FALLBACK).url?.includes("/api/boundaries/"));
-  assert.equal(withDistricts(FALLBACK_STYLE, []), FALLBACK_STYLE);
+  assert.equal(withDistricts(FALLBACK_STYLE, [], "AZ"), FALLBACK_STYLE);
 });
 
 test("boundary counts coalesce by rendered frame and ignore basemap work", () => {
@@ -389,4 +389,33 @@ test("the fallback style draws ground and nothing else, so the map still initial
   assert.deepEqual(FALLBACK_STYLE.sources, {}, "the fallback must request no tiles");
   assert.equal(FALLBACK_STYLE.layers.length, 1);
   assert.equal(FALLBACK_STYLE.layers[0].type, "background");
+});
+
+test("software graphics use the same themed MapTiler map as raster tiles and retain interactive district labels", () => {
+  const choice = { provider: "maptiler" as const, styleUrl: "https://api.maptiler.com/maps/custom-dark/style.json?key=fixture" };
+  assert.equal(basemapStyle(choice, false), choice.styleUrl);
+  const style = basemapStyle(choice, true);
+  assert.notEqual(typeof style, "string");
+  if (typeof style === "string") throw new Error("Expected raster style");
+  assert.equal(style.glyphs, "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=fixture");
+  assert.deepEqual(style.sources.basemap, { type: "raster", url: "https://api.maptiler.com/maps/custom-dark/tiles.json?key=fixture", tileSize: 512 });
+  const districts = withDistricts(style, ["congressional"], "NH");
+  assert.ok(districts.layers.some(layer => layer.type === "symbol" && layer.id.startsWith("district-")));
+  assert.ok(districts.layers.some(layer => layer.id === "basemap"));
+});
+
+test("raster overview uses the published tile templates and bounds its adjacent requests",async t=>{
+  const choice={provider:"maptiler" as const,styleUrl:"https://api.maptiler.com/maps/custom-dark/style.json?key=fixture"};
+  const urls:string[]=[];
+  t.mock.method(globalThis,"fetch",async(input:Parameters<typeof fetch>[0],init?:RequestInit)=>{
+    const url=String(input);urls.push(url);assert.ok(init?.signal);
+    return url.includes("tiles.json") ? Response.json({tiles:["https://api.maptiler.com/maps/custom-dark/{z}/{x}/{y}.png?key=fixture"]}) : new Response(new Uint8Array([1]));
+  });
+  await prefetchRasterOverview(choice,{lat:40.9,lng:-74.4},11,new AbortController().signal);
+  assert.equal(urls[0],"https://api.maptiler.com/maps/custom-dark/tiles.json?key=fixture");
+  assert.equal(new Set(urls.slice(1)).size,9);
+  assert.ok(urls.includes("https://api.maptiler.com/maps/custom-dark/10/300/384.png?key=fixture"));
+  urls.length=0;
+  await prefetchRasterOverview(choice,{lat:90,lng:180},1,new AbortController().signal);
+  assert.deepEqual(urls.slice(1),["https://api.maptiler.com/maps/custom-dark/0/0/0.png?key=fixture"],"polar and world-edge coordinates cannot request nonexistent tiles");
 });

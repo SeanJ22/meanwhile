@@ -581,7 +581,7 @@ test("SEEDED: a crash between COMMIT and APPLY leaves no half-write a reader can
     );
 
     const restarted = await createFileRepositories(root);
-    const report = await reconcile(restarted, T5M);
+    const report = await reconcile(restarted, T5M, [task.id]);
     assert.equal(report.commitsSeen, 1);
     assert.deepEqual(report.healed, [commit.commitId], "the unapplied commit was completed");
 
@@ -592,7 +592,7 @@ test("SEEDED: a crash between COMMIT and APPLY leaves no half-write a reader can
     assert.equal(healedTask.value.disposition?.attemptId, attempt.value.id);
     assert.equal(healedAttempt.value.outcome, "COMPLETED");
 
-    const second = await reconcile(await createFileRepositories(root), T5M);
+    const second = await reconcile(await createFileRepositories(root), T5M, [task.id]);
     assert.equal(second.commitsSeen, 1);
     assert.deepEqual(second.healed, [], "a completed recovery does not re-apply itself");
   });

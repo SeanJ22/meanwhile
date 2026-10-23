@@ -1,0 +1,11 @@
+{
+  "streetUrl": "https://myballotmn.sos.mn.gov/api/Streets/GetStreets?ZipCode=55303",
+  "ballotUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=211766",
+  "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/F3B5B72C-967A-4CB9-87B0-EC8D2D7EB14A.pdf",
+  "httpStatus": 200,
+  "sampleBytes": 667690,
+  "county": "Anoka",
+  "zip": "55303",
+  "judicialDistrict": "10",
+  "precinct": "2605"
+}

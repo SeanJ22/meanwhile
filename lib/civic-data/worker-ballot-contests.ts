@@ -1,6 +1,6 @@
 import { consumeStatePublicationRecord, immutableStateValue, reuseStatePublicationRecord } from "./state-publication.ts";
 import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
-import { recordPublicationFlow } from "./publication-flow.ts";
+import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
@@ -164,9 +164,17 @@ function citedBallotSources(payload: GenericBallotProjection, sources: ManualPro
     for (const child of Object.values(row)) if (child && typeof child === "object") pending.push(child);
   }
   const versions = new Map<string, typeof sources[number]>();
-  for (const source of sources) versions.set(`${source.requestedUrl}\n${source.finalUrl}\n${source.rawHash}`, source);
+  const authorityConflicts = new Set<string>();
+  // Identical bytes observed again are a distinct receipt: retained facts may
+  // still cite either observation, and authority checks use that capture time.
+  const identity = (source: typeof sources[number]) =>
+    `${source.requestedUrl}\n${source.finalUrl}\n${source.rawHash}\n${source.retrievedAt}`;
+  for (const source of sources) {
+    const key = identity(source), prior = versions.get(key);
+    if (prior && (prior.publisher !== source.publisher || prior.sourceClass !== source.sourceClass)) authorityConflicts.add(key);
+    versions.set(key, source);
+  }
   const selected = new Set<string>(), latest = new Map<string, typeof sources[number]>();
-  const identity = (source: typeof sources[number]) => `${source.finalUrl}\n${source.rawHash}`;
   for (const source of versions.values()) for (const url of new Set([source.requestedUrl, source.finalUrl])) {
     const need = needed.get(url);
     if (!need) continue;
@@ -182,7 +190,13 @@ function citedBallotSources(payload: GenericBallotProjection, sources: ManualPro
     const source = latest.get(url);
     if (source) selected.add(identity(source));
   }
-  return [...versions.values()].filter(source => selected.has(identity(source)));
+  return [...versions.values()].filter(source => {
+    const key = identity(source);
+    if (!selected.has(key)) return false;
+    // A partial update must not rewrite authority for untouched retained facts.
+    requirePublication(!authorityConflicts.has(key), "BALLOT_SOURCE_OBSERVATION_AUTHORITY_CONFLICT");
+    return true;
+  });
 }
 
 type MutableRow = Record<string, unknown>;
@@ -228,10 +242,19 @@ export class BallotContestMerge {
     requirePublication(partition?.family === "ballot-contests", "BALLOT_STATE_CONTRACT_REQUIRED");
     this.priorSources = prior?.sourceReceipt?.sources ?? [];
     for (const [sources, target] of [[this.priorSources, this.priorAuthorities], [input.sourceReceipt.sources, this.currentAuthorities]] as const) {
+      const publishers = new Map<string, Set<string>>();
       for (const source of sources) if (source.reviewOutcome !== "BLOCKED" &&
         ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"].includes(source.sourceClass)) {
-        target.set(source.requestedUrl, source.publisher); target.set(source.finalUrl, source.publisher);
+        target.set(`${source.requestedUrl}\n${source.retrievedAt}`, source.publisher);
+        target.set(`${source.finalUrl}\n${source.retrievedAt}`, source.publisher);
+        for (const url of new Set([source.requestedUrl, source.finalUrl])) {
+          const values = publishers.get(url) ?? new Set<string>();
+          values.add(source.publisher); publishers.set(url, values);
+        }
       }
+      // Legacy measure facts need a receipted URL, but do not require the
+      // candidate-list capture-time match. A unique publisher remains known.
+      for (const [url, values] of publishers) if (values.size === 1) target.set(url, [...values][0]);
     }
     for (const source of input.sourceReceipt.sources) if (source.reviewOutcome !== "BLOCKED" && source.httpStatus === 200 &&
       ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"].includes(source.sourceClass) && /^[a-f0-9]{64}$/.test(source.rawHash)) {
@@ -313,11 +336,27 @@ export class BallotContestMerge {
       const hold = state.rows.get("heldContests")?.get(id) as HeldBallotContest | undefined;
       const previous = old ?? hold;
       if (previous && observedAt(previous) > observedAt(contest)) return;
-      const complete = contest.candidateListComplete === true && this.official.has(`${contest.provenance.sourceUrl}\n${contest.provenance.collectedAt}`);
+      const authoritative = this.official.has(`${contest.provenance.sourceUrl}\n${contest.provenance.collectedAt}`);
+      const complete = contest.candidateListComplete === true && authoritative;
       const held = field === "heldContests" || contest.type !== "MEASURE" && !complete;
       if (held && old?.candidateListComplete === true) return;
-      if (this.checkAuthority && previous && this.priorAuthorities.get(previous.provenance.sourceUrl ?? "") !==
-        this.currentAuthorities.get(contest.provenance.sourceUrl ?? "")) throw new Error("Contest authority conflicts with the published ballot.");
+      const priorAuthority = previous && (this.priorAuthorities.get(`${previous.provenance.sourceUrl}\n${previous.provenance.collectedAt}`) ??
+        this.priorAuthorities.get(previous.provenance.sourceUrl ?? ""));
+      const currentAuthority = this.currentAuthorities.get(`${contest.provenance.sourceUrl}\n${contest.provenance.collectedAt}`) ??
+        this.currentAuthorities.get(contest.provenance.sourceUrl ?? "");
+      const correction = (contest as Contest & { scopeCorrection?: { previousOcdId: string; provenance: Contest["provenance"] } }).scopeCorrection;
+      const correctedScope = previous && correction?.previousOcdId === previous.ocdId &&
+        previous.electionId === contest.electionId && authoritative && observedAt(contest) > observedAt(previous) &&
+        Boolean(correction.provenance?.quote?.trim()) &&
+        this.official.has(`${correction.provenance?.sourceUrl}\n${correction.provenance?.collectedAt}`);
+      if (this.checkAuthority && previous && previous.ocdId !== contest.ocdId && !correctedScope) {
+        throw new Error("Contest division conflicts with the published ballot without an official scope correction.");
+      }
+      if (this.checkAuthority && old && priorAuthority !== currentAuthority &&
+        !(priorAuthority && currentAuthority && authoritative && observedAt(contest) > observedAt(previous) &&
+          previous.electionId === contest.electionId && (previous.ocdId === contest.ocdId || correctedScope))) {
+        throw new Error(`Contest authority conflicts with the published ballot: ${id}.`);
+      }
       if (held) {
         const holds = state.rows.get("heldContests") ?? new Map();
         const next = immutableStateValue(field === "heldContests" ? value : { id: contest.id, electionId: contest.electionId,
@@ -450,7 +489,7 @@ export async function publishWorkerBallotContestsResults(input: {
         recovery: verified ? "PUBLISHER" : "WORKER", candidateId, versionId };
     }
     const latest = await input.repos.workItems.mustRead(id);
-    await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now);
     report.push({ workItemId: id, outcome });
   }
   return report;

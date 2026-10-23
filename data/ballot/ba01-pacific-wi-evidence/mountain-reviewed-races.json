@@ -1,0 +1,50 @@
+[
+  [
+    "Representative in Congress District 8",
+    "ocd-division/country:us/state:wi/cd:8",
+    [
+      [
+        "Tony Wied",
+        "Republican"
+      ],
+      [
+        "Rick Crosson",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 36",
+    "ocd-division/country:us/state:wi/sldl:36",
+    [
+      [
+        "Jeffrey L. Mursau",
+        "Republican"
+      ],
+      [
+        "Shena Chapman",
+        "Independent"
+      ]
+    ]
+  ],
+  [
+    "Oconto County Sheriff",
+    "ocd-division/country:us/state:wi/county:oconto",
+    [
+      [
+        "Todd Skarban",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "Oconto County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:oconto",
+    [
+      [
+        "Trisha L. LeFebre",
+        "Republican"
+      ]
+    ]
+  ]
+]

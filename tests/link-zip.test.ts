@@ -3,12 +3,16 @@ import test from "node:test";
 import { readZipChoice, resolveStoredZip } from "../hooks/use-stored-zip.ts";
 import { recallCamera } from "../lib/map/camera-memory.ts";
 import { GET } from "../app/api/location/zip/route.ts";
-import { lookupZcta } from "../lib/geo/zcta.ts";
+import { lookupZcta, resolveZip } from "../lib/geo/zcta.ts";
 
 test("a link's ZIP overrides a tab's previous ZIP before the map resolves", async (t) => {
   const previous = Object.getOwnPropertyDescriptor(globalThis, "window");
-  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) =>
-    GET(input instanceof Request ? input : new Request(new URL(input, "http://localhost"))));
+  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
+    const requestUrl = new URL(input instanceof Request ? input.url : input, "http://localhost");
+    const prefix=/\/(\d{2})\.json$/.exec(requestUrl.pathname)?.[1];
+    assert.ok(prefix);
+    return Response.json({locations:Object.fromEntries(["85635","85701"].filter(zip=>zip.startsWith(prefix)).map(zip=>[zip,lookupZcta(zip)]))});
+  });
   let search = "?zip=85635";
   let blocked = false;
   // The remembered ZIP is kept between visits (localStorage); the map camera stays per-tab.
@@ -47,7 +51,7 @@ test("ZIP startup returns one source-resolved place, including postal ZIPs, with
     const response = await GET(new Request(`http://localhost/api/location/zip?zip=${zip}`));
     assert.equal(response.status, 200);
     const body = await response.text();
-    assert.deepEqual(JSON.parse(body), { location: lookupZcta(zip) });
+    assert.deepEqual(JSON.parse(body), { location: lookupZcta(zip), resolution: resolveZip(zip) });
     assert.ok(Buffer.byteLength(body) < 2000);
   }
   for (const query of ["", "?zip=8564", "?zip=85643&zip=85122", "?zip=85643&radius=150"]) {

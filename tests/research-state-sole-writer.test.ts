@@ -1,7 +1,3 @@
-/**
- * The research round is the research state's only writer. It writes on the revision it last read or wrote and
- * learns the current one only from a lost compare-and-set, so the 1.1 MB row is never read before a write.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
@@ -70,11 +66,13 @@ test("an absent row is created; a row never read is asked for its revision only;
   assert.equal(tries, SOLE_WRITER_LOST_RACES + 1);
 });
 
-test("the research round writes its state through the sole writer and reads the row once, at the start", async () => {
+test("the research round writes its scoped state through the sole writer and reads the row once", async () => {
   const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
+  assert.match(round, /const STATE_RESEARCH_ID=STATE\?`\$\{RESEARCH_STATE_ID\}:\$\{STATE\}`:RESEARCH_STATE_ID;/);
+  assert.match(round, /const previous = await repos\.researchState\.read\(STATE_RESEARCH_ID\);/);
   assert.match(round, /researchStateRevision = previous\?\.revision \?\? null;/);
-  assert.match(round, /const putResearchState = soleWriter\(repos\.researchState, RESEARCH_STATE_ID, researchStateRevision\);/);
+  assert.match(round, /const putResearchState = soleWriter\(repos\.researchState, STATE_RESEARCH_ID, researchStateRevision\);/);
   assert.match(round, /await putResearchState\(researchState\(cycleFinishedAt\), nowIso\(\)\);/);
-  assert.equal(round.split("repos.researchState.read(").length - 1, 1, "one read of the 1.1 MB row per round");
+  assert.equal(round.split("repos.researchState.read(").length - 1, 1, "one read of the state row per round");
   assert.doesNotMatch(round, /researchState\.compareAndSet\(|researchState\.put\(/);
 });

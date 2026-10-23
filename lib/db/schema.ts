@@ -823,6 +823,7 @@ export const civicDataCandidateEvents = pgTable(
   },
   (table) => [
     uniqueIndex("civic_data_candidate_events_sequence_idx").on(table.candidateId, table.sequence),
+    index("civic_data_candidate_events_confirmed_at_idx").on(table.at).where(sql`left(${table.detail}, 26) = 'UNCHANGED_CONFIRMATION_V1 '`),
     check("civic_data_candidate_events_positive_sequence", sql`${table.sequence} > 0`),
     check(
       "civic_data_candidate_events_state_known",
@@ -853,6 +854,8 @@ export const civicDataPromotions = pgTable(
   (table) => [
     uniqueIndex("civic_data_promotions_record_scope_idx").on(table.recordClass, table.scope),
     index("civic_data_promotions_promoted_at_idx").on(table.promotedAt),
+    index("civic_data_promotions_meeting_body_idx").on(sql`split_part(${table.scope}, ':', 4)`)
+      .where(sql`${table.recordClass} = 'MEETING' AND left(${table.scope}, 7) = 'source:' AND split_part(${table.scope}, ':', 3) = 'body'`),
     index("civic_data_promotions_federal_lookup_idx").using("gin", sql`(${table.payload}->'lookupKeys') jsonb_path_ops`)
       .where(sql`${table.payload} ? 'lookupKeys'`),
     check(
@@ -899,39 +902,6 @@ export const civicDataPromotions = pgTable(
   ],
 );
 
-/**
- * Derived reader-serving projections: a serving copy, never an acquisition
- * source or promotion authority. Each row is a pure function of the promoted
- * partitions it names in `composed_from`, plus `fact_sha256`. `sequence` is
- * monotonic: a write lands only when it exceeds the stored sequence, so an
- * older composition never replaces a newer one, and the last valid row keeps
- * serving until replaced.
- */
-export const civicDataReaderProjections = pgTable(
-  "civic_data_reader_projections",
-  {
-    key: text("key").primaryKey(),
-    recordClass: text("record_class").notNull(),
-    scope: text("scope").notNull(),
-    sequence: integer("sequence").notNull(),
-    payload: jsonb("payload").notNull(),
-    composedFrom: jsonb("composed_from").notNull(),
-    factSha256: text("fact_sha256").notNull(),
-    generatedAt: text("generated_at").notNull(),
-    composedAt: timestamp("composed_at", { withTimezone: true, mode: "string" }).notNull(),
-    sourceThrough: text("source_through"),
-    retrievedAt: text("retrieved_at"),
-    promotedThrough: text("promoted_through"),
-  },
-  (table) => [
-    uniqueIndex("civic_data_reader_projections_record_scope_idx").on(table.recordClass, table.scope),
-    check(
-      "civic_data_reader_projections_key_coherent",
-      sql`${table.key} = ${table.recordClass} || ':' || ${table.scope}`,
-    ),
-    check("civic_data_reader_projections_sequence_positive", sql`${table.sequence} > 0`),
-  ],
-);
 
 
 /** Raw click history lives in Blobs; these are retry keys and coarse aggregates. */

@@ -932,16 +932,16 @@
           "contestId": "dc-2026-general-delegate-to-the-house-of-representatives",
           "familyName": "Green",
           "givenName": "Rebekkah",
-          "partyLabel": "Independent",
+          "partyLabel": "Libertarian",
           "slogan": "Declared write-in",
           "incumbent": null,
           "websiteUrl": null,
           "provenance": {
             "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
             "sourceOrg": "District of Columbia Board of Elections",
-            "collectedAt": "2026-10-14T05:01:44.805522Z",
-            "verifiedAt": "2026-10-14T05:01:44.805522Z",
-            "doorId": "fec-dc-chief"
+            "collectedAt": "2026-10-20T22:52:21.509748+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.509748+00:00",
+            "quote": "Rebekkah Green | Delegate to the U.S. House of Representatives | Libertarian"
           }
         },
         {
@@ -1164,6 +1164,23 @@
             "verifiedAt": "2026-10-14T05:01:44.805522Z",
             "doorId": "fec-dc-chief"
           }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:nadeem-a-khan",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "givenName": "",
+          "familyName": "Nadeem A. Khan",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-20T22:52:21.509748+00:00",
+            "verifiedAt": "2026-10-20T22:52:21.509748+00:00",
+            "quote": "Nadeem A. Khan | Mayor of the District of Columbia | Independent"
+          }
         }
       ],
       "measures": [
@@ -1171,7 +1188,7 @@
           "id": "dc-2026-general-initiative-86:question",
           "contestId": "dc-2026-general-initiative-86",
           "officialNumber": "86",
-          "questionText": "Prohibiting Force-Feeding of Birds\nAct of 2026.\nIf enacted, this Initiative would:\n(a) Prohibit any person from\nforce-feeding a bird for the purpose\nof enlarging the bird\u2019s liver beyond\nnormal size;\n(b) Ban the sale or distribution of any\nproduct resulting from force-feeding\na bird, including foie gras;\n(c) Define force-feeding as inserting a\ntube into the bird\u2019s throat to deliver\nexcessive feed;\n(d) Provide for enforcement by the\nDepartment of Energy and\nEnvironment during routine food\nsafety inspections; and\n(e) Provide for civil penalties.",
+          "questionText": "Prohibiting Force-Feeding of Birds\nAct of 2026.\nIf enacted, this Initiative would:\n(a) Prohibit any person from\nforce-feeding a bird for the purpose\nof enlarging the bird’s liver beyond\nnormal size;\n(b) Ban the sale or distribution of any\nproduct resulting from force-feeding\na bird, including foie gras;\n(c) Define force-feeding as inserting a\ntube into the bird’s throat to deliver\nexcessive feed;\n(d) Provide for enforcement by the\nDepartment of Energy and\nEnvironment during routine food\nsafety inspections; and\n(e) Provide for civil penalties.",
           "officialStatement": null,
           "provenance": {
             "sourceUrl": "https://www.dcboe.org/getContentAsset/bf78fba0-50f2-40c4-ad32-0f78255d725a/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward1C.pdf?language=en",
@@ -1191,8 +1208,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-14T05:05:12.477743Z",
+    "reviewedBy": "BA-01 current official write-in list replay",
+    "reviewedAt": "2026-10-20T22:52:21.509748+00:00",
     "sources": [
       {
         "requestedUrl": "https://www.dcboe.org/",
@@ -1303,6 +1320,16 @@
         "publisher": "District of Columbia Board of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official November 3, 2026 general-election sample ballot; all ward groups show Initiative Measure No. 86 as the only District-wide measure."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+        "finalUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+        "httpStatus": 200,
+        "rawHash": "fbcc812ba21436c6b330b8a2d40eec4263c1246e28494f446a08e6b1ed5d3d6e",
+        "retrievedAt": "2026-10-20T22:52:21.509748+00:00",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "All 15 registered write-in candidates for the existing District-wide contests replayed from the current official list. ANC write-ins remain separate local coverage work. Only name, contest, stated party and write-in designation projected."
       }
     ]
   }

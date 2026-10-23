@@ -36,6 +36,7 @@ export interface AskSitting {
 export interface AskAnswerPayload {
   /** One canonical body suggestion; contains no answer until confirmed. */
   confirmation?: BodyConfirmation;
+  bodyChoices?: BodyConfirmation[];
   clarification?: string;
   /** Held agenda records lead the reader answer, even when prose is available. */
   agendaLead?: boolean;
@@ -53,6 +54,8 @@ export interface AskAnswerPayload {
   subject: EvidenceSubject | null;
   /** Validated generated prose, or null. Null is a normal, honest outcome. */
   answer: string | null;
+  /** General AI knowledge, shown separately under its plain label. */
+  aiAnswer?: string;
   /** The evidence, whatever the mode; a rejected or unavailable synthesis still ships every record. */
   records: EvidenceRecord[];
   /** Named gaps, each saying WHOSE gap it is. Evidence, not error handling. */
@@ -203,6 +206,7 @@ export function readAskAnswer(raw: unknown): AskAnswerPayload | null {
     mode: value.mode as AnswerMode,
     subject: (value.subject as EvidenceSubject | null) ?? null,
     answer: typeof value.answer === "string" ? value.answer : null,
+    aiAnswer: typeof value.aiAnswer === "string" ? value.aiAnswer : undefined,
     records: arr<EvidenceRecord>(value.records),
     gaps: arr<EvidenceGap>(value.gaps),
     contacts: arr<AskContact>(value.contacts),
@@ -219,6 +223,8 @@ export function readAskAnswer(raw: unknown): AskAnswerPayload | null {
       typeof (value.confirmation as BodyConfirmation).question === "string"
         ? value.confirmation as BodyConfirmation : undefined,
     clarification: typeof value.clarification === "string" ? value.clarification : undefined,
+    bodyChoices: Array.isArray(value.bodyChoices) ? arr<BodyConfirmation>(value.bodyChoices).filter(choice =>
+      typeof choice?.bodyId === "string" && typeof choice.name === "string" && typeof choice.question === "string") : undefined,
     agendaLead: value.agendaLead === true,
     candidates: Array.isArray(value.candidates)
       ? (value.candidates as string[])

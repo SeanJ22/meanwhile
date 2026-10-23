@@ -8,7 +8,7 @@ import {
   GENERIC_CIVIC_TOKENS,
   type BindableEntity,
 } from "../routing/named-entity.ts";
-import { decideNamedBody } from "./body-confirmation.ts";
+import { bodyInitials, decideNamedBody } from "./body-confirmation.ts";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation } from "./intent.ts";
 import { interpretWithoutModel } from "./interpret.ts";
 import { meetingDateInQuestion } from "./meeting-date.ts";
@@ -17,6 +17,10 @@ import { outcomeQuestionClass } from "./outcome-question.ts";
 import { personVotesQuestionShape, type PersonVotesQuestion } from "./person-votes.ts";
 import { resolveInterpretation } from "./resolve.ts";
 import type { AskSubjectRef } from "./subject.ts";
+import { readerMoneyReference, readerContestReference, readerMeasureReference } from "./reader-references.ts";
+import { officeIdentity } from "../officials/office-identity.ts";
+import { contestsForBallotAsk } from "./ballot-summary.ts";
+import type { Contest } from "../ballot/types.ts";
 
 /**
  * A closed set of question shapes read in code, skipping the model rung. Each
@@ -67,6 +71,9 @@ const WHEN_TAIL = "(?: (?:next|again))?";
 const RECENTLY = "(?: (?:recently|lately|last time|at (?:its|their|the) (?:last|latest|most recent|previous) meeting))?";
 
 const SHAPES: readonly ShapePattern[] = [
+  { shape: "BODY_AGENDA", kind: "BODY", pattern: /^when (?:does|do|will) (?:the )?(.+?) meet next and what (?:is|s) on (?:the|its|their) agenda$/ },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:is|s|are) (?:the )?(.+?) (?:getting together|gathering|holding a meeting)${WHEN_TAIL}$`) },
+  { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:does|do|will) (?:the )?(.+?) (?:get together|gather|hold a meeting)${WHEN_TAIL}$`) },
   /* MEETING_TIME — when a named body sits. */
   { shape: "MEETING_TIME", kind: "BODY", pattern: /^when (?:is|s) (?:the )?(.+?) meeting next(?: and where)?$/ },
   { shape: "MEETING_TIME", kind: "BODY", pattern: new RegExp(`^when (?:does|do|will|did) (?:the )?(.+?) (?:(?:next|last|first) )?(?:meet|convene|sit)${WHEN_TAIL}$`) },
@@ -127,6 +134,7 @@ const SHAPES: readonly ShapePattern[] = [
   { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what (?:does|do) (.+?) stand for$/ },
   { shape: "PERSON_RECORD", kind: "PERSON", pattern: /^what (?:is|s|are) (.+?) s (?:background|record|voting record|platform|biography|bio)$/ },
   /* CONTACT — how to reach a named person or body. */
+  { shape: "CONTACT", kind: "BODY", pattern: /^where (?:is|s|are) (?:the )?(.+?) (?:main )?offices?$/ },
   { shape: "CONTACT", kind: "PERSON", pattern: /^how (?:do|can|could|would|should) (?:i|we) (?:contact|reach|get in touch with|email|call|write to|talk to|speak to|speak with) (.+?)$/ },
   { shape: "CONTACT", kind: "BODY", pattern: /^how (?:do|can|could|would|should) (?:i|we) (?:contact|reach|get in touch with|email|call|write to|talk to|speak to|speak with) (?:the )?(.+?)$/ },
   { shape: "CONTACT", kind: "PERSON", pattern: /^what (?:is|s|are) (.+?) s (?:contact information|contact info|phone number|email address)$/ },
@@ -176,7 +184,9 @@ function shapeMatches(question: string, options: { pronouns?: boolean } = {}): {
     const slot = pattern.exec(normalized)?.[1]?.trim();
     if (!slot) continue;
     // A pronoun is not a name: "when do they meet" depends on something earlier.
-    if (!options.pronouns && slot.split(" ").some((word) => SLOT_PRONOUNS.has(word))) continue;
+    const areaSlot = kind === "BODY" && /^(?:my|our) /.test(slot) &&
+      Object.hasOwn(AREA_CLASS_DIVISIONS, slot.replace(/^(?:my|our) /, ""));
+    if (!options.pronouns && !areaSlot && slot.split(" ").some((word) => SLOT_PRONOUNS.has(word))) continue;
     if (SITTING_SHAPES.has(shape) && (shape === "MEETING_OUTCOME") !== Boolean(outcome)) continue;
     if (!SITTING_SHAPES.has(shape) && outcome) continue;
     out.push({ shape, kind, slot });
@@ -186,6 +196,8 @@ function shapeMatches(question: string, options: { pronouns?: boolean } = {}): {
 
 /** The first shape this question matches, and the words in its name slot, or null. */
 export function lexicalQuestionShape(question: string): { shape: LexicalShape; slot: string } | null {
+  const votes = personVotesQuestionShape(question);
+  if (votes) return { shape: "PERSON_VOTES", slot: votes.slot };
   const found = shapeMatches(question)[0];
   return found ? { shape: found.shape, slot: found.slot } : null;
 }
@@ -203,7 +215,24 @@ export function unheldNamedBodyQuestion(question: string, bodies: readonly Binda
 /** Keep the reader's body name when it binds to the resolved body; a pronoun or another name cannot rename it. */
 export function bodyNameFromQuestion(question: string, inventory: readonly BindableEntity[], bodyId: string): string | null {
   const match = shapeMatches(question).find((entry) => entry.kind === "BODY");
-  return match && slotNames(match.slot, inventory, bodyId) ? match.slot : null;
+  if (!match || !slotNames(match.slot, inventory, bodyId)) return null;
+  const abbreviations = new Set(inventory.filter(entity => entity.id === bodyId).flatMap(bodyInitials));
+  return match.slot.split(" ").map(word => abbreviations.has(word) ? word.toUpperCase() : word).join(" ");
+}
+
+/** A district calendar may also carry its committees. An explicitly requested
+ * school board uses the publisher's board sittings when those are identified. */
+export function requestedSchoolBoardSittings<T extends { bodyId?: string | null; title?: string | null }>(
+  question: string, bodyId: string | undefined, meetings: readonly T[], options: { requireBoardTitle?: boolean } = {},
+): T[] {
+  const words = normalizeName(question);
+  if (!bodyId?.includes("/school_district:") || !/\b(?:school board|governing board|board of education|board of trustees)\b/.test(words) ||
+    /\bcommittee\b/.test(words)) return [...meetings];
+  const isBoard = (meeting: T) => /\b(?:(?:governing|school) board|board of (?:education|trustees))\b/i.test(meeting.title ?? "") &&
+    !/\b(?:committee|advisory)\b/i.test(meeting.title ?? "");
+  if (!meetings.some(meeting => meeting.bodyId === bodyId && isBoard(meeting)))
+    return options.requireBoardTitle ? meetings.filter(meeting => meeting.bodyId !== bodyId) : [...meetings];
+  return meetings.filter(meeting => meeting.bodyId !== bodyId || isBoard(meeting));
 }
 
 /**
@@ -261,10 +290,15 @@ function namesAnotherSubject(question: string, inventory: readonly BindableEntit
 }
 
 /** The slot binds `id` in the inventory, through a name variant that is the slot and nothing else. */
-function slotNames(slot: string, inventory: readonly BindableEntity[], id: string): boolean {
+function slotNames(slot: string, inventory: readonly BindableEntity[], id: string, localDivisionIds: readonly string[] = []): boolean {
   const binding = bindNamedEntity(slot, inventory);
-  if (binding.kind !== "BOUND" || binding.entity.id !== id) return false;
-  return inventory.some((entity) => entity.id === id && slotIsOnlyTheName(slot, entity));
+  if (binding.kind === "BOUND" && binding.entity.id === id &&
+      inventory.some((entity) => entity.id === id && slotIsOnlyTheName(slot, entity))) return true;
+  // A short name slot can be an acronym, nickname, or typo. Qualifiers still
+  // need the model reader; they must not disappear into a name match.
+  if (normalizeName(slot).split(" ").length > 1) return false;
+  const body = decideNamedBody(slot, inventory, undefined, [], localDivisionIds);
+  return body.kind === "BOUND" && body.entity.id === id;
 }
 
 /**
@@ -350,11 +384,6 @@ function personVotesReading(input: LexicalReadingInput): LexicalReading | null {
   const person = boundPersonFor(votes.slot, input.inventory);
   if (!person) return null;
   const temporal = { kind: "NONE" as const };
-  const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
-    activeSubjects: input.activeSubjects ?? [], priorSubjects: input.priorSubjects ?? [],
-  });
-  if (resolved.binding.kind !== "BOUND" || resolved.basis !== "WHOLE_QUESTION" || resolved.binding.entity.id !== person.id) return null;
-  if (namesAnotherSubject(input.question, input.inventory, person.id) || classPhraseIn(input.question)) return null;
   return { shape: "PERSON_VOTES", interpretation: { ...unavailableInterpretation(), intent: SHAPE_INTENT.PERSON_VOTES, temporal }, subjectId: person.id };
 }
 
@@ -409,6 +438,8 @@ export function otherNamedPerson(question: string, inventory: readonly BindableE
 }
 
 export interface LexicalReadingInput {
+  readerPeople?: readonly { id: string; officeTitle: string }[];
+  readerContests?: readonly Contest[];
   question: string;
   /** The same inventory the route hands the model and the resolver. */
   inventory: readonly BindableEntity[];
@@ -471,6 +502,11 @@ const AREA_CLASS_DIVISIONS: Readonly<Record<string, readonly string[]>> = {
   "city commission": ["place"],
 };
 
+export function readerBodyClassQuestion(question: string): boolean {
+  return shapeMatches(question).some(match => match.kind === "BODY" && /^(?:my|our) /.test(match.slot) &&
+    Object.hasOwn(AREA_CLASS_DIVISIONS, match.slot.replace(/^(?:my|our) /, "")));
+}
+
 /**
  * A question naming a kind of body ("the school board"), not one: the one
  * governing body of that kind among the reader's divisions settles it; several
@@ -483,6 +519,7 @@ function areaBodyOfClass(matches: readonly { shape: LexicalShape; kind: SubjectK
     const wanted = AREA_CLASS_DIVISIONS[words];
     if (!wanted) continue;
     const candidates = governing.filter((entity) => entity.level === "BODY" && wanted.includes(entity.divisionType ?? ""));
+    if (!candidates.length && /^(?:my|our) /.test(match.slot)) return { entity: null, choices: [], mention: words, match };
     if (candidates.length === 1) return { entity: candidates[0]!, choices: candidates, mention: words, match };
     if (candidates.length > 1 && candidates.length <= 6) return { entity: null, choices: candidates, mention: words, match };
   }
@@ -494,6 +531,27 @@ function areaBodyOfClass(matches: readonly { shape: LexicalShape; kind: SubjectK
  * code — or null, in which case the caller asks the model exactly as before.
  */
 export function lexicalReading(input: LexicalReadingInput): LexicalReading | null {
+  const referencedMoney = readerMoneyReference(input.question);
+  if (referencedMoney && input.readerPeople) {
+    const ids = new Set(input.readerPeople.filter(person => referencedMoney.office.keys.includes(officeIdentity(person.officeTitle) ?? ""))
+      .map(person => person.id));
+    const people = [...new Map(input.inventory.filter(entity => entity.nameClass === "person" && ids.has(entity.id)).map(entity => [entity.id, entity])).values()];
+    return { shape: "MONEY", subjectId: people.length === 1 ? people[0].id : "",
+      interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD", entityMentions: people.length === 1 ? [people[0].name] : [], temporal: { kind: "NONE" } },
+      ...(people.length > 1 ? { areaChoices: { mention: referencedMoney.money.slot, bodies: people } } : {}) };
+  }
+  const referencedContest = readerContestReference(input.question);
+  const referencedMeasure = readerMeasureReference(input.question);
+  if (referencedContest || referencedMeasure) {
+    const ids = referencedContest ? new Set(contestsForBallotAsk(input.readerContests ?? [], referencedContest.office).map(contest => contest.id)) : null;
+    const candidates = [...new Map(input.inventory.filter(entity => referencedMeasure ? kindOf(entity) === "MEASURE" : ids!.has(entity.id))
+      .map(entity => [entity.id, entity])).values()];
+    const shape = referencedMeasure ? "MEASURE_EXPLAIN" as const : "CONTEST_FIELD" as const;
+    return { shape, subjectId: candidates.length === 1 ? candidates[0].id : "",
+      interpretation: { ...unavailableInterpretation(), intent: referencedMeasure ? "MEASURE" : "PERSON_RECORD", temporal: { kind: "NONE" },
+        entityMentions: candidates.length === 1 ? [candidates[0].name] : [] },
+      ...(candidates.length > 1 ? { areaChoices: { mention: referencedMeasure ? "the measure on your ballot" : "your seat", bodies: candidates } } : {}) };
+  }
   const money = moneyReading(input);
   if (money !== undefined) return money;
   const group = groupMoneyReading(input);
@@ -523,35 +581,43 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   // 1. The whole question binds one subject on the reader's own words, and names no other.
   const explicitDate = meetingDateInQuestion(input.question);
   if (explicitDate && !explicitDate.date) return null;
-  const temporal: AskInterpretation["temporal"] = explicitDate?.date
+  const readTemporal: AskInterpretation["temporal"] = explicitDate?.date
     ? { kind: "DATE", localDate: explicitDate.date }
     : interpretWithoutModel(input.question).temporal;
+  const temporal: AskInterpretation["temporal"] = readTemporal.kind === "NONE" && matches[0]?.shape === "MEETING_TIME" &&
+    /\b(?:getting together|get together|gather(?:ing)?|hold(?:ing)? a meeting)\b/.test(normalizeName(input.question))
+    ? { kind: "NEXT" } : readTemporal;
   const area = areaBodyOfClass(matches, input.readerGoverning ?? []);
-  if (area && !area.choices.some((choice) => namesAnotherSubject(input.question, input.inventory, choice.id))) {
+  if (area && (/^(?:my|our) /.test(area.match.slot) || !area.choices.some((choice) => namesAnotherSubject(input.question, input.inventory, choice.id)))) {
     const areaIntent = tenseIntent(area.match.shape, temporal);
     if (!areaIntent) return null;
-    if (!area.entity) return { shape: area.match.shape, interpretation: { ...unavailableInterpretation(), intent: areaIntent, temporal }, subjectId: "", areaChoices: { mention: area.mention, bodies: area.choices } };
+    if (!area.entity) return { shape: area.match.shape, interpretation: { ...unavailableInterpretation(), intent: areaIntent, temporal }, subjectId: "",
+      ...(area.choices.length ? { areaChoices: { mention: area.mention, bodies: area.choices } } : {}) };
     return { shape: area.match.shape, interpretation: { ...unavailableInterpretation(), intent: areaIntent, temporal, entityMentions: [area.entity.name] }, subjectId: area.entity.id };
   }
   const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
     activeSubjects: input.activeSubjects ?? [],
     priorSubjects: input.priorSubjects ?? [],
   });
-  if (resolved.binding.kind !== "BOUND" || resolved.basis !== "WHOLE_QUESTION") return null;
-  const entity = resolved.binding.entity;
+  const named = decideNamedBody(input.question, input.namedBodies, input.confirmation, [],
+    (input.readerGoverning ?? []).flatMap(entity => entity.ocdId ? [entity.ocdId] : []));
+  const entity = named.kind === "BOUND" ? named.entity
+    : resolved.binding.kind === "BOUND" && resolved.basis === "WHOLE_QUESTION" ? resolved.binding.entity : null;
+  if (!entity) return null;
   if (namesAnotherSubject(input.question, input.inventory, entity.id)) return null;
   const kind = kindOf(entity);
   const found = matches.find((match) => match.kind === kind);
   if (!found || !kind) return null;
 
   // 2. The slot is the name and nothing else, and it binds the same subject.
-  if (!slotNames(found.slot, input.inventory, entity.id)) return null;
+  if (!slotNames(found.slot, input.inventory, entity.id,
+    (input.readerGoverning ?? []).flatMap(entity => entity.ocdId ? [entity.ocdId] : []))) return null;
 
   // 3. For a body, the route's named-body decision binds the same body on the
   //    reader's words alone (never a model mention), unconfirmed. A class phrase
   //    on anything else sends the route down that decision too, so it is refused.
   if (kind === "BODY") {
-    const decision = decideNamedBody(input.question, input.namedBodies, input.confirmation, []);
+    const decision = named;
     if (decision.kind !== "BOUND" || decision.confirmed || decision.entity.id !== entity.id) return null;
   } else if (classPhraseIn(input.question)) {
     return null;

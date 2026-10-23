@@ -1,13 +1,14 @@
 import { keyVotesForMember } from "../votes/key-votes-reader.ts";
 import { keyVotePositionKey } from "../votes/key-vote-positions.ts";
 import { KEY_VOTES_CRITERIA } from "../votes/key-votes.ts";
-import { getVotesSnapshot, readFederalRollCallsProjection } from "../votes/snapshot.ts";
+import { readFederalMemberVotes, readFederalRollCallsProjection } from "../votes/snapshot.ts";
 import { readHistoricalFederalVotesForMember } from "../votes/history.ts";
 import { summaryForBill } from "../votes/bill-summaries.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
 /** The same exact-member key-vote answer as the official card and votes API. */
-export async function keyVoteEvidenceFor(subject: EvidenceSubject, canonicalOfficialIds: readonly string[], select: typeof keyVotesForMember = keyVotesForMember) {
+export async function keyVoteEvidenceFor(subject: EvidenceSubject, canonicalOfficialIds: readonly string[], select: typeof keyVotesForMember = keyVotesForMember,
+  options: { includeSummaries?: boolean } = {}) {
   const records: EvidenceRecord[] = [];
   const gaps: EvidenceGap[] = [];
   const denominators: Record<string, number> = { keyVoteContextsReturned: 0, keyVotePositionsReturned: 0, keyVotePositionsUnresolved: 0, billSummariesReturned: 0 };
@@ -63,12 +64,14 @@ export async function keyVoteEvidenceFor(subject: EvidenceSubject, canonicalOffi
         positions.set(physicalKey, { kind: "KEY_VOTE_POSITION", id: `key-vote:${physicalKey}`, subjectId: subject.id, canonicalSubjectId: member,
           text: `${subject.name}: the ${chamber === "house" ? "U.S. House" : "U.S. Senate"} recorded ${position} on roll call ${ref.rollNumber}, Congress ${ref.congress}, session ${ref.session}. ${ref.question ?? row.entry.title}${ref.tally ? ` Recorded tally: ${ref.tally}.` : ""}`,
           sourceUrl: ref.url, sourceOrg: chamber === "house" ? "U.S. House of Representatives" : "U.S. Senate", retrievedAt: selected.positionsReadAt ?? ref.verifiedAt,
+          rollCall: { position, what: `${row.entry.title} — ${ref.question ?? row.entry.title}`,
+            when: `Congress ${ref.congress}, session ${ref.session}`, result: ref.tally ?? "" },
           keyVote: { entryIds: [row.entry.id], positionKeys: [positionKey], chamber, congress: ref.congress, session: ref.session, rollNumber: ref.rollNumber, position, referenceVerifiedAt: ref.verifiedAt } });
       }
     }
     // A summary belongs to the exact official bill URL on a proven vote,
     // whether that vote is still in Recent or now in verified Earlier records.
-    try {
+    if (options.includeSummaries !== false) try {
       const addSummary = (billUrl: string | null, summary: ReturnType<typeof summaryForBill>) => {
         if (!summary || !billUrl || seenSummaries.has(billUrl)) return;
         seenSummaries.add(billUrl);
@@ -76,9 +79,9 @@ export async function keyVoteEvidenceFor(subject: EvidenceSubject, canonicalOffi
           text: `${summary.title} (${summary.legisNum}): ${summary.summary} Basis: ${summary.basis}`,
           sourceUrl: billUrl, sourceOrg: "Congressional Research Service", retrievedAt: summary.curatedAt });
       };
-      const snapshot = getVotesSnapshot();
-      const mine = new Set(snapshot.positions.filter((position) => position.officeholderId === member).map((position) => position.voteId));
-      for (const vote of snapshot.votes.filter((vote) => mine.has(vote.id)))
+      const own = await readFederalMemberVotes(member);
+      if (own.kind === "STORE_UNREACHABLE") throw new Error(own.detail);
+      for (const vote of own.kind === "PROMOTED" || own.kind === "BOOTSTRAP" ? own.value.votes : [])
         addSummary(vote.billUrl, summaryForBill(vote.billUrl));
       if (process.env.DATABASE_URL) {
         const current = await readFederalRollCallsProjection();

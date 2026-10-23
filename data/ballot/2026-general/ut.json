@@ -2228,6 +2228,595 @@
             "quote": "Shall the Utah Constitution be amended to require that citizen-proposed laws that increase taxes compared to existing law be approved by at least 60% of voters, instead of a simple majority?"
           },
           "measureTextUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-Voter-Information-Pamphlet.pdf"
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-council-at-large-a",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "County Council At-Large A",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY COUNCIL AT-LARGE A\nVote for One\nGREGORY BEGLARIAN (CON)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-district-attorney",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "County District Attorney",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY DISTRICT ATTORNEY\nVote for One\nSIM GILL (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-auditor",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "County Auditor",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY AUDITOR\nVote for One\nALI CLOWARD (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-clerk",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "County Clerk",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY CLERK\nVote for One\nLANNIE CHAPMAN (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-sheriff",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "County Sheriff",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY SHERIFF\nVote for One\nSHANE MANWARING (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-special-bond-election",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "divisionVintage": "2026",
+          "title": "Salt Lake County — Special Bond Election",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "measureTextUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "Shall Salt Lake County, Utah, be authorized to issue general obligation bonds in an amount not to exceed $128,000,000 and to mature in no more than eleven (11) years from the date or dates of issuance of such bonds for the purpose of providing funds for repairing, completing, acquiring, constructing or renovating open space, natural habitat, parks, community trails and recreational facilities and other related facilities under the charge of the County and, to the extent necessary, for providing moneys for the refunding, at or prior to the maturity thereof, of general obligation bonds of the County authorized hereunder or heretofore issued and now outstanding?\nFOR THE ISSUANCE OF BONDS\nAGAINST THE ISSUANCE OF BONDS"
+          }
+        },
+        {
+          "id": "ut-general-2026-first-district-retention-kirk-max-morgan",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:1",
+          "divisionVintage": "2026",
+          "title": "First Judicial District — Juvenile Court — KIRK MAX MORGAN — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall KIRK MAX MORGAN be retained in the office of Judge of the Juvenile Court of the First Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-jason-craig-nelson",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "Second Judicial District — District Court — JASON CRAIG NELSON — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JASON CRAIG NELSON be retained in the office of Judge of the District Court of the Second Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-jennifer-lyn-valencia",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "Second Judicial District — District Court — JENNIFER LYN VALENCIA — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JENNIFER LYN VALENCIA be retained in the office of Judge of the District Court of the Second Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-eldred-blaine-rawson",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "Second Judicial District — District Court — ELDRED BLAINE RAWSON — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ELDRED BLAINE RAWSON be retained in the office of Judge of the District Court of the Second Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-rick-westmoreland",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "Second Judicial District — Juvenile Court — RICK WESTMORELAND — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall RICK WESTMORELAND be retained in the office of Judge of the Juvenile Court of the Second Juvenile Comt District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-robert-garrett-neill",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "Second Judicial District — Juvenile Court — ROBERT GARRETT NEILL — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ROBERT GARRETT NEILL be retained in the office of Judge of the Juvenile Court of the Second Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-jeffrey-j-noland",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:2",
+          "divisionVintage": "2026",
+          "title": "Second Judicial District — Juvenile Court — JEFFREY J. NOLAND — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JEFFREY J. NOLAND be retained in the office of Judge of the Juvenile Court of the Second Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-matthew-david-bates",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — District Court — MATTHEW DAVID BATES — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall MATTHEW DAVID BATES be retained in the office of Judge of the District Court of the Third Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-charles-a-stormont",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — District Court — CHARLES A. STORMONT — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall CHARLES A. STORMONT be retained in the office of Judge of the District Court of the Third Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-coral-sanchez",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — District Court — CORAL SANCHEZ — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall CORAL SANCHEZ be retained in the office of Judge of the District Court of the Third Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-todd-shaughnessy",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — District Court — TODD SHAUGHNESSY — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall TODD SHAUGHNESSY be retained in the office of Judge of the District Court of the Third Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-susan-heather-eisenman",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — Juvenile Court — SUSAN HEATHER EISENMAN — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall SUSAN HEATHER EISENMAN be retained in the office of Judge of the Juvenile Court of the Third Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-steven-k-beck",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — Juvenile Court — STEVEN K. BECK — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall STEVEN K. BECK be retained in the office of Judge of the Juvenile Court of the Third Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-aaron-william-flater",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "divisionVintage": "2026",
+          "title": "Third Judicial District — Juvenile Court — AARON WILLIAM FLATER — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall AARON WILLIAM FLATER be retained in the office of Judge of the Juvenile Court of the Third Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-jared-william-eldridge",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — District Court — JARED WILLIAM ELDRIDGE — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JARED WILLIAM ELDRIDGE be retained in the office of Judge of the District Court of the Fourth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-kraig-powell",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — District Court — KRAIG POWELL — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall KRAIG POWELL be retained in the office of Judge of the District Comt o f the Fourth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-thomas-low",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — District Court — THOMAS LOW — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall THOMAS LOW be retained in the office of Judge of the District Court of the Fourth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-anthony-leonard-howell",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — District Court — ANTHONY LEONARD HOWELL — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ANTHONY LEONARD HOWELL be retained in the office of Judge of the District Court of the Fourth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-douglas-john-nielsen",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "divisionVintage": "2026",
+          "title": "Fourth Judicial District — Juvenile Court — DOUGLAS JOHN NIELSEN — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall DOUGLAS JOHN NIELSEN be retained in the office of Judge of the Juvenile Court of the Fourth Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fifth-district-retention-jay-winward",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:5",
+          "divisionVintage": "2026",
+          "title": "Fifth Judicial District — District Court — JAY WINWARD — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JAY WINWARD be retained in the office of Judge of the District Court of the Fifth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fifth-district-retention-eric-russell-gentry",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:5",
+          "divisionVintage": "2026",
+          "title": "Fifth Judicial District — District Court — ERIC RUSSELL GENTRY — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ERIC RUSSELL GENTRY be retained in the office of Judge of the District Court of the Fifth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fifth-district-retention-matthew-l-bell",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:5",
+          "divisionVintage": "2026",
+          "title": "Fifth Judicial District — District Court — MATTHEW L. BELL — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall MATTHEW L. BELL be retained in the office of Judge of the District Com1 of the Fifth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-sixth-district-retention-mandy-sue-larsen",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:6",
+          "divisionVintage": "2026",
+          "title": "Sixth Judicial District — District Court — MANDY SUE LARSEN — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall MANDY SUE LARSEN be retained in the office of Judge of the District Court of the Sixth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-sixth-district-retention-alex-goble",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:6",
+          "divisionVintage": "2026",
+          "title": "Sixth Judicial District — Juvenile Court — ALEX GOBLE — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ALEX GOBLE be retained in the office of Judge of the Juvenile Court of the Sixth Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-seventh-district-retention-craig-miles-bunnell",
+          "electionId": "ut-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ut/judicial_district:7",
+          "divisionVintage": "2026",
+          "title": "Seventh Judicial District — Juvenile Court — CRAIG MILES BUNNELL — Retention",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall CRAIG MILES BUNNELL be retained in the office of Judge of the Juvenile Court of the Seventh Juvenile Court District?\nYes / No"
+          }
         }
       ],
       "candidacies": [
@@ -6406,6 +6995,601 @@
             "doorId": "fec-ut-chief",
             "quote": "GREGORY KEITH ORME"
           }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-council-at-large-a-gregory-beglarian",
+          "contestId": "ut-salt_lake-general-2026-county-council-at-large-a",
+          "familyName": "GREGORY BEGLARIAN",
+          "givenName": "",
+          "partyLabel": "CON",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY COUNCIL AT-LARGE A\nVote for One\nGREGORY BEGLARIAN (CON)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-council-at-large-a-kathleen-anderson",
+          "contestId": "ut-salt_lake-general-2026-county-council-at-large-a",
+          "familyName": "KATHLEEN ANDERSON",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY COUNCIL AT-LARGE A\nVote for One\nKATHLEEN ANDERSON (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-council-at-large-a-zach-robinson",
+          "contestId": "ut-salt_lake-general-2026-county-council-at-large-a",
+          "familyName": "ZACH ROBINSON",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY COUNCIL AT-LARGE A\nVote for One\nZACH ROBINSON (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-district-attorney-sim-gill",
+          "contestId": "ut-salt_lake-general-2026-county-district-attorney",
+          "familyName": "SIM GILL",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY DISTRICT ATTORNEY\nVote for One\nSIM GILL (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-district-attorney-kent-davis",
+          "contestId": "ut-salt_lake-general-2026-county-district-attorney",
+          "familyName": "KENT DAVIS",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY DISTRICT ATTORNEY\nVote for One\nKENT DAVIS (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-auditor-ali-cloward",
+          "contestId": "ut-salt_lake-general-2026-county-auditor",
+          "familyName": "ALI CLOWARD",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY AUDITOR\nVote for One\nALI CLOWARD (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-auditor-chris-harding",
+          "contestId": "ut-salt_lake-general-2026-county-auditor",
+          "familyName": "CHRIS HARDING",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY AUDITOR\nVote for One\nCHRIS HARDING (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-clerk-lannie-chapman",
+          "contestId": "ut-salt_lake-general-2026-county-clerk",
+          "familyName": "LANNIE CHAPMAN",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY CLERK\nVote for One\nLANNIE CHAPMAN (DEM)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-sheriff-shane-manwaring",
+          "contestId": "ut-salt_lake-general-2026-county-sheriff",
+          "familyName": "SHANE MANWARING",
+          "givenName": "",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY SHERIFF\nVote for One\nSHANE MANWARING (REP)"
+          }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-county-sheriff-rosie-rivera",
+          "contestId": "ut-salt_lake-general-2026-county-sheriff",
+          "familyName": "ROSIE RIVERA",
+          "givenName": "",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "COUNTY SHERIFF\nVote for One\nROSIE RIVERA (DEM)"
+          }
+        },
+        {
+          "id": "ut-general-2026-first-district-retention-kirk-max-morgan-kirk-max-morgan",
+          "contestId": "ut-general-2026-first-district-retention-kirk-max-morgan",
+          "familyName": "KIRK MAX MORGAN",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall KIRK MAX MORGAN be retained in the office of Judge of the Juvenile Court of the First Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-jason-craig-nelson-jason-craig-nelson",
+          "contestId": "ut-general-2026-second-district-retention-jason-craig-nelson",
+          "familyName": "JASON CRAIG NELSON",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JASON CRAIG NELSON be retained in the office of Judge of the District Court of the Second Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-jennifer-lyn-valencia-jennifer-lyn-valencia",
+          "contestId": "ut-general-2026-second-district-retention-jennifer-lyn-valencia",
+          "familyName": "JENNIFER LYN VALENCIA",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JENNIFER LYN VALENCIA be retained in the office of Judge of the District Court of the Second Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-eldred-blaine-rawson-eldred-blaine-rawson",
+          "contestId": "ut-general-2026-second-district-retention-eldred-blaine-rawson",
+          "familyName": "ELDRED BLAINE RAWSON",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ELDRED BLAINE RAWSON be retained in the office of Judge of the District Court of the Second Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-rick-westmoreland-rick-westmoreland",
+          "contestId": "ut-general-2026-second-district-retention-rick-westmoreland",
+          "familyName": "RICK WESTMORELAND",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall RICK WESTMORELAND be retained in the office of Judge of the Juvenile Court of the Second Juvenile Comt District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-robert-garrett-neill-robert-garrett-neill",
+          "contestId": "ut-general-2026-second-district-retention-robert-garrett-neill",
+          "familyName": "ROBERT GARRETT NEILL",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ROBERT GARRETT NEILL be retained in the office of Judge of the Juvenile Court of the Second Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-second-district-retention-jeffrey-j-noland-jeffrey-j-noland",
+          "contestId": "ut-general-2026-second-district-retention-jeffrey-j-noland",
+          "familyName": "JEFFREY J. NOLAND",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JEFFREY J. NOLAND be retained in the office of Judge of the Juvenile Court of the Second Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-matthew-david-bates-matthew-david-bates",
+          "contestId": "ut-general-2026-third-district-retention-matthew-david-bates",
+          "familyName": "MATTHEW DAVID BATES",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall MATTHEW DAVID BATES be retained in the office of Judge of the District Court of the Third Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-charles-a-stormont-charles-a-stormont",
+          "contestId": "ut-general-2026-third-district-retention-charles-a-stormont",
+          "familyName": "CHARLES A. STORMONT",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall CHARLES A. STORMONT be retained in the office of Judge of the District Court of the Third Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-coral-sanchez-coral-sanchez",
+          "contestId": "ut-general-2026-third-district-retention-coral-sanchez",
+          "familyName": "CORAL SANCHEZ",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall CORAL SANCHEZ be retained in the office of Judge of the District Court of the Third Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-todd-shaughnessy-todd-shaughnessy",
+          "contestId": "ut-general-2026-third-district-retention-todd-shaughnessy",
+          "familyName": "TODD SHAUGHNESSY",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall TODD SHAUGHNESSY be retained in the office of Judge of the District Court of the Third Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-susan-heather-eisenman-susan-heather-eisenman",
+          "contestId": "ut-general-2026-third-district-retention-susan-heather-eisenman",
+          "familyName": "SUSAN HEATHER EISENMAN",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall SUSAN HEATHER EISENMAN be retained in the office of Judge of the Juvenile Court of the Third Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-steven-k-beck-steven-k-beck",
+          "contestId": "ut-general-2026-third-district-retention-steven-k-beck",
+          "familyName": "STEVEN K. BECK",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall STEVEN K. BECK be retained in the office of Judge of the Juvenile Court of the Third Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-third-district-retention-aaron-william-flater-aaron-william-flater",
+          "contestId": "ut-general-2026-third-district-retention-aaron-william-flater",
+          "familyName": "AARON WILLIAM FLATER",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall AARON WILLIAM FLATER be retained in the office of Judge of the Juvenile Court of the Third Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-jared-william-eldridge-jared-william-eldridge",
+          "contestId": "ut-general-2026-fourth-district-retention-jared-william-eldridge",
+          "familyName": "JARED WILLIAM ELDRIDGE",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JARED WILLIAM ELDRIDGE be retained in the office of Judge of the District Court of the Fourth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-kraig-powell-kraig-powell",
+          "contestId": "ut-general-2026-fourth-district-retention-kraig-powell",
+          "familyName": "KRAIG POWELL",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall KRAIG POWELL be retained in the office of Judge of the District Comt o f the Fourth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-thomas-low-thomas-low",
+          "contestId": "ut-general-2026-fourth-district-retention-thomas-low",
+          "familyName": "THOMAS LOW",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall THOMAS LOW be retained in the office of Judge of the District Court of the Fourth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-anthony-leonard-howell-anthony-leonard-howell",
+          "contestId": "ut-general-2026-fourth-district-retention-anthony-leonard-howell",
+          "familyName": "ANTHONY LEONARD HOWELL",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ANTHONY LEONARD HOWELL be retained in the office of Judge of the District Court of the Fourth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fourth-district-retention-douglas-john-nielsen-douglas-john-nielsen",
+          "contestId": "ut-general-2026-fourth-district-retention-douglas-john-nielsen",
+          "familyName": "DOUGLAS JOHN NIELSEN",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall DOUGLAS JOHN NIELSEN be retained in the office of Judge of the Juvenile Court of the Fourth Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fifth-district-retention-jay-winward-jay-winward",
+          "contestId": "ut-general-2026-fifth-district-retention-jay-winward",
+          "familyName": "JAY WINWARD",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall JAY WINWARD be retained in the office of Judge of the District Court of the Fifth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fifth-district-retention-eric-russell-gentry-eric-russell-gentry",
+          "contestId": "ut-general-2026-fifth-district-retention-eric-russell-gentry",
+          "familyName": "ERIC RUSSELL GENTRY",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ERIC RUSSELL GENTRY be retained in the office of Judge of the District Court of the Fifth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-fifth-district-retention-matthew-l-bell-matthew-l-bell",
+          "contestId": "ut-general-2026-fifth-district-retention-matthew-l-bell",
+          "familyName": "MATTHEW L. BELL",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall MATTHEW L. BELL be retained in the office of Judge of the District Com1 of the Fifth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-sixth-district-retention-mandy-sue-larsen-mandy-sue-larsen",
+          "contestId": "ut-general-2026-sixth-district-retention-mandy-sue-larsen",
+          "familyName": "MANDY SUE LARSEN",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall MANDY SUE LARSEN be retained in the office of Judge of the District Court of the Sixth Judicial District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-sixth-district-retention-alex-goble-alex-goble",
+          "contestId": "ut-general-2026-sixth-district-retention-alex-goble",
+          "familyName": "ALEX GOBLE",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall ALEX GOBLE be retained in the office of Judge of the Juvenile Court of the Sixth Juvenile Court District?\nYes / No"
+          }
+        },
+        {
+          "id": "ut-general-2026-seventh-district-retention-craig-miles-bunnell-craig-miles-bunnell",
+          "contestId": "ut-general-2026-seventh-district-retention-craig-miles-bunnell",
+          "familyName": "CRAIG MILES BUNNELL",
+          "givenName": "",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Shall CRAIG MILES BUNNELL be retained in the office of Judge of the Juvenile Court of the Seventh Juvenile Court District?\nYes / No"
+          }
         }
       ],
       "measures": [
@@ -6438,18 +7622,358 @@
             "doorId": "fec-ut-chief",
             "quote": "Shall the Utah Constitution be amended to require that citizen-proposed laws that increase taxes compared to existing law be approved by at least 60% of voters, instead of a simple majority?"
           }
+        },
+        {
+          "id": "ut-salt_lake-general-2026-special-bond-election#question",
+          "contestId": "ut-salt_lake-general-2026-special-bond-election",
+          "questionText": "Shall Salt Lake County, Utah, be authorized to issue general obligation bonds in an amount not to exceed $128,000,000 and to mature in no more than eleven (11) years from the date or dates of issuance of such bonds for the purpose of providing funds for repairing, completing, acquiring, constructing or renovating open space, natural habitat, parks, community trails and recreational facilities and other related facilities under the charge of the County and, to the extent necessary, for providing moneys for the refunding, at or prior to the maturity thereof, of general obligation bonds of the County authorized hereunder or heretofore issued and now outstanding?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+            "sourceOrg": "Salt Lake County Clerk",
+            "collectedAt": "2026-10-20T23:34:28.636152+00:00",
+            "verifiedAt": "2026-10-20T23:34:28.636152+00:00",
+            "quote": "Shall Salt Lake County, Utah, be authorized to issue general obligation bonds in an amount not to exceed $128,000,000 and to mature in no more than eleven (11) years from the date or dates of issuance of such bonds for the purpose of providing funds for repairing, completing, acquiring, constructing or renovating open space, natural habitat, parks, community trails and recreational facilities and other related facilities under the charge of the County and, to the extent necessary, for providing moneys for the refunding, at or prior to the maturity thereof, of general obligation bonds of the County authorized hereunder or heretofore issued and now outstanding?\nFOR THE ISSUANCE OF BONDS\nAGAINST THE ISSUANCE OF BONDS"
+          }
         }
       ],
       "absences": [],
       "coverageNotes": [
         "The September 21 amended certification lists all statewide and legislative contests on the November 3 general-election ballot; three certified write-in candidates are included. The certification states that no statewide ballot propositions qualified and separately certifies Constitutional Amendments A and B. County and local contests and judicial district retentions are outside this statewide and legislative projection."
+      ],
+      "measureRecords": [
+        {
+          "contestId": "ut-salt_lake-general-2026-special-bond-election",
+          "whatItDoes": "Shall Salt Lake County, Utah, be authorized to issue general obligation bonds in an amount not to exceed $128,000,000 and to mature in no more than eleven (11) years from the date or dates of issuance of such bonds for the purpose of providing funds for repairing, completing, acquiring, constructing or renovating open space, natural habitat, parks, community trails and recreational facilities and other related facilities under the charge of the County and, to the extent necessary, for providing moneys for the refunding, at or prior to the maturity thereof, of general obligation bonds of the County authorized hereunder or heretofore issued and now outstanding?",
+          "yesMeans": null,
+          "noMeans": null,
+          "parts": [],
+          "sourceUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+          "sourceHash": "dbcee1a20ae5654c52bd372d24489fdff5dfcc2e9fc3010a5a2f72af9db30b08",
+          "sourceHashKind": "CAPTURE_BYTES",
+          "writtenAt": "2026-10-20T23:34:28.636152+00:00"
+        }
+      ],
+      "districtMemberships": [
+        {
+          "id": "ba01-ut-box_elder-in-ocd-division-country-us-state-ut-judicial-district-1",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:box_elder",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:1",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "First Judicial District. The First Judicial District consists of Box Elder, Cache, and Rich Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-cache-in-ocd-division-country-us-state-ut-judicial-district-1",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:cache",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:1",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "First Judicial District. The First Judicial District consists of Box Elder, Cache, and Rich Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-rich-in-ocd-division-country-us-state-ut-judicial-district-1",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:rich",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:1",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "First Judicial District. The First Judicial District consists of Box Elder, Cache, and Rich Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-davis-in-ocd-division-country-us-state-ut-judicial-district-2",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:davis",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:2",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Second Judicial District. The Second Judicial District consists of Davis, Morgan, and Weber Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-morgan-in-ocd-division-country-us-state-ut-judicial-district-2",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:morgan",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:2",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Second Judicial District. The Second Judicial District consists of Davis, Morgan, and Weber Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-weber-in-ocd-division-country-us-state-ut-judicial-district-2",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:weber",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:2",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Second Judicial District. The Second Judicial District consists of Davis, Morgan, and Weber Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-salt_lake-in-ocd-division-country-us-state-ut-judicial-district-3",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:salt_lake",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-summit-in-ocd-division-country-us-state-ut-judicial-district-3",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:summit",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-tooele-in-ocd-division-country-us-state-ut-judicial-district-3",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:tooele",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:3",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Third Judicial District. The Third Judicial District consists of Salt Lake, Summit, and Tooele Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-juab-in-ocd-division-country-us-state-ut-judicial-district-4",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:juab",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Fourth Judicial District. The Fourth Judicial District consists of Juab, Millard, Utah, and Wasatch Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-millard-in-ocd-division-country-us-state-ut-judicial-district-4",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:millard",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Fourth Judicial District. The Fourth Judicial District consists of Juab, Millard, Utah, and Wasatch Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-utah-in-ocd-division-country-us-state-ut-judicial-district-4",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:utah",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Fourth Judicial District. The Fourth Judicial District consists of Juab, Millard, Utah, and Wasatch Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-wasatch-in-ocd-division-country-us-state-ut-judicial-district-4",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:wasatch",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:4",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Fourth Judicial District. The Fourth Judicial District consists of Juab, Millard, Utah, and Wasatch Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-beaver-in-ocd-division-country-us-state-ut-judicial-district-5",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:beaver",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:5",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Fifth Judicial District. The Fifth Judicial District consists of Beaver, Washington, and Iron Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-washington-in-ocd-division-country-us-state-ut-judicial-district-5",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:washington",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:5",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Fifth Judicial District. The Fifth Judicial District consists of Beaver, Washington, and Iron Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-iron-in-ocd-division-country-us-state-ut-judicial-district-5",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:iron",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:5",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Fifth Judicial District. The Fifth Judicial District consists of Beaver, Washington, and Iron Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-garfield-in-ocd-division-country-us-state-ut-judicial-district-6",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:garfield",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:6",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Sixth Judicial District. The Sixth Judicial District consists of Garfield, Kane, Piute, Sanpete, Sevier, and Wayne Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-kane-in-ocd-division-country-us-state-ut-judicial-district-6",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:kane",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:6",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Sixth Judicial District. The Sixth Judicial District consists of Garfield, Kane, Piute, Sanpete, Sevier, and Wayne Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-piute-in-ocd-division-country-us-state-ut-judicial-district-6",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:piute",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:6",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Sixth Judicial District. The Sixth Judicial District consists of Garfield, Kane, Piute, Sanpete, Sevier, and Wayne Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-sanpete-in-ocd-division-country-us-state-ut-judicial-district-6",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:sanpete",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:6",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Sixth Judicial District. The Sixth Judicial District consists of Garfield, Kane, Piute, Sanpete, Sevier, and Wayne Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-sevier-in-ocd-division-country-us-state-ut-judicial-district-6",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:sevier",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:6",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Sixth Judicial District. The Sixth Judicial District consists of Garfield, Kane, Piute, Sanpete, Sevier, and Wayne Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-wayne-in-ocd-division-country-us-state-ut-judicial-district-6",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:wayne",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:6",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Sixth Judicial District. The Sixth Judicial District consists of Garfield, Kane, Piute, Sanpete, Sevier, and Wayne Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-carbon-in-ocd-division-country-us-state-ut-judicial-district-7",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:carbon",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:7",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Seventh Judicial District. The Seventh Judicial District consists of Carbon, Emery, Grand, and San Juan Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-emery-in-ocd-division-country-us-state-ut-judicial-district-7",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:emery",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:7",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Seventh Judicial District. The Seventh Judicial District consists of Carbon, Emery, Grand, and San Juan Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-grand-in-ocd-division-country-us-state-ut-judicial-district-7",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:grand",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:7",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Seventh Judicial District. The Seventh Judicial District consists of Carbon, Emery, Grand, and San Juan Counties."
+          }
+        },
+        {
+          "id": "ba01-ut-san_juan-in-ocd-division-country-us-state-ut-judicial-district-7",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:san_juan",
+          "districtOcdId": "ocd-division/country:us/state:ut/judicial_district:7",
+          "provenance": {
+            "sourceUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+            "sourceOrg": "Utah Lieutenant Governor Elections",
+            "collectedAt": "2026-10-20T22:57:20.564672+00:00",
+            "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
+            "quote": "Seventh Judicial District. The Seventh Judicial District consists of Carbon, Emery, Grand, and San Juan Counties."
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:05:05.741795Z",
-    "reviewedBy": "BL-16 source conversion",
+    "reviewedAt": "2026-10-21T01:02:36.591681+00:00",
+    "reviewedBy": "Codex BA-01 official county source replay",
     "sources": [
       {
         "requestedUrl": "https://vote.utah.gov/",
@@ -6500,6 +8024,28 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "publisher": "Utah Office of the Lieutenant Governor",
         "reviewedEvidence": "Official election-office file converted locally; certification candidate names optically extracted and checked against all printed candidate rows."
+      },
+      {
+        "requestedUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+        "finalUrl": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf",
+        "httpStatus": 200,
+        "rawHash": "dbcee1a20ae5654c52bd372d24489fdff5dfcc2e9fc3010a5a2f72af9db30b08",
+        "retrievedAt": "2026-10-20T23:34:28.636152+00:00",
+        "publisher": "Salt Lake County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official certified November3,2026 Salt Lake sample BT1. Five explicitly COUNTY offices apply countywide, including Council At-Large A. District and municipal contests are excluded. All10 printed names/parties and Vote for One replayed from complete PDF raw extraction.",
+        "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+        "finalUrl": "https://vote.utah.gov/wp-content/uploads/2026/09/2026-General-Election-Certification-Amended-09-21.pdf",
+        "rawHash": "1d1a009e5754194c05b70666a1c7ee200c252f87f18c1fe6f1c00f65621a0956",
+        "retrievedAt": "2026-10-20T22:57:20.564672+00:00",
+        "httpStatus": 200,
+        "publisher": "Utah Lieutenant Governor Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Amended2026GeneralCertification pages19-21 explicitly prints all25regional district/juvenile retention decisions, their25names,and each district whole-county membership. SevenThirdDistrict names independently appear in officialSaltLakeBT1. Municipal/countyjustice courts remain separate until exact political-subdivision electorates are verified.",
+        "reviewOutcome": "SUPPORTED"
       }
     ]
   }

@@ -1,0 +1,34 @@
+[
+  {
+    "file": "sf-candidates.html",
+    "url": "https://www.sf.gov/candidates-november-3-2026-general-election",
+    "publisher": "San Francisco Department of Elections",
+    "retrievedAt": "2026-10-20T22:56:28.397Z",
+    "rawHash": "59f410e98008088d39e0d3c7354acdc1e1e1d153fbe54ae203d933a11b136def",
+    "textHash": "59f410e98008088d39e0d3c7354acdc1e1e1d153fbe54ae203d933a11b136def"
+  },
+  {
+    "file": "sf-qualified-measures.html",
+    "url": "https://www.sf.gov/qualified-ballot-measures",
+    "publisher": "San Francisco Department of Elections",
+    "retrievedAt": "2026-10-20T22:56:28.435Z",
+    "rawHash": "6970baab061fc59e4816eadcbea31ed17ab7c39447bc256c9fb802f490ef72c3",
+    "textHash": "6970baab061fc59e4816eadcbea31ed17ab7c39447bc256c9fb802f490ef72c3"
+  },
+  {
+    "file": "sf-ballot-questions.txt",
+    "url": "https://api.sf.gov/documents/61682/Ballot_Questions_November_2026.pdf",
+    "publisher": "San Francisco Department of Elections",
+    "retrievedAt": "2026-10-20T22:58:26.392Z",
+    "rawHash": "9b2ea8145475b99f65f32e062ee8bf328a58996b10ea496a1ce2acc83c6d3753",
+    "textHash": "05b739fedbf1ac360580772abc5d9db73c2a12234c27e70cf5093b427cf42197"
+  },
+  {
+    "file": "sf-vip.txt",
+    "url": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+    "publisher": "San Francisco Department of Elections",
+    "retrievedAt": "2026-10-20T22:55:55.383Z",
+    "rawHash": "9c6bcf0b49b5a04c1f03de363d5727458c673d8807ef2932c2912ed40d786136",
+    "textHash": "641fa4b5bc02559c27459a679fef5275a031407f492000b6f563ffac905ac23d"
+  }
+]

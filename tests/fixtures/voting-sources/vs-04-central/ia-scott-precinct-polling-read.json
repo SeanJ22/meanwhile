@@ -1,0 +1,3905 @@
+{
+  "doorId": "ia-scott-precinct-polling",
+  "sites": [
+    {
+      "id": "voting-b67b592019e60402c6fa283f",
+      "name": "Quad City Area Realtors",
+      "address": "1900 State St.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 1 Precinct 1 (B11)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 1 Precinct 1 (B11)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 1 Precinct 1 (B11)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 1 Precinct 1 (B11)",
+          "name": "Quad City Area Realtors",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-feafb228feb2dac05b5a7f65",
+      "name": "Asbury United Methodist Church (this is a new pollsite!)",
+      "address": "1809 Mississippi Blvd\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 1 Precinct 2 (B12)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 1 Precinct 2 (B12)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 1 Precinct 2 (B12)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 1 Precinct 2 (B12)",
+          "name": "Asbury United Methodist Church (this is a new pollsite!)",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-16a27ceab0763b0558df6fbb",
+      "name": "Mississippi Bend A.E.A.",
+      "address": "729 21st St.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 1 Precinct 3 (B13)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 1 Precinct 3 (B13)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 1 Precinct 3 (B13)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 1 Precinct 3 (B13)",
+          "name": "Mississippi Bend A.E.A.",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-df30f52157766e557fc0cd2f",
+      "name": "Bettendorf Public Library",
+      "address": "2950 Learning Campus Dr.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 2 Precinct 3 (B23)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 2 Precinct 3 (B23)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 2 Precinct 1 (B21)",
+        "Bettendorf Ward 2 Precinct 3 (B23)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 2 Precinct 1 (B21)",
+          "name": "Bettendorf Public Library",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        },
+        {
+          "precinct": "Bettendorf Ward 2 Precinct 3 (B23)",
+          "name": "Bettendorf Public Library",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5de37fd8ace4539e399b1a51",
+      "name": "Hope Baptist Church",
+      "address": "1642 Tanglefoot Ln.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 2 Precinct 2 (B22)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 2 Precinct 2 (B22)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 2 Precinct 2 (B22)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 2 Precinct 2 (B22)",
+          "name": "Hope Baptist Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-defe272e4af164fc1b6e50d8",
+      "name": "Heritage Church",
+      "address": "2700 Middle Rd\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 3 Precinct 1 (B31)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 3 Precinct 1 (B31)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 3 Precinct 1 (B31)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 3 Precinct 1 (B31)",
+          "name": "Heritage Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-246c4489a72f4605d080c596",
+      "name": "First Baptist Church",
+      "address": "3593 Middle Rd.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 3 Precinct 2 (B32)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 3 Precinct 2 (B32)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 3 Precinct 2 (B32)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 3 Precinct 2 (B32)",
+          "name": "First Baptist Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0702b060dcbf82f3aae70519",
+      "name": "Tanglewood Hills Pavilion",
+      "address": "4250 Middle Rd.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 3 Precinct 3 (B33)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 3 Precinct 3 (B33)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 3 Precinct 3 (B33)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 3 Precinct 3 (B33)",
+          "name": "Tanglewood Hills Pavilion",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-20f7cce1aefc1e12f385e295",
+      "name": "St. John Vianney Church",
+      "address": "4097 18th St.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 4 Precinct 1 (B41)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 4 Precinct 1 (B41)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 4 Precinct 1 (B41)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 4 Precinct 1 (B41)",
+          "name": "St. John Vianney Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-6d29e5f0aa04c01b1ceb6d6b",
+      "name": "ImpactLife Blood Center (this is a new pollsite!)",
+      "address": "5500 Lakeview Parkway\nDavenport, IA 52807",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 4 Precinct 2 (B42)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 4 Precinct 2 (B42)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 4 Precinct 2 (B42)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 4 Precinct 2 (B42)",
+          "name": "ImpactLife Blood Center (this is a new pollsite!)",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-91f01db6f89322887f67dde0",
+      "name": "Bettendorf Public Works",
+      "address": "4403 Devils Glen Rd.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 4 Precinct 3 (B43)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 4 Precinct 3 (B43)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 4 Precinct 3 (B43)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 4 Precinct 3 (B43)",
+          "name": "Bettendorf Public Works",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-c13cd579f0fb4e33d77060fb",
+      "name": "Surrey Heights Fire Station",
+      "address": "5002 Crow Creek Rd.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 5 Precinct 1 (B51)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 5 Precinct 1 (B51)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 5 Precinct 1 (B51)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 5 Precinct 1 (B51)",
+          "name": "Surrey Heights Fire Station",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a92ba26b876a93bb4c9d80e8",
+      "name": "Pleasant View Baptist Church",
+      "address": "6400 Crow Creek Rd.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 5 Precinct 2 (B52)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 5 Precinct 2 (B52)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 5 Precinct 2 (B52)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 5 Precinct 2 (B52)",
+          "name": "Pleasant View Baptist Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9ef624c248e7474424b794e1",
+      "name": "TBK Sports Complex",
+      "address": "4850 Competition Dr.\nBettendorf, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Bettendorf Ward 5 Precinct 3 (B53)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Bettendorf Ward 5 Precinct 3 (B53)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Bettendorf Ward 5 Precinct 3 (B53)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Bettendorf Ward 5 Precinct 3 (B53)",
+          "name": "TBK Sports Complex",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-bda2e5f63f63375b5741c9fe",
+      "name": "Davenport Fairmount Library",
+      "address": "3000 N. Fairmount St.\nDavenport, IA 52804",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 1 Precinct 1 (D11)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 1 Precinct 1 (D11)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 1 Precinct 1 (D11)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 1 Precinct 1 (D11)",
+          "name": "Davenport Fairmount Library",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-25e266eddfa100b73f7b6ca2",
+      "name": "New Hope Presbyterian Church",
+      "address": "4209 W. Locust St.\nDavenport, IA 52804",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 1 Precinct 2 (D12)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 1 Precinct 2 (D12)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 1 Precinct 2 (D12)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 1 Precinct 2 (D12)",
+          "name": "New Hope Presbyterian Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0a7319cb3669120575e11fd3",
+      "name": "Roosevelt Community Center",
+      "address": "1220 Minnie Ave.\nDavenport, IA 52802",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 1 Precinct 3 (D13)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 1 Precinct 3 (D13)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 1 Precinct 3 (D13)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 1 Precinct 3 (D13)",
+          "name": "Roosevelt Community Center",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-111da7427fc6b52e5202736e",
+      "name": "Credit Island Lodge",
+      "address": "2200 W. River Dr.\nDavenport, IA 52802",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 1 Precinct 4 (D14)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 1 Precinct 4 (D14)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 1 Precinct 4 (D14)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 1 Precinct 4 (D14)",
+          "name": "Credit Island Lodge",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ec9145358caa9cb9146ae8dc",
+      "name": "High Point Bible Chapel",
+      "address": "2600 W. 63rd St.\nDavenport, IA 52806",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 2 Precinct 1 (D21)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 2 Precinct 1 (D21)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 2 Precinct 1 (D21)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 2 Precinct 1 (D21)",
+          "name": "High Point Bible Chapel",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e665e7d2567265b191512c55",
+      "name": "Seventh Day Adventist Church",
+      "address": "4444 W. Kimberly Rd.\nDavenport, IA 52806",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 2 Precinct 2 (D22)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 2 Precinct 2 (D22)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 2 Precinct 2 (D22)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 2 Precinct 2 (D22)",
+          "name": "Seventh Day Adventist Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b38c0410c8df302a0871ee34",
+      "name": "Christ Church Davenport",
+      "address": "2330 W. 41st St.\nDavenport, IA 52806",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 2 Precinct 3 (D23)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 2 Precinct 3 (D23)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 2 Precinct 3 (D23)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 2 Precinct 3 (D23)",
+          "name": "Christ Church Davenport",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a03bd453c40967a722291c00",
+      "name": "EICC - Scott Community College West Campus",
+      "address": "2950 N. Fairmount St.\nDavenport, IA 52804",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 2 Precinct 4 (D24)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 2 Precinct 4 (D24)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 2 Precinct 4 (D24)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 2 Precinct 4 (D24)",
+          "name": "EICC - Scott Community College West Campus",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b208c07038d4443c2f92c4f6",
+      "name": "St. Mark Lutheran Church",
+      "address": "2363 W. 3rd St.\nDavenport, IA 52802",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 3 Precinct 1 (D31)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 3 Precinct 1 (D31)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 3 Precinct 1 (D31)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 3 Precinct 1 (D31)",
+          "name": "St. Mark Lutheran Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-37d8958b8d4ce1fedcb5831b",
+      "name": "Zion Lutheran Church",
+      "address": "1216 W. 8th St.\nDavenport, IA 52802",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 3 Precinct 2 (D32)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 3 Precinct 2 (D32)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 3 Precinct 2 (D32)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 3 Precinct 2 (D32)",
+          "name": "Zion Lutheran Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5eeeb21facec0788bbfa8c86",
+      "name": "Scott County Administrative Center",
+      "address": "600 W. 4th St.\nDavenport, IA 52801",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 3 Precinct 3 (D33)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 3 Precinct 3 (D33)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 3 Precinct 3 (D33)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 3 Precinct 3 (D33)",
+          "name": "Scott County Administrative Center",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-17e56b67f8230261dcd4f145",
+      "name": "R. Richard Bittner YMCA",
+      "address": "630 E. 4th St.\nDavenport, IA 52801",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 3 Precinct 4 (D34)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 3 Precinct 4 (D34)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 3 Precinct 4 (D34)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 3 Precinct 4 (D34)",
+          "name": "R. Richard Bittner YMCA",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-3248a3153eedffd753f1d512",
+      "name": "Putnam Museum (this is a new pollsite!)",
+      "address": "1717 W 12th Street\nDavenport, IA 52804",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 4 Precinct 1 (D41)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 4 Precinct 1 (D41)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 4 Precinct 1 (D41)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 4 Precinct 1 (D41)",
+          "name": "Putnam Museum (this is a new pollsite!)",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-db19d5be9fcbcc4407d8e5bd",
+      "name": "Newcomb Presbyterian Church",
+      "address": "2619 N. Division St.\nDavenport, IA 52804",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 4 Precinct 2 (D42)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 4 Precinct 2 (D42)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 4 Precinct 2 (D42)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 4 Precinct 2 (D42)",
+          "name": "Newcomb Presbyterian Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-41e53a8accec6ca8ffb85f9f",
+      "name": "Holy Family Church",
+      "address": "1923 N. Fillmore St.\nDavenport, IA 52804",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 4 Precinct 3 (D43)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 4 Precinct 3 (D43)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 4 Precinct 3 (D43)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 4 Precinct 3 (D43)",
+          "name": "Holy Family Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4e9c9a436a438ff21b917b45",
+      "name": "St. Ambrose - Rogalski Center",
+      "address": "518 W. Locust St.\nDavenport, IA 52803",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 4 Precinct 4 (D44)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 4 Precinct 4 (D44)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 4 Precinct 4 (D44)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 4 Precinct 4 (D44)",
+          "name": "St. Ambrose - Rogalski Center",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-11f4834fead5da30f72d530f",
+      "name": "St. Paul Lutheran Church",
+      "address": "2136 Brady St.\nDavenport, IA 52803",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 5 Precinct 1 (D51)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 5 Precinct 1 (D51)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 5 Precinct 1 (D51)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 5 Precinct 1 (D51)",
+          "name": "St. Paul Lutheran Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e42f5a7c7fd70a10dd34afb0",
+      "name": "First Presbyterian Church",
+      "address": "1702 Iowa St.\nDavenport, IA 52803",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 5 Precinct 2 (D52)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 5 Precinct 2 (D52)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 5 Precinct 2 (D52)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 5 Precinct 2 (D52)",
+          "name": "First Presbyterian Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-80b8e620008f8a0fecb938d5",
+      "name": "Grace Lutheran Church",
+      "address": "1140 E. High St.\nDavenport, IA 52803",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 5 Precinct 3 (D53)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 5 Precinct 3 (D53)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 5 Precinct 3 (D53)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 5 Precinct 3 (D53)",
+          "name": "Grace Lutheran Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-fdeb977c686ead1252f3b2ad",
+      "name": "YWCA",
+      "address": "1115 Mississippi Ave\nDavenport, IA 52803",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 5 Precinct 4 (D54)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 5 Precinct 4 (D54)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 5 Precinct 4 (D54)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 5 Precinct 4 (D54)",
+          "name": "YWCA",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b164b2660866954f17de8532",
+      "name": "Coram Deo Bible Church",
+      "address": "3800 E. 53rd St.\nDavenport, IA 52807",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 6 Precinct 1 (D61)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 6 Precinct 1 (D61)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 6 Precinct 1 (D61)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 6 Precinct 1 (D61)",
+          "name": "Coram Deo Bible Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-79084596e756ae9726114c2e",
+      "name": "Christ's Family Church",
+      "address": "4601 Utica Ridge Rd.\nDavenport, IA 52807",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 6 Precinct 2 (D62)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 6 Precinct 2 (D62)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 6 Precinct 2 (D62)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 6 Precinct 2 (D62)",
+          "name": "Christ's Family Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-15d14eebd82d5f75a617547f",
+      "name": "Unitarian Church",
+      "address": "3707 Eastern Ave.\nDavenport, IA 52807",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 6 Precinct 3 (D63)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 6 Precinct 3 (D63)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 6 Precinct 3 (D63)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 6 Precinct 3 (D63)",
+          "name": "Unitarian Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-464219c80f809bb619293147",
+      "name": "Duck Creek Park Lodge",
+      "address": "3300 E. Locust St.\nDavenport, IA 52803",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 6 Precinct 4 (D64)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 6 Precinct 4 (D64)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 6 Precinct 4 (D64)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 6 Precinct 4 (D64)",
+          "name": "Duck Creek Park Lodge",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ecc9388bf3383805ae2d92bb",
+      "name": "Faith First Community Church",
+      "address": "1630 W. 38th St.\nDavenport, IA 52806",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 7 Precinct 1 (D71)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 7 Precinct 1 (D71)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 7 Precinct 1 (D71)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 7 Precinct 1 (D71)",
+          "name": "Faith First Community Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-180ecf901de925ee91dd66ee",
+      "name": "C.A.S.I.",
+      "address": "1035 W. Kimberly Rd.\nDavenport, IA 52806",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 7 Precinct 2 (D72)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 7 Precinct 2 (D72)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 7 Precinct 2 (D72)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 7 Precinct 2 (D72)",
+          "name": "C.A.S.I.",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2b4e09a60b8f3ea7e24beae9",
+      "name": "Davenport Fire Station #3",
+      "address": "300 E. 42nd St\nDavenport, IA 52806",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 7 Precinct 3 (D73)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 7 Precinct 3 (D73)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 7 Precinct 3 (D73)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 7 Precinct 3 (D73)",
+          "name": "Davenport Fire Station #3",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-cf219064d40be36004d47d81",
+      "name": "Davenport Public Works Center",
+      "address": "1200 E. 46th St.\nDavenport, IA 52807",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 7 Precinct 4 (D74)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 7 Precinct 4 (D74)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 7 Precinct 4 (D74)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 7 Precinct 4 (D74)",
+          "name": "Davenport Public Works Center",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-899cebfd7b06aa53d79678f5",
+      "name": "John T. Blong Tech Center",
+      "address": "8500 Hillandale Rd.\nDavenport, IA 52807",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 8 Precinct 1 (D81)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 8 Precinct 1 (D81)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 8 Precinct 1 (D81)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 8 Precinct 1 (D81)",
+          "name": "John T. Blong Tech Center",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-586df3831206d3d82063b9f4",
+      "name": "Central Church of Christ Office (this is a new pollsite!)",
+      "address": "4900 Northwest Blvd\nDavenport, IA 52806",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 8 Precinct 3 (D83)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 8 Precinct 3 (D83)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 8 Precinct 2 (D82)",
+        "Davenport Ward 8 Precinct 3 (D83)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 8 Precinct 2 (D82)",
+          "name": "Central Church of Christ Gymnasium (this is a new pollsite!)",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        },
+        {
+          "precinct": "Davenport Ward 8 Precinct 3 (D83)",
+          "name": "Central Church of Christ Office (this is a new pollsite!)",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-23792994815abc1f733b10fd",
+      "name": "Davenport Eastern Library",
+      "address": "6000 Eastern Ave.\nDavenport, IA 52807",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Davenport Ward 8 Precinct 4 (D84)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Davenport Ward 8 Precinct 4 (D84)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Davenport Ward 8 Precinct 4 (D84)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Davenport Ward 8 Precinct 4 (D84)",
+          "name": "Davenport Eastern Library",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0b9d3d520cc34c395995fbae",
+      "name": "Donahue Fire Station",
+      "address": "302 N. Main St.\nDonahue, IA 52746",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Allens Grove Township (AG)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Allens Grove Township (AG)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Allens Grove Township (AG)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Allens Grove Township (AG)",
+          "name": "Donahue Fire Station",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5ac452bf572119877e708352",
+      "name": "Blue Grass Public Safety Building",
+      "address": "606 W. Mayne St.\nBlue Grass, IA 52726",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Blue Grass Township (BG)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Blue Grass Township (BG)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Blue Grass Township (BG)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Blue Grass Township (BG)",
+          "name": "Blue Grass Public Safety Building",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-40bb880d6aeb401ba609de9f",
+      "name": "Buffalo Activity Center - City Hall",
+      "address": "329 Dodge St.\nBuffalo, IA 52728",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Buffalo City (BF)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Buffalo City (BF)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Buffalo City (BF)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Buffalo City (BF)",
+          "name": "Buffalo Activity Center - City Hall",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9458b3e6dd78d7b736204a55",
+      "name": "Buffalo Community Center",
+      "address": "426 Clark St.\nBuffalo, IA 52728",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Buffalo Township (BU)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Buffalo Township (BU)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Buffalo Township (BU)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Buffalo Township (BU)",
+          "name": "Buffalo Community Center",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-2a6e8d46872a758ac6f2c245",
+      "name": "Scott County Library",
+      "address": "200 N. 6th Ave.\nEldridge, IA 52748",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Eldridge 1 (EL1)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Eldridge 1 (EL1)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Eldridge 1 (EL1)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Eldridge 1 (EL1)",
+          "name": "Scott County Library",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-06ce7452d4fa1639e634b71a",
+      "name": "Eldridge United Methodist Church",
+      "address": "604 S. 2nd St.\nEldridge, IA 52748",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Eldridge 2 (EL2)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Eldridge 2 (EL2)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Eldridge 2 (EL2)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Eldridge 2 (EL2)",
+          "name": "Eldridge United Methodist Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-1f0e7c2f0ec49b6f397fc1aa",
+      "name": "Maysville Fire Station",
+      "address": "23630 93rd Ave.\nMaysville, IA 52773",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Hickory Grove Township (HG)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Hickory Grove Township (HG)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Hickory Grove Township (HG)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Hickory Grove Township (HG)",
+          "name": "Maysville Fire Station",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-aeb673d5586f63483599dd9d",
+      "name": "First Presbyterian Church of LeClaire",
+      "address": "200 S. 12th St.\nLeClaire, IA 52753",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "LeClaire 1 (LC1)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "LeClaire 1 (LC1)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "LeClaire 1 (LC1)"
+      ],
+      "assignments": [
+        {
+          "precinct": "LeClaire 1 (LC1)",
+          "name": "First Presbyterian Church of LeClaire",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b29772b70c23413b1f56e9e3",
+      "name": "LeClaire Civic Center (this is a new pollsite!)",
+      "address": "127 S Cody Rd\nLeClaire, IA 52753",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "LeClaire 2 (LC2)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "LeClaire 2 (LC2)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "LeClaire 2 (LC2)"
+      ],
+      "assignments": [
+        {
+          "precinct": "LeClaire 2 (LC2)",
+          "name": "LeClaire Civic Center (this is a new pollsite!)",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-18e6a922afcb228ef3c42cae",
+      "name": "Our Lady of the River Catholic Church",
+      "address": "28200 226th Pl.\nLeClaire, IA 52753",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "LeClaire Township (LCT)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "LeClaire Township (LCT)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "LeClaire Township (LCT)"
+      ],
+      "assignments": [
+        {
+          "precinct": "LeClaire Township (LCT)",
+          "name": "Our Lady of the River Catholic Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-38e2470a60d29d06a96b9447",
+      "name": "New Liberty Fire Station",
+      "address": "765 Pike St.\nNew Liberty, IA 52765",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Liberty Township (LB)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Liberty Township (LB)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Liberty Township (LB)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Liberty Township (LB)",
+          "name": "New Liberty Fire Station",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-e515fece1541ddccc041c496",
+      "name": "Scott County Warehouse (this is a new pollsite!)",
+      "address": "1400 Lancer Ct\nEldridge, IA 52748",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Lincoln-Sheridan Township (LS)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Lincoln-Sheridan Township (LS)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Lincoln-Sheridan Township (LS)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Lincoln-Sheridan Township (LS)",
+          "name": "Scott County Warehouse (this is a new pollsite!)",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-617fe659c97e31404492027a",
+      "name": "McCausland Community Center",
+      "address": "305 N. Salina St.\nMcCausland, IA 52758",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "McCausland (MC)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "McCausland (MC)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "McCausland (MC)"
+      ],
+      "assignments": [
+        {
+          "precinct": "McCausland (MC)",
+          "name": "McCausland Community Center",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-b48eb418fb2a6272e9359562",
+      "name": "Park View Lutheran Church",
+      "address": "14 Grove Rd.\nEldridge, IA 52748",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Park View/Butler Township (PKV)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Park View/Butler Township (PKV)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Park View/Butler Township (PKV)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Park View/Butler Township (PKV)",
+          "name": "Park View Lutheran Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-528cc0ca569f404438628089",
+      "name": "Trinity Lutheran Church",
+      "address": "18137 Criswell St.\nPleasant Valley, IA 52767",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Pleasant Valley Township (PV)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Pleasant Valley Township (PV)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Pleasant Valley Township (PV)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Pleasant Valley Township (PV)",
+          "name": "Trinity Lutheran Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5504d3a04ad63387a29c70a8",
+      "name": "PR Zion Lutheran Church",
+      "address": "204 US Hwy 67\nPrinceton, IA 52768",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Princeton Township (PR)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Princeton Township (PR)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Princeton Township (PR)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Princeton Township (PR)",
+          "name": "PR Zion Lutheran Church",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0f9a4ecc525d07e062d7adec",
+      "name": "Riverdale Town Hall",
+      "address": "110 Manor Dr.\nRiverdale, IA 52722",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Riverdale (RV)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Riverdale (RV)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Riverdale (RV)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Riverdale (RV)",
+          "name": "Riverdale Town Hall",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8c343dde1d1260c88cdb5c94",
+      "name": "Calvary Church of Walcott",
+      "address": "100 E. James St.\nWalcott, IA 52773",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Walcott (WC)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Walcott (WC)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Walcott (WC)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Walcott (WC)",
+          "name": "Calvary Church of Walcott",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-9e98f44d0620b46add233412",
+      "name": "Long Grove Community Center",
+      "address": "114 N. 1st St.\nLong Grove, IA 52756",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "ELECTION_DAY",
+      "election": null,
+      "serves": "Winfield Township (WF)",
+      "sources": [
+        {
+          "publisher": "Scott County Auditor",
+          "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+          "title": "Precincts - Elections - Scott County, Iowa",
+          "checkedAt": "2026-10-21T04:32:36.944Z",
+          "official": true,
+          "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+          "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+        }
+      ],
+      "precinct": "Winfield Township (WF)",
+      "countyFips": "19163",
+      "kinds": [
+        "ELECTION_DAY"
+      ],
+      "precincts": [
+        "Winfield Township (WF)"
+      ],
+      "assignments": [
+        {
+          "precinct": "Winfield Township (WF)",
+          "name": "Long Grove Community Center",
+          "room": null,
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ],
+      "schedules": [
+        {
+          "kind": "ELECTION_DAY",
+          "source": {
+            "publisher": "Scott County Auditor",
+            "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+            "title": "Precincts - Elections - Scott County, Iowa",
+            "checkedAt": "2026-10-21T04:32:36.944Z",
+            "official": true,
+            "documentHash": "4079e058a7eb34b076ffc58a591c0f895364bcb0acb71b6d764d823ba0425257",
+            "documentUrl": "https://elections.scottcountyiowa.gov/vote/precincts/"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Scott County Auditor",
+      "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+      "title": "Precincts - Elections - Scott County, Iowa",
+      "checkedAt": "2026-10-21T04:32:36.944Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://elections.scottcountyiowa.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://elections.scottcountyiowa.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /vote/precincts/: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://elections.scottcountyiowa.gov/vote/precincts/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "fileTitle": "Precincts - Elections - Scott County, Iowa",
+  "contacts": []
+}

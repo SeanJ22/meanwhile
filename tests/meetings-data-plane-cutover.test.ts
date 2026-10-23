@@ -6,19 +6,13 @@ import test from "./helpers/playbooks.ts";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import {
-  readMeetingsProjection,
-  type MeetingsSnapshot,
-} from "../lib/meetings/snapshot.ts";
-import {
-  candidateForMeetingPartition,
-  promoteMeetingPartition,
-  readPreviousMeetingPartition,
-} from "../scripts/ingest.ts";
+import { readMeetingPartitionProjection, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { candidateForMeetingPartition, promoteMeetingPartition, readPreviousMeetingPartition } from "../scripts/ingest.ts";
 import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 import { readValidatedResponse } from "../lib/sources/http.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { readEveryBody } from "./helpers/meeting-body-national.ts";
 
 const GENERATED_AT = "2026-09-20T12:00:00.000Z";
 
@@ -84,7 +78,7 @@ function withAcquisitionEvidence(snapshot: MeetingsSnapshot): MeetingsSnapshot {
 }
 
 test("an unreachable store is reported as unreachable", async () => {
-  const read = await readMeetingsProjection({
+  const read = await readMeetingPartitionProjection(partition, {
     store: {
       async readPromotion() {
         throw new Error("database unavailable");
@@ -155,13 +149,10 @@ test("meetings candidate proves its meeting door's obligations independently of 
   const previous = await readPreviousMeetingPartition(store, partition);
   assert.ok(previous);
 
-  const read = await readMeetingsProjection({
-    store,
-    now: GENERATED_AT,
-    bypassCache: true,
-  });
+  const { read } = await readEveryBody(store, GENERATED_AT);
   assert.equal(read.kind, "PROMOTED");
-  assert.equal(read.kind === "PROMOTED" && read.partitions.some((row) => row.versionId === promoted.candidate.id), true);
+  assert.deepEqual(read.kind === "PROMOTED" && read.value.meetings.map((row) => row.id).sort(), evidenced.meetings.map((row) => row.id).sort());
+
 });
 
 test("meetings promotion fails closed without per-child bytes or on an untrusted child redirect", async () => {

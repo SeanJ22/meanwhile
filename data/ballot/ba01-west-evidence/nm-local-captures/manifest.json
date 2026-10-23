@@ -1,0 +1,13 @@
+[
+  {
+    "name": "nm-constitution",
+    "sourceUrl": "https://www.sos.nm.gov/wp-content/uploads/2025/01/NM_Constitution_-2025-for-SOS.pdf",
+    "finalUrl": "https://www.sos.nm.gov/wp-content/uploads/2025/01/NM_Constitution_-2025-for-SOS.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-21T00:49:26.945Z",
+    "rawHash": "50690f40faf8be5faca51c9436e69cdf46cefbebeef8fc068ea5948e44cca0ff",
+    "file": "nm-constitution.pdf.gz",
+    "textSnapshot": "nm-constitution.txt",
+    "textHash": "9fd87b2a3566c939baf1448b1b5161c96f6ba97961ffb33ef84da3bfff86bcc9"
+  }
+]

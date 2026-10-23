@@ -6,16 +6,19 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoverageSummary } from "@/lib/registry/coverage";
 import { representationForDivision } from "@/lib/registry/representation";
 import { levelKeyOf, type ResolvedLocation } from "@/lib/state/resolved-location";
+import { getCachedStateDivision, isStateDivisionPending } from "@/lib/reader/client";
+import type { SeatVacancy } from "@/lib/officials/types";
 
 /**
  * The reader's confirmed divisions, resolved by key. `coverage.seats` is the
- * ZIP-centroid answer, so a confirmed district missing from it must be asked
- * for: `/api/representation/<ocd-id>` returns its name and people. `looking`
+ * ZIP-centroid answer. The complete state package answers other state seats;
+ * remaining divisions ask `/api/representation/<ocd-id>`. `looking`
  * is not an absence and `unavailable` is not `unsourced`.
  */
 export type DivisionStatus = "resolved" | "looking" | "unsourced" | "unavailable";
 
 export interface ConfirmedDivision {
+  readonly vacancy?: SeatVacancy;
   readonly ocdId: string;
   /** The division's own name. Null until known — never an OCD-ID, never a guess. */
   readonly label: string | null;
@@ -26,6 +29,7 @@ export interface ConfirmedDivision {
 }
 
 interface Answer {
+  vacancy?: SeatVacancy;
   label: string | null;
   divisionType: string | null;
   tier: string | null;
@@ -57,7 +61,8 @@ export function useConfirmedDivisions(
     return level !== null && divisionTypes.includes(level);
   });
   /* A stable key, so the effect re-runs only when the divisions change. */
-  const key = wanted.join("|");
+  const cached = new Map(wanted.map(id => [id, getCachedStateDivision(id)]));
+  const key = wanted.filter(id => !cached.get(id) && !isStateDivisionPending(id)).join("|");
 
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
 
@@ -81,6 +86,7 @@ export function useConfirmedDivisions(
               divisionType?: string | null;
               tier?: string | null;
               holders?: SeatHolder[];
+              vacancy?: SeatVacancy;
             } | null,
           ) => {
             if (controller.signal.aborted) return;
@@ -105,6 +111,7 @@ export function useConfirmedDivisions(
                 divisionType: body.divisionType ?? null,
                 tier: body.tier ?? null,
                 holders: body.holders ?? [],
+                vacancy: body.vacancy,
                 failed: false,
               },
             }));
@@ -128,6 +135,13 @@ export function useConfirmedDivisions(
   }, [key]);
 
   return wanted.map((ocdId) => {
+    const cachedAnswer = cached.get(ocdId);
+    if (cachedAnswer) return {
+      ocdId, label: cachedAnswer.label, divisionType: cachedAnswer.divisionType ?? levelKeyOf(ocdId),
+      tier: cachedAnswer.tier, holders: cachedAnswer.holders,
+      vacancy: cachedAnswer.vacancy,
+      status: cachedAnswer.holders.length ? "resolved" as const : "unsourced" as const,
+    };
     const local = representationForDivision(coverage, ocdId);
     const answer = answers[ocdId];
     if (!answer) {
@@ -157,6 +171,7 @@ export function useConfirmedDivisions(
       divisionType: answer.divisionType ?? levelKeyOf(ocdId),
       tier: answer.tier,
       holders,
+      vacancy: answer.vacancy,
       status: holders.length > 0 ? ("resolved" as const) : ("unsourced" as const),
     };
   });

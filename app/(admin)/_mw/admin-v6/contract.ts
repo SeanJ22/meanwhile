@@ -1,25 +1,3 @@
-/**
- * The live pulse (`GET /api/admin/live`) carries an optional `v6` field announcing what the backend serves:
- *
- * ```
- *   pulse.v6 = {
- *     version: 1,
- *     sections: { <name>: { contract: "admin-v6/<name>@1", href, revision } },
- *     actions:  { <kind>: { contract: "admin-v6/action/<kind>@1", type: "<gateway action type>" } },
- *     receiptLookup?: { contract: "admin-v6/receipt@1", href },
- *   }
- * ```
- *
- * An unannounced section is "waiting for the backend". A page fetches a section when it is announced and again
- * whenever its `revision` moves. Being announced never sends anything.
- *
- * Section: `GET <href>?scope=<place key>` → `{ contract, scope, revision, asOf, data, missingParts? }`.
- * Action: `POST /api/admin/action` with the announced `type`, `subject` = the control's target, the idempotency
- * key, `stateVersion` (the latest pulse revision when required, otherwise null) and `actionInput`'s exact keys.
- * Receipt: `GET <href>?type=<gateway type>&key=<idempotency key>` → `{ contract, receipt | null }`; never resubmits.
- * Paged: `GET <href>?scope=…&limit=…[&cursor=…][&q=…][&<filter>=…]`; the envelope adds
- * `page: { total: number | null, nextCursor, prevCursor }`.
- */
 import type { ActionKind, AdminV6Data } from "./model.ts";
 import { settingValueFromInput } from "./actions.ts";
 
@@ -27,7 +5,7 @@ export const V6_CAPABILITY_VERSION = 1;
 
 export type SectionId = keyof AdminV6Data;
 export const SECTION_IDS: readonly SectionId[] = [
-  "places", "hunts", "national", "results", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes",
+  "places", "hunts", "national", "results", "officials", "stuck", "sameCause", "workRows", "history", "workers", "checklist", "agents", "spend", "sends", "reliability", "publication", "money", "scoreboard", "fixes",
 ];
 
 export function sectionContract(id: SectionId): string {
@@ -65,7 +43,6 @@ export interface SectionResponse<T = unknown> {
   readonly page?: SectionPage;
 }
 
-/** A window of a bounded, indexed section. `total` null means unknown, never zero. */
 export interface SectionPage {
   readonly total: number | null;
   readonly nextCursor: string | null;
@@ -119,19 +96,17 @@ export interface ActionInputSource {
   readonly payload?: Readonly<Record<string, string>>;
 }
 
-/**
- * The exact input keys each `admin-v6/action/<kind>@1` contract sends; the gateway validates them exactly.
- * The gateway `subject` is always the control's target. A change here is a new contract version.
- */
 export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Record<string, unknown>> {
   const limit = () => (s.amount.trim() === "" ? null : Number(s.amount));
   switch (kind) {
     case "ballot-publish":
       return {};
+    case "officials-check":
+      return { placeKey: s.target || s.scopeKey, note: s.words.trim() || null };
     case "decide":
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {
-      // A single hunt starts from one ZIP place. Anything wider starts from the many-hunts panel.
+
       const zip = /^geo:([a-z]{2})\.zcta\.(\d{5})$/.exec(s.target);
       return { items: zip ? [{ zip: zip[2], stateAbbr: zip[1].toUpperCase(), budgetUsd: limit() }] : [], priority: 1, huntBudget: true };
     }
@@ -147,6 +122,10 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { placeKey: s.target, change: "resume" };
     case "hunt-stop":
       return { placeKey: s.target };
+    case "hunt-stop-state":
+      return {state:s.target.replace(/^st:/,"")};
+    case "hunt-stop-all":
+      return {state:null};
     case "global-paid":
     case "global-paid-resume":
       return {};
@@ -161,7 +140,7 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return { placeKey: s.target, goalPercent: null };
     case "data-switch-on":
     case "data-switch-off": {
-      // The target is "<recipe>@<audience>": a recipe id has no "@", an audience (admin, dashboard, customer:<id>) has none either.
+
       const at = s.target.indexOf("@");
       return { recipe: at < 0 ? s.target : s.target.slice(0, at), audience: at < 0 ? "" : s.target.slice(at + 1), on: kind === "data-switch-on" };
     }
@@ -182,13 +161,13 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
     case "owed-undo":
       return { undoChangeId: s.target };
     case "setting-set":
-      // config.setSetting: the target is the setting's key; the payload says how its value is typed.
+
       return { key: s.target, value: s.target==="brief.time" && s.amount.trim()==="" ? "" : settingValueFromInput(s.payload?.control ?? "text", s.amount, s.option) ?? null, why: s.words.trim() };
     case "setting-undo":
-      // The same action with the logged previous value, quoting the change it undoes so a later change is never jumped over.
+
       return { key: s.target, value: JSON.parse(s.payload?.value ?? "null") as unknown, why: s.words.trim() || "Undo", undoOf: s.payload?.undoOf ?? "" };
     case "send-agents":
-      // fleet.deployHere: where the fleet goes next, in words. A typed dollar amount is that Send's own rolling budget.
+
       return { note: (s.payload?.words ?? s.words).trim(), ...(s.amount.trim() === "" ? {} : { budgetUsd: Number(s.amount) }) };
     default:
       throw new Error("This control is not available yet.");

@@ -908,6 +908,899 @@
             "doorId": "fec-hi-chief",
             "quote": "QUESTION #2: Directing the Hawaii State Legislature to Establish Procedures for Counties to Issue RISE Bonds, Exempt from County Debt Limits.\nShall the Hawaii State Constitution be amended to direct the legislature to authorize the counties to issue resilient infrastructure for shelter and equity bonds to fund public improvements in designated districts, repaid solely by future growth in property tax revenues within those districts, not by increasing real property tax rates, where such bonds are excluded from the counties’ debt limit and are subject to accountability and oversight requirements as may be provided by law?"
           }
+        },
+        {
+          "id": "ba01-hi-hawaii-councilmember-dist-4",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:hawaii/council_district:4",
+          "divisionVintage": "2026",
+          "title": "HAWAII COUNCILMEMBER, DIST 4",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HAWAII COUNCILMEMBER, DIST 4"
+          }
+        },
+        {
+          "id": "ba01-hi-hawaii-councilmember-dist-5",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:hawaii/council_district:5",
+          "divisionVintage": "2026",
+          "title": "HAWAII COUNCILMEMBER, DIST 5",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HAWAII COUNCILMEMBER, DIST 5"
+          }
+        },
+        {
+          "id": "ba01-hi-hawaii-councilmember-dist-6",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:hawaii/council_district:6",
+          "divisionVintage": "2026",
+          "title": "HAWAII COUNCILMEMBER, DIST 6",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HAWAII COUNCILMEMBER, DIST 6"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-mayor",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI MAYOR",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI MAYOR"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-east-maui",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI COUNCILMEMBER (EAST MAUI)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (EAST MAUI)"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-west-maui",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI COUNCILMEMBER (WEST MAUI)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (WEST MAUI)"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-wailuku-waihee-waikapu",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI COUNCILMEMBER (WAILUKU-WAIHEE-WAIKAPU)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (WAILUKU-WAIHEE-WAIKAPU)"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-kahului",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI COUNCILMEMBER (KAHULUI)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (KAHULUI)"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-south-maui",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI COUNCILMEMBER (SOUTH MAUI)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (SOUTH MAUI)"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-makawao-haiku-paia",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI COUNCILMEMBER (MAKAWAO-HAIKU-PAIA)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (MAKAWAO-HAIKU-PAIA)"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-upcountry",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI COUNCILMEMBER (UPCOUNTRY)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (UPCOUNTRY)"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-lanai",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI COUNCILMEMBER (LANAI)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (LANAI)"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-molokai",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "MAUI COUNCILMEMBER (MOLOKAI)",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (MOLOKAI)"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-mayor",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:kauai",
+          "divisionVintage": "2026",
+          "title": "KAUAI MAYOR",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI MAYOR"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:kauai",
+          "divisionVintage": "2026",
+          "title": "KAUAI COUNCILMEMBER",
+          "type": "CANDIDACY",
+          "voteFor": 7,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-councilmember-dist-iv",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+          "divisionVintage": "2026",
+          "title": "HONOLULU COUNCILMEMBER, DIST IV",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HONOLULU COUNCILMEMBER, DIST IV"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-councilmember-dist-vi",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:6",
+          "divisionVintage": "2026",
+          "title": "HONOLULU COUNCILMEMBER, DIST VI",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "candidateListComplete": true,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HONOLULU COUNCILMEMBER, DIST VI"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-1",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #1",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #1\nShould the Charter require annual funding for a Food Security Fund, without having to simultaneously increase real property tax rates to fund the appropriation, to support programs and grants that provide locally grown or produced food to Oahu residents, as well as non-local food only in an emergency?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-2",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #2",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #2\nShould the Charter be amended to replace its preamble with language recognizing the relationship between the people of the City and County of Honolulu and the 'aina, honoring the wisdom of kupuna and the legacy of Prince Jonah Kuhio Kalaniana'ole, and affirming commitments to transparent, accountable government and stewardship of natural, civic, and cultural resources?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-3",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #3",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #3\nShould an Office of 'Oiwi Resources and Cultural Stewardship be established within the Office of the Mayor to oversee the management of 'Oiwi resources within the City, develop related programs, and create a Cultural Advisory Council of kupuna, cultural practitioners, and community representatives?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-4",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #4",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #4\nShould a nine-member LGBTQIA+ Commission be established to advise the Mayor, City Council, and City agencies on matters affecting the LGBTQIA+ community and recommend policies, programs, and legislation promoting social, economic, and political equality?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-5",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #5",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #5\nBeginning in 2032, should the City use ranked-choice voting to elect the Mayor, City Council, and Prosecuting Attorney, allowing voters to rank candidates in the order they prefer (1st, 2nd, 3rd, etc.) in a single November election?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-6",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #6",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #6\nShould the Charter be amended to require the Honolulu Police Department to 1) adopt policies to ensure the constitutional rights of all persons regardless of immigration or citizenship status are protected, and 2) assist federal immigration enforcement activities only when required by statute or court order, and after the requesting agency's identity and authority have been confirmed?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-7",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #7",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #7\nShall the Revised Charter of the City and County of Honolulu be amended to encourage increasing housing availability and preserving available housing as policies for the City and County of Honolulu?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-8",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #8",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #8\nShould the Charter be amended to clarify that the Affordable Housing Fund is a revolving fund, with repayments, interest, earnings, proceeds, and other receipts derived from the Fund to be redeposited into the Fund?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-9",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #9",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #9\nShould the Charter be amended to no longer require a second public hearing for any transaction related to City real property interests?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-10",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #10",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #10\nShould the City be required to prepare and carry out a functional plan for the development of affordable housing?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-11",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #11",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #11\nShould the Charter be amended to allow the Clean Water and Natural Lands Fund and the Climate Resiliency Fund to award grants to federal income tax-exempt nonprofit organizations that provide services that are consistent with each Fund's purpose?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-12",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #12",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #12\nShould the Revised City Charter be amended to allow the Clean Water and Natural Lands Fund, Affordable Housing Fund, Climate Resiliency Fund, and other funds established under Section 9-204 to receive funding from federal, state, philanthropic, and other sources?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-13",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #13",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #13\nShould the Charter be amended to allow the Clean Water and Natural Lands Fund to be used for historic preservation, and to preserve and protect buildings, sites, structures, and objects that have been acquired by the fund; to rename the Fund the Land, Natural Resources, and Historic Preservation Fund, and the advisory commission for the Fund the Land, Natural Resources, and Historic Preservation advisory commission; and to allocate proposal review for Fund use between the advisory commission and the O'ahu Historic Preservation Commission?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-14",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #14",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #14\nShould the Charter be amended to increase the annual appropriation for costs related to operation, maintenance, and management of lands that were acquired using the Clean Water and Natural Lands Fund, from 5% of the moneys that were deposited into the Fund in the previous year, to 10%?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-15",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #15",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #15\nShould an Office of Data and Innovation be established to use data to improve city services, promote government transparency and civic engagement, ensure that the city uses artificial intelligence responsibly, and protect residents' digital privacy?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-16",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #16",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #16\nShould permanent resident aliens who are residents of the City and County of Honolulu be permitted to serve on City boards and commissions?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-17",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #17",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #17\nShould quorum and board action be based on the majority of members eligible to vote, excluding vacancies and non-voting members?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-18",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #18",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #18\nShould the First Deputy of the Department of Human Resources be exempt from civil service provisions, like similar roles in other City departments?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-19",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #19",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #19\nShould the City Clerk be required to provide technical and secretarial services to the Charter Commission?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-20",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:honolulu",
+          "divisionVintage": "2026",
+          "title": "Honolulu Charter Question #20",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #20\nShould the Charter make a Councilmember, the Mayor, or the Prosecuting Attorney ineligible for election to any City office for two years if impeached, or if the official resigns after an impeachment petition has been filed, consistent with the provision for being recalled from office?"
+          }
+        },
+        {
+          "id": "ba01-hi-1-hawai-i-county-auditor-s-power-to-employ",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:hawaii",
+          "divisionVintage": "2026",
+          "title": "1. Hawai‘i: County Auditor's Power to Employ",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.928024Z",
+            "verifiedAt": "2026-10-20T22:55:16.928024Z",
+            "quote": "1. Hawai‘i: County Auditor's Power to Employ\nShall the Hawai'i County Charter be amended to allow the County Auditor to hire a deputy and exercise the same power, with respect to the employees within the Auditor's office, as the department heads in the executive branch?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-planning-commission-review-of-general-plan-and-land-use-ordinances",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "Maui: Planning Commission Review of General Plan and Land Use Ordinances",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Planning Commission Review of General Plan and Land Use Ordinances\nShall the Charter be amended, effective January 2, 2027, to provide clarity and consistency in deadlines for planning commission review of revisions to the general plan, zoning ordinances, and other land use ordinances proposed by the council, and transmittal of related findings and recommendations to the council?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-standardizing-deadlines-for-voter-initiative-recall-and-charter-amendment",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "Maui: Standardizing Deadlines for Voter Initiative, Recall, and Charter Amendment",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Standardizing Deadlines for Voter Initiative, Recall, and Charter Amendment\nShall the Charter be amended, effective January 1, 2027, to standardize the deadlines related to the clerk's processing of petitions related to voter initiative, recall of elected officers or board or commission members, and charter amendments?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-computation-of-time",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "Maui: Computation of Time",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Computation of Time\nShall the Charter be amended, effective January 1, 2027, to establish a formula for computing Charter deadlines that excludes weekends and holidays?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-processing-of-claims",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "Maui: Processing of Claims",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Processing of Claims\nShall the Charter be amended, effective January 1, 2028 to streamline the process for filing claims for personal injury or property damage by requiring that claims are filed directly with the Director of Finance or as provided by ordinance?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-removing-the-english-translation-of-the-hawai-i-state-motto",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "Maui: Removing the English Translation of the Hawai‘i State Motto",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Removing the English Translation of the Hawai‘i State Motto\nShall the Charter be amended, effective upon passage, by removing the English translation of the Hawai'i State motto in the Maui County Charter Preamble, allowing the original phrase, “Ua mau ke ea o ka ‘aina i ka pono,” to stand on its own?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-emergency-appropriations",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "Maui: Emergency Appropriations",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Emergency Appropriations\nShall the Charter be amended, effective January 2, 2027, to allow the Mayor, with approval from the Council, to pass an emergency appropriation for an application for a line of credit and clarify that the one percent limitation for emergency appropriations does not apply to funds that have already been allocated to an emergency fund?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-independent-nomination-board",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "Maui: Independent Nomination Board",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Independent Nomination Board\nShall the Charter be amended, effective immediately, to repeal the parts of the 2022 Charter amendment that created the Independent Nomination Board and related procedures for nominations for various County officers?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-reappointment-of-members-of-the-board-of-ethics",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:maui",
+          "divisionVintage": "2026",
+          "title": "Maui: Reappointment of Members of the Board of Ethics",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Reappointment of Members of the Board of Ethics\nShall the Charter be amended, effective upon approval, to authorize the Mayor to reappoint members of the Board of Ethics of the County of Maui, with the approval of the Council, for one successive term without an intervening waiting period?"
+          }
+        },
+        {
+          "id": "ba01-hi-relating-to-the-planning-commission-s-appeals-process",
+          "electionId": "hi-2026-11-03",
+          "ocdId": "ocd-division/country:us/state:hi/county:kauai",
+          "divisionVintage": "2026",
+          "title": "Relating to the Planning Commission’s Appeals Process",
+          "type": "MEASURE",
+          "voteFor": 1,
+          "termYears": null,
+          "measureTextUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1601_1.pdf",
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1601_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.942004Z",
+            "verifiedAt": "2026-10-20T22:55:16.942004Z",
+            "quote": "Relating to the Planning Commission’s Appeals Process\nShall the Kaua’i County Charter be amended to expedite and clarify the Planning Commission's appeals process by removing all references to a Zoning Board of Appeals?"
+          }
         }
       ],
       "candidacies": [
@@ -2602,6 +3495,754 @@
             "doorId": "fec-hi-chief",
             "quote": "GOVERNOR | DEMOCRATIC | GREEN, Josh | joshgreenforhawaii.com | In General\nLIEUTENANT GOVERNOR | DEMOCRATIC | KAWAKAMI, Derek S.K. | derekkawakami.com | In General"
           }
+        },
+        {
+          "id": "ba01-hi-hawaii-councilmember-dist-4:427f876f2f60f785",
+          "contestId": "ba01-hi-hawaii-councilmember-dist-4",
+          "familyName": "ENRIQUEZ, Lloyd K.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HAWAII COUNCILMEMBER, DIST 4 | NONPARTISAN SPECIAL | ENRIQUEZ, Lloyd K. |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-hawaii-councilmember-dist-4:d26e51bf94c8c43f",
+          "contestId": "ba01-hi-hawaii-councilmember-dist-4",
+          "familyName": "OHARA, Eileen",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "ohara4puna.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HAWAII COUNCILMEMBER, DIST 4 | NONPARTISAN SPECIAL | OHARA, Eileen | ohara4puna.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-hawaii-councilmember-dist-5:9f167d6f9e708990",
+          "contestId": "ba01-hi-hawaii-councilmember-dist-5",
+          "familyName": "MATSON, Shannon Lopeka",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "electshannonmatson.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HAWAII COUNCILMEMBER, DIST 5 | NONPARTISAN SPECIAL | MATSON, Shannon Lopeka | electshannonmatson.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-hawaii-councilmember-dist-5:a82a931a2718251d",
+          "contestId": "ba01-hi-hawaii-councilmember-dist-5",
+          "familyName": "RODENHURST, Ikaika",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "ikaikarodenhurst.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HAWAII COUNCILMEMBER, DIST 5 | NONPARTISAN SPECIAL | RODENHURST, Ikaika | ikaikarodenhurst.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-hawaii-councilmember-dist-6:fd33d898f4213c4a",
+          "contestId": "ba01-hi-hawaii-councilmember-dist-6",
+          "familyName": "AKI, Zed Kaapana",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "aki4hawaii.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HAWAII COUNCILMEMBER, DIST 6 | NONPARTISAN SPECIAL | AKI, Zed Kaapana | aki4hawaii.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-hawaii-councilmember-dist-6:da3ea0697550ff92",
+          "contestId": "ba01-hi-hawaii-councilmember-dist-6",
+          "familyName": "ENRIQUES, Guy",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HAWAII COUNCILMEMBER, DIST 6 | NONPARTISAN SPECIAL | ENRIQUES, Guy |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-mayor:663b746246100374",
+          "contestId": "ba01-hi-maui-mayor",
+          "familyName": "BISSEN, Richard T., Jr.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "bissen2026.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI MAYOR | NONPARTISAN SPECIAL | BISSEN, Richard T., Jr. | bissen2026.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-mayor:75f885db94ff1a6d",
+          "contestId": "ba01-hi-maui-mayor",
+          "familyName": "SUGIMURA, Yuki Lei Kashiwa",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "www.yukileiformayor.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI MAYOR | NONPARTISAN SPECIAL | SUGIMURA, Yuki Lei Kashiwa | www.yukileiformayor.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-east-maui:204e7e32ce71a130",
+          "contestId": "ba01-hi-maui-councilmember-east-maui",
+          "familyName": "CARROLL, Claire Kamalu",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (EAST MAUI) | NONPARTISAN SPECIAL | CARROLL, Claire Kamalu |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-east-maui:397f91dfd5351364",
+          "contestId": "ba01-hi-maui-councilmember-east-maui",
+          "familyName": "SINENCI, Shane ",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "votesinenci.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (EAST MAUI) | NONPARTISAN SPECIAL | SINENCI, Shane  | votesinenci.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-west-maui:d3c1e25c4b632cea",
+          "contestId": "ba01-hi-maui-councilmember-west-maui",
+          "familyName": "PALTIN, Tamara Akiko Maile ",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "tamarapaltin.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (WEST MAUI) | NONPARTISAN SPECIAL | PALTIN, Tamara Akiko Maile  | tamarapaltin.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-west-maui:8efea8ca9c0850e7",
+          "contestId": "ba01-hi-maui-councilmember-west-maui",
+          "familyName": "TILLMAN, Mark",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (WEST MAUI) | NONPARTISAN SPECIAL | TILLMAN, Mark |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-wailuku-waihee-waikapu:a519ece34c2f1979",
+          "contestId": "ba01-hi-maui-councilmember-wailuku-waihee-waikapu",
+          "familyName": "LINDSEY, Ashley Awakea",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (WAILUKU-WAIHEE-WAIKAPU) | NONPARTISAN SPECIAL | LINDSEY, Ashley Awakea |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-wailuku-waihee-waikapu:bd29105fd75d1706",
+          "contestId": "ba01-hi-maui-councilmember-wailuku-waihee-waikapu",
+          "familyName": "MONIZ, Marvin",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "marvinformaui.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (WAILUKU-WAIHEE-WAIKAPU) | NONPARTISAN SPECIAL | MONIZ, Marvin | marvinformaui.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-kahului:81f3bdcfd34273f6",
+          "contestId": "ba01-hi-maui-councilmember-kahului",
+          "familyName": "BATANGAN, Kauanoe",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "kauanoebatangan.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (KAHULUI) | NONPARTISAN SPECIAL | BATANGAN, Kauanoe | kauanoebatangan.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-kahului:de63a6b40587846f",
+          "contestId": "ba01-hi-maui-councilmember-kahului",
+          "familyName": "KAMEKONA, Carol Lee",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "carolleekamekona.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (KAHULUI) | NONPARTISAN SPECIAL | KAMEKONA, Carol Lee | carolleekamekona.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-south-maui:6639ab516f5f3037",
+          "contestId": "ba01-hi-maui-councilmember-south-maui",
+          "familyName": "COOK, Tom",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "friendsoftomcook.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (SOUTH MAUI) | NONPARTISAN SPECIAL | COOK, Tom | friendsoftomcook.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-south-maui:b3c3c6d0e4531153",
+          "contestId": "ba01-hi-maui-councilmember-south-maui",
+          "familyName": "KING, Kelly Takaya",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "kellykingformaui.org",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (SOUTH MAUI) | NONPARTISAN SPECIAL | KING, Kelly Takaya | kellykingformaui.org | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-makawao-haiku-paia:89f7592c6e9a0ce0",
+          "contestId": "ba01-hi-maui-councilmember-makawao-haiku-paia",
+          "familyName": "CHUNG, Stevie Kathryn",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "linktr.ee/steviekathrynchung",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (MAKAWAO-HAIKU-PAIA) | NONPARTISAN SPECIAL | CHUNG, Stevie Kathryn | linktr.ee/steviekathrynchung | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-makawao-haiku-paia:087d19830e5b6e48",
+          "contestId": "ba01-hi-maui-councilmember-makawao-haiku-paia",
+          "familyName": "U'U-HODGINS, Nohe",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "votenohe.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (MAKAWAO-HAIKU-PAIA) | NONPARTISAN SPECIAL | U'U-HODGINS, Nohe | votenohe.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-upcountry:633fa1e111b82e6b",
+          "contestId": "ba01-hi-maui-councilmember-upcountry",
+          "familyName": "PAHIA, Bobby",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "voteunclebobby.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (UPCOUNTRY) | NONPARTISAN SPECIAL | PAHIA, Bobby | voteunclebobby.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-upcountry:f4a4b2a8e88ab589",
+          "contestId": "ba01-hi-maui-councilmember-upcountry",
+          "familyName": "YOKOUCHI, Jon Masaru",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (UPCOUNTRY) | NONPARTISAN SPECIAL | YOKOUCHI, Jon Masaru |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-lanai:93c011960bb8684d",
+          "contestId": "ba01-hi-maui-councilmember-lanai",
+          "familyName": "JOHNSON, Gabe",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "gabe4council.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (LANAI) | NONPARTISAN SPECIAL | JOHNSON, Gabe | gabe4council.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-councilmember-molokai:5c7ab851c9beb302",
+          "contestId": "ba01-hi-maui-councilmember-molokai",
+          "familyName": "RAWLINS-FERNANDEZ, Keani",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "votekeani.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "MAUI COUNCILMEMBER (MOLOKAI) | NONPARTISAN SPECIAL | RAWLINS-FERNANDEZ, Keani | votekeani.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-mayor:b905449d8534457f",
+          "contestId": "ba01-hi-kauai-mayor",
+          "familyName": "CARVALHO, Bernard, Jr.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI MAYOR | NONPARTISAN SPECIAL | CARVALHO, Bernard, Jr. |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-mayor:29ed5b67dd5e609f",
+          "contestId": "ba01-hi-kauai-mayor",
+          "familyName": "RAPOZO, Mel",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "www.melformayor.org",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI MAYOR | NONPARTISAN SPECIAL | RAPOZO, Mel | www.melformayor.org | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:de85bd46139f0899",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "APPLEGATE, Paul Noboru",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "www.PaulForKauai.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | APPLEGATE, Paul Noboru | www.PaulForKauai.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:4528dc3fc2156a3b",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "BULOSAN, Addison",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "www.bulosanforcouncil.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | BULOSAN, Addison | www.bulosanforcouncil.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:a88e1960a4714fbe",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "COOTS, Mike",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "www.coots4council.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | COOTS, Mike | www.coots4council.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:9d9d6339a68d6a64",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "CORREA, Michelle Kaleiohi",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | CORREA, Michelle Kaleiohi |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:c8cd0002a0a79ae6",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "DECOSTA, Billy D.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | DECOSTA, Billy D. |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:ae4a5fda9323f8ad",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "HOLLAND, Fern Anuenue",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "votefern.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | HOLLAND, Fern Anuenue | votefern.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:b9b0184b912e0e16",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "KAIMINAAUAO, Keola",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "keola4council.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | KAIMINAAUAO, Keola | keola4council.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:508389d89db0f98c",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "KANESHIRO, Arryl J.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "www.votekaneshiro.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | KANESHIRO, Arryl J. | www.votekaneshiro.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:fcc8e89e0b4c0e61",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "MARTIN, Umi",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "umi4council.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | MARTIN, Umi | umi4council.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:c502a13b83046df6",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "MATTOS, John H. (Scooby)",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | MATTOS, John H. (Scooby) |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:37ae6338f623117d",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "OZAKI, Todd R.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "toddozaki.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | OZAKI, Todd R. | toddozaki.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:2d74620196d5fc5d",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "RAPOZO, Cheree",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | RAPOZO, Cheree |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:67f1e3cdcdbc1d38",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "SHIGEMOTO, Taylor H.",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | SHIGEMOTO, Taylor H. |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-kauai-councilmember:b33d58b728a01d27",
+          "contestId": "ba01-hi-kauai-councilmember",
+          "familyName": "SMITH, Dane",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "KAUAI COUNCILMEMBER | NONPARTISAN SPECIAL | SMITH, Dane |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-councilmember-dist-iv:6bd16a30c4b88295",
+          "contestId": "ba01-hi-honolulu-councilmember-dist-iv",
+          "familyName": "GREGORY, Tara Malia",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "taramalia.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HONOLULU COUNCILMEMBER, DIST IV | NONPARTISAN SPECIAL | GREGORY, Tara Malia | taramalia.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-councilmember-dist-iv:fcbd8f3d4a96afbe",
+          "contestId": "ba01-hi-honolulu-councilmember-dist-iv",
+          "familyName": "OZAWA, Trevor",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HONOLULU COUNCILMEMBER, DIST IV | NONPARTISAN SPECIAL | OZAWA, Trevor |  | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-councilmember-dist-vi:76108adb0cf648b5",
+          "contestId": "ba01-hi-honolulu-councilmember-dist-vi",
+          "familyName": "DOS SANTOS-TAM, Tyler",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "www.votetyler.com",
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HONOLULU COUNCILMEMBER, DIST VI | NONPARTISAN SPECIAL | DOS SANTOS-TAM, Tyler | www.votetyler.com | In General"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-councilmember-dist-vi:f037ca52bebc4c3b",
+          "contestId": "ba01-hi-honolulu-councilmember-dist-vi",
+          "familyName": "MORIHARA, Corey",
+          "givenName": "",
+          "partyLabel": "NONPARTISAN SPECIAL",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:53:15.178993Z",
+            "verifiedAt": "2026-10-20T22:53:15.178993Z",
+            "quote": "HONOLULU COUNCILMEMBER, DIST VI | NONPARTISAN SPECIAL | MORIHARA, Corey |  | In General"
+          }
         }
       ],
       "measures": [
@@ -2633,6 +4274,417 @@
             "verifiedAt": "2026-10-14T05:03:16.991898+00:00",
             "doorId": "fec-hi-chief",
             "quote": "Shall the Hawaii State Constitution be amended to direct the legislature to authorize the counties to issue resilient infrastructure for shelter and equity bonds to fund public improvements in designated districts, repaid solely by future growth in property tax revenues within those districts, not by increasing real property tax rates, where such bonds are excluded from the counties’ debt limit and are subject to accountability and oversight requirements as may be provided by law?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-1:question",
+          "contestId": "ba01-hi-honolulu-charter-question-1",
+          "officialNumber": "Charter Question #1",
+          "questionText": "Should the Charter require annual funding for a Food Security Fund, without having to simultaneously increase real property tax rates to fund the appropriation, to support programs and grants that provide locally grown or produced food to Oahu residents, as well as non-local food only in an emergency?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #1\nShould the Charter require annual funding for a Food Security Fund, without having to simultaneously increase real property tax rates to fund the appropriation, to support programs and grants that provide locally grown or produced food to Oahu residents, as well as non-local food only in an emergency?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-2:question",
+          "contestId": "ba01-hi-honolulu-charter-question-2",
+          "officialNumber": "Charter Question #2",
+          "questionText": "Should the Charter be amended to replace its preamble with language recognizing the relationship between the people of the City and County of Honolulu and the 'aina, honoring the wisdom of kupuna and the legacy of Prince Jonah Kuhio Kalaniana'ole, and affirming commitments to transparent, accountable government and stewardship of natural, civic, and cultural resources?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #2\nShould the Charter be amended to replace its preamble with language recognizing the relationship between the people of the City and County of Honolulu and the 'aina, honoring the wisdom of kupuna and the legacy of Prince Jonah Kuhio Kalaniana'ole, and affirming commitments to transparent, accountable government and stewardship of natural, civic, and cultural resources?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-3:question",
+          "contestId": "ba01-hi-honolulu-charter-question-3",
+          "officialNumber": "Charter Question #3",
+          "questionText": "Should an Office of 'Oiwi Resources and Cultural Stewardship be established within the Office of the Mayor to oversee the management of 'Oiwi resources within the City, develop related programs, and create a Cultural Advisory Council of kupuna, cultural practitioners, and community representatives?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #3\nShould an Office of 'Oiwi Resources and Cultural Stewardship be established within the Office of the Mayor to oversee the management of 'Oiwi resources within the City, develop related programs, and create a Cultural Advisory Council of kupuna, cultural practitioners, and community representatives?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-4:question",
+          "contestId": "ba01-hi-honolulu-charter-question-4",
+          "officialNumber": "Charter Question #4",
+          "questionText": "Should a nine-member LGBTQIA+ Commission be established to advise the Mayor, City Council, and City agencies on matters affecting the LGBTQIA+ community and recommend policies, programs, and legislation promoting social, economic, and political equality?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #4\nShould a nine-member LGBTQIA+ Commission be established to advise the Mayor, City Council, and City agencies on matters affecting the LGBTQIA+ community and recommend policies, programs, and legislation promoting social, economic, and political equality?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-5:question",
+          "contestId": "ba01-hi-honolulu-charter-question-5",
+          "officialNumber": "Charter Question #5",
+          "questionText": "Beginning in 2032, should the City use ranked-choice voting to elect the Mayor, City Council, and Prosecuting Attorney, allowing voters to rank candidates in the order they prefer (1st, 2nd, 3rd, etc.) in a single November election?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #5\nBeginning in 2032, should the City use ranked-choice voting to elect the Mayor, City Council, and Prosecuting Attorney, allowing voters to rank candidates in the order they prefer (1st, 2nd, 3rd, etc.) in a single November election?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-6:question",
+          "contestId": "ba01-hi-honolulu-charter-question-6",
+          "officialNumber": "Charter Question #6",
+          "questionText": "Should the Charter be amended to require the Honolulu Police Department to 1) adopt policies to ensure the constitutional rights of all persons regardless of immigration or citizenship status are protected, and 2) assist federal immigration enforcement activities only when required by statute or court order, and after the requesting agency's identity and authority have been confirmed?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #6\nShould the Charter be amended to require the Honolulu Police Department to 1) adopt policies to ensure the constitutional rights of all persons regardless of immigration or citizenship status are protected, and 2) assist federal immigration enforcement activities only when required by statute or court order, and after the requesting agency's identity and authority have been confirmed?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-7:question",
+          "contestId": "ba01-hi-honolulu-charter-question-7",
+          "officialNumber": "Charter Question #7",
+          "questionText": "Shall the Revised Charter of the City and County of Honolulu be amended to encourage increasing housing availability and preserving available housing as policies for the City and County of Honolulu?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #7\nShall the Revised Charter of the City and County of Honolulu be amended to encourage increasing housing availability and preserving available housing as policies for the City and County of Honolulu?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-8:question",
+          "contestId": "ba01-hi-honolulu-charter-question-8",
+          "officialNumber": "Charter Question #8",
+          "questionText": "Should the Charter be amended to clarify that the Affordable Housing Fund is a revolving fund, with repayments, interest, earnings, proceeds, and other receipts derived from the Fund to be redeposited into the Fund?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #8\nShould the Charter be amended to clarify that the Affordable Housing Fund is a revolving fund, with repayments, interest, earnings, proceeds, and other receipts derived from the Fund to be redeposited into the Fund?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-9:question",
+          "contestId": "ba01-hi-honolulu-charter-question-9",
+          "officialNumber": "Charter Question #9",
+          "questionText": "Should the Charter be amended to no longer require a second public hearing for any transaction related to City real property interests?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #9\nShould the Charter be amended to no longer require a second public hearing for any transaction related to City real property interests?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-10:question",
+          "contestId": "ba01-hi-honolulu-charter-question-10",
+          "officialNumber": "Charter Question #10",
+          "questionText": "Should the City be required to prepare and carry out a functional plan for the development of affordable housing?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #10\nShould the City be required to prepare and carry out a functional plan for the development of affordable housing?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-11:question",
+          "contestId": "ba01-hi-honolulu-charter-question-11",
+          "officialNumber": "Charter Question #11",
+          "questionText": "Should the Charter be amended to allow the Clean Water and Natural Lands Fund and the Climate Resiliency Fund to award grants to federal income tax-exempt nonprofit organizations that provide services that are consistent with each Fund's purpose?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #11\nShould the Charter be amended to allow the Clean Water and Natural Lands Fund and the Climate Resiliency Fund to award grants to federal income tax-exempt nonprofit organizations that provide services that are consistent with each Fund's purpose?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-12:question",
+          "contestId": "ba01-hi-honolulu-charter-question-12",
+          "officialNumber": "Charter Question #12",
+          "questionText": "Should the Revised City Charter be amended to allow the Clean Water and Natural Lands Fund, Affordable Housing Fund, Climate Resiliency Fund, and other funds established under Section 9-204 to receive funding from federal, state, philanthropic, and other sources?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #12\nShould the Revised City Charter be amended to allow the Clean Water and Natural Lands Fund, Affordable Housing Fund, Climate Resiliency Fund, and other funds established under Section 9-204 to receive funding from federal, state, philanthropic, and other sources?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-13:question",
+          "contestId": "ba01-hi-honolulu-charter-question-13",
+          "officialNumber": "Charter Question #13",
+          "questionText": "Should the Charter be amended to allow the Clean Water and Natural Lands Fund to be used for historic preservation, and to preserve and protect buildings, sites, structures, and objects that have been acquired by the fund; to rename the Fund the Land, Natural Resources, and Historic Preservation Fund, and the advisory commission for the Fund the Land, Natural Resources, and Historic Preservation advisory commission; and to allocate proposal review for Fund use between the advisory commission and the O'ahu Historic Preservation Commission?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #13\nShould the Charter be amended to allow the Clean Water and Natural Lands Fund to be used for historic preservation, and to preserve and protect buildings, sites, structures, and objects that have been acquired by the fund; to rename the Fund the Land, Natural Resources, and Historic Preservation Fund, and the advisory commission for the Fund the Land, Natural Resources, and Historic Preservation advisory commission; and to allocate proposal review for Fund use between the advisory commission and the O'ahu Historic Preservation Commission?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-14:question",
+          "contestId": "ba01-hi-honolulu-charter-question-14",
+          "officialNumber": "Charter Question #14",
+          "questionText": "Should the Charter be amended to increase the annual appropriation for costs related to operation, maintenance, and management of lands that were acquired using the Clean Water and Natural Lands Fund, from 5% of the moneys that were deposited into the Fund in the previous year, to 10%?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #14\nShould the Charter be amended to increase the annual appropriation for costs related to operation, maintenance, and management of lands that were acquired using the Clean Water and Natural Lands Fund, from 5% of the moneys that were deposited into the Fund in the previous year, to 10%?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-15:question",
+          "contestId": "ba01-hi-honolulu-charter-question-15",
+          "officialNumber": "Charter Question #15",
+          "questionText": "Should an Office of Data and Innovation be established to use data to improve city services, promote government transparency and civic engagement, ensure that the city uses artificial intelligence responsibly, and protect residents' digital privacy?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #15\nShould an Office of Data and Innovation be established to use data to improve city services, promote government transparency and civic engagement, ensure that the city uses artificial intelligence responsibly, and protect residents' digital privacy?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-16:question",
+          "contestId": "ba01-hi-honolulu-charter-question-16",
+          "officialNumber": "Charter Question #16",
+          "questionText": "Should permanent resident aliens who are residents of the City and County of Honolulu be permitted to serve on City boards and commissions?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #16\nShould permanent resident aliens who are residents of the City and County of Honolulu be permitted to serve on City boards and commissions?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-17:question",
+          "contestId": "ba01-hi-honolulu-charter-question-17",
+          "officialNumber": "Charter Question #17",
+          "questionText": "Should quorum and board action be based on the majority of members eligible to vote, excluding vacancies and non-voting members?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #17\nShould quorum and board action be based on the majority of members eligible to vote, excluding vacancies and non-voting members?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-18:question",
+          "contestId": "ba01-hi-honolulu-charter-question-18",
+          "officialNumber": "Charter Question #18",
+          "questionText": "Should the First Deputy of the Department of Human Resources be exempt from civil service provisions, like similar roles in other City departments?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #18\nShould the First Deputy of the Department of Human Resources be exempt from civil service provisions, like similar roles in other City departments?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-19:question",
+          "contestId": "ba01-hi-honolulu-charter-question-19",
+          "officialNumber": "Charter Question #19",
+          "questionText": "Should the City Clerk be required to provide technical and secretarial services to the Charter Commission?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #19\nShould the City Clerk be required to provide technical and secretarial services to the Charter Commission?"
+          }
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-20:question",
+          "contestId": "ba01-hi-honolulu-charter-question-20",
+          "officialNumber": "Charter Question #20",
+          "questionText": "Should the Charter make a Councilmember, the Mayor, or the Prosecuting Attorney ineligible for election to any City office for two years if impeached, or if the official resigns after an impeachment petition has been filed, consistent with the provision for being recalled from office?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.904259Z",
+            "verifiedAt": "2026-10-20T22:55:16.904259Z",
+            "quote": "Charter Question #20\nShould the Charter make a Councilmember, the Mayor, or the Prosecuting Attorney ineligible for election to any City office for two years if impeached, or if the official resigns after an impeachment petition has been filed, consistent with the provision for being recalled from office?"
+          }
+        },
+        {
+          "id": "ba01-hi-1-hawai-i-county-auditor-s-power-to-employ:question",
+          "contestId": "ba01-hi-1-hawai-i-county-auditor-s-power-to-employ",
+          "officialNumber": "1",
+          "questionText": "Shall the Hawai'i County Charter be amended to allow the County Auditor to hire a deputy and exercise the same power, with respect to the employees within the Auditor's office, as the department heads in the executive branch?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.928024Z",
+            "verifiedAt": "2026-10-20T22:55:16.928024Z",
+            "quote": "1. Hawai‘i: County Auditor's Power to Employ\nShall the Hawai'i County Charter be amended to allow the County Auditor to hire a deputy and exercise the same power, with respect to the employees within the Auditor's office, as the department heads in the executive branch?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-planning-commission-review-of-general-plan-and-land-use-ordinances:question",
+          "contestId": "ba01-hi-maui-planning-commission-review-of-general-plan-and-land-use-ordinances",
+          "questionText": "Shall the Charter be amended, effective January 2, 2027, to provide clarity and consistency in deadlines for planning commission review of revisions to the general plan, zoning ordinances, and other land use ordinances proposed by the council, and transmittal of related findings and recommendations to the council?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Planning Commission Review of General Plan and Land Use Ordinances\nShall the Charter be amended, effective January 2, 2027, to provide clarity and consistency in deadlines for planning commission review of revisions to the general plan, zoning ordinances, and other land use ordinances proposed by the council, and transmittal of related findings and recommendations to the council?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-standardizing-deadlines-for-voter-initiative-recall-and-charter-amendment:question",
+          "contestId": "ba01-hi-maui-standardizing-deadlines-for-voter-initiative-recall-and-charter-amendment",
+          "questionText": "Shall the Charter be amended, effective January 1, 2027, to standardize the deadlines related to the clerk's processing of petitions related to voter initiative, recall of elected officers or board or commission members, and charter amendments?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Standardizing Deadlines for Voter Initiative, Recall, and Charter Amendment\nShall the Charter be amended, effective January 1, 2027, to standardize the deadlines related to the clerk's processing of petitions related to voter initiative, recall of elected officers or board or commission members, and charter amendments?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-computation-of-time:question",
+          "contestId": "ba01-hi-maui-computation-of-time",
+          "questionText": "Shall the Charter be amended, effective January 1, 2027, to establish a formula for computing Charter deadlines that excludes weekends and holidays?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Computation of Time\nShall the Charter be amended, effective January 1, 2027, to establish a formula for computing Charter deadlines that excludes weekends and holidays?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-processing-of-claims:question",
+          "contestId": "ba01-hi-maui-processing-of-claims",
+          "questionText": "Shall the Charter be amended, effective January 1, 2028 to streamline the process for filing claims for personal injury or property damage by requiring that claims are filed directly with the Director of Finance or as provided by ordinance?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Processing of Claims\nShall the Charter be amended, effective January 1, 2028 to streamline the process for filing claims for personal injury or property damage by requiring that claims are filed directly with the Director of Finance or as provided by ordinance?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-removing-the-english-translation-of-the-hawai-i-state-motto:question",
+          "contestId": "ba01-hi-maui-removing-the-english-translation-of-the-hawai-i-state-motto",
+          "questionText": "Shall the Charter be amended, effective upon passage, by removing the English translation of the Hawai'i State motto in the Maui County Charter Preamble, allowing the original phrase, “Ua mau ke ea o ka ‘aina i ka pono,” to stand on its own?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Removing the English Translation of the Hawai‘i State Motto\nShall the Charter be amended, effective upon passage, by removing the English translation of the Hawai'i State motto in the Maui County Charter Preamble, allowing the original phrase, “Ua mau ke ea o ka ‘aina i ka pono,” to stand on its own?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-emergency-appropriations:question",
+          "contestId": "ba01-hi-maui-emergency-appropriations",
+          "questionText": "Shall the Charter be amended, effective January 2, 2027, to allow the Mayor, with approval from the Council, to pass an emergency appropriation for an application for a line of credit and clarify that the one percent limitation for emergency appropriations does not apply to funds that have already been allocated to an emergency fund?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Emergency Appropriations\nShall the Charter be amended, effective January 2, 2027, to allow the Mayor, with approval from the Council, to pass an emergency appropriation for an application for a line of credit and clarify that the one percent limitation for emergency appropriations does not apply to funds that have already been allocated to an emergency fund?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-independent-nomination-board:question",
+          "contestId": "ba01-hi-maui-independent-nomination-board",
+          "questionText": "Shall the Charter be amended, effective immediately, to repeal the parts of the 2022 Charter amendment that created the Independent Nomination Board and related procedures for nominations for various County officers?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Independent Nomination Board\nShall the Charter be amended, effective immediately, to repeal the parts of the 2022 Charter amendment that created the Independent Nomination Board and related procedures for nominations for various County officers?"
+          }
+        },
+        {
+          "id": "ba01-hi-maui-reappointment-of-members-of-the-board-of-ethics:question",
+          "contestId": "ba01-hi-maui-reappointment-of-members-of-the-board-of-ethics",
+          "questionText": "Shall the Charter be amended, effective upon approval, to authorize the Mayor to reappoint members of the Board of Ethics of the County of Maui, with the approval of the Council, for one successive term without an intervening waiting period?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T23:11:07.723462Z",
+            "verifiedAt": "2026-10-20T23:11:07.723462Z",
+            "quote": "Maui: Reappointment of Members of the Board of Ethics\nShall the Charter be amended, effective upon approval, to authorize the Mayor to reappoint members of the Board of Ethics of the County of Maui, with the approval of the Council, for one successive term without an intervening waiting period?"
+          }
+        },
+        {
+          "id": "ba01-hi-relating-to-the-planning-commission-s-appeals-process:question",
+          "contestId": "ba01-hi-relating-to-the-planning-commission-s-appeals-process",
+          "questionText": "Shall the Kaua’i County Charter be amended to expedite and clarify the Planning Commission's appeals process by removing all references to a Zoning Board of Appeals?",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1601_1.pdf",
+            "sourceOrg": "Hawaii Office of Elections",
+            "collectedAt": "2026-10-20T22:55:16.942004Z",
+            "verifiedAt": "2026-10-20T22:55:16.942004Z",
+            "quote": "Relating to the Planning Commission’s Appeals Process\nShall the Kaua’i County Charter be amended to expedite and clarify the Planning Commission's appeals process by removing all references to a Zoning Board of Appeals?"
           }
         }
       ],
@@ -3030,15 +5082,15 @@
       ],
       "coverageNotes": [
         "The complete official Candidate Report CSV contains 415 filing records. Only candidates with status In General are included. 29 state legislative contests were decided at the primary and are recorded as absences.",
-        "The Governor and Lieutenant Governor form 2 joint ticket choices on the official general-election sample ballot. Both printed names are retained in each ticket; all 96 people listed In General remain represented.",
-        "The two statewide constitutional questions are taken verbatim from the Office of Elections. Both official full texts were acquired from the Legislature. Its reports link the enrolled bill PDFs and match the bill identifiers and original links on the election-office question page; each printed PDF question matches the held question after typography and whitespace normalization."
+        "The two statewide constitutional questions are taken verbatim from the Office of Elections. Both official full texts were acquired from the Legislature. Its reports link the enrolled bill PDFs and match the bill identifiers and original links on the election-office question page; each printed PDF question matches the held question after typography and whitespace normalization.",
+        "The Governor and Lieutenant Governor form two joint ticket choices. All 140 people listed In General in the complete official Candidate Report are represented, including the 44 local candidates. Official sample ballots supply 20 Honolulu, eight Maui, one Hawaii and one Kauai county charter questions."
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T16:12:56.334557+00:00",
-    "reviewedBy": "BL-12 official-source script conversion",
+    "reviewedAt": "2026-10-20T23:11:07.723462Z",
+    "reviewedBy": "ba01-pacific-source-replay",
     "sources": [
       {
         "requestedUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
@@ -3171,6 +5223,66 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official Legislature report identifies the final measure label, links its full-text PDF, and records Enrolled to Governor: SB3219 HD3 CD1 Constitutional Amendments; Counties; Resilient Infrastructure for Shelter and Equity Bonds (ConAm) PROPOSING AMENDMENTS TO ARTICLE VII, SECTIONS 12 AND 13, OF THE HAWAII STATE CONSTITUTION. Proposes constitutional amendments to expressly provide that the Legislature may authorize political subdivisions, such as the counties, to issue resilient infrastructure for shelter and equity bonds for specified public works, public improvements, or other actions necessary for housing and community development, and exclude these bonds from determinations of the funded debt of the political subdivisions. (CD1) (S) 5/8/2026- Enrolled to Governor. HASHIMOTO, CHANG, KEOHOKALOLE, McKelvey HSG, JHA, FIN HB2476",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+        "finalUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:55:16.904259Z",
+        "httpStatus": 200,
+        "rawHash": "5dd4fbec4a2ecbe06b55afbce6098ddcc7f1000cbca300de8ec9df405a381e0e",
+        "reviewedEvidence": "Official November 3 2026 precinct 24-01 sample ballot; Honolulu Charter Questions 1–20 extracted in column order from pages 3 and 4 without paraphrase."
+      },
+      {
+        "requestedUrl": "https://elections.hawaii.gov/2026-proclamation/",
+        "finalUrl": "https://elections.hawaii.gov/2026-proclamation/",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:54:51.635834Z",
+        "httpStatus": 200,
+        "rawHash": "77947ab8f81ca9601f615ff11489464179d678b5fefa5c1d5e26d4ce508f1c2b",
+        "reviewedEvidence": "Official 2026 election proclamation confirms seven at-large Kauai council seats and the local election jurisdictions."
+      },
+      {
+        "requestedUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "finalUrl": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:53:15.178993Z",
+        "httpStatus": 200,
+        "rawHash": "f92576e7a23fa9b7f80350f6ee1b59eca9281b9c1e692edfc413898ee70f3173",
+        "reviewedEvidence": "Official native full candidate CSV export. Replay status, contest, printed ballot name, party and website for every general candidate. Mailing/contact fields are excluded from the ballot projection."
+      },
+      {
+        "requestedUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf",
+        "finalUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:55:16.928024Z",
+        "httpStatus": 200,
+        "rawHash": "f85a2f92cc34c1d580659052757a1b82ffc232317ff7498788dc3cd597930906",
+        "reviewedEvidence": "Official2026 general sample ballot for precinct01-01; page2 county charter question text extracted by Tesseract with OMP_THREAD_LIMIT=1, Maui in two separate columns. Whole source PDF bytes preserved."
+      },
+      {
+        "requestedUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+        "finalUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:11:07.723462Z",
+        "httpStatus": 200,
+        "rawHash": "917e8c637a6ac20dae7e1be86a9fe13ff991aa64f5223fc73b26131a6803d448",
+        "reviewedEvidence": "Official2026 general sample ballot for precinct09-01; page2 county charter question text extracted by Tesseract with OMP_THREAD_LIMIT=1, Maui in two separate columns. Whole source PDF bytes preserved."
+      },
+      {
+        "requestedUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1601_1.pdf",
+        "finalUrl": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1601_1.pdf",
+        "publisher": "Hawaii Office of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T22:55:16.942004Z",
+        "httpStatus": 200,
+        "rawHash": "36e4ded01f15209119ea27bc3df8d085ab301d944159da5920c14d94e90c2d4f",
+        "reviewedEvidence": "Official2026 general sample ballot for precinct16-01; page2 county charter question text extracted by Tesseract with OMP_THREAD_LIMIT=1, Maui in two separate columns. Whole source PDF bytes preserved."
       }
     ]
   }

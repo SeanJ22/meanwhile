@@ -3,6 +3,7 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ArtifactRecord, ControlPlaneRepositories, RecordProjection } from "../control-plane/repository/types.ts";
 import { runPool } from "../control-plane/scheduler/shadow-loop.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
+import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import { pageWords, section3Record } from "../control-plane/promotion/section3.ts";
@@ -17,26 +18,36 @@ import { electionFieldState } from "./election-fields.ts";
 import type { RoutineRecordClass } from "./types.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
+import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import type { HeldInputs, WorkerPublicationItem } from "./worker-publication-tasks.ts";
 
 export const NATIONAL_ELECTION_OFFICES_URL = "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/";
 
 const SUBJECT_PAGE = 500;
 
-/** When the inputs every held ballot route shares last changed: the national office list, the registry and the published routes. */
+/** When the inputs every held ballot route shares last changed: the national office list, the registry and each state's published routes. */
 export async function readHeldPointerTimes(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
   promotedAt: (recordClass: RoutineRecordClass, scope: string) => Promise<string | null>,
   states: readonly string[],
+  promotedAtMany?: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly { readonly promotedAt: string }[]>,
 ): Promise<Pick<HeldInputs, "nationalAt" | "registryAt" | "routesAt">> {
-  const [national] = await query("SELECT max(recorded_at) AS at FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1)", [NATIONAL_ELECTION_OFFICES_URL]);
   const routes = requiredManualProductionContract("ballot-navigation");
-  let registryAt: string | null = null;
-  for (const state of new Set(states)) {
-    const at = await promotedAt("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state));
-    if (at && (!registryAt || at > registryAt)) registryAt = at;
-  }
-  const routesAt = await promotedAt(routes.recordClass, routes.scope);
+  const owned = [...new Set(states)];
+  const newest = async (recordClass: RoutineRecordClass, scopes: readonly string[]) => {
+    if (promotedAtMany) return (await promotedAtMany(recordClass, scopes)).map(row => row.promotedAt).sort().at(-1) ?? null;
+    const times: string[] = [];
+    await runPool(scopes, 8, async scope => {
+      const at = await promotedAt(recordClass, scope);
+      if (at) times.push(at);
+    });
+    return times.sort().at(-1) ?? null;
+  };
+  const [[national], registryAt, routesAt] = await Promise.all([
+    query("SELECT max(recorded_at) AS at FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1)", [NATIONAL_ELECTION_OFFICES_URL]),
+    newest("REGISTRY_RUNTIME_BINDING", owned.map(stateRegistryRuntimeScope)),
+    newest(routes.recordClass, owned.map(ballotNavigationScope)),
+  ]);
   return { nationalAt: iso(national?.at), registryAt, routesAt };
 }
 
@@ -52,7 +63,7 @@ export async function readHeldInputs(
     const at = new Map<string, string>();
     for (let start = 0; start < keys.length; start += SUBJECT_PAGE) {
       for (const row of await query(`SELECT w.value #>> '${path}' AS key, max(a.recorded_at) AS at
-        FROM cp_work_items w JOIN cp_log_artifacts a ON a.log_key = w.id
+        FROM cp_work_items_history w JOIN cp_log_artifacts a ON a.log_key = w.id
         WHERE w.value #>> '${path}' = ANY($1::text[]) GROUP BY 1`, [keys.slice(start, start + SUBJECT_PAGE)])) {
         const time = iso(row.at);
         if (typeof row.key === "string" && time) at.set(row.key, time);
@@ -218,7 +229,9 @@ export async function publishHeldElectionOffices(input: {
   if (fields.length) {
     try {
       // Delivery counts what this pass newly put in front of readers, once, not each re-verified office per owed item.
-      const before = new Set(((await readManualProjectionPrior("ballot-navigation", input.store, input.now))?.payload as { records?: readonly { id: string }[] } | undefined)?.records?.map(row => row.id) ?? []);
+      const states = [...new Set(fields.flatMap(field => electionFieldState(field.divisionId) ?? []))];
+      const before = new Set((await Promise.all(states.map(state => readManualProjectionPrior("ballot-navigation", input.store, input.now, ballotNavigationScope(state)))))
+        .flatMap(prior => (prior?.payload as { records?: readonly { id: string }[] } | undefined)?.records?.map(row => row.id) ?? []));
       published = await publishElectionFields({ store: input.store, now: input.now, fields, verify: section3Record });
       fresh = published.fields.filter(id => !before.has(id));
     } catch (error) { failure = sanitizedErrorDiagnostic(error); }
@@ -239,7 +252,7 @@ export async function publishHeldElectionOffices(input: {
   }
   await runPool(report, PLACES_AT_ONCE, async ({ workItemId, outcome }) => {
     const latest = await input.repos.workItems.mustRead(workItemId);
-    await input.repos.workItems.compareAndSet(workItemId, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now);
   });
   return report;
 }

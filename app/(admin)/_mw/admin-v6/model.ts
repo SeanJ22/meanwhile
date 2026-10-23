@@ -16,14 +16,14 @@ export interface Sourced<T> {
   readonly state: SourceState;
   readonly load: LoadState;
   readonly data: T | null;
-  /** When the data was read, ISO. Null when never read. */
+
   readonly asOf: string | null;
-  /** Present whenever `state` is not `live`. */
+
   readonly dependency?: Dependency;
-  /** Parts that did not arrive when `load` is `partial`, in plain words. */
+
   readonly missingParts?: readonly string[];
   readonly problem?: "waiting" | "denied" | "incompatible" | "failed";
-  /** Present for a bounded, indexed section read one window at a time. */
+
   readonly page?: { readonly total: number | null; readonly nextCursor: string | null; readonly prevCursor: string | null };
 }
 
@@ -50,32 +50,31 @@ export interface Place {
 }
 
 export interface Hunt {
-  /** Actual allocated charges, rather than the allowance consumed by overlapping hunts. */
+
   readonly reportedSpendUsd?: number | null;
   readonly id: string;
   readonly placeKey: string;
   readonly name: string;
   readonly startedAt: string;
-  /** Lifetime Anthropic limit in dollars. */
+
   readonly limitUsd: number;
   readonly limitSource: string;
   readonly spentUsd: number;
   readonly heldUsd: number;
-  /** Charges saved without a price. Unknown, never zero dollars. */
+
   readonly unpricedEntries: number;
-  /** `unreported`: the hunt is saved and not stopped, but whether paid work is running now is not published. */
+
   readonly status: "running" | "paused" | "stopped" | "unreported";
-  /** Null when not reported. */
+
   readonly researchWorkers: number | null;
-  /** The backend states the period: a hunt's figures are always its whole lifetime. */
+
   readonly basis?: "lifetime";
-  /** Left to spend as the backend computed it; null when an unpriced charge makes it unknown. Absent: limit − spent − set aside. */
+
   readonly availableUsd?: number | null;
-  /** Why a paused hunt is paused: all paid work, the runner, or its own $0 budget. Null or absent when not paused. */
+
   readonly pause?: { readonly kind: "paid-work" | "runner" | "budget"; readonly since: string | null; readonly note: string | null } | null;
 }
 
-/** Left to spend, or null when unknown (never guessed from a lower-bound spend). */
 export function huntLeftUsd(h: Hunt): number | null {
   return h.availableUsd !== undefined ? h.availableUsd : h.limitUsd - h.spentUsd - h.heldUsd;
 }
@@ -87,18 +86,17 @@ export interface StateRow {
   readonly name: string;
   readonly hunts: number | null;
   readonly stuck: number | null;
-  /** Checklist items counted here, or null when coverage is unknown (never zero). */
+
   readonly checklistItems: number | null;
   readonly tracked: boolean;
   readonly kind?: "State" | "District" | "ZIP";
   readonly parentKey?: string;
   readonly zipsWorked?: number | null;
   readonly zipsTotal?: number | null;
-  /** The place's completeness as a percentage, floored to one decimal. */
+
   readonly score?: number | null;
 }
 
-/** `unreported`: nothing records this stage for this result, which is not the same as not done. */
 export type StageMark = "done" | "not-yet" | "wrong" | "partial" | "reported" | "waiting" | "unreported";
 export const STAGE_NAMES = ["Found", "Saved", "Facts pulled out", "Facts checked against sources", "Published", "Checked on the public page"] as const;
 
@@ -123,12 +121,11 @@ export interface TrailStage {
   readonly next?: string;
   readonly docs?: readonly SavedDoc[];
   readonly facts?: readonly { readonly field: string; readonly value: string; readonly note: string }[];
-  /** `seenAt` is ISO. */
+
   readonly publicLink?: { readonly url: string; readonly label: string; readonly seenAt: string | null };
   readonly technical?: readonly string[];
 }
 
-/** One day of the flow, stage by stage. Null counts are days nothing was recorded for. */
 export interface ScoreboardFlowDay {
   readonly label: string;
   readonly findings: number | null;
@@ -141,7 +138,7 @@ export interface ReaderResult {
   readonly id: string;
   readonly title: string;
   readonly applies: readonly string[];
-  /** Null when nothing records whether the result is new, reused, updated or retained. */
+
   readonly kind: ResultKind | null;
   readonly stages: readonly StageMark[];
   readonly readerSees: string;
@@ -169,14 +166,13 @@ export interface StuckItem {
   readonly readersAffected?: boolean;
   readonly fixId?: string;
   readonly unlocks?: number;
-  /** Items with the same cause share a group. */
+
   readonly group?: string;
   readonly actions: readonly ActionRef[];
   readonly latest?: string;
   readonly decision?: DecisionSpec;
 }
 
-/** The choices behind a "Decide" control. The server re-checks every one. */
 export interface DecisionSpec {
   readonly id: string;
   readonly question: string;
@@ -202,7 +198,7 @@ export interface SameCause {
   readonly lane: Lane;
   readonly count: string;
   readonly itemIds: readonly string[];
-  /** Absent when the group names no state the fleet could be sent to. */
+
   readonly action?: ActionRef;
 }
 
@@ -219,7 +215,7 @@ export interface WorkRow {
 
 export interface WorkStageTotal {
   readonly stage: WorkStage;
-  /** The full count held by the server for this stage, or null when not split for this scope. */
+
   readonly total: number | null;
 }
 
@@ -249,7 +245,6 @@ export interface WorkerJob {
   readonly next: string;
 }
 
-/** Workers running now: in the place in view, in the whole system, and whether the read stopped at its row limit (both counts are then lower bounds). */
 export interface WorkersRunning {
   readonly count: number;
   readonly system: number;
@@ -290,24 +285,23 @@ export interface UpdateCard {
 export interface WorkerStatus {
   readonly cycle?: { readonly startedAt: string; readonly finishedAt: string | null;
     readonly exitCode: number | null; readonly signal: string | null; readonly lastError: string | null } | null;
-  /** Workers last checked in: only means they are switched on. */
+
   readonly lastCheckIn: string | null;
   readonly lastUsefulProgress: { readonly at: string; readonly what: string } | null;
   readonly roundStartedAt: string | null;
-  /** Set when a round is open and nothing has started or reported since this time, for ten minutes or more. */
+
   readonly noProgressSince?: string | null;
   readonly refused?: { readonly count: number; readonly why: string } | null;
   readonly lastRoundFinishedAt: string | null;
   readonly nextRoundDueAt: string | null;
   readonly runnerState: string | null;
   readonly lanes: readonly { readonly name: string; readonly active: number | null; readonly waiting: number; readonly blockedBy: string | null }[] | null;
-  /** Database bytes the runner read in its last full hour, largest callers first. */
+
   readonly databaseReads?: { readonly hour: string; readonly controlPlaneBytes: number; readonly readerBytes: number;
     readonly byCaller: readonly { readonly caller: string; readonly bytes: number }[] } | null;
   readonly unread: readonly string[];
 }
 
-/** One agent run (server: v6-agents-read.ts). Newest first; a run still open past the runner's wall is "did-not-finish", never "running". */
 export interface AgentRun {
   readonly id: string;
   readonly role: string;
@@ -318,7 +312,7 @@ export interface AgentRun {
   readonly startedAt: string | null;
   readonly endedAt: string | null;
   readonly model: { readonly tier: "haiku" | "sonnet" | "opus" | "plain-code" | "older"; readonly name: string };
-  /** Dollars for this run, or null when the ledger has no price for it (never $0). */
+
   readonly costUsd: number | null;
   readonly costWords: string;
   readonly found: string;
@@ -339,7 +333,7 @@ export interface Definition {
 export interface ChecklistGroupCount {
   readonly group: string;
   readonly name: string;
-  /** Counts in ITEM_STATUS_ORDER. */
+
   readonly counts: readonly number[];
 }
 
@@ -357,7 +351,7 @@ export interface ChecklistItem {
   readonly parts: readonly { readonly text: string; readonly status: string; readonly proof: string; readonly tone: "good" | "warn" | "muted" }[];
   readonly resultId?: string;
   readonly sourceUrl?: string | null;
-  /** When the next check is due, for an item awaiting publication or due for a refresh. */
+
   readonly nextCheckAt?: string | null;
   readonly addedAt?: string | null;
   readonly actions: readonly ActionRef[];
@@ -376,21 +370,19 @@ export interface ScoreGroup {
   readonly percent: number | null;
 }
 
-/** One of the three measures: what is counted, what it is counted against, and the counts beside it. A count we do not have is null. */
 export interface MeasureView {
   readonly n: number;
   readonly of: number;
   readonly percent: number | null;
   readonly beside: Readonly<Record<string, number | null>>;
 }
-/** Completeness, freshness and delivery, each with its counts and never blended into one number. */
+
 export interface PlaceMeasuresView {
   readonly completeness: MeasureView;
   readonly freshness: MeasureView;
   readonly delivery: MeasureView;
 }
 
-/** The checklist score for one place, overall and by group. It measures capture and never gates publishing. */
 export interface PlaceScoreView {
   readonly placeKey: string;
   readonly placeLabel: string;
@@ -398,22 +390,22 @@ export interface PlaceScoreView {
   readonly observedAt: string;
   readonly divisionCount: number;
   readonly sendWords: string | null;
-  /** The target set for this place, or null. Nothing here gates publishing. */
+
   readonly target: { readonly goalPercent: number; readonly setAt: string } | null;
-  /** Core items only. The family rows below add up to it. */
+
   readonly overall: ScoreGroup;
   readonly groups: readonly ScoreGroup[];
-  /** Extension items, counted apart from the headline. Null when the place owes none. */
+
   readonly extension?: ScoreGroup | null;
-  /** Summary items whose detail items carry the count: listed, out of the denominator. Null when none. */
+
   readonly summary?: ScoreGroup | null;
   readonly coverage?: { readonly words: readonly string[] };
   readonly measures?: PlaceMeasuresView;
-  /** Up, down or same against the last earlier day's completeness. Null with no earlier point. */
+
   readonly trend?: { readonly direction: "up" | "down" | "same"; readonly previousPercent: number | null; readonly previousDay: string } | null;
   readonly notCaptured?: { readonly huntedNotFound: number; readonly nothingHunts: number };
   readonly familyNotCaptured?: readonly { readonly group: string; readonly huntedNotFound: number; readonly nothingHunts: number }[];
-  /** Completeness on the starting list and the grown list, side by side. Null until the place has a mission start. */
+
   readonly growth?: { readonly missionStart: string; readonly starting: { readonly n: number; readonly of: number; readonly percent: number | null }; readonly grown: { readonly n: number; readonly of: number; readonly percent: number | null }; readonly added: number } | null;
   readonly profiles?: { readonly words: string; readonly figures: { readonly fields: readonly { readonly key: string; readonly label: string; readonly applies: number; readonly held: number | null }[]; readonly notMeasured: readonly string[] } };
 }
@@ -433,7 +425,7 @@ export interface ChecklistView {
   readonly placeGroups: readonly ChecklistGroupCount[] | null;
   readonly items: readonly ChecklistItem[] | null;
   readonly systemGroups: readonly SystemGroup[];
-  /** Present for a ZIP, county or state; null or absent where no owed list is measured. */
+
   readonly score?: PlaceScoreView | null;
 }
 
@@ -447,7 +439,7 @@ export interface AccountReading {
 export interface SpendLimit {
   readonly name: string;
   readonly figure: string;
-  /** The dollars in that figure: spent so far (null when not reported) and the limit (null when none stands). */
+
   readonly usedUsd: number | null;
   readonly limitUsd: number | null;
   readonly fraction: number | null;
@@ -470,10 +462,10 @@ export interface MoneyView {
   readonly accountMonth: string;
   readonly monthlyPlans: readonly { readonly name: string; readonly note: string }[];
   readonly limits: readonly SpendLimit[];
-  /** Our recorded request costs against each provider's own report, for that report's period. Null when the attribution was not read. */
+
   readonly reconciliation: readonly {
     readonly provider: string; readonly periodStart: string; readonly periodEnd: string;
-    /** False for a shared platform cost (hosting, database, GitHub): no request is priced in our ledger, so nothing is compared. */
+
     readonly requestPriced: boolean;
     readonly huntUsd: number | null; readonly huntKnownUsd: number; readonly otherUsd: number | null; readonly otherKnownUsd: number;
     readonly providerUsd: number | null; readonly differenceUsd: number | null; readonly unpriced: number }[] | null;
@@ -483,7 +475,7 @@ export interface MoneyView {
     readonly error: string | null; readonly detail: string; readonly credits: string | null; readonly accounts: readonly string[]; readonly limits: readonly string[];
     readonly units: readonly { readonly label: string; readonly value: number; readonly unit: string }[] }[];
   readonly otherServices: string;
-  /** Each billed provider's own days; a cell is null when that number is not held. */
+
   readonly byDay: {
     readonly providers: readonly { readonly provider: string; readonly note: string | null }[];
     readonly days: readonly { readonly day: string; readonly cells: readonly ({ readonly usd: number | null; readonly usage: string | null } | null)[] }[];
@@ -558,34 +550,34 @@ export interface SpendView {
   readonly windowDays: number;
   readonly byTier: readonly { readonly key: string; readonly tier: "haiku" | "sonnet" | "opus" | "older" | "unrecorded"; readonly name: string; readonly usd: number; readonly requests: number }[];
   readonly byDay: readonly { readonly day: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byModel: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];
-  /** Newest first; the first row is the month in progress. Eastern months. */
+
   readonly byMonth: readonly { readonly month: string; readonly anthropicUsd: number; readonly searchUsd: number; readonly byTier: readonly { readonly name: string; readonly usd: number }[]; readonly rows: number }[];
   readonly work: readonly WorkCost[];
   readonly anthropicUsd: number;
   readonly searchUsd: number;
-  /** Ledger rows with no price. Counted beside the dollars, never as $0. */
+
   readonly unpricedRows: number;
   readonly neon: { readonly kind: "recorded" | "not-recorded"; readonly detail: string | null;
     readonly readerReads?: readonly { readonly day: string; readonly route: string; readonly read: string;
       readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
     readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[] };
-  /** Paid model money settled in the last 24 hours, from the cost ledger; null when that read failed. */
+
   readonly last24h?: { readonly modelUsd: number; readonly unpricedRows: number } | null;
   readonly readAt?: string;
   readonly scoutOutcomes?: readonly { readonly recordClass: string; readonly found: number; readonly route: number; readonly total: number }[] | null;
-  /** Open reservations right now over every hunt; null when not read. */
+
   readonly setAsideUsd?: number | null;
-  /** The daily spending limit in force; null when not read. */
+
   readonly dailyLimitUsd?: number | null;
-  /** How many paid hunters the daily limit buys at once right now; null when unread. */
+
   readonly huntersNow?: number | null;
-  /** Charges in the last 24 hours counted at their worst case; null when unread. */
+
   readonly worstCaseCharges?: number | null;
 }
 
 export interface TrendWeek {
   readonly week: string;
-  /** One value per series, or null when there is no record that week. */
+
   readonly values: readonly number[] | null;
 }
 
@@ -621,18 +613,17 @@ export interface LearningView {
   readonly notMeasured: readonly NotMeasured[];
 }
 
-/** One Scoreboard number. A number we do not have has `value: null` (shown "—") and says why in `notMeasured`. Never blended with another row. */
 export interface ScoreboardRow {
   readonly id: string;
   readonly name: string;
   readonly value: string | null;
-  /** The counts behind the value, e.g. "412 of 480". Null when none are held. */
+
   readonly counts: string | null;
   readonly says: string;
   readonly notMeasured: string | null;
   readonly items?: readonly string[];
   readonly technical?: readonly string[];
-  /** A short run of days, oldest first, drawn under the number; a null value is a day nothing was recorded, not a zero. */
+
   readonly trend?: readonly { readonly label: string; readonly value: number | null }[];
   readonly images?: readonly { readonly label: string; readonly src: string }[];
 }
@@ -670,12 +661,14 @@ export interface ScoreboardMissionRow {
   readonly withinHour: boolean | null;
 }
 
-/** One full hour from the runner's hourly row (Now). A number nobody recorded is null and shows "—". */
+/** One full hour from the independent line keeper (Now). A number nobody recorded is null and shows "—". */
 export interface ScoreboardVitalHour {
   readonly hour: string;
   readonly factsLive: number | null;
+  readonly factsLiveConfirmed?:boolean;
   readonly costPerFactUsd: number | null;
   readonly neonGb: number | null;
+  readonly neonAtLeast?:boolean;
   readonly overNeonTarget: boolean | null;
   readonly roundsFinished: number | null;
   readonly roundsKilled: number | null;
@@ -684,13 +677,14 @@ export interface ScoreboardVitalHour {
 }
 
 export interface ScoreboardView {
+  readonly lineKeeper?: string;
   readonly rows: readonly ScoreboardRow[];
   readonly byPlace: readonly ScoreboardPlaceRow[];
   readonly byFamily: readonly ScoreboardFamilyRow[];
   readonly missions: readonly ScoreboardMissionRow[];
   readonly flow: readonly ScoreboardFlowDay[] | null;
   readonly vital: readonly ScoreboardVitalHour[] | null;
-  /** Launch gates as health checks; they never hold anything back. Null when the readings could not be taken. */
+
   readonly gates: { readonly rows: readonly ScoreboardGateRow[]; readonly pass: number; readonly attention: number; readonly notMeasured: number } | null;
   readonly readiness: readonly ScoreboardReadinessRow[];
   readonly learning: LearningView;
@@ -709,7 +703,7 @@ export interface OpenFix {
   readonly helps: string;
   readonly placeInLine: string;
   readonly resourcesNow: string;
-  /** Index into TASK_STAGES reached, or null when no task is linked. */
+
   readonly taskStage: number | null;
   readonly taskId: string | null;
   readonly linkedStuck: readonly string[];
@@ -759,13 +753,13 @@ export interface FixView {
 
 export type ActionKind =
   "ballot-publish" |
+  "officials-check" |
   "focus" |
-  "decide" | "leads-send" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
+  "decide" | "leads-send" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "hunt-stop-state" | "hunt-stop-all" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];
 
-/** The seven lifecycle facts, kept separate. Null means not reached or not reported. */
 export interface Lifecycle {
   readonly saved: string | null;
   readonly workersReceived: string | null;
@@ -790,12 +784,12 @@ export interface ReceiptItem {
   readonly name: string;
   readonly status: ReceiptStatus;
   readonly note: string;
-  /** The item's own status words, when they say more than its status. */
+
   readonly label?: string;
 }
 
 export interface UiReceipt {
-  /** The idempotency key: one per deliberate send, reused by a retried fetch. */
+
   readonly key: string;
   readonly kind: ActionKind;
   readonly target: string;
@@ -810,16 +804,16 @@ export interface UiReceipt {
   readonly says: string;
   readonly items: readonly ReceiptItem[];
   readonly lifecycle: Lifecycle;
-  /** True for anything produced by the sample executor. Never true for a real receipt. */
+
   readonly simulated: boolean;
-  /** The registry action type it was sent as; with `key` it is the durable receipt identity. */
+
   readonly gatewayType: string | null;
   readonly gatewayReceiptId: string | null;
   readonly readBackAt: string | null;
   readonly notPickedUp?: boolean;
   readonly finishBy?: string | null;
   readonly scheduledParentId?: string;
-  /** BR-13: before and after, shown beside Done. */
+
   readonly change?: { readonly before: string; readonly after: string };
   readonly plan?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderPlan;
   readonly progress?: import("../../../../lib/control-plane/gateway/confirmation.ts").OrderProgress;
@@ -835,6 +829,7 @@ export interface AdminV6Data {
   readonly hunts: Sourced<readonly Hunt[]>;
   readonly national: Sourced<readonly StateRow[]>;
   readonly results: Sourced<readonly ReaderResult[]>;
+  readonly officials?: Sourced<import("@/lib/control-plane/admin-view/officials-results.ts").OfficialsResults>;
   readonly stuck: Sourced<readonly StuckItem[]>;
   readonly sameCause: Sourced<readonly SameCause[]>;
   readonly workRows: Sourced<{ readonly rows: readonly WorkRow[]; readonly totals: readonly WorkStageTotal[] }>;
@@ -855,13 +850,11 @@ export function usd(n: number): string {
   return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-/** Percentages round down, so rounding can never produce an unearned 100%. */
 export function pctDown(part: number, whole: number): string {
   if (!whole) return "—";
   return (Math.floor((part / whole) * 1000) / 10).toFixed(1) + "%";
 }
 
-/** A calendar day in Eastern time, for dates without a meaningful clock time. */
 export function mstDay(iso: string | null): string {
   if (!iso || !Number.isFinite(Date.parse(iso))) return "not reported";
   return new Intl.DateTimeFormat("en-US", { timeZone: EASTERN_ZONE, month: "short", day: "numeric" }).format(new Date(iso));
@@ -871,7 +864,6 @@ export function count(n: number): string {
   return n.toLocaleString("en-US");
 }
 
-/** Eastern time. "ET" covers EST and EDT; the hour printed is already the local one. */
 export function mst(iso: string | null, withDay = true): string {
   if (!iso || !Number.isFinite(Date.parse(iso))) return "not reported";
   const f = new Intl.DateTimeFormat("en-US", {

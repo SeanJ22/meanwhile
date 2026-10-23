@@ -5,6 +5,7 @@ import "./globals.css";
 import "./reader.css";
 import { titleFor } from "@/lib/brand";
 import { PUBLIC_SITE_ORIGIN } from "@/lib/ops/origins";
+import { READER_START_SCRIPT } from "@/lib/reader/bootstrap";
 
 // All UI text. Loaded as a variable font, which covers the 300–700 range the
 // design uses without four separate downloads.
@@ -19,7 +20,7 @@ const dmSans = DM_Sans({
 // might compare column-wise or copy.
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
 });
 
@@ -84,6 +85,7 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: READER_START_SCRIPT }} />
       </head>
       <body className="min-h-full">
         {children}

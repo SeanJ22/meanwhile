@@ -2,7 +2,9 @@
 
 import { MeetingRow } from "@/components/ui/meeting-row";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { CardGapsContribution } from "@/components/ui/card-gap-context";
 import { meetingCardSources } from "@/lib/officials/card-sources";
+import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { useEffect, useMemo, useState } from "react";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { MeetingListingNotice } from "./meeting-listing-notice";
@@ -178,6 +180,16 @@ export function ListOverlay({
   const center = ui.nearMe ?? location;
   const listingCount = readerMeetingCount(sorted, listingIdentity);
 
+  const showMore = () => {
+    const nextLimit = limit + PAGE;
+    // Newly added meetings must be readable even when their groups were closed.
+    const addedGroups = new Set(sorted.slice(limit, nextLimit).map(meeting => groupKeyFor(meeting, ui.listGroupBy)));
+    for (const key of addedGroups) {
+      if (key && !ui.expandedGroups.includes(key)) dispatch({ type: "list/toggleGroup", key });
+    }
+    setLimit(nextLimit);
+  };
+
   return (
     <div
       className={embedded ? "al-overlay mw-embedded" : "al-overlay"}
@@ -193,7 +205,7 @@ export function ListOverlay({
       <div className="al-panel">
       <div className="al-overlay-header">
         <span className="al-overlay-count">
-          {sorted.length} {listingCount.unit}
+          {result?.localPending ? "…" : sorted.length} {listingCount.unit}
         </span>
         {/* The focus is stated and one tap clears it. */}
         {focused.applied && focused.chip && (
@@ -209,7 +221,7 @@ export function ListOverlay({
             {focused.chip} · show all ✕
           </button>
         )}
-        {focused.unmatched && focused.chip && (
+        {!result?.localPending && focused.unmatched && focused.chip && (
           /* The subject has no sittings in this window: said, with the full list underneath. */
           <span className="al-focus-chip" data-list-focus-empty>
             {focused.chip}
@@ -265,7 +277,8 @@ export function ListOverlay({
       <div className="al-overlay-body">
         {/* In the scrolling body: in the pinned header a long notice can take the whole height cap. */}
         {listingCount.unresolved && <div className="px-4"><MeetingListingNotice groups={listingCount.groups} /></div>}
-        {sorted.length === 0 && (
+        {result?.localPending && <p className="al-empty">Loading meetings…</p>}
+        {!result?.localPending && sorted.length === 0 && (
           <p className="al-empty">
             Nothing matches the current filters.
             <br />
@@ -314,6 +327,7 @@ export function ListOverlay({
               )}
 
               {!collapsed && <CardSourcesContribution id={`meeting-list:${group.key}`} sources={group.items.flatMap(meeting => meetingCardSources(meeting, []))} />}
+              {!collapsed && <CardGapsContribution id={`meeting-list:${group.key}`} gaps={group.items.flatMap(meetingCardGaps)} />}
 
               {!collapsed && groupBadge !== null && (
                 <p className="al-group-jurisdiction">
@@ -339,7 +353,7 @@ export function ListOverlay({
 
                   return (
                     <div key={meeting.id} className="al-row" style={tierVars(tierForMeeting(meeting))}>
-                      <MeetingRow meeting={meeting} compact sourcesInParent
+                      <MeetingRow meeting={meeting} compact sourcesInParent gapsInParent
                         title={meetingRowTitle(meeting, { jurisdictionShown: ui.listGroupBy === "jurisdiction" })}
                         onOpen={() => { onPickMeeting(meeting); dispatch({ type: "list/open", open: false }); }}
                         jurisdiction={groupBadge === null ? <JurisdictionPill badge={badgeOf(meeting)} bodyClass={bodyClassOf(meeting)} zip={location?.zip ?? null} detail={false} /> : undefined}
@@ -355,7 +369,7 @@ export function ListOverlay({
           <button
             type="button"
             className="al-more"
-            onClick={() => setLimit((n) => n + PAGE)}
+            onClick={showMore}
           >
             Show {Math.min(hidden, PAGE)} more ({hidden} hidden)
           </button>

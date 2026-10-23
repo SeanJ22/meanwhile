@@ -13,12 +13,10 @@
 
 import {
   ASK_GAP_RECORD_CLASS,
-  heldBodyGaps,
   meetingsNotHeldGap,
   type AskGapCode,
   type AskGapRecordClass,
   type HeldAskGap,
-  type HeldGapMeetingLike,
 } from "../../../ask/held-gaps.ts";
 import {
   ASK_GAP_OBSERVATION_WINDOW_DAYS,
@@ -29,8 +27,6 @@ import {
   type AskedGap,
   type AskGapObservationReading,
 } from "../../ask-gap-observations.ts";
-import type { AgendaDocumentLike } from "../../../routing/agenda-search.ts";
-import type { PersistedSittingOutcomes } from "../../../outcomes/types.ts";
 import { ROUTINE_SOURCE_CONTRACTS, type RoutineSourceContract } from "../../../civic-data/contracts.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "../../../civic-data/runtime-routine-contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../../../civic-data/meeting-partitions.ts";
@@ -40,9 +36,6 @@ import type { ObligationProvider, ProvidedObligation, ProviderContext, ProviderY
 
 export { ASK_GAPS_PROVIDER_ID, ASK_GAP_NAMESPACE, askGapObligationId, parseAskGapObligationId } from "../../ask-gap-id.ts";
 
-
-/** A held meeting, as the provider needs it: the gap fields and its body. */
-export type AskGapMeeting = HeldGapMeetingLike & { readonly bodyId?: string | null };
 
 /**
  * Where one carrying routine read stands, as the runner read its clock.
@@ -64,10 +57,10 @@ export type CarrierClock =
 /** Everything the provider reads, taken once a cycle by `readAskGapHoldings`. */
 export interface AskGapHoldings {
   readonly source: string;
-  readonly meetings: readonly AskGapMeeting[];
-  readonly documents: readonly AgendaDocumentLike[];
-  /** The recorded-outcome sittings Ask reads (`lib/outcomes/store.ts`). */
-  readonly sittings: readonly PersistedSittingOutcomes[];
+  /** Each body with held meetings and the gaps Ask would state for it, decided one state at a time. */
+  readonly bodies: readonly { readonly bodyId: string; readonly gaps: readonly HeldAskGap[] }[];
+  /** How many meetings are held for a body readers were told we hold none of. */
+  readonly meetingCountOf: (bodyId: string) => number;
   /** Null when the recorded outcomes were read; why not, otherwise. */
   readonly outcomesUnreadable: string | null;
   readonly clockOf: (contractId: string) => CarrierClock;
@@ -315,9 +308,6 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
       }
       const nowMs = Date.parse(ctx.nowIso);
       const outcomesDown = reading.outcomesUnreadable !== null;
-      const documentsByMeeting = groupBy(reading.documents, (d) => d.meetingId);
-      const sittingsByBody = groupBy(reading.sittings, (s) => s.bodyId);
-      const meetingsByBody = groupBy(reading.meetings, (m) => m.bodyId);
       const records: ProvidedObligation[] = [];
       let unroutedOutcomeFailures = 0;
 
@@ -330,16 +320,8 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
       /* A reader was hurt on the latest day they were told it: reader impact now. */
       const toldAt = (told: AskedGap | null): string | null => (told === null ? null : observationDayStart(told.lastDay));
 
-      for (const [bodyId, meetings] of [...meetingsByBody].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) {
-        const held = heldBodyGaps({
-          bodyId,
-          meetings,
-          documents: meetings.flatMap((m) => documentsByMeeting.get(m.id) ?? []),
-          sittings: sittingsByBody.get(bodyId) ?? [],
-          now: nowMs,
-          outcomesUnavailable: outcomesDown,
-        });
-        for (const [code, gaps] of groupBy(held.gaps, (g) => g.code) as Map<AskGapCode, HeldAskGap[]>) {
+      for (const { bodyId, gaps: bodyGaps } of [...reading.bodies].sort((a, b) => (a.bodyId < b.bodyId ? -1 : a.bodyId > b.bodyId ? 1 : 0))) {
+        for (const [code, gaps] of groupBy(bodyGaps, (g) => g.code) as Map<AskGapCode, HeldAskGap[]>) {
           const carriers = askGapCarriersFor(bodyId, code, input.registered);
           /* An unreadable outcome store is our read failing once for every body: work only where a routine outcomes read exists. */
           if (code === "OUTCOMES_UNREADABLE" && carriers.length === 0) {
@@ -363,7 +345,7 @@ export function askGapsProvider(input: AskGapsInput = {}): ObligationProvider {
       /* A body readers were told we hold no meeting of creates its work until a meeting of it is held. */
       const observedSource = observed !== null && !("unreadable" in observed) ? observed.source : "";
       for (const told of [...asked.values()].filter((a) => a.code === "MEETINGS_NOT_HELD").sort((a, b) => (a.bodyId < b.bodyId ? -1 : a.bodyId > b.bodyId ? 1 : 0))) {
-        const gap = meetingsNotHeldGap(told.bodyId, meetingsByBody.get(told.bodyId)?.length ?? 0);
+        const gap = meetingsNotHeldGap(told.bodyId, reading.meetingCountOf(told.bodyId));
         if (gap === null) continue;
         records.push({
           recordClass: ASK_GAP_OBLIGATION_CLASS,

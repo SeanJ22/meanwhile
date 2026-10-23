@@ -1,0 +1,142 @@
+[
+  {
+    "url": "https://vt.ncsbe.gov/RegLkup",
+    "label": "Voter Search"
+  },
+  {
+    "url": "https://www.ncsbe.gov/faq-letters-voters-about-unvalidated-id-numbers",
+    "label": "Read More"
+  },
+  {
+    "url": "https://www.ncsbe.gov/registering/hosting-voter-registration-drives",
+    "label": "Hosting Voter Registration Drives"
+  },
+  {
+    "url": "https://www.ncsbe.gov/registering/national-voter-registration-act-nvra",
+    "label": "National Voter Registration Act (NVRA)"
+  },
+  {
+    "url": "https://www.ncsbe.gov/registering/faq-voter-registration",
+    "label": "FAQ: Voter Registration"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting",
+    "label": "Voting"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/upcoming-election",
+    "label": "2026 General Election\nLearn about North Carolina's upcoming general election."
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/your-voter-record",
+    "label": "Your Voter Record"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/voter-id",
+    "label": "Voter Photo ID\nFind out what types of ID are acceptable for voting in North Carolina."
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/vote-early-person",
+    "label": "Early Voting\nLearn how and where to vote during the early in-person voting period."
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/vote-person-election-day",
+    "label": "Vote in Person on Election Day"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/vote-mail",
+    "label": "Vote by Mail\nLearn about absentee-by-mail voting."
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/military-and-overseas-voting",
+    "label": "Military and Overseas Voting"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/help-voters-disabilities",
+    "label": "Help for Voters with Disabilities"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/provisional-voting",
+    "label": "Provisional Voting"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/voter-tools-and-forms",
+    "label": "View all tools and forms"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/voting-technology",
+    "label": "Voting Technology"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/vote-honor-veteran",
+    "label": "Vote in Honor of a Veteran"
+  },
+  {
+    "url": "https://www.ncsbe.gov/results-data/voter-registration-data",
+    "label": "Voter Registration Data"
+  },
+  {
+    "url": "https://www.ncsbe.gov/results-data/voter-turnout",
+    "label": "Voter Turnout"
+  },
+  {
+    "url": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "label": "Polling Place Data"
+  },
+  {
+    "url": "https://www.ncsbe.gov/results-data/voter-history-data",
+    "label": "Voter History Data"
+  },
+  {
+    "url": "https://www.ncsbe.gov/results-data/voting-maps-redistricting",
+    "label": "Voting Maps/Redistricting"
+  },
+  {
+    "url": "https://www.ncsbe.gov/about-elections/county-boards-elections",
+    "label": "County Boards of Elections"
+  },
+  {
+    "url": "https://www.ncsbe.gov/about-elections/maintaining-accurate-voter-rolls",
+    "label": "Maintaining Accurate Voter Rolls"
+  },
+  {
+    "url": "https://vt.ncsbe.gov/EVSite",
+    "label": "Early Voting Site Search"
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/upcoming-election/judicial-voter-guide-2026-general-election",
+    "label": "2026 Judicial Voter Guide"
+  },
+  {
+    "url": "https://vt.ncsbe.gov/RegStat",
+    "label": "Voter Registration Statistics"
+  },
+  {
+    "url": "https://www.ncsbe.gov/news/events/person-early-voting-period-november-2026-general-election",
+    "label": "15\n\nOct\n\n...\n\n\n\nOct 15, 2026 - Oct 31, 2026\n\n\nIn-Person Early Voting Period | November 2026 General Election"
+  },
+  {
+    "url": "https://www.ncsbe.gov/news/press-releases/2026/10/19/encounter-issue-while-voting-tell-election-official",
+    "label": "Encounter an Issue While Voting? Tell an Election Official"
+  },
+  {
+    "url": "https://www.ncsbe.gov/news/press-releases/2026/10/14/election-officials-host-media-availability-start-early-voting",
+    "label": "Election Officials to Host Media Availability for the Start of Early Voting"
+  },
+  {
+    "url": "https://www.ncsbe.gov/news/press-releases/2026/10/13/ncsbe-send-letter-potential-non-citizens-voter-rolls",
+    "label": "NCSBE to Send Letter to Potential Non-Citizens on Voter Rolls"
+  },
+  {
+    "url": "https://www.ncsbe.gov/about-elections/county-boards-elections/resources-county-boards",
+    "label": "Resources for County Boards"
+  },
+  {
+    "url": "https://vt.ncsbe.gov/BOEInfo",
+    "label": "County Boards of Elections Search"
+  },
+  {
+    "url": "https://northcarolina.ballottrax.net/voter",
+    "label": "BallotTrax (Absentee Ballot Tracking)"
+  }
+]

@@ -20,8 +20,13 @@ export interface SittingFact {
 
 /** The live facts of each given body's sittings, by body. */
 export async function readSittingFacts(query: Query, bodyIds: readonly string[]): Promise<Map<string, SittingFact[]>> {
+  return sittingFactsFromRows(bodyIds.length ? await query(SITTING_FACTS_SQL, [bodyIds]) : []);
+}
+
+/** Sitting facts from already selected rows, grouped by their body. */
+export function sittingFactsFromRows(rows: readonly Record<string, unknown>[]): Map<string, SittingFact[]> {
   const byBody = new Map<string, SittingFact[]>();
-  for (const row of bodyIds.length ? await query(SITTING_FACTS_SQL, [bodyIds]) : []) {
+  for (const row of rows) {
     const field = FIELD[String(row.field) as keyof typeof FIELD];
     if (!field) continue;
     const at = new Date(row.checked_at as string).toISOString();

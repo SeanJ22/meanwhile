@@ -6,16 +6,16 @@
  * doors a routine task reads on a clock can be overdue; shut and suspended
  * doors are not listed. Pure.
  */
+import { currentMeetingClock } from "../civic-data/contracts.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import { checkEveryWithObserved } from "./observed-rate.ts";
 import { readOnSchedule, type DoorRecord } from "./registry.ts";
 
-const DAY_MS = 86_400_000;
 const MINUTE_MS = 60_000;
-/** A body with a sitting inside this many days either side is checked hourly. */
-export const HOT_SITTING_DAYS = 7;
-export const HOT_CHECK_MINUTES = 60;
-export const COLD_CHECK_MINUTES = 12 * 60;
+/** A body with a sitting inside this span either side is checked at the hot interval; Admin's settings state all three. */
+export const hotSittingMs = (): number => currentMeetingClock().windowMs;
+export const hotCheckMinutes = (): number => currentMeetingClock().hotEveryMs / MINUTE_MS;
+export const coldCheckMinutes = (): number => currentMeetingClock().baseEveryMs / MINUTE_MS;
 /** A non-meeting door with no setting of its own: daily, until its kind states a standing check. */
 export const STANDING_CHECK_MINUTES = 24 * 60;
 
@@ -30,21 +30,36 @@ export function doorFactsKey(source: string, bodyId: string): string {
   return `${source}\u0000${bodyId}`;
 }
 
-/** Live meeting facts per (adapter, body), and whether any sitting is inside the hot window of `now`. Pure. */
-export function meetingFactsByDoor(snapshot: Pick<MeetingsSnapshot, "meetings">, now: string): ReadonlyMap<string, DoorFacts> {
-  const nowMs = Date.parse(now);
-  const out = new Map<string, { liveFacts: number; hot: boolean }>();
+/** The rows behind one door: how many, and when each sits. What is hot depends on the clock, so the times are kept. */
+export interface DoorSittings {
+  readonly liveFacts: number;
+  readonly starts: readonly number[];
+}
+
+/** Live meeting rows per (adapter, body). Pure. */
+export function meetingSittingsByDoor(snapshot: Pick<MeetingsSnapshot, "meetings">): ReadonlyMap<string, DoorSittings> {
+  const out = new Map<string, { liveFacts: number; starts: number[] }>();
   for (const meeting of snapshot.meetings) {
     const source = meeting.carried?.source ?? meeting.id.split(":")[0];
     if (!source || !meeting.bodyId) continue;
     const key = doorFactsKey(source, meeting.bodyId);
-    const held = out.get(key) ?? { liveFacts: 0, hot: false };
+    const held = out.get(key) ?? { liveFacts: 0, starts: [] };
     held.liveFacts += 1;
     const startsAt = Date.parse(meeting.startsAt);
-    if (Number.isFinite(startsAt) && Math.abs(startsAt - nowMs) <= HOT_SITTING_DAYS * DAY_MS) held.hot = true;
+    if (Number.isFinite(startsAt)) held.starts.push(startsAt);
     out.set(key, held);
   }
   return out;
+}
+
+/** What those rows say about a door at `now`: how many facts sit behind it and whether a sitting is inside the hot window. */
+export function doorFactsAt(sittings: DoorSittings, now: string): DoorFacts {
+  const nowMs = Date.parse(now);
+  return { liveFacts: sittings.liveFacts, hot: sittings.starts.some((startsAt) => Math.abs(startsAt - nowMs) <= hotSittingMs()) };
+}
+
+export function meetingFactsByDoor(snapshot: Pick<MeetingsSnapshot, "meetings">, now: string): ReadonlyMap<string, DoorFacts> {
+  return new Map([...meetingSittingsByDoor(snapshot)].map(([key, sittings]) => [key, doorFactsAt(sittings, now)]));
 }
 
 export interface OverdueDoor {
@@ -65,7 +80,7 @@ export interface OverdueDoor {
 export function checkEveryFor(door: DoorRecord, facts: DoorFacts | undefined): { readonly minutes: number; readonly own: boolean } {
   if (door.checkEveryMinutes !== null) return { minutes: door.checkEveryMinutes, own: true };
   // The faster of the standing check and the observed change rate.
-  const standing = door.meeting != null ? (facts?.hot ? HOT_CHECK_MINUTES : COLD_CHECK_MINUTES) : STANDING_CHECK_MINUTES;
+  const standing = door.meeting != null ? (facts?.hot ? hotCheckMinutes() : coldCheckMinutes()) : STANDING_CHECK_MINUTES;
   return { minutes: checkEveryWithObserved(door, standing).minutes, own: false };
 }
 

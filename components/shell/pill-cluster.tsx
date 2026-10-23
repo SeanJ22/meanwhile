@@ -2,6 +2,7 @@
 
 import { useReaderCopy } from "@/hooks/use-reader-copy";
 import Link from "next/link";
+import { useLinkStatus } from "next/link";
 
 import { ASK_PILL_LABELS } from "@/lib/routing/ask-pill-labels";
 import type { AskPillPlacement } from "@/lib/map/cluster-placement";
@@ -13,15 +14,20 @@ export type ReaderPop = "zip" | "vote" | "ask" | null;
 export function PillCluster({
   placement,
   zip,
+  state,
+  point,
   pop,
   governsOpen,
   onOpenPop,
   onOpenGoverns,
   onOpenBallot,
+  prefetchReady = false,
 }: {
   placement: AskPillPlacement;
   /** The zip the viewport currently resolves to. Null shows a ZIP chooser. */
   zip: string | null;
+  state: string | null;
+  point: { lat: number; lng: number } | null;
   pop: ReaderPop;
   /** The Who governs here? card is the view on screen. */
   governsOpen: boolean;
@@ -30,8 +36,18 @@ export function PillCluster({
   onOpenGoverns: () => void;
   /** Ballot opens as the large card (an intercepted route); close any popup first. */
   onOpenBallot?: () => void;
+  /** Background ballot reads wait until this place's state and local reads finish. */
+  prefetchReady?: boolean;
 }) {
   const validZip = zip && /^\d{5}$/.test(zip) ? zip : null;
+  const ballotParams = new URLSearchParams();
+  if (state) ballotParams.set("state", state);
+  if (validZip) ballotParams.set("zip", validZip);
+  if (point) {
+    ballotParams.set("lat", String(point.lat));
+    ballotParams.set("lng", String(point.lng));
+  }
+  const ballotHref = `/ballot${ballotParams.size ? `?${ballotParams}` : ""}`;
   // Ask's full example label at every placement; the pill is always alone on its row.
   const readerCopy = useReaderCopy();
   const pill = { ...ASK_PILL_LABELS.sidebar, label: readerCopy("copy.askSidebar"), ariaLabel: readerCopy("copy.askAccessible") };
@@ -40,10 +56,10 @@ export function PillCluster({
     <div className="mw-nav-wrap" data-pill-cluster={placement}>
       <nav className="mw-compound-nav" aria-label="Main">
         <Link
-          href={validZip ? `/ballot?zip=${validZip}` : "/ballot"}
-          prefetch={false}
+          href={ballotHref}
+          prefetch={prefetchReady ? null : false}
           className="mw-nav-seg mw-nav-ballot"
-          onClick={onOpenBallot}
+          onClick={pop ? onOpenBallot : undefined}
           title={`What's on the ballot${validZip ? ` near ${validZip}` : ""}`}
         >
           {/* A marked ballot sheet, not a check in a box: ✓ already means
@@ -63,7 +79,7 @@ export function PillCluster({
             <path d="M8.3 9.9l2.1 2.1 4.2-4.2" />
             <path d="M8.3 16.4h7.4" />
           </svg>
-          <span>Ballot</span>
+          <BallotLabel />
         </Link>
         <button
           type="button"
@@ -122,4 +138,9 @@ export function PillCluster({
       </button>
     </div>
   );
+}
+
+function BallotLabel() {
+  const { pending } = useLinkStatus();
+  return <span aria-live="polite">{pending ? "Opening ballot…" : "Ballot"}</span>;
 }

@@ -1,4 +1,3 @@
-
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -6,7 +5,6 @@ import { outcomePointers, refreshOutcomeSnapshotFromPromoted } from "../../lib/o
 import { AZ_OFFICIAL_ACTIONS_CONTRACT, PIMA_OUTCOME_TENANT } from "../../lib/outcomes/data-plane.ts";
 import { refreshExecutiveActionsFromPromoted, type ExecutiveAction, type ExecutiveActionStore } from "../../lib/officials/executive-actions.ts";
 import type { OutcomeSnapshot } from "../../lib/outcomes/types.ts";
-import { HELD_MEETING_PARTITIONS, MEETING_PARTITION_CONTRACTS, meetingHistoryScope, type MeetingPartitionContract } from "../../lib/civic-data/meeting-partitions.ts";
 import type { AgendaDocument } from "../../lib/meetings/agenda-documents.ts";
 import { NOTICE_SUMMARIES } from "../../lib/meetings/notice-summary.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../../lib/meetings/snapshot.ts";
@@ -14,8 +12,6 @@ import type { Meeting } from "../../lib/sources/types.ts";
 import type { CandidateCardData } from "../../lib/ballot/candidate-cards.ts";
 import type { CandidateLinks } from "../../lib/ballot/candidate-sites.ts";
 import type { CandidateProfilesProjection } from "../../lib/civic-data/manual-projections.ts";
-
-
 
 import { installAbsent, installPromotedValue } from "./promoted-fixtures.ts";
 
@@ -41,54 +37,6 @@ export async function installPimaOutcomes(value: OutcomeSnapshot = pimaOutcomeFi
 export function recordedMeetings85701(): Meeting[] {
   const recorded = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/reader-upcoming-meetings-85701.json"), "utf8")) as { meetings: Meeting[] };
   return recorded.meetings;
-}
-
-function partitionFor(meeting: Meeting): MeetingPartitionContract {
-  const partition = MEETING_PARTITION_CONTRACTS.find((row) =>
-    row.derivedFamily === null && row.historyOf === undefined && row.bodyId === meeting.bodyId && meeting.id.startsWith(`${row.meetingSource}:`));
-  if (partition) return partition;
-  // A body with no partition of its own is served by its state's derived meeting family.
-  const usps = /state:([a-z]{2})\b/.exec(meeting.ocdId ?? "")?.[1] ?? /^curated:([a-z]{2})\//.exec(meeting.bodyId ?? "")?.[1];
-  const family = usps ? MEETING_PARTITION_CONTRACTS.find((row) => row.derivedFamily === `US-${usps.toUpperCase()}`) : undefined;
-  if (!family) throw new Error(`No registered meeting partition holds ${meeting.id} (${meeting.bodyId}).`);
-  return family;
-}
-
-export function installMeetings(meetings: readonly Meeting[], agendaDocuments: readonly AgendaDocument[] = [], retrievedAt = "2026-09-25T12:00:00.000Z"): void {
-  const byPartition = new Map<MeetingPartitionContract, Meeting[]>();
-  for (const meeting of meetings) {
-    const partition = partitionFor(meeting);
-    const { carried: _carried, ...fresh } = meeting;
-    byPartition.set(partition, [...(byPartition.get(partition) ?? []), fresh as Meeting]);
-  }
-  for (const partition of MEETING_PARTITION_CONTRACTS) {
-    installAbsent("MEETING", meetingHistoryScope(partition.scope));
-    const rows = byPartition.get(partition);
-    if (!rows) { installAbsent("MEETING", partition.scope); continue; }
-    const ids = new Set(rows.map((row) => row.id));
-    const sourceOf = (row: Meeting) => row.id.split(":")[0]!;
-    const sourceNames = partition.derivedFamily === null ? [partition.meetingSource] : [...new Set(rows.map(sourceOf))].sort();
-    const members = partition.derivedFamily === null ? undefined : [...new Map(rows.map((row) => [`${sourceOf(row)}:${row.bodyId}`, {
-      id: `${sourceOf(row)}:${row.bodyId}`, source: sourceOf(row), bodyId: row.bodyId!, status: "ACTIVE" as const, outcome: "FRESH" as const,
-    }])).values()];
-    const value: MeetingsSnapshot = {
-      formatVersion: 1,
-      generatedAt: retrievedAt,
-      counts: snapshotCounts(rows, 0),
-      sources: sourceNames.map((source) => {
-        const count = partition.derivedFamily === null ? rows.length : rows.filter((row) => sourceOf(row) === source).length;
-        return {
-          source, ok: true, error: null, fetched: count, normalized: count,
-          drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
-        };
-      }),
-      meetings: rows,
-      agendaDocuments: agendaDocuments.filter((document) => ids.has(document.meetingId)),
-      ...(members ? { derivedMembers: members } : {}),
-    };
-    installPromotedValue({ recordClass: "MEETING", scope: partition.scope, sourceId: partition.sourceId, versionId: `test:${partition.id}`, value, retrievedAt });
-  }
-  for (const held of HELD_MEETING_PARTITIONS) installAbsent("MEETING", held.scope);
 }
 
 export function noticeSummaryDocuments(meetings: readonly Meeting[] = recordedMeetings85701()): AgendaDocument[] {
@@ -131,6 +79,16 @@ export function recordedMeetingsSnapshot(meetings: readonly Meeting[] = recorded
   };
 }
 
+function withListingId(meeting: Meeting, id: string): Meeting {
+  return {
+    ...meeting,
+    id,
+    ...(meeting.actingBodies ? {
+      actingBodies: meeting.actingBodies.map(row => row.meetingId === meeting.id ? { ...row, meetingId: id } : row),
+    } : {}),
+  };
+}
+
 export function ambiguousListingPairs(count = 3, meetings: readonly Meeting[] = recordedMeetings85701()): { meetings: Meeting[]; pairs: [Meeting, Meeting][] } {
   const body = "ocd-division/country:us/state:az/school_district:tucson_unified_district#board";
   const day = (row: Meeting) => row.startsAt.slice(0, 10);
@@ -140,8 +98,7 @@ export function ambiguousListingPairs(count = 3, meetings: readonly Meeting[] = 
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt)).slice(0, count);
   if (lone.length < count) throw new Error(`only ${lone.length} recorded sittings stand alone on their day`);
   const pairs = lone.map((row): [Meeting, Meeting] => [row, {
-    ...row,
-    id: `${row.id}-second-listing`,
+    ...withListingId(row, `${row.id}-second-listing`),
     provenance: { ...row.provenance, sourceUrl: `${row.provenance.sourceUrl}#second-listing` },
   }]);
   return { meetings: [...meetings, ...pairs.map(([, sibling]) => sibling)], pairs };
@@ -149,7 +106,7 @@ export function ambiguousListingPairs(count = 3, meetings: readonly Meeting[] = 
 
 export function dateOnlyListings(count = 3, meetings: readonly Meeting[] = recordedMeetings85701()): Meeting[] {
   return meetings.filter((row) => row.bodyId?.endsWith("county:pima#governing") && row.id.startsWith("legistar:")).slice(0, count)
-    .map((row) => ({ ...row, id: `${row.id}-date-only`, startsAt: row.startsAt.slice(0, 10), startPrecision: "DAY" as const }));
+    .map((row) => ({ ...withListingId(row, `${row.id}-date-only`), startsAt: row.startsAt.slice(0, 10), startPrecision: "DAY" as const }));
 }
 
 export function syntheticExecutiveActions(officeholderName: string): ExecutiveActionStore {

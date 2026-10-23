@@ -1,4 +1,4 @@
-/** Warm a new production deploy's instances and fill its CDN before its first reader pays for a cold start. */
+/** Fill a new production deploy's CDN with the same meeting answers readers request. */
 import { PUBLIC_SITE_ORIGIN } from "./origins.ts";
 import type { WarmPlace } from "./warm-places.ts";
 
@@ -12,9 +12,9 @@ export const MAX_WARM_PLACES = 300;
 /** How many place requests are in flight at once. */
 export const WARM_CONCURRENCY = 24;
 
-/** The map's request for a typed ZIP, byte for byte as the map builds it; a typed ZIP's view carries no radius. */
+/** The arriving page starts this ZIP request before hydration; fill that exact CDN key. */
 export function readerMeetingsPath(point: WarmPlace): string {
-  return `/api/meetings?lat=${point.lat}&lng=${point.lng}&zip=${point.zip}`;
+  return `/api/meetings?zip=${point.zip}&include=state`;
 }
 
 export interface DeployToWarm {
@@ -43,11 +43,9 @@ export interface PostDeployWarmOptions {
   /** How long to wait for `/api/build` to serve the commit. */
   readonly serveDeadlineMs?: number;
   readonly pollMs?: number;
-  /** The per-request cap on every warm and fill request. */
+  /** The per-request cap on every fill request. */
   readonly requestTimeoutMs?: number;
-  /** The fourteen marked warm calls (`netlify/functions/keep-warm.mts`). */
-  readonly warmCalls: (fetchImpl: typeof fetch) => Promise<{ answered: number; ms: number }>;
-  /** The places to fill; by default one per published county, read from the live site (`/api/warm?places=1`). */
+  /** The places to fill; by default one per published county, read from `/api/reader/places`. */
   readonly places?: (fetchImpl: typeof fetch) => Promise<readonly WarmPlace[]>;
   /** Total time for the fills and the rereads together; places not reached are counted, not read. */
   readonly fillBudgetMs?: number;
@@ -63,11 +61,11 @@ export interface PilotRead {
 
 export type PostDeployWarmResult =
   | { readonly outcome: "NOT_SERVED"; readonly commit: string; readonly waitedMs: number }
+  | { readonly outcome: "PLACES_UNAVAILABLE"; readonly commit: string; readonly waitedMs: number }
   | {
       readonly outcome: "WARMED";
       readonly commit: string;
       readonly waitedMs: number;
-      readonly warm: { readonly answered: number; readonly ms: number };
       /** Places asked for, and how many of them the fills reached within the budget. */
       readonly places: number;
       readonly fills: readonly PilotRead[];
@@ -98,20 +96,19 @@ async function readPilot(origin: string, point: WarmPlace, fetchImpl: typeof fet
   }
 }
 
-/** Wait for the deploy to serve, then warm its instances and fill the CDN with the places' answers. */
-export async function warmAfterDeploy(deploy: DeployToWarm, options: PostDeployWarmOptions): Promise<PostDeployWarmResult> {
+/** Wait for the deploy to serve, then fill the CDN with the places' answers. */
+export async function warmAfterDeploy(deploy: DeployToWarm, options: PostDeployWarmOptions = {}): Promise<PostDeployWarmResult> {
   const origin = options.origin ?? PUBLIC_SITE_ORIGIN;
   const fetchImpl = options.fetchImpl ?? fetch;
   const now = options.now ?? Date.now;
   const sleep = options.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
-  // Inside Netlify's 60 s synchronous limit: at most ~25 s waiting (each poll
-  // capped at 5 s), then the warm calls beside the fills (≤12 s each), then the
-  // rereads (≤12 s, CDN hits when the fill took).
+  // Every request shares the 55 s total deadline, inside Netlify's 60 s limit.
   const deadline = options.serveDeadlineMs ?? 25_000;
   const pollMs = options.pollMs ?? 2_000;
   const timeoutMs = options.requestTimeoutMs ?? 12_000;
 
   const started = now();
+  const totalDeadline = started + 55_000;
   for (;;) {
     if ((await servedCommit(origin, fetchImpl, Math.min(timeoutMs, 5_000))) === deploy.commit) break;
     if (now() - started + pollMs > deadline) return { outcome: "NOT_SERVED", commit: deploy.commit, waitedMs: Math.round(now() - started) };
@@ -121,20 +118,22 @@ export async function warmAfterDeploy(deploy: DeployToWarm, options: PostDeployW
 
   const placesOf = options.places ?? ((f: typeof fetch) => publishedPlaces(origin, f, timeoutMs));
   const budgetMs = options.fillBudgetMs ?? 25_000;
-  const [warm, places] = await Promise.all([options.warmCalls(fetchImpl), placesOf(fetchImpl).catch(() => [] as readonly WarmPlace[])]);
+  let places: readonly WarmPlace[];
+  try { places = await placesOf(fetchImpl); }
+  catch { return { outcome: "PLACES_UNAVAILABLE", commit: deploy.commit, waitedMs }; }
   const wanted = places.slice(0, MAX_WARM_PLACES);
-  const fillDeadline = now() + budgetMs * 0.6;
+  const fillDeadline = Math.min(totalDeadline, now() + budgetMs * 0.6);
   const fills = await readAll(origin, wanted, fetchImpl, now, timeoutMs, fillDeadline);
-  const rereads = await readAll(origin, wanted, fetchImpl, now, timeoutMs, now() + budgetMs * 0.4);
-  return { outcome: "WARMED", commit: deploy.commit, waitedMs, warm, places: wanted.length, fills, rereads };
+  const rereads = await readAll(origin, wanted, fetchImpl, now, timeoutMs, Math.min(totalDeadline, now() + budgetMs * 0.4));
+  return { outcome: "WARMED", commit: deploy.commit, waitedMs, places: wanted.length, fills, rereads };
 }
 
 /** One place per published county, from the live site's own reader edge manifest. */
 export async function publishedPlaces(origin: string, fetchImpl: typeof fetch, timeoutMs: number): Promise<readonly WarmPlace[]> {
-  const response = await fetchImpl(`${origin}/api/warm?places=1`, {
-    headers: { "x-wtp-synthetic-run": "keep-warm", accept: "application/json" }, signal: AbortSignal.timeout(timeoutMs),
+  const response = await fetchImpl(`${origin}/api/reader/places`, {
+    headers: HEADERS, signal: AbortSignal.timeout(timeoutMs),
   });
-  if (!response.ok) return [];
+  if (!response.ok) throw new Error(`Published places HTTP ${response.status}`);
   const body = (await response.json()) as { places?: unknown };
   return Array.isArray(body.places) ? body.places.filter((p): p is WarmPlace =>
     typeof p?.zip === "string" && typeof p.lat === "number" && typeof p.lng === "number") : [];
@@ -148,9 +147,10 @@ async function readAll(origin: string, places: readonly WarmPlace[], fetchImpl: 
     for (;;) {
       const i = next++;
       if (i >= places.length) return;
-      out[i] = now() > deadline
+      const remainingMs = Math.floor(deadline - now());
+      out[i] = remainingMs <= 0
         ? { zip: places[i].zip, status: "SKIPPED", ms: 0, cacheStatus: null }
-        : await readPilot(origin, places[i], fetchImpl, now, timeoutMs);
+        : await readPilot(origin, places[i], fetchImpl, now, Math.min(timeoutMs, remainingMs));
     }
   };
   await Promise.all(Array.from({ length: Math.min(WARM_CONCURRENCY, places.length) }, worker));

@@ -14,4 +14,4 @@ export const GET = readerRoute("/api/open-data", async function GET(request:Requ
       {REGISTRY_ID:row.nativeIds.registry_id,FAC_NAME:row.title}}));
     return NextResponse.json({...read,records,total:read.records.length,nextOffset:offset+records.length<read.records.length?offset+records.length:null},{headers:{"Cache-Control":"no-store"}});
   } catch {return NextResponse.json({records:[],unavailable:["open-data"],notHeld:[]},{status:503});}
-}, ["other-reader-data"]);
+});

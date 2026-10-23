@@ -1,22 +1,3 @@
-/**
- * The statewide Arizona 2026 candidate identity layer, between acquisition
- * and projection:
- *
- * ```
- * ACQUISITION   the complete authoritative source universe, statewide, with
- *               no dependency on any reader's ZIP
- * IDENTITY      one canonical statewide candidate/contest registry:
- *               candidate -> contest -> office/division -> party
- *               -> filing authority -> committee(s)
- * PROJECTION    a reader surface asking the corpus about a candidate the
- *               registry named (`stateMoneyForTarget(candidacyId)`)
- * ```
- *
- * The registry is statewide: never named, keyed, scoped or filtered by a
- * county or ZIP. Reader location decides applicability and display, never who
- * exists.
- */
-
 import type { NameForm } from "./name-forms.ts";
 
 /** Which government layer the seat belongs to. Decides which money regime applies. */

@@ -1,15 +1,14 @@
 /**
- * Sweep the outbound links in the published reader edge and record how many are dead on each surface.
+ * Sweep the outbound links in the current reader data and record how many are dead on each surface.
  *
- * Dry run by default: it reads the edge, looks at the links within the request rules, and prints the counts.
+ * Dry run by default: it reads reader data, looks at the links within the request rules, and prints the counts.
  * `--apply` writes the counts beside door health. Plain code: no AI, no model cost. `--limit=<n>` looks at only
  * the first n hosts' links (a trial); `--rotation=<n>` picks which links a small publisher gets this pass.
  */
 
 import { openControlPlane } from "../lib/control-plane/admin-data.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
-import { resolveReaderArtifactStore } from "../lib/meetings/edge-store.ts";
-import { collectOutboundLinks, readEdgeForSweep, recordSweep, sweepLinks, type SweepFetch } from "../lib/doors/link-sweep.ts";
+import { collectOutboundLinks, readReaderForSweep, recordSweep, sweepLinks, type SweepFetch } from "../lib/doors/link-sweep.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
 
@@ -21,19 +20,13 @@ const FLAGS = new Map<string, string>(
 );
 const say = (line: string): void => console.log(`doors:link-sweep · ${line}`);
 
-const store = resolveReaderArtifactStore();
-if (store === null) {
-  say("REFUSED — this host has no reader artifact store, so there is no published edge to read.");
-  process.exit(1);
-}
-const artifacts = await readEdgeForSweep(store);
-let links = collectOutboundLinks(artifacts);
+let links = await collectOutboundLinks(readReaderForSweep());
 const limit = Number(FLAGS.get("limit") ?? "");
 if (Number.isInteger(limit) && limit > 0) {
   const hosts = [...new Set(links.map((l) => new URL(l.url).hostname))].slice(0, limit);
   links = links.filter((l) => hosts.includes(new URL(l.url).hostname));
 }
-say(`${links.length} links found in ${artifacts.length} published pieces.`);
+say(`${links.length} links found in the current reader data.`);
 // Every request counts against the website's one shared hour, so the control plane is opened before any look.
 const opened = await openControlPlane();
 if (!opened.ok) {

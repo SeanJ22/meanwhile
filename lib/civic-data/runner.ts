@@ -124,7 +124,8 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
   };
 }
 
-const routineSourceTasks = (): RoutineSourceTask[] => [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS].map(routineTaskFromContract);
+import { MEASURE_TRANSLATION_ROUTINE_TASKS } from "../translate/routine-contract.ts";
+const routineSourceTasks = (): RoutineSourceTask[] => [...ROUTINE_SOURCE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS].map(routineTaskFromContract).concat(MEASURE_TRANSLATION_ROUTINE_TASKS);
 /** Every standing task, the meeting doors' partitions included; replaced in place whenever this process installs the doors. */
 export const ROUTINE_SOURCE_TASKS: readonly RoutineSourceTask[] = routineSourceTasks();
 onMeetingPartitionsRefreshed(() => {
@@ -211,7 +212,8 @@ export function routineFailureDomainFrontier(
 
 /** First build missing/current-parser baselines; steady refreshes retain their existing order. */
 export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number; readonly baselineOwed?: boolean; readonly task?: Pick<RoutineSourceTask, "sourceId"> }>(admitted: readonly T[], nowMs?: number): T[] {
-  const group = (candidate: T) => nowMs !== undefined && candidate.deadlineMs !== undefined && Number.isFinite(candidate.deadlineMs) && candidate.deadlineMs <= nowMs ? 0
+  // A meeting without its first read has deadline -Infinity: it is already owed, ahead of baseline work.
+  const group = (candidate: T) => nowMs !== undefined && candidate.deadlineMs !== undefined && candidate.deadlineMs <= nowMs ? 0
     : candidate.baselineOwed ? 1 : candidate.deadlineMs === undefined || Number.isNaN(candidate.deadlineMs) ? 2 : 3;
   // National sources have many independent state projections of the same held release.
   // Offer one from each source before the next state so one portfolio cannot occupy the whole pool.
@@ -229,6 +231,27 @@ export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number;
       ([0, 3].includes(group(left.candidate)) ? (left.candidate.deadlineMs! < right.candidate.deadlineMs! ? -1 : left.candidate.deadlineMs! > right.candidate.deadlineMs! ? 1 : 0) : 0) ||
       left.index - right.index)
     .map(({ candidate }) => candidate);
+}
+
+/**
+ * A serial lane runs one child at a time, so it can hold only one memory slot: its reads start ahead of the rest of
+ * the pass instead of waiting behind it. Inside a lane, work its current parser has never tried goes first, then the
+ * longest owed, so a lane whose earlier reads keep failing still reaches a read its daily cadence owes.
+ */
+export function routineSerialLanesFirst<T extends {
+  readonly task: Pick<RoutineSourceTask, "command">; readonly baselineOwed?: boolean; readonly lastConsideredAt?: string | null;
+}>(ordered: readonly T[]): T[] {
+  const lane = ordered.filter(candidate => routineSerialLane(candidate.task.command) !== undefined);
+  if (!lane.length) return [...ordered];
+  const fresh = (candidate: T) => candidate.baselineOwed === true && !candidate.lastConsideredAt ? 0 : 1;
+  const considered = (candidate: T) => {
+    const at = Date.parse(candidate.lastConsideredAt ?? "");
+    return Number.isFinite(at) ? at : Number.NEGATIVE_INFINITY;
+  };
+  const position = new Map(lane.map((candidate, index) => [candidate, index]));
+  const older = (left: T, right: T) => fresh(left) === 0 ? 0 : Math.sign(considered(left) - considered(right)) || 0;
+  const sorted = [...lane].sort((left, right) => fresh(left) - fresh(right) || older(left, right) || position.get(left)! - position.get(right)!);
+  return [...sorted, ...ordered.filter(candidate => routineSerialLane(candidate.task.command) === undefined)];
 }
 
 export function routineFailureDomainRotationSeed(startedAt: string): number {

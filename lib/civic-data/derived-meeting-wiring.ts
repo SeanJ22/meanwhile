@@ -20,13 +20,12 @@ import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, dataDoorConfig, isDataDoorKind, type 
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, derivedRequestedUrl } from "./derived-door.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 
-export type DerivedWiringKind = "ICAL" | "OFFICIAL_PAGE_EVENTS" | "DILIGENT" | "LEGISTAR" | DataDoorKind;
+export type DerivedWiringKind = "ICAL" | "OFFICIAL_PAGE_EVENTS" | "DILIGENT" | DataDoorKind;
 
 export const DERIVED_WIRING_SOURCE_NAMES: Readonly<Record<DerivedWiringKind, string>> = {
   ICAL: "ical",
   OFFICIAL_PAGE_EVENTS: "official-page-events",
   DILIGENT: "diligent",
-  LEGISTAR: "legistar",
   ...(Object.fromEntries(DATA_DOOR_KINDS.map((kind) => [kind, DOOR_KIND_SPECS[kind].sourceName])) as Record<DataDoorKind, string>),
 };
 
@@ -82,11 +81,6 @@ export function derivedAdapterConfig(input: {
 }): Readonly<Record<string, string>> {
   const common = { slug: derivedMeetingSlug(input.bodyId), bodyName: input.bodyName };
   if (isDataDoorKind(input.kind)) return dataDoorConfig({ kind: input.kind, route: input.route, slug: common.slug, bodyName: input.bodyName, filter: input.filter });
-  if (input.kind === "LEGISTAR") {
-    const slug = /^\/v1\/([a-z0-9_-]+)\/events\/?$/i.exec(new URL(input.route).pathname)?.[1];
-    if (!slug) throw new Error("Invalid Legistar calendar route");
-    return { ...common, slug, ...pick(input.filter, ["eventBodyId"]) };
-  }
   if (input.kind === "DILIGENT") return { ...common, serviceBase: new URL(input.route).origin, meetingPath: "/Portal/MeetingInformation.aspx?Id=", ...pick(input.filter, ["titleMatch", "titleExclude"]) };
   return input.kind === "ICAL"
     ? { ...common, feedUrl: input.route, ...pick(input.filter, ["titleMatch", "categoryMatch", "titleExclude", "feedScope"]) }
@@ -123,7 +117,7 @@ export function derivedWiringProjectionIssue(value: unknown): string | null {
     ids.add(record.id);
     if (record.status !== "ACTIVE" && record.status !== "SUSPENDED") return `${record.id} has no status`;
     if ((record.status === "SUSPENDED") !== (record.suspension !== undefined)) return `${record.id}: only a suspended record carries a suspension`;
-    if (!row || (!["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT", "LEGISTAR"].includes(row.kind) && !isDataDoorKind(row.kind)) ||
+    if (!row || (!["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT"].includes(row.kind) && !isDataDoorKind(row.kind)) ||
       (record.id !== derivedWiringKey(row.kind, row.bodyId) && record.id !== derivedWiringKey(row.kind, row.bodyId, row.route))) {
       return `${record.id} is not keyed by its own route and body`;
     }

@@ -25,7 +25,7 @@ test("Admin kind edits reach a fresh builder pass and the reader edge, with exis
     idempotencyKey: "library-kinds", caller: "OWNER_SESSION" as const, actorRef: "test" };
   const result = await submit(request, { repos, now: () => at, currentStateVersion: null, codeSha: null });
   assert.equal(result.ok, true);
-  const config = (await repos.adminConfig.mustRead("current")).value;
+  const config = (await repos.adminConfig.mustRead("current", { settingHistory: true })).value;
   const next = runtimeKinds(config);
   assert.equal(kindFromSource(next, "body", "Library district body"), "LIBRARY_DISTRICT");
   assert.equal(registeredKind(next, "office", "library-trustee"), "library-trustee");
@@ -44,7 +44,7 @@ test("Admin kind edits reach a fresh builder pass and the reader edge, with exis
   const undo = settingUndo(config, config.settingHistory![0].id)!;
   assert.equal((await submit({ ...request, input: undo, idempotencyKey: "undo-library-kinds" },
     { repos, now: () => at, currentStateVersion: null, codeSha: null })).ok, true);
-  assert.equal(registeredKind(runtimeKinds((await repos.adminConfig.mustRead("current")).value), "body", "LIBRARY_DISTRICT"), null);
+  assert.equal(registeredKind(runtimeKinds((await repos.adminConfig.mustRead("current", { settingHistory: true })).value), "body", "LIBRARY_DISTRICT"), null);
 });
 
 test("initial district kinds are data; invalid and ambiguous source kinds never become a guessed classification", () => {

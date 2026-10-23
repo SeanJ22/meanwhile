@@ -1,8 +1,3 @@
-/**
- * Every order keeps its row after a reload. A hunt, a ceiling change and a send-agents order sent through
- * the real gateway are listed by a fresh history read, with their current state, at the country and at their own place.
- * The gateway takes a whole-state mission through the same scope validation as every other kind.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -67,7 +62,7 @@ test("BR-08 hook: a whole-state mission is accepted by the gateway and saved as 
     stateVersion: null, idempotencyKey: "mission-state-01", caller: "OWNER_SESSION", actorRef: "owner-session" },
     { repos, now: () => at, currentStateVersion: null, codeSha: null });
   assert.equal(result.ok, true, result.receipt.says);
-  const scopes = expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value).scopes;
+  const scopes = expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes;
   assert.equal(scopes.length, 1);
   assert.equal(scopes[0].geography.type, "state");
 });

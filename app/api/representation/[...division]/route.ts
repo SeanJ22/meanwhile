@@ -1,23 +1,15 @@
 import { readerRoute } from "@/lib/api/reader-route";
 import { stageTimer } from "@/lib/api/server-timing";
-import {
-  holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
-  READER_MANIFEST_CACHE_TAG,
-  READER_MAP_AUTHORITY_FAMILIES,
-} from "@/lib/meetings/edge-serving";
+import { readerCacheHeaders, readerCacheScopeForPublication } from "@/lib/reader/cache";
 import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
+import { representationDivisionMetadata, seatHoldersForDivision } from "@/lib/registry/server";
+import { federalDirectoryReadState } from "@/lib/officials/federal-directory-read-model";
+import { statePeopleScopeForDivision } from "@/lib/officials/people-identity";
+import { currentStatePeopleProjection } from "@/lib/state-rollcalls/legislators";
 
 
 
 export const runtime = "nodejs";
-
-const CDN_HELD = {
-  "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
-  "Netlify-Cache-Tag": READER_MANIFEST_CACHE_TAG,
-  "Cache-Control": "public, max-age=0, must-revalidate",
-} as const;
 
 /** The identifier shape, refused rather than guessed at. */
 const OCD_ID = /^ocd-division\/country:us(\/[a-z_]+:[A-Za-z0-9~._-]+)+$/;
@@ -39,16 +31,6 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   }
 
   const timing = stageTimer();
-  // The registry load reads the committed geometry too; start it beside the edge fetch.
-  prefetchReaderGeography();
-  // The reader authority edge, entered in this handler's own execution
-  // before any edge-aware read below (see the header note).
-  {
-    const edge = await timing.time("authority", () =>
-      ensureReaderAuthorityEdge(null, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, READER_MAP_AUTHORITY_FAMILIES)),
-    );
-    if (edge) enterReaderAuthorityEdge(edge);
-  }
 
   const seats = await timing.time("holders", () => seatHoldersForDivision(ocdId));
 
@@ -56,7 +38,7 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   // failure leaves that metadata unavailable while held legislative people still reach the card.
   const metadata = await timing.time("division", async () => {
     try {
-      const [known] = await divisionsByOcdIds([ocdId]);
+      const known = await representationDivisionMetadata(ocdId);
       return { known, rosterGaps: rosterGapsForDivision(ocdId), available: true };
     } catch {
       return { known: undefined, rosterGaps: [], available: false };
@@ -64,6 +46,11 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   });
   const holders = seats;
   const { known } = metadata;
+  const federal = federalDirectoryReadState();
+  const scope = statePeopleScopeForDivision(ocdId);
+  // A vacancy shows only where the office's own source states it and no holder remains.
+  const vacancy = holders.length ? undefined : [...(federal.kind === "PROMOTED" || federal.kind === "BOOTSTRAP" ? federal.value.vacancies ?? [] : []),
+    ...(scope ? currentStatePeopleProjection(scope)?.roster.vacancies ?? [] : [])].find(row => row.ocdId === ocdId);
 
   return Response.json(
     {
@@ -74,11 +61,13 @@ export const GET = readerRoute("/api/representation/[division]", async function 
       holderStatus: holders.length > 0 ? "HELD"
         : !metadata.available || /\/(?:sldu|sldl):/.test(ocdId) ? "HOLDING_UNAVAILABLE" : "NOT_RECORDED",
       holders,
+      ...(vacancy ? { vacancy } : {}),
       rosterGaps: metadata.rosterGaps,
       metadataStatus: metadata.available ? "HELD" : "HOLDING_UNAVAILABLE",
     },
     {
-      headers: { ...(metadata.available ? CDN_HELD : { "Cache-Control": "no-store" }), "Server-Timing": timing.header() },
+      headers: { ...(metadata.available ? readerCacheHeaders({ ...readerCacheScopeForPublication(ocdId), places: [ocdId] })
+        : { "Cache-Control": "no-store" }), "Server-Timing": timing.header() },
     },
   );
 });

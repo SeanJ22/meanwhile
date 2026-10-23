@@ -18,6 +18,7 @@ import {
 import type { MeetingBodyCrosswalkRow } from "../../civic-data/meeting-body-crosswalk.ts";
 import type { DiscoveryFind, MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import { ocdStateCode } from "../../ocd/state-of.ts";
+import { httpsHost } from "../../civic-data/derived-door.ts";
 
 export { derivedWiringKey };
 export type { DerivedWiringRow };
@@ -130,7 +131,15 @@ export function attestationFor(attempt: MeetingsDiscoveryAttempt, find: Discover
     seen.add(via.page);
     chain.unshift(via);
     const parent = recorded.find((r) => r.url === via!.page);
-    if (parent === undefined) return { held: "HOST_NOT_ATTESTED", detail: `the page that linked it (${via.page}) is not a route the walk recorded` };
+    if (parent === undefined) {
+      // A government's public calendar index need not itself contain a dated meeting.
+      // Its own saved page can name and link the feed under the recorded government host.
+      const page = attempt.steps.find(step => sameRoute(step.url, via!.page) && step.artifactId === via!.artifactId
+        && step.status !== null && step.status >= 200 && step.status < 300 && !step.transportError && !step.accessControl);
+      const pageHost = httpsHost(via.page), homeHost = httpsHost(home.url);
+      if (page && pageHost && homeHost && pageHost.replace(/^www\./, "") === homeHost.replace(/^www\./, "")) return link(homeAttestation, chain);
+      return { held: "HOST_NOT_ATTESTED", detail: `the page that linked it (${via.page}) is not a route the walk recorded` };
+    }
     if (parent.basis === "HINT") {
       const fingerprint = attempt.routeHints?.fingerprint;
       if (fingerprint === undefined) return { held: "HOST_NOT_ATTESTED", detail: "a hinted linking page with no hint fingerprint" };
@@ -254,7 +263,8 @@ export function wiringRowFor(row: MeetingBodyCrosswalkRow): DerivedWiringRow {
     state: stateOf(row.ocdId),
     publishingOrg: row.publishingOrg,
     timeZone: row.timeZone,
-    config: derivedAdapterConfig({ kind: row.kind, route: row.route, officialHost: row.officialHost, bodyId: row.bodyId, bodyName: row.bodyName, filter: row.filter }),
+    config: { ...derivedAdapterConfig({ kind: row.kind, route: row.route, officialHost: row.officialHost, bodyId: row.bodyId, bodyName: row.bodyName, filter: row.filter }),
+      ...(row.governmentWebsite ? { governmentWebsite: row.governmentWebsite, platformPublisherUrl: row.route } : {}) },
     crosswalkRowId: row.id,
     reviewedAt: row.reviewedAt,
     verifiedAt: row.evidence.readAt,

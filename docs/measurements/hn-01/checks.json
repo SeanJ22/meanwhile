@@ -1,0 +1,278 @@
+{
+  "at": "2026-10-21T04:33:49.217615+00:00",
+  "tested_code_sha": "949315355985e6ac5e4f25f772ddc8db8814ed30",
+  "command": "pnpm gates",
+  "selection": "Full canonical suite; CI_TEST_FILES and CI_TEST_SHARD unset",
+  "counts": {
+    "files": 1188,
+    "registered": 8786,
+    "passed": 8784,
+    "failed": 0,
+    "skipped": 2,
+    "bundle_registered": 16,
+    "bundle_passed": 16,
+    "bundle_failed": 0
+  },
+  "gatesPassed": 8,
+  "gates": {
+    "lint": "PASS",
+    "tsc": "PASS",
+    "assert:browser": "PASS",
+    "test": "PASS",
+    "db:gate": "PASS",
+    "build": "PASS",
+    "test:bundle": "PASS",
+    "build:standalone": "PASS"
+  },
+  "schema_gate": "NOT APPLICABLE: no change to established schema; new DB tests apply all 46 real reader migrations and actual CP DDL",
+  "budgets": "Default and standalone builds passed unchanged budgets",
+  "scope": "Full canonical suite with current shipped River and main merged. Sean explicitly approved and requested behavioral tests in both returned test files.",
+  "production_copy": "Six API answers plus meetings, ballot and Admin Now pages compared to shipped release code on identical copied databases; detailed limitations in production-copy-parity.json",
+  "native_publication": "Original real source child and unchanged Box publisher on actual Neon copies; new 51-state/DC saved-source replay adds 95 reader-visible native bodies, updates one body, adds 300 native fact rows and zero meetings. See production-copy-state.json.",
+  "admin_priority": "Actual $1 Admin gateway order follows intent, dispatch-work, hunt-packets, standing occurrence and coordinator SCOUT for the same paid task. Owner instructions and budget persist. Separate ordered-blank and Exa request tests retain OFF-17 portraits first.",
+  "no_send": "Four inert descriptor cases: zero child workers, requests and dollars",
+  "database_bytes": {
+    "actual_production": {
+      "reader": {
+        "requestBytes": 799593,
+        "responseBytes": 3764015,
+        "httpRequests": 910,
+        "socketFrames": 0
+      },
+      "control-plane": {
+        "requestBytes": 9036,
+        "responseBytes": 20242,
+        "httpRequests": 31,
+        "socketFrames": 0
+      }
+    },
+    "production_copies_including_all_failed_and_superseded_attempts": {
+      "reader-copy": {
+        "requestBytes": 9750032,
+        "responseBytes": 104122308,
+        "httpRequests": 1482,
+        "socketFrames": 27014
+      },
+      "control-copy": {
+        "requestBytes": 16722753,
+        "responseBytes": 410240050,
+        "httpRequests": 4924,
+        "socketFrames": 0
+      }
+    },
+    "metered_production_response_bytes": 3784257,
+    "metered_copy_response_bytes": 514362358,
+    "total_metered_database_response_bytes": 518146615,
+    "unmetered_initial_baseline": "Unknown wire bytes; approximately 121 KB saved output is not a transfer measurement.",
+    "all_database_bytes_known": false,
+    "production_reader_transfer_usd_at_010_per_gb": 0.0003764015,
+    "all_reader_labeled_transfer_usd_at_010_per_gb": 0.0107886323,
+    "copy_compute_usd": null,
+    "control_project_allowance_status": "unknown"
+  },
+  "source_files_unchanged_after_gates": true,
+  "extra_source_identity_check": "Named library/advisory bodies stay distinct from governing bodies; a five-minute-later report retains original source_copy.fetched_at.",
+  "outside_scope_exa_budget_gap": "Exa uses the existing search request/concurrency gate and does not use the shared model transport Send/area dollar reservations. Shared runtime is outside scope and unchanged. Latest production control is RESUME; settings unchanged. Sean deferred other gaps to a new step.",
+  "exa_owner_directions": "The same Admin-bound owner instructions are read through narrowed WorkItem and occurrence projections; a real owner-order regression and captured Exa request verify OFF-17 portraits first without changing its $1 budget or order creation.",
+  "previous_focused_green": {
+    "tested_code_sha": "d879c6e0906770544e2f4f30310d3558a227aeb5",
+    "files": 26,
+    "counts": {
+      "files": 26,
+      "registered": 137,
+      "passed": 137,
+      "failed": 0,
+      "skipped": 0,
+      "bundle_registered": 16,
+      "bundle_passed": 16,
+      "bundle_failed": 0
+    },
+    "gatesPassed": 8
+  },
+  "focused_test_files": [
+    "tests/hunt-budget-period.test.ts",
+    "tests/hunt-continuation.test.ts",
+    "tests/hunt-exa-agent.test.ts",
+    "tests/hunt-executor.test.ts",
+    "tests/hunt-packet.test.ts",
+    "tests/hunt-places.test.ts",
+    "tests/hunt-report.test.ts",
+    "tests/hunt-search.test.ts",
+    "tests/hunt-source-tasks.test.ts",
+    "tests/hunter-isolation.test.ts",
+    "tests/hunter-lane-arming.test.ts",
+    "tests/hunter-lane.test.ts",
+    "tests/hunters-admin-priority.test.ts",
+    "tests/hunters-body-identity.test.ts",
+    "tests/hunters-exa-publication.test.ts",
+    "tests/hunters-exa-setting.test.ts",
+    "tests/hunters-free-catalog.test.ts",
+    "tests/hunters-no-send-process.test.ts",
+    "tests/hunters-own-calendar.test.ts",
+    "tests/hunters-read-to-reader.test.ts",
+    "tests/hunters-scoped-bank.test.ts",
+    "tests/hunters-source-shapes.test.ts",
+    "tests/standing-meetings-discovery.test.ts",
+    "tests/obligation-registry.test.ts",
+    "tests/expansion-any-state.test.ts",
+    "tests/worker-fleet-coordinator.test.ts"
+  ],
+  "focused_result_on_merged_code": {
+    "files": 26,
+    "counts": {
+      "tests": 137,
+      "passed": 137,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "shipped_main": "4c4f7f8fd528f6f5d435829dad4d1efbb3b9186f",
+  "merged_river": "f328cd2f27a60d87ab8064fe32e1aa71e8747154",
+  "return_repair": {
+    "returned_ready": "011f5abab1fcea89dba1692fd769b2afc6467b0c",
+    "return_check": "fold-conflict",
+    "release_live_verified_at": "2026-10-21T04:33:32.811Z",
+    "merge": "Merged shipped River and shipped main; no unshipped lane commits merged",
+    "imports": "recordFreeDiscoveryWalks and HuntSourceScope retained. Final shipped MP-01 deletes runCensusState and replaces its test call; no nonexistent export was restored.",
+    "file_ci_flags": "tests/expansion-any-state.test.ts: 2 registered, 2 passed, 0 failed or skipped",
+    "preflight": "Final staged-tree preflight PASS: 2/2 checks; 5649/5649 tracked files; zero civic-data release-firewall findings.",
+    "full_test_failures": [
+      {
+        "file": "tests/dispatch-work.test.ts",
+        "counts": {
+          "tests": 18,
+          "failed": 2,
+          "passed": 16,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 18,
+          "suites": 0
+        }
+      },
+      {
+        "file": "tests/robots-recorded-not-blocking.test.ts",
+        "counts": {
+          "tests": 14,
+          "failed": 1,
+          "passed": 13,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "topLevel": 14,
+          "suites": 0
+        }
+      }
+    ],
+    "repair": "Sean approved both test files. Added own-site free route, actual paid-order coordinator and recorded-Disallow reader tests; all 36 targeted tests passed.",
+    "full_suite": "All 1188 canonical files executed once; full eight gates green."
+  },
+  "skipped_tests": [
+    {
+      "file": "tests/acquisition-repair-profile.test.ts",
+      "counts": {
+        "tests": 3,
+        "failed": 0,
+        "passed": 2,
+        "cancelled": 0,
+        "skipped": 1,
+        "todo": 0,
+        "topLevel": 3,
+        "suites": 0
+      }
+    },
+    {
+      "file": "tests/acquisition-repair-roster.test.ts",
+      "counts": {
+        "tests": 3,
+        "failed": 0,
+        "passed": 2,
+        "cancelled": 0,
+        "skipped": 1,
+        "todo": 0,
+        "topLevel": 3,
+        "suites": 0
+      }
+    }
+  ],
+  "reader_admin_source_equality": "app, components, lib/reader, lib/control-plane/admin-view, admin-auth.ts, lib/facts, lib/box and lib/db equal shipped release68 exactly. Prior actual-copy UI parity retains its actual release65/66 baseline; no repeated cold Admin query.",
+  "first_full_return_run": {
+    "at": "2026-10-21T00:50:16.340453+00:00",
+    "tested_code_sha": "c67c8c009031644903d8bac2eafc3d916cac2fef",
+    "counts": {
+      "files": 1187,
+      "registered": 8777,
+      "passed": 8772,
+      "failed": 3,
+      "skipped": 2,
+      "bundle_registered": 16,
+      "bundle_passed": 16,
+      "bundle_failed": 0
+    },
+    "gatesPassed": 7,
+    "gates": {
+      "lint": "PASS",
+      "tsc": "PASS",
+      "assert:browser": "PASS",
+      "test": "FAIL",
+      "db:gate": "PASS",
+      "build": "PASS",
+      "test:bundle": "PASS",
+      "build:standalone": "PASS"
+    },
+    "return_repair": {
+      "returned_ready": "011f5abab1fcea89dba1692fd769b2afc6467b0c",
+      "return_check": "fold-conflict",
+      "release_live_verified_at": "2026-10-21T04:33:32.811Z",
+      "merge": "Merged shipped River and shipped main; no unshipped lane commits merged",
+      "imports": "recordFreeDiscoveryWalks and HuntSourceScope retained. Final shipped MP-01 deletes runCensusState and replaces its test call; no nonexistent export was restored.",
+      "file_ci_flags": "tests/expansion-any-state.test.ts: 2 registered, 2 passed, 0 failed or skipped",
+      "preflight": "Final staged-tree preflight required before READY; canonical gate preflight passed 2/2 at source commit.",
+      "full_test_failures": [
+        {
+          "file": "tests/dispatch-work.test.ts",
+          "counts": {
+            "tests": 18,
+            "failed": 2,
+            "passed": 16,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 18,
+            "suites": 0
+          }
+        },
+        {
+          "file": "tests/robots-recorded-not-blocking.test.ts",
+          "counts": {
+            "tests": 14,
+            "failed": 1,
+            "passed": 13,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 14,
+            "suites": 0
+          }
+        }
+      ],
+      "repair": "Sean approved both test files. Added own-site free route, actual paid-order coordinator and recorded-Disallow reader tests; all 36 targeted tests passed.",
+      "full_suite": "All 1188 canonical files executed once; full eight gates green."
+    }
+  },
+  "strengthened_approved_tests": {
+    "files": [
+      "tests/dispatch-work.test.ts",
+      "tests/robots-recorded-not-blocking.test.ts",
+      "tests/expansion-any-state.test.ts"
+    ],
+    "registered": 36,
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0,
+    "free_read": "Actual placeSourceExecutor reads own government site and linked calendar through controlled HTTP transport, stores Box/discovery evidence, records deterministic executor and zero provider cost. Real migration-backed database.",
+    "paid_order": "Admin $1 order yields BOUNDED_MODEL_WORKER hunter:packet and coordinator SCOUT for that exact task, preserving budget/instructions.",
+    "robots": "THE HUNTER PAGE READER saves the Disallow rule and still reads the government's page. Actual page reader requests robots first, saves Disallow: /, then reads and saves the page. Named in robots consumer inventory."
+  },
+  "interrupted_runs": "Two intermediate full runs were stopped while incorporating Sean's additional behavioral-test requirements. Neither is reported as a completed pass or failed assertion result."
+}

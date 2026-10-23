@@ -1,0 +1,131 @@
+{
+  "state": "MS",
+  "county": "DeSoto",
+  "ballotDate": "2026-11-03",
+  "status": "IMPORTED: five ordinary court races, two countywide local races, three memberships; narrower precinct/district gaps remain.",
+  "countywideCore": [
+    {
+      "title": "Chancery Court Judge Chancery District 17 Place 1",
+      "candidates": [
+        {
+          "name": "Vicki Daniels",
+          "partyLabel": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "title": "Chancery Court Judge Chancery District 17 Place 2",
+      "candidates": [
+        {
+          "name": "Elizabeth 'Beth' Owens",
+          "partyLabel": "Nonpartisan"
+        },
+        {
+          "name": "William 'Ty' Scott",
+          "partyLabel": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "title": "Circuit Court Judge Circuit District 21 Place 1",
+      "candidates": [
+        {
+          "name": "Joseph 'Jody' Neyman",
+          "partyLabel": "Nonpartisan"
+        },
+        {
+          "name": "Gordon Shaw Jr.",
+          "partyLabel": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "title": "Circuit Court Judge Circuit District 21 Place 2",
+      "candidates": [
+        {
+          "name": "Craig Treadway",
+          "partyLabel": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "title": "Circuit Court Judge Circuit District 21 Place 3",
+      "candidates": [
+        {
+          "name": "W. Douglas Hollowell III",
+          "partyLabel": "Nonpartisan"
+        }
+      ]
+    }
+  ],
+  "countywideLocal": [
+    {
+      "title": "County Court Judge Place 1",
+      "name": "Allen B. Couch, Jr.",
+      "partyLabel": "NONPARTISAN"
+    },
+    {
+      "title": "County Attorney \u2014 Special Election",
+      "name": "Tori Williams",
+      "partyLabel": "NONPARTISAN"
+    }
+  ],
+  "districtMembershipsNeeded": [
+    "chancery_court:17",
+    "circuit_court:21",
+    "court_of_appeals:1"
+  ],
+  "ocr": [
+    {
+      "ballotStyle": 1,
+      "path": "style-1.txt",
+      "sha256": "a810f4cf8a1175223b90988934d892178a9a71045bbcec09a9baae4dc39eaac5",
+      "method": "OMP_THREAD_LIMIT=1 tesseract --psm 3, PDF at 200dpi; style4 additionally --psm6",
+      "expectedTotalRaces": 12,
+      "expectedTotalCandidates": 20
+    },
+    {
+      "ballotStyle": 2,
+      "path": "style-2.txt",
+      "sha256": "c07d529f1f89390a4a0eef173a909f8051c33865a82e0aa026a73a6cc71631f3",
+      "method": "OMP_THREAD_LIMIT=1 tesseract --psm 3, PDF at 200dpi; style4 additionally --psm6",
+      "expectedTotalRaces": 11,
+      "expectedTotalCandidates": 18
+    },
+    {
+      "ballotStyle": 3,
+      "path": "style-3.txt",
+      "sha256": "13dd0ded91341b274dc72d59958c7607f980b596cf06df032a43364b0f93941c",
+      "method": "OMP_THREAD_LIMIT=1 tesseract --psm 3, PDF at 200dpi; style4 additionally --psm6",
+      "expectedTotalRaces": 13,
+      "expectedTotalCandidates": 22
+    },
+    {
+      "ballotStyle": 4,
+      "path": "style-4.txt",
+      "sha256": "84417fc33630638e3e07f8ae2a34e0e6f65e8a485d018b755a1ac1733dffeb8c",
+      "method": "OMP_THREAD_LIMIT=1 tesseract --psm 3, PDF at 200dpi; style4 additionally --psm6",
+      "expectedTotalRaces": 12,
+      "expectedTotalCandidates": 20
+    }
+  ],
+  "unresolved": [
+    {
+      "office": "Chancery District17-1 Place3",
+      "scope": "Only ballotStyle3, precinct subdistrict"
+    },
+    {
+      "office": "Circuit District21-1 Place4",
+      "scope": "Only ballotStyle3, precinct subdistrict"
+    },
+    {
+      "office": "Justice Court Judge District1",
+      "scope": "Only ballotStyle1, district electorate"
+    },
+    {
+      "office": "School Board District5",
+      "scope": "Only ballotStyle4, district electorate"
+    }
+  ],
+  "important": "Every style includes the five ordinary court seats. The minority-subdistrict style adds narrow seats alongside all ordinary seats; ordinary seats cannot be limited to MARIS rest-of-county geometry. Preserve all existing statewide candidate names and IDs."
+}

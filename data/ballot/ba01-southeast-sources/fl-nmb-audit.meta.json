@@ -1,0 +1,10 @@
+{
+  "url": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+  "finalUrl": "https://www.citynmb.com/Archive/ViewFile/Item/506",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:39:09.096471+00:00",
+  "rawHash": "355afb41eb88ee7b54b7e4e07b1e0cc5f32f653ee25c368db261666bb3e4ecf9",
+  "bytes": 23673015,
+  "convertedTextHash": "45f146276230840d3a582d3b803a8b5244da1815547b607b2e34f125e297d0b0",
+  "extraction": "pdftotext -layout; exact converted official annual report; original PDF SHA256 retained in rawHash"
+}

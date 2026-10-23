@@ -1,0 +1,5369 @@
+{
+  "capturedReadReplay": true,
+  "productionPublicationProof": false,
+  "sameSourceMappingsCombined": true,
+  "states": [
+    {
+      "state": "AL",
+      "sites": 78,
+      "jurisdictions": 1,
+      "counties": [
+        "01097"
+      ],
+      "sources": [
+        {
+          "id": "al-mobile-public-polling-centers-2026",
+          "sites": 78,
+          "blanks": 0
+        }
+      ]
+    },
+    {
+      "state": "FL",
+      "sites": 463,
+      "jurisdictions": 67,
+      "counties": [
+        "12001",
+        "12003",
+        "12005",
+        "12007",
+        "12009",
+        "12011",
+        "12013",
+        "12015",
+        "12017",
+        "12019",
+        "12021",
+        "12023",
+        "12027",
+        "12029",
+        "12031",
+        "12033",
+        "12035",
+        "12037",
+        "12039",
+        "12041",
+        "12043",
+        "12045",
+        "12047",
+        "12049",
+        "12051",
+        "12053",
+        "12055",
+        "12057",
+        "12059",
+        "12061",
+        "12063",
+        "12065",
+        "12067",
+        "12069",
+        "12071",
+        "12073",
+        "12075",
+        "12077",
+        "12079",
+        "12081",
+        "12083",
+        "12085",
+        "12086",
+        "12087",
+        "12089",
+        "12091",
+        "12093",
+        "12095",
+        "12097",
+        "12099",
+        "12101",
+        "12103",
+        "12105",
+        "12107",
+        "12109",
+        "12111",
+        "12113",
+        "12115",
+        "12117",
+        "12119",
+        "12121",
+        "12123",
+        "12125",
+        "12127",
+        "12129",
+        "12131",
+        "12133"
+      ],
+      "sources": [
+        {
+          "id": "fl-union-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-union-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-volusia-early-general-2026",
+          "sites": 9,
+          "blanks": 0
+        },
+        {
+          "id": "fl-volusia-ballot-intake-general-2026",
+          "sites": 9,
+          "blanks": 0
+        },
+        {
+          "id": "fl-wakulla-early-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-wakulla-ballot-intake-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-walton-early-general-2026",
+          "sites": 4,
+          "blanks": 0
+        },
+        {
+          "id": "fl-walton-ballot-intake-general-2026",
+          "sites": 4,
+          "blanks": 0
+        },
+        {
+          "id": "fl-washington-early-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-washington-ballot-intake-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-alachua-early-general-2026",
+          "sites": 8,
+          "blanks": 0
+        },
+        {
+          "id": "fl-alachua-ballot-intake-general-2026",
+          "sites": 8,
+          "blanks": 0
+        },
+        {
+          "id": "fl-baker-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-baker-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-bay-early-general-2026",
+          "sites": 8,
+          "blanks": 0
+        },
+        {
+          "id": "fl-bay-ballot-intake-general-2026",
+          "sites": 8,
+          "blanks": 0
+        },
+        {
+          "id": "fl-bradford-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-bradford-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-brevard-early-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-brevard-ballot-intake-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-broward-early-general-2026",
+          "sites": 30,
+          "blanks": 0
+        },
+        {
+          "id": "fl-broward-ballot-intake-general-2026",
+          "sites": 30,
+          "blanks": 0
+        },
+        {
+          "id": "fl-calhoun-early-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-calhoun-ballot-intake-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-charlotte-early-general-2026",
+          "sites": 4,
+          "blanks": 0
+        },
+        {
+          "id": "fl-charlotte-ballot-intake-general-2026",
+          "sites": 4,
+          "blanks": 0
+        },
+        {
+          "id": "fl-citrus-early-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-citrus-ballot-intake-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-clay-early-general-2026",
+          "sites": 7,
+          "blanks": 0
+        },
+        {
+          "id": "fl-clay-ballot-intake-general-2026",
+          "sites": 7,
+          "blanks": 0
+        },
+        {
+          "id": "fl-collier-early-general-2026",
+          "sites": 11,
+          "blanks": 0
+        },
+        {
+          "id": "fl-collier-ballot-intake-general-2026",
+          "sites": 11,
+          "blanks": 0
+        },
+        {
+          "id": "fl-columbia-early-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-columbia-ballot-intake-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-miami_dade-early-general-2026",
+          "sites": 28,
+          "blanks": 0
+        },
+        {
+          "id": "fl-miami_dade-ballot-intake-general-2026",
+          "sites": 28,
+          "blanks": 0
+        },
+        {
+          "id": "fl-desoto-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-desoto-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-dixie-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-dixie-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-duval-early-general-2026",
+          "sites": 24,
+          "blanks": 0
+        },
+        {
+          "id": "fl-duval-ballot-intake-general-2026",
+          "sites": 24,
+          "blanks": 0
+        },
+        {
+          "id": "fl-escambia-early-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-escambia-ballot-intake-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-flagler-early-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-flagler-ballot-intake-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-franklin-early-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-franklin-ballot-intake-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-gadsden-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-gadsden-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-gilchrist-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-gilchrist-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-glades-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-glades-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-gulf-early-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-gulf-ballot-intake-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hamilton-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hamilton-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hardee-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hardee-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hendry-early-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hendry-ballot-intake-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hernando-early-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hernando-ballot-intake-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-highlands-early-general-2026",
+          "sites": 3,
+          "blanks": 0
+        },
+        {
+          "id": "fl-highlands-ballot-intake-general-2026",
+          "sites": 3,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hillsborough-early-general-2026",
+          "sites": 27,
+          "blanks": 0
+        },
+        {
+          "id": "fl-hillsborough-ballot-intake-general-2026",
+          "sites": 27,
+          "blanks": 0
+        },
+        {
+          "id": "fl-holmes-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-indian_river-early-general-2026",
+          "sites": 4,
+          "blanks": 0
+        },
+        {
+          "id": "fl-indian_river-ballot-intake-general-2026",
+          "sites": 4,
+          "blanks": 0
+        },
+        {
+          "id": "fl-jackson-early-general-2026",
+          "sites": 3,
+          "blanks": 0
+        },
+        {
+          "id": "fl-jackson-ballot-intake-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-jefferson-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-jefferson-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-lafayette-early-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-lafayette-ballot-intake-general-2026",
+          "sites": 2,
+          "blanks": 0
+        },
+        {
+          "id": "fl-lake-early-general-2026",
+          "sites": 12,
+          "blanks": 0
+        },
+        {
+          "id": "fl-lake-ballot-intake-general-2026",
+          "sites": 12,
+          "blanks": 0
+        },
+        {
+          "id": "fl-lee-early-general-2026",
+          "sites": 12,
+          "blanks": 0
+        },
+        {
+          "id": "fl-lee-ballot-intake-general-2026",
+          "sites": 12,
+          "blanks": 0
+        },
+        {
+          "id": "fl-leon-early-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-leon-ballot-intake-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-levy-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-levy-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-liberty-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-liberty-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-madison-early-general-2026",
+          "sites": 4,
+          "blanks": 0
+        },
+        {
+          "id": "fl-madison-ballot-intake-general-2026",
+          "sites": 4,
+          "blanks": 0
+        },
+        {
+          "id": "fl-manatee-early-general-2026",
+          "sites": 8,
+          "blanks": 0
+        },
+        {
+          "id": "fl-manatee-ballot-intake-general-2026",
+          "sites": 8,
+          "blanks": 0
+        },
+        {
+          "id": "fl-monroe-early-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-monroe-ballot-intake-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-marion-early-general-2026",
+          "sites": 9,
+          "blanks": 0
+        },
+        {
+          "id": "fl-marion-ballot-intake-general-2026",
+          "sites": 9,
+          "blanks": 0
+        },
+        {
+          "id": "fl-martin-early-general-2026",
+          "sites": 6,
+          "blanks": 0
+        },
+        {
+          "id": "fl-martin-ballot-intake-general-2026",
+          "sites": 6,
+          "blanks": 0
+        },
+        {
+          "id": "fl-nassau-early-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-nassau-ballot-intake-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-okaloosa-early-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-okaloosa-ballot-intake-general-2026",
+          "sites": 5,
+          "blanks": 0
+        },
+        {
+          "id": "fl-okeechobee-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-okeechobee-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-orange-early-general-2026",
+          "sites": 27,
+          "blanks": 0
+        },
+        {
+          "id": "fl-orange-ballot-intake-general-2026",
+          "sites": 27,
+          "blanks": 0
+        },
+        {
+          "id": "fl-osceola-early-general-2026",
+          "sites": 11,
+          "blanks": 0
+        },
+        {
+          "id": "fl-osceola-ballot-intake-general-2026",
+          "sites": 11,
+          "blanks": 0
+        },
+        {
+          "id": "fl-palm_beach-early-general-2026",
+          "sites": 28,
+          "blanks": 0
+        },
+        {
+          "id": "fl-palm_beach-ballot-intake-general-2026",
+          "sites": 28,
+          "blanks": 0
+        },
+        {
+          "id": "fl-pasco-early-general-2026",
+          "sites": 12,
+          "blanks": 0
+        },
+        {
+          "id": "fl-pasco-ballot-intake-general-2026",
+          "sites": 12,
+          "blanks": 0
+        },
+        {
+          "id": "fl-pinellas-early-general-2026",
+          "sites": 7,
+          "blanks": 0
+        },
+        {
+          "id": "fl-pinellas-ballot-intake-general-2026",
+          "sites": 7,
+          "blanks": 0
+        },
+        {
+          "id": "fl-polk-early-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-polk-ballot-intake-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-putnam-early-general-2026",
+          "sites": 3,
+          "blanks": 0
+        },
+        {
+          "id": "fl-putnam-ballot-intake-general-2026",
+          "sites": 3,
+          "blanks": 0
+        },
+        {
+          "id": "fl-santa_rosa-early-general-2026",
+          "sites": 6,
+          "blanks": 0
+        },
+        {
+          "id": "fl-santa_rosa-ballot-intake-general-2026",
+          "sites": 6,
+          "blanks": 0
+        },
+        {
+          "id": "fl-sarasota-early-general-2026",
+          "sites": 11,
+          "blanks": 0
+        },
+        {
+          "id": "fl-sarasota-ballot-intake-general-2026",
+          "sites": 11,
+          "blanks": 0
+        },
+        {
+          "id": "fl-seminole-early-general-2026",
+          "sites": 7,
+          "blanks": 0
+        },
+        {
+          "id": "fl-seminole-ballot-intake-general-2026",
+          "sites": 7,
+          "blanks": 0
+        },
+        {
+          "id": "fl-st_johns-early-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-st_johns-ballot-intake-general-2026",
+          "sites": 10,
+          "blanks": 0
+        },
+        {
+          "id": "fl-st_lucie-early-general-2026",
+          "sites": 8,
+          "blanks": 0
+        },
+        {
+          "id": "fl-st_lucie-ballot-intake-general-2026",
+          "sites": 8,
+          "blanks": 0
+        },
+        {
+          "id": "fl-sumter-early-general-2026",
+          "sites": 7,
+          "blanks": 0
+        },
+        {
+          "id": "fl-sumter-ballot-intake-general-2026",
+          "sites": 7,
+          "blanks": 0
+        },
+        {
+          "id": "fl-suwannee-early-general-2026",
+          "sites": 3,
+          "blanks": 0
+        },
+        {
+          "id": "fl-suwannee-ballot-intake-general-2026",
+          "sites": 3,
+          "blanks": 0
+        },
+        {
+          "id": "fl-taylor-early-general-2026",
+          "sites": 1,
+          "blanks": 0
+        },
+        {
+          "id": "fl-taylor-ballot-intake-general-2026",
+          "sites": 1,
+          "blanks": 0
+        }
+      ]
+    },
+    {
+      "state": "GA",
+      "sites": 132,
+      "jurisdictions": 1,
+      "counties": [
+        "13067"
+      ],
+      "sources": [
+        {
+          "id": "ga-cobb-public-precincts-2026",
+          "sites": 132,
+          "blanks": 0
+        }
+      ]
+    },
+    {
+      "state": "KY",
+      "sites": 1690,
+      "jurisdictions": 1,
+      "counties": [
+        "21001",
+        "21003",
+        "21005",
+        "21007",
+        "21009",
+        "21011",
+        "21013",
+        "21015",
+        "21017",
+        "21019",
+        "21021",
+        "21023",
+        "21025",
+        "21027",
+        "21029",
+        "21031",
+        "21033",
+        "21035",
+        "21037",
+        "21039",
+        "21041",
+        "21043",
+        "21045",
+        "21047",
+        "21049",
+        "21051",
+        "21053",
+        "21055",
+        "21057",
+        "21059",
+        "21061",
+        "21063",
+        "21065",
+        "21067",
+        "21069",
+        "21071",
+        "21073",
+        "21075",
+        "21077",
+        "21079",
+        "21081",
+        "21083",
+        "21085",
+        "21087",
+        "21089",
+        "21091",
+        "21093",
+        "21095",
+        "21097",
+        "21099",
+        "21101",
+        "21103",
+        "21105",
+        "21107",
+        "21109",
+        "21111",
+        "21113",
+        "21115",
+        "21117",
+        "21119",
+        "21121",
+        "21123",
+        "21125",
+        "21127",
+        "21129",
+        "21131",
+        "21133",
+        "21135",
+        "21137",
+        "21139",
+        "21141",
+        "21143",
+        "21145",
+        "21147",
+        "21149",
+        "21151",
+        "21153",
+        "21155",
+        "21157",
+        "21159",
+        "21161",
+        "21163",
+        "21165",
+        "21167",
+        "21169",
+        "21171",
+        "21173",
+        "21175",
+        "21177",
+        "21179",
+        "21181",
+        "21183",
+        "21185",
+        "21187",
+        "21189",
+        "21191",
+        "21193",
+        "21195",
+        "21197",
+        "21199",
+        "21201",
+        "21203",
+        "21205",
+        "21207",
+        "21209",
+        "21211",
+        "21213",
+        "21215",
+        "21217",
+        "21219",
+        "21221",
+        "21223",
+        "21225",
+        "21227",
+        "21229",
+        "21231",
+        "21233",
+        "21235",
+        "21237",
+        "21239"
+      ],
+      "sources": [
+        {
+          "id": "ky-statewide-election-day-general-2026",
+          "sites": 1409,
+          "blanks": 0
+        },
+        {
+          "id": "ky-statewide-excused-in-person-general-2026",
+          "sites": 120,
+          "blanks": 0
+        },
+        {
+          "id": "ky-statewide-no-excuse-in-person-general-2026",
+          "sites": 202,
+          "blanks": 0
+        },
+        {
+          "id": "ky-statewide-dropbox-general-2026",
+          "sites": 168,
+          "blanks": 0
+        }
+      ]
+    },
+    {
+      "state": "MS",
+      "sites": 46,
+      "jurisdictions": 1,
+      "counties": [
+        "28033"
+      ],
+      "sources": [
+        {
+          "id": "ms-desoto-current-polling-map",
+          "sites": 46,
+          "blanks": 1
+        }
+      ]
+    },
+    {
+      "state": "NC",
+      "sites": 2806,
+      "jurisdictions": 1,
+      "counties": [
+        "37001",
+        "37003",
+        "37005",
+        "37007",
+        "37009",
+        "37011",
+        "37013",
+        "37015",
+        "37017",
+        "37019",
+        "37021",
+        "37023",
+        "37025",
+        "37027",
+        "37029",
+        "37031",
+        "37033",
+        "37035",
+        "37037",
+        "37039",
+        "37041",
+        "37043",
+        "37045",
+        "37047",
+        "37049",
+        "37051",
+        "37053",
+        "37055",
+        "37057",
+        "37059",
+        "37061",
+        "37063",
+        "37065",
+        "37067",
+        "37069",
+        "37071",
+        "37073",
+        "37075",
+        "37077",
+        "37079",
+        "37081",
+        "37083",
+        "37085",
+        "37087",
+        "37089",
+        "37091",
+        "37093",
+        "37095",
+        "37097",
+        "37099",
+        "37101",
+        "37103",
+        "37105",
+        "37107",
+        "37109",
+        "37111",
+        "37113",
+        "37115",
+        "37117",
+        "37119",
+        "37121",
+        "37123",
+        "37125",
+        "37127",
+        "37129",
+        "37131",
+        "37133",
+        "37135",
+        "37137",
+        "37139",
+        "37141",
+        "37143",
+        "37145",
+        "37147",
+        "37149",
+        "37151",
+        "37153",
+        "37155",
+        "37157",
+        "37159",
+        "37161",
+        "37163",
+        "37165",
+        "37167",
+        "37169",
+        "37171",
+        "37173",
+        "37175",
+        "37177",
+        "37179",
+        "37181",
+        "37183",
+        "37185",
+        "37187",
+        "37189",
+        "37191",
+        "37193",
+        "37195",
+        "37197",
+        "37199"
+      ],
+      "sources": [
+        {
+          "id": "nc-statewide-early-voting-2026",
+          "sites": 367,
+          "blanks": 0
+        },
+        {
+          "id": "nc-statewide-polling-general-2026",
+          "sites": 2610,
+          "blanks": 0
+        }
+      ]
+    },
+    {
+      "state": "SC",
+      "sites": 1956,
+      "jurisdictions": 1,
+      "counties": [
+        "45001",
+        "45003",
+        "45005",
+        "45007",
+        "45009",
+        "45011",
+        "45013",
+        "45015",
+        "45017",
+        "45019",
+        "45021",
+        "45023",
+        "45025",
+        "45027",
+        "45029",
+        "45031",
+        "45033",
+        "45035",
+        "45037",
+        "45039",
+        "45041",
+        "45043",
+        "45045",
+        "45047",
+        "45049",
+        "45051",
+        "45053",
+        "45055",
+        "45057",
+        "45059",
+        "45061",
+        "45063",
+        "45065",
+        "45067",
+        "45069",
+        "45071",
+        "45073",
+        "45075",
+        "45077",
+        "45079",
+        "45081",
+        "45083",
+        "45085",
+        "45087",
+        "45089",
+        "45091"
+      ],
+      "sources": [
+        {
+          "id": "sc-statewide-public-polling-directory",
+          "sites": 1956,
+          "blanks": 0
+        }
+      ]
+    },
+    {
+      "state": "TN",
+      "sites": 15,
+      "jurisdictions": 1,
+      "counties": [
+        "47037"
+      ],
+      "sources": [
+        {
+          "id": "tn-davidson-early-general-2026",
+          "sites": 15,
+          "blanks": 0
+        }
+      ]
+    },
+    {
+      "state": "VA",
+      "sites": 2651,
+      "jurisdictions": 1,
+      "counties": [
+        "51001",
+        "51003",
+        "51005",
+        "51007",
+        "51009",
+        "51011",
+        "51013",
+        "51015",
+        "51017",
+        "51019",
+        "51021",
+        "51023",
+        "51025",
+        "51027",
+        "51029",
+        "51031",
+        "51033",
+        "51035",
+        "51036",
+        "51037",
+        "51041",
+        "51043",
+        "51045",
+        "51047",
+        "51049",
+        "51051",
+        "51053",
+        "51057",
+        "51059",
+        "51061",
+        "51063",
+        "51065",
+        "51067",
+        "51069",
+        "51071",
+        "51073",
+        "51075",
+        "51077",
+        "51079",
+        "51081",
+        "51083",
+        "51085",
+        "51087",
+        "51089",
+        "51091",
+        "51093",
+        "51095",
+        "51097",
+        "51099",
+        "51101",
+        "51103",
+        "51105",
+        "51107",
+        "51109",
+        "51111",
+        "51113",
+        "51115",
+        "51117",
+        "51119",
+        "51121",
+        "51125",
+        "51127",
+        "51131",
+        "51133",
+        "51135",
+        "51137",
+        "51139",
+        "51141",
+        "51143",
+        "51145",
+        "51147",
+        "51149",
+        "51153",
+        "51155",
+        "51157",
+        "51159",
+        "51161",
+        "51163",
+        "51165",
+        "51167",
+        "51169",
+        "51171",
+        "51173",
+        "51175",
+        "51177",
+        "51179",
+        "51181",
+        "51183",
+        "51185",
+        "51187",
+        "51191",
+        "51193",
+        "51195",
+        "51197",
+        "51199",
+        "51510",
+        "51520",
+        "51530",
+        "51540",
+        "51550",
+        "51570",
+        "51580",
+        "51590",
+        "51595",
+        "51600",
+        "51610",
+        "51620",
+        "51630",
+        "51640",
+        "51650",
+        "51660",
+        "51670",
+        "51678",
+        "51680",
+        "51683",
+        "51685",
+        "51690",
+        "51700",
+        "51710",
+        "51720",
+        "51730",
+        "51735",
+        "51740",
+        "51750",
+        "51760",
+        "51770",
+        "51775",
+        "51790",
+        "51800",
+        "51810",
+        "51820",
+        "51830",
+        "51840"
+      ],
+      "sources": [
+        {
+          "id": "va-statewide-polling-general-2026",
+          "sites": 2651,
+          "blanks": 0
+        }
+      ]
+    },
+    {
+      "state": "WV",
+      "sites": 99,
+      "jurisdictions": 1,
+      "counties": [
+        "54001",
+        "54003",
+        "54005",
+        "54007",
+        "54009",
+        "54011",
+        "54013",
+        "54015",
+        "54017",
+        "54019",
+        "54021",
+        "54023",
+        "54025",
+        "54027",
+        "54029",
+        "54031",
+        "54033",
+        "54035",
+        "54037",
+        "54039",
+        "54041",
+        "54043",
+        "54045",
+        "54047",
+        "54049",
+        "54051",
+        "54053",
+        "54055",
+        "54057",
+        "54059",
+        "54061",
+        "54063",
+        "54065",
+        "54067",
+        "54069",
+        "54071",
+        "54073",
+        "54075",
+        "54077",
+        "54079",
+        "54081",
+        "54083",
+        "54085",
+        "54087",
+        "54089",
+        "54091",
+        "54093",
+        "54095",
+        "54097",
+        "54099",
+        "54101",
+        "54103",
+        "54105",
+        "54107",
+        "54109"
+      ],
+      "sources": [
+        {
+          "id": "wv-statewide-early-general-2026",
+          "sites": 99,
+          "blanks": 55
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "nc-statewide-early-voting-2026",
+      "state": "NC",
+      "sites": 367,
+      "capture": "nc-statewide-early-voting-2026.txt",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://vt.ncsbe.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://vt.ncsbe.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /OSSite: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://vt.ncsbe.gov/OSSite?handler=StatewideList",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "nc-statewide-polling-general-2026",
+      "state": "NC",
+      "sites": 2610,
+      "capture": "nc-november-polling.csv.bin",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://s3.amazonaws.com/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 403"
+        },
+        {
+          "url": "https://s3.amazonaws.com/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt CANNOT_TELL for /dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/polling_place_20261103.csv",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "va-statewide-polling-general-2026",
+      "state": "VA",
+      "sites": 2651,
+      "capture": "va-november-polling.xlsx",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.elections.virginia.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.elections.virginia.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt DISALLOWED for /media/registration-statistics/2026-November-General.xlsx: longest-match rule in the `*` group is `Disallow: *.xlsx` for /media/registration-statistics/2026-November-General.xlsx — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://www.elections.virginia.gov/media/registration-statistics/2026-November-General.xlsx",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "sc-statewide-public-polling-directory",
+      "state": "SC",
+      "sites": 1956,
+      "capture": "sc-all-locations.txt",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://vrems.scvotes.sc.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://vrems.scvotes.sc.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /Statistics/ExportSearchResults: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://vrems.scvotes.sc.gov/Statistics/ExportSearchResults",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "ky-statewide-election-day-general-2026",
+      "state": "KY",
+      "sites": 1409,
+      "capture": "ky-all-polling-locations.xlsx",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://elect.ky.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "ky-statewide-excused-in-person-general-2026",
+      "state": "KY",
+      "sites": 120,
+      "capture": "ky-all-polling-locations.xlsx",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://elect.ky.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "ky-statewide-no-excuse-in-person-general-2026",
+      "state": "KY",
+      "sites": 202,
+      "capture": "ky-all-polling-locations.xlsx",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://elect.ky.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "ky-statewide-dropbox-general-2026",
+      "state": "KY",
+      "sites": 168,
+      "capture": "ky-all-polling-locations.xlsx",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://elect.ky.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://elect.ky.gov/Voters/Documents/All%20Polling%20Locations%20-%20Spreadsheet.xlsx",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "wv-statewide-early-general-2026",
+      "state": "WV",
+      "sites": 99,
+      "capture": "wv-early-locations.html",
+      "blanks": [
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Barbour contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Berkeley contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Boone contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Braxton contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Brooke contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Cabell contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Calhoun contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Clay contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Doddridge contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Fayette contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Gilmer contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Grant contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Greenbrier contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Hampshire contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Hancock contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Hardy contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Harrison contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Jackson contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Jefferson contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Kanawha contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Lewis contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Lincoln contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Logan contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Marion contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Marshall contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Mason contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published McDowell contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Mercer contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Mineral contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Mingo contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Monongalia contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Monroe contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Morgan contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Nicholas contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Ohio contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Pendleton contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Pleasants contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Pocahontas contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Preston contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Putnam contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Raleigh contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Randolph contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Ritchie contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Roane contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Summers contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Taylor contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Tucker contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Tyler contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Upshur contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Wayne contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Webster contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Wetzel contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Wirt contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Wood contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        },
+        {
+          "reason": "missing-sites",
+          "owed": "Registered office match for the published Wyoming contact",
+          "tried": [
+            "https://sos.wv.gov/early-voting-locations"
+          ]
+        }
+      ],
+      "attempts": [
+        {
+          "url": "https://sos.wv.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 503"
+        },
+        {
+          "url": "https://sos.wv.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt CANNOT_TELL for /early-voting-locations: robots.txt answered HTTP 503; not a robots document and not a 404. Recorded as unread — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://sos.wv.gov/early-voting-locations",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-union-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12125",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-union-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12125",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-volusia-early-general-2026",
+      "state": "FL",
+      "sites": 9,
+      "countyFips": "12127",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-volusia-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 9,
+      "countyFips": "12127",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-wakulla-early-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12129",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-wakulla-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12129",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-walton-early-general-2026",
+      "state": "FL",
+      "sites": 4,
+      "countyFips": "12131",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-walton-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 4,
+      "countyFips": "12131",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-washington-early-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12133",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-washington-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12133",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-alachua-early-general-2026",
+      "state": "FL",
+      "sites": 8,
+      "countyFips": "12001",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-alachua-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 8,
+      "countyFips": "12001",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-baker-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12003",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-baker-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12003",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-bay-early-general-2026",
+      "state": "FL",
+      "sites": 8,
+      "countyFips": "12005",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-bay-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 8,
+      "countyFips": "12005",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-bradford-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12007",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-bradford-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12007",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-brevard-early-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12009",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-brevard-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12009",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-broward-early-general-2026",
+      "state": "FL",
+      "sites": 30,
+      "countyFips": "12011",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-broward-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 30,
+      "countyFips": "12011",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-calhoun-early-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12013",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-calhoun-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12013",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-charlotte-early-general-2026",
+      "state": "FL",
+      "sites": 4,
+      "countyFips": "12015",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-charlotte-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 4,
+      "countyFips": "12015",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-citrus-early-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12017",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-citrus-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12017",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-clay-early-general-2026",
+      "state": "FL",
+      "sites": 7,
+      "countyFips": "12019",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-clay-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 7,
+      "countyFips": "12019",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-collier-early-general-2026",
+      "state": "FL",
+      "sites": 11,
+      "countyFips": "12021",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-collier-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 11,
+      "countyFips": "12021",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-columbia-early-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12023",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-columbia-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12023",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-miami_dade-early-general-2026",
+      "state": "FL",
+      "sites": 28,
+      "countyFips": "12086",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-miami_dade-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 28,
+      "countyFips": "12086",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-desoto-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12027",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-desoto-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12027",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-dixie-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12029",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-dixie-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12029",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-duval-early-general-2026",
+      "state": "FL",
+      "sites": 24,
+      "countyFips": "12031",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-duval-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 24,
+      "countyFips": "12031",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-escambia-early-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12033",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-escambia-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12033",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-flagler-early-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12035",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-flagler-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12035",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-franklin-early-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12037",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-franklin-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12037",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-gadsden-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12039",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-gadsden-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12039",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-gilchrist-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12041",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-gilchrist-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12041",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-glades-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12043",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-glades-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12043",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-gulf-early-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12045",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-gulf-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12045",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hamilton-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12047",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hamilton-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12047",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hardee-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12049",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hardee-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12049",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hendry-early-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12051",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hendry-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12051",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hernando-early-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12053",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hernando-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12053",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-highlands-early-general-2026",
+      "state": "FL",
+      "sites": 3,
+      "countyFips": "12055",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-highlands-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 3,
+      "countyFips": "12055",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hillsborough-early-general-2026",
+      "state": "FL",
+      "sites": 27,
+      "countyFips": "12057",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-hillsborough-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 27,
+      "countyFips": "12057",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-holmes-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12059",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-indian_river-early-general-2026",
+      "state": "FL",
+      "sites": 4,
+      "countyFips": "12061",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-indian_river-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 4,
+      "countyFips": "12061",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-jackson-early-general-2026",
+      "state": "FL",
+      "sites": 3,
+      "countyFips": "12063",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-jackson-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12063",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-jefferson-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12065",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-jefferson-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12065",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-lafayette-early-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12067",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-lafayette-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 2,
+      "countyFips": "12067",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-lake-early-general-2026",
+      "state": "FL",
+      "sites": 12,
+      "countyFips": "12069",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-lake-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 12,
+      "countyFips": "12069",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-lee-early-general-2026",
+      "state": "FL",
+      "sites": 12,
+      "countyFips": "12071",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-lee-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 12,
+      "countyFips": "12071",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-leon-early-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12073",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-leon-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12073",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-levy-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12075",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-levy-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12075",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-liberty-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12077",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-liberty-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12077",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-madison-early-general-2026",
+      "state": "FL",
+      "sites": 4,
+      "countyFips": "12079",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-madison-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 4,
+      "countyFips": "12079",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-manatee-early-general-2026",
+      "state": "FL",
+      "sites": 8,
+      "countyFips": "12081",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-manatee-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 8,
+      "countyFips": "12081",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-monroe-early-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12087",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-monroe-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12087",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-marion-early-general-2026",
+      "state": "FL",
+      "sites": 9,
+      "countyFips": "12083",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-marion-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 9,
+      "countyFips": "12083",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-martin-early-general-2026",
+      "state": "FL",
+      "sites": 6,
+      "countyFips": "12085",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-martin-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 6,
+      "countyFips": "12085",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-nassau-early-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12089",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-nassau-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12089",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-okaloosa-early-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12091",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-okaloosa-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 5,
+      "countyFips": "12091",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-okeechobee-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12093",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-okeechobee-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12093",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-orange-early-general-2026",
+      "state": "FL",
+      "sites": 27,
+      "countyFips": "12095",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-orange-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 27,
+      "countyFips": "12095",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-osceola-early-general-2026",
+      "state": "FL",
+      "sites": 11,
+      "countyFips": "12097",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-osceola-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 11,
+      "countyFips": "12097",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-palm_beach-early-general-2026",
+      "state": "FL",
+      "sites": 28,
+      "countyFips": "12099",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-palm_beach-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 28,
+      "countyFips": "12099",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-pasco-early-general-2026",
+      "state": "FL",
+      "sites": 12,
+      "countyFips": "12101",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-pasco-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 12,
+      "countyFips": "12101",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-pinellas-early-general-2026",
+      "state": "FL",
+      "sites": 7,
+      "countyFips": "12103",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-pinellas-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 7,
+      "countyFips": "12103",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-polk-early-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12105",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-polk-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12105",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-putnam-early-general-2026",
+      "state": "FL",
+      "sites": 3,
+      "countyFips": "12107",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-putnam-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 3,
+      "countyFips": "12107",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-santa_rosa-early-general-2026",
+      "state": "FL",
+      "sites": 6,
+      "countyFips": "12113",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-santa_rosa-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 6,
+      "countyFips": "12113",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-sarasota-early-general-2026",
+      "state": "FL",
+      "sites": 11,
+      "countyFips": "12115",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-sarasota-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 11,
+      "countyFips": "12115",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-seminole-early-general-2026",
+      "state": "FL",
+      "sites": 7,
+      "countyFips": "12117",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-seminole-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 7,
+      "countyFips": "12117",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-st_johns-early-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12109",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-st_johns-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 10,
+      "countyFips": "12109",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-st_lucie-early-general-2026",
+      "state": "FL",
+      "sites": 8,
+      "countyFips": "12111",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-st_lucie-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 8,
+      "countyFips": "12111",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-sumter-early-general-2026",
+      "state": "FL",
+      "sites": 7,
+      "countyFips": "12119",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-sumter-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 7,
+      "countyFips": "12119",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-suwannee-early-general-2026",
+      "state": "FL",
+      "sites": 3,
+      "countyFips": "12121",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-suwannee-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 3,
+      "countyFips": "12121",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-taylor-early-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12123",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "fl-taylor-ballot-intake-general-2026",
+      "state": "FL",
+      "sites": 1,
+      "countyFips": "12123",
+      "capture": "fl-early-ballot-intake.zip",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 404"
+        },
+        {
+          "url": "https://dos.fl.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt NO_ROBOTS for /media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://dos.fl.gov/media/711428/20261002-ev-and-secure-ballot-intake-station-locations-2026-ge.zip",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "ga-cobb-public-precincts-2026",
+      "state": "GA",
+      "sites": 132,
+      "countyFips": "13067",
+      "capture": "ga-cobb-precincts.pdf",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.cobbcounty.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.cobbcounty.gov/elections/voting/election-day",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://assets.cobbcounty.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 403"
+        },
+        {
+          "url": "https://assets.cobbcounty.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt CANNOT_TELL for /files/2026-09/2026%20Precinct%20Codes%20and%20Locations_Facility%20name__REV%2009-15-2026_148.pdf: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://assets.cobbcounty.gov/files/2026-09/2026%20Precinct%20Codes%20and%20Locations_Facility%20name__REV%2009-15-2026_148.pdf",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "tn-davidson-early-general-2026",
+      "state": "TN",
+      "sites": 15,
+      "countyFips": "47037",
+      "capture": "tn-nashville-early.html",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://www.nashville.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.nashville.gov/departments/elections/voters/find-early-voting-information",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "ms-desoto-current-polling-map",
+      "state": "MS",
+      "sites": 46,
+      "countyFips": "28033",
+      "capture": "ms-desoto-map-file.pdf",
+      "blanks": [
+        {
+          "reason": "earlier-election",
+          "owed": "A newer election list; continue showing the file linked by the current official election page",
+          "tried": [
+            "County-linked voting precinct map revised March 7, 2025"
+          ]
+        }
+      ],
+      "attempts": [
+        {
+          "url": "https://www.desotocountyms.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://www.desotocountyms.gov/DocumentCenter/View/49",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    },
+    {
+      "id": "al-mobile-public-polling-centers-2026",
+      "state": "AL",
+      "sites": 78,
+      "countyFips": "01097",
+      "capture": "al-mobile-polling-file.pdf",
+      "blanks": [],
+      "attempts": [
+        {
+          "url": "https://probate.mobilecountyal.gov/robots.txt",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        },
+        {
+          "url": "https://probate.mobilecountyal.gov/robots.txt",
+          "route": "direct",
+          "outcome": "robots.txt CANNOT_TELL for /uploads/PRECINCTS.pdf: robots.txt answered HTTP 200 with an HTML page, not a robots document (a redirect to a page, or a soft 404). Recorded as unread — recorded as evidence; the public page is still read"
+        },
+        {
+          "url": "https://probate.mobilecountyal.gov/uploads/PRECINCTS.pdf",
+          "route": "direct",
+          "outcome": "HTTP 200"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+Microsoft Word - 2026NovCandidateListing.docx (https://www.co.sauk.wi.us/sites/default/files/fileattachments/county_clerk/page/119667/2026novcandidatelisting.pdf)
+【turn902682view0】 [wordlim: 200] Crawled: 3 weeks ago; Content type: application/pdf; Number of pages: 4; Source: open({"ref_id":"turn807349view4","lineno":0}); Total lines: 102
+L0@P0: SAUK COUNTY – NOVEMBER 3, 2026
+L1@P0: CANDIDATE LISTING
+L2@P0: STATE
+L3@P0: Governor/Lieutenant Governor
+L4@P0: (Vote for One)
+L5@P0: Tom TiƯany/David Varnam - Republican
+L6@P0: David Crowley/Sarah Godlewski - Democratic
+L7@P0: Attorney General
+L8@P0: (Vote for One)
+L9@P0: Eric Toney - Republican
+L10@P0: Josh Kaul - Democratic
+L11@P0: Secretary of State
+L12@P0: (Vote for One)
+L13@P0: Jay Schroeder - Republican
+L14@P0: JoCasta Zamarripa - Democratic
+L15@P0: Pete Karas – Wisconsin Green
+L16@P0: State Treasurer
+L17@P0: (Vote for One)
+L18@P0: John S. Leiber - Republican
+L19@P0: Yee Leng Xiong - Democratic
+L20@P0: Representative in Congress, District 2
+L21@P0: (Vote for One)
+L22@P0: Mark Pocan - Democratic
+L23@P0: Representative in Congress, District 3
+L24@P0: (Vote for One)
+L25@P0: Derrick Van Orden - Republican
+L26@P0: Rebecca Cooke - Democratic
+L27@P0: Alexander Valiensi Kent – Independent
+L28@P0: Rustin Provance - Independent
+L29@P0: Representative to the Assembly, District 40
+L30@P0: (Vote for One)
+L31@P0: Julie Helmer - Republican
+L32@P0-1: Karen DeSanto - Democratic Representative to the Assembly, District 41
+L33@P1: (Vote for One)
+L34@P1: Tony Kurtz - Republican
+L35@P1: Zach Commons - Democratic
+L36@P1: 
+L37@P1: COUNTY
+L38@P1: Sauk County SheriƯ
+L39@P1: (Vote for One)
+L40@P1: Matt Burch - Republican
+L41@P1: Ryan P. Jesberger - Democratic
+L42@P1: 
+L43@P1: Sauk County Coroner
+L44@P1: (Vote for One)
+L45@P1: Don Skrabel - Republican
+L46@P1: Amber Giddings - Independent
+L47@P1: Sauk County Clerk of Circuit Court
+L48@P1: (Vote for One)
+L49@P1: Carrie A. Wastlick - Republican
+L50@P1: REFERENDUMS
+L51@P1: State
+L52@P1: QUESTION 1: “Partial veto. Shall section 10 (1) (c) of article V of the constitution be
+L53@P1: amended to prohibit the governor, in exercising his or her partial veto authority, from
+L54@P1: creating or increasing or authorizing the creation or increase of any tax or fee?”
+L55@P1: Yes
+L56@P1: No
+L57@P1: QUESTION 2: “Freedom to gather in places of worship during an emergency. Shall
+L58@P1: section 18 of article I of the constitution, which deals with religious liberty, be amended to
+L59@P1: prohibit the state or a political subdivision of the state from ordering the closure of, or
+L60@P1: forbidding gatherings in, places of worship in response to a state of emergency, including a
+L61@P1: public health emergency?”
+L62@P1: Yes
+L63@P1-2: No QUESTION 3: “Governmental entity discrimination prohibited. Shall section 27 of article
+L64@P2: I of the constitution be created to prohibit governmental entities in the state from
+L65@P2: discriminating against, or granting preferential treatment to, any individual or group on the
+L66@P2: basis of race, sex, color, ethnicity, or national origin in public employment, public
+L67@P2: education, public contracting, or public administration?”
+L68@P2: Yes
+L69@P2: No
+L70@P2: School District
+L71@P2: Hillsboro School District Referendum
+L72@P2: Question: Shall the School District of Hillsboro, Vernon, Richland, Monroe, Juneau and
+L73@P2: Sauk Counties, Wisconsin be authorized to exceed the revenue limit specified in Section
+L74@P2: 121.91, Wisconsin Statutes, by $1,100,000 per year for four years, beginning with the 2027-
+L75@P2: 2028 school year and ending with the 2030-2031 school year, for non-recurring purposes to
+L76@P2: maintain District facilities and current programs?
+L77@P2: Yes
+L78@P2: No
+L79@P2: Reedsburg School District Referendum
+L80@P2: Question: Shall the School District of Reedsburg, Sauk and Juneau Counties, Wisconsin be
+L81@P2: authorized to issue pursuant to Chapter 67 of the Wisconsin Statutes, general obligation
+L82@P2: bonds in an amount not to exceed $83,000,000 for the public purpose of paying the cost of
+L83@P2: a school building project consisting of: construction of a new middle school on districtowned land, site improvements, and acquisition of furnishings, fixtures and equipment?
+L84@P2: Yes
+L85@P2: No
+L86@P2: Wisconsin Dells School District Referendum
+L87@P2: Question: Shall the School District of Wisconsin Dells, Sauk, Adams, Columbia, Juneau
+L88@P2: and Marquette Counties, Wisconsin be authorized to exceed the revenue limit specified in
+L89@P2: Section 121.91, Wisconsin Statutes, by $1,800,000 beginning with the 2026-2027 school
+L90@P2: year, for recurring purposes consisting of maintaining current elementary, middle and high
+L91@P2: school class sizes, technology equipment, existing career and technical education
+L92@P2: programming, along with operational costs associated with all school buildings?
+L93@P2: Yes
+L94@P2-3: No Wonewoc Union Center School District Referendum
+L95@P3: Question: Shall the School District of Wonewoc and Union Center, Sauk, Juneau and
+L96@P3: Richland Counties, Wisconsin be authorized to exceed the revenue limit specified in
+L97@P3: Section 121.91, Wisconsin Statutes, by $500,000 per year for four years, beginning with the
+L98@P3: 2027-2028 school year and ending with the 2030-2031 school year, for non-recurring
+L99@P3: purposes consisting of operational and maintenance expenses?
+L100@P3: Yes
+L101@P3: No

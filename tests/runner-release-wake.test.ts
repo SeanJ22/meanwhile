@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
+import {createMemoryRepositories} from "../lib/control-plane/repository/memory.ts";
+import {readPlanningContinuation} from "../lib/control-plane/scheduler/state-planning.ts";
+import {ADMIN_CONFIG_ID,defaultAdminConfig} from "../lib/control-plane/gateway/admin-config.ts";
 import { readFileSync } from "node:fs";
 import * as nodeModule from "node:module";
 import { test } from "node:test";
 import { createContext, runInContext } from "node:vm";
 import { spawnSync } from "node:child_process";
+import ts from "typescript";
 import { DEFAULT_HANG_KILL_MS } from "../scripts/runner-hang-watchdog.mts";
 import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
 
@@ -19,9 +23,7 @@ function nextWait(overrides: Record<string, unknown> = {}): (ok: boolean) => Pro
     lifetimeHuntStalledCycles: 0, ownerRepositories: async () => ({ runnerHeartbeat: { read: async () => null } }),
     readRunnerControls: async () => ({ config: null, state: null, research: [] }),
     readIntents: () => ({ paused: false, runnerPause: { paused: false } }),
-    expansionScopesOf: () => ({ malformed: 0, scopes: [] }),
-    isAdminConfig: () => false, isExpansionCycleReading: () => false, isAssignmentCycleReading: () => false,
-    originalLifetimeHuntContinuation: () => null, continuingDirectedHunt: () => null,
+    readPlanningContinuation: async () => null,
     RUNNER_ID: "test", console: { log: () => {}, error: () => {} }, ...overrides,
   });
   return runInContext(stripTypeScriptTypes(wait) + "\nnextCycleWaitMs;", context);
@@ -32,7 +34,7 @@ test("failed research rounds retry within ten minutes on every ordinary fallback
     { ownerRepositories: async () => null },
     { ownerRepositories: async () => { throw new Error("unavailable"); } },
     { readRunnerControls: async () => { throw new Error("control read failed"); } },
-    { expansionScopesOf: () => ({ malformed: 1, scopes: [] }) },
+    { readPlanningContinuation: async () => { throw new Error("planning read failed"); } },
     { readIntents: () => ({ paused: true, runnerPause: { paused: false } }) },
     { readIntents: () => ({ paused: false, runnerPause: { paused: true } }) },
   ]) {
@@ -47,11 +49,25 @@ test("failed research rounds retry within ten minutes on every ordinary fallback
 
 test("failed round continuation caps a long lifetime delay and retains shorter waits", async () => {
   for (const delayMs of [60_000, 600_000, 3_600_000]) {
-    const next = nextWait({ originalLifetimeHuntContinuation: () => ({
-      label: "funded place", due: 20, dispatched: 0, reason: "ELIGIBLE_ZERO_DISPATCH", delayMs,
+    const next = nextWait({ readPlanningContinuation: async () => ({hunt:{label:"funded place",due:20,dispatched:0},
+      lifetime:{reason:"ELIGIBLE_ZERO_DISPATCH",delayMs},
     }) });
     assert.equal(await next(false), Math.min(delayMs, 600_000));
     assert.equal(await next(true), delayMs);
+  }
+});
+
+test("a paid pause or a stopped hunt clears the prior directed-hunt reason before the next wait",async()=>{
+  for(const paused of [true,false]) {
+    const repos=createMemoryRepositories();
+    const at="2026-10-16T11:00:00.000Z";
+    await repos.adminConfig.put(ADMIN_CONFIG_ID,defaultAdminConfig(at),at);
+    await repos.runnerHeartbeat.put("test",{testedSha:"code",nextCycleReason:"Directed hunt ZIP 85122"} as never,at);
+    await repos.researchState.put("level-1:az",{expansion:{scopes:[{key:"zcta:2020/85122",work:{dueThisCycle:79,dispatchedThisCycle:0}}]}} as never,at);
+    const next=nextWait({ownerRepositories:async()=>repos,readPlanningContinuation,
+      readIntents:()=>({paused,runnerPause:{paused:false}})});
+    assert.equal(await next(true),60*60_000);
+    assert.equal((await repos.runnerHeartbeat.mustRead("test")).value.nextCycleReason,null);
   }
 });
 
@@ -90,22 +106,78 @@ test("every completed handoff exits despite a retained timer or socket", () => {
   }
 });
 
-test("CURRENT reopens held admissions and both clocks only after contracts succeed", async () => {
+test("runtime contract initialization precedes every startup path that can use it", () => {
+  const tree = ts.createSourceFile("pilot-runner.mts", source, ts.ScriptTarget.Latest, true);
+  const initialization = tree.statements.find(statement => ts.isVariableStatement(statement)
+    && statement.declarationList.declarations.some(declaration => declaration.name.getText(tree) === "runtimeContracts"));
+  assert.ok(initialization);
+  const functions = new Map(tree.statements.filter(ts.isFunctionDeclaration)
+    .filter(fn => fn.name && fn.body).map(fn => [fn.name!.text, fn.body!]));
+  const visited = new Set<string>();
+  const inspect = (node: ts.Node): void => {
+    if (ts.isFunctionDeclaration(node)) return; // declarations run only when referenced
+    if (ts.isIdentifier(node)) {
+      assert.notEqual(node.text, "runtimeContracts", "startup must initialize the helper before using it");
+      const body = functions.get(node.text);
+      if (body && !visited.has(node.text)) { visited.add(node.text); inspect(body); }
+    }
+    ts.forEachChild(node, inspect);
+  };
+  for (const statement of tree.statements) {
+    if (statement === initialization) break;
+    inspect(statement);
+  }
+  const firstBoundary = source.indexOf("let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();");
+  assert.ok(firstBoundary > initialization.end, "the first release boundary runs after helper construction");
+});
+
+test("CURRENT uses initialized contracts with the running SHA and directory while both clocks keep running", async () => {
   const fn = source.match(/async function reconcileRuntimeReleaseAtBoundary\([\s\S]*?\n\}/)?.[0];
+  const initialization = source.match(/const runtimeContracts = runtimeContractRetry\(\{[\s\S]*?\n\}\);/)?.[0];
   assert.ok(fn);
+  assert.ok(initialization);
   for (const contractsOk of [false, true]) {
     const calls: string[] = [];
-    const context = createContext({ AUTO_RELEASE_HANDOFF: true, ROOT: ".", RUNNING_CODE_SHA: "a".repeat(40),
+    const requests: [string, string][] = [];
+    let initialized = false;
+    let resolved = false;
+    let finish!: (ok: boolean) => void;
+    const contractWork = new Promise<boolean>(resolve => { finish = resolve; });
+    const applyRuntimeContracts = async () => {
+      calls.push("contracts");
+      const ok = await contractWork;
+      resolved = true;
+      return ok;
+    };
+    const context = createContext({ AUTO_RELEASE_HANDOFF: true, ROOT: ".", CODE_ROOT: "/running-release", RUNNING_CODE_SHA: "a".repeat(40),
       runtimeAdmissionsHeld: true, resumeRuntimeReleaseInstall: () => { calls.push("install recovery"); return null; },
       inspectRuntimeRelease: async () => { calls.push("inspect"); return { state: "CURRENT" }; },
-      applyRuntimeContracts: async () => { calls.push("contracts"); return contractsOk; },
+      applyRuntimeContracts,
+      runtimeContractRetry: ({ run }: { run: typeof applyRuntimeContracts }) => {
+        assert.equal(run, applyRuntimeContracts);
+        initialized = true;
+        calls.push("contracts initialized");
+        return { request: (sha: string, directory: string) => {
+          assert.equal(initialized, true);
+          assert.equal(context.runtimeAdmissionsHeld, false);
+          assert.deepEqual(calls.slice(-2), ["routine clock", "Admin copy clock"]);
+          requests.push([sha, directory]);
+          calls.push("contracts requested");
+          void run();
+        } };
+      },
       startStandingRuntimeClock: () => calls.push("routine clock"), startAdminCopyClock: () => calls.push("Admin copy clock"),
     });
-    const result = await runInContext(stripTypeScriptTypes(fn) + "\nreconcileRuntimeReleaseAtBoundary()", context);
-    assert.equal(result, contractsOk ? null : 2);
-    assert.equal(context.runtimeAdmissionsHeld, !contractsOk);
-    assert.deepEqual(calls, contractsOk ? ["install recovery", "inspect", "contracts", "routine clock", "Admin copy clock"]
-      : ["install recovery", "inspect", "contracts"]);
+    const result = await runInContext(stripTypeScriptTypes(`${fn}\n${initialization}`) + "\nreconcileRuntimeReleaseAtBoundary()", context);
+    assert.equal(result, null);
+    assert.equal(context.runtimeAdmissionsHeld, false);
+    assert.equal(resolved, false, "a pending migration cannot block collection");
+    assert.deepEqual(requests, [["a".repeat(40), "/running-release"]]);
+    assert.deepEqual(calls, ["contracts initialized", "install recovery", "inspect", "routine clock", "Admin copy clock", "contracts requested", "contracts"]);
+    finish(contractsOk);
+    await contractWork;
+    assert.equal(resolved, true);
+    assert.equal(context.runtimeAdmissionsHeld, false, "a failed migration cannot close collection");
     console.log(`CURRENT contracts=${contractsOk}: admissionsHeld=${context.runtimeAdmissionsHeld}; ${calls.join(" -> ")}`);
   }
 });

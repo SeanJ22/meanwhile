@@ -1,3 +1,5 @@
+import { readPluralVotesForPerson } from "../lib/sources/plural/vote-reader.ts";
+import { parsePluralBulkSession } from "./helpers/state-vote-parsers.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
@@ -5,13 +7,10 @@ import { createHash } from "node:crypto";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { acquireStateVotes, PLURAL_SESSION_CATALOG, pluralJurisdictionUrl } from "../lib/sources/plural/vote-acquisition.ts";
-import { parsePluralBulkSession } from "../lib/sources/plural/vote-bulk.ts";
-import { parsePluralBill, pluralVotesScope, readPluralVotesForPerson, type PluralBillEvidence } from "../lib/sources/plural/votes.ts";
-import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
-import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
+import { acquireStateVotes, currentPluralSessions, PLURAL_SESSION_CATALOG, pluralJurisdictionsUrl } from "../lib/sources/plural/vote-acquisition.ts";
 
-type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
+import { parsePluralBill, pluralVoteJurisdiction, pluralVotesScope, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
+import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
 
 interface Example { personId: string; position: string; billNumber: string; billTitle: string; date: string; voteId: string }
 interface Sample { state: string; session: string; sourceUrl: string; fixtureArchive: string; fixtureArchiveSha256: string; metadataFixture: string; readerExample?: Example }
@@ -30,7 +29,7 @@ async function harness(sample: Sample) {
   const store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories(), civicStore = new MemoryRoutineDataStore();
   const zip = await readFile(new URL(sample.fixtureArchive, ROOT));
   const metadata = JSON.parse(await readFile(new URL(sample.metadataFixture, ROOT), "utf8")) as { legislative_sessions: { identifier: string }[] };
-  const body = JSON.stringify({ ...metadata, legislative_sessions: metadata.legislative_sessions.filter(session => session.identifier === sample.session) });
+  const body = JSON.stringify({ results: [{ ...metadata, legislative_sessions: metadata.legislative_sessions.filter(session => session.identifier === sample.session) }], pagination: { max_page: 1 } });
   const catalog = await readFile(new URL("session-csv-catalog.html", ROOT));
   const requests: string[] = [];
   let checkedAt = manifest.capturedAt;
@@ -41,7 +40,7 @@ async function harness(sample: Sample) {
       assert.equal(headers.get("X-API-KEY"), null);
       return headers.has("if-none-match") ? new Response(null, { status: 304 }) : new Response(catalog, { headers: { etag: "fixture-catalog" } });
     }
-    if (url === pluralJurisdictionUrl(sample.state)) {
+    if (url === pluralJurisdictionsUrl(1)) {
       assert.equal(headers.get("X-API-KEY"), "fixture-key");
       return headers.has("if-none-match") ? new Response(null, { status: 304 }) : new Response(body, { headers: { etag: "fixture-metadata" } });
     }
@@ -66,10 +65,11 @@ for (const sample of manifest.states.filter(sample => sample.readerExample)) {
       published++;
       assert.equal(h.requests.at(-1), sample.sourceUrl);
       assert.equal(result.votes.length, 1);
-      assert.ok(await h.civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope(sample.state)));
     } });
     assert.equal(published, 1);
     assert.ok(first.publication.outcome.promoted);
+    assert.equal((first.publication.candidate.readModel as { formatVersion: number }).formatVersion, 2);
+    assert.ok(await h.civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope(sample.state)));
     const [archive] = (first.publication.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions;
     assert.equal("body" in archive, false); assert.equal(archive.sha256, sample.fixtureArchiveSha256);
     if (sample.state === "GA") {
@@ -138,7 +138,7 @@ test("the real anonymous public catalog cannot invent archive URLs when no API k
   assert.deepEqual(h.requests, [PLURAL_SESSION_CATALOG]);
 });
 
-test("one public session succeeds while an unavailable preceding archive falls back to its API session", async () => {
+test("current-session refresh skips the preceding cycle even when its archive is unavailable", async () => {
   const sample = manifest.states.find(sample => sample.state === "WA")!, h = await harness(sample);
   const metadata = JSON.parse(await readFile(new URL(sample.metadataFixture, ROOT), "utf8")) as {
     legislative_sessions: { identifier: string; downloads: { data_type: string; url: string }[] }[];
@@ -151,9 +151,9 @@ test("one public session succeeds while an unavailable preceding archive falls b
     if (url === PLURAL_SESSION_CATALOG) return new Response(`<h1>Session CSV</h1><ul>
       <li><a href="${sample.sourceUrl}">current</a> updated 2026-10-12</li>
       <li><a href="${previousUrl}">previous</a> updated 2026-10-11</li></ul>`);
-    if (url === pluralJurisdictionUrl(sample.state)) return new Response(JSON.stringify({ ...metadata,
-      legislative_sessions: metadata.legislative_sessions.filter(session => [sample.session, previous.identifier].includes(session.identifier)) }));
-    if (url === previousUrl) throw new Error("synthetic preceding-session transport outage");
+    if (url === pluralJurisdictionsUrl(1)) return new Response(JSON.stringify({ results: [{ ...metadata,
+      legislative_sessions: metadata.legislative_sessions.filter(session => [sample.session, previous.identifier].includes(session.identifier)) }], pagination: { max_page: 1 } }));
+    if (url === previousUrl) assert.fail("the preceding cycle must not be downloaded during a current-session run");
     if (url.startsWith("https://v3.openstates.org/bills?")) {
       fallbackRequests.push(url);
       assert.equal(new URL(url).searchParams.get("session"), previous.identifier);
@@ -162,9 +162,88 @@ test("one public session succeeds while an unavailable preceding archive falls b
     }
     return replay(raw, init);
   };
-  const acquired = await acquireStateVotes({ ...h.input, fetchImpl });
-  assert.equal(acquired.results.length, 1, "the successful session is not republished during fallback");
-  assert.equal(acquired.results[0].votes[0].session, sample.session);
-  assert.equal(fallbackRequests.length, 1);
-  assert.deepEqual(acquired.held, [], "the completed alternate session read resolves its archive outage");
+  const sessions: string[] = [];
+  const acquired = await acquireStateVotes({ ...h.input, fetchImpl, onBill: async result => { sessions.push(result.votes[0]!.session); } });
+  assert.equal(acquired.bills, 1);
+  assert.deepEqual(sessions, [sample.session]);
+  assert.equal(fallbackRequests.length, 0);
+  assert.deepEqual(acquired.held, []);
+});
+
+test("two state runs share the national session catalog before downloading their own archives", async () => {
+  const samples = ["WA", "AZ"].map(state => manifest.states.find(sample => sample.state === state)!);
+  const h = await harness(samples[0]);
+  const jurisdictions = await Promise.all(samples.map(async sample => {
+    const metadata = JSON.parse(await readFile(new URL(sample.metadataFixture, ROOT), "utf8")) as { legislative_sessions: { identifier: string }[] };
+    return { ...metadata, legislative_sessions: metadata.legislative_sessions.filter(row => row.identifier === sample.session) };
+  }));
+  const archives = new Map(await Promise.all(samples.map(async sample => [sample.sourceUrl, await readFile(new URL(sample.fixtureArchive, ROOT))] as const)));
+  let catalogRequests = 0;
+  const fetchImpl: typeof fetch = async (raw, init) => {
+    const url = String(raw);
+    if (url === PLURAL_SESSION_CATALOG) return new Response("<h1>Session CSV</h1>");
+    if (url === pluralJurisdictionsUrl(1)) {
+      catalogRequests++;
+      assert.equal(new Headers(init?.headers).get("X-API-KEY"), "fixture-key");
+      return new Response(JSON.stringify({ results: jurisdictions, pagination: { max_page: 1 } }));
+    }
+    const archive = archives.get(url);
+    assert.ok(archive, `unexpected source request ${url}`);
+    assert.equal(new Headers(init?.headers).get("X-API-KEY"), null);
+    return new Response(archive);
+  };
+  for (const sample of samples) {
+    const sessions: string[] = [];
+    const acquired = await acquireStateVotes({ ...h.input, state: sample.state, fetchImpl, onBill: async result => {
+      sessions.push(result.votes[0].session);
+    } });
+    assert.deepEqual(sessions, [sample.session]);
+    assert.deepEqual(acquired.held, []);
+  }
+  assert.equal(catalogRequests, 1, "national metadata is shared rather than one quota request per state");
+});
+
+test("current cycles retain regular and special sessions despite missing classifications and backdated starts", () => {
+  // Exact identifying fields from the publisher's live /jurisdictions catalog.
+  // These cases cover its omitted classifications, special sessions labeled
+  // primary, prefiled future sessions, and Mississippi's backdated 2026 start.
+  const samples: { state: string; expected: string[]; rows: [string, string, string, string][] }[] = [
+    { state: "TX", expected: ["89R", "891", "892"], rows: [
+      ["89R", "89th Legislature (2025)", "regular", "2025-01-10"],
+      ["891", "89th Legislature, 1st Called Session (2025)", "special", "2025-07-21"],
+      ["892", "89th Legislature, 2nd Called Session (2025)", "special", "2025-08-18"],
+    ] },
+    { state: "VA", expected: ["2026", "2026S1"], rows: [
+      ["2025", "2025 Regular Session", "", "2025-01-08"],
+      ["2026", "2026 Regular Session", "", "2026-01-14"],
+      ["2026S1", "2026, 1st Special Session", "", "2026-04-23"],
+      ["2027", "2027 Regular Session", "", "2027-01-13"],
+    ] },
+    { state: "GA", expected: ["2025_26", "2026_ss"], rows: [
+      ["2025_26", "2025-2026 Regular Session", "", "2025-01-13"],
+      ["2026_ss", "2026 Special Session", "", "2026-06-17"],
+    ] },
+    { state: "MN", expected: ["2025-2026", "2025s1"], rows: [
+      ["2025-2026", "2025-2026 Regular Session", "primary", "2025-01-14"],
+      ["2025s1", "2025, First Special Session", "primary", "2025-06-08"],
+      ["2027-2028", "2027-2028 Regular Session", "primary", "2027-01-12"],
+    ] },
+    { state: "MS", expected: ["2026", "20261E"], rows: [
+      ["2026", "2026 Regular Session", "primary", "2025-01-06"],
+      ["2025", "2025 Regular Session", "primary", "2025-01-07"],
+      ["20251E", "2025 First Extraordinary Session", "special", "2025-05-28"],
+      ["20261E", "2026 1st Extraordinary Session", "primary", "2026-07-14"],
+    ] },
+    { state: "CA", expected: ["20252026", "20252026 Special Session 1"], rows: [
+      ["20232024 Special Session 2", "2023-2024, Special Session 2", "special", "2024-09-01"],
+      ["20252026", "2025-2026 Regular Session", "primary", "2024-12-02"],
+      ["20252026 Special Session 1", "2025-2026, Special Session 1", "special", "2024-12-02"],
+    ] },
+  ];
+  for (const sample of samples) {
+    const bytes = new TextEncoder().encode(JSON.stringify({ id: pluralVoteJurisdiction(sample.state),
+      legislative_sessions: sample.rows.map(([identifier, name, classification, start_date]) => ({ identifier, name, classification, start_date })),
+    }));
+    assert.deepEqual(currentPluralSessions(bytes, sample.state, "2026-10-20T00:00:00Z").map(row => row.identifier).sort(), [...sample.expected].sort(), sample.state);
+  }
 });

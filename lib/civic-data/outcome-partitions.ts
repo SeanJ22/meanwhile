@@ -1,4 +1,4 @@
-import { MEETING_SITTING_WINDOW, type RoutineSourceContract } from "./contracts.ts";
+import { meetingSittingWindow, type RoutineSourceContract } from "./contracts.ts";
 import { VALIDATION_CHECKS } from "./types.ts";
 import { meetingAcquisitionFailureDomain, meetingPartitionId, setExtraSittingWindowSources } from "./meeting-partitions.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
@@ -6,7 +6,8 @@ import type { BodySourceWiring } from "../registry/source-wiring.ts";
 import { wiringRowsFromDoors } from "../doors/rows.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import type { OutcomeTenant } from "../outcomes/data-plane.ts";
-import { setDoorOutcomePointers } from "../outcomes/door-outcome-pointers.ts";
+import { outcomePartitionScope, setDoorOutcomePointers } from "../outcomes/door-outcome-pointers.ts";
+export { outcomePartitionScope } from "../outcomes/door-outcome-pointers.ts";
 
 const HOUR = 60 * 60 * 1_000;
 const DAY = 24 * HOUR;
@@ -32,10 +33,6 @@ export interface OutcomePartitionContract extends RoutineSourceContract {
 
 export function outcomePartitionId(doorId: string): string {
   return `${doorId}:outcomes`;
-}
-
-export function outcomePartitionScope(doorId: string): string {
-  return `door:${encodeURIComponent(doorId)}:outcomes`;
 }
 
 export function isOutcomePartitionScope(scope: string): boolean {
@@ -148,7 +145,7 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    schedule: { ...MEETING_SITTING_WINDOW, follows: [{ meetingSource: kind, bodyId: door.bodyIds[0] }] },
+    schedule: meetingSittingWindow([{ meetingSource: kind, bodyId: door.bodyIds[0] }]),
     retry: { afterMs: HOUR, description: "one hour after a failed events, items, votes or minutes attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: DOOR_OUTCOMES_SOURCE_ID },
     validationContract: VALIDATION_CHECKS,

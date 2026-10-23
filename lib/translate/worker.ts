@@ -1,5 +1,6 @@
 import { canonicalModelId } from "../models.ts";
 import { randomUUID } from "node:crypto";
+import { recordCost } from "../control-plane/repository/coordinator.ts";
 import { costEntryWithModel } from "../control-plane/cost.ts";
 import { ZERO_COST } from "../control-plane/attempt.ts";
 import { WORKER_SAFETY_FRAME, rolePlaybook, readRolePlaybookRow, type RolePlaybookEntry } from "../control-plane/playbooks.ts";
@@ -13,9 +14,9 @@ import { measureRecordIssue, type MeasureRecord } from "../ballot/measure-record
 import { runtimeKinds } from "../registry/kinds-runtime.ts";
 import { registeredKind } from "../registry/kinds.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-type TranslationCostRepos = FieldManualRepos & Partial<Pick<ControlPlaneRepositories, "costs">>;
+type TranslationCostRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "costs" | "spend">;
 export type MeasureTranslationRepos = TranslationCostRepos & Pick<ControlPlaneRepositories, "adminConfig">;
-import { translationHash, translationRecordIssue, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
+import { translationHash, translationRecordIssue, translationSourceContains, translationSourceNames, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
 
 export interface TranslationPlaybook {
   readonly writerText: string;
@@ -54,17 +55,15 @@ function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTra
     const response = await send(request);
     const usage = readMeteredUsage(response.usage, response.batch === true);
     const at = new Date().toISOString(), id = `translation:${randomUUID()}`;
-    if (repos.costs) {
-      const checker = request.tools[0]?.name.startsWith("check_") === true;
-      const entry = costEntryWithModel({ attemptId: id, workItemId: subjectId, routeTaskId: null, routeId: "plain-english-translation",
-        source: "api.anthropic.com", jurisdiction: subjectId, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
-        costPolicy: "R7", recordedAt: at, requestedModel: request.model, servedModel: response.model,
-        cost: { ...ZERO_COST, ...meteredCostFields(usage), ...modelRequestAccounting(response), requestCount: 1,
-          inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
-          outputTokens: usage.outputTokens, usd: priceMeteredUsage(response.model, usage, "1h").usd,
-          durationMs: Math.round(performance.now() - started) } }, response.model);
-      await repos.costs.append(subjectId, id, entry, at);
-    }
+    const checker = request.tools[0]?.name.startsWith("check_") === true;
+    const entry = costEntryWithModel({ attemptId: id, workItemId: subjectId, routeTaskId: null, routeId: "plain-english-translation",
+      source: "api.anthropic.com", jurisdiction: subjectId, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
+      costPolicy: "R7", recordedAt: at, requestedModel: request.model, servedModel: response.model,
+      cost: { ...ZERO_COST, ...meteredCostFields(usage), ...modelRequestAccounting(response), requestCount: 1,
+        inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
+        outputTokens: usage.outputTokens, usd: priceMeteredUsage(response.model, usage, "1h").usd,
+        durationMs: Math.round(performance.now() - started) } }, response.model);
+    await recordCost(repos, entry, at);
     return response;
   };
 }
@@ -79,9 +78,21 @@ function toolResult(response: ModelResponse, name: string, model: string): unkno
 const writerTool = {
   name: "write_measure_translation", description: "Write the measure summary, vote meanings and only officially numbered parts, with one exact supporting source quote per written sentence.",
   input_schema: { type: "object", required: ["measure", "sentences"], properties: {
-    measure: { type: "object", description: "MeasureRecord: contestId, whatItDoes, yesMeans, noMeans, parts[{id, number, kind, label, what}], sourceUrl, sourceHash, writtenAt. Preserve supplied existing part IDs when rewriting the same parts." },
+    measure: { type: "object", required: ["contestId", "whatItDoes", "yesMeans", "noMeans", "parts", "sourceUrl", "sourceHash", "writtenAt"],
+      description: "Preserve supplied existing part IDs when rewriting the same parts.",
+      properties: {
+        contestId: { type: "string" }, whatItDoes: { type: "string" }, yesMeans: { type: "string" }, noMeans: { type: "string" },
+        sourceUrl: { type: "string" }, sourceHash: { type: "string" }, writtenAt: { type: "string" },
+        parts: { type: "array", description: "Optional. Use [] for a short explainer unless retaining supplied existing numbered parts. Never invent part numbering.", items: { type: "object", required: ["id", "number", "kind", "label", "what"], properties: {
+          id: { type: "string", description: "Must start with the exact contestId followed by #. Preserve any supplied existing part ID." },
+          number: { type: "string", description: "The part's own unique number in the official text." },
+          kind: { type: "string", description: "One of the supplied partKinds keys." }, label: { type: "string" }, what: { type: "string" },
+        } } },
+      } },
     sentences: { type: "array", items: { type: "object", required: ["field", "text", "quote"], properties: {
-      field: { type: "string" }, text: { type: "string" }, quote: { type: "string" },
+      field: { type: "string", description: "Exact output field: whatItDoes, yesMeans, noMeans, parts.<exact part id>.label, or parts.<exact part id>.what. For a text translation use text." },
+      text: { type: "string", description: "One sentence copied exactly from that output field; sentences joined with one space must reproduce the whole field." },
+      quote: { type: "string", description: "One contiguous exact supporting passage copied from the supplied source. Do not insert ellipses or combine separate passages." },
     } } },
   } },
 };
@@ -118,7 +129,7 @@ export async function translateText(input: {
       subject.meeting.documentHash !== hash)) throw new Error("Meeting translation lacks its held body, sitting and document revision.");
   if (!subject.subjectId.startsWith(`${subject.kind.toLowerCase()}:`) || !subject.label.trim() ||
       !evidence.text.includes(subject.label) || !evidence.text.trim() ||
-      evidence.contentHash !== `sha256-${translationHash(evidence.text)}` || !/^https:\/\//.test(evidence.canonicalUrl) ||
+      evidence.contentHash !== `sha256-${translationHash(evidence.text)}` || !(subject.kind === "COMMENT_RULES" ? /^https?:\/\//.test(evidence.canonicalUrl) : /^https:\/\//.test(evidence.canonicalUrl)) ||
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Text translation lacks its exact source-named subject.");
   // Read the same live translator playbook as measures; the task-specific tool
   // supplies the output shape. Existing Bank edits and model routing apply here.
@@ -127,6 +138,7 @@ export async function translateText(input: {
     ? "Describe only what this class of body is under the supplied creating law. Do not assert that a named body possesses those powers."
     : subject.kind === "BODY" ? "Describe only this named body's powers under its own charter or creating law. Do not import powers from its general class."
     : subject.kind === "OFFICE" ? "Describe this state's legally defined office. Do not import duties from a similarly named office in another state."
+    : subject.kind === "COMMENT_RULES" ? "Write a short plain-English summary of how a member of the public may take part in this one body's meetings: how to attend, how to sign up to speak, any time limit, and how to send written comments. Use only what the supplied page states, and state only rules for this body's meetings. Leave out grants, notices, elections, surveys and anything about other bodies. One sentence per rule; never invent a deadline, an address or a limit."
     : subject.kind === "AGENDA" ? "Describe what is on this held agenda, preserving dates, conditions and proposed status. The clerk's verbatim list remains alongside this text. Never describe a proposal as adopted."
     : "Describe only what these held minutes record. Preserve votes, outcomes, qualifications and uncertainty; never invent a vote or speaker.";
   if (input.preservedText && (input.preservedText.origin.kind !== "CURATED_MIGRATION" ||
@@ -166,13 +178,17 @@ export async function translateMeasure(input: {
   readonly batchPriority?: import("../control-plane/model-batch.ts").BatchPriority;
   readonly repos: MeasureTranslationRepos;
   readonly evidence: WorkerEvidence;
-  readonly subject: { readonly contestId: string; readonly title: string; readonly ocdId: string; readonly state: string; readonly prior: MeasureRecord | null };
+  readonly subject: { readonly contestId: string; readonly title: string; readonly ocdId: string; readonly state: string; readonly prior: MeasureRecord | null;
+    /** Exact passage bound by the held ballot to this official source. Titles
+     * often include ballot numbers assigned after the legal text was written. */
+    readonly sourceQuote?: string };
   readonly transportFor: (subject: { subjectId: string; state: string }) => ModelTransport;
   readonly now: string;
 }) {
   const { evidence, subject, now } = input;
   if (!evidence.text.trim() || evidence.contentHash !== `sha256-${translationHash(evidence.text)}` ||
-      !/^https:\/\//.test(evidence.canonicalUrl) || !subject.title.trim() || !evidence.text.includes(subject.title) ||
+      !/^https:\/\//.test(evidence.canonicalUrl) || !subject.title.trim() ||
+      !(subject.sourceQuote?.trim() ? translationSourceContains(evidence.text, subject.sourceQuote) : translationSourceNames(evidence.text, subject.title)) ||
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Translation source is incomplete or does not name this measure.");
   const playbook = await loadTranslationPlaybook(input.repos);
   const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state }), subject.contestId);
@@ -186,16 +202,17 @@ export async function translateMeasure(input: {
   const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
   const writer = await send(request(playbook.writerModel, writerTool, { source: evidence.text, subject,
     sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now,
-    partKinds: kinds.measurePart }));
+    partKinds: kinds.measurePart,
+    instruction: "Write a short, neutral explanation in plain high-school English of what the measure does, what a YES vote would enact, and what a NO vote would reject. All three fields are required. Use only the supplied official text. Preserve every material condition and exception. Never recommend, judge, endorse, favor or argue for either side. Do not invent consequences of rejecting the proposal. Cite one contiguous exact source passage for each individual sentence, with no inserted ellipses. Use sentence fields whatItDoes, yesMeans, noMeans, parts.<exact part id>.label or parts.<exact part id>.what; their sentences joined with one space must reproduce that field exactly. Return parts: [] for a short explainer unless retaining supplied existing numbered parts. Any part ID must start with the exact contestId followed by #, and its number must be the source's own unique number." }));
   const proposal = toolResult(writer, writerTool.name, playbook.writerModel) as { measure: MeasureRecord; sentences: TranslationSentence[] };
   if (!proposal || measureRecordIssue(proposal.measure) || proposal.measure.contestId !== subject.contestId ||
       proposal.measure.sourceUrl !== evidence.canonicalUrl || proposal.measure.sourceHash !== sourceHash || proposal.measure.writtenAt !== now ||
-      !Array.isArray(proposal.sentences) || proposal.sentences.some(sentence => !sentence || typeof sentence.quote !== "string" || !evidence.text.includes(sentence.quote))) throw new Error("Translation writer returned unsupported fields or source passages.");
+      !Array.isArray(proposal.sentences) || proposal.sentences.some(sentence => !sentence || !translationSourceContains(evidence.text, sentence.quote))) throw new Error("Translation writer returned unsupported fields or source passages.");
   if (proposal.measure.parts.some(part => !registeredKind(kinds, "measurePart", part.kind))) throw new Error("Translation part kind is absent from the current kinds setting.");
   if (subject.prior?.parts.some(part => !proposal.measure.parts.some(proposed => proposed.id === part.id &&
       (part.number === null || proposed.number === part.number)))) throw new Error("Translation would lose or reassign an existing measure part's reaction identity.");
   const checker = await send(request(playbook.checkerModel, checkerTool, { originalSource: evidence.text, subject,
-    proposal, instruction: "Check every written sentence and its qualifications against the original source. Every official part number must appear there. Return a false check for any unsupported sentence." }));
+    proposal, instruction: "Check every written sentence and its qualifications against the original source. Verify what a YES vote would enact and what a NO vote would reject without assuming unstated consequences. Reject recommendations, judgments, persuasion or language favoring either side. Every official part number must appear there. Return a false check for any unsupported or non-neutral sentence." }));
   const result = toolResult(checker, checkerTool.name, playbook.checkerModel) as { checked: MeasureTranslation["checked"] };
   const record: MeasureTranslation = { id: `translation:${subject.contestId}`, kind: "MEASURE", subjectId: subject.contestId,
     ocdId: subject.ocdId, sourceUrl: evidence.canonicalUrl, sourceHash, sourceText: evidence.text,

@@ -1,0 +1,589 @@
+{
+  "doorId": "ne-douglas-drop-boxes",
+  "sites": [
+    {
+      "id": "voting-971ce90d142305270c0ce5fe",
+      "name": "Douglas County Election Commission",
+      "address": "12220 W Center Road, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "Southwest end of parking lot ,\n\r\nunder light pole",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-4ec04ff7612a9f845a91c49e",
+      "name": "City/County Building",
+      "address": "1819 Farnam Street, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "Between 18th & 19th on Farnam\n\r\nnear sidewalk",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8d0160d527f3b6fa10ae7566",
+      "name": "South Omaha Library",
+      "address": "2808 Q Street, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "East side parking lot",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-443acfc125d7990991b5ce2d",
+      "name": "Charles B. Washington Branch Library",
+      "address": "2868 Ames Avenue, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "Southwest corner of building",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-8071cd48d3962a6bdcb07546",
+      "name": "Clarkson College Parking Lot 8",
+      "address": "42nd & Farnam Street, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "Northwest corner,\n\r\neast side of parking lot",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-a9b4489e32fe342548356da4",
+      "name": "Asian Market",
+      "address": "321 N 76th Street, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "West end of parking lot",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d3609d6ef6cf5ff9ffe320f6",
+      "name": "Ralston Police Department",
+      "address": "7400 Main Street, Ralston",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "Southwest corner of building",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-0406532c22f0abc37df27020",
+      "name": "Goodwill",
+      "address": "4805 N 72nd Street, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "On median in Goodwill's south\n\r\nparking lot next to Home Depot",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-157e84119749ceb84f9041ba",
+      "name": "Milton R. Abrahams Branch Library",
+      "address": "5111 N 90th Street, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "South of main entrance",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d274fc409a3324e0aeb5d7d4",
+      "name": "Douglas County Engineer's Office",
+      "address": "15505 W Maple Road, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "Near sidewalk by parking stalls",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-d74de8d372803e95dff102a9",
+      "name": "Millard Public Schools Foundation",
+      "address": "5231 South 159th Avenue, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "Northwest corner of building,\n\r\nend of sidewalk",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-ff04d5d4b7368989a69f83ac",
+      "name": "Spring Ridge Shopping Center",
+      "address": "178th & Pacific Street, Omaha",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "On median when entering at 178th St,\n\r\nnext to post office box",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    },
+    {
+      "id": "voting-5202e6f863968063cd16a2ee",
+      "name": "Bess Johnson Elkhorn Branch Library",
+      "address": "2100 Reading Plaza, Elkhorn",
+      "room": null,
+      "lat": null,
+      "lng": null,
+      "kind": "DROP_BOX",
+      "election": null,
+      "serves": null,
+      "sources": [
+        {
+          "publisher": "Douglas County Election Commission",
+          "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+          "title": "Douglas County Election Commission - Early Voting",
+          "checkedAt": "2026-10-21T04:37:16.444Z",
+          "official": true,
+          "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+          "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+        }
+      ],
+      "hours": "24/7",
+      "locationNotes": "Northeast corner of building",
+      "countyFips": "31055",
+      "kinds": [
+        "DROP_BOX"
+      ],
+      "schedules": [
+        {
+          "kind": "DROP_BOX",
+          "hours": "24/7",
+          "source": {
+            "publisher": "Douglas County Election Commission",
+            "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+            "title": "Douglas County Election Commission - Early Voting",
+            "checkedAt": "2026-10-21T04:37:16.444Z",
+            "official": true,
+            "documentHash": "4b168d104af94b6a5e0b6d96e0e18cdf905f3b91d4b6b16ed524f58bafc69099",
+            "documentUrl": "https://www.votedouglascounty-ne.gov/early_voting.aspx"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [],
+  "sources": [
+    {
+      "publisher": "Douglas County Election Commission",
+      "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+      "title": "Douglas County Election Commission - Early Voting",
+      "checkedAt": "2026-10-21T04:37:16.444Z",
+      "official": true
+    }
+  ],
+  "blanks": [],
+  "attempts": [
+    {
+      "url": "https://www.votedouglascounty-ne.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.votedouglascounty-ne.gov/early_voting.aspx",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ],
+  "fileTitle": "Douglas County Election Commission - Early Voting",
+  "contacts": []
+}

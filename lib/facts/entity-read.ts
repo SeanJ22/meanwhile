@@ -14,6 +14,8 @@ const STATE_NAMES: Readonly<Record<string, string>> = {
 
 export const stateName = (code: string | null): string | null => (code ? STATE_NAMES[code.toUpperCase()] ?? null : null);
 
+export const stateCodeOf = (name: string): string | null => Object.entries(STATE_NAMES).find(([, full]) => full === name)?.[0] ?? null;
+
 /** The entity as the check sees it: its name in its state, the official hosts of its parents and of the governments at its place, and its ids. */
 export async function readCheckEntity(query: Query, id: string): Promise<CheckEntity | null> {
   const [row] = await query(`WITH RECURSIVE up(id, depth) AS (

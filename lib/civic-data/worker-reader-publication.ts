@@ -1,5 +1,5 @@
 import { parseStateBallotContractId, type StateBallotContractId } from "./state-scopes.ts";
-import { recordPublicationFlow } from "./publication-flow.ts";
+import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { parserFieldSources } from "./field-sources.ts";
 import { publishWorkerPollingResults, type PollingRegistrySlice } from "./worker-polling-publication.ts";
@@ -20,6 +20,8 @@ import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts"
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { auditPull, captureIntact, jobWorkerResults, capturesForPublication, section3SourceReceipt, latestParserResult, verifiedWorkerRecords, requirePublication, validatorObservation } from "./worker-publication-evidence.ts";
+import { factReader } from "../facts/db.ts";
+import { flagReaderRecord } from "../facts/owner-flags.ts";
 import { readValidatorManual, writeValidatorLessons, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
 import { workerReaderClassMatches, isWorkerReaderContract, type WorkerReaderContract } from "./worker-reader-contracts.ts";
 import { createHash } from "node:crypto";
@@ -249,7 +251,11 @@ export async function publishWorkerReaderResults(input: {
         const old = before.find(row => row.id === record.id);
         return old && prior?.sourceReceipt ? resolveRecordConflicts(record, old, checked.sourceReceipt, prior.sourceReceipt).record : record;
       });
-      const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(checked, input.store, input.now, built.pulledMemberIds);
+      const flags = factReader();
+      if (flags) for (const record of before.filter(row=>built.pulledMemberIds.has(row.id))) await flagReaderRecord(flags,{
+        id:`${contractId}:${record.id}`,family:contractId,area:String(record.bodyId ?? "national"),sourceUrl:String(record.sourceUrl ?? ""),
+        record,verifiedAt:null},{reason:"The audit challenged this published record. Sean's decision is required."});
+      const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(checked, input.store, input.now);
       const composed = candidate.readModel as CuratedReaderProjection;
       requirePublication(delivered.every(row => composed.records.some(published => canonicalJson(published) === canonicalJson(row))),
         `READER_FACTS_HELD:${candidate.excludedFacts?.map(row => `${row.code}: ${row.detail}`).join("; ") ?? "typed record was withheld"}`);
@@ -286,7 +292,7 @@ export async function publishWorkerReaderResults(input: {
     }
     if (plan) outcome = await withPageDoor(input.repos, outcome, captures[0], plan.contract.recordClass);
     const latest = await input.repos.workItems.mustRead(id);
-    await input.repos.workItems.compareAndSet(id, latest.revision, { ...latest.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, latest, outcome, input.now);
     report.push({ workItemId: id, outcome });
     if (plan) await recordPublishedPageDoor({ repos: input.repos, page: captures[0], recordClass: plan.contract.recordClass, ocdId: plan.contract.schemaVersion === 2 ? plan.contract.jurisdiction.canonicalId : null, bodyId: plan.publication?.bodyId, workItemId: id, published: wentLive, now: input.now });
     if (plan) learned.push(validatorObservation({ plan, workItemId: id, page: captures[0], captures, published: wentLive, outcome }));

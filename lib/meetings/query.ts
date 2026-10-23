@@ -8,7 +8,7 @@ import {
   DEFAULT_RADIUS_KM,
   type CoverageTier,
 } from "./constants.ts";
-import { getMeetingSource, type ResolvedMeetingSource } from "./registry.ts";
+import type { ResolvedMeetingSource } from "./snapshot-source.ts";
 
 // Re-exported from ./constants.ts so client code can import the values without this module's server-only graph.
 export {
@@ -18,6 +18,8 @@ export {
 export type { CoverageTier } from "./constants.ts";
 
 export interface MeetingSearchResult {
+  /** State officials are ready while the independent local read is still pending. */
+  localPending?: boolean;
   /** Held meetings of the place’s governments. */
   readerScope?: import("./reader-scope.ts").ReaderMeetingScope;
   meetings: Meeting[];
@@ -88,15 +90,15 @@ function byStartDescending(a: Meeting, b: Meeting) {
 }
 
 type MeetingBody = Pick<Body, "id" | "ocdId" | "alsoServesOcdIds">;
-const bodyIndexes = new WeakMap<readonly MeetingBody[], ReadonlyMap<string, MeetingBody>>();
 
-function meetingBodyIndex(bodies: readonly MeetingBody[]): ReadonlyMap<string, MeetingBody> {
-  const cached = bodyIndexes.get(bodies);
-  if (cached) return cached;
-  const index = new Map<string, MeetingBody>();
-  for (const body of bodies) index.set(body.id, body);
-  bodyIndexes.set(bodies, index);
-  return index;
+/** The ids of the bodies whose territory includes any of these divisions. */
+export function meetingBodyIds(bodies: readonly MeetingBody[], divisions: ReadonlySet<string>): ReadonlySet<string> {
+  const ids = new Set<string>();
+  for (const body of bodies) {
+    if (body.ocdId && divisions.has(body.ocdId.split("#")[0]) ||
+      body.alsoServesOcdIds?.some(id => divisions.has(id.split("#")[0]))) ids.add(body.id);
+  }
+  return ids;
 }
 
 export async function searchMeetings(
@@ -107,13 +109,29 @@ export async function searchMeetings(
   divisionsAtPoint: ReadonlySet<string> = new Set(),
   injectedSource?: ResolvedMeetingSource,
   shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
-  bodies: readonly MeetingBody[] = [],
+  bodyIds: ReadonlySet<string> = new Set(),
+  /** The bodies the registry lists; a meeting of any other body is placed by its own division. */
+  registeredBodyIds?: ReadonlySet<string>,
 ): Promise<MeetingSearchResult> {
-  const source = injectedSource ?? getMeetingSource();
+  const source = injectedSource ?? (await import("./registry.ts")).getMeetingSource();
+  return searchMeetingsFromSource(lat, lng, radiusKm, now, divisionsAtPoint, source, shownSettings, bodyIds, registeredBodyIds);
+}
+
+/** Readers already hold their place's source; loading acquisition adapters is unnecessary. */
+export async function searchMeetingsFromSource(
+  lat: number,
+  lng: number,
+  radiusKm: number,
+  now: Date,
+  divisionsAtPoint: ReadonlySet<string>,
+  source: ResolvedMeetingSource,
+  shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
+  bodyIds: ReadonlySet<string> = new Set(),
+  registeredBodyIds?: ReadonlySet<string>,
+): Promise<MeetingSearchResult> {
   const shown = shownSettings ?? await readReaderMeetingSettings();
   const horizonMs = shown.shownAheadDays * 86_400_000;
   const lookbackMs = shown.shownBackDays * 86_400_000;
-  const byBody = meetingBodyIndex(bodies);
   const all = (await source.load({
     lat,
     lng,
@@ -121,9 +139,8 @@ export async function searchMeetings(
     startsAfter: new Date(now.getTime() - lookbackMs).toISOString(),
     startsBefore: new Date(now.getTime() + horizonMs).toISOString(),
   }, now)).filter(meeting => {
-    const body = meeting.bodyId ? byBody.get(meeting.bodyId) : undefined;
-    const divisions = [body?.ocdId ?? meeting.ocdId, ...(body?.alsoServesOcdIds ?? [])];
-    return divisions.some(id => id != null && divisionsAtPoint.has(id.split("#")[0]));
+    if (meeting.bodyId && registeredBodyIds?.has(meeting.bodyId) !== false) return bodyIds.has(meeting.bodyId);
+    return meeting.ocdId != null && divisionsAtPoint.has(meeting.ocdId.split("#")[0]);
   }).map(meeting => {
     const jurisdiction = readerJurisdictionLabel(meeting.jurisdiction);
     return jurisdiction === meeting.jurisdiction ? meeting : { ...meeting, jurisdiction };

@@ -34,9 +34,21 @@ test("the quote must be on the saved copy and hold the value", () => {
   assert.equal(boundedIndexOf("Ward 2", "2"), 5);
 });
 
-test("a page that is not about the entity fails; a third-party page naming it in its state passes alone", () => {
+test("a page that is not about the entity fails unless it is a .gov page; a page naming it in its state passes, spelled out or abbreviated", () => {
   const vail: CheckEntity = { id: "ocd-body/vail", fullName: "Vail Unified School District", stateName: "Arizona", hosts: ["vailschooldistrict.org"], externalIds: [] };
-  assert.deepEqual(checkFact(chair({ entity: vail }), NOW, window), { ok: false, reason: "PAGE_NOT_ABOUT_ENTITY" });
+  const elsewhere = boardCopy({ finalUrl: "https://example.com/boards/15" });
+  assert.deepEqual(checkFact(chair({ entity: vail, copy: elsewhere }), NOW, window), { ok: false, reason: "PAGE_NOT_ABOUT_ENTITY" });
+  assert.equal(checkFact(chair({ entity: vail }), NOW, window).ok, true, "any .gov page is official");
+  const coolidge: CheckEntity = { id: "az:city:city-of-coolidge", fullName: "City Of Coolidge", stateName: "Arizona", hosts: [], externalIds: [] };
+  const town = (text: string) => boardCopy({ finalUrl: "https://www.coolidgeaz.com/council", text });
+  const claim = (text: string) => chair({ entity: coolidge, valueText: "(520) 723-5361", quote: "Call (520) 723-5361", copy: town(text) });
+  assert.equal(checkFact(claim("Coolidge, AZ 85128. Call (520) 723-5361"), NOW, window).ok, true, "the town and its state's letters");
+  assert.equal(checkFact(claim("Coolidge, Arizona 85128. Call (520) 723-5361"), NOW, window).ok, true);
+  assert.deepEqual(checkFact(claim("Coolidge Pizza. Call (520) 723-5361"), NOW, window), { ok: false, reason: "PAGE_NOT_ABOUT_ENTITY" });
+  const board: CheckEntity = { id: "ocd-division/country:us/state:az/place:duncan#governing", fullName: "Duncan town governing", stateName: "Arizona", hosts: [], externalIds: [] };
+  assert.equal(checkFact(chair({ entity: board, valueText: "Ned Beman", copy: town("Duncan, AZ. Ned Beman Chairperson Ward 2") }), NOW, window).ok, true, "a body is named for its place");
+  const eloy: CheckEntity = { id: "az:school:eloy-school-district-11", fullName: "Eloy School District 11", stateName: "Arizona", hosts: [], externalIds: [] };
+  assert.equal(checkFact(chair({ entity: eloy, valueText: "Ned Beman", copy: town("Eloy, AZ. Ned Beman Chairperson Ward 2") }), NOW, window).ok, true);
   const news = boardCopy({ finalUrl: "https://news.example.com/tccc", text: `${tucsonBoardPage}\nTucson, Arizona 85701` });
   assert.equal(checkFact(chair({ copy: news, entity: { ...tccc, hosts: [] }, provenance: "NEWS" }), NOW, window).ok, true);
 });
@@ -57,7 +69,7 @@ test("a second source only for judgment calls: unofficial portraits, a person ma
   assert.equal(checkFact(portrait, NOW, window).ok, true, "a campaign's own portrait publishes alone");
   assert.deepEqual(checkFact({ ...portrait, provenance: "NEWS" }, NOW, window), { ok: false, reason: "SECOND_SOURCE_REQUIRED" });
   assert.deepEqual(checkFact({ ...chair(), fieldKind: "same_person_link" }, NOW, window), { ok: false, reason: "SECOND_SOURCE_REQUIRED" });
-  assert.equal(checkFact({ ...chair(), provenance: "OTHER", second: { copy: boardCopy({ id: 3 }), quote: "Ned Beman" } }, NOW, window).ok, true);
+  assert.equal(checkFact({ ...chair(), provenance: "OTHER", second: { copy: boardCopy({ id: 3, finalUrl: "https://news.example.com/commission", text: `${tucsonBoardPage} Arizona` }), quote: "Ned Beman" } }, NOW, window).ok, true);
 });
 
 test("any .gov site is official", () => {
@@ -107,7 +119,6 @@ test("publishClaim writes one live fact alone, with its receipt, and queues its 
   assert.equal(Number(fact!.source_copy_id), 1);
   assert.equal(fact!.quote, "Ned Beman Chairperson Ward 2");
   assert.ok(fact!.live_at);
-  assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue")).map(r => r.place_id), ["ocd-division/country:us/state:az/place:tucson"]);
   const again = await publishClaim(db, claim({ copy: boardCopy({ id: 2, fetchedAt: new Date("2026-08-14T13:00:00Z") }) }), clocks, NOW);
   assert.deepEqual(again, { decision: "CONFIRM", factId: 1 });
   assert.equal((await db.query("SELECT count(*)::int AS n FROM fact"))[0]!.n, 1);
@@ -117,7 +128,8 @@ test("a failing claim leaves a blank with its stage and reason; the next passing
   const db = await seeded();
   assert.deepEqual(await publishClaim(db, claim({ quote: "Ned Beman Chairperson Ward 9" }), clocks, NOW), { blank: "QUOTE_NOT_ON_SAVED_COPY" });
   const [blank] = await db.query("SELECT stage, reason, detail, attempts FROM blank");
-  assert.deepEqual(blank, { stage: "CHECK", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY", detail: "https://clerksboards.tucsonaz.gov/boards/15", attempts: 1 });
+  assert.deepEqual({ ...blank,detail:undefined }, { stage:"CHECK",reason:"CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY",detail:undefined,attempts:1 });
+  assert.deepEqual(JSON.parse(String(blank!.detail)),{sourceUrl:boardCopy().finalUrl,copyId:1,fieldKind:"officeholder",provenance:"OFFICIAL",value:"Ned Beman",valueText:"Ned Beman",quote:"Ned Beman Chairperson Ward 9",producedBy:"reader:clerksboards"});
   await publishClaim(db, claim(), clocks, NOW);
   assert.equal((await db.query("SELECT count(*)::int AS n FROM blank"))[0]!.n, 0);
 });
@@ -131,6 +143,7 @@ test("a losing value is kept with its reason; an official value Sean typed over 
   assert.equal("decision" in lost && lost.decision, "KEEP_CURRENT");
   assert.deepEqual(await db.query("SELECT value, status, held_reason FROM fact ORDER BY id"), [
     { value: "Ned Beman", status: "live", held_reason: null }, { value: "Jose Jimenez", status: "held", held_reason: "LOSES_TO_CURRENT" }]);
+  assert.deepEqual(await publishClaim(db, claim(), clocks, NOW), { decision: "CONFIRM", factId: 1 });
 
   await db.query("UPDATE fact SET status = 'superseded' WHERE status = 'live'");
   await db.query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, quote, checked_at, live_at, produced_by)

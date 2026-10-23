@@ -12,7 +12,7 @@ import {
   MEETING_HELD_LOOKBACK_DAYS,
   meetingHeldWindowAt,
 } from "../lib/meetings/constants.ts";
-import { meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
+import { meetingFetchedWindowFor, STANDING_MEETING_GEOGRAPHY } from "../lib/meetings/fetch-window.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { recordFamilyReads } from "../lib/doors/outcome.ts";
 import { evidenceFromFamilyRead } from "../lib/doors/ingest-evidence.ts";
@@ -22,6 +22,10 @@ import {
   resolveMeetingBodies,
 } from "../lib/meetings/attribution.ts";
 import { agendaItems } from "../lib/routing/agenda-search.ts";
+import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
+import { ROUTINE_SAME_DOMAIN_CHILD_GAP_MS } from "../lib/civic-data/bounded-child-pass.ts";
+import { calendarReadOrder } from "../lib/civic-data/state-calendars.ts";
+import { readContractHandoff } from "../lib/civic-data/contract-handoff.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { meetingCarriesRecords } from "../lib/meetings/carries-records.ts";
@@ -134,19 +138,24 @@ const SOURCES: Record<string, (state: string) => MeetingSource<unknown>> = {
 
 };
 
+/** The boards one state's calendar program reads, in the order given; each named once, all registered. */
 export function selectedMeetingPartitions(args: readonly string[]): readonly MeetingPartitionContract[] {
   if (args.some((arg) => arg.startsWith("--partitions="))) {
     throw new Error("MEETING_PARTITION_BATCH_ARGUMENT_RETIRED");
   }
-  const requested = args
+  const flags = args
     .filter((arg) => arg.startsWith("--only-partition="))
     .map((arg) => arg.slice("--only-partition=".length));
-  if (requested.length !== 1 || !requested[0]) {
-    throw new Error("MEETING_PARTITION_EXACTLY_ONE_REQUIRED");
-  }
-  const partition = meetingPartitionContract(requested[0]);
-  if (!partition) throw new Error(`MEETING_PARTITION_NOT_REGISTERED:${requested[0]}`);
-  return [partition];
+  const handed = args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg));
+  if (handed && flags.length > 0) throw new Error("MEETING_PARTITION_SELECTION_AMBIGUOUS");
+  const requested = handed ? readContractHandoff<string>(args) : flags;
+  if (requested.length === 0 || requested.some((id) => typeof id !== "string" || !id)) throw new Error("MEETING_PARTITION_REQUIRED");
+  if (new Set(requested).size !== requested.length) throw new Error("MEETING_PARTITION_NAMED_TWICE");
+  return requested.map((id) => {
+    const partition = meetingPartitionContract(id);
+    if (!partition) throw new Error(`MEETING_PARTITION_NOT_REGISTERED:${id}`);
+    return partition;
+  });
 }
 
 export function documentUrlFor(meeting: Meeting): string | null {
@@ -689,40 +698,79 @@ async function main() {
   if (selectedStates.length !== 1) throw new Error("INGEST_EXACT_STATE_REQUIRED");
   const state = selectedStates[0]!;
   return withRegistryRuntimeStates([state], async () => {
-
-  if (promote && partitions.length === 1 && partitions[0]!.derivedFamily !== null) {
-    await promoteDerivedMeetingFamily(new PostgresRoutineDataStore(), partitions[0]!, async () => {
+    if (name !== "composite") {
       await preloadCanonicalMeetingDependencies({ sourceName: name, state });
       REGISTRY = getRegistryRuntimeReadModel().registry;
-    }, { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) });
-    return;
-  }
-  await preloadCanonicalMeetingDependencies({ sourceName: name, state });
-  REGISTRY = getRegistryRuntimeReadModel().registry;
-  const promotionStore = promote ? new PostgresRoutineDataStore() : null;
+      await readMeetingSource(SOURCES[name](state), [], null);
+      return;
+    }
+    await readStateCalendars(partitions, state);
+  });
+}
 
-  const source = name === "composite"
-    ? buildCompositeSource({
-        timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
-        captureAcquisitionEvidence: true,
-        sourceNames: [...new Set(partitions.map((partition) => partition.meetingSource))],
-        meetingPartitions: partitions.map((partition) => ({
-          sourceName: partition.meetingSource,
-          bodyId: partition.bodyId,
-        })),
-      })
-    : SOURCES[name](state);
+/**
+ * One state's calendar program: the state's data and door list load once, then each due board is read in turn, each
+ * starting with only its own held agenda documents. A board that throws is named and the next board is still read.
+ * Boards not started before the pass deadline are named as still owed.
+ */
+async function readStateCalendars(partitions: readonly MeetingPartitionContract[], state: string): Promise<void> {
+  const store = new PostgresRoutineDataStore();
+  let prepared = false;
+  const prepare = async () => {
+    if (prepared) return;
+    await preloadCanonicalMeetingDependencies({ sourceName: "composite", state });
+    REGISTRY = getRegistryRuntimeReadModel().registry;
+    prepared = true;
+  };
+  const facts = { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) };
+  // A read started later than this could not finish its acquisition before the runner ends the pass.
+  const lastStartMs = passDeadlineFromEnv() - STANDING_PARTITION_ACQUISITION_TIMEOUT_MS;
+  const lastEnded = new Map<string, number>();
+  const ordered = calendarReadOrder(partitions);
+  for (const [index, partition] of ordered.entries()) {
+    const gapEndsMs = (lastEnded.get(partition.acquisitionFailureDomain) ?? Number.NEGATIVE_INFINITY) + ROUTINE_SAME_DOMAIN_CHILD_GAP_MS;
+    if (Math.max(Date.now(), gapEndsMs) >= lastStartMs) {
+      for (const owed of ordered.slice(index)) console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: owed.id })}`);
+      break;
+    }
+    if (gapEndsMs > Date.now()) await new Promise((resolve) => setTimeout(resolve, gapEndsMs - Date.now()));
+    agendaDocumentStore.clear();
+    try {
+      if (partition.derivedFamily !== null) await promoteDerivedMeetingFamily(store, partition, prepare, facts);
+      else {
+        await prepare();
+        await readMeetingPartition(partition, store);
+      }
+    } catch (error) {
+      console.error(error);
+      console.log(`RCD_MEETING_PARTITION_UNREAD=${JSON.stringify({ partitionId: partition.id,
+        detail: (error instanceof Error ? error.stack ?? error.message : String(error)).split("\n").slice(0, 8).join(" | ") })}`);
+    }
+    lastEnded.set(partition.acquisitionFailureDomain, Date.now());
+    console.log("RCD_PROGRESS=" + JSON.stringify({ key: partition.id, records: 1 }));
+  }
+}
+
+async function readMeetingPartition(partition: MeetingPartitionContract, promotionStore: RoutineDataStore): Promise<void> {
+  const source = buildCompositeSource({
+    timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
+    captureAcquisitionEvidence: true,
+    sourceNames: [partition.meetingSource],
+    meetingPartitions: [{ sourceName: partition.meetingSource, bodyId: partition.bodyId, route: partition.wiring?.config.partitionRoute }],
+  });
+  await readMeetingSource(source, [partition], promotionStore);
+}
+
+async function readMeetingSource(source: MeetingSource<unknown>, partitions: readonly MeetingPartitionContract[], promotionStore: RoutineDataStore | null): Promise<void> {
   const previous = source instanceof CompositeSource && promotionStore
     ? await readPreviousMeetingPartition(promotionStore, partitions[0]!)
     : null;
 
-  // Continental US, wide enough to sweep everything the adapter has. The window
-  // is always stated: some upstreams default to upcoming-only when it is omitted.
+  // Registered bodies select the work. Geography covers every state and territory; the date window is stated
+  // because some upstreams default to upcoming-only when it is omitted.
   const now = Date.now();
   const retained = await retainMeetingFetchBytes(() => source.fetch({
-    lat: 39.5,
-    lng: -98.35,
-    radiusKm: 5000,
+    ...STANDING_MEETING_GEOGRAPHY,
     startsAfter: new Date(
       now - MEETING_HELD_LOOKBACK_DAYS * 86_400_000,
     ).toISOString(),
@@ -817,7 +865,6 @@ async function main() {
       console.warn(`  ${dropped} record(s) dropped — unplaceable in time or space`);
     }
   }
-  });
 }
 
 function resolveAttribution(meetings: Meeting[]): Meeting[] {

@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Boone%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Boone%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.094219+00:00",
+  "rawHash": "7ae7069995b0c9eb82540fdd736161abea1547d77d9154cfcfdf2316133440ab",
+  "httpStatus": 200,
+  "bytes": 869931,
+  "extractedTextHash": "e0df3b919466b42dd1ba768d6db7f694f5ed2361777a6f4dcd7b2a4d7e254ad4",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

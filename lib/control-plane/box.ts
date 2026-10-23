@@ -21,6 +21,8 @@ export interface BoxOrigin {
   readonly recordedAt: string;
   /** A mid-walk drop has no Scout result row yet, so its origin carries the fact itself. */
   readonly reported?: { readonly field: string; readonly value: string | number | boolean; readonly subjectHint: string | null };
+  /** The page and quote this origin saw, set only where they differ from the row's own: a repeat of the same fact from another page adds a source, not a row. */
+  readonly source?: { readonly exactQuote: string | null; readonly sourceUrl: string };
 }
 /** What a finding claims, held on its row so a builder never reads the whole result it came from. */
 interface BoxFact { readonly field: string; readonly value: string | number | boolean; readonly recordClass: string | null }
@@ -56,15 +58,20 @@ export interface BoxFinding {
   readonly buildResultId?: string;
   readonly refusal: string | null;
   /** Why a waiting finding has no slot yet, under the slot map it was read with; a newer map looks at it again. */
-  readonly waitingFor?: { readonly class: string; readonly reason: string; readonly slots: string };
+  readonly waitingFor?: { readonly class: string; readonly reason: string; readonly slots: string; readonly retryAt?: string };
 }
+
+/** The builder that publishes hunters' findings into the fact store; its refusals are looked at again when its slot map moves. */
+export const PUBLISHER = "fact-publisher";
 
 /** The Box's reads for builders, filtered and limited by the store rather than read whole. */
 interface BoxQueue {
-  /** Rows a pass must look at: waiting under another slot map, or taken past their lease; recorded since `since`, at most `limit`. */
-  due(input: { readonly slots: string; readonly now: string; readonly since: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
+  /** At most `limit` rows, sharing each pass between retries and findings never looked at. */
+  due(input: { readonly slots: string; readonly now: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them. */
   waitingFor(reason: string, limit: number, subjectIds?: readonly string[]): Promise<readonly BoxFinding[]>;
+  /** Waiting rows handed to one builder, by the reason it gave them, about any board of the given governments (`<government>`, `<government>#governing`, `#board`, `#body:<slug>`); at most `limit` per government. */
+  waitingUnder(reason: string, limit: number, governmentIds: readonly string[]): Promise<readonly BoxFinding[]>;
 }
 export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue;
 
@@ -72,21 +79,40 @@ export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue;
 export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxRepository {
   const rows = async () => (await repo.list()).map(row => row.value).sort((a, b) => a.id.localeCompare(b.id));
   return { ...repo,
-    due: async ({ slots, now, since, limit }) => (await rows()).filter(row => (row.lastRecordedAt ?? "") >= since &&
-      (row.state === "waiting" && row.waitingFor?.slots !== slots || row.state === "taken" && row.claim !== null && row.claim.expiresAt <= now)).slice(0, limit),
+    due: async ({ slots, now, limit }) => {
+      const parked = (row: BoxFinding) => row.state !== "waiting" || row.waitingFor !== undefined;
+      const due = (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.slots !== slots ||
+        row.state === "waiting" && row.waitingFor?.retryAt !== undefined && row.waitingFor.retryAt <= now ||
+        row.state === "refused" && row.attempts.at(-1)?.builder === PUBLISHER && (row.waitingFor?.slots !== slots || row.waitingFor?.retryAt !== undefined && row.waitingFor.retryAt <= now) ||
+        row.state === "taken" && row.claim !== null && row.claim.expiresAt <= now);
+      const retries = due.filter(parked), fresh = due.filter(row => !parked(row));
+      return Array.from({ length: Math.max(retries.length, fresh.length) }, (_, index) => [retries[index], fresh[index]])
+        .flat().filter((row): row is BoxFinding => row !== undefined).slice(0, limit);
+    },
     waitingFor: async (reason, limit, subjectIds) => {
       const subjects = subjectIds ? new Set(subjectIds) : null;
       return (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason && (!subjects || subjects.has(row.subjectId))).slice(0, limit);
     },
+    waitingUnder: async (reason, limit, governmentIds) => {
+      const all = (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason);
+      return governmentIds.flatMap(id => all.filter(row => row.subjectId === id || row.subjectId.startsWith(`${id}#`)).slice(0, limit));
+    },
   };
 }
 
-/** Missing old evidence is retained by origin; it must not collapse into one empty finding. */
-export function boxFindingId(input: BoxInput): string {
+const factValue = (value: string | number | boolean): string => String(value).replace(/\s+/g, " ").trim().toLowerCase();
+
+/** The identity rows had before one row per fact: the quote, page and subject, or the origin where the old evidence is missing. */
+function legacyBoxFindingId(input: BoxInput): string {
   const identity = input.exactQuote && input.sourceUrl
     ? [input.exactQuote, input.sourceUrl, input.subjectId]
     : [input.subjectId, input.origin.kind, input.origin.resultId, input.origin.collection ?? "findings", input.origin.findingIndex];
   return `box-${contentHash(canonicalJson(identity))}`;
+}
+
+/** One row per subject, field and value, whatever page said it; a finding that names no field keeps its quote, page and subject, and missing old evidence is retained by origin. */
+export function boxFindingId(input: BoxInput): string {
+  return input.fact ? `box-${contentHash(canonicalJson([input.subjectId, input.fact.field, factValue(input.fact.value)]))}` : legacyBoxFindingId(input);
 }
 const originId = (origin: BoxOrigin) => canonicalJson([origin.kind, origin.resultId, origin.collection ?? "findings", origin.findingIndex]);
 function instant(value: string): number {
@@ -99,9 +125,11 @@ function instant(value: string): number {
 export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, input: BoxInput, now: string): Promise<BoxFinding> {
   instant(now);
   if (!input.subjectId || !input.origin.resultId || !input.origin.workItemId || !Number.isSafeInteger(input.origin.findingIndex) || input.origin.findingIndex < 0) throw new Error("BOX_INVALID_ORIGIN");
-  const id = boxFindingId(input);
+  const id = boxFindingId(input), legacyId = legacyBoxFindingId(input);
   for (;;) {
-    const held = await repo.read(id);
+    // A row made before one row per fact is still the row for its fact; it keeps its id.
+    const held = await repo.read(id) ?? (input.fact && legacyId !== id ? await repo.read(legacyId) : null);
+    const at = held?.value.id ?? id;
     if (!held) {
       const next: BoxFinding = { id, subjectId: input.subjectId, exactQuote: input.exactQuote, sourceUrl: input.sourceUrl,
         origins: [input.origin], ...(input.fact ? { fact: input.fact } : {}), lastRecordedAt: input.origin.recordedAt,
@@ -109,15 +137,19 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
       try { return (await repo.put(id, next, now)).persisted.value; }
       catch (error) { if (error instanceof IdentityCollision) continue; throw error; }
     }
-    const prior = held.value.origins.find(origin => originId(origin) === originId(input.origin));
+    const elsewhere = input.sourceUrl !== null && input.sourceUrl !== held.value.sourceUrl;
+    const origin: BoxOrigin = elsewhere && !input.origin.source ? { ...input.origin, source: { exactQuote: input.exactQuote, sourceUrl: input.sourceUrl! } } : input.origin;
+    const prior = held.value.origins.find(held => originId(held) === originId(origin));
     const gains = !held.value.fact && input.fact !== undefined || held.value.lastRecordedAt === undefined;
-    if (prior && (!input.origin.resultKey || prior.resultKey === input.origin.resultKey) && !gains) return held.value;
-    const origins = prior ? held.value.origins.map(origin => origin === prior ? { ...origin, resultKey: input.origin.resultKey ?? origin.resultKey } : origin)
-      : [...held.value.origins, input.origin];
+    if (prior && (!origin.resultKey || prior.resultKey === origin.resultKey) && !gains) return held.value;
+    const origins = prior ? held.value.origins.map(known => known === prior ? { ...known, resultKey: origin.resultKey ?? known.resultKey } : known)
+      : [...held.value.origins, origin];
     const fact = held.value.fact ?? input.fact;
-    const next = { ...held.value, origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
-      lastRecordedAt: origins.map(origin => origin.recordedAt).sort().at(-1)! };
-    try { return (await repo.compareAndSet(id, held.revision, next, now)).value; }
+    const newEvidence = !prior || gains;
+    const reopen = newEvidence && (held.value.state === "waiting" || held.value.state === "refused" && held.value.attempts.at(-1)?.builder === PUBLISHER);
+    const next: BoxFinding = { ...held.value, ...(reopen ? { state: "waiting", refusal: null, waitingFor: undefined } : {}), origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
+      lastRecordedAt: origins.map(known => known.recordedAt).sort().at(-1)! };
+    try { return (await repo.compareAndSet(at, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
   }
 }
@@ -141,7 +173,8 @@ export async function takeBoxFinding(repo: AggregateRepository<BoxFinding>, id: 
 
 export type BoxOutcome = { readonly state: "built"; readonly publicationId: string } |
   { readonly state: "built"; readonly buildResultId: string } |
-  { readonly state: "refused"; readonly reason: string } | { readonly state: "failed"; readonly reason: string };
+  { readonly state: "refused"; readonly reason: string; readonly slots?: string; readonly retryAt?: string } |
+  { readonly state: "failed"; readonly reason: string; readonly slots?: string; readonly retryAt?: string };
 
 /** A finding with nowhere to go yet stays in the Box, saying what it waits for. */
 export async function holdBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, waitingFor: NonNullable<BoxFinding["waitingFor"]>, now: string): Promise<void> {
@@ -151,6 +184,16 @@ export async function holdBoxFinding(repo: AggregateRepository<BoxFinding>, id: 
     if (value.state !== "waiting" && !lapsed) return;
     const attempts = lapsed ? [...value.attempts, { ...value.claim!, outcome: "expired" as const, endedAt: now, detail: "Builder lease expired; finding remains available." }] : value.attempts;
     try { await repo.compareAndSet(id, held.revision, { ...value, state: "waiting", claim: null, attempts, waitingFor }, now); return; }
+    catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
+  }
+}
+
+/** A finding the publisher refused goes back to waiting under the slot map now in force, so the next look at it is a fresh one. */
+export async function reopenBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, slots: string, now: string): Promise<void> {
+  for (;;) {
+    const held = await repo.mustRead(id), value = held.value;
+    if (value.state !== "refused") return;
+    try { await repo.compareAndSet(id, held.revision, { ...value, state: "waiting", refusal: null, waitingFor: { class: value.waitingFor?.class ?? "other", reason: value.refusal!, slots } }, now); return; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
   }
 }
@@ -167,6 +210,8 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
       publicationId: outcome.state === "built" && "publicationId" in outcome ? outcome.publicationId : null,
       ...(outcome.state === "built" && "buildResultId" in outcome ? { buildResultId: outcome.buildResultId } : {}),
       refusal: outcome.state === "refused" ? outcome.reason : null,
+      ...(outcome.state === "refused" && outcome.slots ? { waitingFor: { class: value.waitingFor?.class ?? "other", reason: outcome.reason, slots: outcome.slots, ...(outcome.retryAt ? { retryAt: outcome.retryAt } : {}) } } : {}),
+      ...(outcome.state === "failed" && outcome.slots ? { waitingFor: { class: value.waitingFor?.class ?? "other", reason: outcome.reason, slots: outcome.slots, ...(outcome.retryAt ? { retryAt: outcome.retryAt } : {}) } } : {}),
       attempts: [...value.attempts, { ...value.claim, outcome: outcome.state, endedAt: now, detail }] };
     try { await repo.compareAndSet(id, held.revision, next, now); return true; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
@@ -175,8 +220,16 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
 
 /** A finding's field, value and the Scout origin that carried them; null when it names no field. */
 export function findingFact(row: BoxFinding): (BoxFact & { readonly origin: BoxOrigin }) | null {
-  const origin = row.origins.find(o => o.reported) ?? row.origins.find(o => o.kind === "SCOUT");
+  const own = row.origins.filter(o => !o.source);
+  const origin = own.find(o => o.reported) ?? own.find(o => o.kind === "SCOUT");
   return origin && row.fact ? { origin, ...row.fact } : null;
+}
+
+/** The other pages that said the same fact: each with the quote and address it saw and the origin that carries its saved copy. */
+export function otherSources(row: BoxFinding): readonly { readonly origin: BoxOrigin; readonly exactQuote: string; readonly sourceUrl: string }[] {
+  const seen = new Set<string>(row.sourceUrl ? [row.sourceUrl] : []);
+  return row.origins.flatMap(origin => origin.kind === "SCOUT" && origin.source?.exactQuote && !seen.has(origin.source.sourceUrl) && seen.add(origin.source.sourceUrl)
+    ? [{ origin, exactQuote: origin.source.exactQuote, sourceUrl: origin.source.sourceUrl }] : []);
 }
 
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */
@@ -256,20 +309,20 @@ async function indexResults(repos: BackfillRepositories, scouts: readonly ScoutR
   return indexed;
 }
 
-/** Indexes the Scout and Detective results recorded since the last pass. The first pass replays every result once, one log key at a time. */
-export async function backfillBox(repos: BackfillRepositories, now: string): Promise<number> {
-  const cursor = await repos.passCursors.read(BACKFILL_CURSOR);
-  const since = cursor ? new Date(Date.parse(cursor.value.through) - BACKFILL_OVERLAP_MS).toISOString() : now;
-  const [scouts, workers] = await Promise.all([repos.scoutResults.readChangedSince(since), repos.workerResults.readChangedSince(since)]);
-  let indexed = await indexResults(repos, scouts.records.map(({ record }) => record), workers.records.map(({ record }) => record), now);
-  if (!cursor) {
-    for (const key of await repos.scoutResults.keys()) indexed += await indexResults(repos, await repos.scoutResults.read(key), [], now);
-    for (const key of await repos.workerResults.keys()) indexed += await indexResults(repos, [], await repos.workerResults.read(key), now);
-  }
+export async function backfillBox(repos: BackfillRepositories, now: string, cursorId = BACKFILL_CURSOR): Promise<number> {
+  const cursor = await repos.passCursors.read(cursorId);
+  const since = cursor ? new Date(Date.parse(cursor.value.through) - BACKFILL_OVERLAP_MS).toISOString() : null;
+  let indexed = 0;
+  const scouts = await repos.scoutResults.readChangedSince(since, [], { page: async records => {
+    indexed += await indexResults(repos, records.map(({ record }) => record), [], now);
+  } });
+  const workers = await repos.workerResults.readChangedSince(since, [], { page: async records => {
+    indexed += await indexResults(repos, [], records.map(({ record }) => record), now);
+  } });
   const through = [scouts.through, workers.through].flatMap(at => at ?? []).sort()[0];
   if (through) {
-    if (cursor) await repos.passCursors.compareAndSet(BACKFILL_CURSOR, cursor.revision, { through }, now);
-    else await repos.passCursors.put(BACKFILL_CURSOR, { through }, now);
+    if (cursor) await repos.passCursors.compareAndSet(cursorId, cursor.revision, { through }, now);
+    else await repos.passCursors.put(cursorId, { through }, now);
   }
   return indexed;
 }

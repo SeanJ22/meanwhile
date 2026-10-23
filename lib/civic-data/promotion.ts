@@ -17,14 +17,16 @@ import {
   type ManualProductionSourceContract,
 } from "./manual-contracts.ts";
 import type { ReaderProjectionReadbackReceipt } from "./reader-readback.ts";
-import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
+import { recordRoutineReaderProjectionReadback, repairRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { trustedLkgImportUrl } from "./trusted-lkg-import.ts";
 import { assertRegisteredRuntimeContract } from "./runtime-authority.ts";
+import { assertMeetingPartitionAuthority } from "./state-calendars.ts";
 import { verifySourceScopedCandidateProjection } from "./candidate-integrity.ts";
 import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { freezeDurableJson } from "./durable-json.ts";
 import { immutableStateCandidate, largePayloadScope, statePublicationScope, withStatePublicationRead } from "./state-publication.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
@@ -44,14 +46,13 @@ function sourceProjectionObservedAt(store: RoutineDataStore, requested: string):
   return store instanceof PostgresRoutineDataStore ? new Date().toISOString() : requested;
 }
 
-/** One frozen JSON value, so an adapter holding references cannot swap payload and digest between async steps. */
+/** A state candidate takes its immutable state form; any other becomes its own JSON form, frozen in place.
+ * Either way no adapter can swap payload and digest between async steps. */
 function durableCandidateSnapshot(candidate: RoutineCandidate): RoutineCandidate {
   try {
     if (statePublicationScope(candidate.scope)) return withStateRecordHashes(immutableStateCandidate(candidate));
     if (largePayloadScope(candidate.scope)) return immutableStateCandidate(candidate);
-    const encoded = JSON.stringify(candidate);
-    if (encoded === undefined) throw new Error("candidate is not JSON-representable");
-    return JSON.parse(encoded) as RoutineCandidate;
+    return freezeDurableJson(candidate);
   } catch (error) {
     throw new Error(
       `ROUTINE_CANDIDATE_NOT_DURABLE_JSON:${error instanceof Error ? error.message : String(error)}`,
@@ -249,7 +250,8 @@ export async function processRegisteredFanOutCandidate(
   );
 }
 
-/** No readback here: `repairMeetingReaderProjectionReadbacks` records each partition's from one aggregate read per pass. */
+/** A meeting's delivery observation belongs to its publication, including an unchanged recheck.
+ * The later fleet repair can be deferred or die before running; it cannot be the only stamp writer. */
 export async function processRegisteredMeetingPartitionCandidate(
   store: RoutineDataStore,
   partitionId: string,
@@ -258,7 +260,7 @@ export async function processRegisteredMeetingPartitionCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
-  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
+  if (store instanceof PostgresRoutineDataStore) assertMeetingPartitionAuthority(partitionId);
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = requiredMeetingPartitionContract(partitionId);
@@ -275,7 +277,7 @@ export async function processRegisteredMeetingPartitionCandidate(
       ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
   );
-  return processRoutineCandidate(
+  const outcome = await processRoutineCandidate(
     store,
     derivedChecked,
     now,
@@ -284,6 +286,15 @@ export async function processRegisteredMeetingPartitionCandidate(
     sourceProjectionVerification,
     options,
   );
+  if (outcome.promoted === null) return outcome;
+  try {
+    const readback = await repairRoutineReaderProjectionReadback(store, contract, now);
+    return { ...outcome, readerReadback: readback.receipt };
+  } catch {
+    // The pointer is already live. Observation failure must not undo or hold publication.
+    // The hourly keeper sees the missing stamp and queues its repair after 90 minutes.
+    return outcome;
+  }
 }
 
 export async function processRegisteredMeetingHistoryCandidate(
@@ -294,7 +305,7 @@ export async function processRegisteredMeetingHistoryCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
-  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
+  if (store instanceof PostgresRoutineDataStore) assertMeetingPartitionAuthority(partitionId);
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = meetingHistoryContract(requiredMeetingPartitionContract(partitionId));

@@ -1,31 +1,31 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { neonConfig } from "@neondatabase/serverless";
 import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import type { CandidateDocument } from "../lib/candidates/corpus.ts";
 import { installFederalVotes, installOfficeholderStatements, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticCandidateCorpus, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
-import { installMeetings, recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
+import { recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
 
 await installRegistryAuthority();
 
-import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
+import { resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { canonicalOfficialAliases } from "../lib/ask/official-identity.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
 import { ballotAskInventory, ballotRecordsFor } from "../lib/ask/ballot-inventory.ts";
-import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor } from "../lib/corpus/positions.ts";
 import { voteEvidenceFor } from "../lib/ask/votes.ts";
+import { readFederalMemberVotes } from "../lib/votes/snapshot.ts";
 import { bodyIdentityIndex } from "../lib/ask/body-identity.ts";
 import { contactsForBody, contactRecord } from "../lib/ask/contacts.ts";
 import { contactForCandidate } from "../lib/ask/candidate-contact.ts";
 import { candidateContactForCandidacy } from "../lib/ballot/candidate-contacts.ts";
 import { membersOfBody, BODY_COMPOSITIONS } from "../lib/registry/body-membership.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
-import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resolveSubjectRef } from "../lib/ask/subject.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -114,7 +114,6 @@ async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidat
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
@@ -277,7 +276,6 @@ for (const [index, state] of ["AZ", "NJ", "NH"].entries()) {
   if (state === "AZ") continue;
   await installCandidateCorpus({ ...corpus, attempted: 1, documents: [controlPages[index]], failures: [] }, state);
 }
-installMeetings(recordedMeetings85701());
 
 delete process.env.ANTHROPIC_API_KEY;
 const { POST } = await import("../app/api/ask/grounded/route.ts");
@@ -342,7 +340,7 @@ async function ask(question: string, state: keyof typeof divisions = "AZ", extra
   assert.equal(response.status, 200);
   const body = await response.json() as AskAnswerPayload;
   /* A named person's campaign-money question is composed in code from the held filings, never by a model. */
-  if (body.answer !== null) {
+  if (body.answer !== null && body.mode !== "UNRESOLVED" && body.mode !== "NO_EVIDENCE") {
     assert.equal(body.mode, body.trace.composition?.kind === "BALLOT" && body.trace.sourcesLoaded === "ESSENTIAL" ? "STRUCTURED_GROUNDED" : "GROUNDED_COMPOSED", "the response is composed from held records");
     assert.equal(body.trace.synthesis.ran, false, "a composed answer, never a model's");
   }
@@ -382,41 +380,12 @@ test("a held measure without a NO meaning reports the blank instead of asking a 
   assert.equal(answer.trace.synthesis.why, "measure-vote-meaning-not-held");
 });
 
-for (const row of [
-  { state: "AZ" as const, name: "Katie Hobbs", key: FINANCE.AZ.key, contest: "ballot-az-pima:governor", receipts: FINANCE.AZ.receipts, expenditures: FINANCE.AZ.expenditures },
-  { state: "NJ" as const, name: "Tayfun Selen", key: FINANCE.NJ.key, contest: "ballot-nj-morris:county-commissioner", receipts: FINANCE.NJ.receipts, expenditures: FINANCE.NJ.expenditures },
-  { state: "NH" as const, name: "Kelly Ayotte", key: FINANCE.NH.key, contest: "ballot-nh-merrimack:governor", receipts: FINANCE.NH.receipts, expenditures: FINANCE.NH.expenditures },
-]) {
-  test(`${row.state}: Ask returns exact canonical campaign totals and provenance from the visual selector`, async () => {
-    const body = await ask(`How much campaign money has ${row.name} raised and spent?`, row.state);
-    const selected = campaignMoneyForTarget(row.key, row.contest).state.records.find((record) => record.filingState === "FILED")!;
-    assert.ok(selected);
-    assert.equal(selected.totals.receipts, row.receipts, "the installed holding is the known answer");
-    assert.equal(selected.totals.expenditures, row.expenditures);
-    const record = body.records.find((record) => record.canonicalSubjectId === row.key && record.finance);
-    assert.ok(record, "canonical identity survives into the real route payload");
-    assert.deepEqual(record.finance!.totals, selected.totals);
-    assert.equal(record.sourceUrl, selected.filingsUrl ?? selected.provenance.sourceUrl);
-    assert.equal(record.retrievedAt, selected.checkedAt);
-    assert.equal(body.denominators.stateFinanceRecordsReturned, body.records.filter((r) => r.finance).length);
-    assert.ok(body.records.filter((record) => record.finance).every((record) => record.finance!.filingState === "FILED"), "a held filing cannot be contradicted by the fallback agency-absence row");
-    // The composed answer states exactly the selector's figures.
-    const dollars = (amount: number) => `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    assert.ok((body.answer ?? "").includes(`raising ${dollars(row.receipts)} and spending ${dollars(row.expenditures)}`), body.answer ?? "no answer");
-    if (row.state !== "AZ") {
-      assert.doesNotMatch(body.gaps.map((gap) => gap.statement).join(" "), /Pima County|Arizona legislature|bills she signed|her letters|executive orders/i,
-        "an unrelated state's action and county-finance diagnostics cannot contaminate the answer");
-    }
-  });
-}
-
-test("Hobbs ballot and map Ask answers share canonical candidacy and values; Biggs never inherits Hobbs money", async () => {
-  const ballot = await ask("How much campaign money has Katie Hobbs raised?");
-  const map = await ask("How much campaign money has Katie Hobbs raised?", "AZ", { surface: "MAP" });
-  assert.deepEqual(ballot.records.filter((r) => r.finance), map.records.filter((r) => r.finance));
-  const biggs = await ask("How much campaign money has Andy Biggs raised?");
-  assert.ok(biggs.records.every((r) => r.canonicalSubjectId !== "ballot-az-pima:governor:hobbs-katie"));
-  assert.ok(!JSON.stringify(biggs.records.filter((r) => r.finance)).includes(String(FINANCE.AZ.receipts)));
+test("legacy snapshots do not bypass published-person facts in Ask", async () => {
+  for(const control of [{state:"AZ" as const,name:"Katie Hobbs"},{state:"NH" as const,name:"Kelly Ayotte"},{state:"NJ" as const,name:"Tayfun Selen"}]){
+    const body=await ask(`How much campaign money has ${control.name} raised?`,control.state);
+    assert.equal(body.records.filter(record=>record.kind.startsWith("FINANCE_")).length,0);
+    assert.ok(body.gaps.some(gap=>gap.whose==="OURS"));
+  }
 });
 
 test("a direct held federal official remains answerable without a ballot candidacy", async () => {
@@ -464,11 +433,11 @@ test("each readable canonical statement subject can be searched without a genera
   assert.ok(tested >= 40, `real current corpus: ${tested} subjects with quotable passages`);
 });
 
-test("direct official vote IDs never fall through to another same-name person", () => {
+test("direct official vote IDs never fall through to another same-name person", async () => {
   const missing = voteEvidenceFor("Andy Biggs", { officeholderId: "congress:DOES_NOT_EXIST" });
   assert.equal(missing.identity.kind, "NO_ROSTER_ROW");
   assert.equal(missing.records.length, 0);
-  const known = voteEvidenceFor("the card's display name", { officeholderId: "congress:B001302" });
+  const known = voteEvidenceFor("the card's display name", { officeholderId: "congress:B001302", memberVotes: (await readFederalMemberVotes("congress:B001302")).value });
   assert.equal(known.identity.kind, "JOINED");
   assert.ok(known.records.length > 0);
 });
@@ -498,21 +467,6 @@ test("a sourced delegation role stays a direct Ask subject after its cross-seat 
     record.text.includes("(603) 796-6800") && record.sourceUrl));
 });
 
-test("raw acquisition, extraction PASS, and unresolved finance never become a state-money answer", () => {
-  const held = campaignMoneyForTarget("ballot-az-pima:governor:hobbs-katie", "ballot-az-pima:governor");
-  const filed = held.state.records[0];
-  for (const filingState of ["LEAD", "ROUTE_UNREAD", "ACQUIRED", "VALIDATOR_PASS_AUDITOR_INCONCLUSIVE", "IDENTITY_UNRESOLVED"]) {
-    const result = campaignMoneyEvidenceFor({ kind: "PERSON", id: "unverified", name: "Unverified candidate" }, "unverified", undefined, () => ({
-      ...held, federal: { kind: "none" }, state: { ...held.state, records: [{ ...filed, filingState } as StateMoneyRecord] },
-    }));
-    assert.equal(result.records.length, 0, filingState);
-  }
-  const unresolved = campaignMoneyEvidenceFor({ kind: "PERSON", id: "unknown", name: "Unknown person" }, "unknown", undefined, () => ({ ...held, federal: { kind: "none" }, state: { ...held.state, records: [] }, officialIdentity: "IDENTITY_UNRESOLVED" }));
-  assert.equal(unresolved.records.length, 0);
-  assert.equal(unresolved.denominators.financeIdentityUnresolved, 1);
-  assert.ok(unresolved.gaps.some((g) => /not established/.test(g.statement)));
-});
-
 test("a failed corpus read has its own state, distinct from no held statement", () => {
   const result = statementEvidenceFor(["AZ", "NH", "NJ"], { kind: "PERSON", id: "held", name: "Held person" }, "What is their position on housing?", ["held"], () => { throw new Error("missing deployed file"); });
   assert.equal(result.records.length, 0);
@@ -531,12 +485,25 @@ test("one canonical Reader preload failure cannot reject or suppress an unrelate
   assert.equal(outcomes[1]?.status === "fulfilled" ? outcomes[1].value : null, "unrelated ballot authority remains readable");
 });
 
-test("unreadable state ballots are failed holdings, never empty civic populations", async () => {
+test("unreadable state ballots are failed holdings, never empty civic populations", async t => {
   const base = promotedFixtureBundle();
   const states = ["AZ", "NJ"];
-  const edge: ReaderAuthorityEdgeBundle = { ...base, promoted: new Map([...base.promoted!].filter(([key]) => !states.some(state => key === `BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`))),
+  const keys = new Set(states.map(state => `BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`));
+  const originalFetch = neonConfig.fetchFunction;
+  assert.ok(originalFetch, "the fixture canonical transport is installed");
+  t.after(() => { neonConfig.fetchFunction = originalFetch; });
+  let unreadableQueries = 0;
+  neonConfig.fetchFunction = async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+    const request = JSON.parse(String(init?.body)) as { query?: string; params?: unknown[]; queries?: { query: string; params: unknown[] }[] };
+    if ((request.queries ?? [request]).some(statement => keys.has(String(statement.params?.[0])))) {
+      unreadableQueries++;
+      throw new Error("PLANTED_CANONICAL_BALLOT_READ_FAILURE");
+    }
+    return originalFetch(input, init);
+  };
+  const edge: ReaderAuthorityEdgeBundle = { ...base, promoted: new Map([...base.promoted!].filter(([key]) => !keys.has(key))),
     stateAuthorities: { families: base.stateAuthorities!.families, load: async (family, state) => {
-      if (family === "ballot-contests" && states.includes(state)) throw new Error("PLANTED_STATE_BALLOT_FAILURE");
+      if (family === "ballot-contests" && states.includes(state)) return null;
       return base.stateAuthorities!.load(family, state);
     } } };
   await withReaderAuthorityEdge(edge, async () => {
@@ -549,6 +516,7 @@ test("unreadable state ballots are failed holdings, never empty civic population
     assert.equal(body.denominators.ballotLoaderFailures, 1);
     assert.ok(body.gaps.some(gap => gap.whose === "OURS" && /couldn't load the ballot for your area/.test(gap.statement)));
   });
+  assert.ok(unreadableQueries >= 2, "each unreadable ballot reached the canonical database transport");
 });
 
 test("the canonical body inventory remains available where no meeting has been acquired", async () => {

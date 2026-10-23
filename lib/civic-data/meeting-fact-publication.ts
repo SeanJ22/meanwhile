@@ -22,11 +22,13 @@ export async function publishReadMeetingFacts(input: {
   }
   const tally = { live: 0, confirmed: 0, held: 0, blanks: 0 };
   if (!captures.length) return { ...tally, unsaved };
+  // The bytes were read after the pass began; checking them against its start would refuse every fresh read.
+  const now = new Date(Math.max(input.now.getTime(), ...captures.map(capture => Date.parse(capture.observedAt)).filter(Number.isFinite)));
   for (const meeting of input.meetings) {
     const title = normalizeText(meeting.title);
     const states = (capture: WorkerPublicationCapture) => normalizeText(capture.evidence.text).includes(title);
     const capture = captures.find(c => states(c) && sittingOnPage(c.evidence.text, meeting)) ?? captures.find(states) ?? captures[0]!;
-    const report = await publishMeetingFacts(input.facts, { meeting, capture, producedBy: input.producedBy }, input.clocks, input.now);
+    const report = await publishMeetingFacts(input.facts, { meeting, capture, producedBy: input.producedBy }, input.clocks, now);
     tally.live += report.live; tally.confirmed += report.confirmed; tally.held += report.held; tally.blanks += report.blanks;
   }
   return { ...tally, unsaved };

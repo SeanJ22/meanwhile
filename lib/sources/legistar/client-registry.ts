@@ -48,6 +48,8 @@ export interface LegistarClient {
   eventBodyName?: string;
   /** The `{client}` path segment at webapi.legistar.com. */
   slug: string;
+  /** Set when the platform census opened this calendar's door; absent for a hand-wired door. */
+  censusRoute?: string;
   /** The division whose government this is. WHERE, not WHO. */
   ocdId: OcdId;
   /**
@@ -123,6 +125,7 @@ export function legistarClientsFromWiring(
       timeZone: row.timeZone,
       ...(row.config.insiteHost ? { insiteHost: row.config.insiteHost } : {}),
       ...(insiteFeed ? { insiteFeed } : {}),
+      ...(row.config.crosswalkRowId ? { censusRoute: row.config.partitionRoute ?? row.config.crosswalkRowId } : {}),
       // Possibly empty: a scope with no reviewed row is a real state, and the
       // adapter publishes its sittings with their venue gap named.
       get venues() {
@@ -144,9 +147,12 @@ export function venueKey(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
+/** The one client for a tenant (and body). A census door copying a hand-wired door never makes the hand-wired one ambiguous. */
 export function findClient(slug: string, bodyId?: string): LegistarClient | undefined {
   const matches = LEGISTAR_CLIENTS.filter(client => client.slug === slug && (bodyId === undefined || client.bodyId === bodyId));
-  return matches.length === 1 ? matches[0] : undefined;
+  const handWired = matches.filter(client => client.censusRoute === undefined);
+  const chosen = handWired.length > 0 ? handWired : matches;
+  return chosen.length === 1 ? chosen[0] : undefined;
 }
 
 /** A known door's exact official name can recover its native body key; a tenant is never a body. */

@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Cabell%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Cabell%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.584414+00:00",
+  "rawHash": "23aa677aa5f8daec2f39ca22b0e743b0ff1e0a23c232821025cd3edcbbd5961e",
+  "httpStatus": 200,
+  "bytes": 1253524,
+  "extractedTextHash": "9a4fdfaf377b5e5db2cb1ddbf346b92310ca102d95c333cb069d34c6a88027ce",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

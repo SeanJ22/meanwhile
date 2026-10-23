@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no">
+    <title></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" />
+<meta name="x-stylesheet-fallback-test" content="" class="visually-hidden" /><script>!function(a,b,c,d){var e,f=document,g=f.getElementsByTagName("SCRIPT"),h=g[g.length-1].previousElementSibling,i=f.defaultView&&f.defaultView.getComputedStyle?f.defaultView.getComputedStyle(h):h.currentStyle;if(i&&i[a]!==b)for(e=0;e<c.length;e++)f.write('<link href="'+c[e]+'" '+d+"/>")}("position","absolute",["/lib/bootstrap/dist/css/bootstrap.min.css"], "rel=\u0022stylesheet\u0022 ");</script>
+    <link rel="icon" href="/img/favicon.ico" />
+    <link href="https://kendo.cdn.telerik.com/themes/12.0.0/default/default-ocean-blue.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+<meta name="x-stylesheet-fallback-test" content="" class="fa-solid" /><script>!function(a,b,c,d){var e,f=document,g=f.getElementsByTagName("SCRIPT"),h=g[g.length-1].previousElementSibling,i=f.defaultView&&f.defaultView.getComputedStyle?f.defaultView.getComputedStyle(h):h.currentStyle;if(i&&i[a]!==b)for(e=0;e<c.length;e++)f.write('<link href="'+c[e]+'" '+d+"/>")}("font-weight","900",["/lib/font-awesome/css/font-awesome.min.css"], "rel=\u0022stylesheet\u0022 ");</script>
+    <link rel="stylesheet" href="/css/site.css?v=SriC2o3ShQD-CFELtlmWCTkoDZkArDHWcrW05wvyp6E" />
+    <link rel="stylesheet" href="/VoterTools.styles.css?v=gpTXNPeln5MSpOsZQyFAkRTe86HoFm-mdzmMysfvf5s" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>(window.jQuery||document.write("\u003Cscript src=\u0022/lib/jquery/jquery.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>(window.JSZip||document.write("\u003Cscript src=\u0022/lib/jszip/jszip.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="https://cdn.kendostatic.com/2025.3.812/js/kendo.all.min.js"></script>
+<script>(window.kendo && window.kendo.ui||document.write("\u003Cscript src=\u0022/lib/progress/kendo-ui/umd/kendo.all.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="https://cdn.kendostatic.com/2025.3.812/js/kendo.aspnetmvc.min.js"></script>
+<script>(window.kendo && window.kendo.aspnetmvc||document.write("\u003Cscript src=\u0022/lib/progress/kendo-ui/umd/kendo.aspnetmvc.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    
+<script type="text/javascript">!function(T,l,y){var S=T.location,k="script",D="instrumentationKey",C="ingestionendpoint",I="disableExceptionTracking",E="ai.device.",b="toLowerCase",w="crossOrigin",N="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"5",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[b](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:function(){var e=new Date;function t(e){var t=""+e;return 1===t.length&&(t="0"+t),t}return e.getUTCFullYear()+"-"+t(1+e.getUTCMonth())+"-"+t(e.getUTCDate())+"T"+t(e.getUTCHours())+":"+t(e.getUTCMinutes())+":"+t(e.getUTCSeconds())+"."+((e.getUTCMilliseconds()/1e3).toFixed(3)+"").slice(2,5)+"Z"}(),iKey:e,name:"Microsoft.ApplicationInsights."+e.replace(/-/g,"")+"."+t,sampleRate:100,tags:n,data:{baseData:{ver:2}}}}var h=d.url||y.src;if(h){function a(e){var t,n,a,i,r,o,s,c,u,p,l;g=!0,m.queue=[],f||(f=!0,t=h,s=function(){var e={},t=d.connectionString;if(t)for(var n=t.split(";"),a=0;a<n.length;a++){var i=n[a].split("=");2===i.length&&(e[i[0][b]()]=i[1])}if(!e[C]){var r=e.endpointsuffix,o=r?e.location:null;e[C]="https://"+(o?o+".":"")+"dc."+(r||"services.visualstudio.com")}return e}(),c=s[D]||d[D]||"",u=s[C],p=u?u+"/v2/track":d.endpointUrl,(l=[]).push((n="SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)",a=t,i=p,(o=(r=v(c,"Exception")).data).baseType="ExceptionData",o.baseData.exceptions=[{typeName:"SDKLoadFailed",message:n.replace(/\./g,"-"),hasFullStack:!1,stack:n+"\nSnippet failed to load ["+a+"] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: "+(S&&S.pathname||"_unknown_")+"\nEndpoint: "+i,parsedStack:[]}],r)),l.push(function(e,t,n,a){var i=v(c,"Message"),r=i.data;r.baseType="MessageData";var o=r.baseData;return o.message='AI (Internal): 99 message:"'+("SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) ("+n+")").replace(/\"/g,"")+'"',o.properties={endpoint:a},i}(0,0,t,p)),function(e,t){if(JSON){var n=T.fetch;if(n&&!y.useXhr)n(t,{method:N,body:JSON.stringify(e),mode:"cors"});else if(XMLHttpRequest){var a=new XMLHttpRequest;a.open(N,t),a.setRequestHeader("Content-type","application/json"),a.send(JSON.stringify(e))}}}(l,p))}function i(e,t){f||setTimeout(function(){!t&&m.core||a()},500)}var e=function(){var n=l.createElement(k);n.src=h;var e=y[w];return!e&&""!==e||"undefined"==n[w]||(n[w]=e),n.onload=i,n.onerror=a,n.onreadystatechange=function(e,t){"loaded"!==n.readyState&&"complete"!==n.readyState||i(0,t)},n}();y.ld<0?l.getElementsByTagName("head")[0].appendChild(e):setTimeout(function(){l.getElementsByTagName(k)[0].parentNode.appendChild(e)},y.ld||0)}try{m.cookie=l.cookie}catch(p){}function t(e){for(;e.length;)!function(t){m[t]=function(){var e=arguments;g||m.queue.push(function(){m[t].apply(m,e)})}}(e.pop())}var n="track",r="TrackPage",o="TrackEvent";t([n+"Event",n+"PageView",n+"Exception",n+"Trace",n+"DependencyData",n+"Metric",n+"PageViewPerformance","start"+r,"stop"+r,"start"+o,"stop"+o,"addTelemetryInitializer","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"]),m.SeverityLevel={Verbose:0,Information:1,Warning:2,Error:3,Critical:4};var s=(d.extensionConfig||{}).ApplicationInsightsAnalytics||{};if(!0!==d[I]&&!0!==s[I]){var c="onerror";t(["_"+c]);var u=T[c];T[c]=function(e,t,n,a,i){var r=u&&u(e,t,n,a,i);return!0!==r&&m["_"+c]({message:e,url:t,lineNumber:n,columnNumber:a,error:i}),r},d.autoExceptionInstrumented=!0}return m}(y.cfg);function a(){y.onInit&&y.onInit(n)}(T[t]=n).queue&&0===n.queue.length?(n.queue.push(a),n.trackPageView({})):a()}(window,document,{
+src: "https://js.monitor.azure.com/scripts/b/ai.2.min.js", // The SDK URL Source
+crossOrigin: "anonymous", 
+cfg: { // Application Insights Configuration
+    connectionString: 'InstrumentationKey=eb638385-ba1a-f95b-9c93-dacb136132ba;EndpointSuffix=applicationinsights.us;IngestionEndpoint=https://usgovvirginia-1.in.applicationinsights.azure.us/;LiveEndpoint=https://usgovvirginia.livediagnostics.monitor.azure.us/;AADAudience=https://monitor.azure.us/;ApplicationId=219e0eee-a6c3-4980-ba82-f3cb64603a95'
+}});</script></head>
+<body class="k-content" style=" background-color: #f3f3f4;">
+<div b-ct5k6qwudn class="border-bottom white-bg" style="white-space: nowrap;">
+        <nav b-ct5k6qwudn class="navbar navbar-static-top" role="navigation" style="padding: 5px;">
+            <div b-ct5k6qwudn class="navbar-header">
+                <button b-ct5k6qwudn id="button_menu"
+                        aria-controls="navbar"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation menu"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbar"
+                        class="navbar-toggle collapsed"
+                        type="button">
+                    <i b-ct5k6qwudn class="fa fa-reorder" aria-hidden="true"></i>
+                </button>
+                <a b-ct5k6qwudn href="https://www.ncsbe.gov/"><img style="padding-right: 12px;" src="/img/Logo_Web.png" alt="North Carolina State Board of Elections Logo" /></a>
+            </div>
+            <div b-ct5k6qwudn class="navbar-collapse collapse navbar-right" id="navbar" style="width:224px;">
+                <ul b-ct5k6qwudn id="menu_mobile" class="nav navbar-nav" style="float:right;">
+                    <li b-ct5k6qwudn class="dropdown hidden-xs" id="headerMenuDropdown">
+                        <a b-ct5k6qwudn id="applicationAnchor" aria-expanded="false" aria-haspopup="true" role="button" class="dropdown-toggle" data-bs-toggle="dropdown" href="#">Applications<span b-ct5k6qwudn class="caret"></span></a>
+                        <ul b-ct5k6qwudn id="menu_desktop" class="dropdown-menu" aria-labelledby="applicationAnchor" aria-expanded="false">
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+       
+    </div>
+
+    <main b-ct5k6qwudn>
+        <div b-ct5k6qwudn id="mainContent" class="wrapper-content">
+            <div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h3 style="color: #B00020;"><span class="field-validation-error"></span>Sorry, something went wrong </h3>
+            </div>
+            <div class="ibox-content">
+                <p class="panel">
+                    The web function you were interacting with has encountered an error.&nbsp; &nbsp;There is an issue with the specific function or the information you entered for the function.
+                </p>
+                <h4>Error Message:</h4>
+                <p class="panel">
+Status code: 404                        <br />
+                        <br />
+
+An unexpected error has occurred. If this error continues then please contact us.                </p>
+                <h4>Support information:</h4>
+                <p class="panel">
+                    If this error persists, please send an email (include as much information as you can, such as what you were doing or what you entered) to <a href="/cdn-cgi/l/email-protection#0f476a637f5d6a7e7a6a7c7b215c4d404a4f616c7c6d6a21686079305c7a6d656a6c7b3259607b6a7d2f5b6060637c2f476a637f" target="_top" style="text-decoration:none;"><span class="__cf_email__" data-cfemail="8dc5e8e1fddfe8fcf8e8fef9a3decfc2c8cde3eefeefe8a3eae2fb">[email&#160;protected]</span></a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <noscript b-ct5k6qwudn>
+            <style type="text/css">
+                #mainContent {
+                    display: none;
+                }
+            </style>
+            <div b-ct5k6qwudn class="wrapper-content text-danger text-center" role="alert" aria-live="assertive" tabindex="0">
+                <br b-ct5k6qwudn/>
+                <h3 b-ct5k6qwudn>You don’t have javascript enabled. This site will not function without enabling it.</h3>
+            </div>
+        </noscript>
+    </main>
+
+
+    <footer b-ct5k6qwudn class="footer text-center d-flex align-items-center">
+        <div b-ct5k6qwudn id="footerText" tabindex="-1">
+            © 2014-2026
+            <a b-ct5k6qwudn type="button" class="btn-link" href="https://www.ncsbe.gov/" style="white-space: nowrap;"><strong b-ct5k6qwudn>NC State Board of Elections</strong></a>
+        </div>
+    </footer>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+<script>(window.bootstrap||document.write("\u003Cscript src=\u0022/lib/bootstrap/dist/js/bootstrap.bundle.min.js\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="/js/site.js?v=GuwVJ50QYASP6IuY2YdMcPd5okaoSJYjeX4_2eBHAdY"></script>
+    <script type="text/javascript">
+        // Close all navbar menus when viewport crosses the mobile/desktop breakpoint
+        (function() {
+            var mobileBreakpoint = 768;
+            var wasMobile = window.innerWidth < mobileBreakpoint;
+            
+            function closeAllNavbarMenus() {
+                // Close Bootstrap collapse (mobile hamburger menu)
+                var navbarCollapse = document.getElementById('navbar');
+                if (navbarCollapse) {
+                    var bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+                    if (bsCollapse) {
+                        bsCollapse.hide();
+                    } else {
+                        navbarCollapse.classList.remove('show');
+                    }
+                }
+                
+                // Close Bootstrap dropdown (desktop Applications menu)
+                var dropdownToggle = document.getElementById('applicationAnchor');
+                if (dropdownToggle) {
+                    var bsDropdown = bootstrap.Dropdown.getInstance(dropdownToggle);
+                    if (bsDropdown) {
+                        bsDropdown.hide();
+                    }
+                }
+                // Also remove show class from dropdown menu container
+                var dropdownMenu = document.getElementById('menu_desktop');
+                if (dropdownMenu) {
+                    dropdownMenu.classList.remove('show');
+                }
+                var dropdownParent = document.getElementById('headerMenuDropdown');
+                if (dropdownParent) {
+                    dropdownParent.classList.remove('show');
+                }
+            }
+            
+            window.addEventListener('resize', function() {
+                var isMobile = window.innerWidth < mobileBreakpoint;
+                // If we crossed the breakpoint, close all menus
+                if (isMobile !== wasMobile) {
+                    closeAllNavbarMenus();
+                    wasMobile = isMobile;
+                }
+            });
+        })();
+
+        //load the menu with the sites in /sites.txt
+        $(document).ready(function () {
+                var fileSites = new XMLHttpRequest();
+                var arrSites;
+                var timeDayHourMinute = String(new Date().getDate()) + '-' + String(new Date().getHours()) + '-' + String(new Date().getMinutes());
+
+                fileSites.open('get', "/sites.txt" + '?v=' + timeDayHourMinute, false);
+                fileSites.send(null);
+
+                arrSites = JSON.parse(fileSites.responseText);
+
+                arrSites.sort(function (a, b) {
+                    if (a.name > b.name) { return 1 }
+                    if (a.name < b.name) { return -1 }
+                    return 0;
+                });
+
+            for (i = 0; i < arrSites.length; i++) {
+                var linkHtml = '<a class="dropdown-item" href="' + arrSites[i].url + '">' + arrSites[i].name + '</a>';
+                $('#menu_mobile').append('<li class="visible-xs-block">' + linkHtml + '</li>');
+                $('#menu_desktop').append('<li>' + linkHtml + '</li>');
+                if ($('#menu_index').length) {
+                    // Directly add style for color to the <a> tag for menu_index links
+                    $('#menu_index').append('<li>' + linkHtml.replace('<a ', '<a style="color:#337ab7;" ') + '</li>');
+                }
+            }
+            });
+    </script>
+    
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-50M238KFRX"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            gtag('config', 'G-50M238KFRX');
+        </script>
+</body>
+</html>

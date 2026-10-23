@@ -34,7 +34,7 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
-import { installManualValue } from "./helpers/promoted-fixtures.ts";
+import { installManualValue, installPromotedValue } from "./helpers/promoted-fixtures.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
@@ -97,6 +97,24 @@ async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotPro
 const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
 await installBallots(azBallot);
 
+
+import { recordedMeetingsSnapshot, recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
+
+/** A readable synthetic agenda makes writer checks exercise validation rather than a missing-calendar composition. */
+function installWriterAgendaFixture(): void {
+  const meeting = recordedMeetings85701().find(row => row.id === "legistar:pima:1826");
+  assert.ok(meeting?.agendaUrl, "the writer test holds a Pima meeting and its agenda URL");
+  const readAt = "2026-09-08T21:40:32.432Z";
+  installPromotedValue({ recordClass: "MEETING", scope: `source:legistar:body:${encodeURIComponent(meeting.bodyId!)}`,
+    sourceId: "meetings-public-bodies", versionId: "test:writer-validation-pima-agenda", retrievedAt: readAt,
+    value: { ...recordedMeetingsSnapshot([meeting]), agendaDocuments: [{
+      id: `${meeting.id}@writer-validation-agenda`, meetingId: meeting.id, ocdId: meeting.ocdId,
+      documentUrl: meeting.agendaUrl, contentHash: "a".repeat(64), retrievedAt: readAt,
+      contentType: "text/html", text: "1. Call to order and roll call.\n2. Public hearing on a proposed zoning amendment.\n3. Adjournment of the meeting.",
+      extraction: "html", extractionNote: null, sourceUrl: meeting.agendaUrl,
+      sourceOrg: meeting.provenance.sourceOrg, collectedAt: readAt, verifiedAt: null,
+    }] } });
+}
 
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
 const MESA_SCHOOLS = "ocd-division/country:us/state:az/school_district:mesa_unified_district#board";
@@ -256,31 +274,30 @@ const NOW = Date.parse("2026-09-25T12:00:00Z");
 test("a time-and-place answer uses only the chosen meeting venue and names an acquisition gap", () => {
   const base = { shape: "MEETING_TIME" as const, subjectName: "Mesa", records: RECORDS, sittingGaps: [], now: NOW, includeLocation: true };
   const held = composeSittingAnswer({ ...base, sittings: [{ ...STUDY, location: { name: "Council Chambers", address: "57 E First Street" } }] });
-  assert.match(held?.answer ?? "", /The listed location is Council Chambers, 57 E First Street\./);
+  assert.match(held?.answer ?? "", /Council Chambers, 57 E First Street\./);
   assert.deepEqual(held?.citedUrls, ["https://mesa.example.gov/m1"]);
   const repeated = composeSittingAnswer({ ...base, sittings: [{ ...STUDY, location: { name: "Council Chambers", address: "Council Chambers" } }] });
-  assert.match(repeated?.answer ?? "", /The listed location is Council Chambers\./);
+  assert.match(repeated?.answer ?? "", /Council Chambers\./);
   assert.doesNotMatch(repeated?.answer ?? "", /Council Chambers, Council Chambers/);
   const missing = composeSittingAnswer({ ...base, sittings: [STUDY] });
-  assert.match(missing?.answer ?? "", /We do not hold a verified location for this meeting\./);
+  assert.match(missing?.answer ?? "", /We don't have its location yet\./);
   assert.doesNotMatch(missing?.answer ?? "", /not been posted|Council Chambers/);
 });
 
 test("a requested past date with agenda material but no held decisions states the dated gap", () => {
   const answer = composeSittingAnswer({ shape: "MEETING_OUTCOME", subjectName: "Mesa", sittings: [STUDY], records: [RECORDS[0], { kind: "AGENDA_ITEM", id: "proposal", bodyId: MESA, text: "Proposed tax change" }], sittingGaps: [{ role: "OUTCOME", meetingId: STUDY.id, gap: { whose: "OURS", statement: "We have not acquired the decisions from that meeting." } }], now: Date.parse("2026-10-01T00:00:00Z"), requestedLocalDate: "2026-09-28" });
   assert.ok(answer);
-  assert.match(answer.answer, /September 28th, 2026/);
-  assert.match(answer.answer, /We have not acquired the decisions/);
+  assert.equal(answer.answer, "We don't have Mesa's meeting decisions yet.");
   assert.doesNotMatch(answer.answer, /most recent|next Mesa|tax change/);
 });
 
-test("a meeting-time answer is the sitting, in the body's own zone, and the named agenda gap", () => {
+test("a meeting-time answer states the selected sitting in local time and stops", () => {
   const composed = composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "Mesa", sittings: [STUDY, REGULAR], records: RECORDS, sittingGaps: [AGENDA_GAP], now: NOW });
   assert.ok(composed);
-  assert.equal(composed.answer,
-    "The next Mesa meeting is on Monday, September 28th, 2026 at 5:15 PM MST, listed as \"City Council Study Session\". " +
-    "Later that day: \"City Council\" at 5:45 PM MST. We hold the agenda document for that meeting but could not extract its items.");
-  assert.deepEqual(composed.citedUrls, ["https://mesa.example.gov/m1", "https://mesa.example.gov/m2"], "cites only the sittings' own records");
+  assert.equal(composed.answer, "The next Mesa meeting is the City Council Study Session on September 28 at 5:15 PM.");
+  assert.doesNotMatch(composed.answer, /agenda|extract|records|Later that day/);
+  assert.deepEqual(composed.citedUrls, ["https://mesa.example.gov/m1"]);
+
 });
 
 test("composition steps aside whenever there is something to summarise or a fact it cannot state", () => {
@@ -297,9 +314,9 @@ test("composition steps aside whenever there is something to summarise or a fact
   assert.equal(composeSittingAnswer({ ...base, shape: "MEETING_TIME", records: [{ ...RECORDS[0], meetingListingIdentity: { uniqueMeetingCount: null } as EvidenceRecord["meetingListingIdentity"] }], sittingGaps: [] }), null, "an unresolved listing identity goes to the model's rule for it");
   assert.equal(composeSittingAnswer({ ...base, shape: "MEETING_TIME", records: [], sittingGaps: [] }), null, "a sitting the reader is not shown is never described");
   const long: SittingGap = { role: "OUTCOME", gap: { whose: "OURS", statement: "x".repeat(690) } };
-  assert.equal(composeSittingAnswer({ ...base, shape: "MEETING_OUTCOME", sittingGaps: [long] }), null, "the gap that IS the answer must fit, or the model writes it");
+  assert.equal(composeSittingAnswer({ ...base, shape: "MEETING_OUTCOME", sittingGaps: [long] })?.answer, "We don't have Mesa's meeting decisions yet.", "long source diagnostics do not become reader prose");
   const items = composeSittingAnswer({ ...base, shape: "MEETING_TIME", records: [RECORDS[0], item], sittingGaps: [] });
-  assert.match(items?.answer ?? "", /The "City Council Study Session" agenda we hold lists 1 item\./, "a meeting-time answer counts, never summarises, held items");
+  assert.doesNotMatch(items?.answer ?? "", /agenda|item/, "an agenda count does not answer when");
 });
 
 test("a date-only posting is stated as its date, never as the midnight it is stored at", () => {
@@ -307,20 +324,20 @@ test("a date-only posting is stated as its date, never as the midnight it is sto
   const dayOnly: ComposableSitting = { id: "c1", title: "City Council", startsAt: "2026-10-12T00:00:00-07:00", timeZone: "America/Phoenix", startPrecision: "DAY", status: "SCHEDULED" };
   const records = [meetingRecord(dayOnly, "https://chandler.example.gov/c1")];
   const composed = composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "Chandler", sittings: [dayOnly], records, sittingGaps: [], now: NOW });
-  assert.equal(composed?.answer, "The next Chandler meeting is on Monday, October 12th, 2026, listed as \"City Council\". Its start time has not been posted.");
+  assert.equal(composed?.answer, "The next Chandler meeting is the City Council on October 12; the start time isn't posted.");
   assert.doesNotMatch(composed?.answer ?? "", /12:00 AM/);
   // The record text the model reads says the same, through the same function.
   assert.equal(readableSitting(dayOnly), "Monday, October 12th, 2026 (start time not posted)");
   assert.equal(readableSitting({ ...dayOnly, startPrecision: undefined }), "Monday, October 12th, 2026 at 12:00 AM MST", "a posted time is still printed");
   // Beside a timed sitting, a date-only one is "also that day", never "earlier".
   const withTimed = composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "Mesa", sittings: [STUDY, { ...dayOnly, startsAt: "2026-09-28T00:00:00-07:00", id: "m9" }], records: [RECORDS[0], meetingRecord({ ...dayOnly, id: "m9" }, "https://mesa.example.gov/m9")], sittingGaps: [], now: NOW });
-  assert.match(withTimed?.answer ?? "", /Also that day: "City Council" \(start time not posted\)\./);
+  assert.doesNotMatch(withTimed?.answer ?? "", /Also that day/);
 });
 
 test("with no sitting, the named gap is the whole answer", () => {
   const gap: SittingGap = { role: "NO_SITTING", gap: { whose: "OURS", statement: "We hold meetings for Mesa but none scheduled in the future." } };
   assert.deepEqual(composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "Mesa", sittings: [], records: [], sittingGaps: [gap], now: NOW }),
-    { answer: "We hold meetings for Mesa but none scheduled in the future.", citedUrls: [] });
+    { answer: "We don't have Mesa's requested meeting date yet.", citedUrls: [], missingAnswer: true });
 });
 
 test("gap wording is kept; only a machine timestamp is spelled out in the body's zone", () => {
@@ -498,11 +515,12 @@ test("ROUTE: a money question asking WHO gave is written by the fast writer firs
 });
 
 test("ROUTE: the frontier writer runs ONLY when the fast answer fails a check, and the reason is recorded", { concurrency: false }, async () => {
+  installWriterAgendaFixture();
   try {
     writerAnswers = { [ASK_FAST_WRITER_MODEL]: { answer: "See https://invented.example/agenda for the full list.", citedSources: [1] }, default: PASSING };
     const { payload, calls: made } = await ask("What's on the Pima County Board of Supervisors agenda?", [AZ, PIMA]);
     assert.deepEqual(made.map((call) => call.model), [ASK_FAST_WRITER_MODEL, ASK_SYNTHESIS_MODEL]);
-    assert.equal(made[1].thinking, true, "the frontier writer keeps adaptive thinking");
+    assert.equal(made[1].thinking, true, "the frontier keeps its reasoning mode");
     assert.equal(payload.mode, "GROUNDED_CLAUDE");
     assert.equal(payload.answer, PASSING.answer, "the frontier writer's passing answer is delivered — never the failed one");
     assert.equal(payload.trace.synthesis.model, ASK_SYNTHESIS_MODEL);
@@ -519,6 +537,7 @@ test("ROUTE: the frontier writer runs ONLY when the fast answer fails a check, a
 });
 
 test("ROUTE: when every writer fails validation the answer still fails closed — an invented citation or an invented link", { concurrency: false }, async () => {
+  installWriterAgendaFixture();
   try {
     for (const answer of [
       { answer: "The board lists every item in the records.", citedSources: [42] },
@@ -562,9 +581,9 @@ test("the synthesis request numbers the sources, asks for numbers, and still gen
     messages: { content: { text: string }[] }[];
   };
   const schema = body.output_config.format.schema;
-  assert.deepEqual(Object.keys(schema.properties), ["answer", "citedSources"], "the answer is the first property, so the citation format cannot change a word of it");
-  assert.deepEqual(schema.required, ["answer", "citedSources"]);
-  assert.match(synthesisPrompt(pack), /citedSources: the n, from the sources list/);
+  assert.deepEqual(Object.keys(schema.properties), ["answer", "citedSources", "answeredFromRecords"], "the answer is the first property, so the citation format cannot change a word of it");
+  assert.deepEqual(schema.required, ["answer", "citedSources", "answeredFromRecords"]);
+  assert.match(synthesisPrompt(pack), /citedSources: the source-list numbers actually used/);
   assert.doesNotMatch(synthesisPrompt(pack), /citedUrls/);
   const context = JSON.parse(body.messages[0].content[0].text) as { records: EvidenceRecord[]; sources: { n: number; url: string }[] };
   assert.deepEqual(context.records, pack.records, "the records the model reads are unchanged");
@@ -604,7 +623,7 @@ test("the writer is sent every record but member-vote rows past the bound, cut b
   assert.equal(writerInputProof(pack, records, sent.records.filter((record) => record.id !== action.id)).receivesItsSelection, false, "a withheld action fails the proof");
 
   // The writer is told, in its rules too, and an answer that calls the withheld votes unpublished is refused.
-  assert.match(synthesisPrompt(pack), /Never say or imply that the others were not published/);
+  assert.match(synthesisPrompt(pack), /selected subset of vote records is not evidence that the remaining votes are unavailable/);
   const refused = validateAnswer("Four members voted Aye on the first item. The Board has not published how each member voted on most other items.", [], pack);
   assert.ok(refused.kind === "FAILED" && refused.failed.includes("withheld-votes-called-unpublished"));
   assert.equal(validateAnswer("Four members voted Aye on the first item; Member 3 voted Nay on the second.", [], pack).kind, "PASSED");
@@ -612,13 +631,13 @@ test("the writer is sent every record but member-vote rows past the bound, cut b
   assert.ok(!(validateAnswer("The Board has not published how each member voted on most other items.", [], whole) as { failed?: string[] }).failed?.includes("withheld-votes-called-unpublished"), "only where rows were held back from the writer");
 });
 
-test("the declared ladder: the fast writer first (adaptive thinking, low effort), then the frontier; one switch turns the fast writer off", () => {
+test("the declared ladder: the fast writer first (thinking disabled, low effort), then the frontier; one switch turns the fast writer off", () => {
   const ladder = synthesisLadder({});
   assert.deepEqual(ladder.map((rung) => [rung.model, rung.role, rung.effort]), [[ASK_FAST_WRITER_MODEL, "FAST", "low"], [ASK_SYNTHESIS_MODEL, "FRONTIER", "medium"]]);
   assert.deepEqual(synthesisLadder({ "ask.fastWriterModel": "off" }).map((rung) => rung.role), ["FRONTIER"]);
   const pack: EvidencePack = { question: "q", intent: "UNKNOWN", temporal: { kind: "NONE" }, subject: null, records: [RECORDS[0]], gaps: [], denominators: {}, today: "2026-09-25" };
   const fast = synthesisRequestBody(pack, { model: ASK_FAST_WRITER_MODEL, cached: true, effort: "low" }) as { thinking?: unknown; output_config: { effort?: unknown } };
-  assert.deepEqual(fast.thinking, { type: "adaptive" });
+  assert.deepEqual(fast.thinking, { type: "disabled" });
   assert.equal(fast.output_config.effort, "low");
   const frontier = synthesisRequestBody(pack, { model: ASK_SYNTHESIS_MODEL, cached: true, effort: "medium" }) as { thinking?: unknown; output_config: { effort?: unknown } };
   assert.deepEqual(frontier.thinking, { type: "adaptive" });

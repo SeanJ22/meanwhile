@@ -4,11 +4,14 @@ import { localDate } from "../lib/ask/meeting-time.ts";
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
-import { installMeetings, recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
+import { recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
 
 await installRegistryAuthority();
-const held = recordedMeetings85701();
-installMeetings(held);
+delete process.env.DATABASE_URL;
+const installed = recordedMeetingsSnapshot();
+const held = installed.meetings;
+await publishRecordedEdge(held, installed.agendaDocuments);
 
 test("an explicit held local date retrieves that sitting rather than the next or latest one", async () => {
   delete process.env.ANTHROPIC_API_KEY;

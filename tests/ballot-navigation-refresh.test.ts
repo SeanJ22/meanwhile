@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -237,14 +237,14 @@ test("literal embedded source HTML is bound through sanitization to its protecte
   } finally { await rm(scratch, { recursive: true, force: true }); }
 });
 
-test("ballot navigation refresh has one state publisher daily and hourly before Election Day", () => {
+test("ballot navigation refresh has one state publisher twice daily and hourly before Election Day", () => {
   const task = AUTOMATIC_REFRESH_TASKS.find(row => row.id === "ballot-navigation-oh")!;
   assert.ok(task);
   assert.equal(task.scope, "US-OH:official-ballot-navigation");
   assert.deepEqual(task.command, [...requiredManualProductionContract("ballot-navigation").command, "--state=OH"]);
   assert.equal(AUTOMATIC_REFRESH_TASKS.filter(task => task.id.startsWith("ballot-navigation-")).length, 51);
   assert.equal(task.ownerInvocation, undefined);
-  assert.equal(cadenceMsAt(task.contract, Date.parse("2026-10-14T19:00:00Z")), 86_400_000);
+  assert.equal(cadenceMsAt(task.contract, Date.parse("2026-10-14T19:00:00Z")), 43_200_000);
   assert.equal(cadenceMsAt(task.contract, Date.parse("2026-10-27T19:00:00Z")), 3_600_000);
 });
 
@@ -266,4 +266,36 @@ test("one saved state directory proves many delegated county sites without retai
   const read = await readElectionFieldsForDivisions([`${division("OH")}/county:fixture-249`], { store: ctx.store, now });
   assert.equal(read.fields.length, 1);
   assert.equal(read.fields[0].value.navigationUrl, `${sources[249]}/registration`);
+});
+
+test("a state's first own publication carries the verified records the national pointer held for it, with the reviews they cite", async () => {
+  const fetcher = (async (url: string | URL | Request) => new URL(String(url)).pathname === "/robots.txt"
+    ? new Response("User-agent: *\nDisallow: /", { status: 200 })
+    : new Response(htmlFor(new URL(String(url)).pathname.slice(1)), { status: 200, headers: { "content-type": "text/html" } })) as typeof fetch;
+  const source = context();
+  await refreshBallotNavigation({ ...source, now, state: "OH", report: report("OH"), fetch: fetcher });
+  const national = requiredManualProductionContract("ballot-navigation");
+  const held = source.store as unknown as { promotions: Map<string, { key: string; scope: string; versionId: string; receipt: Record<string, unknown> }>;
+    candidates: Map<string, { candidate: Record<string, unknown>; receipt: Record<string, unknown> }> };
+  const ohio = held.promotions.get("CURATED_READER_RECORD:US-OH:official-ballot-navigation")!;
+  const version = held.candidates.get(ohio.versionId)!;
+  const ctx = context(), into = ctx.store as unknown as typeof held;
+  const id = `${ohio.versionId}:national`;
+  into.promotions.set(`CURATED_READER_RECORD:${national.scope}`, { ...ohio, key: `CURATED_READER_RECORD:${national.scope}`, scope: national.scope,
+    versionId: id, lastKnownGoodVersionId: id, receipt: { ...ohio.receipt, scope: national.scope, candidateId: id } } as typeof ohio);
+  into.candidates.set(id, { ...version, promotedVersion: id, lastKnownGoodVersion: id, candidate: { ...version.candidate, id, scope: national.scope },
+    receipt: { ...version.receipt, scope: national.scope, candidateId: id } } as typeof version);
+  const nationalIds = (await readElectionFieldsForDivisions([division("OH")], { store: source.store, now, bypassCache: true })).fields.map(row => row.id).sort();
+  assert.equal(nationalIds.length, 2);
+  const later = "2026-10-14T19:00:00.000Z";
+  const unavailable = (async () => new Response("Unavailable", { status: 503 })) as unknown as typeof fetch;
+  const carried = await refreshBallotNavigation({ ...ctx, now: later, state: "OH", report: report("OH"), fetch: unavailable });
+  assert.deepEqual([...carried.fields].sort(), nationalIds, "the verified national records are the state's first version");
+  assert.ok(carried.promotedVersionId);
+  const read = await readElectionFieldsForDivisions([division("OH")], { store: ctx.store, now: later, bypassCache: true });
+  assert.deepEqual(read.fields.map(row => row.id).sort(), nationalIds);
+  const again = await refreshBallotNavigation({ ...ctx, now: "2026-10-15T19:00:00.000Z", state: "OH", report: report("OH"), fetch: unavailable });
+  assert.deepEqual(again.fields, [], "the carry happens once, when the state has no pointer of its own");
+  const sibling = await refreshBallotNavigation({ ...ctx, now: later, state: "MI", report: report("MI"), fetch: unavailable });
+  assert.deepEqual(sibling.fields, [], "another state's records never carry");
 });

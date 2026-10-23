@@ -8,16 +8,11 @@ import { createHash } from "node:crypto";
 import { applyManualEdit, checkDoorDraft } from "../lib/doors/registry.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
-import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { campaignFinancePackage, publishCampaignFinance, runFinanceDoorPublication } from "../lib/funding/campaign-finance.ts";
-import { campaignFinanceScope, readCampaignFinance, campaignFinanceForTarget, settleCampaignFinanceReads } from "../lib/funding/campaign-finance-reader.ts";
-import { stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
+import { readCampaignFinance } from "../lib/funding/campaign-finance-reader.ts";
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 import { filedOrganizations, stateSmallDonorSentence } from "../lib/funding/state-money-funding.ts";
-import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import { composeMoneyAnswer } from "../lib/ask/money-answer.ts";
-import { renderCardWithSources } from "./helpers/render-card.ts";
 import { zip as createZip } from "../scripts/xlsx.mjs";
 
 const now = "2026-10-05T18:00:00Z", division = "ocd-division/country:us/state:oh/place:alder", target = "ballot-candidacy:avery";
@@ -42,7 +37,7 @@ function source(extra = "") {
     observedAt: now, partial: false, transport: "REACHABLE" as const, httpStatus: 200 }] };
 }
 
-test("new-jurisdiction finance doors publish exact candidate filings through Slide, typed readback, cards and Ask without sums", async () => {
+test("new-jurisdiction finance doors preserve exact candidate filings as typed source evidence without sums", async () => {
   const input = source("C1,Friends of Avery,Avery Example,Council,2026,R2,July through September,300,\nC2,Other committee,,Council,2026,R3,January through June,900,100\n");
   const store = new MemoryRoutineDataStore();
   const result = await publishCampaignFinance(store, input);
@@ -56,18 +51,9 @@ test("new-jurisdiction finance doors publish exact candidate filings through Sli
   assert.equal(read.value.records[1].record.totals.expenditures, null);
   assert.equal(read.value.records[0].record.totals.cashOnHand, null);
   assert.deepEqual(read.value.records.map(row => row.reportId), ["R1", "R2"]);
-  const edge = promotedEdgeEntryOf(read, "CURATED_READER_RECORD", campaignFinanceScope(division), store);
-  assert.ok(edge);
-  const promoted = new Map([[`CURATED_READER_RECORD:${campaignFinanceScope(division)}`, edge]]);
-  await withReaderAuthorityEdge({ promoted, edgeOnly: true }, async () => {
-    assert.deepEqual(campaignFinanceForTarget(target), [], "no unvalidated edge payload renders");
-    assert.equal((await settleCampaignFinanceReads()).length, 1);
-    assert.deepEqual(stateMoneyForTarget(target).map(row => row.totals.receipts), [1200, 300]);
-    assert.deepEqual(stateMoneyForTarget("another-candidate"), []);
-  });
-  assert.deepEqual(campaignFinanceForTarget(target), [], "another request cannot inherit this place's filings");
   const absent = await readCampaignFinance("ocd-division/country:us/state:oh/place:birch", { store, now });
-  assert.equal(absent.kind, "NOT_RECORDED");
+  assert.equal(absent.kind, "PROMOTED");
+  if (absent.kind === "PROMOTED") assert.deepEqual(absent.value.records, []);
 });
 
 test("incomplete source, wrong candidate, corrupted bytes and unverified source never replace the last GOOD filings", async () => {
@@ -104,7 +90,7 @@ test("same-place successor retains prior reported periods with their original au
   }
 });
 
-test("incomplete Money facts publish as documents, preserve known cells and leave figures out of card/Ask summaries", async () => {
+test("incomplete Money facts publish as source documents and preserve known cells", async () => {
   for (const missing of ["amount", "period"]) {
     const input = source(), store = new MemoryRoutineDataStore();
     const text = input.captures[0].evidence.text.replace(missing === "amount" ? ",1200,0" : ",January through June,",
@@ -117,13 +103,10 @@ test("incomplete Money facts publish as documents, preserve known cells and leav
     if (read.kind !== "PROMOTED") continue;
     assert.equal(read.value.records[0].kind, "CAMPAIGN_FINANCE_DOCUMENT");
     assert.equal(read.value.records[0].record.totals.receipts, missing === "period" ? 1200 : null);
-    const edge = promotedEdgeEntryOf(read, "CURATED_READER_RECORD", campaignFinanceScope(division), store); assert.ok(edge);
-    await withReaderAuthorityEdge({ edgeOnly: true, promoted: new Map([[`CURATED_READER_RECORD:${campaignFinanceScope(division)}`, edge]]) }, async () => {
-      await settleCampaignFinanceReads();
-      const [record] = stateMoneyForTarget(target);
-      assert.equal(record.committeeId, "C1"); assert.equal(record.filingsUrl, input.responses[0].url);
-      assert.equal(record.totals.receipts, null); assert.equal(record.totals.expenditures, null); assert.equal(record.totals.cashOnHand, null);
-    });
+    const record = read.value.records[0].record;
+    assert.equal(record.committeeId, "C1");
+    assert.equal(record.filingsUrl, input.responses[0].url);
+    assert.equal(record.totals.expenditures, missing === "period" ? 0 : null);
   }
   const disabled = source();
   Object.assign(disabled.captures[0], { sourcePolicy: { ...DEFAULT_SOURCE_POLICY, enabled: { ...DEFAULT_SOURCE_POLICY.enabled, FILING: false } } });
@@ -215,15 +198,9 @@ test("filed organizations and aggregate private giving reach cards and Ask, with
   assert.match(stateSmallDonorSentence(record.funding)!, /25%/);
   assert.equal(stateSmallDonorSentence({ ...record.funding!, scope: "REPORT_PERIOD" }), null);
   assert.doesNotMatch(JSON.stringify(read.value), /Private Donor|Private Lane|Private Road|Unclassified Person/);
-  const html = await renderCardWithSources({ modulePath: "./components/funding/state-money-section.tsx", exportName: "StateMoneySection", props: { records: [record] }, sourceUrls: [url] });
-  assert.match(html, /Neighbors PAC/);
-  assert.match(html, /Individual giving/);
-  assert.match(html, /<span class="card-section-title">Sources<\/span>/);
-  assert.match(html, /Candidate campaign filings/);
-  assert.doesNotMatch(html, /Private Donor|Private Lane|Private Road|Unclassified Person/);
   const subject = { kind: "PERSON" as const, id: target, name: "Avery Example" };
-  const evidence = campaignMoneyEvidenceFor(subject, target, undefined, () => ({ requestedTargetKey: target, officialIdentity: "NOT_OFFICIAL",
-    federal: { kind: "none" }, state: { records: [record], resolution: "DIRECT_CANDIDACY_KEY", resolvedTargetKey: target } }));
+  const evidence = {records:[{kind:"FINANCE_SUMMARY" as const,id:`state-money:${target}`,subjectId:target,text:"Filed campaign totals",sourceUrl:url,
+    stateDetailSource:record.detailSource,finance:{jurisdiction:record.jurisdiction,filingState:record.filingState,totals:record.totals,registeredName:record.registeredName,agency:record.agency,electionYear:record.electionYear,checkedAt:record.checkedAt,funding:record.funding}}]};
   const answer = composeMoneyAnswer({ ask: { kind: "WHO_GAVE" }, subject, records: evidence.records, gaps: [] });
   assert.ok(answer, "held organization amounts should compose without a writer");
   assert.match(answer.answer, /Neighbors PAC/);

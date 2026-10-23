@@ -1,7 +1,3 @@
-/**
- * When the same door or method breaks in the same month in two or more years, or right after the same known event
- * more than once, one lesson names the pattern and the fix that worked last time. Writes nothing without enough history.
- */
 import { fixEpisodes, type FixEpisode, type FixItemWithHistory } from "../control-plane/fix-history.ts";
 import { fixItems } from "../control-plane/fix-list.ts";
 import { newFieldManualEntry, writeFieldManual, type FieldManualEntry, type FieldManualRepos } from "../control-plane/field-manual.ts";
@@ -86,14 +82,9 @@ export function patternLesson(p: BreakPattern, now: string): FieldManualEntry {
   });
 }
 
-/**
- * The pass: read the fix list, find the patterns, write one lesson each. A
- * lesson rewrites itself (same id) as more breaks are seen. A write failure is
- * returned, never thrown.
- */
 export async function runBreakPatternPass(repos: Pick<ControlPlaneRepositories, "adminConfig"> & FieldManualRepos, now: string,
   events: readonly KnownEvent[] = []): Promise<{ readonly patterns: number; readonly written: number; readonly error?: string }> {
-  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const held = await repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { activeAndRecent: 500 } });
   const items = held && isAdminConfig(held.value) ? fixItems(held.value) : [];
   const patterns = breakPatterns(items, now, events);
   if (patterns.length === 0) return { patterns: 0, written: 0 };

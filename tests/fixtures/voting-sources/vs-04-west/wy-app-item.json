@@ -1,0 +1,12 @@
+{
+  "url": "https://www.arcgis.com/sharing/rest/content/items/b74e2a986316437391cc89ba3530e7ee/data?f=json",
+  "path": "tests/fixtures/voting-sources/vs-04-west/wy-app-9caca578cc9e-9c0f313cfa3d.json",
+  "value": {
+    "error": {
+      "code": 403,
+      "messageCode": "GWM_0003",
+      "message": "You do not have permissions to access this resource or perform this operation.",
+      "details": []
+    }
+  }
+}

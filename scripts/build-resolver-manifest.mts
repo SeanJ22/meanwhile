@@ -1,11 +1,13 @@
 /** Builds the resolver input from held geometry. A national file stays in until
  * per-state derivatives cover every division it holds. */
+import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 
 import { US_JURISDICTIONS, jurisdictionFromOcdId } from "../lib/coverage/states.ts";
 import { geometryFiles } from "../lib/holdings/discovery.ts";
 import { today } from "./doc-dates.mjs";
+import { STATE_GEOMETRY_MANIFEST, type StateGeometryManifest } from "../lib/geo/state-geometry.ts";
 
 const ROOT = process.cwd();
 const OUT = join(process.cwd(), "data", "derived", "resolver-geometry.json");
@@ -111,6 +113,13 @@ writeFileSync(
   )}\n`,
   "utf8",
 );
+
+// No function packs state geometry: each file is read from the reader edge store under the sha256 named here.
+const stateGeometry: StateGeometryManifest = { formatVersion: 1, files: Object.fromEntries(files.filter(file => file.startsWith("data/states/")).map(file => {
+  const bytes = readFileSync(join(ROOT, file));
+  return [file, { sha256: createHash("sha256").update(bytes).digest("hex"), bytes: bytes.byteLength }];
+})) };
+writeFileSync(join(ROOT, STATE_GEOMETRY_MANIFEST), `${JSON.stringify(stateGeometry, null, 1)}\n`, "utf8");
 
 const unaccounted = files.filter(
   (f) => !included.some((r) => r.file === f) && !excluded.some((r) => r.file === f),

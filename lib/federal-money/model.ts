@@ -98,8 +98,8 @@ export interface FederalMoneyCheckpoint {
     };
   };
 }
-export const FEDERAL_MONEY_PARTITION_ROWS = 500;
-export const FEDERAL_MONEY_PARTITION_BYTES = 4 * 1024 * 1024;
+const FEDERAL_MONEY_PARTITION_ROWS = 500;
+const FEDERAL_MONEY_PARTITION_BYTES = 4 * 1024 * 1024;
 export function federalMoneyPartitionWithinBounds(records: readonly unknown[]): boolean {
   if (records.length > FEDERAL_MONEY_PARTITION_ROWS) return false;
   if (records.length <= 1) return true;

@@ -1,4 +1,3 @@
-/** A fix in Testing is a Queue row; proving out, a lesson, and a proven fix breaking each write one update; then it goes quiet. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -13,7 +12,8 @@ import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { takeUnshownUpdates, updateRecords } from "../lib/control-plane/updates.ts";
 import { memoryFixMap, type MethodAttempt } from "../lib/method/fix-map-record.ts";
-import { DEFAULT_FIX_PROOF_BAR, FIX_PROOF_PLACES, fixProof, nextStanding } from "../lib/method/fix-status.ts";
+import { methodStatistics } from "../lib/method/fix-map.ts";
+import { DEFAULT_FIX_PROOF_BAR, FIX_PROOF_PLACES, proofFromStatistics, nextStanding } from "../lib/method/fix-status.ts";
 
 const PLACES = ["az/county:a", "az/county:b", "nm/county:c", "nm/county:d", "nm/county:e", "nm/county:f"].map((p) => {
   const [state, county] = p.split("/");
@@ -25,7 +25,7 @@ const attempt = (place: string, outcome: "SUCCEEDED" | "FAILED", day: number, me
 const title = () => "the agenda-listing route";
 
 async function config(repos: ReturnType<typeof createMemoryRepositories>): Promise<AdminConfig> {
-  return (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value as AdminConfig;
+  return (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { updates: true, methodStandings: true })).value as AdminConfig;
 }
 
 test("a fix is a Queue row while testing, writes one Proven update when it proves out, then leaves the Queue", async () => {
@@ -98,9 +98,9 @@ test("the bar is the Admin setting: raising it keeps a fix in Testing", async ()
 
 test("pure transitions: no change, no update", () => {
   const rows = PLACES.slice(0, 2).map((p) => ({ methodId: "m", placeId: p, state: "WORKS" as const, triedAt: at(1), attemptId: p, cause: null, updatedAt: at(1) }));
-  const first = nextStanding("m", null, fixProof(rows), "x", at(1));
+  const first = nextStanding("m", null, proofFromStatistics(methodStatistics(rows)), "x", at(1));
   assert.equal(first.update, null);
-  assert.equal(nextStanding("m", first.standing, fixProof(rows), "x", at(2)).update, null);
+  assert.equal(nextStanding("m", first.standing, proofFromStatistics(methodStatistics(rows)), "x", at(2)).update, null);
 });
 
 test("the Scoreboard's Proven fixes row is wired, not a placeholder", () => {

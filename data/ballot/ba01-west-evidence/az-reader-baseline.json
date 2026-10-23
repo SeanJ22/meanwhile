@@ -1,0 +1,869 @@
+{
+  "sourceRevision": "4c4f7f8fd528f6f5d435829dad4d1efbb3b9186f",
+  "purpose": "Preserve every pre-BA-01 Arizona contest, raw measure, candidacy identity and reviewed reaction target while adding verified official ballot facts. Hashes use sorted compact UTF-8 JSON.",
+  "contests": [
+    {
+      "id": "ballot-az-pima:governor",
+      "hash": "eb09c387320e30f1151c077ef69460c22cf436c37eeb636ad9d0bb55b6c1049d"
+    },
+    {
+      "id": "ballot-az-pima:secretary-of-state",
+      "hash": "8b7dc51679dc6b136f14acc2c08853e37a6d3dbef9cb8eb90aa499f03f0cae34"
+    },
+    {
+      "id": "ballot-az-pima:attorney-general",
+      "hash": "ddccb6834d04aca4f5454a046fc67f19888db93d8fea1d32424f39455271453c"
+    },
+    {
+      "id": "ballot-az-pima:state-treasurer",
+      "hash": "d98d88471d311b56375fb067b618c8e922c75dbb0b1e4e6ba219b858da8655a4"
+    },
+    {
+      "id": "ballot-az-pima:superintendent",
+      "hash": "58717952d59c08cd914132a2c6645bbd47c2f170b7248cb989f1821b7f5058e6"
+    },
+    {
+      "id": "ballot-az-pima:mine-inspector",
+      "hash": "dc104e0e46ecc1ed949fa58ca8f9c9cd7a7fefb1b3fd1aff8ac97472fd359ec0"
+    },
+    {
+      "id": "ballot-az-pima:us-house-6",
+      "hash": "f30837f517b8c24f4bce90501e20126419fe8fec25ace54e3ad73604d6c1e458"
+    },
+    {
+      "id": "ballot-az-pima:us-house-7",
+      "hash": "39ca1beeec11c0ecd01f1157af538ca609f3e392acbb9d4736d7133a6b447489"
+    },
+    {
+      "id": "ballot-az-pima:state-senate-19",
+      "hash": "54fa02917fb56b9d5f6c7883c170095404081f8ea838d418c6078409617eb231"
+    },
+    {
+      "id": "ballot-az-pima:state-senate-20",
+      "hash": "59de9103c2773345942adf461637908739d897e32a37a1ca8caef64709d75886"
+    },
+    {
+      "id": "ballot-az-pima:state-house-19",
+      "hash": "57c91caf79e3b2b12be81d3dea57e65258b1a6c268e669c7cfa21ae42a573b07"
+    },
+    {
+      "id": "ballot-az-pima:state-house-20",
+      "hash": "fb795b7bfe68e64dbf5a20951e684d5754430da12104bc98f13ac0c35fd87ad7"
+    },
+    {
+      "id": "ballot-az-pima:prop-141",
+      "hash": "548bf9c53aad00a7e4a9ab71c69090b3f46f6fff125bf0b0338193c0978ebbdb"
+    },
+    {
+      "id": "ballot-az-pima:prop-142",
+      "hash": "bb4859f6db0ef284704f0f32dc9c2a6638cb3b85c3340fbaab80d3b05cc54d12"
+    },
+    {
+      "id": "ballot-az-pima:prop-143",
+      "hash": "2bef70d889c806d6562ec480d613eb5c549082114a08c4a584f151a8dc8e9487"
+    },
+    {
+      "id": "ballot-az-pima:prop-144",
+      "hash": "df7157196ca7f12b3d18243083532b31b78b8fc90b6137f4e81f2deeb4483b8b"
+    },
+    {
+      "id": "ballot-az-pima:prop-145",
+      "hash": "33d97481ed760122a493da8ffc845fc6de564431fa35ea8e1916847689ac7efe"
+    },
+    {
+      "id": "ballot-az-pima:prop-212",
+      "hash": "dc4cf6c62852f9768056a9816680ecf5bc0845c72c01393f4bffdc058594c9ec"
+    },
+    {
+      "id": "ballot-az-pima:prop-316",
+      "hash": "b104d3fd58654fc6b04086f618760a796a02961608373d74c5fdf855b99fe298"
+    },
+    {
+      "id": "ballot-az-pima:prop-317",
+      "hash": "18ddb8d98bf6ad913f5e8b5f7797101f54752e31aba95f1f89784778c8e08538"
+    },
+    {
+      "id": "ballot-az-pima:prop-318",
+      "hash": "c859ff3c848271fb99d6b0232b31cdfe6b191297d5af24001c6bf073a7a96c3d"
+    },
+    {
+      "id": "ballot-az-pima:prop-319",
+      "hash": "487d6925baff934fb4eb5ad8dc97ff5b90ea12410d4812b3d549b17746029366"
+    },
+    {
+      "id": "ballot-az-pima:prop-320",
+      "hash": "921091945bd9ee760b1b87193aa8467aa2d581ee939f29b4aee5d77460febb32"
+    },
+    {
+      "id": "ballot-az-pima:state-senate-17",
+      "hash": "b7457e9b55f745571d266cc6d0dfe27bb6fd161adf9b1d3481ba6f883340ee56"
+    },
+    {
+      "id": "ballot-az-pima:state-house-17",
+      "hash": "f683cd4676915bde6cdd8bfa8cc515f23d8325fccbde168e1ee92c12fff3a154"
+    },
+    {
+      "id": "ballot-az-pima:corporation-commissioner",
+      "hash": "7846ca4f7cbd8768afc343d784d14248b5b8f2bbbe6c75e347d8535e1e888459"
+    },
+    {
+      "id": "ballot-az-pima:prop-425",
+      "hash": "57f348bce91a45baff952322f02e2f6531ae5d2bdfeaf2d4c83f340f70f22f02"
+    },
+    {
+      "id": "ballot-az-pima:prop-423",
+      "hash": "4a5230dd4dd17ecb9b2ac7a793959587ef27ae8caaa024e25095afaad78163b1"
+    },
+    {
+      "id": "ballot-az-pima:prop-428",
+      "hash": "2e66d98cc576b12ccaa076e434097687eab8a4abfa334ca6ac114b041d1d53f7"
+    },
+    {
+      "id": "ballot-az-pima:prop-429",
+      "hash": "9164f25c30941a9ce16d35be87435b2c727936d4af2147781ba649ca57085dcc"
+    },
+    {
+      "id": "az-2026-general-state-senate-1",
+      "hash": "3f360c63c2c5bbd911c981a841d8d12af0e455d46050597d4ae1937174bd03fd"
+    },
+    {
+      "id": "az-2026-general-state-house-1",
+      "hash": "afbc685dbab0486857982c6ffea86ce9489a7ae25a63eee69b20c1bdd1c0b150"
+    },
+    {
+      "id": "az-2026-general-state-senate-2",
+      "hash": "2c9083734d76ea84d01bda33ab4f61bab288a3f47866fd2c7406b04723a17f52"
+    },
+    {
+      "id": "az-2026-general-state-house-2",
+      "hash": "954b6a602c5963c49f342d60d8e9c05c80bde2009e513de17a765a4fd3f960a6"
+    },
+    {
+      "id": "az-2026-general-state-senate-3",
+      "hash": "79660a596991b08e5ea0e2c36d46cbfe5f8d3110109230514447d2556462c6cb"
+    },
+    {
+      "id": "az-2026-general-state-house-3",
+      "hash": "12a8299f942a5942e02cc81dffec71443820309d99749ec9a223ea276502264e"
+    },
+    {
+      "id": "az-2026-general-state-senate-4",
+      "hash": "7dbf71eafc8c6bac1bdb6a82cb41c31a9120aff00460f2dd69975d6cda6b8104"
+    },
+    {
+      "id": "az-2026-general-state-house-4",
+      "hash": "ebdc152659239c99b22009243ad41478e290f64b7b713f15696ab901a8dfba4e"
+    },
+    {
+      "id": "az-2026-general-state-senate-5",
+      "hash": "dded3c899c656d847018609fc33de28c618d0c03c19f8e9273aaba04b7f26e27"
+    },
+    {
+      "id": "az-2026-general-state-house-5",
+      "hash": "605b17b13c3eb76026a377de6e0abe79ee0c43d80bce632b401d2e408fb43d07"
+    },
+    {
+      "id": "az-2026-general-state-senate-6",
+      "hash": "636d132db3e7b680bb20a8af3aaba5892968b478c994a53621358701a9c7dda2"
+    },
+    {
+      "id": "az-2026-general-state-house-6",
+      "hash": "f4e6fb3939c08b8a84ec27a0c967c7c2b7c58c18d52a174252ea948e33629edd"
+    },
+    {
+      "id": "az-2026-general-state-senate-7",
+      "hash": "8649d3ed3306f252f637171f335e6c7e82f111fe6f04cadf6a7b5ddf3d1d6926"
+    },
+    {
+      "id": "az-2026-general-state-house-7",
+      "hash": "9cffe459dbc9ef83dd585f8adb27eba4e59d443a967ec4eaf458e2d98b922cd2"
+    },
+    {
+      "id": "az-2026-general-state-senate-8",
+      "hash": "fc0ca72d076898d8d984048e6c3d14223401e4a6b401d0a77cd898a3bded0997"
+    },
+    {
+      "id": "az-2026-general-state-house-8",
+      "hash": "4a11cdc62adff67e405825b6e050b7159cfe23a14fdd43a9f85eea73a433b9ee"
+    },
+    {
+      "id": "az-2026-general-state-senate-9",
+      "hash": "7a2569d1027c1196155682c7b45fcf331630189431943a8d1139d6dd68a5fc65"
+    },
+    {
+      "id": "az-2026-general-state-house-9",
+      "hash": "a9e74c39006aa67b5454bc13121518025926e55a4fe6ea302bea95d148c84928"
+    },
+    {
+      "id": "az-2026-general-state-senate-10",
+      "hash": "833d98be2dceebef7b9c7e60175333a48ef0dc1753effb4c9e343b5f53d02b1b"
+    },
+    {
+      "id": "az-2026-general-state-house-10",
+      "hash": "87659cfe4bfe6ce7cb62e1c6d0ef2447f1284be83cced93022e108bb2ac3ef00"
+    },
+    {
+      "id": "az-2026-general-state-senate-11",
+      "hash": "0dca86089a524e151705c9205597e5a87378dfdc5532a15c7949fe81c5b66d90"
+    },
+    {
+      "id": "az-2026-general-state-house-11",
+      "hash": "365b2bd863ec9b361e4a1d0e5c840699ceb09a4198ea174bd3ae26de93a033c2"
+    },
+    {
+      "id": "az-2026-general-state-senate-12",
+      "hash": "ca33393ec84dc7d49643e87351d2f5ffe3d3a6258e362205fc48899cdd7c0c93"
+    },
+    {
+      "id": "az-2026-general-state-house-12",
+      "hash": "b4a820dfb7be837bb2f880b42b924fa811216ae12da4b4514dd7c8cb58b4ac1b"
+    },
+    {
+      "id": "az-2026-general-state-senate-13",
+      "hash": "b5ed2663010028256c9345ab2e5ba80920807ae9a859e5618bb58a089ce2f7aa"
+    },
+    {
+      "id": "az-2026-general-state-house-13",
+      "hash": "a438a8e7e9e85beff47a383f71c9c7db75a674aba8bff4b4e979c3c99576b65d"
+    },
+    {
+      "id": "az-2026-general-state-senate-14",
+      "hash": "7932a2b880ef15c054cc127f250249b962d663dfe604a22010ed55a8b263aedd"
+    },
+    {
+      "id": "az-2026-general-state-house-14",
+      "hash": "c4f901e92628f8d761ba9ad356f1ba430807ef06fa3302ad86e3bfbd9c6c286b"
+    },
+    {
+      "id": "az-2026-general-state-senate-15",
+      "hash": "cf6221d99a00f3b26a2d6851e38abe0ed8c2897ef533a262b1b547527a09c6a1"
+    },
+    {
+      "id": "az-2026-general-state-house-15",
+      "hash": "47b09442cfb9064499a07467b4600ec03870e2bd702074032b69f5c5c546c51d"
+    },
+    {
+      "id": "az-2026-general-state-senate-16",
+      "hash": "50642fe200aff7572e2b8ee4d9f862dc159d2bd2b807ff714cef975fdeb72e66"
+    },
+    {
+      "id": "az-2026-general-state-house-16",
+      "hash": "29be6b2377c86a311352f4b48614bfe44d3395c67ed14f9a032018c17546c755"
+    },
+    {
+      "id": "az-2026-general-state-senate-18",
+      "hash": "5936187c61c0734bdfeb7e071f3948abdba9dbacb280adf78aa6e7e350f31a76"
+    },
+    {
+      "id": "az-2026-general-state-house-18",
+      "hash": "86fe632f493087e457430047305308effb69dcc87851f63a81ab68150aab0d03"
+    },
+    {
+      "id": "az-2026-general-state-senate-21",
+      "hash": "71e8e4fe3dd0ed968ed36691f9131c0e8e78dec23f9af5bde6c774ac4c8e8f7f"
+    },
+    {
+      "id": "az-2026-general-state-house-21",
+      "hash": "e84a053c337ce084014a309be747ebb1c338c5dc4a43306aa7276004542d2b18"
+    },
+    {
+      "id": "az-2026-general-state-senate-22",
+      "hash": "6d1eeb463b696c4aa64853c018daa3876719d84d612601f14c9e4c72a0163a1f"
+    },
+    {
+      "id": "az-2026-general-state-house-22",
+      "hash": "fb25fb720340d6e595b5fcde7f23e631ba34452f33fee06cdf35ff3b75289376"
+    },
+    {
+      "id": "az-2026-general-state-senate-23",
+      "hash": "0b3279ec02b70809376b87f06127e26967d7a220632f0d2a237cd84120b19100"
+    },
+    {
+      "id": "az-2026-general-state-house-23",
+      "hash": "6f928c92b7de598f79f827b02bac69309d23c8bcd49080a98120e0ed2480da61"
+    },
+    {
+      "id": "az-2026-general-state-senate-24",
+      "hash": "acface0c2df688bc734fb36104e1b67c89df64540766bbc6fa1777c621cbf918"
+    },
+    {
+      "id": "az-2026-general-state-house-24",
+      "hash": "ca2ecabb497937a03114e20492da98b40632eacfd5868da6d52cf1726ae384a8"
+    },
+    {
+      "id": "az-2026-general-state-senate-25",
+      "hash": "2dc0e214b6da260cada80a61c5c9783be8a82f2aee7a581ac2787e266840fd83"
+    },
+    {
+      "id": "az-2026-general-state-house-25",
+      "hash": "a415b61a37530094f617152715001ca03239ff25b5f90559ef710515fbf24797"
+    },
+    {
+      "id": "az-2026-general-state-senate-26",
+      "hash": "636797300e1743c091507c7162cb5a0e895e6a7c2fa3f4789f519c543edfbdb4"
+    },
+    {
+      "id": "az-2026-general-state-house-26",
+      "hash": "b11d3d4bdd27c23a911f9181c338c3a83ff59ae739f02ba6656d66f10f968b17"
+    },
+    {
+      "id": "az-2026-general-state-senate-27",
+      "hash": "ff56037e3640fc2191733376d7ff7ce6ecddd19fae9c2f9c98a5aa089f04074b"
+    },
+    {
+      "id": "az-2026-general-state-house-27",
+      "hash": "2cfaca88e7dcf0ca70bd599ee8f7111c11282e7dc41b104a2cf2475fb4a77bfa"
+    },
+    {
+      "id": "az-2026-general-state-senate-28",
+      "hash": "2275f07918ee174f1171640253076612dd9e0e595f304f97ed83516b50e0c222"
+    },
+    {
+      "id": "az-2026-general-state-house-28",
+      "hash": "444ebd78888d17e403986527733428967a920a50a12740d54ad715570a880303"
+    },
+    {
+      "id": "az-2026-general-state-senate-29",
+      "hash": "4decc99ea7ac5fa14a8aa2d744c8bf136f187981166707b7a00249a9920130d5"
+    },
+    {
+      "id": "az-2026-general-state-house-29",
+      "hash": "fa26bcdfc6e79d4894e3d49fdf69c02fc6dc829cbf1986224705ce133539fde9"
+    },
+    {
+      "id": "az-2026-general-state-senate-30",
+      "hash": "e674f7220edda7a2aee6ccad7754bd338dbd40334a9fcbd34a476f30fe2a8da0"
+    },
+    {
+      "id": "az-2026-general-state-house-30",
+      "hash": "37279a1c1aa05f642fe92ab768d9d7e12339844adda7e93b78bff30a8e195217"
+    },
+    {
+      "id": "az-2026-general-us-house-1",
+      "hash": "9d5bc62f9fca8be0902ec837cf0bf64e4e313394faa3c328c7ade93985ad5ebc"
+    },
+    {
+      "id": "az-2026-general-us-house-2",
+      "hash": "2ea472b471aa1778ce66af7a5e5609a2ff4d62d4ccaea583028d7bb972c00644"
+    },
+    {
+      "id": "az-2026-general-us-house-3",
+      "hash": "cff97b396b7c7bf295b4be76b42ea8582dfdd574523db09edf1fcd13ef53108c"
+    },
+    {
+      "id": "az-2026-general-us-house-4",
+      "hash": "ac8163ff374e3549e3877473c3709784dd299654c4e2b5f164058db6d0f5394c"
+    },
+    {
+      "id": "az-2026-general-us-house-5",
+      "hash": "6679754fabf0e386019e407adf04a0a218f97243af63b6ab96e7beee336c23b6"
+    },
+    {
+      "id": "az-2026-general-us-house-8",
+      "hash": "b3c5d727c3f6c4555acbef59cdab4f6251bb2e7170d72e9d374df4031c3d091d"
+    },
+    {
+      "id": "az-2026-general-us-house-9",
+      "hash": "20bf03dd5e9f5aab136a07ee5cf15673864df66e71c45ee8cf6697dffb6a6c81"
+    }
+  ],
+  "candidacyIds": [
+    "ballot-az-pima:governor:hobbs-katie",
+    "ballot-az-pima:governor:hourihan-teri-ann",
+    "ballot-az-pima:governor:lombardo-risa",
+    "ballot-az-pima:governor:biggs-andy",
+    "ballot-az-pima:secretary-of-state:fontes-adrian",
+    "ballot-az-pima:secretary-of-state:collier-duwayne",
+    "ballot-az-pima:secretary-of-state:kolodin-alexander",
+    "ballot-az-pima:attorney-general:mayes-kris",
+    "ballot-az-pima:attorney-general:petersen-warren",
+    "ballot-az-pima:state-treasurer:mansour-nick",
+    "ballot-az-pima:state-treasurer:norton-elijah",
+    "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+    "ballot-az-pima:superintendent:yee-kimberly",
+    "ballot-az-pima:mine-inspector:matlock-brian",
+    "ballot-az-pima:mine-inspector:presmyk-walter",
+    "ballot-az-pima:us-house-6:mendoza-joanna",
+    "ballot-az-pima:us-house-6:peters-jereme-lance",
+    "ballot-az-pima:us-house-6:ciscomani-juan",
+    "ballot-az-pima:us-house-7:grijalva-adelita",
+    "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+    "ballot-az-pima:state-senate-19:griffin-gail",
+    "ballot-az-pima:state-senate-20:hernandez-alma",
+    "ballot-az-pima:state-house-19:anderson-jackie-o-donnell",
+    "ballot-az-pima:state-house-19:swallow-aiden-nicholette",
+    "ballot-az-pima:state-house-19:diaz-lupe",
+    "ballot-az-pima:state-house-19:gowan-david",
+    "ballot-az-pima:state-house-20:gonzales-sally-ann",
+    "ballot-az-pima:state-house-20:villegas-betty",
+    "ballot-az-pima:state-senate-17:king",
+    "ballot-az-pima:state-senate-17:soto",
+    "ballot-az-pima:state-house-17:keshel",
+    "ballot-az-pima:state-house-17:winchester",
+    "ballot-az-pima:state-house-17:lyon",
+    "ballot-az-pima:state-house-17:volk",
+    "ballot-az-pima:corporation-commissioner:thompson",
+    "ballot-az-pima:corporation-commissioner:pratte",
+    "ballot-az-pima:corporation-commissioner:hill",
+    "az-2026-general-state-senate-1:dargon-christine-ellen",
+    "az-2026-general-state-senate-1:finchem-mark",
+    "az-2026-general-state-house-1:bliss-selina",
+    "az-2026-general-state-house-1:nguyen-quang-huu",
+    "az-2026-general-state-house-1:zalecki-sandy",
+    "az-2026-general-state-house-1:eakins-charles-charlie",
+    "az-2026-general-state-senate-2:bolick-shawnna",
+    "az-2026-general-state-senate-2:gallitano-amelia",
+    "az-2026-general-state-house-2:carver-paul",
+    "az-2026-general-state-house-2:simacek-stephanie",
+    "az-2026-general-state-house-2:wilmeth-justin",
+    "az-2026-general-state-senate-3:fortney-jeffrey",
+    "az-2026-general-state-senate-3:kavanagh-john",
+    "az-2026-general-state-senate-3:bertone-frank",
+    "az-2026-general-state-house-3:gable-julie",
+    "az-2026-general-state-house-3:khalaf-george",
+    "az-2026-general-state-house-3:reim-cody",
+    "az-2026-general-state-house-3:skirbst-john",
+    "az-2026-general-state-house-3:spargo-richard-rick-robert",
+    "az-2026-general-state-senate-4:lieberman-aaron",
+    "az-2026-general-state-senate-4:werner-carine",
+    "az-2026-general-state-house-4:caputi-tammy",
+    "az-2026-general-state-house-4:carter-pamela",
+    "az-2026-general-state-house-4:gresham-karen",
+    "az-2026-general-state-house-4:gress-matt",
+    "az-2026-general-state-senate-5:laforest-jason",
+    "az-2026-general-state-senate-5:marsh-christine",
+    "az-2026-general-state-house-5:liguori-sarah",
+    "az-2026-general-state-house-5:marquez-aaron",
+    "az-2026-general-state-senate-6:johnson-lloyd",
+    "az-2026-general-state-senate-6:peshlakai-jamescita",
+    "az-2026-general-state-house-6:peshlakai-mae",
+    "az-2026-general-state-house-6:teller-ian",
+    "az-2026-general-state-house-6:trachsel-brendan",
+    "az-2026-general-state-house-6:jenkins-royce-rj-mark",
+    "az-2026-general-state-senate-7:montiel-michiel-mike",
+    "az-2026-general-state-senate-7:rogers-wendy",
+    "az-2026-general-state-house-7:blackman-walter-walt",
+    "az-2026-general-state-house-7:cook-sr-david",
+    "az-2026-general-state-house-7:grayson-richard",
+    "az-2026-general-state-house-7:martin-samuel-sam",
+    "az-2026-general-state-senate-8:kuby-lauren",
+    "az-2026-general-state-senate-8:loughrige-bill",
+    "az-2026-general-state-house-8:connolly-janeen",
+    "az-2026-general-state-house-8:garcia-brian",
+    "az-2026-general-state-house-8:hawker-donald",
+    "az-2026-general-state-senate-9:fitzgibbons-bridget",
+    "az-2026-general-state-senate-9:sears-kiana-maria",
+    "az-2026-general-state-house-9:austin-lorena",
+    "az-2026-general-state-house-9:bettencourt-bradley-d",
+    "az-2026-general-state-house-9:martinez-jacob-d",
+    "az-2026-general-state-senate-10:farnsworth-david-christian",
+    "az-2026-general-state-senate-10:fierro-nick",
+    "az-2026-general-state-senate-10:moses-blair",
+    "az-2026-general-state-house-10:calaway-brian",
+    "az-2026-general-state-house-10:hunter-helen",
+    "az-2026-general-state-house-10:olson-justin",
+    "az-2026-general-state-house-10:rogers-james",
+    "az-2026-general-state-house-10:scott-david",
+    "az-2026-general-state-senate-11:ayala-joshua",
+    "az-2026-general-state-senate-11:miranda-catherine",
+    "az-2026-general-state-house-11:aleman-cesar",
+    "az-2026-general-state-house-11:cavero-junelle",
+    "az-2026-general-state-house-11:dailey-joseph-charles",
+    "az-2026-general-state-house-11:de-los-santos-oscar",
+    "az-2026-general-state-senate-12:contreras-patricia-patty",
+    "az-2026-general-state-senate-12:ramirez-anthony-jason",
+    "az-2026-general-state-senate-12:hatch-gary",
+    "az-2026-general-state-house-12:montero-armando",
+    "az-2026-general-state-house-12:richardson-david",
+    "az-2026-general-state-house-12:travers-stacey",
+    "az-2026-general-state-senate-13:o-brien-kristie",
+    "az-2026-general-state-senate-13:willoughby-julie",
+    "az-2026-general-state-house-13:armstrong-racquel-rockee",
+    "az-2026-general-state-house-13:hartke-kevin",
+    "az-2026-general-state-house-13:weinberg-jacob",
+    "az-2026-general-state-house-13:weninger-janet",
+    "az-2026-general-state-senate-14:biggs-mylie",
+    "az-2026-general-state-senate-14:walsh-stephanie",
+    "az-2026-general-state-house-14:farnsworth-tyler-andrew",
+    "az-2026-general-state-house-14:hendrix-laurin",
+    "az-2026-general-state-house-14:rose-mary",
+    "az-2026-general-state-senate-15:accalia-jayme",
+    "az-2026-general-state-senate-15:hoffman-jake",
+    "az-2026-general-state-house-15:carter-neal",
+    "az-2026-general-state-house-15:way-michael",
+    "az-2026-general-state-senate-16:aldrete-elaine",
+    "az-2026-general-state-senate-16:shope-thomas-t-j",
+    "az-2026-general-state-house-16:gusse-julia-romero",
+    "az-2026-general-state-house-16:lopez-chris",
+    "az-2026-general-state-house-16:martinez-teresa",
+    "az-2026-general-state-senate-18:everett-douglas",
+    "az-2026-general-state-senate-18:sundareshan-priya",
+    "az-2026-general-state-house-18:dohse-bob",
+    "az-2026-general-state-house-18:gutierrez-nancy",
+    "az-2026-general-state-house-18:mathis-chris",
+    "az-2026-general-state-senate-21:flores-esteban",
+    "az-2026-general-state-senate-21:gabaldon-rosanna",
+    "az-2026-general-state-house-21:hernandez-consuelo",
+    "az-2026-general-state-house-21:kibbey-christopher",
+    "az-2026-general-state-house-21:lopez-miranda",
+    "az-2026-general-state-senate-22:diaz-eva",
+    "az-2026-general-state-house-22:luna-najera-elda",
+    "az-2026-general-state-house-22:munoz-betsy",
+    "az-2026-general-state-senate-23:altherr-michelle",
+    "az-2026-general-state-senate-23:fernandez-brian",
+    "az-2026-general-state-house-23:cortez-emilia",
+    "az-2026-general-state-house-23:garcia-snyder-gary",
+    "az-2026-general-state-house-23:pena-michele",
+    "az-2026-general-state-house-23:sandoval-mariana",
+    "az-2026-general-state-senate-24:ortiz-analise",
+    "az-2026-general-state-senate-24:steele-frank",
+    "az-2026-general-state-house-24:arescurenaga-lisbeth",
+    "az-2026-general-state-house-24:flores-alberto",
+    "az-2026-general-state-house-24:mclaughlin-delores",
+    "az-2026-general-state-senate-25:dunn-timothy-tim",
+    "az-2026-general-state-senate-25:huber-laura",
+    "az-2026-general-state-house-25:byrne-tiffany",
+    "az-2026-general-state-house-25:carbone-michael",
+    "az-2026-general-state-house-25:kupper-nickolas-nick",
+    "az-2026-general-state-senate-26:bishop-jim",
+    "az-2026-general-state-senate-26:bravo-flavio",
+    "az-2026-general-state-house-26:aguilar-cesar",
+    "az-2026-general-state-house-26:crews-quanta",
+    "az-2026-general-state-house-26:gomez-hector",
+    "az-2026-general-state-house-26:mckenna-jonathan",
+    "az-2026-general-state-house-26:roberts-frank",
+    "az-2026-general-state-senate-27:clayton-kyle",
+    "az-2026-general-state-senate-27:payne-kevin",
+    "az-2026-general-state-house-27:fink-lisa",
+    "az-2026-general-state-house-27:howard-deborah",
+    "az-2026-general-state-house-27:rivero-tony",
+    "az-2026-general-state-senate-28:braun-michael",
+    "az-2026-general-state-senate-28:carroll-frank",
+    "az-2026-general-state-house-28:fike-barbara",
+    "az-2026-general-state-house-28:graham-marc",
+    "az-2026-general-state-house-28:livingston-david",
+    "az-2026-general-state-house-28:pingerelli-beverly",
+    "az-2026-general-state-senate-29:shamp-janae",
+    "az-2026-general-state-senate-29:stafford-eric",
+    "az-2026-general-state-house-29:montenegro-steve",
+    "az-2026-general-state-house-29:scianna-christine-marie",
+    "az-2026-general-state-house-29:taylor-james",
+    "az-2026-general-state-senate-30:biasiucci-leo",
+    "az-2026-general-state-house-30:gannuscio-mike",
+    "az-2026-general-state-house-30:mcmahan-brian",
+    "az-2026-general-state-house-30:rose-david",
+    "az-2026-general-us-house-1:feely-iv-thomas-jay",
+    "az-2026-general-us-house-1:shah-amish",
+    "az-2026-general-us-house-1:alponte-monica",
+    "az-2026-general-us-house-1:gupta-dev",
+    "az-2026-general-us-house-1:thunder-gage-dylan",
+    "az-2026-general-us-house-2:crane-eli",
+    "az-2026-general-us-house-2:nez-jonathan",
+    "az-2026-general-us-house-2:goodwin-curtis",
+    "az-2026-general-us-house-3:ansari-yassamin",
+    "az-2026-general-us-house-3:redkey-david",
+    "az-2026-general-us-house-3:aversa-alan",
+    "az-2026-general-us-house-3:parkman-jacob",
+    "az-2026-general-us-house-4:jasser-zuhdi",
+    "az-2026-general-us-house-4:stanton-greg",
+    "az-2026-general-us-house-4:benoit-tisha",
+    "az-2026-general-us-house-4:sanders-steven",
+    "az-2026-general-us-house-5:lamb-mark",
+    "az-2026-general-us-house-5:lee-elizabeth",
+    "az-2026-general-us-house-8:hamadeh-abraham-abe",
+    "az-2026-general-us-house-8:greene-placentia-bernadette",
+    "az-2026-general-us-house-9:gosar-paul",
+    "az-2026-general-us-house-9:sterbinsky-danielle-dani",
+    "az-2026-general-us-house-9:hatch-g-seville",
+    "az-2026-general-us-house-9:perry-william",
+    "az-2026-general-state-senate-19:karp-bob",
+    "az-2026-general-us-house-6:swing-gary",
+    "az-2026-general-us-house-6:dorland-michael",
+    "az-2026-general-governor:gonzalez-gertritrude",
+    "az-2026-general-governor:novoa-alice",
+    "az-2026-general-superintendent:davis-gerard",
+    "az-2026-general-superintendent:neal-jr-stephen",
+    "az-2026-general-corporation-commissioner:heap-ralph",
+    "az-2026-general-corporation-commissioner:cease-mike"
+  ],
+  "measures": [
+    {
+      "id": "ballot-az-pima:prop-425:question",
+      "hash": "0ffac2a77c02539d3e6c412e0510f9824d110d4a98941ab96bd5e8d9a97decbc"
+    },
+    {
+      "id": "ballot-az-pima:prop-423:question",
+      "hash": "fbd24210f79c191dfef15a0193f9f2c025d29404bfa3130d038a952164673cd4"
+    },
+    {
+      "id": "ballot-az-pima:prop-428:question",
+      "hash": "df0cd11436e0fa88d260ed285b16e4d34473b5e3c66a5c9ba906e10880d3f675"
+    },
+    {
+      "id": "ballot-az-pima:prop-429:question",
+      "hash": "4d3161a790ca9c9a87cc9b76f514fee8f03dbcf10bffa0a736a68b8e639a1192"
+    }
+  ],
+  "measureRecords": [
+    {
+      "id": "ballot-az-pima:prop-141",
+      "hash": "8cf7fb4446221798be206961f46a919845b79f37404fbaf0b3f849911eeabed2"
+    },
+    {
+      "id": "ballot-az-pima:prop-142",
+      "hash": "fc74dd5184ffcdc8bf01b030d069eebdae783f79a59ba3baf442ccedf017b678"
+    },
+    {
+      "id": "ballot-az-pima:prop-143",
+      "hash": "4dbea68f23c12a4fa7ace0e18da610aa064b1d18f8610e99265bcc33296a6c17"
+    },
+    {
+      "id": "ballot-az-pima:prop-144",
+      "hash": "23d8d4df48407fadef22c66bb996dd4556ecdec1f8161430034698f5c50393e9"
+    },
+    {
+      "id": "ballot-az-pima:prop-145",
+      "hash": "52369ea10d73dca113dd6cdba7bc1a25edb216ac0f6671bda6f09565d9b9450c"
+    },
+    {
+      "id": "ballot-az-pima:prop-212",
+      "hash": "01aaae426e4ade60b978efa467ec0132f67f8e7686691cc8594e57ba8680d62e"
+    },
+    {
+      "id": "ballot-az-pima:prop-316",
+      "hash": "456eaf441765e9a7bdbb956ad4c93e9b89791fb6678a5075d59dc5af252242f3"
+    },
+    {
+      "id": "ballot-az-pima:prop-317",
+      "hash": "2502378e65c9eb7c01965aedfe62282d75807604c93dba39d5e272181a6317ef"
+    },
+    {
+      "id": "ballot-az-pima:prop-318",
+      "hash": "4e7f48448f2ed1d1a1507560bc19a2daf7f242a69d4a03a0edb9448f9b59af66"
+    },
+    {
+      "id": "ballot-az-pima:prop-319",
+      "hash": "d460a734cb50ad8583edce92e052d285fb60430948ddbb40cf72b5e4bf9863d2"
+    },
+    {
+      "id": "ballot-az-pima:prop-320",
+      "hash": "0e384942e42ff49bf59e93b230fa25b9ef0765c9ae02ca7f5eaff4fc7567c23c"
+    },
+    {
+      "id": "ballot-az-pima:prop-425",
+      "hash": "ef987deadfb43bc105314b27ac3cbfaff79f5b7c276e48f74e10abb52ed1da4b"
+    },
+    {
+      "id": "ballot-az-pima:prop-423",
+      "hash": "ee40eca03ae502e433d816d85ab349495bcb749cef0b0b9bb8691d3a5b0e21de"
+    },
+    {
+      "id": "ballot-az-pima:prop-428",
+      "hash": "03909205a77eb1aa994fb59b0d5000344d1d4f63425cb37ba01b0d3fd2fa3154"
+    },
+    {
+      "id": "ballot-az-pima:prop-429",
+      "hash": "0d8d7920b0a69c44377b69a08a89b6c7efe5632f11b7d2e9f3b9148cc97478a8"
+    }
+  ],
+  "tucsonContestIds": [
+    "ballot-az-pima:governor",
+    "ballot-az-pima:secretary-of-state",
+    "ballot-az-pima:attorney-general",
+    "ballot-az-pima:state-treasurer",
+    "ballot-az-pima:superintendent",
+    "ballot-az-pima:mine-inspector",
+    "ballot-az-pima:us-house-7",
+    "ballot-az-pima:state-senate-20",
+    "ballot-az-pima:state-house-20",
+    "ballot-az-pima:corporation-commissioner",
+    "ballot-az-pima:prop-141",
+    "ballot-az-pima:prop-142",
+    "ballot-az-pima:prop-143",
+    "ballot-az-pima:prop-144",
+    "ballot-az-pima:prop-145",
+    "ballot-az-pima:prop-212",
+    "ballot-az-pima:prop-316",
+    "ballot-az-pima:prop-317",
+    "ballot-az-pima:prop-318",
+    "ballot-az-pima:prop-319",
+    "ballot-az-pima:prop-320",
+    "ballot-az-pima:prop-425"
+  ],
+  "governorReconciliationRows": [
+    {
+      "basis": {
+        "note": "contest, party and an exact name form all agree",
+        "partyAgrees": true,
+        "partyChecked": true,
+        "contestAgrees": true,
+        "sharedNameForm": "katie hobbs",
+        "sharedNameFormRules": [
+          "AS_PUBLISHED"
+        ]
+      },
+      "cardKey": "ballot-az-pima:governor|Katie Hobbs",
+      "outcome": "RECONCILED",
+      "contestId": "ballot-az-pima:governor",
+      "nomineeName": "Katie Hobbs",
+      "sourceValues": {
+        "canvassName": "Katie Hobbs",
+        "canvassParty": "Democratic",
+        "registryName": "Katie Hobbs",
+        "registryParty": "Democratic",
+        "registryCandidateIds": [
+          "az-2026:governor:hobbs-katie"
+        ]
+      },
+      "nomineePartyLabel": "Democratic",
+      "readerGapSentence": null,
+      "candidateIdentityId": "az-2026:governor:hobbs-katie",
+      "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie"
+    },
+    {
+      "basis": {
+        "note": "contest, party and an exact name form all agree",
+        "partyAgrees": true,
+        "partyChecked": true,
+        "contestAgrees": true,
+        "sharedNameForm": "andy biggs",
+        "sharedNameFormRules": [
+          "AS_PUBLISHED"
+        ]
+      },
+      "cardKey": "ballot-az-pima:governor|Andy Biggs",
+      "outcome": "RECONCILED",
+      "contestId": "ballot-az-pima:governor",
+      "nomineeName": "Andy Biggs",
+      "sourceValues": {
+        "canvassName": "Andy Biggs",
+        "canvassParty": "Republican",
+        "registryName": "Andy Biggs",
+        "registryParty": "Republican",
+        "registryCandidateIds": [
+          "az-2026:governor:biggs-andy"
+        ]
+      },
+      "nomineePartyLabel": "Republican",
+      "readerGapSentence": null,
+      "candidateIdentityId": "az-2026:governor:biggs-andy",
+      "canonicalCandidacyId": "ballot-az-pima:governor:biggs-andy"
+    },
+    {
+      "basis": {
+        "note": "contest, party and an exact name form all agree",
+        "partyAgrees": true,
+        "partyChecked": true,
+        "contestAgrees": true,
+        "sharedNameForm": "risa lombardo",
+        "sharedNameFormRules": [
+          "AS_PUBLISHED"
+        ]
+      },
+      "cardKey": "ballot-az-pima:governor|Risa Lombardo",
+      "outcome": "RECONCILED",
+      "contestId": "ballot-az-pima:governor",
+      "nomineeName": "Risa Lombardo",
+      "sourceValues": {
+        "canvassName": "Risa Lombardo",
+        "canvassParty": "Green",
+        "registryName": "Risa Lombardo",
+        "registryParty": "Green",
+        "registryCandidateIds": [
+          "az-2026:governor:lombardo-risa"
+        ]
+      },
+      "nomineePartyLabel": "Green",
+      "readerGapSentence": null,
+      "candidateIdentityId": "az-2026:governor:lombardo-risa",
+      "canonicalCandidacyId": "ballot-az-pima:governor:lombardo-risa"
+    },
+    {
+      "basis": {
+        "note": "one name match, and the two authorities disagree on party (canvass \"No Labels\" vs filing list \"Arizona Independent Party\")",
+        "partyAgrees": false,
+        "partyChecked": true,
+        "contestAgrees": true,
+        "sharedNameForm": "teri ann hourihan",
+        "sharedNameFormRules": [
+          "AS_PUBLISHED"
+        ]
+      },
+      "cardKey": "ballot-az-pima:governor|Teri Ann Hourihan",
+      "outcome": "PARTY_CONFLICT",
+      "contestId": "ballot-az-pima:governor",
+      "nomineeName": "Teri Ann Hourihan",
+      "sourceValues": {
+        "canvassName": "Teri Ann Hourihan",
+        "canvassParty": "No Labels",
+        "registryName": "Teri Ann Hourihan",
+        "registryParty": "Arizona Independent Party",
+        "registryCandidateIds": [
+          "az-2026:governor:hourihan-teri-ann"
+        ]
+      },
+      "nomineePartyLabel": "No Labels",
+      "readerGapSentence": "Arizona's certified canvass and the Secretary of State's candidate-filing list state different parties for the only matching name, so we have not established that they are the same candidacy.",
+      "candidateIdentityId": null,
+      "canonicalCandidacyId": null
+    },
+    {
+      "cardKey": "ballot-az-pima:governor|Gertritrude Gonzalez",
+      "contestId": "ballot-az-pima:governor",
+      "nomineeName": "Gertritrude Gonzalez",
+      "nomineePartyLabel": "Republican",
+      "outcome": "RECONCILED",
+      "candidateIdentityId": "az-2026:governor:gonzalez-gertritrude",
+      "canonicalCandidacyId": "az-2026-general-governor:gonzalez-gertritrude",
+      "sourceValues": {
+        "canvassName": "Gertritrude Gonzalez",
+        "canvassParty": "Republican",
+        "registryName": "Gertritrude Gonzalez",
+        "registryParty": "Republican",
+        "registryCandidateIds": [
+          "az-2026:governor:gonzalez-gertritrude"
+        ]
+      },
+      "basis": {
+        "contestAgrees": true,
+        "partyChecked": true,
+        "partyAgrees": true,
+        "sharedNameForm": "gertritrude gonzalez",
+        "sharedNameFormRules": [
+          "AS_PUBLISHED"
+        ],
+        "note": "Exact published name form, contest and party agree."
+      },
+      "readerGapSentence": null
+    },
+    {
+      "cardKey": "ballot-az-pima:governor|Alice Novoa",
+      "contestId": "ballot-az-pima:governor",
+      "nomineeName": "Alice Novoa",
+      "nomineePartyLabel": "Republican",
+      "outcome": "RECONCILED",
+      "candidateIdentityId": "az-2026:governor:novoa-alice",
+      "canonicalCandidacyId": "az-2026-general-governor:novoa-alice",
+      "sourceValues": {
+        "canvassName": "Alice Novoa",
+        "canvassParty": "Republican",
+        "registryName": "Alice Novoa",
+        "registryParty": "Republican",
+        "registryCandidateIds": [
+          "az-2026:governor:novoa-alice"
+        ]
+      },
+      "basis": {
+        "contestAgrees": true,
+        "partyChecked": true,
+        "partyAgrees": true,
+        "sharedNameForm": "alice novoa",
+        "sharedNameFormRules": [
+          "AS_PUBLISHED"
+        ],
+        "note": "Exact published name form, contest and party agree."
+      },
+      "readerGapSentence": null
+    }
+  ]
+}

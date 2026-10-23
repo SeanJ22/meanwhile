@@ -4,7 +4,6 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { absencesForDivisions } from "../lib/ask/ballot-inventory.ts";
-import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
 import type { EvidencePack, EvidenceRecord, EvidenceSubject } from "../lib/ask/evidence.ts";
 import { overLengthBudget } from "../lib/ask/length-contract.ts";
 import { financeQuestionAsked, financeRegimeNotesFor } from "../lib/ask/local-finance.ts";
@@ -19,7 +18,6 @@ import {
 } from "../lib/ask/money-answer.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import type { CampaignMoney } from "../lib/funding/campaign-money.ts";
 import type { StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { stateMoneyRecordsForDisplay } from "../lib/funding/state-money-reader.ts";
 
@@ -73,7 +71,7 @@ const MONEY: StateMoneyRecord[] = [
 
 interface Race { contest: { id: string; title: string; ocdId: string }; candidates: GroupCandidate[]; records: EvidenceRecord[]; gaps: EvidencePack["gaps"] }
 
-/** A contest's candidates and their held money, through the route's own selector (state records only). */
+
 function race(contestId: string): Race {
   const contest = CONTESTS.find((row) => row.id === contestId)!;
   const records: EvidenceRecord[] = [];
@@ -83,14 +81,10 @@ function race(contestId: string): Race {
     const name = [candidacy.givenName, candidacy.familyName].filter(Boolean).join(" ");
     const subject: EvidenceSubject = { kind: "PERSON", id: candidacy.id, name };
     const shown = stateMoneyRecordsForDisplay(MONEY.filter((record) => record.targetKeys.includes(candidacy.id)));
-    const select = (): CampaignMoney => ({
-      requestedTargetKey: candidacy.id, federal: { kind: "none" }, officialIdentity: "NOT_OFFICIAL",
-      state: { records: shown, resolution: "DIRECT_CANDIDACY_KEY", resolvedTargetKey: candidacy.id },
-    });
-    const evidence = campaignMoneyEvidenceFor(subject, candidacy.id, contestId, select);
-    records.push(...evidence.records);
-    gaps.push(...evidence.gaps);
-    candidates.push({ id: candidacy.id, name, matched: evidence.denominators.financeIdentityUnresolved === 0 });
+    records.push(...shown.map((record,index):EvidenceRecord=>({kind:"FINANCE_SUMMARY",id:`state-money:${candidacy.id}:${index}`,subjectId:subject.id,text:"Filed campaign totals",
+      sourceUrl:record.filingsUrl,sourceOrg:record.agency,retrievedAt:record.checkedAt,
+      finance:{jurisdiction:record.jurisdiction,filingState:record.filingState,totals:record.totals,registeredName:record.registeredName,agency:record.agency,electionYear:record.electionYear,checkedAt:record.checkedAt}})));
+    candidates.push({id:candidacy.id,name,matched:true});
   }
   const contestSubject: EvidenceSubject = { kind: "CONTEST", id: contestId, name: contest.title };
   gaps.push(...financeRegimeNotesFor(contestSubject, { state: records.length > 0, federal: false, county: false }).map((note) => note.gap));
@@ -146,7 +140,7 @@ test("race money wording is recognised with its race words, and a named person's
   for (const [question] of accepted) assert.equal(moneyQuestionShape(question), null, question);
 });
 
-test("every held contest composes, names every candidate with its own figures and a counted denominator, and passes the validator", () => {
+test("contest money answers name candidates with their own figures and pass validation", () => {
   let composedCount = 0;
   let withAMissingRecord = 0;
   for (const held of RACES) {
@@ -162,15 +156,15 @@ test("every held contest composes, names every candidate with its own figures an
       const subject: EvidenceSubject = { kind: "CONTEST", id: held.contest.id, name: held.contest.title };
       const verdict = validateAnswer(composed.answer, composed.citedUrls, packFor(subject, held.records, "race money"));
       assert.equal(verdict.kind, "PASSED", `${where}: ${verdict.kind === "FAILED" ? verdict.failed.join(",") : ""}\n${composed.answer}`);
-      const withRecord = held.candidates.filter((person) => held.records.some((record) => record.subjectId === person.id));
-      assert.ok(composed.answer.includes(`candidates with a state money record we hold: ${withRecord.length} of ${held.candidates.length}`), `${where}: ${composed.answer}`);
+      if (ask.kind === "WHO_GAVE") { assert.equal(composed.missingAnswer, true); continue; }
+      assert.doesNotMatch(composed.answer, /candidates with a state money record we hold/);
       for (const person of held.candidates) {
         assert.ok(composed.answer.includes(person.name), `${where} names ${person.name}: ${composed.answer}`);
         const record = held.records.find((row) => row.subjectId === person.id);
         if (!record) {
           withAMissingRecord += 1;
           // Our gap, in the words that fit it: an unresolved finance identity is never "no filing".
-          const gap = person.matched ? "no state committee filing in our records" : "not yet matched to a state filing in our records";
+          const gap = "we don't have a campaign filing yet";
           assert.ok(namedWithGap(composed.answer, person.name, gap), `${where}: ${composed.answer}`);
           continue;
         }
@@ -186,10 +180,7 @@ test("every held contest composes, names every candidate with its own figures an
         if (held.records.filter((row) => row.subjectId === person.id).length === 2) assert.ok(composed.answer.includes(`${person.name}, two committees stated apart (`), `${where}: ${composed.answer}`);
       }
       for (const url of composed.citedUrls) assert.ok(held.records.some((record) => record.sourceUrl === url), `${where} cites only held records`);
-      if (ask.kind === "WHO_GAVE") {
-        assert.match(composed.answer, /hold campaign totals, not the identities of donors \(money records naming a donor: 0 of \d+/);
-        assert.doesNotMatch(composed.answer, /\b(?:state|secretary of state|county) (?:does not|doesn't|do not) (?:publish|disclose|release|provide)/i);
-      }
+
       if (ask.kind === "MOST" && / reported raising more$| reported raising more\./.test(composed.answer)) {
         // A verdict names the committee with the highest filed receipts, and only on like-for-like filings.
         const filed = held.records.filter((record) => record.finance?.filingState === "FILED");
@@ -201,7 +192,7 @@ test("every held contest composes, names every candidate with its own figures an
   assert.ok(withAMissingRecord > 0, "at least one composed contest names a candidate we hold no money record for");
 });
 
-test("a contest with a candidate lacking a record names the gap as ours, with the count", () => {
+test("a contest names a candidate’s missing filing without treating it as zero", () => {
   const ask: GroupMoneyAsk = { kind: "HOW_MUCH", measures: ["RAISED"] };
   let found = 0;
   for (const held of RACES) {
@@ -211,8 +202,8 @@ test("a contest with a candidate lacking a record names the gap as ours, with th
     const composed = composeGroupMoneyAnswer({ ask, contest: held.contest, candidates: held.candidates, records: held.records, gaps: held.gaps });
     if (!composed) continue;
     found += 1;
-    assert.ok(composed.answer.includes(`(candidates with a state money record we hold: ${withRecord.length} of ${held.candidates.length}): `) && composed.answer.startsWith(`For the ${held.contest.title} race, by each candidate's own committee filing`), composed.answer);
-    for (const person of lacking) assert.ok(namedWithGap(composed.answer, person.name, "no state committee filing in our records"), composed.answer);
+    assert.doesNotMatch(composed.answer, /candidates with a state money record we hold/);
+    for (const person of lacking) assert.ok(namedWithGap(composed.answer, person.name, "we don't have a campaign filing yet"), composed.answer);
     // Never "$0" for a candidate we hold nothing for.
     assert.doesNotMatch(composed.answer, /\$0\.00/);
   }
@@ -225,7 +216,7 @@ test("a candidate whose ballot listing is not matched to a filing identity is ne
   const records = held.records.filter((record) => record.subjectId !== candidates[0].id);
   const composed = composeGroupMoneyAnswer({ ask: { kind: "HOW_MUCH", measures: ["RAISED"] }, contest: held.contest, candidates, records, gaps: held.gaps });
   assert.ok(composed);
-  assert.ok(namedWithGap(composed.answer, candidates[0].name, "not yet matched to a state filing in our records"), composed.answer);
+  assert.ok(namedWithGap(composed.answer, candidates[0].name, "we don't have a campaign filing yet"), composed.answer);
   assert.ok(!namedWithGap(composed.answer, candidates[0].name, "no state committee filing in our records"), composed.answer);
 });
 
@@ -268,7 +259,7 @@ test("a bound body reaches a contest only through its own office, never another 
   assert.equal(contestFitsBody("Member of the Township Committee", "Mendham Township Planning Board"), false);
 });
 
-test("Vail: no race on the ballot, in the authority's words, then the county register's committees by their registered names, never a total", () => {
+test("a ballot absence and committee register cannot substitute for requested campaign funding", () => {
   const bodyId = "ocd-division/country:us/state:az/school_district:vail_unified_district#board";
   const body = { kind: "BODY" as const, id: bodyId, name: "Vail Unified School District Governing Board" };
   const [absence] = absencesForDivisions([bodyId.split("#")[0]], AZ_BALLOT.absences);
@@ -281,19 +272,15 @@ test("Vail: no race on the ballot, in the authority's words, then the county reg
   for (const ask of [{ kind: "WHO_GAVE" }, { kind: "HOW_MUCH", measures: ["RAISED"] }] as GroupMoneyAsk[]) {
     const composed = composeNoRaceMoneyAnswer({ ask, body: { id: bodyId, name: body.name }, absence, records });
     assert.ok(composed, ask.kind);
-    // The authority's own words: its whole statement, or at least its first sentence, verbatim.
-    assert.ok(composed.answer.startsWith(absence.text.trim().split(/(?<=\.)\s+(?=[A-Z])/)[0]), composed.answer);
-    for (const committee of committees) assert.ok(composed.answer.includes(`"${/^"([^"]+)"/.exec(committee.text)![1]}"`), composed.answer);
+    assert.match(composed.answer, /^We don't have Vail Unified School District Governing Board's campaign/);
+    assert.equal(composed.missingAnswer, true);
     assert.equal(overLengthBudget(composed.answer), null);
     const verdict = validateAnswer(composed.answer, composed.citedUrls, packFor(body, records, "Who funded the Vail school board candidates?"));
     assert.equal(verdict.kind, "PASSED", verdict.kind === "FAILED" ? verdict.failed.join(",") : "");
-    assert.ok(composed.citedUrls.includes(absence.sourceUrl!), "cites the authority's statement");
+    assert.deepEqual(composed.citedUrls, [], "a gap about our holding does not claim a government absence");
     // Never a total, and never a committee attached to a person.
     assert.doesNotMatch(composed.answer, /\btotal(?:led|ing)? \$|\braised \$/);
-    if (ask.kind === "WHO_GAVE") {
-      const money = finance.records.length;
-      assert.ok(composed.answer.includes(`money records naming a donor: 0 of ${money}`), composed.answer);
-    }
+
   }
   // A statement that a race IS on the ballot is not this answer's to restate as "no race".
   assert.equal(composeNoRaceMoneyAnswer({ ask: { kind: "WHO_GAVE" }, body: { id: bodyId, name: body.name }, absence: { ...absence, kind: "CONTEST" }, records }), null);

@@ -1,0 +1,22 @@
+[
+  {
+    "baseReportTypeId": 1,
+    "baseReportTypeDescription": "Principal Reports"
+  },
+  {
+    "baseReportTypeId": 2,
+    "baseReportTypeDescription": "Deposit Reports"
+  },
+  {
+    "baseReportTypeId": 3,
+    "baseReportTypeDescription": "Year-End Summaries"
+  },
+  {
+    "baseReportTypeId": 5,
+    "baseReportTypeDescription": "Reimbursement Reports"
+  },
+  {
+    "baseReportTypeId": 8,
+    "baseReportTypeDescription": "Other Periodic Reports"
+  }
+]

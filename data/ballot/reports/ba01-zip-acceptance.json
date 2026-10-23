@@ -1,0 +1,555 @@
+{
+  "scope": "Requested 15-ZIP acceptance remains open. Live counts below are the recorded pre-publication baseline, not proof against official ballots. A specific address/style does not establish every address in a split ZIP.",
+  "workflow": "River ships corrected inputs and code; the existing daily runner publishes; oversight checks live pages race by race.",
+  "zips": [
+    {
+      "zip": "78701",
+      "baselineLiveContestCount": 20,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Certified House contests already held; live baseline lacks a resolved congressional district. Travis judicial/countywide offices and Austin questions expanded; exact local/special-district sample/style comparison and live acceptance remain open.",
+      "copySelectorContestCount": 53,
+      "copyBrowserContestCount": 53,
+      "copyBrowserCandidateCount": 87,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": [
+        "U.S. House"
+      ]
+    },
+    {
+      "zip": "94110",
+      "baselineLiveContestCount": 23,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Certified House contests already held; live baseline lacks a resolved congressional district. Eleven Court of Appeal retentions and countywide offices/questions reach the prepared county reader; exact district sample/style and live acceptance remain open.",
+      "copySelectorContestCount": 52,
+      "copyBrowserContestCount": 39,
+      "copyBrowserCandidateCount": 37,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [
+        "ca-sos-2026-general-retention-kelli-m-evans",
+        "ca-sos-2026-general-retention-joshua-groban",
+        "ca-sos-2026-general-retention-charles-a-smiley",
+        "ca-sos-2026-general-retention-kathleen-m-banke",
+        "ca-sos-2026-general-retention-monique-langhorne-wilson",
+        "ca-sos-2026-general-retention-therese-m-stewart",
+        "ca-sos-2026-general-retention-tara-m-desautels",
+        "ca-sos-2026-general-retention-ioana-petrou",
+        "ca-sos-2026-general-retention-victor-a-rodriguez",
+        "ca-sos-2026-general-retention-tracie-l-brown",
+        "ca-sos-2026-general-retention-mark-simons",
+        "ca-sos-2026-general-retention-danny-y-chou",
+        "ca-sos-2026-general-retention-gordon-burns"
+      ],
+      "copyUnresolvedDistrictFamilies": [
+        "U.S. House"
+      ]
+    },
+    {
+      "zip": "43215",
+      "baselineLiveContestCount": 9,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Franklin current official rosters and GIS identify the Statehouse address with CD15/Senate15/House1. Exact paper sample is behind a CAPTCHA; no bypass. Full local/style and live race-by-race acceptance remain open.",
+      "copySelectorContestCount": 28,
+      "copyBrowserContestCount": 28,
+      "copyBrowserCandidateCount": 53,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": [
+        "U.S. House"
+      ]
+    },
+    {
+      "zip": "53703",
+      "baselineLiveContestCount": 9,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": 11,
+      "preparedMatchedRaceCount": 11,
+      "remaining": "Central Library Ward52/style005 matches11source contests and14choices through the prepared selector. CityHallWard51 paper sample and all other addresses remain unverified; live acceptance remains open.",
+      "officialPrintedAddressComparison": {
+        "zip": "53703",
+        "address": "201 W Mifflin St, Madison, Wisconsin, 53703",
+        "ward": 52,
+        "divisions": [
+          "ocd-division/country:us/state:wi",
+          "ocd-division/country:us/state:wi/county:dane",
+          "ocd-division/country:us/state:wi/cd:2",
+          "ocd-division/country:us/state:wi/sldl:76"
+        ],
+        "electionDate": "2026-11-03",
+        "ballotStyle": "005",
+        "comparisonStatus": "OFFICIAL_PRINTED_SAMPLE_AND_GIS_MATCH",
+        "printedSampleStatus": "VERIFIED_FOR_THIS_ADDRESS",
+        "liveStatus": "NOT_VERIFIED",
+        "sampleUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf",
+        "officialLinkingUrl": "https://www.blmgrove.com/election-info",
+        "sourceUrls": [
+          "https://elections.countyofdane.com/documents/pdf/What-s-on-the-Ballot-Nov-2026.pdf",
+          "https://maps.cityofmadison.com/arcgis/rest/services/Locators/AddressPoints_w_Unit/GeocodeServer/findAddressCandidates?f=json&SingleLine=210+Martin+Luther+King+Jr+Blvd+Madison+WI+53703&outFields=%2A&outSR=4326",
+          "https://maps.cityofmadison.com/arcgis/rest/services/Public/PollsWards/MapServer/1/query?f=json&geometry=-89.3823933439%2C43.072423155106&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false",
+          "https://www.blmgrove.com/election-info",
+          "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf",
+          "https://maps.cityofmadison.com/arcgis/rest/services/Locators/AddressPoints_w_Unit/GeocodeServer/findAddressCandidates?f=json&SingleLine=201+W+Mifflin+St+Madison+WI+53703&outFields=%2A&outSR=4326",
+          "https://maps.cityofmadison.com/arcgis/rest/services/Public/PollsWards/MapServer/1/query?f=json&geometry=-89.387519798072%2C43.073588323556&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=%2A&returnGeometry=false"
+        ],
+        "matchedCandidateContests": 8,
+        "matchedMeasures": 3,
+        "matchedContests": 11,
+        "matchedCandidateChoices": 14,
+        "missingContests": [],
+        "missingCandidates": [],
+        "rows": [
+          {
+            "title": "Governor / Lieutenant Governor",
+            "type": "CANDIDACY",
+            "expectedChoices": 2,
+            "actualChoices": 2,
+            "choices": [
+              [
+                "Tom Tiffany / David Varnam",
+                "Republican"
+              ],
+              [
+                "David Crowley / Sarah Godlewski",
+                "Democratic"
+              ]
+            ],
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          },
+          {
+            "title": "Attorney General",
+            "type": "CANDIDACY",
+            "expectedChoices": 2,
+            "actualChoices": 2,
+            "choices": [
+              [
+                "Eric Toney",
+                "Republican"
+              ],
+              [
+                "Josh Kaul",
+                "Democratic"
+              ]
+            ],
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          },
+          {
+            "title": "Secretary of State",
+            "type": "CANDIDACY",
+            "expectedChoices": 3,
+            "actualChoices": 3,
+            "choices": [
+              [
+                "Jay Schroeder",
+                "Republican"
+              ],
+              [
+                "JoCasta Zamarripa",
+                "Democratic"
+              ],
+              [
+                "Pete Karas",
+                "Wisconsin Green"
+              ]
+            ],
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          },
+          {
+            "title": "State Treasurer",
+            "type": "CANDIDACY",
+            "expectedChoices": 2,
+            "actualChoices": 2,
+            "choices": [
+              [
+                "John S. Leiber",
+                "Republican"
+              ],
+              [
+                "Yee Leng Xiong",
+                "Democratic"
+              ]
+            ],
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          },
+          {
+            "title": "Representative in Congress District 2",
+            "type": "CANDIDACY",
+            "expectedChoices": 1,
+            "actualChoices": 1,
+            "choices": [
+              [
+                "Mark Pocan",
+                "Democratic"
+              ]
+            ],
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          },
+          {
+            "title": "Representative to the Assembly District 76",
+            "type": "CANDIDACY",
+            "expectedChoices": 2,
+            "actualChoices": 2,
+            "choices": [
+              [
+                "Nina Chat",
+                "Republican"
+              ],
+              [
+                "Dina Nina Martinez-Rutherford",
+                "Democratic"
+              ]
+            ],
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          },
+          {
+            "title": "Dane County Sheriff",
+            "type": "CANDIDACY",
+            "expectedChoices": 1,
+            "actualChoices": 1,
+            "choices": [
+              [
+                "Kalvin D. Barrett",
+                "Democratic"
+              ]
+            ],
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          },
+          {
+            "title": "Dane County Clerk of Circuit Court",
+            "type": "CANDIDACY",
+            "expectedChoices": 1,
+            "actualChoices": 1,
+            "choices": [
+              [
+                "Jeff Okazaki",
+                "Democratic"
+              ]
+            ],
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          }
+        ],
+        "measures": [
+          {
+            "title": "Partial veto",
+            "officialNumber": "QUESTION 1",
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          },
+          {
+            "title": "Freedom to gather in places of worship during an emergency",
+            "officialNumber": "QUESTION 2",
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          },
+          {
+            "title": "Governmental entity discrimination prohibited",
+            "officialNumber": "QUESTION 3",
+            "matched": true,
+            "sourceUrl": "https://storage.googleapis.com/juniper-media-library/367/2026/09/Sample%20Ballot%20for%20Assembly%20District%2076%20(Wards%201-2).pdf"
+          }
+        ],
+        "limitations": [
+          "This printed sample comparison covers Central Library, 201 W Mifflin St in Madison Ward 52, ZIP 53703. It does not establish every address in this ZIP.",
+          "The separately checked City Hall address is in Ward 51, which is absent from this printed style; its printed sample remains unverified.",
+          "This verifies the repository reader projection against official sources. The live page still requires verification."
+        ]
+      },
+      "copySelectorContestCount": 12,
+      "copyBrowserContestCount": 12,
+      "copyBrowserCandidateCount": 16,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
+    },
+    {
+      "zip": "19103",
+      "baselineLiveContestCount": 6,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquired Philadelphia style has3candidate races and2questions, but its mapping to the ZIP address remains unverified; the ZIP spans multiple House districts.",
+      "officialSampleLead": {
+        "place": "Philadelphia split3-xx-182",
+        "candidateContests": 3,
+        "candidacies": 6,
+        "measures": 2,
+        "url": "https://vote.phila.gov/files/SampleBallot/2026_General/6bcea152-a8f5-4365-baac-c7f4836390ba.pdf",
+        "zip": "19103",
+        "zipMappingVerified": false,
+        "liveVerified": false
+      },
+      "copySelectorContestCount": 8,
+      "copyBrowserContestCount": 8,
+      "copyBrowserCandidateCount": 9,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
+    },
+    {
+      "zip": "85003",
+      "baselineLiveContestCount": 23,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 83,
+      "copyBrowserContestCount": 83,
+      "copyBrowserCandidateCount": 99,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
+    },
+    {
+      "zip": "80202",
+      "baselineLiveContestCount": 27,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 55,
+      "copyBrowserContestCount": 48,
+      "copyBrowserCandidateCount": 75,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [
+        "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii",
+        "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre",
+        "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris",
+        "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum",
+        "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie",
+        "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock",
+        "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan"
+      ],
+      "copyUnresolvedDistrictFamilies": []
+    },
+    {
+      "zip": "98101",
+      "baselineLiveContestCount": 15,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 26,
+      "copyBrowserContestCount": 26,
+      "copyBrowserCandidateCount": 33,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
+    },
+    {
+      "zip": "10001",
+      "baselineLiveContestCount": 7,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": 16,
+      "preparedMatchedRaceCount": 16,
+      "remaining": "Catalog matches this official address style. Address resolution for local municipal-court/City-Council districts and live acceptance remain open; other addresses in the ZIP are not established.",
+      "officialSample": {
+        "address": "315 West29St",
+        "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
+        "races": [
+          {
+            "officialContest": "Governor/Lieutenant Governor Citywide",
+            "heldId": "ny-boe:2026-general:governor-lieutenant-governor",
+            "candidacies": 2
+          },
+          {
+            "officialContest": "State Comptroller Citywide",
+            "heldId": "ny-boe:2026-general:comptroller",
+            "candidacies": 2
+          },
+          {
+            "officialContest": "Attorney General Citywide",
+            "heldId": "ny-boe:2026-general:attorney-general",
+            "candidacies": 2
+          },
+          {
+            "officialContest": "Surrogate New York",
+            "heldId": "ny-2026-new-york-county-surrogate",
+            "candidacies": 1
+          },
+          {
+            "officialContest": "Justice of the Supreme Court 1st Judicial District",
+            "heldId": "ny-2026-general:supreme-court-1",
+            "candidacies": 11
+          },
+          {
+            "officialContest": "Judge of the Civil Court - County New York",
+            "heldId": "ny-2026-new-york-county-civil-court",
+            "candidacies": 3
+          },
+          {
+            "officialContest": "Representative in Congress 12th Congressional District",
+            "heldId": "ny-boe:2026-general:cd:12",
+            "candidacies": 4
+          },
+          {
+            "officialContest": "State Senator 47th Senatorial District",
+            "heldId": "ny-boe:2026-general:sldu:47",
+            "candidacies": 2
+          },
+          {
+            "officialContest": "Member of the City Council 3rd Council District",
+            "heldId": "ny-2026-new-york-city-council-3",
+            "candidacies": 2
+          },
+          {
+            "officialContest": "Member of the Assembly 75th Assembly District",
+            "heldId": "ny-boe:2026-general:sldl:75",
+            "candidacies": 2
+          },
+          {
+            "officialContest": "Judge of the Civil Court - District 3rd Municipal Court District - New York",
+            "heldId": "ny-2026-new-york-county-municipal-court-3",
+            "candidacies": 1
+          },
+          {
+            "officialContest": "Proposal Number 1, a Question: Proposed Charter Amendment: Speed Up Process for Granting a Revocable Consent to Use Public Space",
+            "heldId": "ny-2026-new-york-city-charter-proposal-1",
+            "measure": true
+          },
+          {
+            "officialContest": "Proposal Number 2, a Question: Proposed Charter Amendment: Reduce City Contractor Paperwork; Require Regular Meetings of Procurement Policy Board",
+            "heldId": "ny-2026-new-york-city-charter-proposal-2",
+            "measure": true
+          },
+          {
+            "officialContest": "Proposal Number 3, a Question: Proposed Charter Amendment: Speed Up Street Safety Projects, Disposition of Unused City Property, Office Leasing",
+            "heldId": "ny-2026-new-york-city-charter-proposal-3",
+            "measure": true
+          },
+          {
+            "officialContest": "Proposal Number 4, a Question: Proposed Charter Amendment: Simplify Building Permitting and Move Waterfront Permitting to Department of Buildings",
+            "heldId": "ny-2026-new-york-city-charter-proposal-4",
+            "measure": true
+          },
+          {
+            "officialContest": "Proposal Number 5, a Question: Proposed Charter Amendment: Set Contribution Targets for Rainy Day Fund to Promote Sufficient Budgetary Reserves",
+            "heldId": "ny-2026-new-york-city-charter-proposal-5",
+            "measure": true
+          }
+        ]
+      },
+      "copySelectorContestCount": 15,
+      "copyBrowserContestCount": 15,
+      "copyBrowserCandidateCount": 31,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
+    },
+    {
+      "zip": "30303",
+      "baselineLiveContestCount": 19,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 22,
+      "copyBrowserContestCount": 22,
+      "copyBrowserCandidateCount": 46,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
+    },
+    {
+      "zip": "33130",
+      "baselineLiveContestCount": 11,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 29,
+      "copyBrowserContestCount": 23,
+      "copyBrowserCandidateCount": 30,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [
+        "fl-doe-2026-general-dca-3-90262",
+        "fl-doe-2026-general-dca-3-90301",
+        "fl-doe-2026-general-dca-3-90370",
+        "fl-doe-2026-general-dca-3-90307",
+        "fl-doe-2026-general-dca-3-90439",
+        "fl-doe-2026-general-scj-90484"
+      ],
+      "copyUnresolvedDistrictFamilies": [
+        "U.S. House"
+      ]
+    },
+    {
+      "zip": "07102",
+      "baselineLiveContestCount": 1,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 3,
+      "copyBrowserContestCount": 3,
+      "copyBrowserCandidateCount": 10,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
+    },
+    {
+      "zip": "48226",
+      "baselineLiveContestCount": 14,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 23,
+      "copyBrowserContestCount": 23,
+      "copyBrowserCandidateCount": 113,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": [
+        "State Senate"
+      ]
+    },
+    {
+      "zip": "46204",
+      "baselineLiveContestCount": 11,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 14,
+      "copyBrowserContestCount": 11,
+      "copyBrowserCandidateCount": 19,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [
+        "in-ied-2026-retention-mary-a-deboer",
+        "in-ied-2026-retention-paul-a-felix",
+        "in-ied-2026-retention-justin-l-mcadam"
+      ],
+      "copyUnresolvedDistrictFamilies": []
+    },
+    {
+      "zip": "96813",
+      "baselineLiveContestCount": 9,
+      "liveAcceptance": "NOT_VERIFIED",
+      "officialBallotRaceCount": null,
+      "preparedMatchedRaceCount": null,
+      "remaining": "Acquire or finish exact official sample and address/ZIP-to-style comparison; verify promoted live page after River and daily runner.",
+      "copySelectorContestCount": 29,
+      "copyBrowserContestCount": 29,
+      "copyBrowserCandidateCount": 20,
+      "copyBrowserHttpStatus": 200,
+      "copyHeldContestsOmittedByPage": [],
+      "copyUnresolvedDistrictFamilies": []
+    }
+  ],
+  "productionCopyReports": [
+    "ba01-production-copy.json",
+    "ba01-production-copy-pages.json"
+  ]
+}

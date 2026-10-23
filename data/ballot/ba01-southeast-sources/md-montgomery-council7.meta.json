@@ -1,0 +1,8 @@
+{
+  "url": "https://gis.montgomerycountymd.gov/arcgis/rest/services/elections/council_7_districts_maponly/MapServer/0/query?where=COUNCIL%3D%277%27&outFields=COUNCIL&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://gis.montgomerycountymd.gov/arcgis/rest/services/elections/council_7_districts_maponly/MapServer/0/query?where=COUNCIL%3D%277%27&outFields=COUNCIL&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:29:45.578562+00:00",
+  "rawHash": "7e8900308311efda112ab8ffd03fa8753150594c0926b2de1d9a7244df5cabdf",
+  "bytes": 132309
+}

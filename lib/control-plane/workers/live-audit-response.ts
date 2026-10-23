@@ -1,7 +1,5 @@
 /**
- * Answers a red live-audit flag at once: pull the fact through the publication path, reopen the owning work
- * item, add a fix-list item, and write a lesson keyed by platform. A pulled fact that audits green again is
- * marked FIXED. Every store is passed in.
+ * Answers a red live-audit result with Sean's flag, repair work and a transferable lesson.
  */
 import { newFieldManualEntry, type FieldManualEntry } from "../field-manual.ts";
 import type { AuditCorrection } from "../admin-view/v6-audit-read.ts";
@@ -37,16 +35,13 @@ export interface FixItem {
 export interface RedFlagWriters {
   /** Where the fact came from; null when it cannot be traced (it is then reported, not pulled blindly). */
   readonly originOf: (factId: string) => Promise<FactOrigin | null>;
-  /** The pull, written where the publishers read audit pulls. */
-  readonly pull: (pull: { workItemId: string; parserResultId: string; parserAttemptId: string; recordIds: readonly string[]; result: LiveAuditResult }) => Promise<void>;
-  readonly reopenWorkItem: (workItemId: string, why: string) => Promise<void>;
+  readonly flag: (result: LiveAuditResult) => Promise<void>;
   readonly addFixItem: (item: FixItem) => Promise<void>;
   readonly writeLesson: (entry: FieldManualEntry) => Promise<void>;
-  readonly recordCorrection: (correction: AuditCorrection) => Promise<void>;
 }
 
 export type RedFlagOutcome =
-  | { readonly status: "PULLED_AND_REOPENED"; readonly factId: string; readonly fixItemId: string; readonly lessonId: string }
+  | { readonly status: "FLAGGED"; readonly factId: string; readonly fixItemId: string; readonly lessonId: string }
   | { readonly status: "NOT_RED"; readonly factId: string }
   | { readonly status: "ORIGIN_UNKNOWN"; readonly factId: string; readonly fixItemId: string };
 
@@ -69,31 +64,25 @@ export function redFlagLesson(result: LiveAuditResult, origin: FactOrigin, obser
 /** Respond to one live-audit result. Only a red result does anything. */
 export async function respondToRedFlag(result: LiveAuditResult, writers: RedFlagWriters, now: string): Promise<RedFlagOutcome> {
   if (result.verdict !== "RED") return { status: "NOT_RED", factId: result.factId };
+  await writers.flag(result);
   const day = now.slice(0, 10);
   const origin = await writers.originOf(result.factId);
-  const failed = result.checks.filter((c) => !c.ok).map((c) => c.field);
   if (!origin) {
     // Never pull blind: say it needs a person-free trace, and keep the flag on the one repair list.
     const item: FixItem = { id: `audit-red:${result.factId}:${day}`, kind: "AUDIT_RED_FLAG", title: `A published fact no longer matches its page`,
-      detail: `${result.reason} The fact could not be traced to the work that produced it, so it was not pulled automatically.`,
+      detail: `${result.reason} Sean's flag is open. The work that produced this fact still needs to be traced.`,
       factId: result.factId, workItemId: "", at: now };
     await writers.addFixItem(item);
     return { status: "ORIGIN_UNKNOWN", factId: result.factId, fixItemId: item.id };
   }
-  // The whole extraction's records behind the fact are named, so nothing stale is left beside the wrong value.
-  await writers.pull({ workItemId: origin.workItemId, parserResultId: origin.parserResultId, parserAttemptId: origin.parserAttemptId,
-    recordIds: origin.extractionRecordIds, result });
-  await writers.reopenWorkItem(origin.workItemId, `Live audit: ${failed.join(", ") || "a value"} no longer on ${result.reread?.url ?? result.sourceUrl}.`);
   const item: FixItem = { id: `audit-red:${result.factId}:${day}`, kind: "AUDIT_RED_FLAG",
     title: `A published ${origin.recordClass} fact no longer matches its page`,
-    detail: `${result.reason} It was taken off the live page and the work was reopened.`,
+    detail: `${result.reason} Sean can remove it, keep it, send the fleet, or enter the right value.`,
     factId: result.factId, workItemId: origin.workItemId, at: now };
   await writers.addFixItem(item);
   const lesson = redFlagLesson(result, origin, now);
   await writers.writeLesson(lesson);
-  await writers.recordCorrection({ factId: result.factId, action: "PULLED", at: now,
-    summary: `Taken off the page: ${failed.join(", ") || "a value"} no longer matched the source.` });
-  return { status: "PULLED_AND_REOPENED", factId: result.factId, fixItemId: item.id, lessonId: lesson.id };
+  return { status: "FLAGGED", factId: result.factId, fixItemId: item.id, lessonId: lesson.id };
 }
 
 /**

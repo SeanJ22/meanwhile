@@ -1,5 +1,5 @@
 import { stateRegistryRuntimeContractId, stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
-import { recordPublicationFlow } from "./publication-flow.ts";
+import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import { SECTION3_MINIMUMS } from "../control-plane/promotion/section3.ts";
 import { isQuotedExtraction, quotedSourceFindings } from "../control-plane/workers/quoted-proof.ts";
 import { parserFieldSources } from "./field-sources.ts";
@@ -154,10 +154,10 @@ export async function publishBodyRoster(facts: FactDb & { readonly query: Query 
     throw new Error("ROSTER_PAGE_NOT_THIS_BODY");
   }
   await learnOfficialHost(facts.query, body.id, reading.capture.evidence.canonicalUrl);
-  const tally = await publishRosterFacts(facts, { body: { id: body.id, name: body.name, state: input.state, parentId: body.ocdId },
-    capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id }, input.clocks, input.now);
   const named = body.name === null && division ? bodyNameFromPage(text, division.label) : null;
   const own = named && division ? named.split(new RegExp(division.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")).join(" ").replace(/\s+/g, " ").trim() : "";
+  const tally = await publishRosterFacts(facts, { body: { id: body.id, name: body.name, state: input.state, parentId: body.ocdId },
+    capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id, nameFromPage: !(named && own) }, input.clocks, input.now);
   if (named && own) await publishBodyFacts(facts, { bodyId: body.id, capture: reading.capture, producedBy: reading.id,
     facts: [{ field: "name", value: named, quote: own }] }, input.clocks, input.now);
   const schedule = input.schedule;
@@ -202,10 +202,23 @@ export async function publishOwedRosterFacts(input: {
       if (!body || !prior) throw new Error("ROSTER_BODY_UNREGISTERED");
       const parser = latestParserResult(records, id);
       const pull = parser ? auditPull(records, parser) : null;
+      if (pull?.all) await input.facts.query(`INSERT INTO owner_flag(fact_id,kind,reason,source_url)
+        SELECT f.id,'AUDIT_LOOKS_WRONG','The audit challenged this published roster.',s.url FROM fact f
+        JOIN source_copy s ON s.id=f.source_copy_id WHERE f.entity_id=$1 AND f.field LIKE 'member:%' AND f.status='live'
+        AND NOT EXISTS(SELECT 1 FROM owner_flag o WHERE o.fact_id=f.id AND o.resolved IS NULL)`,[bodyId]);
       const captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId,
         results: records, readCapture, officialLinks: manual.officialLinks }) : [];
       reading = parser && !pull?.all ? parserReading(parser, plan.contract, captures) : null;
-      if (reading && pull) reading = { ...reading, members: reading.members.filter(member => !pull.recordIds.has(member.recordId)) };
+      if (reading && pull) {
+        for (const member of reading.members.filter(member=>pull.recordIds.has(member.recordId))) {
+          const name=String(member.fields.name ?? "");
+          await input.facts.query(`INSERT INTO owner_flag(fact_id,kind,reason,source_url)
+            SELECT f.id,'AUDIT_LOOKS_WRONG','The audit challenged this published member.',s.url FROM fact f
+            JOIN source_copy s ON s.id=f.source_copy_id WHERE f.entity_id=$1 AND f.field LIKE 'member:%' AND f.status='live'
+            AND f.value->>'name'=$2 AND NOT EXISTS(SELECT 1 FROM owner_flag o WHERE o.fact_id=f.id AND o.resolved IS NULL)`,[bodyId,name]);
+        }
+        reading = { ...reading,complete:false,members:reading.members.filter(member => !pull.recordIds.has(member.recordId)) };
+      }
       if (!reading) {
         if (!heldByBody.has(bodyId)) heldByBody.set(bodyId, (async () => {
           const siblings = await itemsOf(input.repos, other => other.autonomousPlan?.publication?.bodyId === bodyId, [[["autonomousPlan", "publication", "bodyId"], bodyId]]);
@@ -214,6 +227,7 @@ export async function publishOwedRosterFacts(input: {
         })());
         reading = await heldByBody.get(bodyId)!;
       }
+      if (reading && pull?.all) reading = {...reading,complete:false};
       if (!reading) throw new Error("ROSTER_NO_READABLE_SAVED_PAGE:No extraction yet, and no saved page for this body has a member table");
       if (item.publicationOutcome?.workerResultId === reading.id && item.publicationOutcome.status !== "HELD" && !(pull && pull.at > item.publicationOutcome.at)) {
         report.push({ workItemId: id, outcome: item.publicationOutcome });
@@ -238,7 +252,7 @@ export async function publishOwedRosterFacts(input: {
     }
     // Written even when unchanged: a held roster is read again only for a page newer than this outcome's time.
     const current = await input.repos.workItems.mustRead(id);
-    await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, current, outcome, input.now);
     report.push({ workItemId: id, outcome });
     if (outcome.code !== "VERIFIED_RESULT_REUSED" && reading) await recordPublishedPageDoor({ repos: input.repos, page: reading.capture, recordClass: plan.contract.recordClass, bodyId,
       ocdId: plan.contract.jurisdiction.canonicalId, workItemId: id, published: outcome.status === "HELD" ? 0 : 1, now: input.now });
@@ -356,7 +370,7 @@ export async function publishWorkerDirectoryResults(input: {
     const current = await input.repos.workItems.mustRead(id);
     const pages = captures.length ? captures : [heldDirectory?.checked.primary].filter((c): c is WorkerPublicationCapture => Boolean(c));
     outcome = await withPageDoor(input.repos, outcome, pages[0], plan.contract.recordClass);
-    await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, current, outcome, input.now);
     report.push({ workItemId: id, outcome });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") await recordPublishedPageDoor({ repos: input.repos, page: pages[0], recordClass: plan.contract.recordClass, bodyId, ocdId: plan.contract.jurisdiction.canonicalId, workItemId: id, published: wentLive, now: input.now });
     if (outcome.code !== "VERIFIED_RESULT_REUSED") learned.push(validatorObservation({ plan, workItemId: id, page: pages[0], captures: pages, published: wentLive, outcome }));

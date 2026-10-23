@@ -1,0 +1,135 @@
+[
+  {
+    "url": "https://olvr.hawaii.gov/Controls/CandidateFiling.aspx?elid=94",
+    "file": "hi-candidate-report.csv.gz",
+    "retrievedAt": "2026-10-20T22:53:15.178993Z",
+    "rawHash": "f92576e7a23fa9b7f80350f6ee1b59eca9281b9c1e692edfc413898ee70f3173",
+    "method": "Official native full candidate CSV export. Replay status, contest, printed ballot name, party and website for every general candidate. Mailing/contact fields are excluded from the ballot projection."
+  },
+  {
+    "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_2401_1.pdf",
+    "file": "hi-honolulu-sample-ballot.pdf.gz",
+    "retrievedAt": "2026-10-20T22:55:16.904259Z",
+    "rawHash": "5dd4fbec4a2ecbe06b55afbce6098ddcc7f1000cbca300de8ec9df405a381e0e",
+    "method": "Official November 3 2026 precinct 24-01 sample ballot; Honolulu Charter Questions 1\u201320 extracted in column order from pages 3 and 4 without paraphrase."
+  },
+  {
+    "url": "https://info.kingcounty.gov/kcelections/Vote/contests/candidates.aspx?eid=55",
+    "file": "wa-king-candidates.html.gz",
+    "retrievedAt": "2026-10-20T22:53:36.318832Z",
+    "rawHash": "6739b1dc35c3a5f7ffbf2a3c8b69dd5ad822a392b823298ef22589b9450c2e9d",
+    "method": "Official general-election list groups 153 candidate names in 97 contests; local nonpartisan names replayed from exact contest HTML."
+  },
+  {
+    "url": "https://sos.oregon.gov/elections/Documents/Directive-2026-09-official-ballot-statments-general-election-2026.pdf",
+    "file": "or-certified-directive.pdf.gz",
+    "retrievedAt": "2026-10-20T22:52:40.414418Z",
+    "rawHash": "96de66c011e2b75d2b1be9a6fee03d499c0bf0728ca27dd4e787c7609d790a3f",
+    "method": "Official Directive 2026-09 supplies all 83 federal/statewide/legislative contests and their 167 candidates plus seven circuit-court contests and three district-attorney contests."
+  },
+  {
+    "url": "https://multco.us/file/ballot_content_-_nov._2026/download",
+    "file": "or-multnomah-ballot-content.pdf.gz",
+    "retrievedAt": "2026-10-20T22:54:21.282897Z",
+    "rawHash": "eec5842cadb8e28513f9fcdc616bbda4d00b80d5e7a456c9c09c3a24d9dd25c8",
+    "method": "Official general-election ballot content; printed count 63 contests and 116 candidates. Ranked-choice county and Portland contests are in a separate RCV ballot document."
+  },
+  {
+    "url": "https://multco.us/file/ballot_content_rcv_-_nov._2026/download",
+    "file": "or-multnomah-rcv-content.pdf.gz",
+    "retrievedAt": "2026-10-20T22:54:21.298283Z",
+    "rawHash": "c1be7b04d586051f2600be7b8ee8c17ee93d4d6a491ecc8f416c36e613af19f0",
+    "method": "Official ranked-choice ballot content records seven local contests and 46 names, including countywide chair, auditor and sheriff, County District 2, Portland auditor and Council Districts 3 and 4."
+  },
+  {
+    "url": "https://cdn.kingcounty.gov/-/media/king-county/depts/elections/current-election/2026/11/sample-ballot.pdf",
+    "file": "wa-king-sample-ballot.pdf.gz",
+    "retrievedAt": "2026-10-20T22:53:38.375713Z",
+    "rawHash": "7470c8db740b2845deffb62e5f2401f01dd8fb288ecf813356d4dcfbdb707db8",
+    "method": "Official county all-contests sample ballot, 12 pages, explicitly warns an individual voter is not eligible for every listed contest; used to check the candidate list and local measure wording."
+  },
+  {
+    "url": "https://www.courts.oregon.gov/courts/multnomah/Pages/default.aspx",
+    "file": "or-multnomah-court.html.gz",
+    "retrievedAt": "2026-10-20T22:59:33.289575Z",
+    "rawHash": "5880d3eae9e8f8c980b29e90bb8f0c9d4f5d9455875392d5df137b33627e6fb1",
+    "method": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+  },
+  {
+    "url": "https://www.courts.oregon.gov/courts/deschutes/Pages/default.aspx",
+    "file": "or-deschutes-court.html.gz",
+    "retrievedAt": "2026-10-20T22:59:33.391666Z",
+    "rawHash": "816ccb074811b7d25eccac84eb9cfc19688bce30650ab9efc0aa43a10537acce",
+    "method": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+  },
+  {
+    "url": "https://www.courts.oregon.gov/courts/lane/Pages/default.aspx",
+    "file": "or-lane-court.html.gz",
+    "retrievedAt": "2026-10-20T22:59:33.395534Z",
+    "rawHash": "3938b1a4353fe6ccc055d256acbc657ed6ce96ba358a8f34d95a77960d7be446",
+    "method": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+  },
+  {
+    "url": "https://www.courts.oregon.gov/courts/clackamas/Pages/default.aspx",
+    "file": "or-clackamas-court.html.gz",
+    "retrievedAt": "2026-10-20T22:59:33.399233Z",
+    "rawHash": "aab95e852429ca38b21766a910a014537b31e4286d4679d5071948009f585a9b",
+    "method": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+  },
+  {
+    "url": "https://www.courts.oregon.gov/courts/washington/Pages/default.aspx",
+    "file": "or-washington-court.html.gz",
+    "retrievedAt": "2026-10-20T22:59:33.652036Z",
+    "rawHash": "d0098f952e58016ef0d77962c1f7894ecb38d2a82e6b8e8c612c5056f32e88b9",
+    "method": "Official court page identifies the county and its judicial district number; used only to map certified district contests to their county electorate."
+  },
+  {
+    "url": "https://elections.hawaii.gov/2026-proclamation/",
+    "file": "hi-proclamation.html.gz",
+    "retrievedAt": "2026-10-20T22:54:51.635834Z",
+    "rawHash": "77947ab8f81ca9601f615ff11489464179d678b5fefa5c1d5e26d4ce508f1c2b",
+    "method": "Official 2026 election proclamation confirms seven at-large Kauai council seats and the local election jurisdictions."
+  },
+  {
+    "url": "https://info.kingcounty.gov/kcelections/Vote/contests/ballotmeasures.aspx?lang=en-US&cid=102258&groupname=City",
+    "file": "wa-seattle-transit-measure.html.gz",
+    "retrievedAt": "2026-10-20T22:57:09.556164Z",
+    "rawHash": "9445564aca9dfc7cd4515c83c228a914ee8886ce98601f74942f8e8ecdb5329a",
+    "method": "Official Seattle Proposition No.1 ballot statement copied exactly through its approval question; advocacy arguments are excluded."
+  },
+  {
+    "url": "https://ajc.alaska.gov/retention/current2026.html",
+    "file": "ak-judicial-council-web-text.txt.gz",
+    "retrievedAt": "2026-10-20T23:06:30.712208Z",
+    "rawHash": "249ec882625d8190b797ac728ff3fafc31414d2c0c905456f3b5c94149ee602b",
+    "method": "Official Alaska Judicial Council page acquired as normalized source text through the web source reader (265-line source). Hash identifies saved transport text, not origin HTML. All21 Judges on the2026 Ballot name/court/electorate triples replayed; recommendations excluded from reader data."
+  },
+  {
+    "url": "https://voter.votewa.gov/CandidateList.aspx?ctl00_ContentPlaceHolder1_grdCandidatesChangePage=1_100&e=899",
+    "file": "wa-general-candidate-export.csv.gz",
+    "retrievedAt": "2026-10-20T23:08:53.016007Z",
+    "rawHash": "90dff01a61b379f1afd4382ecb9922e6a9943414c7a0caac54cc6b819a4924e6",
+    "method": "Official full native Export to CSV acquired by its public form post, with modern browser User-Agent and Accept headers; 887 rows across599 offices. All137 congressional/legislative/Supreme Court contests and255 name+party rows match the held file exactly. Mailing/contact fields are excluded from projections."
+  },
+  {
+    "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0101_1.pdf",
+    "file": "hi-hawaii-sample-ballot.pdf.gz",
+    "retrievedAt": "2026-10-20T22:55:16.928024Z",
+    "rawHash": "f85a2f92cc34c1d580659052757a1b82ffc232317ff7498788dc3cd597930906",
+    "method": "Official2026 general sample ballot for precinct01-01; page2 county charter question text extracted by Tesseract with OMP_THREAD_LIMIT=1, Maui in two separate columns. Whole source PDF bytes preserved."
+  },
+  {
+    "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_0901_1.pdf",
+    "file": "hi-maui-sample-ballot.pdf.gz",
+    "retrievedAt": "2026-10-20T23:11:07.723462Z",
+    "rawHash": "917e8c637a6ac20dae7e1be86a9fe13ff991aa64f5223fc73b26131a6803d448",
+    "method": "Official2026 general sample ballot for precinct09-01; page2 county charter question text extracted by Tesseract with OMP_THREAD_LIMIT=1, Maui in two separate columns. Whole source PDF bytes preserved."
+  },
+  {
+    "url": "https://files.hawaii.gov/elections/files/SampleBallots/2026-General/GeneralElectionEnglish/FAX001_1601_1.pdf",
+    "file": "hi-kauai-sample-ballot.pdf.gz",
+    "retrievedAt": "2026-10-20T22:55:16.942004Z",
+    "rawHash": "36e4ded01f15209119ea27bc3df8d085ab301d944159da5920c14d94e90c2d4f",
+    "method": "Official2026 general sample ballot for precinct16-01; page2 county charter question text extracted by Tesseract with OMP_THREAD_LIMIT=1, Maui in two separate columns. Whole source PDF bytes preserved."
+  }
+]

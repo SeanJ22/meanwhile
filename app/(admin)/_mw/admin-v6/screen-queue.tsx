@@ -9,6 +9,7 @@ import { QUEUE_FILTERS, QUEUE_FILTER_WORDS, queueCounts, type QueueFilter, type 
 import { Actions, Empty, Pill, Tabs, Technical, usePager } from "./ui.tsx";
 import { useQueueRows } from "./use-queue.ts";
 import s from "./v6.module.css";
+import { AuditFlagsPanel } from "./audit-flags.tsx";
 
 export function QueueScreen() {
   const { rows, unread } = useQueueRows();
@@ -30,6 +31,7 @@ export function QueueScreen() {
         </div>
       </div>
       {unread.length > 0 && <p className={s.why}>Not read yet, so not shown here: {unread.join(", ")}.</p>}
+      <AuditFlagsPanel />
       <Tabs label="Queue" value={filter} onChange={setFilter} tabs={QUEUE_FILTERS.map((f) => ({ id: f, label: QUEUE_FILTER_WORDS[f], count: counts[f] }))} />
       <div className={s.stack} role="tabpanel">
         {!shown.length && <Empty>Nothing in this list.</Empty>}

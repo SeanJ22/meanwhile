@@ -15,6 +15,7 @@ import { agendaItems } from "@/lib/routing/agenda-search";
 import type { MeetingReaderRecords } from "@/lib/meetings/reader-records";
 import { MeetingRecords } from "./meeting-records";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
+import { fetchReaderAgendaResponse } from "@/lib/reader/bootstrap";
 
 /**
  * The meeting's stored notice or agenda text on the meeting surface: public
@@ -37,6 +38,8 @@ interface AgendaDocumentView {
 
 interface AgendaSectionProps {
   meetingId: string;
+  /** The body the meeting belongs to; a meeting is read from its body's record. */
+  bodyId: string;
   /** The meeting's own agenda link, for the no-document and failed cases. */
   agendaUrl: string | null;
   /**
@@ -75,6 +78,7 @@ export function AgendaSection(props: AgendaSectionProps) {
 
 function AgendaForMeeting({
   meetingId,
+  bodyId,
   agendaUrl,
   agendaSlotObservedEmpty,
   provenance,
@@ -95,10 +99,7 @@ function AgendaForMeeting({
     const controller = new AbortController();
     void (async () => {
       try {
-        const response = await fetch(
-          `/api/agenda?meetingId=${encodeURIComponent(meetingId)}`,
-          { signal: controller.signal },
-        );
+        const response = await fetchReaderAgendaResponse(meetingId, bodyId, controller.signal);
         if (!response.ok) throw new Error(String(response.status));
         const payload = (await response.json()) as {
           documents: AgendaDocumentView[];
@@ -118,7 +119,7 @@ function AgendaForMeeting({
       }
     })();
     return () => controller.abort();
-  }, [meetingId]);
+  }, [meetingId, bodyId]);
 
   if (failed) {
     return <>

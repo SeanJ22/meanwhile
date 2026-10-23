@@ -19,10 +19,10 @@ import { registrationGovernments, type ReadOnlyQuery, type Statement } from "../
 import { deployPreview } from "../lib/control-plane/deploy-preview.ts";
 import { wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { registrationGovernmentsPlaced, stateSendPreviewSentence, type PreviewCode } from "../lib/control-plane/expansion/send-preview.ts";
-import { scopeOfMeeting, stateOfOcdId } from "../lib/meetings/edge-artifacts.ts";
+import { meetingStateOf } from "../lib/meetings/body-scope.ts";
+import { stateOfOcdId } from "../lib/meetings/edge-artifacts.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
-import type { Meeting } from "../lib/sources/types.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const PR = "ocd-division/country:us/territory:pr/county:adjuntas";
@@ -37,9 +37,9 @@ test("a DC or territory division lies in its own state code on every step of the
   assert.equal(ocdStateCode("ocd-division/country:us/statehood:xx"), null);
   assert.equal(ocdStateCode(null), null);
 
-  /* The reader's serving scope: a Puerto Rico sitting is Puerto Rico's, not the national bucket's. */
+  /* The reader's serving state: a Puerto Rico body is filed under Puerto Rico's index, not the national one. */
   assert.equal(stateOfOcdId(PR), "pr");
-  assert.equal(scopeOfMeeting({ ocdId: `${PR}/place:adjuntas` } as Meeting), "pr");
+  assert.equal(meetingStateOf(`${PR}#governing`), "PR");
 
   /* A crosswalk row on a municipio's division, reviewed like any other. */
   const bodyId = `${PR}#governing`;
@@ -156,7 +156,7 @@ test("Admin's preview: the registration slice, and the governments a Send must p
 
 test("the runner reads a state's registration before its providers run, before the territory, and for a DISPATCH", () => {
   const runner = readFileSync(join(ROOT, "scripts", "freshness-shadow.mts"), "utf8");
-  const preload = runner.indexOf("await preloadRegistrationJurisdictions({ root: ROOT, states: [...materialized.ids]");
+  const preload = runner.indexOf("await preloadRegistrationJurisdictions({ root: ROOT, states: [PLANNING_STATE]");
   assert.ok(preload > 0 && preload < runner.indexOf("const registryProviders = ["), "created work's states are read before the providers keep it");
   const beforeTerritory = runner.slice(runner.indexOf("beforeTerritory: async (states) => {"), runner.indexOf("...(\"registries\" in promoted"));
   const registrationRead = beforeTerritory.indexOf("await preloadRegistrationJurisdictions({ root: ROOT, states,");

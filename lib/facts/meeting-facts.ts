@@ -1,7 +1,7 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { Meeting } from "../sources/types.ts";
 import { captureProvenance } from "./capture.ts";
-import { normalizeText } from "./check.ts";
+import { boundedIndexOf, normalizeText } from "./check.ts";
 import { ensureEntity, learnDoorChannel } from "./entities.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { readCheckEntity } from "./entity-read.ts";
@@ -24,8 +24,19 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
   const p = localParts(meeting.startsAt, meeting.timeZone);
   const month = MONTHS[p.m - 1]!;
   const day = meeting.startPrecision === "DAY";
-  const together = day ? [] : [`${p.y}${p.mm}${p.dd}T${p.hh}${p.mi}00`, `${p.y}-${p.mm}-${p.dd}T${p.hh}:${p.mi}`];
-  for (const token of together) if (page.includes(token)) return { valueText: token, quote: token };
+  const utc = new Date(meeting.startsAt).toISOString();
+  const together = day ? [] : [utc,utc.replace(/\.000Z$/,"Z"),utc.replace(/[-:]/g,"").replace(/\.000Z$/,"Z")];
+  for (const token of together) if (boundedIndexOf(page,token)!==-1) return { valueText: token, quote: token };
+  if (!day) for (const token of [`${p.y}${p.mm}${p.dd}T${p.hh}${p.mi}00`,`${p.y}-${p.mm}-${p.dd}T${p.hh}:${p.mi}`]) {
+    for(let at=page.indexOf(token);at!==-1;at=page.indexOf(token,at+1)) {
+      // A Z or numeric offset states an instant, not the body's local clock.
+      if (/^(?::?\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})\b/.test(page.slice(at+token.length))) continue;
+      return {valueText:token,quote:token};
+    }
+  }
+  if (!day) for (const match of page.matchAll(/\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})\b/g)) {
+    if (Date.parse(match[0])===Date.parse(meeting.startsAt)) return {valueText:match[0],quote:match[0]};
+  }
   const dates = [`${p.y}-${p.mm}-${p.dd}T00:00:00`, `${p.y}-${p.mm}-${p.dd}`, `${p.y}${p.mm}${p.dd}`, `${p.m}/${p.d}/${p.y}`, `${p.mm}/${p.dd}/${p.y}`,
     `${month} ${p.d}, ${p.y}`, `${month.slice(0, 3)} ${p.d}, ${p.y}`, `${month.slice(0, 3)}. ${p.d}, ${p.y}`, `${p.d} ${month} ${p.y}`];
   const suffixes = p.pm ? ["PM", "pm", "p.m.", "P.M."] : ["AM", "am", "a.m.", "A.M."];
@@ -34,9 +45,13 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
   for (const date of dates) {
     for (let at = page.lastIndexOf(date); at !== -1; at = at ? page.lastIndexOf(date, at - 1) : -1) {
       if (day) return { valueText: date, quote: date };
+      if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})\b/.test(page.slice(at))) continue;
       const window = page.slice(at, at + date.length + 200);
       const time = times.map(t => ({ t, i: window.indexOf(t, date.length) })).filter(row => row.i !== -1).sort((a, b) => a.i - b.i)[0];
-      if (time) return { valueText: date, quote: window.slice(0, time.i + time.t.length) };
+      if (time) {
+        const quote=window.slice(0,time.i+time.t.length);
+        return {valueText:quote,quote};
+      }
     }
   }
   return null;
@@ -50,7 +65,7 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
 }, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
   const { meeting, capture } = input;
   const id = meetingEntityId(meeting.id);
-  const state = /\/state:([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null;
+  const state = /\/(?:state|district|territory):([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null;
   const owner = meeting.bodyId ?? meeting.ocdId;
   if (owner) {
     await ensureEntity(db.query, { id: owner, kind: meeting.bodyId ? "body" : "place", name: meeting.bodyName, state, parentId: meeting.bodyId ? meeting.ocdId : null });
@@ -77,7 +92,8 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   if (sitting) await claim("starts_at", start, sitting.valueText, sitting.quote);
   else {
     await openBlank(db.query, { entityId: id, field: "starts_at", stage: "CHECK", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY",
-      detail: `${meeting.startsAt} is not written on ${capture.evidence.canonicalUrl}`, retryMinutes: clocks.retryMinutes("meeting") });
+      detail: JSON.stringify({sourceUrl:copy.finalUrl,copyId:copy.id,fieldKind:"meeting",provenance,value:start,
+        valueText:meeting.startsAt,quote:meeting.startsAt,producedBy:input.producedBy}), retryMinutes: clocks.retryMinutes("meeting") });
     tally.blanks++;
   }
   if (meeting.location) await claim("location", { name: meeting.location.name, address: meeting.location.address }, meeting.location.address ?? meeting.location.name);

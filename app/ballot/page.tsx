@@ -1,3 +1,6 @@
+import {Suspense} from "react";
+import {preload as preloadResource} from "react-dom";
+import { readBallotReaderData, primeBallotFundingRead, primeBallotCandidateDetails } from "@/lib/ballot/reader-data";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "@/lib/db/reader-route";
@@ -16,11 +19,12 @@ import { filingsForDivisions, type OfficialFiling } from "@/lib/civic-data/offic
 import { readOfficialFilingsForReader } from "@/lib/civic-data/curated-reader-read-model";
 
 import { contestsForDivisions } from "@/lib/ballot/contests";
-import { ballotPointDivisions } from "@/lib/ballot/reader-place";
-import { ballotStatesForDivisions, readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
+import { ballotPlaceFromParams, ballotPointDivisions, ballotPointStateDivisions } from "@/lib/ballot/reader-place";
+import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
   ballotAuxiliaryPreloadSucceeded,
+  ballotAuxiliaryReads,
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "@/lib/ballot/auxiliary-preloads";
@@ -56,11 +60,10 @@ import {
 import { BallotAskPill } from "@/components/ballot/ballot-ask-pill";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
-import { jurisdictionNameFromOcdId } from "@/lib/ballot/could-govern";
-import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
-import { StateMoneySection } from "@/components/funding/state-money-section";
-import { stateMoneyForCard } from "@/lib/funding/nominee-money";
+import { officeCardSections, officeHasActions } from "@/lib/officials/office-sections";
+import { StateCampaignSection } from "@/components/funding/state-campaign-section";
+
 import {
   MemberCommitteesContent,
   MemberOfficesContent,
@@ -103,23 +106,13 @@ import {
   type FundingAnswer,
 } from "@/lib/funding/display";
 import { settleFundingRead } from "@/lib/funding/snapshot";
-import { settleStateMoneyRead } from "@/lib/funding/state-snapshot";
-import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
-import { settleCampaignFinanceReads } from "@/lib/funding/campaign-finance-reader";
 import { officeIdentity } from "@/lib/officials/office-identity";
 import { settleFundingHoldingAnswer } from "@/lib/funding/holding-answer";
-import {
-  holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
-  READER_BALLOT_AUTHORITY_FAMILIES,
-} from "@/lib/meetings/edge-serving";
-import {
-  enterReaderAuthorityEdge,
-  withReaderAuthorityEdge,
-  type ReaderAuthorityEdgeBundle,
-} from "@/lib/registry/runtime-edge";
+
 import {
   settleCandidateCorpusRead,
   settleCandidateProfilesRead,
+  candidateProfilesReadState,
 } from "@/lib/civic-data/manual-read-models";
 import { readBallotNavigationProjection } from "@/lib/civic-data/curated-reader-read-model";
 import {
@@ -142,41 +135,20 @@ import { CandidateContact, CandidateContactSources } from "@/components/ballot/c
 import { candidateContactForCandidacy } from "@/lib/ballot/candidate-contacts";
 import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
-import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { readerContestScope } from "@/lib/ballot/reader-scope";
-import { resolveZip } from "@/lib/geo/zcta";
 import {
   settleFederalDirectoryRead,
   settleRegistryAuthorityReads,
 } from "@/lib/registry/server";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
-import type { ReactionViewContext } from "@/lib/reactions/client";
 import { BallotCapture } from "@/components/ballot/ballot-capture";
 import { tierForOcdId, tierForOffice } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
 import { readerPartyLabel } from "@/lib/text/reader-names";
-import {
-  IncumbencyFootnote,
-  IncumbencyMarker,
-} from "@/components/ballot/incumbency-note";
 
 export const runtime = "nodejs";
-
-const AUXILIARY_READER_LABEL: Record<BallotAuxiliaryFamily, string> = {
-  "candidate-profiles": "candidate profiles",
-  "candidate-publications": "what candidates say in their own words",
-  "federal-funding": "federal campaign money",
-  "state-money": "state campaign money",
-  "campaign-finance": "campaign money filings",
-  "federal-directory": "federal officeholders",
-  "registry-runtime": "the officials and districts that go with this ZIP",
-  "nh-members": "New Hampshire legislators",
-  "ballot-navigation": "registration and polling-place links",
-};
-
-const EXTENDED_MECHANICS_CHARS = 180;
 
 function nomineeProvenance(nominee: LineupNominee, contest: Contest, state: string): Provenance {
   const canvass = getGeneralLineup(state)?.canvass;
@@ -231,8 +203,8 @@ async function IncumbentName({ name, context, holder }: {
     : <span className="text-[0.9375rem] font-semibold tracking-tight">{name}</span>;
 }
 
-function withBallotReader<T>(edge: ReaderAuthorityEdgeBundle | null, selection: ReaderSelection | undefined, read: () => T): T {
-  return withReaderAuthorityEdge(edge, () => withReaderSelection(selection, read));
+function withBallotReader<T>(selection: ReaderSelection | undefined, read: () => T): T {
+  return withReaderSelection(selection, read);
 }
 
 async function CandidateFunding({
@@ -240,26 +212,24 @@ async function CandidateFunding({
   targetKey,
   context,
   available,
-  readerEdge,
   readerSelection,
 }: {
   divisions: readonly string[];
   targetKey: string;
   context: { zip: string; lat: number; lng: number } | null;
   available: boolean;
-  readerEdge: ReaderAuthorityEdgeBundle | null;
   readerSelection: ReaderSelection | undefined;
 }) {
   if (!available) return unavailableHolding("federal campaign-finance");
   let answer: FundingAnswer;
   try {
-    answer = await withBallotReader(readerEdge, readerSelection, async () => fundingAnswerForTarget(targetKey));
+    answer = await withBallotReader(readerSelection, async () => fundingAnswerForTarget(targetKey));
   } catch {
     return unavailableHolding("federal campaign-finance");
   }
   let partial = false;
   try {
-    const settled = await withBallotReader(readerEdge, readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined, undefined, divisions));
+    const settled = await withBallotReader(readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined, undefined, divisions));
     partial = settled.kind === "ANSWER" && settled.holdingStatus === "PARTIAL";
   } catch {
     partial = true;
@@ -279,14 +249,6 @@ async function CandidateFunding({
   );
 }
 
-function stateCandidateFunding(
-  records: ReturnType<typeof stateMoneyForCard>["records"],
-  context: ReactionViewContext | null,
-) {
-  if (records.length === 0) return null;
-  return <StateMoneySection records={records} bare context={context} />;
-}
-
 async function BallotBattlecard({
   name,
   partyLine,
@@ -300,11 +262,10 @@ async function BallotBattlecard({
   officeBlurb,
   federal,
   resolvedStanding,
-  contestId,
   context,
   authorityAvailability,
-  readerEdge,
   readerSelection,
+  stanceTopics,
 }: {
   name: string;
   partyLine: React.ReactNode;
@@ -325,13 +286,12 @@ async function BallotBattlecard({
   federal: boolean;
 
   resolvedStanding: Awaited<ReturnType<typeof contestIncumbency>> | null;
-  contestId: string;
 
   context: { zip: string; lat: number; lng: number } | null;
   authorityAvailability: BallotAuthorityAvailability;
 
-  readerEdge: ReaderAuthorityEdgeBundle | null;
   readerSelection: ReaderSelection | undefined;
+  stanceTopics: ReturnType<typeof readStanceTopics>;
 }) {
   const state = ocdStateCode(contestOcdId)!.toUpperCase();
   const recordHolder = resolvedStanding?.holderFor.get(targetKey) ?? null;
@@ -349,24 +309,17 @@ async function BallotBattlecard({
   let positionsUnavailable = !authorityAvailability.candidatePublications;
   if (!positionsUnavailable) {
     try {
-      positions = await withBallotReader(readerEdge, readerSelection, async () =>
-        positionsFor(state, targetKey, null, await readStanceTopics(), recordHolder?.id));
+      positions = await withBallotReader(readerSelection, async () =>
+        positionsFor(state, targetKey, null, await stanceTopics, recordHolder?.id));
     } catch {
       positionsUnavailable = true;
     }
   }
 
-  let stateMoney: ReturnType<typeof stateMoneyForCard>["records"] = [];
-  let stateMoneyUnavailable = !federal && (!authorityAvailability.campaignFinance ||
-    (authorityAvailability.stateMoneyApplicable && !authorityAvailability.stateMoney));
-  if (!federal) {
-    try {
-      stateMoney = await withBallotReader(readerEdge, readerSelection, async () => stateMoneyForCard(targetKey, contestId).records);
-    } catch {
-      stateMoneyUnavailable = true;
-    }
-  }
-  const filingContact = await withBallotReader(readerEdge, readerSelection, async () => {
+  const officeHolder = { id: targetKey, officeTitle: contestTitle, officeJurisdictionOcdId: contestOcdId };
+  const sectionIds = officeCardSections(officeHolder), has = (id: (typeof sectionIds)[number]) => sectionIds.includes(id);
+
+  const filingContact = await withBallotReader(readerSelection, async () => {
     const candidacyId = targetKey.includes("|") ? reconciledCandidacyIdForCard(targetKey) : targetKey;
     return candidacyId ? candidateContactForCandidacy(state, candidacyId) : null;
   });
@@ -387,6 +340,8 @@ async function BallotBattlecard({
       divisionIds={[contestOcdId]}
 
       contactHolder={recordHolder}
+      sectionIds={sectionIds}
+      actionsGap={officeHasActions(officeHolder)}
       contact={<><CandidateContact card={card ?? null} links={links} filing={filingContact} />{recordHolder && <ContactPills holder={recordHolder} scope="primary" />}{!card?.email && !links?.campaign && !filingContact?.email && !recordHolder && <CardGapContribution id={`candidate-contact:${targetKey}`} label="contact details" subject={{ type: "CANDIDATE", id: targetKey }} />}</>}
       sections={{
 
@@ -406,22 +361,22 @@ async function BallotBattlecard({
           ) : null,
 
         committees:
-          !officeholdersAvailable ? (
+          !has("committees") ? null : !officeholdersAvailable ? (
             unavailableHolding("officeholder-directory")
           ) : recordHolder && memberDirectoryReaches(recordHolder.id) ? (
             <MemberCommitteesContent holder={recordHolder} />
           ) : null,
         offices:
-          !officeholdersAvailable ? (
+          !has("offices") ? null : !officeholdersAvailable ? (
             unavailableHolding("officeholder-directory")
           ) : recordHolder && memberDirectoryReaches(recordHolder.id, "offices", recordHolder.state) ? (
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
-        money: federal ? (
-          <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerEdge={readerEdge} readerSelection={readerSelection} />
-        ) : <>{stateMoneyUnavailable && unavailableHolding("state campaign-finance")}{stateCandidateFunding(stateMoney, context)}</>,
+        money: !has("money") ? null : federal ? (
+          <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerSelection={readerSelection} />
+        ) : <StateCampaignSection divisionId={contestOcdId} personId={targetKey} bare context={context}/>,
 
-        record: !officeholdersAvailable ? (
+        record: !has("record") ? null : !officeholdersAvailable ? (
           unavailableHolding("officeholder-directory")
         ) : recordHolder ? (
           <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />
@@ -455,9 +410,6 @@ interface BallotAuthorityAvailability {
   readonly candidateProfiles: boolean;
   readonly candidatePublications: boolean;
   readonly funding: boolean;
-  readonly stateMoney: boolean;
-  readonly stateMoneyApplicable: boolean;
-  readonly campaignFinance: boolean;
   readonly officeholders: boolean;
   readonly federalOfficeholders: boolean;
 }
@@ -479,22 +431,16 @@ export const metadata: Metadata = {
   description: "The contests on your ballot, the candidates in them, and where to vote.",
 };
 
-async function readBallotReaderEdge() {
-  const edge = await ensureReaderAuthorityEdge(null, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, READER_BALLOT_AUTHORITY_FAMILIES));
-  return { edge };
-}
-
 export default readerRoute("/ballot", async function BallotPage({
   searchParams,
 }: {
-  searchParams: Promise<{ zip?: string }>;
+  searchParams: Promise<{ zip?: string; state?: string; lat?: string; lng?: string }>;
 }) {
-  const { zip: zipParam } = await searchParams;
-  const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
+  const place = ballotPlaceFromParams(await searchParams);
+  const { zip, centroid } = place;
+  const ballotRead = (async () => {
   let filingRead: Promise<Awaited<ReturnType<typeof readOfficialFilingsForReader>> | null> = Promise.resolve(null);
 
-  const resolution = zip ? resolveZip(zip) : null;
-  const centroid = resolution?.ok ? resolution.centroid : null;
   let set: BallotSet | null = null;
   let matched: ReturnType<typeof contestsForDivisions> | null = null;
   let coverageNotes: string[] = [];
@@ -503,26 +449,46 @@ export default readerRoute("/ballot", async function BallotPage({
   const ballotLoaderFailures: string[] = [];
 
   let askOcdIds: string[] = [];
-  const readerEdgeRead = centroid ? readBallotReaderEdge() : Promise.resolve({ edge: null });
-  const { edge } = await readerEdgeRead;
-  let certainty = await withReaderAuthorityEdge(edge, () => zipCertainty(zip));
   const readerSelection = currentReaderSelection();
-  let readerEdge: ReaderAuthorityEdgeBundle | null = null;
+  const startRead = ballotAuxiliaryReads();
+  const navigationReads = new Map<string, ReturnType<typeof readBallotNavigationProjection>>();
+  const readNavigation = (state: string) => {
+    let read = navigationReads.get(state);
+    if (!read) { read = readBallotNavigationProjection(state); navigationReads.set(state, read); }
+    return read;
+  };
+  const pointDivisionsRead = centroid ? place.state
+    ? ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
+    : ballotPointDivisions(readerSelection?.states ?? [], centroid.lat, centroid.lng) : Promise.resolve([]);
+  void pointDivisionsRead.catch(() => undefined);
+  const readerData = await readBallotReaderData(place);
+  const stanceTopics = readStanceTopics();
+  void stanceTopics.catch(()=>undefined);
+  const knownState = place.state?.code ?? (readerSelection?.states?.length === 1 ? readerSelection.states[0] : null);
+  if (centroid && knownState) {
+    startRead("registry-runtime", () => readerData?.registryRead ?? settleRegistryAuthorityReads("REGISTRY"));
+    startRead("federal-directory", settleFederalDirectoryRead);
+    void readNavigation(knownState).catch(() => undefined);
+    if (knownState === "NH") startRead("nh-members", settleNhSeatHolders);
+  }
+  const zipEntry = readerData ? await readerData.entry() : undefined;
+  let certainty = await zipCertainty(zip, undefined, zipEntry);
   if (centroid) {
-    readerEdge = edge;
-    if (readerEdge) enterReaderAuthorityEdge(readerEdge);
     filingRead = readOfficialFilingsForReader().catch(() => null);
     attempted = true;
     const pointDivisionIds = [...certainty?.all ?? []];
-    divisionHoldingUnavailable = pointDivisionIds.length === 0;
-    try { pointDivisionIds.push(...await ballotPointDivisions(ballotStatesForDivisions(pointDivisionIds), centroid.lat, centroid.lng)); }
-    catch { divisionHoldingUnavailable = true; }
-    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS);
+    divisionHoldingUnavailable = pointDivisionIds.length === 0 && !place.state;
+    try {
+      pointDivisionIds.push(...await pointDivisionsRead);
+    } catch { divisionHoldingUnavailable = true; }
+    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS, zipEntry);
     askOcdIds = ocdIds;
     const electionDivisions = new Map<string, string[]>();
     const missingDistrictOffices = new Map<string, string[]>();
+    await readerData?.districtRead.catch(() => undefined);
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, {}, async (election, districtFamilies) => {
-      const ids = await divisionIdsForZipArea(zip, pointDivisionIds, { purpose: "election", asOf: phoenixToday(), electionDate: election.date }, POINT_GEOMETRY_PLANS);
+      const geography = { purpose: "election" as const, asOf: phoenixToday(), electionDate: election.date };
+      const ids = await divisionIdsForZipArea(zip, pointDivisionIds, geography, POINT_GEOMETRY_PLANS, readerData ? await readerData.entry(geography) : undefined);
       electionDivisions.set(election.id, ids);
       missingDistrictOffices.set(election.id, unestablishedDistrictOfficesForFamilies(districtFamilies, ids));
       return ids;
@@ -536,10 +502,10 @@ export default readerRoute("/ballot", async function BallotPage({
           set = candidate;
           matched = hit;
           askOcdIds = electionIds;
-          certainty = await zipCertainty(zip, selection);
+          certainty = await zipCertainty(zip, selection, readerData ? await readerData.entry(selection) : undefined);
           coverageNotes = coverageNotesForScope(candidate, zip, electionIds);
           for (const office of missingDistrictOffices.get(candidate.election.id) ?? []) {
-            coverageNotes.push(`We're working on getting the ${office} district for ZIP ${zip}. ${office} contests aren't shown until we have it.`);
+            coverageNotes.push(`We're working on getting the ${office} district for ${zip ? `ZIP ${zip}` : "this area"}. ${office} contests aren't shown until we have it.`);
           }
           break;
         }
@@ -549,77 +515,65 @@ export default readerRoute("/ballot", async function BallotPage({
     }
   }
 
+  const officeBlurbsRead = readCuratedContestOfficeBlurbs(matched?.contests ?? []);
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
+  const preload = (family: BallotAuxiliaryFamily, read: () => Promise<unknown>) =>
+    auxiliaryPreloads.set(family, startRead(family, read));
   const navigationStates = [...new Set(askOcdIds.map(electionFieldState).filter((state): state is string => state !== null))];
   const navigation = new Map<string, BallotNavigation>();
-  if (centroid) auxiliaryPreloads.set("ballot-navigation", async () => {
+  if (centroid) preload("ballot-navigation", async () => {
     const results = await Promise.allSettled(navigationStates.map(async state => {
-      const read = await readBallotNavigationProjection(state);
+      const read = await readNavigation(state);
       if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`Navigation ${state} is ${read.kind}`);
-      navigation.set(state, ballotNavigationFor(state, read.value, read.metadata.versionId!, askOcdIds));
+      if (read.value.records.length) navigation.set(state, ballotNavigationFor(state, read.value, read.metadata.versionId!, askOcdIds));
     }));
     if (results.some(result => result.status === "rejected")) throw new Error("Some states' voting information is unavailable.");
   });
   if (set && matched) {
-    auxiliaryPreloads.set("candidate-profiles", () => settleCandidateProfilesRead(set!.election.state));
-    auxiliaryPreloads.set("candidate-publications", () => settleCandidateCorpusRead(set!.election.state));
-    auxiliaryPreloads.set("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
+    const candidateDetails = readerData ? primeBallotCandidateDetails(set,matched.contests) : Promise.resolve();
+    void candidateDetails.catch(() => {});
+    preload("candidate-profiles", async () => {
+      await candidateDetails;
+      const version = await settleCandidateProfilesRead(set!.election.state);
+      const read = candidateProfilesReadState(set!.election.state);
+      if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
+        // Fetch the leading portraits while the independent money/office reads
+        // finish, instead of discovering them after the streamed cards lay out.
+        let portraits=0;
+        leadingPortraits: for (const contest of matched!.contests.filter(contest=>contest.type==="CANDIDACY")) {
+          const lineup = lineupForContest(set!.election.state,contest.id);
+          const keys = lineup ? lineup.nominees.map(n=>`${contest.id}|${n.name}`) : candidatesOf(set!,contest).map(c=>c.id);
+          for (const key of keys) {
+            const photo=read.value.cards.cards[key]?.photoUrl;
+            if(photo){preloadResource(photo,{as:"image"});if(++portraits===5)break leadingPortraits;}
+          }
+        }
+      }
+      return version;
+    });
+    preload("candidate-publications", async () => { await candidateDetails; return settleCandidateCorpusRead(set!.election.state); });
+    preload("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
     if (matched.contests.some(isFederalContest)) {
-      auxiliaryPreloads.set("federal-directory", settleFederalDirectoryRead);
+      preload("federal-directory", settleFederalDirectoryRead);
     }
     if (matched.contests.some(nhLegislativeRosterAppliesTo)) {
-      auxiliaryPreloads.set("nh-members", settleNhSeatHolders);
+      preload("nh-members", settleNhSeatHolders);
     }
     if (matched.contests.some((contest) => isFederalContest(contest))) {
-      auxiliaryPreloads.set("federal-funding", settleFundingRead);
+      preload("federal-funding", async () => {
+        if (readerData) await primeBallotFundingRead(set!, matched.contests.filter(isFederalContest));
+        return settleFundingRead();
+      });
     }
-    auxiliaryPreloads.set("campaign-finance", () => settleCampaignFinanceReads(askOcdIds));
-    if (matched.contests.some((contest) => !isFederalContest(contest)) &&
-        Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, set.election.state)) {
-      const state = set.election.state as StateCampaignFinanceJurisdiction;
-      auxiliaryPreloads.set(
-        "state-money",
-        () => settleStateMoneyRead(state),
-      );
-    }
+
   }
-  const auxiliaryOutcomes = await settleBallotAuxiliaryPreloads(auxiliaryPreloads);
-  const auxiliaryFailures = [...auxiliaryOutcomes.entries()]
-    .filter(([, outcome]) => !ballotAuxiliaryPreloadSucceeded(outcome))
-    .map(([family]) => family);
-  const auxiliaryFailed = new Set(auxiliaryFailures);
-  const authorityAvailability: BallotAuthorityAvailability = {
-    candidateProfiles:
-      auxiliaryPreloads.has("candidate-profiles") && !auxiliaryFailed.has("candidate-profiles"),
-    candidatePublications:
-      auxiliaryPreloads.has("candidate-publications") && !auxiliaryFailed.has("candidate-publications"),
-    funding:
-      auxiliaryPreloads.has("federal-funding") && !auxiliaryFailed.has("federal-funding"),
-    stateMoney:
-      auxiliaryPreloads.has("state-money") && !auxiliaryFailed.has("state-money"),
-    stateMoneyApplicable: auxiliaryPreloads.has("state-money"),
-    campaignFinance: auxiliaryPreloads.has("campaign-finance") && !auxiliaryFailed.has("campaign-finance"),
-    officeholders:
-      auxiliaryPreloads.has("registry-runtime") &&
-      !auxiliaryFailed.has("registry-runtime"),
-    federalOfficeholders:
-      auxiliaryPreloads.has("federal-directory") && !auxiliaryFailed.has("federal-directory"),
-  };
-
-  const availableCardForNominee = (contestId: string, name: string): CandidateCardData | null =>
-    set ? cardForNominee(set.election.state, contestId, name) : null;
-  const availableLinksForNominee = (contestId: string, name: string): CandidateLinks | null =>
-    authorityAvailability.candidateProfiles ? linksForNominee(set!.election.state, contestId, name) : null;
-  const availableCardForCandidacy = (candidacyId: string): CandidateCardData | null =>
-    set ? cardForCandidacy(set.election.state, candidacyId) : null;
-  const availableLinksForCandidacy = (candidacyId: string): CandidateLinks | null =>
-    authorityAvailability.candidateProfiles ? linksForCandidacy(set!.election.state, candidacyId) : null;
-  const availableDerivedBlurbFor = (candidateId: string) =>
-    authorityAvailability.candidatePublications ? derivedBlurbFor(set!.election.state, candidateId) : null;
-
   const candidacyContests =
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
-  const contestResolutions = new Map(await Promise.all(candidacyContests.map(async contest => {
+  const officeholderReads = ["registry-runtime", "federal-directory", "nh-members", "federal-funding"] as const;
+  const contestResolutionsRead = Promise.allSettled(officeholderReads.flatMap(family => {
+    const read = auxiliaryPreloads.get(family);
+    return read ? [read()] : [];
+  })).then(() => Promise.all(candidacyContests.map(async contest => {
     const lineup = lineupForContest(set!.election.state, contest.id);
     const candidates = lineup ? lineup.nominees.map(n => ({ key: `${contest.id}|${n.name}`,
       display: n.name, targetKey: `${contest.id}|${n.name}` })) : candidatesOf(set!, contest).map(c => ({
@@ -629,23 +583,9 @@ export default readerRoute("/ballot", async function BallotPage({
       incumbentHolderFor).catch(() => null);
     return [contest.id, result] as const;
   })));
-  const resolvedHolder = (contestId: string, key: string) => contestResolutions.get(contestId)?.holderFor.get(key) ?? null;
 
-  const measureRecords = set ? measureRecordsForBallot(set) : [];
   const measureContests = orderMeasures(
     matched?.contests.filter((c) => c.type === "MEASURE") ?? [],
-  );
-
-  const measureFor = (contestId: string): Measure | null =>
-    set?.measures.find((m) => m.contestId === contestId) ?? null;
-
-  const isStatewideDivision = (ocdId: string): boolean =>
-    /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId);
-  const statewideMeasures = measureContests.filter((c) =>
-    isStatewideDivision(c.ocdId),
-  );
-  const localMeasures = measureContests.filter(
-    (c) => !isStatewideDivision(c.ocdId),
   );
 
   const askSubjects: {
@@ -683,6 +623,57 @@ export default readerRoute("/ballot", async function BallotPage({
     ),
   ].filter((v) => v.name.length > 0);
 
+  const contents = (async () => {
+  const auxiliaryOutcomes = await settleBallotAuxiliaryPreloads(auxiliaryPreloads);
+  const auxiliaryFailures = [...auxiliaryOutcomes.entries()]
+    .filter(([, outcome]) => !ballotAuxiliaryPreloadSucceeded(outcome))
+    .map(([family]) => family);
+  const auxiliaryFailed = new Set(auxiliaryFailures);
+  const authorityAvailability: BallotAuthorityAvailability = {
+    candidateProfiles:
+      auxiliaryPreloads.has("candidate-profiles") && !auxiliaryFailed.has("candidate-profiles"),
+    candidatePublications:
+      auxiliaryPreloads.has("candidate-publications") && !auxiliaryFailed.has("candidate-publications"),
+    funding:
+      auxiliaryPreloads.has("federal-funding") && !auxiliaryFailed.has("federal-funding"),
+    officeholders:
+      auxiliaryPreloads.has("registry-runtime") &&
+      !auxiliaryFailed.has("registry-runtime"),
+    federalOfficeholders:
+      auxiliaryPreloads.has("federal-directory") && !auxiliaryFailed.has("federal-directory"),
+  };
+
+  const availableCardForNominee = (contestId: string, name: string): CandidateCardData | null =>
+    set ? cardForNominee(set.election.state, contestId, name) : null;
+  const availableLinksForNominee = (contestId: string, name: string): CandidateLinks | null =>
+    authorityAvailability.candidateProfiles ? linksForNominee(set!.election.state, contestId, name) : null;
+  const availableCardForCandidacy = (candidacyId: string): CandidateCardData | null =>
+    set ? cardForCandidacy(set.election.state, candidacyId) : null;
+  const availableLinksForCandidacy = (candidacyId: string): CandidateLinks | null =>
+    authorityAvailability.candidateProfiles ? linksForCandidacy(set!.election.state, candidacyId) : null;
+  const availableDerivedBlurbFor = (candidateId: string) =>
+    authorityAvailability.candidatePublications ? derivedBlurbFor(set!.election.state, candidateId) : null;
+
+  const contestResolutions = new Map(await contestResolutionsRead);
+  const resolvedHolder = (contestId: string, key: string) => contestResolutions.get(contestId)?.holderFor.get(key) ?? null;
+
+  const measureRecords = set ? measureRecordsForBallot(set) : [];
+
+
+  const measureFor = (contestId: string): Measure | null =>
+    set?.measures.find((m) => m.contestId === contestId) ?? null;
+
+  const isStatewideDivision = (ocdId: string): boolean =>
+    /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId);
+  const statewideMeasures = measureContests.filter((c) =>
+    isStatewideDivision(c.ocdId),
+  );
+  const localMeasures = measureContests.filter(
+    (c) => !isStatewideDivision(c.ocdId),
+  );
+
+
+
   const pickableContests =
     set && matched
       ? [...candidacyContests, ...measureContests].filter(contest => contest.voteFor !== null).map((contest) => ({
@@ -699,52 +690,6 @@ export default readerRoute("/ballot", async function BallotPage({
       .map((c) => jurisdictionKeyForContestId(c.id))
       .find((key): key is string => key !== null) ?? null;
 
-  const FOOTNOTE_MARKERS = ["*", "†", "‡", "§", "‖", "¶"];
-
-  const MARKER_START = 1;
-  type SourceCite =
-    | { kind: "canvass"; url: string; issuedBy: string; readAt: string }
-    | { kind: "filing"; url: string | null; org: string; collectedAt: string };
-  const contestSourceKey = (cite: SourceCite): string =>
-    cite.kind === "canvass"
-      ? `canvass|${cite.url}|${cite.issuedBy}|${cite.readAt}`
-      : `filing|${cite.url ?? ""}|${cite.org}|${cite.collectedAt}`;
-  const contestCites = new Map<string, { cite: SourceCite; count: number }>();
-  for (const contest of candidacyContests) {
-    const lineup = lineupForContest(set!.election.state, contest.id);
-    const canvass = lineup && !lineup.nominees.some(nominee => nominee.provenance) ? getGeneralLineup(set!.election.state)?.canvass : null;
-    const cite: SourceCite =
-      lineup && canvass
-        ? {
-            kind: "canvass",
-            url: canvass.url,
-            issuedBy: canvass.issuedBy,
-            readAt: canvass.readAt,
-          }
-        : {
-            kind: "filing",
-            url: contest.provenance.sourceUrl ?? null,
-            org: contest.provenance.sourceOrg,
-            collectedAt: contest.provenance.collectedAt,
-          };
-    const key = contestSourceKey(cite);
-    const entry = contestCites.get(key);
-    if (entry) entry.count += 1;
-    else contestCites.set(key, { cite, count: 1 });
-  }
-  const sharedSources: { key: string; marker: string; cite: SourceCite }[] = [];
-  for (const [key, { cite, count }] of contestCites) {
-    if (count > 1) {
-      sharedSources.push({
-        key,
-        marker:
-          FOOTNOTE_MARKERS[MARKER_START + sharedSources.length] ??
-          `${MARKER_START + sharedSources.length + 1}`,
-        cite,
-      });
-    }
-  }
-
   const readerScopeNotes = new Map((matched?.contests ?? []).map((contest) => {
     const lineup = lineupForContest(set!.election.state, contest.id);
     const canvass = lineup && !lineup.nominees.some(nominee => nominee.provenance) ? getGeneralLineup(set!.election.state)?.canvass : null;
@@ -754,20 +699,6 @@ export default readerRoute("/ballot", async function BallotPage({
     });
     return [contest.id, scope.currentNote] as const;
   }));
-  const scopeNotes = sharedNotesFor(
-    (matched?.contests ?? []).map((contest) => ({ id: contest.id, scopeNote: readerScopeNotes.get(contest.id) ?? null })),
-    MARKER_START + sharedSources.length,
-  );
-
-  const contestSourceRef = (
-    key: string,
-  ): { shared: boolean; marker: string | null; anchor: string | null } => {
-    const index = sharedSources.findIndex((s) => s.key === key);
-    return index === -1
-      ? { shared: false, marker: null, anchor: null }
-      : { shared: true, marker: sharedSources[index].marker, anchor: `source-note-${index}` };
-  };
-
   const earlierFilings = new Map<string, Candidacy[]>();
   for (const candidate of set?.filingCandidacies ?? []) {
     const rows = earlierFilings.get(candidate.contestId) ?? [];
@@ -781,7 +712,7 @@ export default readerRoute("/ballot", async function BallotPage({
     if (candidate.filing) rows.push(candidate.filing.provenance);
     filingSources.set(candidate.contestId, rows);
   }
-  const officeBlurbs = await readCuratedContestOfficeBlurbs(matched?.contests ?? []);
+  const officeBlurbs = await officeBlurbsRead;
 
   const filingProjection = await filingRead;
   const filingRows = filingProjection?.kind === "PROMOTED"
@@ -789,48 +720,8 @@ export default readerRoute("/ballot", async function BallotPage({
 
   return (
 
-    <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
-      <BallotCapture zip={zip} />
-      <div className="ballot-page-chrome flex items-center justify-between gap-3">
-        <p className="t-body">
-          <Link
-            href="/"
-            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-          >
-            ← Back to the map
-          </Link>
-        </p>
-        <ThemeToggle className="shrink-0" />
-      </div>
-      <div className="ballot-page-chrome mt-4">
-        <Logo variant="wordmark" size={30} />
-      </div>
-      <h1 className="mt-1.5 text-xl font-semibold tracking-tight">
-        What&apos;s on the ballot{zip ? ` near ${zip}` : ""}
-      </h1>
+    <>
 
-      <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
-        A zip code is orientation, not your exact ballot — zip areas cross
-        town and district lines. Everything below is presented as filed with
-        election authorities, with the filing linked on every item.{" "}
-        <span className="font-medium">We never suggest how to vote.</span>
-      </p>
-
-      {zip && (
-        <div className="ballot-top-pills">
-          <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
-          <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">
-            Moving here? Know the basics →
-          </Link>
-          <BallotAskPill
-            zip={zip}
-            ocdIds={askOcdIds}
-            activeSubjects={askSubjects}
-          />
-        </div>
-      )}
-
-      <div className="my-4"><WhereToVote /></div>
       <OfficialFilings rows={filingRows} />
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds).filter(office => office.kind === "CAMPAIGN_FINANCE_OFFICE")} />
 
@@ -890,32 +781,8 @@ export default readerRoute("/ballot", async function BallotPage({
           </Card>
         </section>;
       })}
-      {set && (divisionHoldingUnavailable || auxiliaryFailures.length > 0) && (
-        <section
-          className="mt-4 rounded-[8px] border border-line bg-panel p-4 t-body leading-relaxed text-voice lg:max-w-3xl"
-          data-ballot-canonical-holding-gaps
-        >
-          <p>
-            The ballot below is complete as filed. A few extras that go with it could not be loaded just now, and each is marked as not loaded where it would appear:
-          </p>
-          <ul className="mt-2 list-disc pl-5">
-            {divisionHoldingUnavailable && <li>the officials and districts that go with this ZIP</li>}
-            {auxiliaryFailures.map((family) => (
-              <li key={family}>{AUXILIARY_READER_LABEL[family]}</li>
-            ))}
-          </ul>
-        </section>
-      )}
 
-      {set && matched && (
-        <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
-          The contests below are recorded for areas that may overlap this ZIP. Check your address with your election office for the exact ballot.
-          {measureContests.length > 0 &&
-            " Propositions are voted on at the same time."}
-        </p>
-      )}
-
-      {!zip && (
+      {!centroid && !zip && (
         <p className="mt-6 t-body text-muted lg:max-w-2xl">
           Open this page with a zip, e.g.{" "}
           <Link href="/ballot?zip=07866" className="underline decoration-dotted">
@@ -952,45 +819,10 @@ export default readerRoute("/ballot", async function BallotPage({
         pickable={pickableContests}
       />
 
-      {set && matched && certainty && (
-        <JurisdictionNote
-          electionDate={set?.election.date ?? null}
-
-          unplaceable={
-            candidacyContests.filter(
-              (contest) => certainty.certaintyOf(contest.ocdId) === "UNKNOWN",
-            ).length
-          }
-          jurisdictions={[
-            ...new Set(
-              candidacyContests
-                .filter((contest) => certainty.certaintyOf(contest.ocdId) === "AMBIGUOUS")
-
-                .map((contest) => jurisdictionNameFromOcdId(contest.ocdId))
-                .filter((name): name is string => name !== null),
-            ),
-          ]}
-
-          zip={zip ?? ""}
-        />
-      )}
-
       {set && matched && (
       <div className="ballot-office-list">
       {candidacyContests.map((contest, contestIndex) => {
           const lineup = lineupForContest(set!.election.state, contest.id);
-          const nomineeSourceOrgs = lineup
-            ? [...new Set(lineup.nominees.map(nominee => nomineeProvenance(nominee, contest, set!.election.state).sourceOrg))].join(" and ")
-            : null;
-          const canvass = lineup && !lineup.nominees.some(nominee => nominee.provenance) ? getGeneralLineup(set!.election.state)?.canvass : null;
-          const sourceRef =
-            lineup && canvass
-              ? contestSourceRef(
-                  `canvass|${canvass.url}|${canvass.issuedBy}|${canvass.readAt}`,
-                )
-              : contestSourceRef(
-                  `filing|${contest.provenance.sourceUrl ?? ""}|${contest.provenance.sourceOrg}|${contest.provenance.collectedAt}`,
-                );
           return (
             <Card
               key={contest.id}
@@ -1002,7 +834,7 @@ export default readerRoute("/ballot", async function BallotPage({
                 ...(contestIndex > 0 && tierForOffice(contest.title, contest.ocdId) !== tierForOffice(candidacyContests[contestIndex - 1].title, candidacyContests[contestIndex - 1].ocdId) ? { "data-office-tier-start": "true" } : {}),
                 ...(certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? { "data-could-govern": "true" } : {}),
               }}
-              sources={[{ what: "Candidates and voting instructions", provenance: contest.provenance },
+              sources={[{ what: readerScopeNotes.get(contest.id) ?? "Candidates and voting instructions", provenance: contest.provenance },
                 ...(filingSources.get(contest.id) ?? []).map(provenance => ({ what: "Candidate filings", provenance })),
                 ...(lineup && set.generalLineup ? [{ what: "Primary election canvass", provenance: { sourceUrl: set.generalLineup.canvass.url, sourceOrg: set.generalLineup.canvass.issuedBy, collectedAt: set.generalLineup.canvass.readAt, verifiedAt: null } }] : []),
                 ...(lineup ? [...new Map(lineup.nominees.map(nominee => { const provenance = nomineeProvenance(nominee, contest, set!.election.state); return [provenance.sourceUrl, { what: "General-election candidates", provenance }] as const; })).values()] : [])]}
@@ -1019,20 +851,6 @@ export default readerRoute("/ballot", async function BallotPage({
                     <JurisdictionMark />
                   )}
 
-                  {(lineup || candidatesOf(set, contest).length > 0) && (
-                    <IncumbencyMarker />
-                  )}
-                  {sourceRef.shared && (
-                    <sup>
-                      <a
-                        href={`#${sourceRef.anchor}`}
-                        title="Source, cited once at the foot of this page"
-                        className="ml-0.5 font-mono text-[0.6875rem] text-muted no-underline hover:text-link"
-                      >
-                        {sourceRef.marker}
-                      </a>
-                    </sup>
-                  )}
                 </h2>
                 {(contest.voteFor !== null || contest.termYears) && <p className="t-eyebrow text-muted">
                   {[contest.voteFor !== null ? `Vote for ${contest.voteFor}` : null, contest.termYears ? `${contest.termYears}-year term` : null].filter(Boolean).join(" · ")}
@@ -1053,43 +871,6 @@ export default readerRoute("/ballot", async function BallotPage({
                   </p>
                 ) : null;
               })()}
-
-              {!sourceRef.shared && (
-                <FilingNote
-                  summary={
-                    lineup
-                      ? `General-election candidates per ${nomineeSourceOrgs}`
-                      : `Candidates as filed with ${contest.provenance.sourceOrg}`
-                  }
-                >
-                  {lineup && !canvass ? <>Official records for these candidates appear in Sources.</> : lineup && canvass ? (
-                    <>
-                      Primary nominees per the{" "}
-                      <a
-                        href={canvass.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-dotted underline-offset-2 hover:text-link"
-                      >
-                        certified primary canvass
-                      </a>{" "}
-                      ({canvass.issuedBy}) · read {formatDateMDY(canvass.readAt)}
-                    </>
-                  ) : (
-                    <>
-                      <a
-                        href={contest.provenance.sourceUrl ?? undefined}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline decoration-dotted underline-offset-2 hover:text-link"
-                      >
-                        {contest.provenance.sourceOrg} filing
-                      </a>{" "}
-                      · read {formatDateMDY(contest.provenance.collectedAt)}
-                    </>
-                  )}
-                </FilingNote>
-              )}
 
               <FilingChanges removals={(set.removals ?? []).filter((record) => record.contestId === contest.id)} />
 
@@ -1140,7 +921,6 @@ export default readerRoute("/ballot", async function BallotPage({
                             contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null}
                             federal={isFederalContest(contest)}
-                            contestId={contest.id}
                             resolvedStanding={contestResolutions.get(contest.id) ?? null}
                             context={
                               centroid && zip
@@ -1148,7 +928,7 @@ export default readerRoute("/ballot", async function BallotPage({
                                 : null
                             }
                             authorityAvailability={authorityAvailability}
-                              readerEdge={readerEdge} readerSelection={readerSelection}
+                              readerSelection={readerSelection} stanceTopics={stanceTopics}
                           />
                         }
                       />
@@ -1167,7 +947,6 @@ export default readerRoute("/ballot", async function BallotPage({
                     </li>
                   ))}
                 </ul>
-                <IncumbencyFootnote />
                 {!isFederalContest(contest) && (
                   <StateFundingNote note={STATE_FUNDING_NOTE} />
                 )}
@@ -1183,31 +962,6 @@ export default readerRoute("/ballot", async function BallotPage({
               ) : (
                 <>
 
-                  {readerScopeNotes.get(contest.id) &&
-                    (scopeNotes.isShared(contest.id) ? (
-                      <p className="mt-1.5 font-mono text-[0.6875rem] text-muted">
-                        <a
-                          href="#scope-notes"
-                          className="underline decoration-dotted underline-offset-2 hover:text-link"
-                        >
-                          {scopeNotes.markerFor(contest.id)} see note
-                        </a>
-                      </p>
-                    ) : (readerScopeNotes.get(contest.id)?.length ?? 0) > EXTENDED_MECHANICS_CHARS ? (
-
-                      <details className="mt-1.5" data-scope-note-collapsed>
-                        <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
-                          More info
-                        </summary>
-                        <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                          {readerScopeNotes.get(contest.id)}
-                        </p>
-                      </details>
-                    ) : (
-                      <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
-                        {readerScopeNotes.get(contest.id)}
-                      </p>
-                    ))}
                   <ul className="ballot-candidate-grid mt-3.5">
                     {candidatesOf(set, contest).map((cand) => (
                       <li
@@ -1266,7 +1020,6 @@ export default readerRoute("/ballot", async function BallotPage({
                               contestOcdId={contest.ocdId}
                               officeBlurb={officeBlurbs.get(contest.id) ?? null}
                               federal={isFederalContest(contest)}
-                              contestId={contest.id}
                               resolvedStanding={contestResolutions.get(contest.id) ?? null}
                               context={
                                 centroid && zip
@@ -1274,7 +1027,7 @@ export default readerRoute("/ballot", async function BallotPage({
                                   : null
                               }
                               authorityAvailability={authorityAvailability}
-                              readerEdge={readerEdge} readerSelection={readerSelection}
+                              readerSelection={readerSelection} stanceTopics={stanceTopics}
                             />
                           }
                         />
@@ -1295,8 +1048,7 @@ export default readerRoute("/ballot", async function BallotPage({
                       </li>
                     ))}
                   </ul>
-                  <IncumbencyFootnote />
-                  {!isFederalContest(contest) && (
+                    {!isFederalContest(contest) && (
                     <StateFundingNote note={STATE_FUNDING_NOTE} />
                   )}
 
@@ -1312,7 +1064,6 @@ export default readerRoute("/ballot", async function BallotPage({
               {(earlierFilings.get(contest.id)?.length ?? 0) > 0 && (
                 <details className="mt-5 border-t border-subtle pt-3" data-earlier-filings={contest.id}>
                   <summary className="cursor-pointer t-heading text-paper-dim">Earlier filings ({earlierFilings.get(contest.id)!.length})</summary>
-                  <p className="mt-2 t-detail text-muted">These people appeared in earlier official filings. They are not listed on the current general-election ballot for this contest.</p>
                   <ul className="ballot-candidate-grid mt-3.5">
                     {earlierFilings.get(contest.id)!.map(candidate => {
                       const provenance = candidate.filing?.provenance ?? candidate.provenance;
@@ -1325,11 +1076,11 @@ export default readerRoute("/ballot", async function BallotPage({
                             card={availableCardForCandidacy(candidate.id)} links={availableLinksForCandidacy(candidate.id)} targetKey={candidate.id}
                             filingSource={provenance} contestTitle={contest.title} contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(contest)}
-                            contestId={contest.id} resolvedStanding={null}
+                            resolvedStanding={null}
                             context={centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null}
-                            authorityAvailability={authorityAvailability} readerEdge={readerEdge} readerSelection={readerSelection} />}
+                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} stanceTopics={stanceTopics} />}
                         />
-                        <p className="mt-1 t-detail text-muted"><a href={provenance.sourceUrl ?? undefined} className="text-link underline" target="_blank" rel="noreferrer">{provenance.sourceOrg}</a> · read {formatDateMDY(provenance.collectedAt)}</p>
+
                       </li>;
                     })}
                   </ul>
@@ -1340,54 +1091,6 @@ export default readerRoute("/ballot", async function BallotPage({
         })}
       </div>
       )}
-
-      {sharedSources.length > 0 && (
-        <section className="mt-5 border-t border-[var(--panel-border)] pt-3 lg:max-w-2xl">
-          {sharedSources.map((s, i) => (
-            <p
-              key={s.key}
-              id={`source-note-${i}`}
-              className="mt-1 text-[0.6875rem] leading-relaxed text-muted first:mt-0"
-            >
-              <span className="font-mono">{s.marker}</span>{" "}
-              {s.cite.kind === "canvass" ? (
-                <>
-                  Primary nominees per the{" "}
-                  <a
-                    href={s.cite.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline decoration-dotted underline-offset-2 hover:text-link"
-                  >
-                    certified primary canvass
-                  </a>{" "}
-                  ({s.cite.issuedBy}) · read {formatDateMDY(s.cite.readAt)}
-                </>
-              ) : (
-                <>
-                  <a
-                    href={s.cite.url ?? undefined}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline decoration-dotted underline-offset-2 hover:text-link"
-                  >
-                    {s.cite.org} filing
-                  </a>{" "}
-                  · read {formatDateMDY(s.cite.collectedAt)}
-                </>
-              )}
-            </p>
-          ))}
-        </section>
-      )}
-
-      {set &&
-        matched &&
-        candidacyContests.some((c) => lineupForContest(set!.election.state, c.id)) && (
-          <p className="mt-3 text-[0.6875rem] leading-relaxed text-muted lg:max-w-2xl">
-            {getGeneralLineup(set!.election.state)?.note}
-          </p>
-        )}
 
       {(
         [
@@ -1413,7 +1116,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
             const measure = measureFor(contest.id);
             return (
-              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[]}>
+              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
               <div>
 
                 {summary ? (
@@ -1421,6 +1124,7 @@ export default readerRoute("/ballot", async function BallotPage({
                     className="mt-2.5 rounded-md bg-[var(--surface,rgba(255,255,255,0.04))] p-3"
                     data-measure-summary="PRESENT"
                   >
+                    <CardSourcesContribution id={`measure-summary:${contest.id}`} sources={[{ what: "Plain-language summary", provenance: { sourceUrl: summary.summarizesUrl, sourceOrg: new URL(summary.summarizesUrl).hostname.replace(/^www\./, ""), collectedAt: summary.writtenAt, verifiedAt: null } }]} />
                     <p className="t-eyebrow text-muted">
                       Plain-language summary — read the official text below
                     </p>
@@ -1474,10 +1178,7 @@ export default readerRoute("/ballot", async function BallotPage({
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-2 text-[0.6875rem] text-muted">
-                      Each part is written from the official analysis below, and
-                      says what it would do — never whether it is a good idea.
-                    </p>
+
                   </details>
                 )}
 
@@ -1517,7 +1218,7 @@ export default readerRoute("/ballot", async function BallotPage({
                 {analysis?.text ? (
                   <details className="mt-2.5">
                     <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
-                      Official analysis — {analysis.sourceOrg}
+                      Official analysis
                     </summary>
                     <p className="t-record mt-1.5 max-h-72 overflow-y-auto whitespace-pre-line rounded-md border border-[var(--panel-border)] p-3 text-[0.75rem] leading-relaxed text-paper-dim">
                       {analysis.text}
@@ -1525,29 +1226,11 @@ export default readerRoute("/ballot", async function BallotPage({
                   </details>
                 ) : (
                   analysis?.extractionNote && (
-                    <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-                      We retrieved this measure&apos;s official analysis but
-                      couldn&apos;t extract its text — read it at the link
-                      below.
-                    </p>
+                    <CardGapContribution id={`measure-analysis-text:${contest.id}`} label="analysis text" />
                   )
                 )}
 
-                {readerScopeNotes.get(contest.id) &&
-                  (scopeNotes.isShared(contest.id) ? (
-                    <p className="mt-2 font-mono text-[0.6875rem] text-muted">
-                      <a
-                        href="#scope-notes"
-                        className="underline decoration-dotted underline-offset-2 hover:text-link"
-                      >
-                        {scopeNotes.markerFor(contest.id)} see note
-                      </a>
-                    </p>
-                  ) : (
-                    <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-                      {readerScopeNotes.get(contest.id)}
-                    </p>
-                  ))}
+                {!measure?.questionText && <CardGapContribution id={`measure-wording:${contest.id}`} label="final ballot wording" />}
 
                 <PickControl
                   contestId={contest.id}
@@ -1606,57 +1289,21 @@ export default readerRoute("/ballot", async function BallotPage({
         <>
 
           {groupAbsences(matched.absences).map((absence) => (
-            <section
-              key={absence.key}
-              className="mt-5 rounded-[10px] border border-[var(--panel-border)] p-4 lg:max-w-2xl"
-              data-absence-count={absence.members.length}
-              data-absence-ocd-ids={absence.members.map((record) => record.ocdId).join(" ")}
-            >
+            <Card key={absence.key} title="Ballot records" titleVisible={false} className="mt-5 lg:max-w-2xl" sources={[{ what: "Ballot record search", provenance: absence.provenance }]} attrs={{ "data-absence-count": String(absence.members.length), "data-absence-ocd-ids": absence.members.map(record => record.ocdId).join(" ") }}>
               <p className="t-body leading-relaxed text-paper-dim">
                 {absence.statement}
               </p>
-              <p className="mt-2 text-[0.6875rem] text-muted">
-                <a
-                  href={absence.provenance.sourceUrl ?? undefined}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline decoration-dotted underline-offset-2 hover:text-link"
-                >
-                  {absence.provenance.sourceOrg}
-                </a>{" "}
-                · read {formatDateMDY(absence.provenance.collectedAt)}
-              </p>
-            </section>
+            </Card>
           ))}
 
-          {scopeNotes.notes.length > 0 && (
-            <div
-              id="scope-notes"
-              className="mt-6 border-t border-[var(--panel-border)] pt-4 lg:max-w-2xl"
-            >
-              {scopeNotes.notes.map((note) => (
-                <p
-                  key={note.marker}
-                  className="mt-1.5 text-[0.75rem] leading-relaxed text-muted first:mt-0"
-                >
-                  <span aria-hidden="true" className="mr-1 font-mono text-paper-dim">
-                    {note.marker}
-                  </span>
-                  {note.text}{" "}
-                  <span className="text-paper-dim">
-                    (applies to {note.count} contests on this page)
-                  </span>
-                </p>
-              ))}
-            </div>
-          )}
 
         </>
       )}
 
-      <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] lg:max-w-2xl">
+      <p data-ballot-complete className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] lg:max-w-2xl">
         <Link
           href="/"
+          prefetch={false}
           className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
         >
           Back to the map
@@ -1664,11 +1311,64 @@ export default readerRoute("/ballot", async function BallotPage({
         <span className="text-muted">·</span>{" "}
         <Link
           href="/transparency"
+          prefetch={false}
           className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
         >
-          How we handle data
+          What this site collects
         </Link>
       </p>
+    </>
+  );
+  })();
+  void contents.catch(() => {});
+  return { contents, controls: (
+    <>
+      {zip && <>
+        <div className="flex flex-wrap items-center gap-3">
+          {certainty && [...candidacyContests, ...measureContests].some(contest => needsPill(certainty.certaintyOf(contest.ocdId))) && <JurisdictionNote />}
+          <BallotNarrowing zip={zip} electionDate={set?.election.date ?? null} className="ballot-top-pill" />
+        </div>
+        <Link href={`/about-area?zip=${zip}`} prefetch={false} className="ballot-top-pill">About this area</Link>
+        <BallotAskPill zip={zip} ocdIds={askOcdIds} activeSubjects={askSubjects} />
+      </>}
+    </>
+  ) };
+  })();
+  void ballotRead.catch(() => {});
+  const pills = ballotRead.then(result => result.controls);
+  const contents = ballotRead.then(result => result.contents);
+  void pills.catch(() => {});
+  void contents.catch(() => {});
+  return (
+    <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
+      <BallotCapture zip={zip} />
+      <div className="ballot-page-chrome flex items-center justify-between gap-3">
+        <p className="t-body">
+          <Link
+            href="/"
+            prefetch={false}
+            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            ← Back to the map
+          </Link>
+        </p>
+        <ThemeToggle className="shrink-0" />
+      </div>
+      <div className="ballot-page-chrome mt-4">
+        <Logo variant="wordmark" size={30} />
+      </div>
+      <h1 className="mt-1.5 text-xl font-semibold tracking-tight">
+        What&apos;s on the ballot{zip ? ` near ${zip}` : place.state ? ` in ${place.state.name}` : ""}
+      </h1>
+
+      <div className="ballot-top-pills items-start">
+        <WhereToVote />
+        <Suspense fallback={null}>{pills}</Suspense>
+      </div>
+
+      <Suspense fallback={<p role="status" className="my-6 text-paper-dim">Loading your ballot…</p>}>
+        {contents}
+      </Suspense>
     </main>
   );
 });

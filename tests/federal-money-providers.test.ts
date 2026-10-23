@@ -10,7 +10,7 @@ import { archiveCrc32 } from "../lib/sources/archive.ts";
 import { acquireFederalMoney as acquireNative, type FederalMoneyAcquireOptions } from "../lib/federal-money/acquire.ts";
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { federalCsvRecords, federalJsonRecords } from "../lib/federal-money/streams.ts";
+import { federalCsvRecords, federalJsonRecords, federalJsonStringBytes } from "../lib/federal-money/streams.ts";
 import type { FederalMoneyCapture, FederalMoneySource } from "../lib/federal-money/model.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/federal-money/${name}`, import.meta.url), "utf8");
@@ -272,4 +272,28 @@ test("Treasury current district identifiers join current cards while original di
   assert.deepEqual(fact.geography, [{ type: "congressional", geoid: "0615" }]); assert.equal(fact.details.originalCongressionalDistrict, "CA-14");
   const [unmapped] = parsed("usaspending", "https://files.usaspending.gov/generated_downloads/fixture.zip#Assistance.csv", csv.replace("CA-15", ""), "CA");
   assert.deepEqual(unmapped.geography, []); assert.equal(unmapped.details.originalCongressionalDistrict, "CA-14");
+});
+
+
+test("streamed JSON indexes accept native scalar and compound values across byte boundaries", async () => {
+  const expected = [2026, "11/5/2024", true, false, null, { id: "file" }, [1, 2]], envelope = { rows: 0, found: false };
+  async function* chunks(text: string) { for (const byte of Buffer.from(text)) yield Uint8Array.of(byte); }
+  const values = [];
+  for await (const row of federalJsonRecords(chunks(JSON.stringify({ data: { years: expected }, total: 7 })), "data.years", envelope)) values.push(JSON.parse(row));
+  assert.deepEqual(values, expected); assert.equal(envelope.rows, 7); assert.equal(envelope.found, true);
+  for (const source of ["[2026,]", "[1 2]", "[truefalse]", '["unterminated]']) await assert.rejects(async () => {
+    for await (const _row of federalJsonRecords(chunks(source), "", { rows: 0, found: false })) void _row;
+  });
+});
+
+
+test("escaped public JSON responses decode incrementally across every escape boundary", async () => {
+  const native = { Table: [{ text: 'é \" \\ \n 😀', amount: 12 }, { text: "second", amount: 0 }] };
+  const encoded = JSON.stringify({ d: JSON.stringify(native) }).replace("😀", "\\ud83d\\ude00");
+  const rows = [];
+  for await (const row of federalJsonRecords(federalJsonStringBytes(bytes(encoded), "d"), "Table", { rows: 0, found: false })) rows.push(JSON.parse(row));
+  assert.deepEqual(rows, native.Table);
+  for (const bad of ['{"d":"missing', '{"d":"bad\\x"}', '{"d":"\\ud800x"}', '{"d":"value","other":1}', '{"wrong":"value"}']) await assert.rejects(async () => {
+    for await (const _chunk of federalJsonStringBytes(bytes(bad), "d")) void _chunk;
+  }, /envelope/);
 });

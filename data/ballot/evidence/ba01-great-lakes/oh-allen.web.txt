@@ -1,0 +1,507 @@
+Official county document linked from saved oh-allen-parent.web.txt; https://www.dropbox.com/scl/fi/2e7gtmv9d30h0wyztnces/2026_GENERAL_FWAB.pdf?dl=1&rlkey=zseu69mlokl60inwapljzmsga
+Captured HTTP 200. Local pdftotext -layout extraction; original PDF saved as oh-allen.pdf.gz.
+L0:                        ELECTION NOTICE FOR USE WITH THE
+L1:                     FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB)
+L2:                                                     R.C. 3511.16
+L3: 
+L4:                             Issued by the Allen County Board of Elections
+L5:                                                  46 Day Notice
+L6:                                     (to be posted 46 days prior to date of election)
+L7: 
+L8:                                   November 3, 2026 General Election
+L9: 
+L10: 
+L11:                                                      All Offices
+L12: Name of Candidate (Party)         Office, To Elect, Term                                Precincts
+L13: Joshua D. Kolasinski (Dem)        US CONGRESS 4TH DIST                                  All Precincts
+L14: Jim Jordan (Rep)
+L15: Tracey L. Tackett                 1 to be elected
+L16:                                   Full 2 Year Term Commencing 01/03/2027
+L17: 
+L18: Sherrod Brown (Dem)               US SENATOR                                            All Precincts
+L19: William B. Redpath (Lib)
+L20: Jon Husted (Rep)                  1 to be elected
+L21: Greg Levy                         Unexpired Term Ending 01/03/2029
+L22: 
+L23: Stephen Faris (Write-In)
+L24: Anthony Holliman (Write-In)
+L25: Timothy Telymonde (Write-In)
+L26: Amy Acton (Dem)                   OHIO GOVERNOR /LT GOVERNOR                            All Precincts
+L27: Don Kissick (Lib)
+L28: Vivek Ramaswamy (Rep)             1 to be elected
+L29:                                   Full 4 Year Term Commencing 01/11/2027
+L30: Timothy Grady and Andrea
+L31: Neutzling (Write-In)
+L32: Heather Hill and Patrick Manley
+L33: (Write-In)
+L34: Renea Turner and Jalen Turner
+L35: (Write-In)
+L36: Ron Ula and Michael C. Lehnerd
+L37: (Write-In)
+L38: John J. Kulewicz (Dem)            ATTORNEY GENERAL                                      All Precincts
+L39: Keith Faber (Rep)
+L40:                                   1 to be elected
+L41:                                   Full 4 Year Term Commencing 01/11/2027
+L42: 
+L43: Annette Blackwell (Dem)           AUDITOR OF STATE                                      All Precincts
+L44: Frank LaRose (Rep)
+L45:                                   1 to be elected
+L46:                                   Full 4 Year Term Commencing 01/11/2027
+L47: 
+L48: 
+L49: 
+L50: 
+L51:                                                        Page 1 of 10                    Revised: 9/8/2026 10:10 AM
+L52: 
+L53: Allison Russo (Dem)        SECRETARY OF STATE                        All Precincts
+L54: Tom Pruss (Lib)
+L55: Robert Sprague (Rep)       1 to be elected
+L56:                            Full 4 Year Term Commencing 01/11/2027
+L57: 
+L58: 
+L59: 
+L60: Seth Walsh (Dem)           TREASURER OF STATE                        All Precincts
+L61: Jay Edwards (Rep)
+L62:                            1 to be elected
+L63:                            Full 4 Year Term Commencing 01/11/2027
+L64: 
+L65: Jeffrey R. Givan (Dem)     STATE REPRESENTATIVE 78TH DIST            All Precincts
+L66: Matt Huffman (Rep)
+L67:                            1 to be elected
+L68:                            Full 2 Year Term Commencing 01/01/2027
+L69: 
+L70: Marilyn Zayas (Dem)        SUPREME COURT JUSTICE                     All Precincts
+L71: Daniel R. Hawkins (Rep)
+L72:                            1 to be elected
+L73:                            Full 6 Year Term Commencing 01/01/2027
+L74: 
+L75: Jennifer Brunner (Dem)     SUPREME COURT JUSTICE                     All Precincts
+L76: Colleen O'Donnell (Rep)
+L77:                            1 to be elected
+L78:                            Full 6 Year Term Commencing 01/02/2027
+L79: 
+L80: Lew Modic (Dem)            COUNTY COMMISSIONER                       All Precincts
+L81: Brian Winegardner (Rep)
+L82:                            1 to be elected
+L83:                            Full 4 Year Term Commencing 01/01/2027
+L84: 
+L85: Rachael S. Gilroy (Rep)    COUNTY AUDITOR                            All Precincts
+L86: 
+L87:                            1 to be elected
+L88:                            Full 4 Year Term Commencing 03/08/2027
+L89: 
+L90: Todd E. Kohlrieser (Rep)   COMMON PLEAS JUDGE- PROBATE               All Precincts
+L91:                            DIVISION
+L92: 
+L93:                            1 to be elected
+L94:                            Full 6 Year Term Commencing 02/09/2027
+L95: 
+L96: Mark C. Miller (Rep)       3RD DIST COURT OF APPEALS JUDGE           All Precincts
+L97: 
+L98:                            1 to be elected
+L99:                            Full 6 Year Term Commencing 02/09/2027
+L100: 
+L101: 
+L102: 
+L103: 
+L104:                                            All Issues
+L105: Entity, Overlaps           Issue Number, Description                  Precincts
+L106:                                            Page 2 of 10             Revised: 9/8/2026 10:10 AM
+L107: 
+L108: City of Lima           REFERENDUM ON ORDINANCE                         Lima 1A, 1B, 1C, 2A, 2B, 2C,3A,
+L109:                        NO.022-26                                       3B, 3C, 4A, 4B, 4C, 5A, 5B,5C,
+L110:                        (By Petition)                                   5D, 6A, 6B, 6C, 7A, 7B, 7C
+L111:                        City of Lima
+L112: 
+L113: 
+L114:                        A majority affirmative vote is necessary for
+L115:                        passage
+L116: 
+L117:                        Shall ordinance no. 022-26 proposing the
+L118:                        Mayor purchase or accept donations of real
+L119:                        property for the Cable Road Improvement
+L120:                        Project (PID 112573) along Cable Road,
+L121:                        from Latham Avenue to College Park West
+L122:                        Drive, be approved?
+L123: 
+L124: 
+L125:                        YES
+L126:                        NO
+L127: Delphos City Schools   PROPOSED TAX LEVY (RENEWAL)                     DELPHOS 1A, 1B, 2A,
+L128:                        Delphos City School District                    2B,MARIONA, B, SPENCER A
+L129: 
+L130: 
+L131:                        A majority affirmative vote is necessary for
+L132:                        passage
+L133: 
+L134: 
+L135:                        A renewal of a tax for the benefit of
+L136:                        Delphos City School District for the
+L137:                        purpose of current expenses, that the
+L138:                        county auditor estimates will collect
+L139:                        $929,532 annually, at a rate not exceeding
+L140:                        5.5 mills for each $1 of taxable value, which
+L141:                        amounts to $83 for each $100,000 of the
+L142:                        county auditor's market value, for 5 years,
+L143:                        commencing in 2027, first due in calendar
+L144:                        year 2028. The county auditor has certified
+L145:                        that the amount by which the carry-over
+L146:                        balance in the district's general operating
+L147:                        budget from the preceding fiscal year
+L148:                        exceeds the district's general fund
+L149:                        expenditures made in the preceding fiscal
+L150:                        year is $0, which is 0% of those
+L151:                        expenditures.
+L152: 
+L153: 
+L154:                        FOR THE TAX LEVY
+L155:                        AGAINST THE TAX LEVY
+L156: 
+L157: 
+L158: 
+L159: 
+L160:                                         Page 3 of 10               Revised: 9/8/2026 10:10 AM
+L161: 
+L162: Lima City Schools   PROPOSED TAX LEVY (RENEWAL)                     Lima 1A, 1B, 1C, 2A, 2B, 2C,3A,
+L163:                     Lima City School District                       3B, 3C, 4A, 4B, 4C, 5A, 5B,5C,
+L164:                                                                     5D, 6A, 6B, 6C, 7A, 7B,
+L165:                                                                     7C,AMERICANE, K
+L166:                     A majority affirmative vote is necessary for
+L167:                     passage
+L168: 
+L169: 
+L170:                     A renewal of a tax for the benefit of Lima
+L171:                     City School District for the purpose of the
+L172:                     acquisition, construction, enlargement,
+L173:                     renovation, and financing of general
+L174:                     permanent improvements and current
+L175:                     operating expenses, that the county auditor
+L176:                     estimates will collect $1,836,189 annually,
+L177:                     at a rate not exceeding 5.99 mills for each
+L178:                     $1 of taxable value, which amounts to $142
+L179:                     for each $100,000 of the county auditor's
+L180:                     market value, for 5 years, commencing in
+L181:                     2027, first due in calendar year 2028. The
+L182:                     County Auditor has certified that the
+L183:                     amount by which the carry-over balance in
+L184:                     the school district's general operating
+L185:                     budget from the preceding fiscal year
+L186:                     exceeds the school district's general fund
+L187:                     expenditures made in the preceding fiscal
+L188:                     year is $-0-, which is 0% of those
+L189:                     expenditures.
+L190: 
+L191: 
+L192:                     FOR THE TAX LEVY
+L193:                     AGAINST THE TAX LEVY
+L194: 
+L195: 
+L196: 
+L197: 
+L198:                                      Page 4 of 10                 Revised: 9/8/2026 10:10 AM
+L199: 
+L200: Perry Schools          PROPOSED TAX LEVY (RENEWAL)                     LIMA 5D, 6C, PERRY A, B, C
+L201:                        Perry Local School District
+L202: 
+L203: 
+L204:                        A majority affirmative vote is necessary for
+L205:                        passage
+L206: 
+L207: 
+L208:                        A renewal of a tax for the benefit of Perry
+L209:                        Local School District, County of Allen,
+L210:                        Ohio, for the purpose of current expenses,
+L211:                        that the County Auditor estimates will
+L212:                        collect $605,689 annually, at a rate not
+L213:                        exceeding 4.9 mills for each $1 of taxable
+L214:                        value, which amounts to $89 for each
+L215:                        $100,000 of the county auditor's market
+L216:                        value, for 5 years, commencing in 2026,
+L217:                        first due in calendar year 2027. The County
+L218:                        Auditor has certified that the amount by
+L219:                        which the carry-over balance in the
+L220:                        district's general operating budget from the
+L221:                        preceding fiscal year exceeds the district's
+L222:                        general fund expenditures made in the
+L223:                        preceding fiscal year is $0, which is 0% of
+L224:                        those expenditures.
+L225: 
+L226: 
+L227:                        FOR THE TAX LEVY
+L228:                        AGAINST THE TAX LEVY
+L229: Spencerville Schools   PROPOSED INCOME TAX (RENEWAL)                   AMANDA
+L230:                        Spencerville Local School District              E,N,SPENCERVILLE A,
+L231:                                                                        B,SPENCER A
+L232: 
+L233:                        A majority affirmative vote is necessary for
+L234:                        passage
+L235: 
+L236: 
+L237:                        Shall an annual income tax of 1% on the
+L238:                        school district income of individuals be
+L239:                        imposed by Spencerville Local School
+L240:                        District, to renew an income tax (or income
+L241:                        taxes) expiring at the end of 2027 for 5
+L242:                        years, beginning January 1, 2028, for the
+L243:                        purpose of current expenses?
+L244: 
+L245: 
+L246:                        FOR THE TAX
+L247:                        AGAINST THE TAX
+L248: 
+L249: 
+L250: 
+L251: 
+L252:                                         Page 5 of 10                 Revised: 9/8/2026 10:10 AM
+L253: 
+L254: Monroe Township   PROPOSED TAX LEVY (RENEWAL)                       CAIRO, MONROE E, W
+L255:                   Monroe Township
+L256: 
+L257: 
+L258:                   A majority affirmative vote is necessary for
+L259:                   passage
+L260: 
+L261: 
+L262:                   A renewal of a tax for the benefit of
+L263:                   Monroe Township for the purpose of
+L264:                   providing and maintaining fire apparatus,
+L265:                   appliances, buildings, or sites therefore, or
+L266:                   sources of water supply and materials
+L267:                   therefore, or the establishment and
+L268:                   maintenance of lines of fire alarm
+L269:                   telegraph, or the payment of permanent,
+L270:                   part-time, or volunteer firefighters or
+L271:                   firefighting companies to operate the same,
+L272:                   including the payment of the firefighter
+L273:                   employers' contribution required under
+L274:                   section 742.34 of the Revised Code, or the
+L275:                   purchase of ambulance equipment, or the
+L276:                   provision of ambulance, paramedic, or
+L277:                   other emergency medical services operated
+L278:                   by a fire department or firefighting
+L279:                   company, that the county auditor estimates
+L280:                   will collect $26,644 annually, at a rate not
+L281:                   exceeding 0.5 mill for each $1 of taxable
+L282:                   value, which amounts to $9 for each
+L283:                   $100,000 of the county auditor's market
+L284:                   value, for 5 years, commencing in 2026,
+L285:                   first due in calendar year 2027.
+L286: 
+L287: 
+L288:                   FOR THE TAX LEVY
+L289:                   AGAINST THE TAX LEVY
+L290: 
+L291: 
+L292: 
+L293: 
+L294:                                     Page 6 of 10                  Revised: 9/8/2026 10:10 AM
+L295: 
+L296: Perry Township   PROPOSED TAX LEVY (RENEWAL)                    PERRY A, B, C
+L297:                  Perry Township
+L298: 
+L299: 
+L300:                  A majority affirmative vote is necessary for
+L301:                  passage
+L302: 
+L303: 
+L304:                  A renewal of a tax for the benefit of Perry
+L305:                  Township for the purpose of providing and
+L306:                  maintaining fire apparatus, appliances,
+L307:                  buildings, or sites therefor, or sources of
+L308:                  water supply and materials therefor, or the
+L309:                  establishment and maintenance of lines of
+L310:                  fire-alarm communications, or the payment
+L311:                  of firefighting companies or permanent,
+L312:                  part-time, or volunteer firefighting,
+L313:                  emergency medical service, administrative,
+L314:                  or communications personnel to operate
+L315:                  the same, including the payment of any
+L316:                  employer contribution required under
+L317:                  section 145.48 or 742.34 of the Revised
+L318:                  Code, or the purchase of ambulance
+L319:                  equipment, or the provision of ambulance,
+L320:                  paramedic, or other emergency medical
+L321:                  services operated by a fire department or
+L322:                  firefighting company,, that the county
+L323:                  auditor estimates will collect $123,771
+L324:                  annually, at a rate not exceeding 1.000 mill
+L325:                  for each $1 of taxable value, which amounts
+L326:                  to $19 for each $100,000 of the county
+L327:                  auditor's market value, for 5 years,
+L328:                  commencing in 2027, first due in calendar
+L329:                  year 2028.
+L330: 
+L331: 
+L332:                  FOR THE TAX LEVY
+L333:                  AGAINST THE TAX LEVY
+L334: 
+L335: 
+L336: 
+L337: 
+L338:                                   Page 7 of 10              Revised: 9/8/2026 10:10 AM
+L339: 
+L340: Perry Township   PROPOSED TAX LEVY (RENEWAL)                    PERRY A, B, C
+L341:                  Perry Township
+L342: 
+L343: 
+L344:                  A majority affirmative vote is necessary for
+L345:                  passage
+L346: 
+L347: 
+L348:                  A renewal of a tax for the benefit of Perry
+L349:                  Township for the purpose of providing and
+L350:                  maintaining fire apparatus, appliances,
+L351:                  building, or sites therefor, or sources of
+L352:                  water supply and materials therefor, or the
+L353:                  establishment and maintenance of lines of
+L354:                  fire-alarm communications, or the payment
+L355:                  of firefighting companies or permanent,
+L356:                  part-time, or volunteer firefighting,
+L357:                  emergency medical service, administrative,
+L358:                  or communications personnel to operate
+L359:                  the same, including the payment of any
+L360:                  employer contributions required under
+L361:                  section 145.48 or 742.34 of the Revised
+L362:                  Code, or the purchase of ambulance
+L363:                  equipment, or the provision of ambulance,
+L364:                  paramedic, or other emergency medical
+L365:                  services operated by a fire department or
+L366:                  firefighting company,, that the county
+L367:                  auditor estimates will collect $185,656
+L368:                  annually, at a rate not exceeding 1.5 mills
+L369:                  for each $1 of taxable value, which amounts
+L370:                  to $29 for each $100,000 of the county
+L371:                  auditor's market value, for 5 years,
+L372:                  commencing in 2027, first due in calendar
+L373:                  year 2028.
+L374: 
+L375: 
+L376:                  FOR THE TAX LEVY
+L377:                  AGAINST THE TAX LEVY
+L378: 
+L379: 
+L380: 
+L381: 
+L382:                                   Page 8 of 10              Revised: 9/8/2026 10:10 AM
+L383: 
+L384: Sugar Creek Township   PROPOSED TAX LEVY (RENEWAL)                      Sugar Creek
+L385:                        Sugar Creek Township
+L386: 
+L387: 
+L388:                        A majority affirmative vote is necessary for
+L389:                        passage
+L390: 
+L391: 
+L392:                        A renewal of a tax for the benefit of Sugar
+L393:                        Creek Township for the purpose of current
+L394:                        expenses, that the county auditor estimates
+L395:                        will collect $85,210 annually, at a rate not
+L396:                        exceeding 2 mills for each $1 of taxable
+L397:                        value, which amounts to $33 for each
+L398:                        $100,000 of the county auditor's market
+L399:                        value, for 5 years, commencing in 2027,
+L400:                        first due in calendar year 2028.
+L401: 
+L402: 
+L403:                        FOR THE TAX LEVY
+L404:                        AGAINST THE TAX LEVY
+L405: 
+L406: Local Option           Local Liquor Option for Particular Use at        Richland A
+L407:                        Business Location (By Petition)
+L408:                        Prec Richland A
+L409: 
+L410: 
+L411:                        A majority affirmative vote is necessary for
+L412:                        passage
+L413: 
+L414: 
+L415:                        Shall the sale of wine and mixed beverages
+L416:                        be permitted for sale on Sunday by
+L417:                        RaceTrac, Inc. an applicant for a D-6
+L418:                        liquor permit who is engaged in the
+L419:                        business of operating a carryout/grocery
+L420:                        store at 6452 Reppert Road, Lima, Ohio
+L421:                        45801 in this precinct?
+L422: 
+L423: 
+L424:                        Yes
+L425:                        No
+L426: 
+L427: 
+L428: 
+L429: 
+L430:                                         Page 9 of 10                  Revised: 9/8/2026 10:10 AM
+L431: 
+L432:                                                              all precincts
+L433: State Issue 3   Issue 3
+L434:                 Proposed Constitutional
+L435:                 Amendment
+L436: 
+L437:                 TO REQUIRE VOTERS TO
+L438:                 PRESENT PHOTO
+L439:                 IDENTIFICATION IN ORDER TO
+L440:                 VOTE
+L441: 
+L442:                 Proposed by Joint Resolution of the
+L443:                 General Assembly
+L444: 
+L445:                 To enact Section 5 of Article V of the
+L446:                 Constitution of the State of Ohio
+L447: 
+L448:                 A majority yes vote is required for the
+L449:                 adoption of Section 5.
+L450: 
+L451:                 This proposed amendment would:
+L452: 
+L453:                 • Require voters to present an approved
+L454:                 form of government-issued photo
+L455:                 identification in order to vote.
+L456: 
+L457:                 • Allow state law to provide for an
+L458:                 alternative method of verifying a voter’s
+L459:                 identity for a voter who has a sincere
+L460:                 religious objection to being photographed
+L461:                 and, therefore, does not possess an
+L462:                 approved form of government-issued
+L463:                 photo identification.
+L464: 
+L465:                 • Require that voters who do not vote in
+L466:                 person provide an approved form of
+L467:                 government-issued photo identification,
+L468:                 unless the law authorizes those persons to
+L469:                 vote by providing a signature and at least
+L470:                 one other specified unique identifier.
+L471: 
+L472:                 • Define approved forms of government-
+L473:                 issued photo identification as an
+L474:                 unexpired Ohio driver license or state
+L475:                 identification card; a United States
+L476:                 passport or passport card; or a United
+L477:                 States military identification card, Ohio
+L478:                 National Guard identification card, or
+L479:                 United States Department of Veterans
+L480:                 Affairs identification card.
+L481: 
+L482:                 If approved, the amendment shall take
+L483:                 effect immediately.
+L484: 
+L485:                      INSTRUCTIONS TO VOTER FOR INDICATING YOUR CHOICES ON A
+L486:                             FEDERAL WRITE-IN ABSENTEE BALLOT (FWAB):
+L487: To complete a Federal Write-In Absentee Ballot (FWAB), go to www.fvap.gov. You have the option of downloading a blank, hard copy
+L488: FWAB to complete by hand, or proceeding through electronic completion of the FWAB using the website’s FWAB Wizard.
+L489: The first page of the FWAB is a Voter Declaration/Affirmation you must complete in order for your ballot to count.
+L490: After completing the Voter Declaration/Affirmation, use the initial election notice issued on the 100th day before the election and the
+L491: updated election notice issued on the 46th day before the election as a guide to:
+L492:            (1) write the name of each candidate or issue contest for which you are casting a vote and then
+L493:            (2) write the name of your choice of candidate or choice for or against an issue.
+L494: After you have completed the FWAB, you must PRINT the ballot and MAIL it to your county board of elections at this address:
+L495: Allen County Board of Elections, 204 N. Main Street, Lima, OH 45801.
+L496: A complete listing of all county board of elections mailing addresses and contact information is available at https://ohiosos.gov/SOS/
+L497: elections/electionsofficials/boeDirectory.aspx#dir.
+L498:             Do not send your ballot via e-mail or fax; Ohio law prohibits electronic transmission of a voted ballot.
+L499: 
+L500: 
+L501: 
+L502: 
+L503:                                                                Page 10 of 10                   Revised: 9/8/2026 10:10 AM
+L504: 

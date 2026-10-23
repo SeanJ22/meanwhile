@@ -1,0 +1,10 @@
+{
+  "url": "https://www.elections.maryland.gov/elections/2026/general_ballots/Frederick.pdf",
+  "finalUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/Frederick.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:55:39.775239+00:00",
+  "rawHash": "170d5b3d51c358452b3709568ffcfd2d83da19b63ca349d48c167daef336e3a0",
+  "bytes": 1210124,
+  "convertedTextHash": "4671c5c542260ddb3915c76277592edd783a3d8d4eedded6790e7f458d7d1ba3",
+  "extraction": "pdftotext -layout; exact official certified ballot source text; original PDF identified by rawHash"
+}

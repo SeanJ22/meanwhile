@@ -10,7 +10,6 @@ import {
   civicDataCandidateEvents,
   civicDataCandidates,
   civicDataPromotions,
-  civicDataReaderProjections,
 } from "../db/schema.ts";
 import {
   projectRoutineDataObservabilityRead,
@@ -215,18 +214,7 @@ async function readRowsFromCanonicalTables(
     }).from(civicDataPromotions);
   const candidates = await db.select(candidateSelection).from(civicDataCandidates).where(selectedCandidate);
   const events = await db.select(eventSelection).from(civicDataCandidateEvents).where(selectedEvent);
-    // Read in the same snapshot as the promotions, so publication lag compares two facts from one instant.
-  const preparedProjections = await db.select({
-      key: civicDataReaderProjections.key,
-      recordClass: civicDataReaderProjections.recordClass,
-      scope: civicDataReaderProjections.scope,
-      sequence: civicDataReaderProjections.sequence,
-      composedFrom: civicDataReaderProjections.composedFrom,
-      generatedAt: civicDataReaderProjections.generatedAt,
-      composedAt: civicDataReaderProjections.composedAt,
-      promotedThrough: civicDataReaderProjections.promotedThrough,
-    }).from(civicDataReaderProjections);
-  return { candidates, events, promotions, preparedProjections };
+  return { candidates, events, promotions };
   }, ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS);
   } catch (error) {
     if (statementTimeoutMs !== null && isStatementTimeout(error)) throw new RoutineObservabilityReadTimedOut(statementTimeoutMs, error);

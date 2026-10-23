@@ -1,13 +1,16 @@
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
-import { readerQuery } from "./promoted-reader-query.ts";
+import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
+import {createRequire} from "node:module";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
+import { readerCanonicalEntry } from "../reader/canonical-context.ts";
 
 import type {
+  CandidateEvent,
   CandidateVersionRecord,
   PromotedPointerIdentity,
   PromotedProjection,
@@ -25,18 +28,12 @@ import {
 } from "./fixture-policy.ts";
 export { mayUseTestFixture } from "./fixture-policy.ts";
 export type { CivicDataFixtureEnvironment } from "./fixture-policy.ts";
-import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
-import {
-  PostgresRoutineDataStore,
-  projectionKey,
-  readPointerMoveEvents,
-  type CandidateVersionReadback,
-  type PublishedCandidateMetadata,
-  type RoutineDataStore,
-} from "./store.ts";
+import type { CandidateVersionReadback, PublishedCandidateMetadata, RoutineDataStore } from "./store.ts";
+import { projectionKey } from "./projection-key.ts";
 
 const TTL_MS = 30_000;
 const SHA256 = /^[a-f0-9]{64}$/;
+const proofRequire=createRequire(import.meta.url);
 
 function trustedLkgPredecessorVersionId(candidate: CandidateVersionRecord | null): string | null {
   const evidence = candidate?.candidate.bootstrapImport;
@@ -116,7 +113,10 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata">>;
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata">> & {
+  /** Already published canonical database rows, read together for the reader shelf. */
+  readonly readPromotedEntry?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry>;
+};
 
 type CivicDataBatchReadStore = Pick<
   RoutineDataStore,
@@ -325,7 +325,7 @@ export interface CivicDataBootstrap<T> {
 export interface PromotedOrBootstrapOptions<T> extends PromotedCivicDataReadOptions {
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
-  readonly bootstrap: () => CivicDataBootstrap<T>;
+  readonly bootstrap: () => CivicDataBootstrap<T> | Promise<CivicDataBootstrap<T>>;
   /** Production never consults the fixture: an absent pointer is an authority gap. */
   readonly allowUnconfiguredBootstrap?: boolean;
 }
@@ -490,8 +490,15 @@ export async function readPromotedCivicData<T>(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<T>> {
   const now = options.now ?? new Date().toISOString();
+  if (options.store?.readPromotedEntry) return readPromotedFromEdge<T>(recordClass, scope, await options.store.readPromotedEntry(recordClass, scope), now, options.maxAgeMs);
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
+  const canonical = !injected && !currentReaderAuthorityEdge() && !options.bypassCache && !isStateAuthorityScope(scope)
+    ? readerCanonicalEntry(recordClass, scope) : undefined;
+  if (canonical) {
+    try { return readPromotedFromEdge<T>(recordClass, scope, await canonical, now, options.maxAgeMs); }
+    catch (error) { return storeReadFailedResult<T>(recordClass, scope, null, error); }
+  }
   if (!injected && isStateAuthorityScope(scope)) {
     const [{ readStateAuthorityProjection }, { stateFromRegistryRuntimeScope }, { STATE_BALLOT_FAMILIES, stateFromBallotScope }] = await Promise.all([
       import("./state-reader.ts"), import("./state-scopes.ts"), import("./state-scopes.ts"),
@@ -579,7 +586,7 @@ async function loadPromotedCivicData<T>(
   const cacheable = !injected && !stateAuthority;
   let observedProjection: PromotedProjection<T> | null = null;
   try {
-    const store = options.store ?? new PostgresRoutineDataStore();
+    const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
     const known = options.bypassCache ? undefined : provenPointersOf(options.store, scope).get(key);
     if (known !== undefined && typeof store.readPromotionIdentity === "function") {
       const identity = await store.readPromotionIdentity(recordClass, scope);
@@ -707,7 +714,7 @@ export async function readPromotedCivicDataBatch<T>(
     }));
   }
 
-  const store = options.store ?? new PostgresRoutineDataStore();
+  const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
   if (!hasBatchReadDoor(store)) {
     return Promise.all(scopes.map((scope) => readPromotedCivicData<T>(recordClass, scope, options)));
   }
@@ -956,7 +963,9 @@ export interface ProvenCivicDataHistory<T> {
 
 export interface ProvenCivicDataHistoryOptions {
   readonly store?: Pick<RoutineDataStore, "readCandidate" | "events"> &
-    Partial<Pick<RoutineDataStore, "readCandidateProof" | "readCandidateProofs" | "pointerMoveEvents">>;
+    Partial<Pick<RoutineDataStore, "readCandidateProof" | "readCandidateProofs" | "pointerMoveEvents" | "pointerMoveChain" | "historicalVoteBillVersions">>;
+  /** A filtered federal bill lookup; selected versions retain full promotion proof. */
+  readonly voteBill?: string;
   readonly cursor?: string | null;
   /** Payloads per page, not a cap on the historical chain. */
   readonly pageSize?: number;
@@ -984,7 +993,7 @@ export async function readPromotedCivicDataPredecessors<T>(
   if (cursor !== null && (!cursor || cursor.length > 256 || /\s/.test(cursor))) {
     return { versions: [], complete: false, nextVersionId: null, issue: "Historical continuation is malformed." };
   }
-  const cacheKey = `${key}|${currentId}|${cursor ?? ""}|${pageSize}`;
+  const cacheKey = `${key}|${currentId}|${cursor ?? ""}|${pageSize}|${options.voteBill ?? ""}`;
   if (!options.store && !options.bypassCache) {
     const cached = historicalPages.get(cacheKey);
     if (cached && cached.expiresAt > Date.now()) return cached.value as ProvenCivicDataHistory<T>;
@@ -992,12 +1001,16 @@ export async function readPromotedCivicDataPredecessors<T>(
     if (pending) return pending as Promise<ProvenCivicDataHistory<T>>;
   }
   const work = (async (): Promise<ProvenCivicDataHistory<T>> => {
+    const { PostgresRoutineDataStore, readPointerMoveEvents } = await import("./store.ts");
     const store = options.store ?? new PostgresRoutineDataStore();
+    let chain: readonly CandidateEvent[] | null = null;
+    const eventsById = new Map<string, CandidateEvent[]>();
+
     const versions: Extract<CivicDataReadResult<T>, { readonly kind: "PROMOTED" }>[] = [];
     const fail = (issue: string): ProvenCivicDataHistory<T> => ({ versions, complete: false, nextVersionId: null, issue });
     const seen = new Set<string>();
     const link = async (id: string): Promise<{ readonly previous: string | null; readonly at: string } | null> => {
-      const events = await readPointerMoveEvents(store, id);
+      const events = chain === null ? await readPointerMoveEvents(store, id) : eventsById.get(id) ?? [];
       const prefix = `Atomic pointer ${key} moved from `;
       const suffix = ` to ${id}.`;
       const matched = events.filter((event) => event.state === "PROMOTED" &&
@@ -1012,6 +1025,10 @@ export async function readPromotedCivicDataPredecessors<T>(
     const moves = new Map<string, { readonly previous: string | null; readonly at: string }>();
     const pageIds: string[] = [];
     try {
+      chain = typeof store.pointerMoveChain === "function" ? await store.pointerMoveChain(key, currentId) : null;
+      for (const event of chain ?? []) eventsById.set(event.candidateId, [...eventsById.get(event.candidateId) ?? [], event]);
+      const matchingVersions = options.voteBill && recordClass === "FEDERAL_ROLL_CALL" && chain && store.historicalVoteBillVersions
+        ? new Set(await store.historicalVoteBillVersions([...eventsById.keys()], options.voteBill)) : null;
       // Rewalk the exact anchored links on a continuation. No caller-supplied
       // version can jump into an unrelated candidate's history.
       for (;;) {
@@ -1033,7 +1050,7 @@ export async function readPromotedCivicDataPredecessors<T>(
         const move = await link(id);
         if (!move) return fail(`Historical pointer-move proof is missing or ambiguous at ${id}.`);
         moves.set(id, move);
-        pageIds.push(id);
+        if (!matchingVersions || matchingVersions.has(id)) pageIds.push(id);
         if (move.previous === null) { next = null; break; }
         next = move.previous;
         id = next;
@@ -1232,6 +1249,8 @@ export function promotionProofIssue<T>(
   if (indexedPrior) {
     if (indexedPrior.versionId !== candidate.id) return "the consumed prior index names a different immutable version";
   } else if (candidate.bootstrapImport) {
+    // Reader pointer proofs do not need the legacy import builders on a cold visit.
+    const {trustedLkgImportEvidenceIssue}=proofRequire("./trusted-lkg-import.ts") as typeof import("./trusted-lkg-import.ts");
     const importIssue = trustedLkgImportEvidenceIssue(candidate, predecessor);
     if (importIssue !== null) return `the trusted-LKG import evidence is invalid: ${importIssue}`;
     const expectedSourceCode = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION"
@@ -1353,7 +1372,7 @@ export async function readPromotedOrBootstrap<T>(
     (result.kind === "NOT_RECORDED" ||
       (result.kind === "STORE_UNREACHABLE" && result.code === "STORE_NOT_CONFIGURED"))
   ) {
-    return bootstrapResult(options.recordClass, options.scope, options.bootstrap(), now, options.maxAgeMs);
+    return bootstrapResult(options.recordClass, options.scope, await options.bootstrap(), now, options.maxAgeMs);
   }
   return result;
 }
@@ -1373,6 +1392,12 @@ export function promotedVersionOrThrow<T>(result: CivicDataReadResult<T>): strin
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 
+/** Lets go of one pointer's proof once a caller holds what it needs of it, so a long publication holds one candidate at a time. */
+export function forgetPromotedProof(store: CivicDataReadStore | undefined, recordClass: RoutineRecordClass, scope: string, versionId: string): void {
+  provenByVersion.delete(versionId);
+  provenPointersOf(store, scope).delete(projectionKey(recordClass, scope));
+}
+
 export function clearPromotedReadModelCache(): void {
   cache.clear();
   provenByVersion.clear();
@@ -1381,6 +1406,75 @@ export function clearPromotedReadModelCache(): void {
 }
 
 const readerProjectionReads = new WeakMap<ReaderSelection, Map<string, Promise<PromotedEdgeEntry>>>();
+
+/** The reviewed national question catalog stays whole; only the requested
+ * members' position cells cross the wire. Generic geographic slicing would
+ * mistake the catalog's entry IDs for place IDs and discard every question. */
+export const FEDERAL_KEY_VOTE_READER_PAYLOAD = `(SELECT jsonb_set(full_value, '{positions,positions}',
+  coalesce((SELECT jsonb_object_agg(roll_key, coalesce((SELECT jsonb_object_agg(member, position)
+    FROM jsonb_each(member_positions) cells(member, position) WHERE member = ANY($3::text[])), '{}'::jsonb))
+    FROM jsonb_each(full_value#>'{positions,positions}') rolls(roll_key, member_positions)), '{}'::jsonb))
+  #- '{positions,retiredMappings}' FROM (SELECT reader_payload_value(p.payload) AS full_value) decoded)`;
+
+/** Find the requested source filer, without joining their name to an official
+ * or ballot identity. The normal reader still validates the selected holding. */
+export const STATE_MONEY_READER_PAYLOAD = `(SELECT reader_payload_value(header - 'records') || jsonb_build_object('records',
+  coalesce((SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
+    FROM reader_payload_members(header->'records') members
+    WHERE EXISTS (SELECT 1 FROM jsonb_path_query(reader_payload_node(item),'$.**') cell(v) WHERE cell.v#>>'{}'=ANY($3::text[]))
+      OR EXISTS (SELECT 1 FROM unnest($3::text[]) wanted(name) WHERE name LIKE 'ask-money-name:%'
+        AND regexp_split_to_array(trim(regexp_replace(lower(reader_payload_node(item)->>'candidateNameAsFiled'), '[^a-z0-9]+', ' ', 'g')), ' +')
+          @> string_to_array(substring(name FROM 16), ' '))), '[]'::jsonb))
+  FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
+
+/** Ballot cards join by reviewed target keys, not by a mention inside a filing. */
+const BALLOT_STATE_MONEY_PAYLOAD = `(SELECT reader_payload_value(header - 'records') || jsonb_build_object('records',
+  coalesce((SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
+    FROM reader_payload_members(header->'records') members
+    WHERE EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(item)->'targetKeys') target
+      WHERE reader_payload_value(target.item)#>>'{}'=ANY($3::text[]))), '[]'::jsonb))
+  FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
+
+/** Keep every field and cycle for selected candidates, and their one-hop committee books. */
+const BALLOT_FEC_MONEY_PAYLOAD = `(WITH root AS MATERIALIZED (SELECT reader_payload_node(p.payload) AS value),
+  chosen AS MATERIALIZED (
+    SELECT members.ordinal_index,reader_payload_value(members.item) AS value FROM root,
+      LATERAL reader_payload_members(root.value->'candidates') members
+    WHERE EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(members.item)->'targetKeys') target
+      WHERE reader_payload_value(target.item)#>>'{}'=ANY($3::text[]))
+      OR reader_payload_node(members.item)->>'fecCandidateId'=ANY($3::text[])
+      OR 'fec:'||(reader_payload_node(members.item)->>'fecCandidateId')=ANY($3::text[])
+  ), committees AS MATERIALIZED (
+    SELECT DISTINCT receipt->>'contributorCommitteeId' AS id FROM chosen,
+      LATERAL jsonb_array_elements(coalesce(chosen.value->'topContributions','[]'::jsonb)) receipt
+    WHERE receipt->>'contributorCommitteeId' IS NOT NULL
+  ) SELECT reader_payload_value(root.value-'candidates'-'absences'-'secondHop')
+    || CASE WHEN root.value ? 'candidates' THEN jsonb_build_object('candidates',coalesce((
+      SELECT jsonb_agg(value ORDER BY ordinal_index) FROM chosen),'[]'::jsonb)) ELSE '{}'::jsonb END
+    || CASE WHEN root.value ? 'absences' THEN jsonb_build_object('absences',coalesce((
+      SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
+      FROM reader_payload_members(root.value->'absences')
+      WHERE reader_payload_value(reader_payload_node(item)->'targetKey')#>>'{}'=ANY($3::text[])), '[]'::jsonb)) ELSE '{}'::jsonb END
+    || CASE WHEN root.value ? 'secondHop' THEN jsonb_build_object('secondHop',coalesce((
+      SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
+      FROM reader_payload_members(root.value->'secondHop')
+      WHERE reader_payload_node(item)->>'committeeId' IN (SELECT id FROM committees)), '[]'::jsonb)) ELSE '{}'::jsonb END
+  FROM root)`;
+/** Keep a place's complete selected slice when later card reads add aliases to its selection. */
+export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[], options: {readonly exactKeys?: true} = {}): Promise<PromotedEdgeEntry> {
+  const selection = currentReaderSelection();
+  if (!selection) throw new Error("READER_SELECTION_REQUIRED");
+  let held = readerProjectionReads.get(selection);
+  if (!held) { held = new Map(); readerProjectionReads.set(selection, held); }
+  const pointer = `${recordClass}:${scope}`;
+  const existing = held.get(pointer);
+  if (existing) return existing;
+  const read = loadReaderProjection(recordClass, scope, { ...selection, keys: new Set(options.exactKeys ? keys : [...selection.keys, ...keys]) },options.exactKeys === true);
+  held.set(pointer, read);
+  void read.catch(() => undefined);
+  return read;
+}
+
 
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
   let held = readerProjectionReads.get(selection);
@@ -1399,17 +1493,22 @@ async function readReaderProjection(recordClass: RoutineRecordClass, scope: stri
 }
 
 // On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.
-async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
-  const query = readerQuery(1800);
+async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection, exactKeys=false): Promise<PromotedEdgeEntry> {
+  const query = readerDatabaseQuery(1800);
   if (!query) throw new Error("READER_STORE_UNCONFIGURED");
   const window = selection.governmentWindow;
-  const payload = window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
+  const money = recordClass === "STATE_CAMPAIGN_FINANCE";
+  const fec = exactKeys && recordClass === "FEC_FUNDING";
+  const payload = fec ? BALLOT_FEC_MONEY_PAYLOAD : recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD
+    : money ? exactKeys ? BALLOT_STATE_MONEY_PAYLOAD : STATE_MONEY_READER_PAYLOAD
+    : window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
   const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
     p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
     ${payload} payload,
     c.retrieved_at, reader_payload_node(c.candidate)->'temporal' temporal FROM civic_data_promotions p
     JOIN civic_data_candidates c ON c.id=p.current_version_id
-    WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys], ...(window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
+    WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys],
+      ...(recordClass === "FEDERAL_KEY_VOTE" || money || fec ? [] : window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
   const row = rows[0];
   if (!row) return { kind: "NOT_RECORDED", recordClass, scope };
   const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;

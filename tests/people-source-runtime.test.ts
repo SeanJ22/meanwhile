@@ -15,7 +15,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 const vault = new MemoryEvidenceStore();
 
 test("every nationally available people source has an independent standing state shard", () => {
-  const tasks = PEOPLE_SOURCE_CONTRACTS.filter(contract => contract.sourceId !== "people-portraits").map(routineTaskFromContract);
+  const tasks = PEOPLE_SOURCE_CONTRACTS.filter(contract => contract.sourceId !== "people-portraits" && contract.scope !== "US:people:statewide-executive-sources:v1").map(routineTaskFromContract);
   assert.equal(tasks.length, PEOPLE_SOURCE_STATES.length * STANDING_PEOPLE_SOURCE_IDS.length);
   assert.equal(new Set(tasks.map(task => `${task.recordClass}:${task.scope}`)).size, tasks.length);
   for (const state of PEOPLE_SOURCE_STATES) for (const sourceId of STANDING_PEOPLE_SOURCE_IDS) {
@@ -34,7 +34,7 @@ test("portraits are automatic and independently clocked after a fresh state rost
   const now = Date.parse("2026-10-12T00:00:00.000Z");
   const native = ROUTINE_SOURCE_TASKS.find(task => task.id === `openstates-people-${PLURAL_STATES[0]}`)!;
   const portraits = PEOPLE_SOURCE_CONTRACTS.filter(contract => contract.sourceId === "people-portraits").map(routineTaskFromContract);
-  assert.equal(portraits.length, PEOPLE_SOURCE_STATES.length + 1);
+  assert.equal(portraits.length, PEOPLE_SOURCE_STATES.length);
   assert.equal(routineTaskDue(native, { lastAttemptedAt: new Date(now).toISOString(), lastSucceededObservedAt: new Date(now).toISOString() }, now), false);
   for (const task of portraits) {
     assert.equal(routineTaskDue(task, undefined, now), true);

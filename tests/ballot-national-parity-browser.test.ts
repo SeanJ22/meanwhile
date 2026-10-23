@@ -9,7 +9,6 @@ import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { build } from "esbuild";
 import sharp from "sharp";
-import { neonConfig } from "@neondatabase/serverless";
 
 import { launchGuarded } from "../scripts/browser.mts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -18,20 +17,18 @@ import { ballotElectionKey, genericBallotProblems } from "../lib/ballot/generic-
 import { reconcileOfficialCandidacies } from "../lib/registry/runtime-data-plane.ts";
 import { normalizePortrait } from "../lib/photos/decode.ts";
 import type { PortraitVerification } from "../lib/photos/binding.ts";
-import { ensureReaderAuthorityEdge, publishReaderMeetings, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
-import { publishPointers } from "./helpers/edge-pointers.ts";
+import { installReaderValues, installCanonicalEntries, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
+type PublishAuthorityValue = { readonly value: unknown; readonly versionId: string };
 import type { GlobalAuthorityFamily, StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { PRL_CONTRACT } from "../lib/sources/prl/data-plane.ts";
 import { PRL_RHETORIC_ATTRIBUTION, type PrlSnapshot } from "../lib/sources/prl/types.ts";
 import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import type { FundingSnapshot } from "../lib/funding/types.ts";
-import { FEDERAL_ROLLCALL_SCOPE, FEDERAL_KEY_VOTE_SCOPE, FEDERAL_VOTES_SOURCE_ID } from "../lib/votes/data-plane.ts";
+import { FEDERAL_ROLLCALL_SCOPE, FEDERAL_KEY_VOTE_SCOPE, FEDERAL_VOTES_SOURCE_ID, federalMemberVotesScope } from "../lib/votes/data-plane.ts";
 import { absentEdgeEntry, manualEdgeEntry, promotedFamily, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { registryTransferImport, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalRollCalls, syntheticFederalKeyVotes, syntheticOfficeholderStatements, stateMoneyFixture } from "./helpers/promoted-fixtures.ts";
+import { registryTransferImport, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalRollCalls, syntheticFederalKeyVotes, syntheticOfficeholderStatements, stateMoneyFixture, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope, DERIVED_CAMPAIGN_SITES_SOURCE_ID, derivedCampaignSitesProjectionIssue, type DerivedCampaignSitesProjection } from "../lib/civic-data/derived-campaign-sites.ts";
@@ -76,7 +73,6 @@ function stateRegistryArtifacts(versionId: string, states: readonly string[], va
       versionId: `${versionId}:${state}`, value: registryFixtureForState(state, value) })] } }]));
 }
 
-type FixtureStatement = { query?: string; params?: unknown[] };
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 
@@ -114,6 +110,7 @@ async function renderBallot(zip: string): Promise<RenderedBallot> {
   const result: RenderedBallot = { cards: new Map(), names: new Map(), sources: new Map(), text: "" };
   let elementNumber = 0;
   const resolve = async (node: unknown, subject?: string): Promise<unknown> => {
+    node = await node;
     if (typeof node === "string") { result.text += ` ${node}`; return node; }
     if (!node || typeof node !== "object") return node;
     if (Array.isArray(node)) return Promise.all(node.map(child => resolve(child, subject)));
@@ -137,7 +134,7 @@ async function renderBallot(zip: string): Promise<RenderedBallot> {
   return result;
 }
 
-test("BL-20: Ohio and Michigan national ballots render the same incumbent record and challenger portrait as Arizona", async t => {
+test("BL-20: Ohio and Michigan national ballots render the same incumbent record and challenger portrait as Arizona", async () => {
   const encoded = await sharp({ create: { width: 128, height: 144, channels: 3, background: "#456789" } }).png().toBuffer();
   const portrait = await normalizePortrait(encoded);
   assert.ok("bytes" in portrait && portrait.verdict.ok);
@@ -158,20 +155,6 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   }
   const linkedRegistry = { ...registry, officialCandidacies: reconcileOfficialCandidacies({ bridge: registry.officialCandidacies, ballots }),
     officialPhotos: { photos: registry.officialPhotos.photos.filter(photo => !cases.some(item => item.incumbent === photo.officeholderId)) } };
-  const previousFetch = neonConfig.fetchFunction, previousDatabase = process.env.DATABASE_URL;
-  process.env.DATABASE_URL = "postgresql://fixture:fixture@ballot-place.invalid/fixture";
-  neonConfig.fetchFunction = async (_input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
-    const body = JSON.parse(String(init?.body)) as FixtureStatement & { queries?: FixtureStatement[] };
-    const empty = { command: "SELECT", rowCount: 0, rows: [], fields: [] };
-    const results = (body.queries ?? [body]).map(statement => {
-      assert.ok(statement.query?.includes("FROM fact f JOIN source_copy") || statement.query?.includes("WITH people AS") ||
-        statement.query?.includes("database_transfer_daily"), statement.query);
-      return empty;
-    });
-    return Response.json(body.queries ? { results } : results[0]);
-  };
-  t.after(() => { neonConfig.fetchFunction = previousFetch;
-    if (previousDatabase === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = previousDatabase; });
   for (const [index, item] of cases.entries()) assert.equal(linkedRegistry.officialCandidacies.rows.find(row => row.holder.id === item.incumbent)?.candidacy?.candidacyId, ballots[index]!.candidacies[0]!.id);
   const corpus: CandidateCorpus = { formatVersion: 1, attempted: 2, fetchedAt: checkedAt, failures: [], documents: cases.map(item => {
     const text = `I will protect drinking water for every family in our state. ${"Our communities need schools, safe roads, and public services that everyone can reach. ".repeat(5)}`;
@@ -210,18 +193,18 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
       statementCount: 100, shares: { policy: 60, bipartisanship: 10, creditclaiming: 20, "attack-policy": 15, "attack-personal": 5 }, sources: ["all"], measuredAt: "2026-09-30" })) };
   const fec = requiredRoutineContract("fec-funding");
   const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
-    "federal-directory": { value: federal, versionId: "BL-20:federal" },
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "BL-20:filings"),
     "federal-funding": promotedFamily([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: "BL-20:fec", value: funding }), manualEdgeEntry("campaign-finance", { kind: "campaign-finance", records: [] }, "BL-20:generic-money")], "BL-20:money"),
     "state-money": promotedFamily((Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map(state => provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", ...STATE_CAMPAIGN_FINANCE_SOURCES[state], versionId: `BL-20:state-money:${state}`, value: stateMoneyFixture(state) })), "BL-20:state-money"),
-    "federal-votes": promotedFamily([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "BL-20:votes", value: syntheticFederalRollCalls(federal, 2) })], "BL-20:votes"),
+    "federal-votes": promotedFamily([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "BL-20:votes", value: syntheticFederalRollCalls(federal, 2).window })], "BL-20:votes"),
     "federal-key-votes": promotedFamily([provenEdgeEntry({ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "BL-20:key-votes", value: syntheticFederalKeyVotes(federal) })], "BL-20:key-votes"),
     "officeholder-statements": promotedFamily([manualEdgeEntry("officeholder-statements", syntheticOfficeholderStatements(cases.map(item => item.incumbent)), "BL-20:statements")], "BL-20:statements"),
     "prl-archives": promotedFamily([provenEdgeEntry({ recordClass: PRL_CONTRACT.recordClass, scope: PRL_CONTRACT.scope, sourceId: PRL_CONTRACT.sourceId, versionId: "BL-20:prl", value: prl })], "BL-20:prl"),
   };
   const stateAuthorities: Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>> = {
     "registry-runtime": stateRegistryArtifacts("BL-20:registry", ["AZ", "OH", "MI"], linkedRegistry),
+    "federal-directory": stateFederalDirectoryArtifacts("BL-20:federal", federal),
     "ballot-contests": Object.fromEntries([...ballots, azBallot].map(ballot => [ballot.election.state,
       promotedFamily([manualEdgeEntry(stateBallotContractId("ballot-contests", ballot.election.state),
         { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } }, `BL-20:ballots:${ballot.election.state}`)], `BL-20:ballots:${ballot.election.state}`)])),
@@ -244,15 +227,13 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   ] as const) stateAuthorities[family] = { ...stateAuthorities[family], AZ: promotedFamily([absentEdgeEntry(recordClass, `US-AZ:${scope}`)], `BL-20:absent-${family}:AZ`) };
   const dir = mkdtempSync(join(tmpdir(), "wtp-national-ballot-parity-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
-  const store = new LocalFileArtifactStore(dir);
-  const published = await publishReaderMeetings({ formatVersion: 1, generatedAt: checkedAt, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [] }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store });
-  assert.equal(published.status, "PUBLISHED");
   const none = { value: null, versionId: "none" };
-  await publishPointers(store, { authority, stateAuthorities, registrations: { az: none, oh: none, mi: none },
-    stateLegislators: { "US-AZ": none, "US-OH": none, "US-MI": none } });
-  process.env.WTP_READER_EDGE_DIR = dir;
-  const manifest = (await store.readManifest())!.manifest;
-  const edge = await ensureReaderAuthorityEdge(manifest, store);
+  installReaderValues({ authority, stateAuthorities, registrations: { az: none, oh: none, mi: none },
+    stateLegislators: { "US-AZ": none, "US-OH": none, "US-MI": none } }, dir);
+  installCanonicalEntries(syntheticFederalRollCalls(federal, 2).members.map(record => provenEdgeEntry({
+    recordClass: "FEDERAL_ROLL_CALL", scope: federalMemberVotesScope(record.officeholderId), sourceId: FEDERAL_VOTES_SOURCE_ID,
+    versionId: `BL-20:votes:${record.officeholderId}`, value: record })), dir);
+  activateCanonicalFixture(dir);
   const browserCards: Record<string, unknown>[] = [];
   for (const [index, item] of cases.entries()) {
     const rendered = await renderBallot(item.zip);
@@ -282,15 +263,15 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   const { GET: positionsGET } = await import("../app/api/positions/[subject]/[topic]/route.ts");
   const answers = new Map<string, string>();
   for (const item of cases) {
-    const votes = await withReaderAuthorityEdge(edge, () => votesGET(new Request(`https://fixture.test/api/votes?member=${item.incumbent}`)));
+    const votes = await votesGET(new Request(`https://fixture.test/api/votes?member=${item.incumbent}`));
     assert.equal(votes.status, 200);
     answers.set(`/api/votes?member=${encodeURIComponent(item.incumbent)}&state=${item.state}`, await votes.text());
-    const profile = await withReaderAuthorityEdge(edge, () => profileGET(new Request("https://fixture.test/"), { params: Promise.resolve({ subject: item.incumbent }) }));
+    const profile = await profileGET(new Request("https://fixture.test/"), { params: Promise.resolve({ subject: item.incumbent }) });
     assert.equal(profile.status, 200);
     const profileBody = await profile.json();
     assert.equal(profileBody.profile?.subjectId, item.incumbent);
     answers.set(`/api/profile/${encodeURIComponent(item.incumbent)}`, JSON.stringify(profileBody));
-    const positions = await withReaderAuthorityEdge(edge, () => positionsGET(new Request(`https://fixture.test/?${new URLSearchParams({ division: `ocd-division/country:us/state:${item.state.toLowerCase()}` })}`), { params: Promise.resolve({ subject: item.incumbent, topic: "water" }) }));
+    const positions = await positionsGET(new Request(`https://fixture.test/?${new URLSearchParams({ division: `ocd-division/country:us/state:${item.state.toLowerCase()}` })}`), { params: Promise.resolve({ subject: item.incumbent, topic: "water" }) });
     assert.equal(positions.status, 200);
     answers.set(`/api/positions/${encodeURIComponent(item.incumbent)}/water?${new URLSearchParams({ division: `ocd-division/country:us/state:${item.state.toLowerCase()}` })}`, await positions.text());
   }

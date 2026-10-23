@@ -36,6 +36,7 @@ import type { Meeting } from "../sources/types.ts";
 import { historyGapFor, type HistoryGap } from "../meetings/history-gaps.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
 import type { StateOfficeContact } from "../reference/state-offices.ts";
+import type { SeatVacancy } from "../officials/types.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
  * New control-plane attempts are not present in this historic audit yet, so
@@ -190,6 +191,8 @@ export interface Seat {
    * that the seat is vacant.
    */
   representatives: SeatHolder[];
+  /** A vacancy is shown only when the office's own source explicitly states it. */
+  vacancy?: SeatVacancy;
 }
 
 export interface CoverageSummary {
@@ -199,6 +202,8 @@ export interface CoverageSummary {
   governments?: RegistrationGovernmentListing[];
   governmentInventoryStates?: string[];
   governmentInventoryUnavailableStates?: string[];
+  /** Divisions reaching into the ZIP where few of its residents live: named, their boards not shown. */
+  fringeDivisions?: { ocdId: string; label: string }[];
   /** National FEC directories selected for the states this place touches. */
   stateOffices?: StateOfficeContact[];
   federalDirectoryUnavailable?: boolean;

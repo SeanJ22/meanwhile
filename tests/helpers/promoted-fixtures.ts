@@ -14,15 +14,17 @@ import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../
 import { readRegistryRuntimeProjection } from "../../lib/registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../../lib/registry/runtime-data-plane.ts";
 import {
-  FEDERAL_DIRECTORY_SCOPE,
   FEDERAL_DIRECTORY_SOURCE_ID,
+  federalDirectoryForState,
+  federalDirectoryScope,
   type FederalDirectoryReadModel,
 } from "../../lib/officials/federal-directory-data-plane.ts";
-import { primeFederalDirectoryFromValue, readFederalDirectoryProjection } from "../../lib/officials/federal-directory-read-model.ts";
+import { readFederalDirectoryProjection } from "../../lib/officials/federal-directory-read-model.ts";
 import type { Officeholder, OfficeholderDivision } from "../../lib/officials/types.ts";
 import type { DirectoryFile } from "../../lib/officials/directory.ts";
 import { requiredManualProductionContract, type ManualProductionContractId } from "../../lib/civic-data/manual-contracts.ts";
 import type { OfficialStateLegislatorReadModel } from "../../lib/civic-data/candidate-builders.ts";
+import { trustedNhMembersImportReadModel, expectedNhMembersTerm, type NhMemberReadModel } from "../../lib/civic-data/candidate-builders.ts";
 import { officialStateLegislatorTargetByScope, type OfficialStateVoteScope } from "../../lib/state-rollcalls/authority.ts";
 import { PIMA_LOCAL_FINANCE_CONTRACT, type AzPimaFinanceReadModel, STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../../lib/funding/data-plane.ts";
 import type { StateMoneySnapshot } from "../../lib/funding/state-money.ts";
@@ -36,7 +38,8 @@ import type { CandidateCorpus, CandidateDocument } from "../../lib/candidates/co
 import type { SourceSnapshot, StatementCorpus } from "../../lib/corpus/types.ts";
 
 import { readOfficeholderStatementsProjection } from "../../lib/corpus/data-plane.ts";
-import { FEDERAL_KEY_VOTE_SCOPE, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_SOURCE_ID, type FederalKeyVotesReadModel, type FederalRollCallsReadModel } from "../../lib/votes/data-plane.ts";
+import { FEDERAL_KEY_VOTE_SCOPE, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_SOURCE_ID, federalMemberVotesScope, federalPartyBreakdowns, type FederalKeyVotesReadModel,
+  type FederalMemberVotesReadModel, type FederalRollCallsReadModel } from "../../lib/votes/data-plane.ts";
 import { readFederalRollCallsProjection } from "../../lib/votes/snapshot.ts";
 import { readFederalKeyVotesProjection } from "../../lib/votes/key-votes-projection.ts";
 import { federalKeyVoteSelectionV1Snapshot } from "../../lib/votes/key-vote-selection-v1.ts";
@@ -44,28 +47,27 @@ import type { MemberVote, RollCallVote, VotePosition } from "../../lib/votes/typ
 import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { rosterFactReader } from "./roster-fact-reader.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
-
-
-import { STATE_AUTHORITY_RECORD_CLASSES as stateClasses, stateAuthorityScope as stateScope } from "../../lib/civic-data/state-reader.ts";
 import { registryJurisdictions, stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
-import type { StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
+import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
+import { stateAuthorityPointers } from "../../lib/civic-data/state-reader.ts";
+import { installCanonicalEntries, activateCanonicalFixture } from "./canonical-reader-fixtures.ts";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const REGISTRY_FIXTURE = join(ROOT, "tests/fixtures/registry-transfer-import.json.gz");
 
-let federalDirectory: ReaderAuthorityEdgeBundle["federalDirectory"];
 const stateLegislators: Record<string, OfficialStateLegislatorReadModel> = {};
 const promoted = new Map<string, PromotedEdgeEntry>();
 
 const live: ReaderAuthorityEdgeBundle = {
   stateAuthorities: {
-    families: new Set(Object.keys(stateClasses) as StateAuthorityFamily[]),
+    families: new Set(STATE_AUTHORITY_FAMILIES),
     load: async (family, state) => {
-      const entry = promoted.get(`${stateClasses[family]}:${stateScope(family, state)}`);
-      return entry ? { kind: "PROMOTED_POINTERS", entries: [entry] } : null;
+      const pointers = stateAuthorityPointers(family, state);
+      if (!promoted.has(`${pointers[0].recordClass}:${pointers[0].scope}`)) return null;
+      return { kind: "PROMOTED_POINTERS", entries: pointers.map(({ recordClass, scope }) =>
+        promoted.get(`${recordClass}:${scope}`) ?? { kind: "NOT_RECORDED" as const, recordClass, scope }) };
     },
   },
-  get federalDirectory() { return federalDirectory; },
   get stateLegislators() {
     return Object.keys(stateLegislators).length ? {
       load: async (jurisdiction: string) => stateLegislators[jurisdiction]
@@ -91,6 +93,7 @@ export function installPromotedValue<T>(input: {
 }): Extract<PromotedEdgeEntry<T>, { kind: "PROMOTED" }> {
   const entry = provenEdgeEntry(input);
   promoted.set(`${input.recordClass}:${input.scope}`, entry as PromotedEdgeEntry);
+  installCanonicalEntries([entry]);
   enter();
   return entry;
 }
@@ -239,26 +242,43 @@ export function syntheticFederalDirectory(registry: RegistryRuntimeReadModel = r
   };
 }
 
-export async function installFederalDirectory(value: FederalDirectoryReadModel = syntheticFederalDirectory()): Promise<{ readonly value: FederalDirectoryReadModel; readonly versionId: string }> {
-  const versionId = "test:federal-directory";
-  const installed = { value, versionId };
-  federalDirectory = installed;
-  promoted.set(`FEDERAL_DIRECTORY:${FEDERAL_DIRECTORY_SCOPE}`, provenEdgeEntry({
-    recordClass: "FEDERAL_DIRECTORY",
-    scope: FEDERAL_DIRECTORY_SCOPE,
-    sourceId: FEDERAL_DIRECTORY_SOURCE_ID,
-    versionId,
-    value,
+/** Each place's members of Congress as the state artifacts a reader edge publishes; no place holds portraits here. */
+export function stateFederalDirectoryArtifacts(versionId: string, value: FederalDirectoryReadModel = syntheticFederalDirectory(),
+  states: readonly string[] = [...new Set(value.roster.officeholders.flatMap(holder => holder.state ? [holder.state] : []))]) {
+  return Object.fromEntries(states.map(state => [state, { versionId: `${versionId}:${state}`, value: { kind: "PROMOTED_POINTERS" as const, entries: [
+    provenEdgeEntry({ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state), sourceId: FEDERAL_DIRECTORY_SOURCE_ID,
+      versionId: `${versionId}:${state}`, value: federalDirectoryForState(value, state) }) as PromotedEdgeEntry,
+    { kind: "NOT_RECORDED" as const, recordClass: "STATE_LEGISLATOR" as const, scope: stateAuthorityPointers("federal-directory", state)[1].scope },
+  ] } }]));
+}
+
+/** A reader edge holding only these places' members of Congress, as a request sees it. */
+export function federalDirectoryEdge(value: FederalDirectoryReadModel, versionId = "test:federal-directory"): ReaderAuthorityEdgeBundle {
+  const artifacts = stateFederalDirectoryArtifacts(versionId, value);
+  return { stateAuthorities: { key: () => null, families: new Set<StateAuthorityFamily>(["federal-directory"]),
+    load: async (family, state) => family === "federal-directory" ? artifacts[state]?.value ?? null : null } };
+}
+
+let federalDirectory: FederalDirectoryReadModel | null = null;
+
+/** Each place's members of Congress install as that place's own record. */
+export async function installFederalDirectory(value: FederalDirectoryReadModel = syntheticFederalDirectory()): Promise<{ readonly value: FederalDirectoryReadModel; readonly states: readonly string[] }> {
+  const states = [...new Set(value.roster.officeholders.flatMap(holder => holder.state ? [holder.state] : []))].sort();
+  for (const state of states) promoted.set(`FEDERAL_DIRECTORY:${federalDirectoryScope(state)}`, provenEdgeEntry({
+    recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state), sourceId: FEDERAL_DIRECTORY_SOURCE_ID,
+    versionId: `test:federal-directory:${state}`, value: federalDirectoryForState(value, state),
   }) as PromotedEdgeEntry);
+  federalDirectory = value;
+  installCanonicalEntries([...promoted.values()]);
   enter();
-  served(await readFederalDirectoryProjection(), "Federal directory");
-  primeFederalDirectoryFromValue(value, versionId);
-  return installed;
+  served(await readFederalDirectoryProjection(states), "Federal directory");
+  return { value, states };
 }
 
 export async function installRegistryAuthority(): Promise<void> {
   await installRegistryRuntime();
   await installFederalDirectory();
+  activateCanonicalFixture("default");
 }
 
 export function syntheticStateLegislators(scope: OfficialStateVoteScope, registry: RegistryRuntimeReadModel = registryTransferImport().projection.payload): OfficialStateLegislatorReadModel {
@@ -307,6 +327,11 @@ export function syntheticStateLegislators(scope: OfficialStateVoteScope, registr
 
 export function installStateLegislators(scope: OfficialStateVoteScope, value: OfficialStateLegislatorReadModel = syntheticStateLegislators(scope)): OfficialStateLegislatorReadModel {
   stateLegislators[scope] = value;
+  if (scope === "US-NH") {
+    const source = JSON.parse(readFileSync(join(ROOT, "data/states/nh/hunt/nh-gencourt-members.json"), "utf8")) as { source: { collectedAt: string }; members: NhMemberReadModel["members"] };
+    installPromotedValue({ recordClass: "STATE_LEGISLATOR", scope, sourceId: value.sourceId, versionId: `test:state-legislators:${scope}`,
+      value: trustedNhMembersImportReadModel(source.members, expectedNhMembersTerm(source.source.collectedAt)) });
+  } else installPromotedValue({ recordClass: "STATE_LEGISLATOR", scope, sourceId: value.sourceId, versionId: `test:state-legislators:${scope}`, value });
   enter();
   return value;
 }
@@ -445,7 +470,8 @@ export async function installOfficeholderStatements(value: StatementCorpus = syn
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-export function syntheticFederalRollCalls(directory: FederalDirectoryReadModel = syntheticFederalDirectory(), perChamber = 20): FederalRollCallsReadModel {
+/** The shared window and each member's own record, as the roll-call writer publishes them. */
+export function syntheticFederalRollCalls(directory: FederalDirectoryReadModel = syntheticFederalDirectory(), perChamber = 20): { window: FederalRollCallsReadModel; members: FederalMemberVotesReadModel[] } {
   const votes: RollCallVote[] = [];
   const positions: MemberVote[] = [];
   const summaries: FederalRollCallsReadModel["billSummaries"]["summaries"] = {};
@@ -470,15 +496,20 @@ export function syntheticFederalRollCalls(directory: FederalDirectoryReadModel =
       for (const member of members[chamber]) positions.push({ officeholderId: member.id, voteId: id, position });
     }
   }
+  const snapshot = {
+    generatedAt: "2026-09-20T00:00:00.000Z", congress: 119, session: 2,
+    window: { houseRolls: votes.filter((v) => v.chamber === "house").map((v) => v.rollNumber), senateRolls: votes.filter((v) => v.chamber === "senate").map((v) => v.rollNumber) },
+    identifierMatch: { houseMatched: members.house.length, houseTotal: members.house.length, senateMatched: members.senate.length, senateTotal: members.senate.length },
+    votes,
+  };
+  const parties = new Map(directory.roster.officeholders.map(holder => [holder.id, holder.partyLabel]));
   return {
-    formatVersion: 1,
-    snapshot: {
-      generatedAt: "2026-09-20T00:00:00.000Z", congress: 119, session: 2,
-      window: { houseRolls: votes.filter((v) => v.chamber === "house").map((v) => v.rollNumber), senateRolls: votes.filter((v) => v.chamber === "senate").map((v) => v.rollNumber) },
-      identifierMatch: { houseMatched: members.house.length, houseTotal: members.house.length, senateMatched: members.senate.length, senateTotal: members.senate.length },
-      votes, positions,
-    },
-    billSummaries: { curatedAt: "2026-09-20", summaries, pending: [] },
+    window: { formatVersion: 1, snapshot, partyBreakdowns: federalPartyBreakdowns({ ...snapshot, positions }, parties),
+      billSummaries: { curatedAt: "2026-09-20", summaries, pending: [] } },
+    members: [...members.house, ...members.senate].map(member => {
+      const own = positions.filter(row => row.officeholderId === member.id), ids = new Set(own.map(row => row.voteId));
+      return { formatVersion: 1, officeholderId: member.id, congress: 119, session: 2, votes: votes.filter(vote => ids.has(vote.id)), positions: own };
+    }),
   };
 }
 
@@ -496,11 +527,13 @@ export function syntheticFederalKeyVotes(directory: FederalDirectoryReadModel = 
   return { formatVersion: 1, selectionVersion: "v1", snapshot, positions: { formatVersion: 1, fetchedAt: "2026-09-20T00:00:00.000Z", positions } };
 }
 
-export async function installFederalVotes(input: { rollCalls?: FederalRollCallsReadModel; keyVotes?: FederalKeyVotesReadModel } = {}): Promise<{ rollCalls: FederalRollCallsReadModel; keyVotes: FederalKeyVotesReadModel }> {
-  const directory = federalDirectory?.value ?? syntheticFederalDirectory();
+export async function installFederalVotes(input: { rollCalls?: ReturnType<typeof syntheticFederalRollCalls>; keyVotes?: FederalKeyVotesReadModel } = {}): Promise<{ rollCalls: ReturnType<typeof syntheticFederalRollCalls>; keyVotes: FederalKeyVotesReadModel }> {
+  const directory = federalDirectory ?? syntheticFederalDirectory();
   const rollCalls = input.rollCalls ?? syntheticFederalRollCalls(directory);
   const keyVotes = input.keyVotes ?? syntheticFederalKeyVotes(directory);
-  installPromotedValue({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "test:federal-roll-calls", value: rollCalls });
+  installPromotedValue({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "test:federal-roll-calls", value: rollCalls.window });
+  for (const member of rollCalls.members) installPromotedValue({ recordClass: "FEDERAL_ROLL_CALL", scope: federalMemberVotesScope(member.officeholderId),
+    sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: `test:federal-member-votes:${member.officeholderId}`, value: member });
   installPromotedValue({ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "test:federal-key-votes", value: keyVotes });
   served(await readFederalRollCallsProjection(), "Federal roll calls");
   served(await readFederalKeyVotesProjection(), "Federal key votes");

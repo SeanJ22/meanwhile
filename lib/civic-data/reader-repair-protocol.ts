@@ -1,6 +1,6 @@
 import type { RoutineSourceContract } from "./contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionSourceContract } from "./manual-contracts.ts";
-import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "./meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, meetingPartitionOfId, observableRoutineContracts, type MeetingPartitionContract } from "./meeting-partitions.ts";
 import {
   READER_PROJECTION_READBACK_PREFIX,
   parseReaderProjectionReadback,
@@ -8,13 +8,32 @@ import {
 } from "./reader-readback.ts";
 import type { ReaderReadbackRepairOutcome } from "./reader-verification.ts";
 import type { RoutineCivicDataReaderReadbackReference } from "../control-plane/owner-surface.ts";
+import { statesForRegistryDivisions } from "./state-scopes.ts";
 
 export const ROUTINE_READER_REPAIR_PREFIX = "RCD_READER_REPAIR=";
 export const ROUTINE_READER_CHILD_CONCURRENCY = 4;
 export const ROUTINE_READER_SINGLE_TIMEOUT_MS = 2 * 60_000;
 export const ROUTINE_READER_MEETING_TIMEOUT_MS = 5 * 60_000;
+/** Bound a domain's query and output size; every domain gets its own killable child. */
+export const ROUTINE_READER_MEETING_BATCH_SIZE = 256;
 
 export type ReaderRepairContract = RoutineSourceContract | ManualProductionSourceContract;
+
+/** The isolated repair child uses its parent's complete selection for both typed reads and evidence-write identity. */
+export function installMeetingReaderRepairSelection(contracts: readonly MeetingPartitionContract[]): void {
+  if (contracts.length === 0) throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
+  const ids = new Set<string>(), scopes = new Set<string>();
+  for (const contract of contracts) {
+    const identity = contract && typeof contract.id === "string" ? meetingPartitionOfId(contract.id) : null;
+    if (!identity || contract.recordClass !== "MEETING" || contract.sourceId !== "meetings-public-bodies" ||
+        identity.source !== contract.meetingSource || identity.bodyId !== contract.bodyId || identity.scope !== contract.scope ||
+        !contract.readerProjection?.id || ids.has(contract.id) || scopes.has(contract.scope)) {
+      throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
+    }
+    ids.add(contract.id); scopes.add(contract.scope);
+  }
+  MEETING_PARTITION_CONTRACTS.splice(0, MEETING_PARTITION_CONTRACTS.length, ...contracts);
+}
 
 export function selectedReaderRepairContracts(
   contracts: readonly ReaderRepairContract[],
@@ -50,13 +69,25 @@ export function routineReaderRepairDomains(
     contracts: [contract],
     timeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
   }));
-  if (meetingContracts.length > 0) {
-    domains.push({
-      id: "reader-readback:meetings-aggregate",
-      mode: "MEETING_AGGREGATE",
-      contracts: meetingContracts,
-      timeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,
-    });
+  const meetingsByState = new Map<string, ReaderRepairContract[]>();
+  const partitions = new Map(MEETING_PARTITION_CONTRACTS.map(contract => [contract.id, contract]));
+  for (const contract of meetingContracts) {
+    const partition = partitions.get(contract.id)!;
+    const states = statesForRegistryDivisions([partition.derivedFamily ?? "", partition.ocdId ?? "", partition.bodyId]);
+    // An ambiguous board keeps its own child; it never brings another state's payload into that child.
+    const state = states.length === 1 ? states[0]! : `unscoped:${contract.id}`;
+    const selected = meetingsByState.get(state) ?? [];
+    selected.push(contract); meetingsByState.set(state, selected);
+  }
+  for (const [state, selected] of meetingsByState) {
+    for (let at = 0; at < selected.length; at += ROUTINE_READER_MEETING_BATCH_SIZE) {
+      domains.push({
+        id: `reader-readback:meetings-aggregate:${state}:${at / ROUTINE_READER_MEETING_BATCH_SIZE}`,
+        mode: "MEETING_AGGREGATE",
+        contracts: selected.slice(at, at + ROUTINE_READER_MEETING_BATCH_SIZE),
+        timeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,
+      });
+    }
   }
   const planned = domains.flatMap(({ contracts: rows }) => rows.map(({ id }) => id));
   if (new Set(planned).size !== planned.length || planned.some((id) => !ids.includes(id))) {

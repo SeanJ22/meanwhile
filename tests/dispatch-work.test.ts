@@ -44,7 +44,16 @@ import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.
 import type { ControlPlaneRepositories } from "@/lib/control-plane/repository/types.ts";
 import { modelLaneClosure } from "@/lib/control-plane/scheduler/model-lane.ts";
 import { OWNER_DISPATCH } from "@/lib/control-plane/scheduler/obligation.ts";
-import { planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
+import { openOccurrence, planSupersededRetirement, standing, syncObligations } from "@/lib/control-plane/scheduler/durable.ts";
+import { scheduleObligation } from "@/lib/control-plane/scheduler/obligation.ts";
+import { submit } from "@/lib/control-plane/gateway/gateway.ts";
+import { huntPacketsProvider } from "@/lib/control-plane/scheduler/providers/hunt-packets.ts";
+import { placeSourceExecutor, type HuntSourceScope } from "@/lib/hunt/own-site-runtime.ts";
+import { ensureEntity } from "@/lib/facts/entities.ts";
+import { MemoryEvidenceStore, putArtifact } from "@/lib/control-plane/evidence/store.ts";
+import { factDb } from "./helpers/hunters-db.ts";
+import { beginAttempt, claim } from "@/lib/control-plane/attempt.ts";
+import { nextAutonomousOperation } from "@/lib/control-plane/workers/coordinator.ts";
 import { parseDispatchTarget } from "@/lib/control-plane/scheduler/dispatch-target.ts";
 import { RESEARCH_INTENT_LOG_KEY, readIntents } from "@/lib/control-plane/scheduler/research-policy.ts";
 import { buildRegistry, type RegistryPass } from "@/lib/control-plane/scheduler/registry.ts";
@@ -75,8 +84,6 @@ import { MemoryRoutineDataStore } from "@/lib/civic-data/store.ts";
 import { meetingsDiscoveryNeeds } from "@/lib/hunt/meetings-discovery.ts";
 import { sourcesOf, type Jurisdiction, type JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
-
-
 const ROOT = join(import.meta.dirname, "..");
 const T0 = "2026-09-23T21:00:00.000Z";
 const T1 = "2026-09-23T22:00:00.000Z";
@@ -87,7 +94,7 @@ const REGISTRIES = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdicti
 installOperationalReferenceBundle(operationalReferenceBundle(REGISTRIES));
 
 let territoryAll: TerritoryIndex | null = null;
-/** Synthetic bounded area observations exercise dispatch; saved lattice counts are not area evidence. */
+
 const HELD_PLACES = new Map<string, readonly PlaceDivision[]>([["85701", [
   ["county", "04019", "Pima County"], ["place", "0477000", "Tucson"],
   ["place", "0468850", "South Tucson"], ["place", "0444270", "Marana"],
@@ -95,7 +102,7 @@ const HELD_PLACES = new Map<string, readonly PlaceDivision[]>([["85701", [
 ].map(([layer, geoid, label]) => ({ id: `${layer}:${geoid}`, label, geoid, divisionType: layer,
   sourceUrl: "https://www2.census.gov/geo/docs/maps-data/data/rel2020/", censusLayer: layer,
   zctaOverlap: { whole: false, fraction: 0.2, fractionBasis: "area" } }))]]);
-/** The runner's own territory index over every promoted registry, read once for the file. */
+
 function territory(): TerritoryIndex {
   territoryAll ??= readTerritoryIndex(ROOT, Object.values(REGISTRIES), undefined, undefined, HELD_PLACES);
   return territoryAll;
@@ -104,7 +111,6 @@ function territory(): TerritoryIndex {
 const PIMA: ExpansionScopeGeography = { type: "county", geoid: "04019", version: "county:2020", label: "Pima County, Arizona", stateAbbr: "AZ" };
 const CD6: ExpansionScopeGeography = { type: "congressional_district", geoid: "0406", version: "cd:119", label: "Arizona CD 6", stateAbbr: "AZ" };
 
-/** A selected scope, built by the gateway's own pure step, exactly as `expansion.scope.set` records it. */
 function decision(geography: ExpansionScopeGeography, priority = 1, budgetUsd = 5, decidedAt = T0): ExpansionScopeDecision {
   const [made] = withScopeSet([], { geography, priority, budgetUsd, note: null, decidedAt, decidedBy: "adm_test-session", receiptId: `expansion.scope.set:${geography.geoid}` }).scopes;
   return made;
@@ -128,7 +134,6 @@ async function planned(d: ExpansionScopeDecision): Promise<PlannedScope> {
   };
 }
 
-/** The two providers dispatch work feeds, exactly as the runner builds them. */
 function registryPass(materialized: MaterializedReading, tracked = trackedStatesFromOperationalReference()): RegistryPass {
   return buildRegistry(
     [
@@ -139,7 +144,6 @@ function registryPass(materialized: MaterializedReading, tracked = trackedStates
   );
 }
 
-/** One runner cycle up to the dispatch-work step: read the marked rows, build the corpus, register it. */
 async function cycleWorld(repos: ControlPlaneRepositories, now: string, over: Partial<DispatchWorkWorld> = {}) {
   const rows = await repos.obligations.listWhere(["materializedBy"], OWNER_DISPATCH);
   const registry = registryPass({ ids: new Set(rows.map((r) => r.id)) });
@@ -213,7 +217,6 @@ test("sending the fleet to Pima County creates what the registry defines there a
     assert.equal(subjectOfObligationId(id), row.value.subjectId, "Admin recovers the government from the id");
   }
 
-  /* The need is the gap ledger's own: the same derivation, the same basis. */
   const need = meetingsDiscoveryNeedFor(REGISTRIES.az, "az:city:city-of-tucson");
   assert.equal(need?.basis, "SOURCE_DISCOVERY_OWED");
   assert.equal(parseMeetingsDiscoveryId(tucson)?.jurisdictionId, need?.jurisdictionId);
@@ -241,7 +244,6 @@ test("created work joins the corpus through its providers next cycle: scheduled,
   assert.equal(discovery?.readFailure, null);
   assert.equal(discovery?.units, applied.written.filter((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE)).length);
 
-  /* Removing the scope (it is simply no longer a target) undoes nothing: the rows stay owed. */
   const after = await cycleWorld(repos, T2);
   for (const id of applied.written) assert.equal((await repos.obligations.mustRead(id)).value.active, true, `${id} stays owed after the scope is gone`);
   assert.ok(after.registry.obligations.some((o) => o.id === applied.written[0]));
@@ -264,7 +266,6 @@ test("sending the same scope twice creates nothing new, and overlapping geograph
     assert.equal(t.requirements.created, once.written.length, "what exists is counted as created, cumulatively");
   }
 
-  /* The two scopes overlap: a requirement both hold is written once, under the first. */
   const fresh = createMemoryRepositories();
   const both = await cycleWorld(fresh, T0);
   const cd6 = scopeWorkTarget(await planned(decision(CD6, 2)));
@@ -292,7 +293,7 @@ test("all missing requirements are created in one pass without a cycle window", 
 });
 
 test("a geography in a state with no promoted registry is blocked by name, and nothing is invented for it", async () => {
-  /* Arizona unregistered: the same Census units, and no registry to say what they owe. */
+
   const withoutAz = readTerritoryIndex(ROOT, [REGISTRIES.nh, REGISTRIES.nj], ["AZ", "NH", "NJ"], undefined, HELD_PLACES);
   const repos = createMemoryRepositories();
   const { world } = await cycleWorld(repos, T0);
@@ -312,14 +313,12 @@ test("a geography in a state with no promoted registry is blocked by name, and n
   assert.equal(pima.units.blocked, blocked.units);
   assert.match(pima.says.join(" "), /Promoting its registry is the whole change that unblocks them/);
 
-  /* The lookup did not resolve it: blocked, and the count itself is unknown, never zero. */
   const unresolved: PlannedScope = { kind: "UNRESOLVED", decision: decision(PIMA), why: "the Census geography is not published yet", states: ["AZ"], members: new Set() };
   const u = dispatchWorkReading(planDispatchWork({ targets: [scopeWorkTarget(unresolved)], world }), null, CONTEXT).targets[0];
   assert.equal(u.blocked[0].code, "GEOGRAPHY_UNRESOLVED");
   assert.equal(u.units.blocked, null);
   assert.match(u.blocked[0].dataset, /published Census geography lookup/);
 
-  /* The territory files could not be read. */
   const t = dispatchWorkReading(
     planDispatchWork({ targets: [scopeWorkTarget(await planned(decision(PIMA)))], world: { ...world, territory: null, territoryDetail: "ENOENT census-unit-zips.json" } }),
     null,
@@ -328,7 +327,6 @@ test("a geography in a state with no promoted registry is blocked by name, and n
   assert.equal(t.blocked[0].code, "TERRITORY_UNREADABLE");
   assert.match(t.blocked[0].why, /ENOENT census-unit-zips\.json/);
 
-  /* A DISPATCH to a state with no registry, and one that names no state at all. */
   const illinois = dispatchWorkTarget({ intentId: "i-il", note: "deep dive on Illinois", requestedAt: T0 });
   const pimaWords = dispatchWorkTarget({ intentId: "i-pima", note: "Pima County", requestedAt: T0 });
   const d = planDispatchWork({ targets: [illinois, pimaWords], world: { ...world, censusUnitsByState: new Map([["IL", 6963]]) } });
@@ -400,14 +398,12 @@ test("a Census unit the registry does not carry is blocked NOT_IN_REGISTRY, with
   assert.deepEqual(t.blocked[0].sample, ["TOWN OF SOMEWHERE"]);
   assert.equal(t.units.blocked, 1);
 
-  /* ZCTAs that place no government at all are a gap in the territory data, never an empty geography. */
   const nowhere: PlannedScope = { ...scope, zctas: new Set(["99999"]), whole: new Set(["99999"]) };
   const [empty] = dispatchWorkReading(planDispatchWork({ targets: [scopeWorkTarget(nowhere)], world }), null, CONTEXT).targets;
   assert.equal(empty.blocked[0].code, "NO_GOVERNMENT_PLACED");
   assert.equal(empty.units.blocked, null, "the count is unknown, never zero");
   assert.match(empty.blocked[0].why, /never a geography with no government/);
 
-  /* A DISPATCH whose words match no registered government says so, and creates nothing. */
   const [words] = dispatchWorkReading(
     planDispatchWork({ targets: [dispatchWorkTarget({ intentId: "i-z", note: "Arizona zzqx", requestedAt: T0 })], world }),
     null,
@@ -453,7 +449,6 @@ test("creating work opens no paid lane: the owner's PAUSE stands and nothing but
   assert.equal((await repos.costs.readAll()).length, 0, "no charge");
   assert.equal((await repos.scoutResults.readAll()).length, 0, "no Scout ran");
 
-  /* The lane stays closed on the same facts: the PAUSE stands. */
   const closure = modelLaneClosure({
     dry: false,
     noModel: false,
@@ -470,18 +465,16 @@ test("creating work opens no paid lane: the owner's PAUSE stands and nothing but
   const discovery = applied.written.find((id) => id.startsWith(MEETINGS_DISCOVERY_NAMESPACE))!;
   const jurisdictionId = parseMeetingsDiscoveryId(discovery)!.jurisdictionId;
 
-  /* When the lane opens, the scope's own budget binds the created subjects — a $0 budget holds all paid work there. */
   const gate = new ScopeBudgetGate({
     scopes: [{ key: scopeKeyOf(PIMA), label: "Pima", budgetUsd: 0, resolved: true, members: new Set([jurisdictionId]), states: ["AZ"], historicalUsd: 0 }],
     worstCaseUsd: 0.6,
   });
   assert.equal(gate.admit(discovery, jurisdictionId).admit, false);
 
-  /* And the receipt says why the created work waits, and which budgets bind it — the Send's own among them. */
   const [t] = dispatchWorkReading(plan, applied, CONTEXT).targets;
   const says = t.says.join(" ");
-  assert.match(says, /need a model and wait: paused by owner intent pause-1/);
-  assert.match(says, /\$105\.00 rolling 24-hour ceiling \(your dial\) first, then this Send's own \$0\.00 rolling 24-hour budget over the work it reached, and this geography's\./);
+  assert.match(says, /run on the plain-code lane as they come due, at no model cost/);
+  assert.doesNotMatch(says, /need a model and wait:/);
   assert.doesNotMatch(says, /no per-assignment budget/);
   assert.match(says, /without waiting for free routes to fail/);
 });
@@ -518,35 +511,34 @@ test("a DISPATCH naming a registered state creates there, counts it on the owner
   assert.equal(work?.created, plan.writes.length);
   assert.equal(work?.deferred, t.requirements.deferred);
 
-  const carried = carriedDispatchTargets(reading);
+  const carried = carriedDispatchTargets(reading,new Set(["i-1"]));
   assert.equal(carried.length, 0, "all creation and assignment marks finished in this cycle");
   assert.equal(
     carriedDispatchTargets({
       ...reading,
       targets: reading.targets.map((x) => ({ ...x, requirements: { ...x.requirements, deferred: 0 }, assignment: { recordedThisCycle: 0, marksDeferred: 0, marksFailed: 0 } })),
-    }).length,
+    },new Set(["i-1"])).length,
     0,
   );
-  /* A Send is carried until every row it reached records it, even with nothing left to create. */
+
   assert.equal(
     carriedDispatchTargets({
       ...reading,
       targets: reading.targets.map((x) => ({ ...x, requirements: { ...x.requirements, deferred: 0 }, assignment: { recordedThisCycle: 0, marksDeferred: 2, marksFailed: 0 } })),
-    }).length,
+    },new Set(["i-1"])).length,
     1,
   );
-  /* A Send with a remainder still to create is carried; taking it back stops that, and taking back a different Send does not. */
+
   const withRemainder = { ...reading, targets: reading.targets.map((x) => ({ ...x, requirements: { ...x.requirements, deferred: 2 } })) };
-  assert.equal(carriedDispatchTargets(withRemainder).length, 1, "a Send with a remainder is carried");
-  assert.equal(carriedDispatchTargets(withRemainder, new Set(["i-1"])).length, 0, "a Send the owner took back (CANCEL_DISPATCH) is no longer carried");
-  assert.equal(carriedDispatchTargets(withRemainder, new Set(["another"])).length, 1, "taking back one Send leaves the others carried");
-  assert.equal(carriedDispatchTargets({ nonsense: true }).length, 0, "an unreadable prior reading carries nothing, never throws");
+  assert.equal(carriedDispatchTargets(withRemainder,new Set(["i-1"])).length, 1, "a Send with a remainder is carried");
+  assert.equal(carriedDispatchTargets(withRemainder, new Set()).length, 0, "a stopped, canceled or paused Send cannot return from the previous cycle");
+  assert.equal(carriedDispatchTargets(withRemainder, new Set(["i-1"])).length, 1, "taking back one Send leaves the others carried");
+  assert.equal(carriedDispatchTargets({ nonsense: true },new Set()).length, 0, "an unreadable prior reading carries nothing, never throws");
   assert.equal(isDispatchWorkReading(reading), true);
 
   assert.match(dispatchWorkSentence(t), /created \d+ of \d+ requirement\(s\) the registry defines here \(\d+ this cycle\); reordered \d+ of \d+ standing obligations; 0 of \d+ governments blocked by missing data\./);
 });
 
-/** The rule the provider has always used, restated here as an independent oracle: no existing id may move. */
 function legacyIds(reg: JurisdictionRegistry): Set<string> {
   const out = new Set<string>();
   for (const j of reg.jurisdictions) {
@@ -578,7 +570,6 @@ test("local-jurisdictions schedules the tracked states it is handed, keeps every
   assert.equal(none.units.length, 0);
   assert.match(none.byProvider[0].readFailure ?? "", /names no tracked state — a failed read/, "an empty tracked set is a failed read, never 'track nothing'");
 
-  /* A requirement the owner's dispatch materialized in an UNTRACKED state keeps the id tracking would give it. */
   const pima = REGISTRIES.az.jurisdictions.find((j) => j.govClass === "COUNTY" && jurisdictionRequirements(REGISTRIES.az, j).length > 0)!;
   const [req] = jurisdictionRequirements(REGISTRIES.az, pima);
   const materialized = buildRegistry(
@@ -618,7 +609,7 @@ test("a meetings route with a known address is carried by what the partition wir
   assert.equal(jurisdictionRequirements(REGISTRIES.az, REGISTRIES.az.jurisdictions.find((x) => x.id === "az:city:city-of-tucson")!).some((r) => r.source.recordClass === "MEETINGS"), false, "a DISCOVERY_OWED meetings source is discovery, not a route here");
 });
 
-test("explicit paid meetings discovery keeps the materialized needs in the registry derivation's shape", () => {
+test("materialized meetings hunts keep their identities and read the government's own website for free", async () => {
   const empty = meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }) }).enumerate({ root: ROOT, nowIso: T0 });
   assert.equal(empty.obligations.length, 0);
   assert.match(empty.emptyReason ?? "", /no registered government website/);
@@ -635,12 +626,99 @@ test("explicit paid meetings discovery keeps the materialized needs in the regis
   assert.deepEqual(pass.units.map((u) => u.obligation.id).sort(), [...ids].sort(), "a need whose basis moved, and another provider's id, are not emitted");
   for (const u of pass.units) {
     assert.equal(u.obligation.recordClass, "meetings-discovery");
-    assert.equal(u.route.open.kind, "NOT_MACHINE_EXECUTABLE");
+    assert.equal(u.route.open.kind, "HTTP_GET");
   }
   const ownUnit = pass.units.find((u) => u.obligation.subjectId === own.jurisdictionId)!;
-  assert.equal(ownUnit.route.open.kind === "NOT_MACHINE_EXECUTABLE" ? ownUnit.route.open.target : null, own.ownWebAddress);
+  assert.equal(ownUnit.route.open.kind === "HTTP_GET" ? ownUnit.route.open.url : null, own.ownWebAddress);
   assert.equal(ownUnit.route.routeId, "own-site-meetings");
   assert.equal(pass.units.find((u) => u.obligation.subjectId === noSite.jurisdictionId)!.route.routeId, "find-own-site");
+
+  const facts = await factDb();
+  try {
+    const repos = createMemoryRepositories(), vault = new MemoryEvidenceStore();
+    const scope = (ownUnit.route as typeof ownUnit.route & { placeHunt: HuntSourceScope }).placeHunt;
+    assert.equal(scope.website, own.ownWebAddress);
+    assert.equal(ownUnit.route.executorClass, "DETERMINISTIC");
+    await ensureEntity(facts.query, { id: own.jurisdictionId, kind: "government", name: own.name, state: own.stateCode, parentId: null });
+    const calendar = new URL("/meetings.ics", scope.website).href;
+    const seen: string[] = [];
+    const scheduled = scheduleObligation(ownUnit.obligation, Date.parse(T0));
+    assert.ok("cadenceHours" in scheduled);
+    const attempt = beginAttempt({ routeTaskId: "rt-free-meetings", workItemId: "wi-free-meetings",
+      worker: { role: "ACQUIRER", provider: "test", version: "1", instance: "test" },
+      lease: claim("rt-free-meetings", "test", T0, 30_000, null), now: T0, methodVersion: 0, policyVersion: "test" });
+    await repos.attempts.put(attempt.id, attempt, T0);
+    const run = placeSourceExecutor({ repos, scope, query: facts.query, now: () => T0,
+      readHeldPage: async () => null, spaceOut: async () => {},
+      vault: async (artifact, body) => {
+        const stored = await putArtifact(vault, "freshness", artifact, Buffer.from(body));
+        return { stored: true, where: stored.key, why: "saved" };
+      },
+      open: async ({ url }) => {
+        seen.push(url);
+        const body = url.endsWith("/robots.txt") ? "User-agent: *\nDisallow: /\n"
+          : url === calendar ? "BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:City Council meeting\nDTSTART:20261031T170000Z\nEND:VEVENT\nEND:VCALENDAR"
+          : `<main><h1>City Council</h1><a href="${calendar}">Council meeting calendar</a></main>`;
+        return { status: 200, body, bytes: Buffer.byteLength(body), contentType: url.endsWith(".txt") ? "text/plain" : url === calendar ? "text/calendar" : "text/html",
+          durationMs: 1, transportError: null };
+      } });
+    const result = await run({ obligation: scheduled, workItemId: "wi-free-meetings", routeTaskId: "rt-free-meetings",
+      attemptId: attempt.id, holder: "test", executor: "DETERMINISTIC", bound: { maxAttempts: 1, maxWallMs: 30_000 } });
+    assert.equal(result.kind, "DISPOSED", result.detail);
+    assert.equal(result.ranAs, "DETERMINISTIC");
+    assert.equal(result.cost?.usd, 0);
+    assert.ok((result.cost?.requestCount ?? 0) > 0, "the free route made real source requests");
+    assert.ok(seen.some(url => new URL(url).href === new URL(scope.website).href), "the registered government's own page was read");
+    assert.ok(seen.includes(calendar), "the calendar linked by that page was read");
+    const saved = await repos.discoveryAttempts.read(own.jurisdictionId);
+    assert.ok(saved.some(attempt => attempt.found.some(source => source.url === calendar)), "the acquired calendar enters the existing discovery path");
+    assert.ok((await repos.boxFindings.list()).length > 0, "source findings enter the existing Box");
+  } finally {
+    await facts.pg.close();
+  }
+});
+
+test("an Admin order still creates its paid hunt packet beside the free meeting reads", async () => {
+  const repos = createMemoryRepositories();
+  const accepted = await submit({ type: "fleet.deployHere", subject: "fleet", input: { note: "Send agents to Tucson AZ. Fill OFF-17 portraits first.", budgetUsd: 1 },
+    stateVersion: null, idempotencyKey: "hn01-paid-dispatch", caller: "OWNER_SESSION", actorRef: "test-owner" },
+  { repos, now: () => T0, currentStateVersion: null, codeSha: null, readPlaceScore: async () => null, wake: null });
+  assert.equal(accepted.ok, true, accepted.receipt.says);
+  const [intent] = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch;
+  assert.equal(intent.budgetUsd, 1);
+  const place = "ocd-division/country:us/state:az/place:tucson";
+  const target = { ...dispatchWorkTarget({ intentId: intent.intentId, note: intent.note!, requestedAt: intent.requestedAt }), budgetUsd: intent.budgetUsd };
+  const { world } = await cycleWorld(repos, T0);
+  const plan = planDispatchWork({ targets: [target], world: { ...world, packetDivisions: new Map([[target.key, [place]]]) } });
+  const applied = await applyDispatchWork(repos, plan, { now: T0 });
+  assert.deepEqual(applied.failed, []);
+  const materialized = new Set((await repos.obligations.list()).map(row => row.id));
+  const paid = buildRegistry([huntPacketsProvider({ materialized: () => ({ ids: materialized }) })], { root: ROOT, nowIso: T0 });
+  const packet = paid.units.find(unit => unit.obligation.subjectId === place);
+  assert.ok(packet, "the same Admin order still owns a hunt packet for its place");
+  assert.equal(packet.route.executorClass, "BOUNDED_MODEL_WORKER", "free meeting reads do not replace the ordered paid hunt");
+  const synced = await syncObligations(repos, [packet.obligation], T0);
+  const occurrence = await openOccurrence(repos, { obligation: synced.all[0], dueAt: T0, now: T0 });
+  assert.ok(occurrence);
+  assert.equal(occurrence.routeTask.state, "PENDING");
+  assert.equal(occurrence.routeTask.routeId, "hunter:packet");
+  assert.deepEqual(occurrence.workItem.autonomousPlan?.ownerInstructions, [intent.intentId]);
+  const next = await nextAutonomousOperation({ repos, now: () => T0, methodVersion: 0,
+    readEvidence: async () => { throw new Error("No evidence read is needed to schedule the paid hunt"); },
+    independentContext: async () => { throw new Error("No audit is needed to schedule the paid hunt"); } }, occurrence.workItem.id);
+  assert.equal(next.action, "SCOUT");
+  assert.equal(next.task?.id, occurrence.routeTask.id, "the ordered paid task is handed to the hunter, not replaced by the free route");
+  assert.equal(readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).pendingDispatch[0].budgetUsd, 1,
+    "materializing the paid job preserves the owner's budget");
+});
+
+test("a pause holds paid work, never free work: hunts are not stopped while paused, and Box publishing still runs", () => {
+  const planner = readFileSync(join(ROOT, "scripts/freshness-shadow.mts"), "utf8");
+  assert.match(planner, /if\(!dry && !filteredCycle && !huntsPaused\)await deactivateUnfundedHunts\(repos,fundedRefs,NOW\);/);
+  const runner = readFileSync(join(ROOT, "scripts/routine-civic-data-runner.mts"), "utf8");
+  const read = runner.slice(runner.indexOf("async function readHuntSourceTasks("));
+  assert.ok(read.indexOf("publishBoxFindings(") > 0 && read.indexOf("publishBoxFindings(") < read.indexOf("if (intents.runnerPause.paused) return [];"),
+    "the free Box publishing pass runs before the pause can return");
 });
 
 test("candidate enrichment enumerates the tracked states and names one with no ballot authority", async () => {

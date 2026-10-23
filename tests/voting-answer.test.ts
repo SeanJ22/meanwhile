@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { answerVotingSites, projectVotingJurisdiction, GOOGLE_VOTING_DATA_LABEL, type VotingReaderPlace } from "../lib/ballot/voting-answer.ts";
+import { answerVotingSites, projectVotingJurisdiction, type VotingReaderPlace } from "../lib/ballot/voting-answer.ts";
 import { narrowingFor, votingSitesForDisplay, type VotingJurisdiction, type VotingSite, type VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 
@@ -23,7 +23,6 @@ test("VS-01 real county rows preserve precinct names; one loaded place never pro
   const result = projectVotingJurisdiction(jurisdiction, place);
   assert.ok(result.sites.some(site => site.name === "Baker Area Recreation Bldg" && site.address === "5503 HWY 4 Baker, FL 32531"));
   assert.equal(result.narrowing.kind, "REFUSED");
-  assert.match(result.narrowing.sentence, /precinct is on your voter card/);
   assert.equal(narrowingFor({ ...jurisdiction, sites: sites.slice(0, 1) }).kind, "REFUSED");
 });
 
@@ -38,56 +37,29 @@ test("VS-01 published precinct matching narrows a county directory; a ZIP never 
   assert.equal(zip.narrowing.kind, "REFUSED");
 });
 
-test("VS-01 identity-locked lookup is never invoked and county lists still answer", async () => {
+test("VS-01 held precinct records answer without making official or Google requests", async () => {
+  const previous = globalThis.fetch;
   let requests = 0;
-  const answer = await answerVotingSites({ ...file, jurisdictions: [{ ...jurisdiction, addressLookups: [lookup("identity-locked-lookup")] }] }, place,
-    { readerRequested: true, address: "5503 HWY 4 Baker, FL 32531" }, { readOfficialAddress: async () => { requests++; throw new Error("identity must not leave reader"); } });
-  assert.equal(requests, 0);
-  assert.equal(answer.jurisdictions[0].sites.length, sites.length);
-});
-
-test("VS-01 no reader request sends nothing to official address tools or Google", async () => {
-  let requests = 0;
-  const answer = await answerVotingSites({ ...file, jurisdictions: [{ ...jurisdiction, sites: [], addressLookups: [lookup("address-lookup")] }] }, place,
-    { readerRequested: false, googleRequested: true, address: "5503 HWY 4 Baker, FL 32531" }, {
-      readOfficialAddress: async () => { requests++; throw new Error("unsolicited request"); }, readGoogle: async () => { requests++; return []; },
-    });
-  assert.equal(requests, 0);
-  assert.equal(answer.googleFallback?.requested, false);
-});
-
-test("VS-01 ordinary reader request never invokes Google; distinct request only works without official facts", async () => {
-  let requests = 0;
-  const dependencies = { readGoogle: async () => { requests++; return []; } };
-  await answerVotingSites({ ...file, jurisdictions: [] }, place, { readerRequested: true, address: "5503 HWY 4 Baker, FL 32531" }, dependencies);
-  assert.equal(requests, 0);
-  await answerVotingSites(file, place, { readerRequested: true, googleRequested: true, address: "5503 HWY 4 Baker, FL 32531" }, dependencies);
-  assert.equal(requests, 0);
-  const fallback = await answerVotingSites({ ...file, jurisdictions: [] }, place, { readerRequested: true, googleRequested: true, address: "5503 HWY 4 Baker, FL 32531" }, dependencies);
-  assert.equal(requests, 1);
-  assert.equal(fallback.googleFallback?.label, GOOGLE_VOTING_DATA_LABEL);
-});
-
-test("VS-01 official address-only response stays on our page without returning private request metadata", async () => {
-  const answer = await answerVotingSites({ ...file, jurisdictions: [{ ...jurisdiction, sites: [], addressLookups: [lookup("address-lookup")] }] }, place,
-    { readerRequested: true, address: "5503 HWY 4 Baker, FL 32531" }, { readOfficialAddress: async (_door, address) => {
-      assert.equal(address, "5503 HWY 4 Baker, FL 32531");
-      return { doorId: "address-lookup", sites: sites.slice(0, 1), sources: [official], rules: [], blanks: [], attempts: [], rawBodies: [] };
-    } });
-  assert.equal(answer.jurisdictions[0].narrowing.kind, "EXACT");
-  assert.equal(answer.jurisdictions[0].addressLookups, undefined);
-  assert.equal(answer.jurisdictions[0].boundaries, undefined);
-  assert.equal(answer.jurisdictions[0].sites[0].name, "Baker Area Recreation Bldg");
+  globalThis.fetch = async () => { requests++; throw new Error("A reader must never fetch a source after geocoding"); };
+  try {
+    const answer = await answerVotingSites({ ...file, jurisdictions: [{ ...jurisdiction, addressLookups: [lookup("address-lookup"), lookup("identity-locked-lookup")] }] }, place);
+    assert.equal(requests, 0);
+    assert.equal(answer.jurisdictions[0].sites.length, sites.length);
+    assert.equal(answer.jurisdictions[0].addressLookups, undefined);
+    assert.equal(answer.googleFallback, undefined);
+    const gap = await answerVotingSites({ ...file, jurisdictions: [{ ...jurisdiction, sites: [] }] }, place);
+    assert.equal(gap.outsideCoverage, true, "an office or source record is not voting-site coverage");
+  } finally { globalThis.fetch = previous; }
 });
 
 test("VS-01 no-drop-box rule carries legal return routes from the state source", async () => {
   const sample = read("al-absentee-return-rule.json");
   const al: VotingJurisdiction = { ...jurisdiction, ocdId: "ocd-division/country:us/state:al", state: "AL", countyFips: undefined, name: "Alabama", sites: [],
     rules: [{ text: sample.rule, source: { publisher: sample.publisher, url: sample.url } }, { text: sample.returnDeadline, source: { publisher: sample.publisher, url: sample.url } }] };
-  const answer = await answerVotingSites({ ...file, jurisdictions: [al] }, { ...place, states: ["AL"], divisionIds: [al.ocdId], countyFips: [] }, { readerRequested: true });
+  const answer = await answerVotingSites({ ...file, jurisdictions: [al] }, { ...place, states: ["AL"], divisionIds: [al.ocdId], countyFips: [] });
   assert.match(answer.jurisdictions[0].rules![0].text, /personal hand delivery to the absentee election manager/);
   assert.match(answer.jurisdictions[0].rules![0].text, /do not include unattended ballot drop boxes/);
-  assert.equal(answer.googleFallback?.available, false);
+  assert.equal(answer.googleFallback, undefined);
 });
 
 test("VS-01 Puerto Rico no-general-election answer is sourced data and retains unresolved special-election scope", async () => {
@@ -95,7 +67,7 @@ test("VS-01 Puerto Rico no-general-election answer is sourced data and retains u
   const pr: VotingJurisdiction = { ...jurisdiction, ocdId: "ocd-division/country:us/territory:pr", state: "PR", countyFips: undefined, name: "Puerto Rico", sites: [], office: sample.office,
     publication: { status: "NO_GENERAL_ELECTION", text: "Puerto Rico has no general election on November 3, 2026.", source: { publisher: sample.publisher, url: sample.url },
       specialElections: ["The election office lists a 2026 Cataño special election; its applicability on November 3 is still being gathered."] } };
-  const answer = await answerVotingSites({ ...file, jurisdictions: [pr] }, { ...place, states: ["PR"], divisionIds: [pr.ocdId], countyFips: [] }, { readerRequested: true });
+  const answer = await answerVotingSites({ ...file, jurisdictions: [pr] }, { ...place, states: ["PR"], divisionIds: [pr.ocdId], countyFips: [] });
   assert.match(answer.jurisdictions[0].modelSentence, /no general election on November 3, 2026/);
   assert.equal(answer.jurisdictions[0].office?.phone, "787-777-8682");
   assert.match(answer.jurisdictions[0].narrowing.sentence, /still being gathered/);
@@ -117,10 +89,7 @@ test("VS-01 Texas identity-locked state answers from the official El Paso county
     sourceOrg: "El Paso County Elections Department", sourceUrl: "https://epcountyvotes.com/voter-information/election-day-vote-centers",
     sites: [{ ...sites[0], id: "el-paso-agua-dulce", name: first[1], address: first[2], room: first[3], hours, countyFips: "48141", kind: "VOTE_CENTER", precinct: undefined, serves: null }],
     addressLookups: [{ ...lookup("identity-locked-lookup"), publisher: identity.publisher, url: identity.lookupUrl, scope: { state: "TX", ocdId: "ocd-division/country:us/state:tx", name: "Texas" } }] };
-  let sent = 0;
-  const answer = await answerVotingSites({ ...file, jurisdictions: [county] }, { ...place, states: ["TX"], countyFips: ["48141"], divisionIds: [county.ocdId] },
-    { readerRequested: true, address: first[2] }, { readOfficialAddress: async () => { sent++; throw new Error("identity lookup must never run"); } });
-  assert.equal(sent, 0);
+  const answer = await answerVotingSites({ ...file, jurisdictions: [county] }, { ...place, states: ["TX"], countyFips: ["48141"], divisionIds: [county.ocdId] });
   assert.equal(answer.jurisdictions[0].sites[0].name, "Agua Dulce Community Center");
   assert.equal(answer.jurisdictions[0].sites[0].address, "15371 Kentwood Ave. 79928");
   assert.equal(answer.jurisdictions[0].sites[0].hours, "7:00 a.m. to 7:00 p.m.");

@@ -4,7 +4,7 @@ import { STATE_PEOPLE_JURISDICTIONS } from "../lib/officials/people-identity.ts"
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 import { statePeoplePortraits } from "../lib/civic-data/state-people-publication.ts";
 import { readPeopleSourceProjection, publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
-import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
+import { readStateFederalDirectory } from "../lib/officials/federal-directory-read-model.ts";
 import { congressPortraits } from "../lib/officials/congress-portraits.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -25,8 +25,8 @@ import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 export function parsePeoplePortraitArguments(args:readonly string[]):string {
   const state=args.find(arg=>arg.startsWith("--state="))?.slice(8).toLowerCase();
   if (args.filter(arg=>arg === "--promote").length !== 1 || args.length !== 2 ||
-    !((args.includes("--federal") && !state) || state && STATE_PEOPLE_JURISDICTIONS.includes(`US-${state.toUpperCase()}`))) throw Error("PEOPLE_PORTRAITS_EXACT_SCOPE_REQUIRED");
-  return state ?? "US";
+    !state || !STATE_PEOPLE_JURISDICTIONS.includes(`US-${state.toUpperCase()}`)) throw Error("PEOPLE_PORTRAITS_EXACT_SCOPE_REQUIRED");
+  return state;
 }
 
 function portraitPerson(person:Officeholder):Officeholder {
@@ -41,8 +41,8 @@ function portraitPerson(person:Officeholder):Officeholder {
 
 async function sourceInputs(store:RoutineDataStore,jurisdiction:string,linking?:{vault:EvidenceStore;captures:PortraitCapture[]}):Promise<DerivedInputRef[]> {
   const contracts=[...ROUTINE_SOURCE_CONTRACTS,...MANUAL_PRODUCTION_SOURCE_CONTRACTS]
-    .filter(row=>row.sourceId !== "people-portraits" && (jurisdiction === "US" ? row.recordClass === "FEDERAL_DIRECTORY" : ["STATE_LEGISLATOR","FEDERAL_DIRECTORY"].includes(row.recordClass)) &&
-      (jurisdiction === "US" ? row.scope.startsWith("US:") : row.scope === jurisdiction || row.scope.startsWith(`${jurisdiction}:`)));
+    .filter(row=>row.sourceId !== "people-portraits" && ["STATE_LEGISLATOR","FEDERAL_DIRECTORY"].includes(row.recordClass) &&
+      (row.scope === jurisdiction || row.scope.startsWith(`${jurisdiction}:`)));
   const found=await Promise.all(contracts.map(async contract=>{
     const promotion=await store.readPromotion(contract.recordClass,contract.scope);
     if (!promotion) return null;
@@ -73,70 +73,71 @@ function portraitInputs(person:Officeholder,facts:readonly PortraitAttempt[]):De
   return saved;
 }
 
+/** Finished portraits publish together once this long has passed, and at the end, so a cut-off run keeps its work. */
+const PORTRAIT_PUBLISH_BATCH_MS = 10 * 60_000;
+
 export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault:EvidenceStore;state:string;options?:StandingPortraitOptions}) {
   const {store,vault,state}=input,options=input.options ?? {},clock=options.now ?? (()=>new Date().toISOString());
-  const pacing={sizeFor:websiteSizeFromHoldings(state === "US" ? [] : [state])};
+  const pacing={sizeFor:websiteSizeFromHoldings([state])};
   const acquire=options.acquire ?? ((request:Parameters<typeof pacedPortraitAcquire>[0])=>pacedPortraitAcquire(request,pacing));
   const portraitOptions={...options,acquire,storePortrait:options.storePortrait ?? ((...args:Parameters<typeof storeStandingPortrait>)=>storeStandingPortrait(args[0],args[1],args[2],args[3],pacing))};
-  const jurisdiction=(state === "US" ? "US" : `US-${state.toUpperCase()}`) as "US" | `US-${string}`;
-  const contractId=state === "US" ? "people-portraits-federal" : `people-portraits-${state.toLowerCase()}`;
+  const jurisdiction=`US-${state.toUpperCase()}` as const;
+  const contractId=`people-portraits-${state.toLowerCase()}`;
   const prior=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
   if(prior.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
   const previous=prior.kind === "PROMOTED" ? await store.readCandidate(prior.metadata.versionId!) : null;
   const priorFacts=previous?.candidate.excludedFacts ?? [];
   const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? [])];
-  await sourceInputs(store,jurisdiction,{vault,captures:linkingCaptures});
-  let baseRoster:OfficeholderSet|null=null;
-  let continuationFacts:readonly PortraitAttempt[]=[];
-  let queue=Promise.resolve(),last:Awaited<ReturnType<typeof publishPeopleSource>>|null=null;
+  const sources=await sourceInputs(store,jurisdiction,{vault,captures:linkingCaptures});
+  let baseRoster:OfficeholderSet|null=null,last=null as Awaited<ReturnType<typeof publishPeopleSource>>|null;
+  let finished=new Map<string,{person:Officeholder;facts:readonly PortraitAttempt[]}>(),batchStarted=Date.now(),queue=Promise.resolve();
+  const publish=async(continuation:readonly PortraitAttempt[]|null)=>{
+    const batch=[...finished.values()];
+    finished=new Map();batchStarted=Date.now();
+    const people=new Set(batch.map(row=>row.person.personId ?? row.person.id));
+    const officeholders=batch.length ? batch.map(row=>portraitPerson(row.person)) : baseRoster!.officeholders.map(portraitPerson);
+    for(;;){
+      const held=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
+      if(held.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
+      const current=held.kind === "PROMOTED" ? await store.readCandidate(held.metadata.versionId!) : null;
+      const kept=(current?.candidate.excludedFacts ?? priorFacts).filter(fact=>!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
+        !(continuation && fact.code.endsWith("_WORK_REMAINS")));
+      const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",
+        roster:{scope:state,generatedAt:clock(),officeholders,divisions:[],unmatched:[]},acquisitions:[],releaseId:clock(),now:clock(),
+        derivedInputs:[...sources,...batch.flatMap(row=>portraitInputs(row.person,row.facts))],
+        excludedFacts:[...kept,...batch.flatMap(row=>row.facts),...continuation ?? []],confirmUnchanged:true});
+      if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED")continue;
+      if(!publication.outcome.promoted && !publication.outcome.confirmed)throw Error(`PEOPLE_PORTRAIT_PUBLICATION_REFUSED:${publication.outcome.candidate.failureDetail}`);
+      last=publication;return;
+    }
+  };
   const marker=async(person:Officeholder,facts:readonly PortraitAttempt[])=>{
-    const operation=queue.then(async()=>{
-      for(;;){
-        const held=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
-        if(held.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
-        const current=held.kind === "PROMOTED" ? await store.readCandidate(held.metadata.versionId!) : null;
-        const personId=person.personId ?? person.id;
-        const excludedFacts=[...(current?.candidate.excludedFacts ?? []).filter(row=>(row.record as {personId?:string}|undefined)?.personId !== personId),...facts];
-        const roster:OfficeholderSet={scope:state,generatedAt:clock(),officeholders:[portraitPerson(person)],divisions:[],unmatched:[]};
-        const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",roster,acquisitions:[],releaseId:clock(),now:clock(),
-          derivedInputs:[...await sourceInputs(store,jurisdiction),...portraitInputs(person,facts)],excludedFacts,confirmUnchanged:false});
-        if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED")continue;
-        if(!publication.outcome.promoted && !publication.outcome.confirmed)throw Error(`PEOPLE_PORTRAIT_PUBLICATION_REFUSED:${publication.outcome.candidate.failureDetail}`);
-        last=publication;return;
-      }
-    });
-    queue=operation.catch(()=>{});await operation;
+    finished.set(person.personId ?? person.id,{person,facts});
+    if(Date.now()-batchStarted >= PORTRAIT_PUBLISH_BATCH_MS){
+      const operation=queue.then(()=>publish(null));
+      queue=operation.catch(()=>{});await operation;
+    }
     await options.onPerson?.(person,facts);
   };
-  if(state === "US"){
-    const read=await readFederalDirectoryProjection({store,now:clock(),bypassCache:true});
-    if(read.kind !== "PROMOTED")throw Error("PEOPLE_PORTRAIT_FEDERAL_ROSTER_UNAVAILABLE");
-    baseRoster=read.value.roster;
-    // Each photo is published to this job's own routine scope; readers lay it on the directory (withFederalPortraits).
-    const result=await congressPortraits(read.value,clock(),options.signal,{...portraitOptions,previousExcludedFacts:priorFacts,onPerson:marker});
-    continuationFacts=result.excludedFacts.filter(fact=>fact.code === "CONGRESS_PORTRAIT_WORK_REMAINS");
-  }else{
-    const read=await readStatePeopleProjection(jurisdiction as `US-${string}`,{store,now:clock(),bypassCache:true});
-    if(read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP")throw Error("PEOPLE_PORTRAIT_STATE_ROSTER_UNAVAILABLE");
-    baseRoster=read.value.roster;
-    const result=await statePeoplePortraits({roster:read.value.roster,state,now:clock(),signal:options.signal},{...portraitOptions,linkingCaptures,previousExcludedFacts:priorFacts,onPerson:marker});
-    continuationFacts=result.excludedFacts.filter(fact=>fact.code === "STATE_PORTRAIT_WORK_REMAINS");
-  }
+  // The place's members of Congress share its portrait record; readers lay their photos on the place directory.
+  const [peopleRead,placeRead]=await Promise.all([readStatePeopleProjection(jurisdiction,{store,now:clock(),bypassCache:true}),
+    readStateFederalDirectory(state,{store,now:clock(),bypassCache:true})]);
+  const people=peopleRead.kind === "PROMOTED" || peopleRead.kind === "BOOTSTRAP" ? peopleRead.value.roster : null;
+  const place=placeRead.kind === "PROMOTED" ? placeRead.value : null;
+  if(!people && !place)throw Error("PEOPLE_PORTRAIT_ROSTER_UNAVAILABLE");
+  baseRoster={...(people ?? place!.roster),officeholders:[...people?.officeholders ?? [],...place?.roster.officeholders ?? []]};
+  const stateResult=people ? await statePeoplePortraits({roster:people,state,now:clock(),signal:options.signal},{...portraitOptions,linkingCaptures,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
+  const congressResult=place ? await congressPortraits(place,clock(),options.signal,{...portraitOptions,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
+  const continuationFacts=[...stateResult?.excludedFacts.filter(fact=>fact.code === "STATE_PORTRAIT_WORK_REMAINS") ?? [],
+    ...congressResult?.excludedFacts.filter(fact=>fact.code === "CONGRESS_PORTRAIT_WORK_REMAINS") ?? []];
   await queue;
-  // A no-work recheck advances its own clock rather than the source roster's.
-  if((!last || continuationFacts.length) && baseRoster){
-    const current=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
-    if(current.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
-    const saved=current.kind === "PROMOTED" ? await store.readCandidate(current.metadata.versionId!) : null;
-    const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",roster:{...baseRoster,officeholders:baseRoster.officeholders.map(portraitPerson)},
-      acquisitions:[],releaseId:clock(),now:clock(),derivedInputs:await sourceInputs(store,jurisdiction),
-      excludedFacts:[...(saved?.candidate.excludedFacts ?? priorFacts).filter(fact=>!fact.code.endsWith("_WORK_REMAINS")),...continuationFacts],confirmUnchanged:continuationFacts.length === 0});
-    last=publication;
-  }
+  // The last batch carries the remaining work; a run that finished nothing still advances its own clock.
+  if(finished.size || !last || continuationFacts.length)await publish(continuationFacts);
   if(!last)throw Error("PEOPLE_PORTRAIT_NO_HELD_PEOPLE");
   printSourceRunnerReceipt(contractId,last.candidate,last.outcome);
   return last;
 }
+
 
 async function main(){
   const state=parsePeoplePortraitArguments(process.argv.slice(2));

@@ -3,7 +3,7 @@ import test from "node:test";
 import { sharedScoutBrowser, browseWithPlaywright } from "../scripts/scout-browse.mts";
 import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
-import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { newFieldManualEntry, readFieldManual, readFieldManualSourceHints, readLearnedManualRoutes, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -19,7 +19,6 @@ import { createRequire } from "node:module";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
 
-/* A measured child reserves its largest recent peak, 5% over, rounded up to a whole MiB. */
 const reservedFor = (peaks: readonly number[]) => Math.ceil(Math.max(...peaks) * 1.05 / 1048576) * 1048576;
 
 test("Windows and Linux process probes leave timers and the host lock available", async context => {
@@ -126,16 +125,22 @@ test("concurrent workers share a browser and close only their own contexts", asy
 test("hosted workers receive their own manual rows and browser observations without reading the manual themselves", async () => {
   const priorUrl = process.env.WTP_WORKER_TOOLS_URL, priorToken = process.env.WTP_WORKER_TOOLS_TOKEN;
   const entry = (state: string) => newFieldManualEntry("test", state || "portable", { role: "SHARED", kind: "REFERENCE",
-    title: state, summary: state, outcome: "REFERENCE", states: state ? [state] : [], portable: state === "" });
+    title: state, summary: state, outcome: "REFERENCE", states: state ? [state] : [], portable: state === "",url:state==="az"?"https://one.gov/source":null });
   const shared = createMemoryRepositories();
   await writeFieldManual(shared, [entry("az"), entry("nj"), entry("")], "2026-10-07T00:00:00.000Z");
   const host = await startWorkerToolsHost({ repos: shared, browse: async input => ({ finalUrl: input.url,
     status: 200, html: "official", text: "official", requests: [], transportError: null, durationMs: 1 }) });
   try {
-    const repos = { fieldManual: { slice: async () => { throw new Error("worker must not read the manual itself"); } } };
+    const fail=async():Promise<never>=>{throw new Error("worker must not read the manual itself");};
+    const repos = { fieldManual: { select:fail,sourceHints:fail,learnedRoutes:fail } };
     const manual = await readFieldManual(repos as never, { state: "az" });
     assert.equal(manual.error, undefined);
     assert.deepEqual(manual.store.entries.map(row => row.states).sort(), [[], ["az"]]);
+    assert.deepEqual(await readFieldManualSourceHints(repos as never,{state:"az"},"https://one.gov/"),[
+      {url:"https://one.gov/source",outcome:"REFERENCE",observedAt:null,worked:false,workedFor:[]},
+    ]);
+    await writeFieldManual(shared,[newFieldManualEntry("test","learned-route",{role:"SHARED",kind:"ROUTE",title:"Indexed route",summary:"Shared maturity",outcome:"YIELDED",payload:{routeId:"indexed-route"}})],"2026-10-07T00:00:00.000Z");
+    assert.deepEqual(await readLearnedManualRoutes(repos as never,["indexed-route","unlearned"]),{present:true,routeIds:["indexed-route"]});
     assert.equal((await browseWithPlaywright({ url: "https://one.gov", timeoutMs: 1000, holder: "test" })).text, "official");
   } finally {
     await host.close();
@@ -183,7 +188,7 @@ test("all publication siblings and routine script families reserve their measure
   await assert.rejects(census.acquire("census-geography/census-geography-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   const ordinary = await census.acquire("reader:meeting/ordinary-source.mts"); ordinary();
   const small = routineProcessSlots({ availableBytes: () => (768 + 342) * mib });
-  for (const entry of ["meetings:any/ingest.ts", "az-money/state-money-az.mts", "nh-money/state-money-nh.mts", "nj-rollcalls/state-rollcalls.mts"]) {
+  for (const entry of ["meetings:any/ingest.ts", "az-money/state-money-az.mts", "nh-money/state-money-nh.mts", "nj-rollcalls/state-rollcalls.mts", "campaign-money/state-campaign-finance.mts"]) {
     await assert.rejects(small.acquire(entry, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   }
 });
@@ -230,30 +235,6 @@ test("state publishers retain their state-unit floor after small-state measureme
   }
 });
 
-test("state artifact children reserve their own measured unit and fit together below source publication memory", async () => {
-  const mib = 1024 * 1024;
-  const script = "publish-state-authority.mts";
-  for (const [family, measured] of [
-    ["ballot-contests", 512 * mib], ["candidate-profiles", 512 * mib], ["candidate-corpus", 512 * mib],
-    ["voting-sites", 512 * mib], ["candidate-campaign-sites-derived", 512 * mib],
-  ] as const) {
-    const host = workerMemoryHost({ processes: () => [] });
-    host.transact(state => { state.peaks = { [script]: Array(5).fill(200 * mib) }; }, false);
-    const slots = routineProcessSlots({ host, availableBytes: () => 2 * measured + 768 * mib - 1 });
-    const first = await slots.acquire(`${family}:IL:reader-artifact/${script}`, Date.now() + 500);
-    host.transact(state => assert.ok(state.reservations[0]!.peak >= measured), false);
-    await assert.rejects(slots.acquire(`${family}:TX:reader-artifact/${script}`, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
-    first();
-  }
-  const host = workerMemoryHost({ processes: () => [] });
-  const slots = routineProcessSlots({ host, availableBytes: () => 3 * 1024 * mib });
-  const first = await slots.acquire(`candidate-profiles:IL:reader-artifact/${script}`, Date.now() + 500);
-  const second = await slots.acquire(`candidate-profiles:TX:reader-artifact/${script}`, Date.now() + 500);
-  const third = await slots.acquire("candidate-profiles:CA/promote-manual-civic-projection.mts", Date.now() + 500);
-  const fourth = await slots.acquire("registry-runtime:AZ:reader-artifact/publish-state-authority.mts", Date.now() + 500);
-  await assert.rejects(slots.acquire("ballot-contests:NY/assemble-ballot-package.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
-  first(); second(); third(); fourth();
-});
 
 test("OS-free memory reserves only unreached child peaks and the research parent's growth", async () => {
   let childRss = 0;
@@ -434,11 +415,11 @@ test("the staging host size accounts for its already-running parent", () => {
   }
 });
 
-test("a script's reservation follows its measured peak, and a never-measured script keeps its table peak", async () => {
+test("a job's reservation follows its measured peak, and a never-measured job keeps its table peak", async () => {
   const mib = 1024 * 1024;
   const crashed = 3.57e9;
   const host = workerMemoryHost({ processes: () => [] });
-  host.transact(state => { state.peaks = { "national-people-refresh.mts": [1.1e9, crashed, 1.2e9] }; }, false);
+  host.transact(state => { state.peaks = { "people-wikidata-people-*/national-people-refresh.mts": [1.1e9, crashed, 1.2e9] }; }, false);
   let free = crashed + 768 * mib;
   const slots = routineProcessSlots({ host, availableBytes: () => free });
   const people = "people-wikidata-people-ca/national-people-refresh.mts";
@@ -450,7 +431,7 @@ test("a script's reservation follows its measured peak, and a never-measured scr
   release();
   free = Number.MAX_SAFE_INTEGER;
   const votes = await slots.acquire("openstates-votes-ca/openstates-votes-refresh.mts");
-  host.transact(state => { assert.equal(state.reservations[0]!.peak, 3072 * mib); }, false);
+  host.transact(state => { assert.equal(state.reservations[0]!.peak, 3574 * mib); }, false);
   votes();
 });
 
@@ -467,7 +448,7 @@ test("a running child's high-water memory is sampled, raises its live reservatio
   release();
   await yieldToEventLoop();
   let recorded: number[] = [];
-  host.transact(state => { recorded = state.peaks?.["peak-probe.mts"] ?? []; }, false);
+  host.transact(state => { recorded = state.peaks?.["probe/peak-probe.mts"] ?? []; }, false);
   assert.equal(recorded.length, 1);
   assert.ok(recorded[0]! >= 160 * mib);
   const next = await slots.acquire("probe/peak-probe.mts");

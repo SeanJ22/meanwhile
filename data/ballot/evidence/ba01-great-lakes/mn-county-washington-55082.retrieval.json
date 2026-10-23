@@ -1,0 +1,11 @@
+{
+  "streetUrl": "https://myballotmn.sos.mn.gov/api/Streets/GetStreets?ZipCode=55082",
+  "ballotUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=967",
+  "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/5E24B611-A63B-4999-B1E7-545D21C7E8F9.pdf",
+  "httpStatus": 200,
+  "sampleBytes": 75250,
+  "county": "Washington",
+  "zip": "55082",
+  "judicialDistrict": "10",
+  "precinct": "0325"
+}

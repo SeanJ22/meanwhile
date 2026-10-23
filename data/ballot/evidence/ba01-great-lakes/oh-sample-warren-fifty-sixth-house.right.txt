@@ -1,0 +1,50 @@
+https://lookup.boe.ohio.gov/vtrapp/warren/getballot.aspx?elect=20261103G&prsid=013___1&bpty=X
+Captured HTTP200 official November 3, 2026 sample ballot. Original PDF bytes saved as oh-sample-warren-fifty-sixth-house.pdf.gz. Numbered text is local pdftotext -layout output.
+L0:  nty, Ohio web site.
+L1:  OT
+L2:                        LEBANON CITY A 013
+L3:                                  Split 01
+L4:  For U.S. Senator
+L5:  (Unexpired term ending 1-3-2029)
+L6:  (Vote for not more than 1)
+L7:          Sherrod Brown
+L8:          Democratic
+L9:          Jon Husted
+L10:          Republican
+L11:          Greg Levy
+L12:          Other-party candidate
+L13: l e      William B. Redpath
+L14:          Libertarian
+L15:          Write-in
+L16:  For Representative to Congress
+L17:  (1st District)
+L18:  (Vote for not more than 1)
+L19:          Nathan Weise
+L20:          Libertarian
+L21:          Eric Conroy
+L22:          Republican
+L23:          Greg Landsman
+L24:          Democratic
+L25:  For State Senator
+L26:  (7th District)
+L27:  (Vote for not more than 1)
+L28:          Cara Jacob
+L29:          Democratic
+L30:          Zac Haines
+L31:          Republican
+L32:  For State Representative
+L33:  (56th District)
+L34:  (Vote for not more than 1)
+L35:          Laalitya Acharya
+L36:          Democratic
+L37:          Adam Mathews
+L38:          Republican
+L39:  For Judge of the
+L40:  Court of Appeals
+L41:  (12th District)
+L42:  (Full term commencing 1-1-2027)
+L43:  (Vote for not more than 1)
+L44:          Matthew Byrne
+L45:          Republican
+L46:          Write-in
+L47:  :1889769

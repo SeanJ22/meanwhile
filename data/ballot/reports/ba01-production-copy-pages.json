@@ -1,0 +1,3962 @@
+{
+  "checkedAt": "2026-10-21T04:22:08.253Z",
+  "branchId": "br-wandering-shape-ax3ranho",
+  "parentBranchId": "br-delicate-lab-ax02xuo5",
+  "runId": "ba01-production-copy-pages@2026-10-21T04:21:50.775Z",
+  "origin": "http://127.0.0.1:3091",
+  "syntheticWritesBlocked": 1,
+  "runtime": "Next development server using the real route and copied production database; timings are local development observations.",
+  "meaning": "Actual local /ballot pages connected to an isolated production database copy after publication; official completeness and live publication are reported separately.",
+  "zips": [
+    {
+      "zip": "78701",
+      "httpStatus": 200,
+      "elapsedMs": 4537,
+      "underThreeSeconds": false,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "tx-sos-2026-u-s-senator",
+          "title": "U. S. SENATOR",
+          "candidates": [
+            "tx-sos-2026-u-s-senator-252579a4143f891f",
+            "tx-sos-2026-u-s-senator-c595bc851af95d22",
+            "tx-sos-2026-u-s-senator-3f1b03628dbb469b",
+            "tx-sos-2026-u-s-senator-b012d141f7996260",
+            "tx-sos-2026-u-s-senator-214b6c2bd3bb21a8",
+            "tx-sos-2026-u-s-senator-b286d496f94b0f76",
+            "tx-sos-2026-u-s-senator-eb68a41bef2a64d0"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-governor",
+          "title": "GOVERNOR",
+          "candidates": [
+            "tx-sos-2026-governor-ea61899fbddd1f30",
+            "tx-sos-2026-governor-70bc43d2f73cef88",
+            "tx-sos-2026-governor-df8a021b0a15918b",
+            "tx-sos-2026-governor-ff82aa6872b7f73d",
+            "tx-sos-2026-governor-73b52014374f0874",
+            "tx-sos-2026-governor-8b8aea8200fc37fb",
+            "tx-sos-2026-governor-fca1a3d7a544b6e1"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-lieutenant-governor",
+          "title": "LIEUTENANT GOVERNOR",
+          "candidates": [
+            "tx-sos-2026-lieutenant-governor-d1325ba2824e57ec",
+            "tx-sos-2026-lieutenant-governor-2d839b38da2bd115",
+            "tx-sos-2026-lieutenant-governor-ce834a5f945daa26",
+            "tx-sos-2026-lieutenant-governor-688761c8788e45e7",
+            "tx-sos-2026-lieutenant-governor-c0d75e04af13706f",
+            "tx-sos-2026-lieutenant-governor-9062451ac8be8800"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-attorney-general",
+          "title": "ATTORNEY GENERAL",
+          "candidates": [
+            "tx-sos-2026-attorney-general-b244374190cf0d33",
+            "tx-sos-2026-attorney-general-a219f9b147c7ed6d",
+            "tx-sos-2026-attorney-general-8338a3aebb9d5315"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-comptroller-of-public-accounts",
+          "title": "COMPTROLLER OF PUBLIC ACCOUNTS",
+          "candidates": [
+            "tx-sos-2026-comptroller-of-public-accounts-e533bf4d9a103e87",
+            "tx-sos-2026-comptroller-of-public-accounts-c1070aaccf3e53a2",
+            "tx-sos-2026-comptroller-of-public-accounts-0a163803ec49b4a5",
+            "tx-sos-2026-comptroller-of-public-accounts-b71c16ce3f40bb94"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-commissioner-of-the-general-land-office",
+          "title": "COMMISSIONER OF THE GENERAL LAND OFFICE",
+          "candidates": [
+            "tx-sos-2026-commissioner-of-the-general-land-office-c1ca85e5fbfc1a7a",
+            "tx-sos-2026-commissioner-of-the-general-land-office-6d2c5b218313d22f",
+            "tx-sos-2026-commissioner-of-the-general-land-office-40a18bc76831a51a"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-commissioner-of-agriculture",
+          "title": "COMMISSIONER OF AGRICULTURE",
+          "candidates": [
+            "tx-sos-2026-commissioner-of-agriculture-063efed77e50ccd0",
+            "tx-sos-2026-commissioner-of-agriculture-0aa76cacc419d514",
+            "tx-sos-2026-commissioner-of-agriculture-248b048f42d89b20"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-railroad-commissioner",
+          "title": "RAILROAD COMMISSIONER",
+          "candidates": [
+            "tx-sos-2026-railroad-commissioner-4fbcd9de8161b97f",
+            "tx-sos-2026-railroad-commissioner-12300a4d22182897",
+            "tx-sos-2026-railroad-commissioner-8d79aeab1e69ff70"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-chief-justice-supreme-court",
+          "title": "CHIEF JUSTICE, SUPREME COURT",
+          "candidates": [
+            "tx-sos-2026-chief-justice-supreme-court-aadb9657ba7c8d8f",
+            "tx-sos-2026-chief-justice-supreme-court-285c0fd00f49e518"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-justice-supreme-court-place-2-unexpired-term",
+          "title": "JUSTICE, SUPREME COURT, PLACE 2 (UNEXPIRED TERM)",
+          "candidates": [
+            "tx-sos-2026-justice-supreme-court-place-2-unexpired-term-f0df2d5295f341c3",
+            "tx-sos-2026-justice-supreme-court-place-2-unexpired-term-ae4f53bb50301421"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-justice-supreme-court-place-7",
+          "title": "JUSTICE, SUPREME COURT, PLACE 7",
+          "candidates": [
+            "tx-sos-2026-justice-supreme-court-place-7-7f3f33e1f68049d0",
+            "tx-sos-2026-justice-supreme-court-place-7-7cb3f79099b9f983"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-justice-supreme-court-place-8",
+          "title": "JUSTICE, SUPREME COURT, PLACE 8",
+          "candidates": [
+            "tx-sos-2026-justice-supreme-court-place-8-f0d4d9d8b1b7b652",
+            "tx-sos-2026-justice-supreme-court-place-8-bdca80939681889e"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-judge-court-of-criminal-appeals-place-3",
+          "title": "JUDGE, COURT OF CRIMINAL APPEALS, PLACE 3",
+          "candidates": [
+            "tx-sos-2026-judge-court-of-criminal-appeals-place-3-db4222faed70b552",
+            "tx-sos-2026-judge-court-of-criminal-appeals-place-3-5f643ed73baa4a79",
+            "tx-sos-2026-judge-court-of-criminal-appeals-place-3-e71d5c992f7f8ea7"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-judge-court-of-criminal-appeals-place-4",
+          "title": "JUDGE, COURT OF CRIMINAL APPEALS, PLACE 4",
+          "candidates": [
+            "tx-sos-2026-judge-court-of-criminal-appeals-place-4-f513226940d72829",
+            "tx-sos-2026-judge-court-of-criminal-appeals-place-4-003e1b11d38e1146"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-judge-court-of-criminal-appeals-place-9",
+          "title": "JUDGE, COURT OF CRIMINAL APPEALS, PLACE 9",
+          "candidates": [
+            "tx-sos-2026-judge-court-of-criminal-appeals-place-9-f9d2a96666bc229d",
+            "tx-sos-2026-judge-court-of-criminal-appeals-place-9-97815d34bc54af7c"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+          "title": "CHIEF JUSTICE, 15TH COURT OF APPEALS DISTRICT",
+          "candidates": [
+            "tx-sos-2026-chief-justice-15th-court-of-appeals-district-4310ef83b86221b7",
+            "tx-sos-2026-chief-justice-15th-court-of-appeals-district-06fafee156b18590"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+          "title": "JUSTICE, 15TH COURT OF APPEALS DISTRICT, PLACE 2",
+          "candidates": [
+            "tx-sos-2026-justice-15th-court-of-appeals-district-place-2-7f28261b02fdeb12",
+            "tx-sos-2026-justice-15th-court-of-appeals-district-place-2-2131bb5fe87bbd88"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+          "title": "JUSTICE, 15TH COURT OF APPEALS DISTRICT, PLACE 3",
+          "candidates": [
+            "tx-sos-2026-justice-15th-court-of-appeals-district-place-3-b6279ba07fd6c7d2",
+            "tx-sos-2026-justice-15th-court-of-appeals-district-place-3-bd0ccb1334c491ae"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-state-representative-district-49",
+          "title": "STATE REPRESENTATIVE DISTRICT 49",
+          "candidates": [
+            "tx-sos-2026-state-representative-district-49-2a368313a17b34d7",
+            "tx-sos-2026-state-representative-district-49-dc6e10c61e4f5e0b"
+          ]
+        },
+        {
+          "id": "tx-sos-2026-state-representative-district-51",
+          "title": "STATE REPRESENTATIVE DISTRICT 51",
+          "candidates": [
+            "tx-sos-2026-state-representative-district-51-004ffb7136f8622e",
+            "tx-sos-2026-state-representative-district-51-a01651e1362fdb1d"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-county-judge",
+          "title": "County Judge",
+          "candidates": [
+            "tx-ba01-2026-travis-county-judge-8b6e93ac7d2880b6"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-1",
+          "title": "Judge, County Court at Law No. 1",
+          "candidates": [
+            "tx-ba01-2026-travis-judge-county-court-at-law-no-1-1a3630fea6b44f58"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-2",
+          "title": "Judge, County Court at Law No. 2",
+          "candidates": [
+            "tx-ba01-2026-travis-judge-county-court-at-law-no-2-6810151897d51bfe"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-3",
+          "title": "Judge, County Court at Law No. 3",
+          "candidates": [
+            "tx-ba01-2026-travis-judge-county-court-at-law-no-3-573fc42a96b40d64"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-4",
+          "title": "Judge, County Court at Law No. 4",
+          "candidates": [
+            "tx-ba01-2026-travis-judge-county-court-at-law-no-4-a86e1acc5f449076"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-5",
+          "title": "Judge, County Court at Law No. 5",
+          "candidates": [
+            "tx-ba01-2026-travis-judge-county-court-at-law-no-5-bf44f3ea09d12101"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-6",
+          "title": "Judge, County Court at Law No. 6",
+          "candidates": [
+            "tx-ba01-2026-travis-judge-county-court-at-law-no-6-178b256695b9106f"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-judge-county-court-at-law-no-7",
+          "title": "Judge, County Court at Law No. 7",
+          "candidates": [
+            "tx-ba01-2026-travis-judge-county-court-at-law-no-7-f102b8920cc707d9"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-judge-probate-court-no-1",
+          "title": "Judge, Probate Court No. 1",
+          "candidates": [
+            "tx-ba01-2026-travis-judge-probate-court-no-1-9f68db591bdcea57"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-district-clerk",
+          "title": "District Clerk",
+          "candidates": [
+            "tx-ba01-2026-travis-district-clerk-dcd23c18dbb7a4a7"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-county-clerk",
+          "title": "County Clerk",
+          "candidates": [
+            "tx-ba01-2026-travis-county-clerk-78f159bbd650d542"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-county-treasurer",
+          "title": "County Treasurer",
+          "candidates": [
+            "tx-ba01-2026-travis-county-treasurer-b35c0358333cb8ca"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-appraisal-place-1",
+          "title": "Travis Central Appraisal District, Board of Directors, Place 1",
+          "candidates": [
+            "tx-ba01-2026-travis-appraisal-place-1-626e32a761aa1931"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-appraisal-place-2",
+          "title": "Travis Central Appraisal District, Board of Directors, Place 2",
+          "candidates": [
+            "tx-ba01-2026-travis-appraisal-place-2-fa53d03035e9306e"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-travis-appraisal-place-3",
+          "title": "Travis Central Appraisal District, Board of Directors, Place 3",
+          "candidates": [
+            "tx-ba01-2026-travis-appraisal-place-3-83c81c5151c0331e",
+            "tx-ba01-2026-travis-appraisal-place-3-3b4e1409c8216091"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-147",
+          "title": "DISTRICT JUDGE, 147TH JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-147:cliff_brown"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-201",
+          "title": "DISTRICT JUDGE, 201ST JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-201:amy_clark_meachum"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-250",
+          "title": "DISTRICT JUDGE, 250TH JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-250:kennon_lily_wooten"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-261",
+          "title": "DISTRICT JUDGE, 261ST JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-261:daniella_deseta_lyttle"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-299",
+          "title": "DISTRICT JUDGE, 299TH JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-299:karen_r_sage"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-331",
+          "title": "DISTRICT JUDGE, 331ST JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-331:chantal_melissa_eldridge"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-403",
+          "title": "DISTRICT JUDGE, 403RD JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-403:brandy_mueller"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-419",
+          "title": "DISTRICT JUDGE, 419TH JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-419:catherine_a_mauzy"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-455",
+          "title": "DISTRICT JUDGE, 455TH JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-455:laurie_eiserloh"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-district-judge-459",
+          "title": "DISTRICT JUDGE, 459TH JUDICIAL DISTRICT",
+          "candidates": [
+            "tx-ba01-2026-district-judge-459:maya_guerra_gamble"
+          ]
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-a",
+          "title": "City of Austin Proposition A ◆",
+          "candidates": []
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-b",
+          "title": "City of Austin Proposition B ◆",
+          "candidates": []
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-c",
+          "title": "City of Austin Proposition C ◆",
+          "candidates": []
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-d",
+          "title": "City of Austin Proposition D ◆",
+          "candidates": []
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-e",
+          "title": "City of Austin Proposition E ◆",
+          "candidates": []
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-f",
+          "title": "City of Austin Proposition F ◆",
+          "candidates": []
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-g",
+          "title": "City of Austin Proposition G ◆",
+          "candidates": []
+        },
+        {
+          "id": "tx-ba01-2026-austin-proposition-h",
+          "title": "City of Austin Proposition H ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [
+        "We're working on getting the U.S. House district for ZIP 78701. U.S. House contests aren't shown until we have it."
+      ],
+      "contestCount": 53,
+      "candidateCount": 87
+    },
+    {
+      "zip": "94110",
+      "checkedAt": "2026-10-21T04:21:53.821Z",
+      "httpStatus": 200,
+      "elapsedMs": 2743,
+      "underThreeSeconds": true,
+      "missingHeldContests": [
+        {
+          "id": "ca-sos-2026-general-retention-kelli-m-evans",
+          "title": "Associate Justice of the Supreme Court — KELLI M. EVANS",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-kelli-m-evans-candidate",
+              "name": "Kelli M. Evans",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-joshua-groban",
+          "title": "Associate Justice of the Supreme Court — JOSHUA GROBAN",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-joshua-groban-candidate",
+              "name": "Joshua Groban",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-charles-a-smiley",
+          "title": "Associate Justice, Court of Appeal, First District, Division One — CHARLES A. SMILEY",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-charles-a-smiley-candidate",
+              "name": "Charles A. Smiley",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-kathleen-m-banke",
+          "title": "Associate Justice, Court of Appeal, First District, Division One — KATHLEEN M. BANKE",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-kathleen-m-banke-candidate",
+              "name": "Kathleen M. Banke",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+          "title": "Associate Justice, Court of Appeal, First District, Division One — MONIQUE LANGHORNE WILSON",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-monique-langhorne-wilson-candidate",
+              "name": "Monique Langhorne Wilson",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-therese-m-stewart",
+          "title": "Presiding Justice, Court of Appeal, First District, Division Two — THERESE M. STEWART",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-therese-m-stewart-candidate",
+              "name": "Therese M. Stewart",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-tara-m-desautels",
+          "title": "Associate Justice, Court of Appeal, First District, Division Two — TARA M. DESAUTELS",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-tara-m-desautels-candidate",
+              "name": "Tara M. Desautels",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-ioana-petrou",
+          "title": "Associate Justice, Court of Appeal, First District, Division Three — IOANA PETROU",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-ioana-petrou-candidate",
+              "name": "Ioana Petrou",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-victor-a-rodriguez",
+          "title": "Associate Justice, Court of Appeal, First District, Division Three — VICTOR A. RODRIGUEZ",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-victor-a-rodriguez-candidate",
+              "name": "Victor A. Rodriguez",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-tracie-l-brown",
+          "title": "Presiding Justice, Court of Appeal, First District, Division Four — TRACIE L. BROWN",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-tracie-l-brown-candidate",
+              "name": "Tracie L. Brown",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-mark-simons",
+          "title": "Associate Justice, Court of Appeal, First District, Division Five — MARK SIMONS",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-mark-simons-candidate",
+              "name": "Mark Simons",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-danny-y-chou",
+          "title": "Associate Justice, Court of Appeal, First District, Division Five — DANNY Y. CHOU",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-danny-y-chou-candidate",
+              "name": "Danny Y. Chou",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "ca-sos-2026-general-retention-gordon-burns",
+          "title": "Associate Justice, Court of Appeal, First District, Division Five — GORDON BURNS",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1",
+          "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf",
+          "candidates": [
+            {
+              "id": "ca-sos-2026-general-retention-gordon-burns-candidate",
+              "name": "Gordon Burns",
+              "party": null,
+              "sourceUrl": "https://elections.cdn.sos.ca.gov/statewide-elections/2026-general/cert-list-candidates.pdf"
+            }
+          ],
+          "measures": []
+        }
+      ],
+      "priorTucsonIdsMissing": [],
+      "priorInspectionError": "page.waitForFunction: Timeout 60000ms exceeded.",
+      "explanation": "The first inspection waited for retention cards that the current page filters out. This inspection records those actual missing cards explicitly.",
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "ca-sos-2026-general-governor",
+          "title": "Governor",
+          "candidates": [
+            "ca-sos-2026-general-governor-steve-hilton",
+            "ca-sos-2026-general-governor-xavier-becerra"
+          ]
+        },
+        {
+          "id": "ca-sos-2026-general-lieutenant-governor",
+          "title": "Lieutenant Governor",
+          "candidates": [
+            "ca-sos-2026-general-lieutenant-governor-fiona-ma",
+            "ca-sos-2026-general-lieutenant-governor-gloria-romero"
+          ]
+        },
+        {
+          "id": "ca-sos-2026-general-secretary-of-state",
+          "title": "Secretary of State",
+          "candidates": [
+            "ca-sos-2026-general-secretary-of-state-donald-p-don-wagner",
+            "ca-sos-2026-general-secretary-of-state-shirley-n-weber"
+          ]
+        },
+        {
+          "id": "ca-sos-2026-general-controller",
+          "title": "Controller",
+          "candidates": [
+            "ca-sos-2026-general-controller-herb-w-morgan",
+            "ca-sos-2026-general-controller-malia-m-cohen"
+          ]
+        },
+        {
+          "id": "ca-sos-2026-general-treasurer",
+          "title": "Treasurer",
+          "candidates": [
+            "ca-sos-2026-general-treasurer-eleni-kounalakis",
+            "ca-sos-2026-general-treasurer-jennifer-hawks"
+          ]
+        },
+        {
+          "id": "ca-sos-2026-general-attorney-general",
+          "title": "Attorney General",
+          "candidates": [
+            "ca-sos-2026-general-attorney-general-michael-e-gates",
+            "ca-sos-2026-general-attorney-general-rob-bonta"
+          ]
+        },
+        {
+          "id": "ca-sos-2026-general-insurance-commissioner",
+          "title": "Insurance Commissioner",
+          "candidates": [
+            "ca-sos-2026-general-insurance-commissioner-ben-allen",
+            "ca-sos-2026-general-insurance-commissioner-jane-kim"
+          ]
+        },
+        {
+          "id": "ca-sos-2026-general-superintendent-of-public-instruction",
+          "title": "Superintendent of Public Instruction",
+          "candidates": [
+            "ca-sos-2026-general-superintendent-of-public-instruction-richard-barrera",
+            "ca-sos-2026-general-superintendent-of-public-instruction-sonja-shaw"
+          ]
+        },
+        {
+          "id": "ca-sos-2026-general-state-assembly-member-district-17",
+          "title": "State Assembly Member District 17",
+          "candidates": [
+            "ca-sos-2026-general-state-assembly-member-district-17-manuel-noris-barrera",
+            "ca-sos-2026-general-state-assembly-member-district-17-matt-haney"
+          ]
+        },
+        {
+          "id": "ca-sf-2026-assessor-recorder",
+          "title": "Assessor-Recorder",
+          "candidates": [
+            "ca-sf-2026-assessor-recorder-bf1102ad3b382143"
+          ]
+        },
+        {
+          "id": "ca-sf-2026-public-defender",
+          "title": "Public Defender",
+          "candidates": [
+            "ca-sf-2026-public-defender-5705b143187f74d3"
+          ]
+        },
+        {
+          "id": "ca-sf-2026-board-education",
+          "title": "Board of Education (3 seats)",
+          "candidates": [
+            "ca-sf-2026-board-education-ce9f1f6b01226df8",
+            "ca-sf-2026-board-education-044eda2266810853",
+            "ca-sf-2026-board-education-65a80c27a7474cc0",
+            "ca-sf-2026-board-education-5a398de56d4af519",
+            "ca-sf-2026-board-education-9ee6295c15e80c81",
+            "ca-sf-2026-board-education-e8104bc2a4b9d1a3",
+            "ca-sf-2026-board-education-123bc30906b9a678",
+            "ca-sf-2026-board-education-d79d92611fec3a7e"
+          ]
+        },
+        {
+          "id": "ca-sf-2026-community-college-board",
+          "title": "Community College Board (3 seats)",
+          "candidates": [
+            "ca-sf-2026-community-college-board-5987a116c2e80f0c",
+            "ca-sf-2026-community-college-board-12bbfc0670b5d436",
+            "ca-sf-2026-community-college-board-cc1d66686a2a855e",
+            "ca-sf-2026-community-college-board-4cca2cc403c71327",
+            "ca-sf-2026-community-college-board-78d3ce1924fb5820",
+            "ca-sf-2026-community-college-board-462129902b5d9c98",
+            "ca-sf-2026-community-college-board-d1a57615912f7e3c",
+            "ca-sf-2026-community-college-board-0515e05623ed73e3"
+          ]
+        },
+        {
+          "id": "ca-sf-2026-community-college-board-partial",
+          "title": "Community College Board Partial Term",
+          "candidates": [
+            "ca-sf-2026-community-college-board-partial-0f760316eb714cb5"
+          ]
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-1",
+          "title": "Proposition 1: AUTHORIZES BONDS FOR HOUSING AFFORDABILITY PROGRAMS. LEGISLATIVE STATUTE.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-2",
+          "title": "Proposition 2: INCREASES STATE’S RAINY DAY FUND. LEGISLATIVE CONSTITUTIONAL AMENDMENT.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-3",
+          "title": "Proposition 3: PROVIDES PERMANENT FUNDING FOR SCHOOLS AND HEALTH CARE BY EXTENDING EXISTING TAX ON HIGH INCOMES. INITIATIVE CONSTITUTIONAL AMENDMENT.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-4",
+          "title": "Proposition 4: REPEALS PROHIBITION AGAINST PUBLIC FUNDING OF ELECTION CAMPAIGNS. LEGISLATIVE STATUTE.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-5",
+          "title": "Proposition 5: CHANGES RECALL ELECTION PROCESS FOR STATEWIDE OFFICERS. LEGISLATIVE CONSTITUTIONAL AMENDMENT.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-37",
+          "title": "Proposition 37: CREATES LOAN PROGRAM FOR MIDDLE-INCOME BUYERS OF QUALIFIED NEW HOMES. INITIATIVE STATUTE.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-38",
+          "title": "Proposition 38: AUTHORIZES BONDS FOR IMMUNOLOGY MEDICAL RESEARCH. INITIATIVE STATUTE.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-39",
+          "title": "Proposition 39: PROHIBITS CITIZENS FROM VOTING UNLESS THEY PRESENT GOVERNMENT-ISSUED IDENTIFICATION. INITIATIVE CONSTITUTIONAL AMENDMENT.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-40",
+          "title": "Proposition 40: IMPOSES ONE-TIME TAX ON CERTAIN TAXPAYERS. INITIATIVE CONSTITUTIONAL AMENDMENT AND STATUTE.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-41",
+          "title": "Proposition 41: PROHIBITS NEW STATE TAXES THAT EXCLUDE REVENUES FROM STATE SPENDING LIMIT. REQUIRES AUDITS FOR NEW STATE SPECIAL TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-42",
+          "title": "Proposition 42: PROHIBITS NEW STATE PERSONAL PROPERTY TAXES AND CERTAIN RETROACTIVE STATE TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-43",
+          "title": "Proposition 43: LIMITS VOTERS’ ABILITY TO RAISE REVENUES FOR LOCAL GOVERNMENT SERVICES. LEGISLATIVE CONSTITUTIONAL AMENDMENT.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-44",
+          "title": "Proposition 44: REQUIRES COMMUNITY HEALTH CLINICS SPEND 90% OF REVENUE ON PROGRAM SERVICES. INITIATIVE STATUTE.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sos-2026-general-proposition-45",
+          "title": "Proposition 45: MODIFIES ENVIRONMENTAL REVIEW FOR CERTAIN PROJECTS. INITIATIVE STATUTE.",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-a",
+          "title": "Proposition A — Charter Changes Affecting Various City Departments and Commissions ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-b",
+          "title": "Proposition B — Establishing a Municipal Finance Corporation and a Public Bank ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-c",
+          "title": "Proposition C — Contributions to the Housing Fund ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-d",
+          "title": "Proposition D — Changes to Ballot Measure Process ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-e",
+          "title": "Proposition E — City Administrator’s Authority and Changes to City Contracting ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-f",
+          "title": "Proposition F — Changes to Executive Branch Management ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-g",
+          "title": "Proposition G — Allowing Private Vehicles on the Great Highway in Sunset Dunes Park ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-h",
+          "title": "Proposition H — Parcel Tax to Fund Public Muni Operations ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-i",
+          "title": "Proposition I — Changes to Real Property Transfer Tax ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-proposition-j",
+          "title": "Proposition J — Removal of Foreclosure Exemption for Real Property Transfer Tax ◆",
+          "candidates": []
+        },
+        {
+          "id": "ca-sf-2026-regional-transit-measure",
+          "title": "RTM — Regional Transit Measure ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [
+        "We're working on getting the U.S. House district for ZIP 94110. U.S. House contests aren't shown until we have it."
+      ],
+      "contestCount": 39,
+      "candidateCount": 37
+    },
+    {
+      "zip": "43215",
+      "httpStatus": 200,
+      "elapsedMs": 3780,
+      "underThreeSeconds": false,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "oh-sos-2026-general-governor-and-lieutenant-governor",
+          "title": "Governor and Lieutenant Governor",
+          "candidates": [
+            "oh-sos-2026-general-governor-and-lieutenant-governor-67effa9bde26",
+            "oh-sos-2026-general-governor-and-lieutenant-governor-2f874d2ea9f2",
+            "oh-sos-2026-general-governor-and-lieutenant-governor-a264deaf25ac",
+            "oh-sos-2026-general-governor-and-lieutenant-governor-78d3c1d0db79",
+            "oh-sos-2026-general-governor-and-lieutenant-governor-974cf9d6d218",
+            "oh-sos-2026-general-governor-and-lieutenant-governor-6c3534aa55a6"
+          ]
+        },
+        {
+          "id": "oh-sos-2026-general-attorney-general",
+          "title": "Attorney General",
+          "candidates": [
+            "oh-sos-2026-general-attorney-general-49f9caa98c35",
+            "oh-sos-2026-general-attorney-general-0b393cd79f33"
+          ]
+        },
+        {
+          "id": "oh-sos-2026-general-auditor-of-state",
+          "title": "Auditor of State",
+          "candidates": [
+            "oh-sos-2026-general-auditor-of-state-12a9998994fa",
+            "oh-sos-2026-general-auditor-of-state-66c064082982"
+          ]
+        },
+        {
+          "id": "oh-sos-2026-general-secretary-of-state",
+          "title": "Secretary of State",
+          "candidates": [
+            "oh-sos-2026-general-secretary-of-state-0f8d4ea379f8",
+            "oh-sos-2026-general-secretary-of-state-eda4ab12bbb9",
+            "oh-sos-2026-general-secretary-of-state-a95e8a0d9142"
+          ]
+        },
+        {
+          "id": "oh-sos-2026-general-treasurer-of-state",
+          "title": "Treasurer of State",
+          "candidates": [
+            "oh-sos-2026-general-treasurer-of-state-8033e8ed34ea",
+            "oh-sos-2026-general-treasurer-of-state-fc921ec9359f"
+          ]
+        },
+        {
+          "id": "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-1-2027",
+          "title": "Justice of the Supreme Court (Full term commencing 1/1/2027)",
+          "candidates": [
+            "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-1-2027-1873447a5af9",
+            "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-1-2027-864188626f46"
+          ]
+        },
+        {
+          "id": "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-2-2027",
+          "title": "Justice of the Supreme Court (Full term commencing 1/2/2027)",
+          "candidates": [
+            "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-2-2027-4cb282d001f0",
+            "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-2-2027-ccfee69c2d2b"
+          ]
+        },
+        {
+          "id": "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029",
+          "title": "U.S. Senator (Unexpired term ending 1/3/2029)",
+          "candidates": [
+            "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029-afc9223223d1",
+            "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029-1d88a8c23189",
+            "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029-5789920b4121",
+            "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029-7ccfec4fa811",
+            "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029-157ac87a4c0c",
+            "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029-f67111c6210d",
+            "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029-d4013b2f8cbc"
+          ]
+        },
+        {
+          "id": "oh-ba01-state-senator-district-3-sldu-3",
+          "title": "State Senator, District 3",
+          "candidates": [
+            "oh-ba01-state-senator-district-3-sldu-3-candidate-michele-reynolds",
+            "oh-ba01-state-senator-district-3-sldu-3-candidate-stacie-a-baker"
+          ]
+        },
+        {
+          "id": "oh-ba01-state-senator-district-15-sldu-15",
+          "title": "State Senator, District 15",
+          "candidates": [
+            "oh-ba01-state-senator-district-15-sldu-15-candidate-joseph-healy",
+            "oh-ba01-state-senator-district-15-sldu-15-candidate-latyna-m-humphrey"
+          ]
+        },
+        {
+          "id": "oh-ba01-state-senator-district-25-sldu-25",
+          "title": "State Senator, District 25",
+          "candidates": [
+            "oh-ba01-state-senator-district-25-sldu-25-candidate-bill-demora",
+            "oh-ba01-state-senator-district-25-sldu-25-candidate-don-roberts",
+            "oh-ba01-state-senator-district-25-sldu-25-candidate-raisheda-d-angus"
+          ]
+        },
+        {
+          "id": "oh-ba01-state-representative-district-1-sldl-1",
+          "title": "State Representative, District 1",
+          "candidates": [
+            "oh-ba01-state-representative-district-1-sldl-1-candidate-dontavius-jarrells",
+            "oh-ba01-state-representative-district-1-sldl-1-candidate-joel-a-greff"
+          ]
+        },
+        {
+          "id": "oh-ba01-state-representative-district-7-sldl-7",
+          "title": "State Representative, District 7",
+          "candidates": [
+            "oh-ba01-state-representative-district-7-sldl-7-candidate-cameron-koffel",
+            "oh-ba01-state-representative-district-7-sldl-7-candidate-ukeme-awakessien-jeter",
+            "oh-ba01-state-representative-district-7-sldl-7-candidate-william-mercier"
+          ]
+        },
+        {
+          "id": "oh-ba01-state-representative-district-10-sldl-10",
+          "title": "State Representative, District 10",
+          "candidates": [
+            "oh-ba01-state-representative-district-10-sldl-10-candidate-denise-d-angelo",
+            "oh-ba01-state-representative-district-10-sldl-10-candidate-mark-sigrist"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-01-01-2027-county-franklin",
+          "title": "Franklin County — Judge of the Court of Common Pleas (General Division) (term commencing 01/01/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-01-01-2027-county-franklin-candidate-carl-aveni"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-02-09-2027-county-franklin",
+          "title": "Franklin County — Judge of the Court of Common Pleas (General Division) (term commencing 02/09/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-02-09-2027-county-franklin-candidate-andy-miller"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-01-2027-county-franklin",
+          "title": "Franklin County — Judge of the Court of Common Pleas (General Division) (term commencing 07/01/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-01-2027-county-franklin-candidate-david-young"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-02-2027-county-franklin",
+          "title": "Franklin County — Judge of the Court of Common Pleas (General Division) (term commencing 07/02/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-general-division-term-commencing-07-02-2027-county-franklin-candidate-chris-brown"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-02-2027-county-franklin",
+          "title": "Franklin County — Judge of the Court of Common Pleas (Domestic Relations Division) (term commencing 01/02/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-02-2027-county-franklin-candidate-kelley-gabrielle-boller"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-03-2027-county-franklin",
+          "title": "Franklin County — Judge of the Court of Common Pleas (Domestic Relations Division) (term commencing 01/03/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-domestic-relations-division-term-commencing-01-03-2027-county-franklin-candidate-lasheyl-n-stroud"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-probate-term-commencing-02-09-2027-county-franklin",
+          "title": "Franklin County — Judge of the Court of Common Pleas (Probate) (term commencing 02/09/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-probate-term-commencing-02-09-2027-county-franklin-candidate-chris-junga",
+            "oh-ba01-franklin-county-judge-of-the-court-of-common-pleas-probate-term-commencing-02-09-2027-county-franklin-candidate-kelly-green"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-county-auditor-county-franklin",
+          "title": "Franklin County — County Auditor",
+          "candidates": [
+            "oh-ba01-franklin-county-county-auditor-county-franklin-candidate-michael-stinziano"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-county-commissioner-term-commencing-01-01-2027-county-franklin",
+          "title": "Franklin County — County Commissioner (term commencing 01/01/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-county-commissioner-term-commencing-01-01-2027-county-franklin-candidate-eric-terford",
+            "oh-ba01-franklin-county-county-commissioner-term-commencing-01-01-2027-county-franklin-candidate-erica-c-crawley"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-02-09-2027-county-franklin",
+          "title": "Franklin County — Judge of Court of Appeals, 10th District (term commencing 02/09/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-02-09-2027-county-franklin-candidate-michael-c-mentel"
+          ]
+        },
+        {
+          "id": "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-07-01-2027-county-franklin",
+          "title": "Franklin County — Judge of Court of Appeals, 10th District (term commencing 07/01/2027)",
+          "candidates": [
+            "oh-ba01-franklin-county-judge-of-court-of-appeals-10th-district-term-commencing-07-01-2027-county-franklin-candidate-terri-jamison"
+          ]
+        },
+        {
+          "id": "oh-sos-2026-general-issue-3",
+          "title": "Issue 3 — Proposed Constitutional Amendment TO REQUIRE VOTERS TO PRESENT PHOTO IDENTIFICATION IN ORDER TO VOTE",
+          "candidates": []
+        },
+        {
+          "id": "oh-ba01-columbus-issue-8-city-council-district-elections-by-petition-place-columbus",
+          "title": "Columbus Issue 8 — City Council District Elections (By Petition) ◆",
+          "candidates": []
+        },
+        {
+          "id": "oh-ba01-columbus-issue-9-city-council-district-and-at-large-elections-place-columbus",
+          "title": "Columbus Issue 9 — City Council District and At-Large Elections ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [
+        "We're working on getting the U.S. House district for ZIP 43215. U.S. House contests aren't shown until we have it."
+      ],
+      "contestCount": 28,
+      "candidateCount": 53
+    },
+    {
+      "zip": "53703",
+      "httpStatus": 200,
+      "elapsedMs": 2219,
+      "underThreeSeconds": true,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "wi-green-county-2026-general-governor",
+          "title": "Governor / Lieutenant Governor",
+          "candidates": [
+            "wi-green-county-2026-general-governor-candidate-david-crowley",
+            "wi-green-county-2026-general-governor-candidate-tom-tiffany"
+          ]
+        },
+        {
+          "id": "wi-green-county-2026-general-attorney-general",
+          "title": "Attorney General",
+          "candidates": [
+            "wi-green-county-2026-general-attorney-general-candidate-josh-kaul",
+            "wi-green-county-2026-general-attorney-general-candidate-eric-toney"
+          ]
+        },
+        {
+          "id": "wi-green-county-2026-general-secretary-of-state",
+          "title": "Secretary of State",
+          "candidates": [
+            "wi-green-county-2026-general-secretary-of-state-candidate-pete-karas",
+            "wi-green-county-2026-general-secretary-of-state-candidate-jay-schroeder",
+            "wi-green-county-2026-general-secretary-of-state-candidate-jocasta-zamarripa"
+          ]
+        },
+        {
+          "id": "wi-green-county-2026-general-state-treasurer",
+          "title": "State Treasurer",
+          "candidates": [
+            "wi-green-county-2026-general-state-treasurer-candidate-john-s-leiber",
+            "wi-green-county-2026-general-state-treasurer-candidate-yee-leng-xiong"
+          ]
+        },
+        {
+          "id": "wi-green-county-2026-general-representative-in-congress-district-2",
+          "title": "Representative in Congress District 2",
+          "candidates": [
+            "wi-green-county-2026-general-representative-in-congress-district-2-candidate-mark-pocan"
+          ]
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-76-sldl-76",
+          "title": "Representative to the Assembly District 76",
+          "candidates": [
+            "wi-ba01-representative-to-the-assembly-district-76-sldl-76-candidate-dina-nina-martinez-rutherford",
+            "wi-ba01-representative-to-the-assembly-district-76-sldl-76-candidate-nina-chat"
+          ]
+        },
+        {
+          "id": "wi-ba01-representative-to-the-assembly-district-77-sldl-77",
+          "title": "Representative to the Assembly District 77",
+          "candidates": [
+            "wi-ba01-representative-to-the-assembly-district-77-sldl-77-candidate-jane-mccormick",
+            "wi-ba01-representative-to-the-assembly-district-77-sldl-77-candidate-renuka-mayadev"
+          ]
+        },
+        {
+          "id": "wi-ba01-dane-county-sheriff-county-dane",
+          "title": "Dane County Sheriff",
+          "candidates": [
+            "wi-ba01-dane-county-sheriff-county-dane-candidate-kalvin-d-barrett"
+          ]
+        },
+        {
+          "id": "wi-ba01-dane-county-clerk-of-circuit-court-county-dane",
+          "title": "Dane County Clerk of Circuit Court",
+          "candidates": [
+            "wi-ba01-dane-county-clerk-of-circuit-court-county-dane-candidate-jeff-okazaki"
+          ]
+        },
+        {
+          "id": "wi-green-county-2026-general-question-2",
+          "title": "Freedom to gather in places of worship during an emergency",
+          "candidates": []
+        },
+        {
+          "id": "wi-green-county-2026-general-question-3",
+          "title": "Governmental entity discrimination prohibited",
+          "candidates": []
+        },
+        {
+          "id": "wi-green-county-2026-general-question-1",
+          "title": "Partial veto",
+          "candidates": []
+        }
+      ],
+      "gaps": [],
+      "contestCount": 12,
+      "candidateCount": 16
+    },
+    {
+      "zip": "19103",
+      "httpStatus": 200,
+      "elapsedMs": 1828,
+      "underThreeSeconds": true,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "pa-dos:pa-2026-general:governor-lieutenant-governor",
+          "title": "Governor and Lieutenant Governor – Statewide",
+          "candidates": [
+            "pa-dos:pa-2026-general:candidate:2b841733e071fe18d72a",
+            "pa-dos:pa-2026-general:candidate:acd8665256bd2db509d2",
+            "pa-dos:pa-2026-general:candidate:30cf48b946276b195d48"
+          ]
+        },
+        {
+          "id": "pa-dos:pa-2026-general:cd-3",
+          "title": "Representative in Congress – 3rd District",
+          "candidates": [
+            "pa-dos:pa-2026-general:candidate:98a791d832ce7a4877a4",
+            "pa-dos:pa-2026-general:candidate:147f7c51dc74713bfde8"
+          ]
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-10",
+          "title": "Representative in the General Assembly – 10th District",
+          "candidates": [
+            "pa-dos:pa-2026-general:candidate:ce93feeacb3ef9ce780f"
+          ]
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-181",
+          "title": "Representative in the General Assembly – 181st District",
+          "candidates": [
+            "pa-dos:pa-2026-general:candidate:85b0caa54412d0c4ecb7"
+          ]
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-182",
+          "title": "Representative in the General Assembly – 182nd District",
+          "candidates": [
+            "pa-dos:pa-2026-general:candidate:25c13b6c87b1fab82819"
+          ]
+        },
+        {
+          "id": "pa-dos:pa-2026-general:sldl-195",
+          "title": "Representative in the General Assembly – 195th District",
+          "candidates": [
+            "pa-dos:pa-2026-general:candidate:1f3bfab06dd16bd945f3"
+          ]
+        },
+        {
+          "id": "pa-philadelphia-2026-charter-question-1",
+          "title": "Philadelphia Charter Change Question #1 ◆",
+          "candidates": []
+        },
+        {
+          "id": "pa-philadelphia-2026-charter-question-2",
+          "title": "Philadelphia Charter Change Question #2 ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [],
+      "contestCount": 8,
+      "candidateCount": 9
+    },
+    {
+      "zip": "85003",
+      "httpStatus": 200,
+      "elapsedMs": 5249,
+      "underThreeSeconds": false,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "ballot-az-pima:governor",
+          "title": "Governor / Lieutenant Governor",
+          "candidates": [
+            "ballot-az-pima:governor|Katie Hobbs / John Giles",
+            "ballot-az-pima:governor|Andy Biggs / Sine Kerr",
+            "ballot-az-pima:governor|Risa Lombardo / Lisa Castillo",
+            "ballot-az-pima:governor|Teri Ann Hourihan / Angela Harrolle Mohan",
+            "ballot-az-pima:governor|Gertritrude Gonzalez",
+            "ballot-az-pima:governor|Alice Novoa"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:secretary-of-state",
+          "title": "Secretary of State",
+          "candidates": [
+            "ballot-az-pima:secretary-of-state|Adrian Fontes",
+            "ballot-az-pima:secretary-of-state|Alexander Kolodin",
+            "ballot-az-pima:secretary-of-state|Duwayne Collier"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:attorney-general",
+          "title": "Attorney General",
+          "candidates": [
+            "ballot-az-pima:attorney-general|Kris Mayes",
+            "ballot-az-pima:attorney-general|Warren Petersen"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:state-treasurer",
+          "title": "State Treasurer",
+          "candidates": [
+            "ballot-az-pima:state-treasurer|Nick Mansour",
+            "ballot-az-pima:state-treasurer|Elijah Norton"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:superintendent",
+          "title": "Superintendent of Public Instruction",
+          "candidates": [
+            "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
+            "ballot-az-pima:superintendent|Kimberly Yee",
+            "ballot-az-pima:superintendent|Gerard Davis",
+            "ballot-az-pima:superintendent|Stephen Neal Jr."
+          ]
+        },
+        {
+          "id": "ballot-az-pima:mine-inspector",
+          "title": "State Mine Inspector",
+          "candidates": [
+            "ballot-az-pima:mine-inspector|Brian Matlock",
+            "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:corporation-commissioner",
+          "title": "Corporation Commissioner",
+          "candidates": [
+            "ballot-az-pima:corporation-commissioner|Ralph Heap",
+            "ballot-az-pima:corporation-commissioner|Kevin Thompson",
+            "ballot-az-pima:corporation-commissioner|Jonathon Hill",
+            "ballot-az-pima:corporation-commissioner|Clara Pratte",
+            "ballot-az-pima:corporation-commissioner|Mike Cease"
+          ]
+        },
+        {
+          "id": "az-2026-general-state-senate-5",
+          "title": "State Senator, District 5",
+          "candidates": [
+            "az-2026-general-state-senate-5:laforest-jason",
+            "az-2026-general-state-senate-5:marsh-christine"
+          ]
+        },
+        {
+          "id": "az-2026-general-state-house-5",
+          "title": "State Representative, District 5",
+          "candidates": [
+            "az-2026-general-state-house-5:liguori-sarah",
+            "az-2026-general-state-house-5:marquez-aaron"
+          ]
+        },
+        {
+          "id": "az-2026-general-state-senate-11",
+          "title": "State Senator, District 11",
+          "candidates": [
+            "az-2026-general-state-senate-11:ayala-joshua",
+            "az-2026-general-state-senate-11:miranda-catherine"
+          ]
+        },
+        {
+          "id": "az-2026-general-state-house-11",
+          "title": "State Representative, District 11",
+          "candidates": [
+            "az-2026-general-state-house-11:aleman-cesar",
+            "az-2026-general-state-house-11:cavero-junelle",
+            "az-2026-general-state-house-11:dailey-joseph-charles",
+            "az-2026-general-state-house-11:de-los-santos-oscar"
+          ]
+        },
+        {
+          "id": "az-2026-general-us-house-3",
+          "title": "U.S. Representative, District 3",
+          "candidates": [
+            "az-2026-general-us-house-3:ansari-yassamin",
+            "az-2026-general-us-house-3:aversa-alan",
+            "az-2026-general-us-house-3:parkman-jacob",
+            "az-2026-general-us-house-3:redkey-david"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-clerk-of-the-superior-court",
+          "title": "Clerk of the Superior Court",
+          "candidates": [
+            "az-maricopa-2026-clerk-of-the-superior-court-dial-jeff",
+            "az-maricopa-2026-clerk-of-the-superior-court-matta-sebastian-seb-maximiliano"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-17-retention",
+          "title": "Judge of the Superior Court, Division 17 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-17-retention-astrowsky-brad"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-37-retention",
+          "title": "Judge of the Superior Court, Division 37 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-37-retention-blair-michael-c"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-53-retention",
+          "title": "Judge of the Superior Court, Division 53 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-53-retention-blanchard-john"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-54-retention",
+          "title": "Judge of the Superior Court, Division 54 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-54-retention-brooks-robert-ian"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-76-retention",
+          "title": "Judge of the Superior Court, Division 76 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-76-retention-cairo-sunita-a"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-78-retention",
+          "title": "Judge of the Superior Court, Division 78 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-78-retention-carson-michelle"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-35-retention",
+          "title": "Judge of the Superior Court, Division 35 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-35-retention-como-gregory-s"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-15-retention",
+          "title": "Judge of the Superior Court, Division 15 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-15-retention-cooper-katherine-kay-margaret"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-60-retention",
+          "title": "Judge of the Superior Court, Division 60 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-60-retention-covil-max-henri"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-36-retention",
+          "title": "Judge of the Superior Court, Division 36 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-36-retention-culbertson-kristin-r"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-55-retention",
+          "title": "Judge of the Superior Court, Division 55 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-55-retention-davis-marvin-l"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-61-retention",
+          "title": "Judge of the Superior Court, Division 61 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-61-retention-edelstein-monica-n-b"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-25-retention",
+          "title": "Judge of the Superior Court, Division 25 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-25-retention-fish-geoffrey-h"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-29-retention",
+          "title": "Judge of the Superior Court, Division 29 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-29-retention-fox-dewain"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-75-retention",
+          "title": "Judge of the Superior Court, Division 75 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-75-retention-francis-jillian"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-82-retention",
+          "title": "Judge of the Superior Court, Division 82 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-82-retention-gilla-marischa"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-28-retention",
+          "title": "Judge of the Superior Court, Division 28 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-28-retention-green-jennifer-e"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-86-retention",
+          "title": "Judge of the Superior Court, Division 86 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-86-retention-guyton-lauren-r"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-79-retention",
+          "title": "Judge of the Superior Court, Division 79 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-79-retention-harmon-melody-g"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-14-retention",
+          "title": "Judge of the Superior Court, Division 14 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-14-retention-herrod-michael-j"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-74-retention",
+          "title": "Judge of the Superior Court, Division 74 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-74-retention-jackson-charlene-d"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-50-retention",
+          "title": "Judge of the Superior Court, Division 50 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-50-retention-julian-melissa-i"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-80-retention",
+          "title": "Judge of the Superior Court, Division 80 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-80-retention-kalman-amy-michelle"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-51-retention",
+          "title": "Judge of the Superior Court, Division 51 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-51-retention-kiefer-joseph"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-32-retention",
+          "title": "Judge of the Superior Court, Division 32 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-32-retention-korbin-steiner-ronee"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-3-retention",
+          "title": "Judge of the Superior Court, Division 3 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-3-retention-kreamer-joseph-c"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-33-retention",
+          "title": "Judge of the Superior Court, Division 33 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-33-retention-lemaire-kerstin"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-5-retention",
+          "title": "Judge of the Superior Court, Division 5 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-5-retention-martin-daniel-g"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-59-retention",
+          "title": "Judge of the Superior Court, Division 59 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-59-retention-mata-julie"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-81-retention",
+          "title": "Judge of the Superior Court, Division 81 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-81-retention-mccarthy-steven-warren"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-26-retention",
+          "title": "Judge of the Superior Court, Division 26 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-26-retention-moskowitz-frank-william"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-6-retention",
+          "title": "Judge of the Superior Court, Division 6 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-6-retention-myers-sam-j"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-56-retention",
+          "title": "Judge of the Superior Court, Division 56 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-56-retention-nicholls-suzanne-m"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-83-retention",
+          "title": "Judge of the Superior Court, Division 83 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-83-retention-o-donnell-smith-colleen"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-16-retention",
+          "title": "Judge of the Superior Court, Division 16 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-16-retention-polk-jay-m"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-57-retention",
+          "title": "Judge of the Superior Court, Division 57 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-57-retention-rassas-michael-z"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-31-retention",
+          "title": "Judge of the Superior Court, Division 31 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-31-retention-rogers-joshua-d"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-30-retention",
+          "title": "Judge of the Superior Court, Division 30 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-30-retention-rueter-jeffrey"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-27-retention",
+          "title": "Judge of the Superior Court, Division 27 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-27-retention-ryan-touhill-jennifer"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-58-retention",
+          "title": "Judge of the Superior Court, Division 58 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-58-retention-schwartz-aryeh-d"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-13-retention",
+          "title": "Judge of the Superior Court, Division 13 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-13-retention-viola-danielle-j"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-7-retention",
+          "title": "Judge of the Superior Court, Division 7 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-7-retention-warner-randall-h"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-2-retention",
+          "title": "Judge of the Superior Court, Division 2 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-2-retention-welty-joseph-c"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-34-retention",
+          "title": "Judge of the Superior Court, Division 34 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-34-retention-whitehead-roy-chuck"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-85-retention",
+          "title": "Judge of the Superior Court, Division 85 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-85-retention-williams-paula"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-84-retention",
+          "title": "Judge of the Superior Court, Division 84 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-84-retention-wingard-william-r"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-52-retention",
+          "title": "Judge of the Superior Court, Division 52 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-52-retention-woo-cassie-bray"
+          ]
+        },
+        {
+          "id": "az-maricopa-2026-judge-of-the-superior-court-division-77-retention",
+          "title": "Judge of the Superior Court, Division 77 — Retention",
+          "candidates": [
+            "az-maricopa-2026-judge-of-the-superior-court-division-77-retention-zabor-melissa"
+          ]
+        },
+        {
+          "id": "ballot-az-2026-general-supreme-court-john-lopez-iv",
+          "title": "Justice of the Arizona Supreme Court — John Lopez IV — Retention",
+          "candidates": [
+            "ballot-az-2026-general-supreme-court-john-lopez-iv-john-lopez-iv"
+          ]
+        },
+        {
+          "id": "az-maricopa-general-2026-appeals-catlett-michael",
+          "title": "Court of Appeals, Division 1 — CATLETT, MICHAEL — Retention",
+          "candidates": [
+            "az-maricopa-general-2026-appeals-catlett-michael-catlett-michael"
+          ]
+        },
+        {
+          "id": "az-maricopa-general-2026-appeals-hill-foster-anni",
+          "title": "Court of Appeals, Division 1 — HILL FOSTER, ANNI — Retention",
+          "candidates": [
+            "az-maricopa-general-2026-appeals-hill-foster-anni-hill-foster-anni"
+          ]
+        },
+        {
+          "id": "az-maricopa-general-2026-appeals-howe-randall",
+          "title": "Court of Appeals, Division 1 — HOWE, RANDALL — Retention",
+          "candidates": [
+            "az-maricopa-general-2026-appeals-howe-randall-howe-randall"
+          ]
+        },
+        {
+          "id": "az-maricopa-general-2026-appeals-jacobs-andrew",
+          "title": "Court of Appeals, Division 1 — JACOBS, ANDREW — Retention",
+          "candidates": [
+            "az-maricopa-general-2026-appeals-jacobs-andrew-jacobs-andrew"
+          ]
+        },
+        {
+          "id": "az-maricopa-general-2026-appeals-kiley-daniel",
+          "title": "Court of Appeals, Division 1 — KILEY, DANIEL — Retention",
+          "candidates": [
+            "az-maricopa-general-2026-appeals-kiley-daniel-kiley-daniel"
+          ]
+        },
+        {
+          "id": "az-maricopa-general-2026-appeals-morse-jr-james",
+          "title": "Court of Appeals, Division 1 — MORSE JR., JAMES — Retention",
+          "candidates": [
+            "az-maricopa-general-2026-appeals-morse-jr-james-morse-jr-james"
+          ]
+        },
+        {
+          "id": "az-maricopa-general-2026-appeals-perkins-jennifer",
+          "title": "Court of Appeals, Division 1 — PERKINS, JENNIFER — Retention",
+          "candidates": [
+            "az-maricopa-general-2026-appeals-perkins-jennifer-perkins-jennifer"
+          ]
+        },
+        {
+          "id": "az-maricopa-general-2026-appeals-weinzweig-david",
+          "title": "Court of Appeals, Division 1 — WEINZWEIG, DAVID — Retention",
+          "candidates": [
+            "az-maricopa-general-2026-appeals-weinzweig-david-weinzweig-david"
+          ]
+        },
+        {
+          "id": "az-maricopa-general-2026-college-at-large",
+          "title": "Maricopa County Community College District — Board Member At-Large",
+          "candidates": [
+            "az-maricopa-general-2026-college-at-large-crow-john-david",
+            "az-maricopa-general-2026-college-at-large-schwiebert-judy"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:prop-141",
+          "title": "Proposition 141: Prohibit tax; monitoring; vehicle mileage",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-142",
+          "title": "Proposition 142: Preferential treatment; discrimination; prohibited acts",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-143",
+          "title": "Proposition 143: School districts; labor organizations; resources",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-144",
+          "title": "Proposition 144: Citizenship; identification; contributions; early voting",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-145",
+          "title": "Proposition 145: Military families; scholarship accounts",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-212",
+          "title": "Proposition 212: Protect Education Act",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-316",
+          "title": "Proposition 316: Food; municipal tax; exemption",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-317",
+          "title": "Proposition 317: Drug cartels; terrorist organizations",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-318",
+          "title": "Proposition 318: Interscholastic; intramural athletics; biological sex",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-319",
+          "title": "Proposition 319: Photo enforcement systems; voter approval",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-320",
+          "title": "Proposition 320: Instructional expenses; operational spending; enforcement",
+          "candidates": []
+        },
+        {
+          "id": "az-maricopa-2026-proposition-413",
+          "title": "Proposition 413 — Transaction Privilege Tax for Jail Facilities ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [],
+      "contestCount": 83,
+      "candidateCount": 99
+    },
+    {
+      "zip": "80202",
+      "checkedAt": "2026-10-21T04:21:56.649Z",
+      "httpStatus": 200,
+      "elapsedMs": 2523,
+      "underThreeSeconds": true,
+      "missingHeldContests": [
+        {
+          "id": "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii",
+          "title": "Colorado Supreme Court — William W. Hood, III — Retention",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:co",
+          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+          "candidates": [
+            {
+              "id": "co-sos-2026-general-colorado-supreme-court-william-w-hood-iii-william-w-hood-iii",
+              "name": "William W. Hood, III",
+              "party": null,
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre",
+          "title": "Colorado Court of Appeals — Rebecca Rankin Freyre — Retention",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:co",
+          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+          "candidates": [
+            {
+              "id": "co-sos-2026-general-colorado-court-of-appeals-rebecca-rankin-freyre-rebecca-rankin-freyre",
+              "name": "Rebecca Rankin Freyre",
+              "party": null,
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris",
+          "title": "Colorado Court of Appeals — Elizabeth L. Harris — Retention",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:co",
+          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+          "candidates": [
+            {
+              "id": "co-sos-2026-general-colorado-court-of-appeals-elizabeth-l-harris-elizabeth-l-harris",
+              "name": "Elizabeth L. Harris",
+              "party": null,
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum",
+          "title": "Colorado Court of Appeals — Katharine E. Lum — Retention",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:co",
+          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+          "candidates": [
+            {
+              "id": "co-sos-2026-general-colorado-court-of-appeals-katharine-e-lum-katharine-e-lum",
+              "name": "Katharine E. Lum",
+              "party": null,
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie",
+          "title": "Colorado Court of Appeals — Pax Moultrie — Retention",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:co",
+          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+          "candidates": [
+            {
+              "id": "co-sos-2026-general-colorado-court-of-appeals-pax-moultrie-pax-moultrie",
+              "name": "Pax Moultrie",
+              "party": null,
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock",
+          "title": "Colorado Court of Appeals — Karl L. Schock — Retention",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:co",
+          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+          "candidates": [
+            {
+              "id": "co-sos-2026-general-colorado-court-of-appeals-karl-l-schock-karl-l-schock",
+              "name": "Karl L. Schock",
+              "party": null,
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan",
+          "title": "Colorado Court of Appeals — Grant Sullivan — Retention",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:co",
+          "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html",
+          "candidates": [
+            {
+              "id": "co-sos-2026-general-colorado-court-of-appeals-grant-sullivan-grant-sullivan",
+              "name": "Grant Sullivan",
+              "party": null,
+              "sourceUrl": "https://www.sos.state.co.us/pubs/elections/vote/generalCandidates.html"
+            }
+          ],
+          "measures": []
+        }
+      ],
+      "priorTucsonIdsMissing": [],
+      "priorInspectionError": "page.waitForFunction: Timeout 60000ms exceeded.",
+      "explanation": "The first inspection waited for retention cards that the current page filters out. This inspection records those actual missing cards explicitly.",
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "co-sos-2026-general-us-senate-state",
+          "title": "US Senate",
+          "candidates": [
+            "co-sos-2026-general-us-senate-state-ryan-apelbaum",
+            "co-sos-2026-general-us-senate-state-mark-baisley",
+            "co-sos-2026-general-us-senate-state-christopher-baum",
+            "co-sos-2026-general-us-senate-state-bob-chew",
+            "co-sos-2026-general-us-senate-state-john-hickenlooper",
+            "co-sos-2026-general-us-senate-state-blake-huber",
+            "co-sos-2026-general-us-senate-state-will-powers",
+            "co-sos-2026-general-us-senate-state-donald-willoughby",
+            "co-sos-2026-general-us-senate-state-adam-withrow"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-us-house-of-representatives-1",
+          "title": "US House of Representatives — District 1",
+          "candidates": [
+            "co-sos-2026-general-us-house-of-representatives-1-shimon-blau",
+            "co-sos-2026-general-us-house-of-representatives-1-chad-humphrey",
+            "co-sos-2026-general-us-house-of-representatives-1-melat-kiros",
+            "co-sos-2026-general-us-house-of-representatives-1-critter-milton",
+            "co-sos-2026-general-us-house-of-representatives-1-christy-peterson",
+            "co-sos-2026-general-us-house-of-representatives-1-stephen-replin",
+            "co-sos-2026-general-us-house-of-representatives-1-kevin-stclair",
+            "co-sos-2026-general-us-house-of-representatives-1-john-wren"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-governor-state",
+          "title": "Governor / Lieutenant Governor",
+          "candidates": [
+            "co-sos-2026-general-governor-state-eric-mulder",
+            "co-sos-2026-general-governor-state-erik-underwood",
+            "co-sos-2026-general-governor-state-greg-lopez",
+            "co-sos-2026-general-governor-state-jeff-peckman",
+            "co-sos-2026-general-governor-state-phil-weiser",
+            "co-sos-2026-general-governor-state-stephen-t-hamilton",
+            "co-sos-2026-general-governor-state-victor-marx"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-secretary-of-state-state",
+          "title": "Secretary of State",
+          "candidates": [
+            "co-sos-2026-general-secretary-of-state-state-amanda-campbell",
+            "co-sos-2026-general-secretary-of-state-state-amanda-gonzalez",
+            "co-sos-2026-general-secretary-of-state-state-celeste-landry",
+            "co-sos-2026-general-secretary-of-state-state-sean-vadney",
+            "co-sos-2026-general-secretary-of-state-state-james-wiley"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-state-treasurer-state",
+          "title": "State Treasurer",
+          "candidates": [
+            "co-sos-2026-general-state-treasurer-state-jodie-barr",
+            "co-sos-2026-general-state-treasurer-state-jeff-bridges",
+            "co-sos-2026-general-state-treasurer-state-kevin-grantham",
+            "co-sos-2026-general-state-treasurer-state-marilee-langner-sturgis"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-attorney-general-state",
+          "title": "Attorney General",
+          "candidates": [
+            "co-sos-2026-general-attorney-general-state-michael-j-allen",
+            "co-sos-2026-general-attorney-general-state-jena-griswold"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-state-board-of-education-1",
+          "title": "State Board of Education — District 1",
+          "candidates": [
+            "co-sos-2026-general-state-board-of-education-1-clayton-casciato",
+            "co-sos-2026-general-state-board-of-education-1-lisa-esc-rcega",
+            "co-sos-2026-general-state-board-of-education-1-frederick-espinoza"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-state-senate-31",
+          "title": "State Senate — District 31",
+          "candidates": [
+            "co-sos-2026-general-state-senate-31-matt-ball"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-state-senate-34",
+          "title": "State Senate — District 34",
+          "candidates": [
+            "co-sos-2026-general-state-senate-34-chela-garcia-irlando",
+            "co-sos-2026-general-state-senate-34-jacob-luria",
+            "co-sos-2026-general-state-senate-34-jennifer-qualteri"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-state-house-of-representatives-5",
+          "title": "State House of Representatives — District 5",
+          "candidates": [
+            "co-sos-2026-general-state-house-of-representatives-5-johnnie-w-johnson",
+            "co-sos-2026-general-state-house-of-representatives-5-justine-sandoval"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-state-house-of-representatives-6",
+          "title": "State House of Representatives — District 6",
+          "candidates": [
+            "co-sos-2026-general-state-house-of-representatives-6-kathleen-angel",
+            "co-sos-2026-general-state-house-of-representatives-6-iris-halpern"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-state-house-of-representatives-8",
+          "title": "State House of Representatives — District 8",
+          "candidates": [
+            "co-sos-2026-general-state-house-of-representatives-8-carolyn-barnes",
+            "co-sos-2026-general-state-house-of-representatives-8-lindsay-gilchrist",
+            "co-sos-2026-general-state-house-of-representatives-8-jesse-lashawn-parris"
+          ]
+        },
+        {
+          "id": "co-denver-2026-councilmember-at-large-seat-b",
+          "title": "Councilmember At-Large — Seat B",
+          "candidates": [
+            "co-denver-2026-councilmember-at-large-seat-b-jake-browne",
+            "co-denver-2026-councilmember-at-large-seat-b-cynthia-diaz",
+            "co-denver-2026-councilmember-at-large-seat-b-raymon-anthony-doane",
+            "co-denver-2026-councilmember-at-large-seat-b-gabriel-konkle",
+            "co-denver-2026-councilmember-at-large-seat-b-monica-martinez",
+            "co-denver-2026-councilmember-at-large-seat-b-melissa-adriana-mej-a",
+            "co-denver-2026-councilmember-at-large-seat-b-alfredo-reyes",
+            "co-denver-2026-councilmember-at-large-seat-b-julissa-soto",
+            "co-denver-2026-councilmember-at-large-seat-b-whitney-traylor",
+            "co-denver-2026-councilmember-at-large-seat-b-jeff-walker"
+          ]
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention",
+          "title": "2nd Judicial District — Michael W.V. Angel — Retention",
+          "candidates": [
+            "co-denver-2026-2nd-judicial-district-michael-w-v-angel-retention-michael-w-v-angel"
+          ]
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention",
+          "title": "2nd Judicial District — Christopher J. Baumann — Retention",
+          "candidates": [
+            "co-denver-2026-2nd-judicial-district-christopher-j-baumann-retention-christopher-j-baumann"
+          ]
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention",
+          "title": "2nd Judicial District — John Eric Elliff — Retention",
+          "candidates": [
+            "co-denver-2026-2nd-judicial-district-john-eric-elliff-retention-john-eric-elliff"
+          ]
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-andrew-luxen-retention",
+          "title": "2nd Judicial District — Andrew Luxen — Retention",
+          "candidates": [
+            "co-denver-2026-2nd-judicial-district-andrew-luxen-retention-andrew-luxen"
+          ]
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention",
+          "title": "2nd Judicial District — Jon J. Olafson — Retention",
+          "candidates": [
+            "co-denver-2026-2nd-judicial-district-jon-j-olafson-retention-jon-j-olafson"
+          ]
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention",
+          "title": "2nd Judicial District — Sarah Block Wallace — Retention",
+          "candidates": [
+            "co-denver-2026-2nd-judicial-district-sarah-block-wallace-retention-sarah-block-wallace"
+          ]
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention",
+          "title": "2nd Judicial District/ Juvenile — Lisa Gomez — Retention",
+          "candidates": [
+            "co-denver-2026-2nd-judicial-district-juvenile-lisa-gomez-retention-lisa-gomez"
+          ]
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention",
+          "title": "2nd Judicial District/Juvenile — Elizabeth Joan McCarthy — Retention",
+          "candidates": [
+            "co-denver-2026-2nd-judicial-district-juvenile-elizabeth-joan-mccarthy-retention-elizabeth-joan-mccarthy"
+          ]
+        },
+        {
+          "id": "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention",
+          "title": "2nd Judicial District/ Probate — Elizabeth D. Leith — Retention",
+          "candidates": [
+            "co-denver-2026-2nd-judicial-district-probate-elizabeth-d-leith-retention-elizabeth-d-leith"
+          ]
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-andrea-eddy-retention",
+          "title": "Denver County Court — Andrea Eddy — Retention",
+          "candidates": [
+            "co-denver-2026-denver-county-court-andrea-eddy-retention-andrea-eddy"
+          ]
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention",
+          "title": "Denver County Court — Isaam L. Shamsid-Deen — Retention",
+          "candidates": [
+            "co-denver-2026-denver-county-court-isaam-l-shamsid-deen-retention-isaam-l-shamsid-deen"
+          ]
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-judith-smith-retention",
+          "title": "Denver County Court — Judith Smith — Retention",
+          "candidates": [
+            "co-denver-2026-denver-county-court-judith-smith-retention-judith-smith"
+          ]
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-olympia-z-fay-retention",
+          "title": "Denver County Court — Olympia Z. Fay — Retention",
+          "candidates": [
+            "co-denver-2026-denver-county-court-olympia-z-fay-retention-olympia-z-fay"
+          ]
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-kerri-lombardi-retention",
+          "title": "Denver County Court — Kerri Lombardi — Retention",
+          "candidates": [
+            "co-denver-2026-denver-county-court-kerri-lombardi-retention-kerri-lombardi"
+          ]
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-chelsea-malone-retention",
+          "title": "Denver County Court — Chelsea Malone — Retention",
+          "candidates": [
+            "co-denver-2026-denver-county-court-chelsea-malone-retention-chelsea-malone"
+          ]
+        },
+        {
+          "id": "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention",
+          "title": "Denver County Court — Michelle Martinez-Thomas — Retention",
+          "candidates": [
+            "co-denver-2026-denver-county-court-michelle-martinez-thomas-retention-michelle-martinez-thomas"
+          ]
+        },
+        {
+          "id": "co-sos-2026-general-proposition-132",
+          "title": "Proposition 132 — Penalties for Fentanyl Crimes",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-proposition-133",
+          "title": "Proposition 133 — Penalties for Human Trafficking of a Minor",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-proposition-134",
+          "title": "Proposition 134 — Male and Female Participation in School Sports",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-proposition-135",
+          "title": "Proposition 135 — Prohibit Certain Surgeries on Minors",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-proposition-136",
+          "title": "Proposition 136 — Income Tax Rate Cap",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-proposition-137",
+          "title": "Proposition 137 — Designate Sporting Goods Sales Tax Revenue for Conservation",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-amendment-81",
+          "title": "Amendment 81 — Law Enforcement Reporting Requirements to Federal Authorities",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-amendment-82",
+          "title": "Amendment 82 — Right to Natural Gas",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-amendment-83",
+          "title": "Amendment 83 — Constitutional Right to Hunt and Fish",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-amendment-84",
+          "title": "Amendment 84 — Mail Ballot Voter Identification",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-amendment-85",
+          "title": "Amendment 85 — Plain Language Ballot Questions",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-amendment-86",
+          "title": "Amendment 86 — Congressional Redistricting",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-amendment-87",
+          "title": "Amendment 87 — Graduated Income Tax",
+          "candidates": []
+        },
+        {
+          "id": "co-sos-2026-general-proposition-nn",
+          "title": "Proposition NN — State Public K-12 Education Funding",
+          "candidates": []
+        },
+        {
+          "id": "co-denver-2026-initiated-ordinance-311",
+          "title": "Initiated Ordinance 311 ◆",
+          "candidates": []
+        },
+        {
+          "id": "co-denver-2026-referred-question-2h",
+          "title": "Referred Question 2H ◆",
+          "candidates": []
+        },
+        {
+          "id": "co-denver-2026-referred-question-2i",
+          "title": "Referred Question 2I ◆",
+          "candidates": []
+        },
+        {
+          "id": "co-denver-2026-referred-question-2j",
+          "title": "Referred Question 2J ◆",
+          "candidates": []
+        },
+        {
+          "id": "co-denver-2026-referred-question-2k",
+          "title": "Referred Question 2K ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [],
+      "contestCount": 48,
+      "candidateCount": 75
+    },
+    {
+      "zip": "98101",
+      "httpStatus": 200,
+      "elapsedMs": 2556,
+      "underThreeSeconds": true,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "wa-sos-2026-general-ec4090bcfed791c3",
+          "title": "U.S. Representative, Congressional District 7",
+          "candidates": [
+            "wa-sos-2026-general-ec4090bcfed791c3-4ac4637ec007",
+            "wa-sos-2026-general-ec4090bcfed791c3-9407fe4e53b9"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-04a1a8c2b592d583",
+          "title": "State Senator, Legislative District 34",
+          "candidates": [
+            "wa-sos-2026-general-04a1a8c2b592d583-90ad4507f58d"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-1edc1b61aab06a80",
+          "title": "State Representative Pos. 1, Legislative District 34",
+          "candidates": [
+            "wa-sos-2026-general-1edc1b61aab06a80-71facdeaeb67"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-9fd7402f58428d44",
+          "title": "State Representative Pos. 2, Legislative District 34",
+          "candidates": [
+            "wa-sos-2026-general-9fd7402f58428d44-2c7e6b29047d",
+            "wa-sos-2026-general-9fd7402f58428d44-cc173500be82"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-e66f4c83bab2de99",
+          "title": "State Senator, Legislative District 43",
+          "candidates": [
+            "wa-sos-2026-general-e66f4c83bab2de99-d3291031deb8",
+            "wa-sos-2026-general-e66f4c83bab2de99-7d29dfe691ec"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-e4b46d7bc3520efc",
+          "title": "State Representative Pos. 1, Legislative District 43",
+          "candidates": [
+            "wa-sos-2026-general-e4b46d7bc3520efc-6f785a1323c3",
+            "wa-sos-2026-general-e4b46d7bc3520efc-9d3150f6d92a"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-a8673305b22833c5",
+          "title": "State Representative Pos. 2, Legislative District 43",
+          "candidates": [
+            "wa-sos-2026-general-a8673305b22833c5-0f9779fd8eeb"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-4a01ae3c96851c17",
+          "title": "Supreme Court, Justice Position #01",
+          "candidates": [
+            "wa-sos-2026-general-4a01ae3c96851c17-52877884e207",
+            "wa-sos-2026-general-4a01ae3c96851c17-cf7107801c56"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-e6141c106be4832c",
+          "title": "Supreme Court, Justice Position #03",
+          "candidates": [
+            "wa-sos-2026-general-e6141c106be4832c-3a2654c1526e",
+            "wa-sos-2026-general-e6141c106be4832c-2bf2bb6e61c0"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-b2c297f9a98570f8",
+          "title": "Supreme Court, Justice Position #04",
+          "candidates": [
+            "wa-sos-2026-general-b2c297f9a98570f8-5c36aa787201",
+            "wa-sos-2026-general-b2c297f9a98570f8-79412eca913e"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-5ab3d81746ef7ce9",
+          "title": "Supreme Court, Justice Position #05",
+          "candidates": [
+            "wa-sos-2026-general-5ab3d81746ef7ce9-29a99e8d0958",
+            "wa-sos-2026-general-5ab3d81746ef7ce9-336378b519c8"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-2b3d94ad4f312ba5",
+          "title": "Supreme Court, Justice Position #07",
+          "candidates": [
+            "wa-sos-2026-general-2b3d94ad4f312ba5-bf2143c326aa",
+            "wa-sos-2026-general-2b3d94ad4f312ba5-f39340090271"
+          ]
+        },
+        {
+          "id": "ba01-wa-king-county-prosecuting-attorney",
+          "title": "King County Prosecuting Attorney",
+          "candidates": [
+            "ba01-wa-king-county-prosecuting-attorney:86fbb7f76c638008"
+          ]
+        },
+        {
+          "id": "ba01-wa-king-county-assessor",
+          "title": "King County Assessor",
+          "candidates": [
+            "ba01-wa-king-county-assessor:1c511aa436cddb29",
+            "ba01-wa-king-county-assessor:2b8ee8ed52b87987"
+          ]
+        },
+        {
+          "id": "ba01-wa-king-county-director-of-elections",
+          "title": "King County Director of Elections",
+          "candidates": [
+            "ba01-wa-king-county-director-of-elections:ef5c0e0b762ebc42"
+          ]
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1",
+          "title": "City of Seattle, Municipal Court Judge Position No. 1",
+          "candidates": [
+            "ba01-wa-city-of-seattle-municipal-court-judge-position-no-1:d8b6293dfdb1e61e"
+          ]
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2",
+          "title": "City of Seattle, Municipal Court Judge Position No. 2",
+          "candidates": [
+            "ba01-wa-city-of-seattle-municipal-court-judge-position-no-2:35753d70c2cf67bd"
+          ]
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3",
+          "title": "City of Seattle, Municipal Court Judge Position No. 3",
+          "candidates": [
+            "ba01-wa-city-of-seattle-municipal-court-judge-position-no-3:e2e194e294e61add"
+          ]
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4",
+          "title": "City of Seattle, Municipal Court Judge Position No. 4",
+          "candidates": [
+            "ba01-wa-city-of-seattle-municipal-court-judge-position-no-4:22c8350b756424c8"
+          ]
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5",
+          "title": "City of Seattle, Municipal Court Judge Position No. 5",
+          "candidates": [
+            "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5:6139acb387749b1b",
+            "ba01-wa-city-of-seattle-municipal-court-judge-position-no-5:804d2ab0f49fba1d"
+          ]
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6",
+          "title": "City of Seattle, Municipal Court Judge Position No. 6",
+          "candidates": [
+            "ba01-wa-city-of-seattle-municipal-court-judge-position-no-6:264973d008cf0011"
+          ]
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7",
+          "title": "City of Seattle, Municipal Court Judge Position No. 7",
+          "candidates": [
+            "ba01-wa-city-of-seattle-municipal-court-judge-position-no-7:e56d2adb9bb2132a"
+          ]
+        },
+        {
+          "id": "wa-sos-2026-general-initiative-il26-001",
+          "title": "Initiative Measure No. IL26-001",
+          "candidates": []
+        },
+        {
+          "id": "wa-sos-2026-general-initiative-il26-638",
+          "title": "Initiative Measure No. IL26-638",
+          "candidates": []
+        },
+        {
+          "id": "wa-sos-2026-general-initiative-ip26-645",
+          "title": "Initiative Measure No. IP26-645",
+          "candidates": []
+        },
+        {
+          "id": "ba01-wa-city-of-seattle-proposition-no-1-seattle-transit-measure",
+          "title": "City of Seattle, Proposition No. 1 — Seattle Transit Measure ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [
+        "Washington’s official current-election page lists U.S. Representative, state legislative offices, Supreme Court, Court of Appeals and local offices on the November 3 ballot. No U.S. Senate or statewide executive contest is listed for this election. Verified King County and Seattle local offices are included. We're working on getting the remaining local contests and measures."
+      ],
+      "contestCount": 26,
+      "candidateCount": 33
+    },
+    {
+      "zip": "10001",
+      "httpStatus": 200,
+      "elapsedMs": 2442,
+      "underThreeSeconds": true,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "ny-boe:2026-general:governor-lieutenant-governor",
+          "title": "Governor and Lt. Governor",
+          "candidates": [
+            "ny-boe:2026-general:governor-lieutenant-governor:763380d64630519c",
+            "ny-boe:2026-general:governor-lieutenant-governor:ff91b6d1cd9e1aa8"
+          ]
+        },
+        {
+          "id": "ny-boe:2026-general:comptroller",
+          "title": "Comptroller",
+          "candidates": [
+            "ny-boe:2026-general:comptroller:ed0b7771017142ec",
+            "ny-boe:2026-general:comptroller:510f4b9e56702589"
+          ]
+        },
+        {
+          "id": "ny-boe:2026-general:attorney-general",
+          "title": "Attorney General",
+          "candidates": [
+            "ny-boe:2026-general:attorney-general:12aba842a7e6cf29",
+            "ny-boe:2026-general:attorney-general:0c3f08115f2f6bbc"
+          ]
+        },
+        {
+          "id": "ny-boe:2026-general:cd:12",
+          "title": "U.S. House District 12",
+          "candidates": [
+            "ny-boe:2026-general:cd:12:c0f1f0d48633f31a",
+            "ny-boe:2026-general:cd:12:af027d4ee6cd107e",
+            "ny-boe:2026-general:cd:12:bcf9fef78d5ddd70",
+            "ny-boe:2026-general:cd:12:e7cec37efd2d5cf0"
+          ]
+        },
+        {
+          "id": "ny-boe:2026-general:sldu:28",
+          "title": "State Senate District 28",
+          "candidates": [
+            "ny-boe:2026-general:sldu:28:bf66886d734fff7a",
+            "ny-boe:2026-general:sldu:28:c419aa6ee582b2fb"
+          ]
+        },
+        {
+          "id": "ny-boe:2026-general:sldu:47",
+          "title": "State Senate District 47",
+          "candidates": [
+            "ny-boe:2026-general:sldu:47:15fe6aefc7ebbde9",
+            "ny-boe:2026-general:sldu:47:127337f6cd296a5c"
+          ]
+        },
+        {
+          "id": "ny-boe:2026-general:sldl:75",
+          "title": "State Assembly District 75",
+          "candidates": [
+            "ny-boe:2026-general:sldl:75:cd29b50bdab53cbf",
+            "ny-boe:2026-general:sldl:75:dd17f9ca8d6a707a"
+          ]
+        },
+        {
+          "id": "ny-2026-general:supreme-court-1",
+          "title": "Supreme Court Justice, District 1",
+          "candidates": [
+            "ny-2026-general:supreme-court-1:amy-s-taylor",
+            "ny-2026-general:supreme-court-1:bob-cohen",
+            "ny-2026-general:supreme-court-1:christopher-chin",
+            "ny-2026-general:supreme-court-1:hasa-a-kingo",
+            "ny-2026-general:supreme-court-1:jeffrey-w-rizzo",
+            "ny-2026-general:supreme-court-1:joshua-e-goldfein",
+            "ny-2026-general:supreme-court-1:kathleen-waterman-marshall",
+            "ny-2026-general:supreme-court-1:manuel-j-mendez",
+            "ny-2026-general:supreme-court-1:saliann-scarpulla",
+            "ny-2026-general:supreme-court-1:shlomo-s-hagler",
+            "ny-2026-general:supreme-court-1:sienna-m-fontaine"
+          ]
+        },
+        {
+          "id": "ny-2026-new-york-county-surrogate",
+          "title": "Surrogate New York",
+          "candidates": [
+            "ny-2026-new-york-county-surrogate:rita-mella"
+          ]
+        },
+        {
+          "id": "ny-2026-new-york-county-civil-court",
+          "title": "Judge of the Civil Court - County New York",
+          "candidates": [
+            "ny-2026-new-york-county-civil-court:emily-morales-minerva",
+            "ny-2026-new-york-county-civil-court:josh-e-hanshaft",
+            "ny-2026-new-york-county-civil-court:vlad-frants"
+          ]
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-1",
+          "title": "New York City Proposal 1: Speed Up Process for Granting a Revocable Consent to Use Public Spaces ◆",
+          "candidates": []
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-2",
+          "title": "New York City Proposal 2: Reduce City Contractor Paperwork: Require Regular Meetings of Procurement Policy Board ◆",
+          "candidates": []
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-3",
+          "title": "New York City Proposal 3: Speed Up Street Safety Projects, Disposition of Unused City Property, Office Leasing ◆",
+          "candidates": []
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-4",
+          "title": "New York City Proposal 4: Simplify Building Permitting and Move Waterfront Permitting to Department of Buildings ◆",
+          "candidates": []
+        },
+        {
+          "id": "ny-2026-new-york-city-charter-proposal-5",
+          "title": "New York City Proposal 5: Set Contribution Targets for Rainy Day Fund to Promote Sufficient Budgetary Reserves ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [],
+      "contestCount": 15,
+      "candidateCount": 31
+    },
+    {
+      "zip": "30303",
+      "httpStatus": 200,
+      "elapsedMs": 2539,
+      "underThreeSeconds": true,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "ga-sos-2026-u-s-senate",
+          "title": "U.S. Senate",
+          "candidates": [
+            "ga-sos-2026-u-s-senate:write-in:cassandra-easton",
+            "ga-sos-2026-u-s-senate:write-in:christina-clement",
+            "ga-sos-2026-u-s-senate:write-in:elbert-arthur-bartell",
+            "ga-sos-2026-u-s-senate:jon-ossoff",
+            "ga-sos-2026-u-s-senate:mike-collins"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-governor",
+          "title": "Governor",
+          "candidates": [
+            "ga-sos-2026-governor:write-in:andrew-pacetti",
+            "ga-sos-2026-governor:write-in:david-c-byrne",
+            "ga-sos-2026-governor:write-in:david-leon-moreland",
+            "ga-sos-2026-governor:write-in:deb-broughton-davis",
+            "ga-sos-2026-governor:write-in:jacqueline-angela-dacosta",
+            "ga-sos-2026-governor:keisha-lance-bottoms",
+            "ga-sos-2026-governor:write-in:leland-jake-olinger-ii",
+            "ga-sos-2026-governor:write-in:milton-j-lofton",
+            "ga-sos-2026-governor:rick-jackson"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-lieutenant-governor",
+          "title": "Lieutenant Governor",
+          "candidates": [
+            "ga-sos-2026-lieutenant-governor:greg-dolezal",
+            "ga-sos-2026-lieutenant-governor:josh-mclaurin"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-secretary-of-state",
+          "title": "Secretary of State",
+          "candidates": [
+            "ga-sos-2026-secretary-of-state:penny-brown-reynolds",
+            "ga-sos-2026-secretary-of-state:tim-fleming"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-attorney-general",
+          "title": "Attorney General",
+          "candidates": [
+            "ga-sos-2026-attorney-general:brian-strickland",
+            "ga-sos-2026-attorney-general:tanya-miller"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-agriculture-commissioner",
+          "title": "Agriculture Commissioner",
+          "candidates": [
+            "ga-sos-2026-agriculture-commissioner:katherine-e-juhan-arnold",
+            "ga-sos-2026-agriculture-commissioner:tyler-harper"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-insurance-and-fire-safety-commissioner",
+          "title": "Insurance and Fire Safety Commissioner",
+          "candidates": [
+            "ga-sos-2026-insurance-and-fire-safety-commissioner:john-king",
+            "ga-sos-2026-insurance-and-fire-safety-commissioner:keisha-sean-waites"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-state-school-superintendent",
+          "title": "State School Superintendent",
+          "candidates": [
+            "ga-sos-2026-state-school-superintendent:lydia-powell",
+            "ga-sos-2026-state-school-superintendent:richard-woods"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-labor-commissioner",
+          "title": "Labor Commissioner",
+          "candidates": [
+            "ga-sos-2026-labor-commissioner:b-rbara-rivera-holmes",
+            "ga-sos-2026-labor-commissioner:nikki-porcher"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-public-service-commissioner-district-3",
+          "title": "Public Service Commissioner, District 3",
+          "candidates": [
+            "ga-sos-2026-public-service-commissioner-district-3:fitz-johnson",
+            "ga-sos-2026-public-service-commissioner-district-3:peter-hubbard"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-public-service-commissioner-district-5",
+          "title": "Public Service Commissioner, District 5",
+          "candidates": [
+            "ga-sos-2026-public-service-commissioner-district-5:josh-tolbert",
+            "ga-sos-2026-public-service-commissioner-district-5:shelia-edwards"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-u-s-house-of-representatives-district-5",
+          "title": "U.S. House of Representatives, District 5",
+          "candidates": [
+            "ga-sos-2026-u-s-house-of-representatives-district-5:john-bongo-salvesen",
+            "ga-sos-2026-u-s-house-of-representatives-district-5:nikema-williams"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-state-senate-district-36",
+          "title": "State Senate, District 36",
+          "candidates": [
+            "ga-sos-2026-state-senate-district-36:katie-corkren",
+            "ga-sos-2026-state-senate-district-36:nan-grogan-orrock"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-state-house-district-56",
+          "title": "State House, District 56",
+          "candidates": [
+            "ga-sos-2026-state-house-district-56:bryce-berry"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-state-house-district-58",
+          "title": "State House, District 58",
+          "candidates": [
+            "ga-sos-2026-state-house-district-58:mathewos-samson",
+            "ga-sos-2026-state-house-district-58:torrey-balam"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-state-house-district-59",
+          "title": "State House, District 59",
+          "candidates": [
+            "ga-sos-2026-state-house-district-59:devonta-sully-sullivan",
+            "ga-sos-2026-state-house-district-59:phil-a-olaleye"
+          ]
+        },
+        {
+          "id": "ga-fulton-2026-commission-chair",
+          "title": "Fulton County Commission Chairperson",
+          "candidates": [
+            "ga-fulton-2026-commission-chair:ca443bf62339aefb",
+            "ga-fulton-2026-commission-chair:9d17348097c8c842"
+          ]
+        },
+        {
+          "id": "ga-fulton-2026-soil-water-supervisor",
+          "title": "Fulton Soil & Water Conservation District Supervisor",
+          "candidates": [
+            "ga-fulton-2026-soil-water-supervisor:54f53b08f52189eb",
+            "ga-fulton-2026-soil-water-supervisor:c83eaf192b652d9e",
+            "ga-fulton-2026-soil-water-supervisor:217e38a94f6de76f"
+          ]
+        },
+        {
+          "id": "ga-sos-2026-constitutional-amendment-1",
+          "title": "Constitutional Amendment 1: Increases the maximum qualifying acreage for assessment and taxation as bona fide conservation use property.",
+          "candidates": []
+        },
+        {
+          "id": "ga-sos-2026-constitutional-amendment-2",
+          "title": "Constitutional Amendment 2: Provides for the nonpartisan election of all probate court judges.",
+          "candidates": []
+        },
+        {
+          "id": "ga-sos-2026-constitutional-amendment-3",
+          "title": "Constitutional Amendment 3: Authorizes creation of Georgia Next Generation 9-1-1 Fund for 9-1-1 systems expansion, maintenance, and operation.",
+          "candidates": []
+        },
+        {
+          "id": "ga-fulton-2026-measure-f769882f8ba84ae7",
+          "title": "Fulton County — Educational Special Purpose Local Option Sales and Use Tax (ESPLOST) ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [],
+      "contestCount": 22,
+      "candidateCount": 46
+    },
+    {
+      "zip": "33130",
+      "checkedAt": "2026-10-21T04:21:59.382Z",
+      "httpStatus": 200,
+      "elapsedMs": 2414,
+      "underThreeSeconds": true,
+      "missingHeldContests": [
+        {
+          "id": "fl-doe-2026-general-dca-3-90262",
+          "title": "District Court of Appeal District 3 — Kansas R. Gooden",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "sourceUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+          "candidates": [
+            {
+              "id": "fl-doe-2026-general-candidate-90262",
+              "name": "Kansas R. Gooden",
+              "party": "NOP",
+              "sourceUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "fl-doe-2026-general-dca-3-90301",
+          "title": "District Court of Appeal District 3 — Monica Gordo",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "sourceUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+          "candidates": [
+            {
+              "id": "fl-doe-2026-general-candidate-90301",
+              "name": "Monica Gordo",
+              "party": "NOP",
+              "sourceUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "fl-doe-2026-general-dca-3-90370",
+          "title": "District Court of Appeal District 3 — Fleur Jeannine Lobree",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "sourceUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+          "candidates": [
+            {
+              "id": "fl-doe-2026-general-candidate-90370",
+              "name": "Fleur Jeannine Lobree",
+              "party": "NOP",
+              "sourceUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "fl-doe-2026-general-dca-3-90307",
+          "title": "District Court of Appeal District 3 — Thomas Logue",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "sourceUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+          "candidates": [
+            {
+              "id": "fl-doe-2026-general-candidate-90307",
+              "name": "Thomas Logue",
+              "party": "NOP",
+              "sourceUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "fl-doe-2026-general-dca-3-90439",
+          "title": "District Court of Appeal District 3 — Bronwyn Catherine Miller",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:fl/district_court:3",
+          "sourceUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+          "candidates": [
+            {
+              "id": "fl-doe-2026-general-candidate-90439",
+              "name": "Bronwyn Catherine Miller",
+              "party": "NOP",
+              "sourceUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "fl-doe-2026-general-scj-90484",
+          "title": "Supreme Court Justice — Carlos G. Muniz",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:fl",
+          "sourceUrl": "https://dos.elections.myflorida.com/candidates/extractCanList.asp?elecID=20261103-GEN&office=All&status=All&cantype=STA&FormSubmit=Download+Candidate+List",
+          "candidates": [
+            {
+              "id": "fl-doe-2026-general-candidate-90484",
+              "name": "Carlos G. Muniz",
+              "party": "NOP",
+              "sourceUrl": "https://dos.elections.myflorida.com/candidates/CanList.asp?elecid=20261103-GEN"
+            }
+          ],
+          "measures": []
+        }
+      ],
+      "priorTucsonIdsMissing": [],
+      "priorInspectionError": "page.waitForFunction: Timeout 60000ms exceeded.",
+      "explanation": "The first inspection waited for retention cards that the current page filters out. This inspection records those actual missing cards explicitly.",
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "fl-doe-2026-general-gov",
+          "title": "Governor and Lieutenant Governor",
+          "candidates": [
+            "fl-doe-2026-general-candidate-90433",
+            "fl-doe-2026-general-candidate-90612",
+            "fl-doe-2026-general-candidate-90630",
+            "fl-doe-2026-general-candidate-89630",
+            "fl-doe-2026-general-candidate-88529",
+            "fl-doe-2026-general-candidate-89042",
+            "fl-doe-2026-general-candidate-84076",
+            "fl-doe-2026-general-candidate-89243",
+            "fl-doe-2026-general-candidate-89939",
+            "fl-doe-2026-general-candidate-89571"
+          ]
+        },
+        {
+          "id": "fl-doe-2026-general-str-113",
+          "title": "State Representative District 113",
+          "candidates": [
+            "fl-doe-2026-general-candidate-89609",
+            "fl-doe-2026-general-candidate-89612",
+            "fl-doe-2026-general-candidate-90699"
+          ]
+        },
+        {
+          "id": "fl-doe-2026-general-str-109",
+          "title": "State Representative District 109",
+          "candidates": [
+            "fl-doe-2026-general-candidate-89989"
+          ]
+        },
+        {
+          "id": "fl-doe-2026-general-sts-36",
+          "title": "State Senator District 36",
+          "candidates": [
+            "fl-doe-2026-general-candidate-83608",
+            "fl-doe-2026-general-candidate-92078"
+          ]
+        },
+        {
+          "id": "fl-doe-2026-general-agr",
+          "title": "Commissioner of Agriculture",
+          "candidates": [
+            "fl-doe-2026-general-candidate-83588",
+            "fl-doe-2026-general-candidate-92013",
+            "fl-doe-2026-general-candidate-90560"
+          ]
+        },
+        {
+          "id": "fl-doe-2026-general-uss",
+          "title": "United States Senator",
+          "candidates": [
+            "fl-doe-2026-general-candidate-89955",
+            "fl-doe-2026-general-candidate-89119",
+            "fl-doe-2026-general-candidate-90009"
+          ]
+        },
+        {
+          "id": "fl-doe-2026-general-cfo",
+          "title": "Chief Financial Officer",
+          "candidates": [
+            "fl-doe-2026-general-candidate-89394",
+            "fl-doe-2026-general-candidate-91310"
+          ]
+        },
+        {
+          "id": "fl-doe-2026-general-atg",
+          "title": "Attorney General",
+          "candidates": [
+            "fl-doe-2026-general-candidate-89231",
+            "fl-doe-2026-general-candidate-89041"
+          ]
+        },
+        {
+          "id": "fl-miami-dade-2026-59c8676b83554eb558c4",
+          "title": "Circuit Judge, 11th Judicial Circuit — Group 5",
+          "candidates": [
+            "fl-miami-dade-2026-59c8676b83554eb558c4:3d7f82298dc64ebe",
+            "fl-miami-dade-2026-59c8676b83554eb558c4:dfe460b6efc09df1"
+          ]
+        },
+        {
+          "id": "fl-miami-dade-2026-b9b3b43f3a2b3b58f590",
+          "title": "Circuit Judge, 11th Judicial Circuit — Group 69",
+          "candidates": [
+            "fl-miami-dade-2026-b9b3b43f3a2b3b58f590:c4cdff554bc0178c",
+            "fl-miami-dade-2026-b9b3b43f3a2b3b58f590:de14a762a6a2e2a8"
+          ]
+        },
+        {
+          "id": "fl-doe-2026-general-amendment-1",
+          "title": "Amendment 1: BUDGET STABILIZATION FUND",
+          "candidates": []
+        },
+        {
+          "id": "fl-doe-2026-general-amendment-2",
+          "title": "Amendment 2: EXEMPTION OF TANGIBLE PERSONAL PROPERTY ON AGRICULTURAL LAND FROM TAXATION",
+          "candidates": []
+        },
+        {
+          "id": "fl-doe-2026-general-amendment-3",
+          "title": "Amendment 3: INCREASED HOMESTEAD EXEMPTION; LOWER CAP ON INCREASES IN NON-HOMESTEAD PROPERTY ASSESSMENTS",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-172535ade4c43ada17da",
+          "title": "Miami Referendum 1 — Safe and Ready Miami: General Obligation Bonds for Police/Fire Facilities without Increasing Millage Rate ◆",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-c0188d9b8ed165b0e85e",
+          "title": "Miami Referendum 2 — Charter Amendment to Establish a Permanent Advisory General Obligation Bonds Oversight Committee ◆",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-0a66a56be6fb715bfa95",
+          "title": "Miami Referendum 3 — Proposed Lease and Redevelopment of existing Rickenbacker and Marine Stadium Marinas on Virginia Key ◆",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-4d4cb4aeebd528ebcd9a",
+          "title": "Miami-Dade County — County Referendum 1 — Charter Amendment Establish an Independent Salary Commission ◆",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-61dcc5507b517999f221",
+          "title": "Miami-Dade County — County Referendum 2 — Charter Amendment Increase Length of District Residency to Run for County Commissioner ◆",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-1465651684b5cdc3dced",
+          "title": "Miami-Dade County — County Referendum 3 — Charter Amendment Allow Vacancy Election to Sync Up with Other Election; Establish Municipal Qualifying Standards ◆",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-ef56ffdda7eac2bcb1bb",
+          "title": "Miami-Dade County — County Referendum 4 — Charter Amendment Revisions Due to Reestablishment of Elected County Constitutional Offices ◆",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-709b96129c310337b251",
+          "title": "Miami-Dade County — County Referendum 5 — Charter Amendment Miscellaneous Matters and Technical Changes ◆",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-883b2f4968d5756951e4",
+          "title": "Miami-Dade County — County Referendum 6 — Charter Amendment Expanding Allowable Advertising at Parks ◆",
+          "candidates": []
+        },
+        {
+          "id": "fl-miami-dade-2026-378ee002fa66fcf847a9",
+          "title": "Miami-Dade County — School Board Referendum — Referendum Renewal of Existing Ad Valorem Levy for Teachers, Instructional Personnel, Student Safety and Security ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [
+        "We're working on getting the U.S. House district for ZIP 33130. U.S. House contests aren't shown until we have it."
+      ],
+      "contestCount": 23,
+      "candidateCount": 30
+    },
+    {
+      "zip": "07102",
+      "httpStatus": 200,
+      "elapsedMs": 3874,
+      "underThreeSeconds": false,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "ballot-nj-morris:us-senate",
+          "title": "Member of the United States Senate",
+          "candidates": [
+            "ballot-nj-morris:us-senate:booker",
+            "ballot-nj-morris:us-senate:fernandez",
+            "ballot-nj-morris:us-senate:kuniansky",
+            "ballot-nj-morris:us-senate:murphy"
+          ]
+        },
+        {
+          "id": "nj-doe-2026-us-house-8",
+          "title": "Member of the House of Representatives (District 8)",
+          "candidates": [
+            "nj-doe-2026-us-house-8:aristotle-eliopoulos",
+            "nj-doe-2026-us-house-8:craig-honts",
+            "nj-doe-2026-us-house-8:da-shone-hughey",
+            "nj-doe-2026-us-house-8:rob-menendez"
+          ]
+        },
+        {
+          "id": "nj-doe-2026-us-house-10",
+          "title": "Member of the House of Representatives (District 10)",
+          "candidates": [
+            "nj-doe-2026-us-house-10:carmen-bucco",
+            "nj-doe-2026-us-house-10:lamonica-r-mciver"
+          ]
+        }
+      ],
+      "gaps": [],
+      "contestCount": 3,
+      "candidateCount": 10
+    },
+    {
+      "zip": "48226",
+      "httpStatus": 200,
+      "elapsedMs": 3050,
+      "underThreeSeconds": false,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "mi-sos-2026-general-governor-lieutenant-governor",
+          "title": "Governor / Lt. Governor",
+          "candidates": [
+            "mi-sos-2026-general-governor-lieutenant-governor-benson-jocelyn-brinks-winnie",
+            "mi-sos-2026-general-governor-lieutenant-governor-brandenburg-donna-cowper-ii-robert-donald",
+            "mi-sos-2026-general-governor-lieutenant-governor-campbell-douglas-clay-bobbie",
+            "mi-sos-2026-general-governor-lieutenant-governor-hudson-anthony-parmenter-beau",
+            "mi-sos-2026-general-governor-lieutenant-governor-james-john-deboyer-jay"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-secretary-of-state",
+          "title": "Secretary of State",
+          "candidates": [
+            "mi-sos-2026-general-secretary-of-state-aughney-scott-e",
+            "mi-sos-2026-general-secretary-of-state-borregard-eric",
+            "mi-sos-2026-general-secretary-of-state-forlini-anthony-g",
+            "mi-sos-2026-general-secretary-of-state-gilchrist-ii-garlin",
+            "mi-sos-2026-general-secretary-of-state-sloan-christine"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-attorney-general",
+          "title": "Attorney General",
+          "candidates": [
+            "mi-sos-2026-general-attorney-general-dern-doug",
+            "mi-sos-2026-general-attorney-general-dye-jason",
+            "mi-sos-2026-general-attorney-general-lloyd-doug",
+            "mi-sos-2026-general-attorney-general-ludtke-jr-john-perry",
+            "mi-sos-2026-general-attorney-general-polonowski-jeff",
+            "mi-sos-2026-general-attorney-general-savit-eli"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-us-senate",
+          "title": "U.S. Senate",
+          "candidates": [
+            "mi-sos-2026-general-us-senate-christensen-lydia",
+            "mi-sos-2026-general-us-senate-el-sayed-abdul",
+            "mi-sos-2026-general-us-senate-kristy-walter-p",
+            "mi-sos-2026-general-us-senate-long-tim",
+            "mi-sos-2026-general-us-senate-marsh-douglas-p",
+            "mi-sos-2026-general-us-senate-rogers-mike"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-us-house-13",
+          "title": "13th District Representative in Congress",
+          "candidates": [
+            "mi-sos-2026-general-us-house-13-coleman-simone-r",
+            "mi-sos-2026-general-us-house-13-dardzinski-chris",
+            "mi-sos-2026-general-us-house-13-light-raelyn",
+            "mi-sos-2026-general-us-house-13-mckinney-donavan",
+            "mi-sos-2026-general-us-house-13-nykoriak-t-p"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-state-house-1",
+          "title": "1st District Representative in State Legislature",
+          "candidates": [
+            "mi-sos-2026-general-state-house-1-carter-tyrone",
+            "mi-sos-2026-general-state-house-1-whittaker-valerie"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-state-house-9",
+          "title": "9th District Representative in State Legislature",
+          "candidates": [
+            "mi-sos-2026-general-state-house-9-ausherman-logan",
+            "mi-sos-2026-general-state-house-9-burton-willie",
+            "mi-sos-2026-general-state-house-9-lundgren-michele",
+            "mi-sos-2026-general-state-house-9-smith-jahdante-john-elijah"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-state-board-of-education",
+          "title": "Member of the State Board of Education",
+          "candidates": [
+            "mi-sos-2026-general-state-board-of-education-charafeddine-wissam",
+            "mi-sos-2026-general-state-board-of-education-collins-terence",
+            "mi-sos-2026-general-state-board-of-education-essner-charles",
+            "mi-sos-2026-general-state-board-of-education-hering-mary-anne",
+            "mi-sos-2026-general-state-board-of-education-moeggenberg-bree",
+            "mi-sos-2026-general-state-board-of-education-mohr-ii-william",
+            "mi-sos-2026-general-state-board-of-education-monroe-kelli",
+            "mi-sos-2026-general-state-board-of-education-pritchett-judith",
+            "mi-sos-2026-general-state-board-of-education-schwartz-christine-c",
+            "mi-sos-2026-general-state-board-of-education-tilley-tiffany"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-university-of-michigan-regent",
+          "title": "Regent of the University of Michigan",
+          "candidates": [
+            "mi-sos-2026-general-university-of-michigan-regent-brown-paul",
+            "mi-sos-2026-general-university-of-michigan-regent-chadderdon-andrew",
+            "mi-sos-2026-general-university-of-michigan-regent-epstein-lena",
+            "mi-sos-2026-general-university-of-michigan-regent-maas-kyle",
+            "mi-sos-2026-general-university-of-michigan-regent-makled-amir",
+            "mi-sos-2026-general-university-of-michigan-regent-schostak-michael"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-michigan-state-university-trustee",
+          "title": "Trustee of Michigan State University",
+          "candidates": [
+            "mi-sos-2026-general-michigan-state-university-trustee-la-pietra-john-anthony",
+            "mi-sos-2026-general-michigan-state-university-trustee-maday-julie",
+            "mi-sos-2026-general-michigan-state-university-trustee-ozbek-yaz",
+            "mi-sos-2026-general-michigan-state-university-trustee-patterson-daniel-r",
+            "mi-sos-2026-general-michigan-state-university-trustee-sanger-janet",
+            "mi-sos-2026-general-michigan-state-university-trustee-sanger-john",
+            "mi-sos-2026-general-michigan-state-university-trustee-scott-brianna",
+            "mi-sos-2026-general-michigan-state-university-trustee-victory-roger",
+            "mi-sos-2026-general-michigan-state-university-trustee-white-will-tyler",
+            "mi-sos-2026-general-michigan-state-university-trustee-zemke-kelly-tebay"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-wayne-state-university-governor",
+          "title": "Governor of Wayne State University",
+          "candidates": [
+            "mi-sos-2026-general-wayne-state-university-governor-akeel-shereef",
+            "mi-sos-2026-general-wayne-state-university-governor-anuzis-andy",
+            "mi-sos-2026-general-wayne-state-university-governor-avery-alex",
+            "mi-sos-2026-general-wayne-state-university-governor-mack-richard",
+            "mi-sos-2026-general-wayne-state-university-governor-mcdonald-jeff",
+            "mi-sos-2026-general-wayne-state-university-governor-murphy-christa",
+            "mi-sos-2026-general-wayne-state-university-governor-oakford-kathleen",
+            "mi-sos-2026-general-wayne-state-university-governor-ragan-paul-m",
+            "mi-sos-2026-general-wayne-state-university-governor-roehrig-suzanne",
+            "mi-sos-2026-general-wayne-state-university-governor-van-alstine-jami"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-supreme-court-justice",
+          "title": "Justice of Supreme Court",
+          "candidates": [
+            "mi-sos-2026-general-supreme-court-justice-cavanagh-megan-kathleen",
+            "mi-sos-2026-general-supreme-court-justice-hood-noah-p",
+            "mi-sos-2026-general-supreme-court-justice-howe-thomas-w",
+            "mi-sos-2026-general-supreme-court-justice-morse-bills-casandra",
+            "mi-sos-2026-general-supreme-court-justice-warren-michael",
+            "mi-sos-2026-general-supreme-court-justice-white-jody"
+          ]
+        },
+        {
+          "id": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions",
+          "title": "1st District Judge of Court of Appeals Incumbent 6 Year Terms (3) Positions",
+          "candidates": [
+            "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions-candidate-bazzi_mariam_saad",
+            "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions-candidate-letica_anica",
+            "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions-candidate-murray_christopher_m"
+          ]
+        },
+        {
+          "id": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position",
+          "title": "1st District Judge of Court of Appeals Incumbent Partial Term Ending 01/01/2031 (1) Position",
+          "candidates": [
+            "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position-candidate-lievense_andrew_j"
+          ]
+        },
+        {
+          "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions",
+          "title": "3rd Circuit Judge of Circuit Court Incumbent 6 Year Terms (16) Positions",
+          "candidates": [
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-allen_david_j",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-baker_robinson_chandra_w",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-blount_christopher_m",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-castka_nicole_l",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-cobb_bradley_l",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-dingell_chris",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-elder_charlene_m",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-farhat_helal_a",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-goodson_nicole_n",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-joseph_edward_j",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-kelly_mary_beth",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-knapp_don",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-miller_cylenthia_latoye",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-testani_carla_g",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-van_houten_margaret_m",
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions-candidate-walker_shannon_nicol"
+          ]
+        },
+        {
+          "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+          "title": "3rd Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+          "candidates": [
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position-candidate-hawkins_shakira_lynn"
+          ]
+        },
+        {
+          "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position",
+          "title": "3rd Circuit Judge of Circuit Court Incumbent Partial Term - 4 Years Ending 01/01/2031 (1) Position",
+          "candidates": [
+            "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position-candidate-sabree_aliyah_s"
+          ]
+        },
+        {
+          "id": "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county",
+          "title": "WAYNE Judge of Probate Court Non-Incumbent 6 Year Terms (3) Positions Files With County",
+          "candidates": [
+            "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county-candidate-colegrove_sarah",
+            "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county-candidate-fanning_suzanne",
+            "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county-candidate-moss_vanessa_m"
+          ]
+        },
+        {
+          "id": "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions",
+          "title": "36th District Judge of District Court Incumbent 6 Year Terms (6) Positions",
+          "candidates": [
+            "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-brue_demetria",
+            "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-bryant_e_lynise",
+            "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-hinnant_johnson_adrienne",
+            "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-holmes_shannon_a",
+            "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-king_kenneth_j",
+            "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions-candidate-sherman_millicent_d"
+          ]
+        },
+        {
+          "id": "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions",
+          "title": "36th District Judge of District Court Non-Incumbent 6 Year Terms (3) Positions",
+          "candidates": [
+            "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions-candidate-burton_jr_william",
+            "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions-candidate-burton_delphia_j",
+            "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions-candidate-davis_kahlilia_yvette",
+            "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions-candidate-irby_jo_a"
+          ]
+        },
+        {
+          "id": "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions",
+          "title": "36th District Judge of District Court Incumbent Partial Term Ending 01/01/2031 (3) Positions",
+          "candidates": [
+            "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions-candidate-clay_ponce_d",
+            "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions-candidate-griffin_iv_herman",
+            "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions-candidate-youngblood_chastity_a"
+          ]
+        },
+        {
+          "id": "mi-sos-2026-general-proposal-2026-1",
+          "title": "A proposal to convene a constitutional convention for the purpose of drafting a general revision of the state constitution",
+          "candidates": []
+        },
+        {
+          "id": "mi-sos-2026-general-proposal-2026-2",
+          "title": "A proposed initiated law to prohibit campaign contributions from certain regulated utilities and government contractors and apply campaign finance laws and regulations to additional types of political communications",
+          "candidates": []
+        }
+      ],
+      "gaps": [
+        "We're working on getting the State Senate district for ZIP 48226. State Senate contests aren't shown until we have it."
+      ],
+      "contestCount": 23,
+      "candidateCount": 113
+    },
+    {
+      "zip": "46204",
+      "checkedAt": "2026-10-21T04:22:01.498Z",
+      "httpStatus": 200,
+      "elapsedMs": 1890,
+      "underThreeSeconds": true,
+      "missingHeldContests": [
+        {
+          "id": "in-ied-2026-retention-mary-a-deboer",
+          "title": "Court of Appeals Judicial Retention - Fourth District",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:in",
+          "sourceUrl": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL",
+          "candidates": [
+            {
+              "id": "in-ied-2026-retention-mary-a-deboer:judge",
+              "name": "Mary A. DeBoer",
+              "party": null,
+              "sourceUrl": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "in-ied-2026-retention-paul-a-felix",
+          "title": "Court of Appeals Judicial Retention - Fifth District",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:in",
+          "sourceUrl": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL",
+          "candidates": [
+            {
+              "id": "in-ied-2026-retention-paul-a-felix:judge",
+              "name": "Paul A. Felix",
+              "party": null,
+              "sourceUrl": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL"
+            }
+          ],
+          "measures": []
+        },
+        {
+          "id": "in-ied-2026-retention-justin-l-mcadam",
+          "title": "Retention of Judge of the Indiana Tax Court",
+          "type": "RETENTION",
+          "ocdId": "ocd-division/country:us/state:in",
+          "sourceUrl": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL",
+          "candidates": [
+            {
+              "id": "in-ied-2026-retention-justin-l-mcadam:judge",
+              "name": "Justin L. McAdam",
+              "party": null,
+              "sourceUrl": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/33156/Pct-201-Clay-01-Act-01-GENERAL"
+            }
+          ],
+          "measures": []
+        }
+      ],
+      "priorTucsonIdsMissing": [],
+      "priorInspectionError": "page.waitForFunction: Timeout 60000ms exceeded.",
+      "explanation": "The first inspection waited for retention cards that the current page filters out. This inspection records those actual missing cards explicitly.",
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "in-ied-2026-secretary-of-state",
+          "title": "Secretary of State",
+          "candidates": [
+            "in-ied-2026-secretary-of-state:30cf8f3a75b77705",
+            "in-ied-2026-secretary-of-state:6254cd7f2841fa5d",
+            "in-ied-2026-secretary-of-state:b957befe04ecf197",
+            "in-ied-2026-secretary-of-state:3539903ac07eb85d",
+            "in-ied-2026-secretary-of-state:3f016b74d4047288"
+          ]
+        },
+        {
+          "id": "in-ied-2026-state-comptroller-auditor-of-state",
+          "title": "State Comptroller (Auditor of State)",
+          "candidates": [
+            "in-ied-2026-state-comptroller-auditor-of-state:13739df1aa250165",
+            "in-ied-2026-state-comptroller-auditor-of-state:22c035774f2ae517",
+            "in-ied-2026-state-comptroller-auditor-of-state:f519e7a408cd206a"
+          ]
+        },
+        {
+          "id": "in-ied-2026-treasurer-of-state",
+          "title": "Treasurer of State",
+          "candidates": [
+            "in-ied-2026-treasurer-of-state:ad500a15127ed11b",
+            "in-ied-2026-treasurer-of-state:9647c811aaf11264"
+          ]
+        },
+        {
+          "id": "in-ied-2026-united-states-representative-seventh-district",
+          "title": "United States Representative, Seventh District",
+          "candidates": [
+            "in-ied-2026-united-states-representative-seventh-district:1aaa92880f6542d8",
+            "in-ied-2026-united-states-representative-seventh-district:04a884defd972c7a",
+            "in-ied-2026-united-states-representative-seventh-district:c4b8066873d3245a"
+          ]
+        },
+        {
+          "id": "in-ied-2026-state-senator-district-46",
+          "title": "State Senator, District 46",
+          "candidates": [
+            "in-ied-2026-state-senator-district-46:62ad907e7b832722"
+          ]
+        },
+        {
+          "id": "in-ied-2026-state-representative-district-096",
+          "title": "State Representative, District 096",
+          "candidates": [
+            "in-ied-2026-state-representative-district-096:64ffa95dbb83d104"
+          ]
+        },
+        {
+          "id": "in-ied-2026-state-representative-district-097",
+          "title": "State Representative, District 097",
+          "candidates": [
+            "in-ied-2026-state-representative-district-097:afec92dc9fe5f503",
+            "in-ied-2026-state-representative-district-097:fa2554855d9ad99c"
+          ]
+        },
+        {
+          "id": "in-ied-2026-state-representative-district-099",
+          "title": "State Representative, District 099",
+          "candidates": [
+            "in-ied-2026-state-representative-district-099:fb9e5f26f8bb24f9"
+          ]
+        },
+        {
+          "id": "in-ied-2026-state-representative-district-100",
+          "title": "State Representative, District 100",
+          "candidates": [
+            "in-ied-2026-state-representative-district-100:a8c9e4f96a1c6a91"
+          ]
+        },
+        {
+          "id": "in-ied-2026-public-question-1",
+          "title": "Public Question #1",
+          "candidates": []
+        },
+        {
+          "id": "in-ied-2026-public-question-2",
+          "title": "Public Question #2",
+          "candidates": []
+        }
+      ],
+      "gaps": [],
+      "contestCount": 11,
+      "candidateCount": 19
+    },
+    {
+      "zip": "96813",
+      "httpStatus": 200,
+      "elapsedMs": 2904,
+      "underThreeSeconds": true,
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "hi-2026-general-u-s-representative-dist-i",
+          "title": "U.S. REPRESENTATIVE, DIST I",
+          "candidates": [
+            "hi-2026-general-u-s-representative-dist-i-277f700e7cd8b408",
+            "hi-2026-general-u-s-representative-dist-i-692a681cba6e5141",
+            "hi-2026-general-u-s-representative-dist-i-94da11d3927fcf98",
+            "hi-2026-general-u-s-representative-dist-i-6f1a2e3cca6d4727"
+          ]
+        },
+        {
+          "id": "hi-2026-general-governor-and-lieutenant-governor",
+          "title": "Governor and Lieutenant Governor",
+          "candidates": [
+            "hi-2026-general-governor-and-lieutenant-governor-8062888b7d17d839",
+            "hi-2026-general-governor-and-lieutenant-governor-911c8e50e8b51d48"
+          ]
+        },
+        {
+          "id": "hi-2026-general-state-senator-dist-13",
+          "title": "STATE SENATOR, DIST 13",
+          "candidates": [
+            "hi-2026-general-state-senator-dist-13-167cc1f81b563e7d",
+            "hi-2026-general-state-senator-dist-13-ef05d3178780938f"
+          ]
+        },
+        {
+          "id": "hi-2026-general-state-representative-dist-26",
+          "title": "STATE REPRESENTATIVE, DIST 26",
+          "candidates": [
+            "hi-2026-general-state-representative-dist-26-c3b3ae1dd76b575e",
+            "hi-2026-general-state-representative-dist-26-86a01f6b9253ab4f"
+          ]
+        },
+        {
+          "id": "hi-2026-general-oha-maui-resident-trustee",
+          "title": "OHA MAUI RESIDENT TRUSTEE",
+          "candidates": [
+            "hi-2026-general-oha-maui-resident-trustee-ca8088c4f3339a8a",
+            "hi-2026-general-oha-maui-resident-trustee-899f9d05ea7ee46a"
+          ]
+        },
+        {
+          "id": "hi-2026-general-oha-oahu-resident-trustee",
+          "title": "OHA OAHU RESIDENT TRUSTEE",
+          "candidates": [
+            "hi-2026-general-oha-oahu-resident-trustee-19374a7d3687c636",
+            "hi-2026-general-oha-oahu-resident-trustee-d3d3ee8a9e74c0f6"
+          ]
+        },
+        {
+          "id": "hi-2026-general-oha-at-large-trustee",
+          "title": "OHA AT-LARGE TRUSTEE",
+          "candidates": [
+            "hi-2026-general-oha-at-large-trustee-955f8146f147994c",
+            "hi-2026-general-oha-at-large-trustee-125600e922bd04b4",
+            "hi-2026-general-oha-at-large-trustee-5b458dd3e848b056",
+            "hi-2026-general-oha-at-large-trustee-76240e2abb2c2594",
+            "hi-2026-general-oha-at-large-trustee-7fe5147c3d9dee42",
+            "hi-2026-general-oha-at-large-trustee-b65ddf04daff58ff"
+          ]
+        },
+        {
+          "id": "hi-2026-general-question-1",
+          "title": "QUESTION #1: Increasing the Timeframe for the Hawaii Senate to Consider and Act on Judicial Appointments.",
+          "candidates": []
+        },
+        {
+          "id": "hi-2026-general-question-2",
+          "title": "QUESTION #2: Directing the Hawaii State Legislature to Establish Procedures for Counties to Issue RISE Bonds, Exempt from County Debt Limits.",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-1",
+          "title": "Honolulu Charter Question #1 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-10",
+          "title": "Honolulu Charter Question #10 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-11",
+          "title": "Honolulu Charter Question #11 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-12",
+          "title": "Honolulu Charter Question #12 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-13",
+          "title": "Honolulu Charter Question #13 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-14",
+          "title": "Honolulu Charter Question #14 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-15",
+          "title": "Honolulu Charter Question #15 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-16",
+          "title": "Honolulu Charter Question #16 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-17",
+          "title": "Honolulu Charter Question #17 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-18",
+          "title": "Honolulu Charter Question #18 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-19",
+          "title": "Honolulu Charter Question #19 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-2",
+          "title": "Honolulu Charter Question #2 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-20",
+          "title": "Honolulu Charter Question #20 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-3",
+          "title": "Honolulu Charter Question #3 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-4",
+          "title": "Honolulu Charter Question #4 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-5",
+          "title": "Honolulu Charter Question #5 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-6",
+          "title": "Honolulu Charter Question #6 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-7",
+          "title": "Honolulu Charter Question #7 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-8",
+          "title": "Honolulu Charter Question #8 ◆",
+          "candidates": []
+        },
+        {
+          "id": "ba01-hi-honolulu-charter-question-9",
+          "title": "Honolulu Charter Question #9 ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [],
+      "contestCount": 29,
+      "candidateCount": 20
+    },
+    {
+      "zip": "85701",
+      "checkedAt": "2026-10-21T04:22:04.839Z",
+      "httpStatus": 200,
+      "elapsedMs": 3059,
+      "underThreeSeconds": false,
+      "missingHeldContests": [],
+      "priorTucsonIdsMissing": [],
+      "title": "Your ballot — Meanwhile",
+      "contests": [
+        {
+          "id": "ballot-az-pima:governor",
+          "title": "Governor / Lieutenant Governor",
+          "candidates": [
+            "ballot-az-pima:governor|Katie Hobbs / John Giles",
+            "ballot-az-pima:governor|Andy Biggs / Sine Kerr",
+            "ballot-az-pima:governor|Risa Lombardo / Lisa Castillo",
+            "ballot-az-pima:governor|Teri Ann Hourihan / Angela Harrolle Mohan",
+            "ballot-az-pima:governor|Gertritrude Gonzalez",
+            "ballot-az-pima:governor|Alice Novoa"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:secretary-of-state",
+          "title": "Secretary of State",
+          "candidates": [
+            "ballot-az-pima:secretary-of-state|Adrian Fontes",
+            "ballot-az-pima:secretary-of-state|Alexander Kolodin",
+            "ballot-az-pima:secretary-of-state|Duwayne Collier"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:attorney-general",
+          "title": "Attorney General",
+          "candidates": [
+            "ballot-az-pima:attorney-general|Kris Mayes",
+            "ballot-az-pima:attorney-general|Warren Petersen"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:state-treasurer",
+          "title": "State Treasurer",
+          "candidates": [
+            "ballot-az-pima:state-treasurer|Nick Mansour",
+            "ballot-az-pima:state-treasurer|Elijah Norton"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:superintendent",
+          "title": "Superintendent of Public Instruction",
+          "candidates": [
+            "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
+            "ballot-az-pima:superintendent|Kimberly Yee",
+            "ballot-az-pima:superintendent|Gerard Davis",
+            "ballot-az-pima:superintendent|Stephen Neal Jr."
+          ]
+        },
+        {
+          "id": "ballot-az-pima:mine-inspector",
+          "title": "State Mine Inspector",
+          "candidates": [
+            "ballot-az-pima:mine-inspector|Brian Matlock",
+            "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:us-house-7",
+          "title": "U.S. Representative, District 7",
+          "candidates": [
+            "ballot-az-pima:us-house-7|Adelita Grijalva",
+            "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr."
+          ]
+        },
+        {
+          "id": "ballot-az-pima:state-senate-20",
+          "title": "State Senator, District 20",
+          "candidates": [
+            "ballot-az-pima:state-senate-20|Alma Hernandez"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:state-house-20",
+          "title": "State Representative, District 20",
+          "candidates": [
+            "ballot-az-pima:state-house-20|Sally Ann Gonzales",
+            "ballot-az-pima:state-house-20|Betty Villegas"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:corporation-commissioner",
+          "title": "Corporation Commissioner",
+          "candidates": [
+            "ballot-az-pima:corporation-commissioner|Ralph Heap",
+            "ballot-az-pima:corporation-commissioner|Kevin Thompson",
+            "ballot-az-pima:corporation-commissioner|Jonathon Hill",
+            "ballot-az-pima:corporation-commissioner|Clara Pratte",
+            "ballot-az-pima:corporation-commissioner|Mike Cease"
+          ]
+        },
+        {
+          "id": "ballot-az-2026-general-supreme-court-john-lopez-iv",
+          "title": "Justice of the Arizona Supreme Court — John Lopez IV — Retention",
+          "candidates": [
+            "ballot-az-2026-general-supreme-court-john-lopez-iv-john-lopez-iv"
+          ]
+        },
+        {
+          "id": "ballot-az-pima-general-2026-clerk-of-the-superior-court",
+          "title": "Clerk of the Superior Court",
+          "candidates": [
+            "ballot-az-pima-general-2026-clerk-of-the-superior-court-giacomino-james-w"
+          ]
+        },
+        {
+          "id": "ballot-az-pima:prop-141",
+          "title": "Proposition 141: Prohibit tax; monitoring; vehicle mileage",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-142",
+          "title": "Proposition 142: Preferential treatment; discrimination; prohibited acts",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-143",
+          "title": "Proposition 143: School districts; labor organizations; resources",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-144",
+          "title": "Proposition 144: Citizenship; identification; contributions; early voting",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-145",
+          "title": "Proposition 145: Military families; scholarship accounts",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-212",
+          "title": "Proposition 212: Protect Education Act",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-316",
+          "title": "Proposition 316: Food; municipal tax; exemption",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-317",
+          "title": "Proposition 317: Drug cartels; terrorist organizations",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-318",
+          "title": "Proposition 318: Interscholastic; intramural athletics; biological sex",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-319",
+          "title": "Proposition 319: Photo enforcement systems; voter approval",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-320",
+          "title": "Proposition 320: Instructional expenses; operational spending; enforcement",
+          "candidates": []
+        },
+        {
+          "id": "ballot-az-pima:prop-425",
+          "title": "Proposition 425: Permanent Base Adjustment ◆",
+          "candidates": []
+        }
+      ],
+      "gaps": [],
+      "contestCount": 24,
+      "candidateCount": 31
+    }
+  ]
+}

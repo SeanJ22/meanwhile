@@ -1,0 +1,9 @@
+{
+  "url": "https://www.sos.alabama.gov/sites/default/files/election-2026/ALGOPAmendedCertification-SD25.pdf",
+  "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/ALGOPAmendedCertification-SD25.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T22:53:32.809513+00:00",
+  "sha256": "54edd1d66f85da74a2e5304880d1af34043c4e1f83a35f0e0bfd876fb7bf611c",
+  "sourceTextSha256": "2397a8ba3f817940451a49b3788396b69cb13ef31f0bf675b2aa589a9ba87ecb",
+  "sourceDocument": "Text extracted by pdftotext -layout from the captured 34.8MB official PDF; raw PDF omitted from repository to keep worker evidence concise."
+}

@@ -3,7 +3,7 @@ import test from "node:test";
 
 import { readFileSync } from "node:fs";
 
-import { unitOf } from "./helpers/ask-gap-unit.ts";
+import { heldReading, unitOf, type AskGapMeeting } from "./helpers/ask-gap-unit.ts";
 import {
   ASK_GAP_OBSERVATION_FIELDS,
   ASK_GAP_OBSERVATION_UPSERT,
@@ -25,7 +25,7 @@ import {
   statedAskGaps,
 } from "../lib/ask/gap-observation.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { askGapsProvider, type AskGapHoldings, type AskGapMeeting, type CarrierClock } from "../lib/control-plane/scheduler/providers/ask-gaps.ts";
+import { askGapsProvider, type AskGapHoldings, type CarrierClock } from "../lib/control-plane/scheduler/providers/ask-gaps.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import { planSupersededRetirement, standing, supersededRetirementReason } from "../lib/control-plane/scheduler/durable.ts";
 import { askGapCountWords, askGapRenderedNumbers, assignmentCountClaims, buildAssignments, buildAssignmentView, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
@@ -57,16 +57,8 @@ const onCadence = (): CarrierClock => ({
   nextReadDueAt: "2026-09-24T12:30:00.000Z",
 });
 
-function holdings(over: Partial<AskGapHoldings> = {}): AskGapHoldings {
-  return {
-    source: "the fixture holdings",
-    meetings: seed.meetings,
-    documents: seed.agendaDocuments,
-    sittings: seed.sittings,
-    outcomesUnreadable: null,
-    clockOf: onCadence,
-    ...over,
-  };
+function holdings(over: { meetings?: AskGapMeeting[] } = {}): AskGapHoldings {
+  return heldReading({ meetings: seed.meetings, documents: seed.agendaDocuments, sittings: seed.sittings, now: NOW, clockOf: onCadence, ...over });
 }
 
 type Observed = Awaited<ReturnType<typeof readAskGapObservations>>;
@@ -145,13 +137,13 @@ test("a synthetic run and an edge-only context record nothing — by name", asyn
   try {
     const stated = [{ bodyId: PIMA_BOARD, code: "AGENDA_NOT_HELD" as const }];
     assert.equal((planAskGapObservations({ stated, runClass: "SYNTHETIC", nowIso: NOW_ISO }) as { why?: string }).why, "NOT_A_READER");
-    /* The keep-warm context, entered in a callback of its own so it cannot outlive it (AsyncLocalStorage.enterWith). */
+    /* The edge-only context, entered in a callback of its own so it cannot outlive it (AsyncLocalStorage.enterWith). */
     const edgeOnly = await new Promise<ReturnType<typeof planAskGapObservations>>((resolve) => setImmediate(() => {
       enterReaderAuthorityEdge({ edgeOnly: true });
       resolve(planAskGapObservations({ stated, runClass: "ORGANIC", nowIso: NOW_ISO }));
     }));
     assert.equal(edgeOnly.kind, "SKIPPED");
-    assert.equal((edgeOnly as { why?: string }).why, "EDGE_ONLY_CONTEXT", "the keep-warm context never reaches a database");
+    assert.equal((edgeOnly as { why?: string }).why, "EDGE_ONLY_CONTEXT", "the edge-only context never reaches a database");
     assert.equal(planAskGapObservations({ stated, runClass: "ORGANIC", nowIso: NOW_ISO }).kind, "RECORD", "and the refusal did not leak out of that context");
     assert.equal((await recordAskGapObservations(edgeOnly)).kind, "SKIPPED");
     assert.deepEqual(await store.list(), []);

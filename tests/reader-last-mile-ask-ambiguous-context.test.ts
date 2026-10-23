@@ -146,7 +146,8 @@ test("focused candidate contact questions retrieve the same held profile and rej
     const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test" }, body: JSON.stringify({ question, surface: "BALLOT", ocdIds: ["ocd-division/country:us/state:az"], activeSubjects: [{ id, name: "Katie Hobbs", kind: "PERSON", focused: true }] }) }));
     const payload = await response.json() as AskAnswerPayload;
     assert.equal(response.status, 200);
-    assert.equal(payload.answer, null);
+    if (id.endsWith("wrong-id")) assert.equal(payload.answer, "We don't have that answer yet.");
+    else assert.equal(payload.answer, null);
     if (id.endsWith("wrong-id")) {
       assert.equal(payload.mode, "UNRESOLVED");
       assert.equal(payload.denominators.identityUnresolved, 1);

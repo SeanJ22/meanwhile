@@ -9,7 +9,9 @@ export interface VotingFetchSession {
   rawBodies: VotingCapture[];
   get: (url: string, init?: RequestInit) => Promise<VotingCapture>;
 }
-const blockedBody = (text: string) => /(?:<title>[^<]*(?:access denied|just a moment|attention required)|cf-chl-|g-recaptcha|h-captcha|captcha-container|name=["']password["'])/i.test(text);
+// Public election pages often include a footer login or contact-form CAPTCHA.
+// A whole-page challenge is an access failure; an unrelated public form is not.
+const blockedBody = (text: string) => /(?:<title>[^<]*(?:access denied|just a moment|attention required|authentication required|\blog[ -]?in\b|\bsign[ -]?in\b)|\bid=["']challenge-form["']|\bclass=["'][^"']*captcha-container)/i.test(text);
 function publicUrl(value: string): URL {
   const url = new URL(value);
   if (!["https:", "http:"].includes(url.protocol) || url.username || url.password || /^(?:localhost|127\.|10\.|192\.168\.|169\.254\.|0\.|\[|172\.(?:1[6-9]|2\d|3[01])\.)/i.test(url.hostname)) throw new Error("Only public election source URLs may be read");
@@ -69,7 +71,6 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
       if (response.status >= 300 && response.status < 400) {
         const location = response.headers.get("location"); if (!location) throw new Error("Source redirect has no location");
         const next = publicUrl(new URL(location, url).href);
-        if (runtime.readerAddress && next.origin !== url.origin) throw new Error("Address lookup redirected away from the election office; address was not forwarded");
         url = next; continue;
       }
       if (!response.ok) throw new Error(`Source returned HTTP ${response.status}${response.headers.get("retry-after") ? `; retry after ${response.headers.get("retry-after")}` : ""}`);

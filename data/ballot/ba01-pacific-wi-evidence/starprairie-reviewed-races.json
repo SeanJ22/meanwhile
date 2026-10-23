@@ -1,0 +1,50 @@
+[
+  [
+    "Representative in Congress District 7",
+    "ocd-division/country:us/state:wi/cd:7",
+    [
+      [
+        "Michael Alfonso",
+        "Republican"
+      ],
+      [
+        "Fred Clark",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "Representative to the Assembly District 28",
+    "ocd-division/country:us/state:wi/sldl:28",
+    [
+      [
+        "Rob Kreibich",
+        "Republican"
+      ],
+      [
+        "Robin Lillesve",
+        "Democratic"
+      ]
+    ]
+  ],
+  [
+    "St. Croix County Sheriff",
+    "ocd-division/country:us/state:wi/county:st_croix",
+    [
+      [
+        "Scott Knudson",
+        "Republican"
+      ]
+    ]
+  ],
+  [
+    "St. Croix County Clerk of Circuit Court",
+    "ocd-division/country:us/state:wi/county:st_croix",
+    [
+      [
+        "Kathy A. Kittel",
+        "Republican"
+      ]
+    ]
+  ]
+]

@@ -4,6 +4,7 @@ import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import { FEDERAL_MONEY_AUTHORITIES } from "../federal-money/authority.ts";
+import { CAMPAIGN_FINANCE_AUTHORITIES } from "../funding/state-sources.ts";
 import {
   MANUAL_SOURCE_CLASSES,
   type ManualSourceSetReceipt,
@@ -82,7 +83,7 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
 
 function peopleSourceAuthority(input: {
   readonly id: string; readonly publisher: string; readonly official: boolean;
-  readonly federal?: boolean; readonly routePrefixes: readonly string[];
+  readonly federal?: boolean; readonly routePrefixes: readonly string[]; readonly parserVersion?: string;
 }): SourceAuthorityContract {
   return {
     id: input.id, publisher: input.publisher,
@@ -91,13 +92,14 @@ function peopleSourceAuthority(input: {
     routePrefixes: input.routePrefixes,
     jurisdictions: ["US", ...Object.values(FIPS_TO_STATE).map(state => `US-${state.postal}`)],
     recordClasses: [input.federal ? "FEDERAL_DIRECTORY" : "STATE_LEGISLATOR"],
-    competentFacts: input.official ? ["source-verified current holder", "office", "official contact", "term"] : ["attributed identity and current-office leads"],
-    expectedIdentifierKeys: ["person_id", "people_id", "bioguide_id", "wikidata_id"],
+    competentFacts: input.official ? ["source-verified current holder", "office", "official contact", "term", "publisher-stated vacancy"] : ["attributed identity and current-office leads"],
+    // An official page's stated empty seat is keyed by its office's division.
+    expectedIdentifierKeys: ["person_id", "people_id", "bioguide_id", "wikidata_id", ...(input.official ? ["office_id"] : [])],
     expectedTemporalFields: ["term", "source_through"],
     horizonSemantics: input.official
       ? "Each person must be named in the office on their captured own official page. Statewide election and appointment labels come from explicit state-page evidence. A failed page preserves prior verified facts."
       : "Every native fact is attributed to its source. Shared identifiers join complementary evidence; secondary sources never establish an official photo or statewide elected-office label.",
-    parserVersion: "people-sources/1", freshnessExpectation: "Daily standing per-state acquisition with independent source clocks.",
+    parserVersion: input.parserVersion ?? "people-sources/1", freshnessExpectation: "Daily standing per-state acquisition with independent source clocks.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
   };
 }
@@ -123,7 +125,8 @@ function sharedAuthority(people: SourceAuthorityContract, federal: SourceAuthori
   };
 }
 
-export const SOURCE_AUTHORITIES = {
+const AUTHORITIES = {
+  ...CAMPAIGN_FINANCE_AUTHORITIES,
   ...FEDERAL_MONEY_AUTHORITIES,
   "google-civic-voterinfo": {
     id: "google-civic-voterinfo", publisher: "Google Civic Information; upstream publishers and official flags retained per fact",
@@ -138,7 +141,7 @@ export const SOURCE_AUTHORITIES = {
   },
   "legiscan-api": peopleSourceAuthority({ id: "legiscan-api", publisher: "LegiScan current-session people API", official: false, routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"] }),
   "official-state-people": peopleSourceAuthority({ id: "official-state-people", publisher: "Each state legislature's captured official roster and member pages", official: true, routePrefixes: ["https://"] }),
-  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"] }),
+  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"], parserVersion: "people-sources/2" }),
   "wikidata-people": peopleSourceAuthority({ id: "wikidata-people", publisher: "Wikidata; image licenses attributed to Wikimedia Commons", official: false, routePrefixes: ["https://query.wikidata.org/", "https://www.wikidata.org/", "https://www.wikimedia.org/", "https://commons.wikimedia.org/"] }),
   "people-portraits": {
     id: "people-portraits", publisher: "Each person's own official page, verified against saved portrait evidence",
@@ -225,14 +228,15 @@ export const SOURCE_AUTHORITIES = {
     publisher: "unitedstates/congress-legislators (community-maintained directory project)",
     trust: "T3_ATTRIBUTED_PRIMARY",
     sourceClass: "INTERMEDIARY",
-    routePrefixes: ["https://raw.githubusercontent.com/unitedstates/congress-legislators/", "https://api.github.com/repos/unitedstates/congress-legislators/commits"],
+    routePrefixes: ["https://raw.githubusercontent.com/unitedstates/congress-legislators/", "https://api.github.com/repos/unitedstates/congress-legislators/commits",
+      "https://clerk.house.gov/xml/lists/MemberData.xml", "https://www.senate.gov/general/contact_information/senators_cfm.xml"],
     jurisdictions: ["US"],
     recordClasses: ["FEDERAL_DIRECTORY"],
-    competentFacts: ["current federal membership", "term and chamber", "official contact", "district office", "official social account", "committee membership"],
+    competentFacts: ["current federal membership", "term and chamber", "official contact", "district office", "capitol office", "publisher-stated vacancy", "official social account", "committee membership"],
     expectedIdentifierKeys: ["bioguide_id", "division_ocd_id", "committee_id"],
     expectedTemporalFields: ["term_start", "term_end", "source_sha", "source_through"],
     horizonSemantics: "Current members are resolved at an explicit as-of date from a pinned commit. Optional contact, office, social and committee files advance independently; unavailable optional files retain their prior source dates. The project is attributed as an intermediary.",
-    parserVersion: "congress-directory/4",
+    parserVersion: "congress-directory/5",
     freshnessExpectation: "Existing daily acquisition resolves a shared source SHA and reuses immutable captures.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
@@ -958,6 +962,7 @@ export const SOURCE_AUTHORITIES = {
   },
 } as const satisfies Readonly<Record<string, SourceAuthorityContract>>;
 
+export const SOURCE_AUTHORITIES = AUTHORITIES as typeof AUTHORITIES & typeof CAMPAIGN_FINANCE_AUTHORITIES;
 export type SourceAuthorityId = keyof typeof SOURCE_AUTHORITIES;
 
 export function sourceAuthority(sourceId: string): SourceAuthorityContract | null {
@@ -1073,7 +1078,7 @@ export function authorityForManualReceipt(
     if (!SHA256.test(source.rawHash) || !source.publisher.trim() || !source.reviewedEvidence.trim()) {
       return { ok: false, code: "MANUAL_SOURCE_PROOF_INCOMPLETE", detail: `${source.finalUrl} lacks exact bytes, publisher identity, or reviewed evidence.` };
     }
-    const identity = `${requested.href}\n${final.href}\n${source.rawHash}`;
+    const identity = `${requested.href}\n${final.href}\n${source.rawHash}\n${source.retrievedAt}`;
     if (seen.has(identity)) return { ok: false, code: "MANUAL_SOURCE_PROOF_DUPLICATED", detail: `${source.finalUrl} repeats the same reviewed bytes.` };
     seen.add(identity);
   }

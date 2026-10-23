@@ -1,0 +1,39 @@
+[
+  {
+    "Committee": "109 PAC",
+    "District": "",
+    "Office Sought": "",
+    "Receipt Type": "Itemized Contributions from Individuals",
+    "Committee Type": "Political Action Committee",
+    "Transaction Date": "01/07/2026",
+    "File To State": "04/06/2026",
+    "Amount": "85.00",
+    "ElectionYear": "",
+    "Report Name": "April 10 Filing",
+    "Committee ID": "10540",
+    "Section Letter": "B",
+    "Section Name": "Itemized Contributions from Individuals",
+    "Period Start": "01/01/2026",
+    "Period End": "03/31/2026",
+    "Report ID": "E128710"
+  },
+  {
+    "Committee": "109 PAC",
+    "District": "",
+    "Office Sought": "",
+    "Receipt Type": "Contributions from Other Committees",
+    "Committee Type": "Political Action Committee",
+    "Transaction Date": "05/11/2026",
+    "File To State": "07/10/2026",
+    "Amount": "2000.00",
+    "ElectionYear": "",
+    "Report Name": "July 10 Filing",
+    "Committee ID": "10540",
+    "Section Letter": "C1",
+    "Section Name": "Contributions from Other Committees",
+    "Period Start": "04/01/2026",
+    "Period End": "06/30/2026",
+    "Report ID": "E132524",
+    "Contributor Name": "SEIU Local 32BJ Connecticut PAC"
+  }
+]

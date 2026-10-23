@@ -163,6 +163,13 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "0045_src_mn_retire_campaign_load": { phase: "contract", why: "After the native writer is retired, deletes its state campaign load and publications while preserving captured source files." },
+  "0046_ck01_audit_flags": { phase: "expand", why: "Adds nullable owner flag metadata and indexes and permits null fact_id for a named legacy reader record. Every old writer still supplies fact_id and keeps working; apply before code that uses the new columns." },
+  "0047_ck01_flag_target": { phase: "contract", why: "After the flag writers serving scalar or named reader targets deploy, require every flag to name one of those targets. The ADD CONSTRAINT is narrowing, so it is separate from the columns required before deploy." },
+  "0044_rs01_retire_copies": { phase: "contract", why: "After direct canonical readers deploy, removes obsolete reader copy documents, publication queues and their triggers while retaining source candidates, facts and history." },
+  "0043_rs01_place_reads": { phase: "expand", why: "Indexes each canonical meeting source calendar by body, so one place query retrieves every source without an adapter list or a publication copy. Existing readers and writers keep working." },
+  "0042_rm01_confirmation_times": { phase: "expand", why: "Indexes unchanged-version confirmation times so the reader edge reads only what was confirmed since it last published." },
+  "0041_mt02_meeting_body_queue": { phase: "expand", why: "Adds a queue table and triggers that note which meeting partitions changed; no existing table or column is altered." },
   "0040_r1_edge_changes": { phase: "expand", why: "Indexes promotion times so the reader edge reads only what was promoted since it last published." },
   "0038_src_mn_federal_money_lookup": { phase: "expand", why: "Indexes exact federal native IDs without indexing source descriptions or loading state inventories." },
   "0000_square_stryfe": {
@@ -364,6 +371,8 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   },
   "0034_reader_events": { phase: "expand", why: "New aggregate and anonymous membership tables; existing capture stores are unaffected." },
   "0035_r1_fact_store": { phase: "expand", why: "Creates the fact store tables. Nothing reads or writes them before the build that ships with it." },
+  "0049_r3_legistar_members_retire_index": { phase: "contract", why: "Drops the live-only member index after the covering member lookup replaces it." },
+  "0048_r3_legistar_members": { phase: "expand", why: "Adds the exact member lookup index; no reader or writer depends on it before it exists." },
   "0037_r1_fact_scale": { phase: "expand", why: "Adds the fact watermark, the pass cursors and the trigger that queues changed places; existing writers keep working." },
   "0036_ne01": { phase: "expand", why: "Adds defaulted read counters and reader selection functions; existing readers and writers keep working." },
   "0033_feedback_context": {

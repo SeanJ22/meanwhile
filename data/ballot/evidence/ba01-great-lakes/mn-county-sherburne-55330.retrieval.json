@@ -1,0 +1,11 @@
+{
+  "streetUrl": "https://myballotmn.sos.mn.gov/api/Streets/GetStreets?ZipCode=55330",
+  "ballotUrl": "https://myballotmn.sos.mn.gov/api/PollingPlaceData/GetPollingPlaceData?prodAddressRangeId=2001",
+  "sampleUrl": "https://myballotmn.sos.mn.gov/file/SampleBallotPdf/51C60E72-591F-4603-8C9A-335302D35F47.pdf",
+  "httpStatus": 200,
+  "sampleBytes": 358269,
+  "county": "Sherburne",
+  "zip": "55330",
+  "judicialDistrict": "10",
+  "precinct": "0130"
+}

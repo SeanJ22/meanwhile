@@ -1,0 +1,10 @@
+{
+  "url": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Gilmer%20261103%20General%20-%2014inch.pdf",
+  "finalUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Gilmer%20261103%20General%20-%2014inch.pdf",
+  "retrievedAt": "2026-10-20T23:10:34.770366+00:00",
+  "rawHash": "15af7068bc5cac0ec8f638e99115de07fb4d2c1c3536d7d666d2450bad73407d",
+  "httpStatus": 200,
+  "bytes": 737587,
+  "extractedTextHash": "d8a080a0ed732bfbceaa902b4641ffa96ee69b5c0cfab5c3486ae918fa64fc97",
+  "extraction": "pdftotext -raw; exact source text, no paraphrase"
+}

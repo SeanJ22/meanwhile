@@ -62,6 +62,20 @@ describe("the published meeting doors", () => {
     assert.match(meetingDoorsProjectionIssue({ kind: "meeting-doors", formatVersion: 1, doors: [{ ...door, status: "OPEN" }, { ...door, status: "OPEN" }] }) ?? "", /duplicate/);
   });
 
+  it("publish a registry that gained doors as a new version, not a re-confirmation of the old one", async () => {
+    const store = new MemoryRoutineDataStore();
+    const first = await registryRows();
+    const one = await processRegisteredRoutineCandidate(store, MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(first.rows, AT), AT, undefined, { confirmUnchanged: true });
+    const later = "2026-10-08T13:00:00.000Z";
+    const grown = await registryRows([added()]);
+    const two = await processRegisteredRoutineCandidate(store, MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(grown.rows, later), later, undefined, { confirmUnchanged: true });
+    assert.equal(two.candidate.state, "PROMOTED");
+    assert.notEqual(two.promoted?.versionId, one.promoted?.versionId);
+    const read = await readMeetingDoors({ store, bypassCache: true, now: later });
+    assert.equal(read.kind, "PROMOTED");
+    assert.equal(read.kind === "PROMOTED" ? read.value.doors.length : 0, grown.rows.length);
+  });
+
   it("promote through their own contract, and a process installs them: a new door becomes meeting work there", async () => {
     const store = new MemoryRoutineDataStore();
     const door = added();

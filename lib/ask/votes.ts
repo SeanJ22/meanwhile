@@ -11,9 +11,12 @@ import type { StateRollCall, StateVotesSnapshot } from "../sources/legiscan/type
 import {
   officialStateVoteScopeForOfficeholderId,
 } from "../state-rollcalls/authority.ts";
-import { getVotesSnapshot, readFederalRollCallsProjection } from "../votes/snapshot.ts";
+import { getVotesSnapshot, readFederalMemberVotes, readFederalRollCallsProjection } from "../votes/snapshot.ts";
+import type { FederalMemberVotesReadModel, FederalRollCallWindow } from "../votes/data-plane.ts";
 import { readHistoricalFederalVotesForMember } from "../votes/history.ts";
-import type { RollCallVote, VotesSnapshot } from "../votes/types.ts";
+import { matchingPersonVotes } from "./person-votes.ts";
+import { keyVoteEvidenceFor } from "./key-votes.ts";
+import type { RollCallVote } from "../votes/types.ts";
 
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import { readNativeMemberVotes, type NativeMemberVoteReaders } from "../state-rollcalls/reader-votes.ts";
@@ -177,7 +180,7 @@ export function resolveVoteIdentity(
     : { kind: "NO_ROSTER_ROW" };
 }
 
-function federalSnapshot(): VotesSnapshot | null {
+function federalSnapshot(): FederalRollCallWindow | null {
   try {
     return getVotesSnapshot();
   } catch {
@@ -262,9 +265,10 @@ export function voteEvidenceReadsStateRollCalls(
   return identity.kind === "JOINED" && identity.seat.rosterScope !== "us";
 }
 
+/** `memberVotes`: the federal member's own record, null when none is held, undefined when it could not be read. */
 export function voteEvidenceFor(
   personName: string,
-  options: { withinStates?: readonly string[]; officeholderId?: string } = {},
+  options: { withinStates?: readonly string[]; officeholderId?: string; memberVotes?: FederalMemberVotesReadModel | null } = {},
 ): VoteEvidence {
   const identity = resolveVoteIdentity(personName, options);
   const records: EvidenceRecord[] = [];
@@ -307,21 +311,21 @@ export function voteEvidenceFor(
   denominators.officeholderSeatsMatched = 1;
 
   if (seat.rosterScope === "us") {
-    const snapshot = federalSnapshot();
-    if (!snapshot) {
+    const snapshot = federalSnapshot(), record = options.memberVotes;
+    if (!snapshot || record === undefined) {
       gaps.push({
         whose: "OURS",
         statement: `We hold ${seat.name} as ${seat.officeTitle}, but could not read our roll-call records just now, so no votes are shown.`,
       });
       return { identity, records, gaps, denominators };
     }
-    const byId = new Map(snapshot.votes.map((v) => [v.id, v]));
+    const byId = new Map((record?.votes ?? []).map((v) => [v.id, v]));
     const chamberRolls = seat.chamber
       ? snapshot.votes.filter((v) => v.chamber === seat.chamber)
       : snapshot.votes;
     denominators.rollCallsHeldForTheirChamber = chamberRolls.length;
 
-    const mine = snapshot.positions.filter((p) => p.officeholderId === seat.officeholderId);
+    const mine = record?.positions ?? [];
     denominators.rollCallVotesRecorded = mine.length;
 
     const ordered = mine
@@ -399,7 +403,7 @@ export function voteEvidenceFor(
 
 export async function voteEvidenceForIncludingHistory(
   personName: string,
-  options: { withinStates?: readonly string[]; officeholderId?: string } = {},
+  options: { withinStates?: readonly string[]; officeholderId?: string; topic?: string | null; onRecentMiss?: () => void } = {},
   readers?: NativeMemberVoteReaders,
 ): Promise<VoteEvidence> {
   const stateHint = options.withinStates?.length === 1 ? options.withinStates[0] : undefined;
@@ -428,8 +432,21 @@ export async function voteEvidenceForIncludingHistory(
         gaps: [{ whose: "OURS", statement: `We could not load the voting record for ${personName} just now.` }] };
     }
   }
-  const current = voteEvidenceFor(personName, options);
+  const identity = resolveVoteIdentity(personName, options);
+  const memberVotes = identity.kind === "JOINED" && identity.seat.rosterScope === "us"
+    ? await readFederalMemberVotes(identity.seat.officeholderId).then(read => read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value
+      : read.kind === "NOT_RECORDED" ? null : undefined, () => undefined) : null;
+  const current = voteEvidenceFor(personName, { ...options, memberVotes });
+  if (options.topic !== undefined && matchingPersonVotes(current.records, options.topic)?.length) return current;
   if (current.identity.kind !== "JOINED" || current.identity.seat.rosterScope !== "us") return current;
+  if (options.topic) {
+    const key = await keyVoteEvidenceFor({ kind: "PERSON", id: current.identity.seat.officeholderId, name: current.identity.seat.name },
+      [current.identity.seat.officeholderId], undefined, { includeSummaries: false });
+    const matching = matchingPersonVotes(key.records, options.topic);
+    if (matching?.length) return { ...current, records: [...current.records, ...matching],
+      denominators: { ...current.denominators, keyVotePositionsShown: matching.length } };
+  }
+  options.onRecentMiss?.();
   const seat = current.identity.seat;
   const promoted = await readFederalRollCallsProjection();
   if (promoted.kind !== "PROMOTED") return { ...current, gaps: [...current.gaps, {
@@ -441,9 +458,11 @@ export async function voteEvidenceForIncludingHistory(
     .map((record) => record.id));
   const seenCursors = new Set<string>();
   let cursor: string | null = null;
+  const bill = options.topic && /\b(h\s*r|hr|s|h\s*(?:con\s*)?res|s\s*(?:con\s*)?res)\s*(\d+)\b/i.exec(options.topic);
+  const voteBill = bill ? `${bill[1].toLowerCase().replace(/\s/g, "")}${bill[2]}` : undefined;
   for (;;) {
     const page = await readHistoricalFederalVotesForMember(seat.officeholderId, promoted,
-      { cursor, pageSize: 16 });
+      { cursor, pageSize: 16, voteBill });
     for (const vote of page.votes) {
       const id = `${seat.officeholderId}#${vote.id}`;
       if (seenVoteIds.has(id)) continue;

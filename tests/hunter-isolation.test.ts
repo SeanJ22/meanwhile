@@ -98,29 +98,54 @@ test("isolation: a stuck worker is ended alone, its state recorded, and its sibl
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
-test("isolation: a stuck task keeps its deferral when a sibling's finished list reached the lane before the task was announced", async () => {
-  /* A real worker reads its task before it announces it; a sibling that ends in that window lists every id as finished. */
+test("isolation: a stuck task keeps its deferral when a sibling's finished list reached the lane before the task was announced", async t => {
   const root = await fixture("late-start", `${TAKES_FIRST}
     process.once('message', config => {
       const id = claim(config.taskIds);
       if (id === 'ok') { done(config, id); return; }
-      setTimeout(() => {
+      process.once('message', () => {
         process.send({ kind: 'task-start', id: '', taskId: id, body: id });
         process.send({ kind: 'model', id: 'q1', taskId: id, jurisdiction: { subjectId: 's', state: null }, body: {} });
         setInterval(() => {}, 1000);
-      }, 300);
+      });
+      process.send({ kind: 'progress', id: '', body: 'ready' });
     });`);
   try {
+    t.mock.timers.enable({ apis: ["setTimeout", "Date"], now: Date.now() });
     const stuck: StuckWorker[] = [];
+    const order: string[] = [];
+    let blocked: ChildProcess | null = null, siblingExited = false, released = false;
+    const release = () => {
+      if (blocked && siblingExited && !released) { released = true; blocked.send({ kind: "announce" }); }
+    };
     const results = await runLeaseWorkerProcesses({ entry: "worker.mjs", childTimeoutMs: 60_000, config: config(root, ["stuck", "ok"]),
-      capacity: () => 2, transportFor: () => () => new Promise(() => {}), standing: { quietMs: 1_000, onStuck: worker => stuck.push(worker) } });
+      capacity: () => 2, transportFor: () => () => {
+        order.push("stuck request");
+        t.mock.timers.tick(1_000);
+        return new Promise(() => {});
+      },
+      standing: { quietMs: 1_000, onStuck: worker => stuck.push(worker) },
+      onStarted: pid => {
+        const handles = (process as unknown as { _getActiveHandles(): unknown[] })._getActiveHandles();
+        const child = handles.find(handle => handle instanceof ChildProcess && handle.pid === pid) as ChildProcess;
+        assert.ok(child);
+        child.on("message", (message: { kind: string; body: unknown }) => {
+          if (message.kind === "finished") order.push("sibling finished");
+          if (message.kind === "task-start") order.push("stuck announced");
+          if (message.kind === "progress" && message.body === "ready") { blocked = child; release(); }
+        });
+      },
+      onExited: (_pid, why) => {
+        if (why === "exit 0") { order.push("sibling exited"); siblingExited = true; release(); }
+      } });
+    assert.deepEqual(order, ["sibling finished", "sibling exited", "stuck announced", "stuck request"]);
     assert.equal(stuck.length, 1);
     const byTask = new Map(results.map(r => [r.routeTaskId, r]));
     assert.equal(byTask.get("ok")?.outcome, "WORKED");
     assert.equal(byTask.get("stuck")?.outcome, "FAILED", "the ended worker's task is recorded as owed, not dropped");
     assert.match(byTask.get("stuck")!.detail, /WORKER_STUCK:\d+: .*work remains owed/);
     assert.equal(results.length, 2);
-  } finally { await rm(root, { recursive: true, force: true }); }
+  } finally { t.mock.timers.reset(); await rm(root, { recursive: true, force: true }); }
 });
 
 test("isolation: a worker that keeps talking to the lane is never ended by the quiet clock", async () => {
@@ -292,12 +317,14 @@ test("isolation: the lane hands a running wave the round's newer queue once, and
 test("isolation: the runner's heartbeat carries the host's memory, its process tree, the reservations and how many workers fit", async () => {
   const MIB = 1024 * 1024;
   const reading = memoryReading({ at: "2026-10-06T05:30:00.000Z", totalBytes: 8192 * MIB, availableBytes: 3000 * MIB, rootPid: 10,
-    rows: [{ pid: 10, parentPid: 1, rss: 100 * MIB }, { pid: 11, parentPid: 10, rss: 900 * MIB }, { pid: 12, parentPid: 11, rss: 200 * MIB },
+    rows: [{ pid: 10, parentPid: 1, rss: 100 * MIB }, { pid: 11, parentPid: 10, rss: 900 * MIB, peakRss: 950 * MIB }, { pid: 12, parentPid: 11, rss: 200 * MIB },
       { pid: 13, parentPid: 12, rss: 50 * MIB }, { pid: 99, parentPid: 1, rss: 500 * MIB }],
-    state: { parents: [{ pid: 11, peak: 1000 * MIB }], reservations: [{ pid: 12, peak: 342 * MIB, entry: "lib/control-plane/workers/lease-worker.ts" }] } });
+    state: { parents: [{ pid: 11, peak: 1000 * MIB, entry: "freshness-shadow.mts:az" }], reservations: [{ pid: 12, peak: 342 * MIB, entry: "lib/control-plane/workers/lease-worker.ts" }] } });
   assert.equal(reading.runnerTreeRssBytes, 1250 * MIB, "the runner and everything under it, not other host processes");
   assert.equal(reading.runnerTreeProcesses, 4);
-  assert.deepEqual(reading.parents, [{ pid: 11, peakBytes: 1000 * MIB, rssBytes: 900 * MIB }]);
+  assert.deepEqual(reading.parents, [{ pid: 11, peakBytes: 1000 * MIB, rssBytes: 900 * MIB,
+    peakRssBytes: 950 * MIB, entry: "freshness-shadow.mts:az" }]);
+  assert.equal(typeof reading.parents[0]!.peakRssBytes, "number", "the OS high-water RSS is reported in bytes");
   assert.deepEqual(reading.reservations, [{ entry: "lease-worker.ts", peakBytes: 342 * MIB, rssBytes: 250 * MIB }], "a worker's tree, grandchildren included");
   assert.equal(reading.reservedGrowthBytes, (100 + 92) * MIB);
   assert.equal(reading.headroomBytes, 768 * MIB);

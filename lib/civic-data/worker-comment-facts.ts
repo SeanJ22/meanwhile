@@ -1,5 +1,6 @@
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
+import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { readValidatorManual } from "../control-plane/promotion/validator-manual.ts";
 import { factClocks } from "../facts/clocks.ts";
@@ -67,7 +68,7 @@ export async function publishOwedCommentFacts(input: {
       outcome = { at: input.now, workerResultId: parser.id, status: "HELD", code: detail.split(":")[0]!, detail, recovery: "WORKER", candidateId: null, versionId: null };
     }
     const current = await input.repos.workItems.mustRead(id);
-    await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
+    await saveWorkerPublicationOutcome(input.repos, current, outcome, input.now);
     report.push({ workItemId: id, outcome });
     await recordPublishedPageDoor({ repos: input.repos, page: captures[0], recordClass: plan.contract.recordClass, bodyId: plan.publication.bodyId,
       ocdId: plan.contract.jurisdiction.canonicalId, workItemId: id,

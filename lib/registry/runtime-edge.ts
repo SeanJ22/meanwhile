@@ -5,7 +5,6 @@ import type { BodyFacts } from "../facts/registry-overlay.ts";
 import type { StateAuthorityFamily, PromotedFamilyArtifactValue } from "../meetings/edge-artifacts.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
 
-import type { FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
@@ -17,10 +16,6 @@ import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 
 
-export interface FederalDirectoryEdgeValue {
-  readonly value: FederalDirectoryReadModel;
-  readonly versionId: string;
-}
 export interface CampaignSitesEdgeValue {
   readonly value: CuratedReaderProjection;
   readonly versionId: string;
@@ -57,14 +52,12 @@ interface StateAuthoritiesEdge {
 }
 
 export interface ReaderAuthorityEdgeBundle {
-  readonly meetingPlaces?: ReadonlyMap<string, readonly string[]>;
   readonly selection?: ReaderSelection;
   readonly loadPromoted?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry | null>;
   readonly stateAuthorities?: StateAuthoritiesEdge;
   readonly stateRegistryFacts?: { readonly key?: (state: string) => string | null; readonly load: (state: string) => Promise<{ readonly bodies: readonly BodyFacts[]; readonly versionId: string | null } | null> };
   /** A ZIP's Census districts, from its state's own pointer. */
   readonly censusDistricts?: { readonly slice: (zip: string) => Promise<Slice<CodeSlice>> };
-  readonly federalDirectory?: FederalDirectoryEdgeValue;
   readonly campaignSites?: CampaignSitesEdgeValue;
   readonly stateLegislators?: StateLegislatorsEdgeValue;
   readonly meetingOutcomes?: MeetingOutcomesEdgeValue;
@@ -204,9 +197,6 @@ async function loadCurrentPromotedEdge(recordClass: RoutineRecordClass, scope: s
   return await edgeStore.getStore()?.loadPromoted?.(recordClass, scope) ?? null;
 }
 
-export function currentFederalDirectoryEdge(): FederalDirectoryEdgeValue | null {
-  return edgeStore.getStore()?.federalDirectory ?? null;
-}
 export function currentCampaignSitesEdge(): CampaignSitesEdgeValue | null {
   return edgeStore.getStore()?.campaignSites ?? null;
 }

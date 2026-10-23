@@ -1,10 +1,8 @@
 import { readerRoute } from "@/lib/api/reader-route";
 import { directFundingTargetPlan } from "@/lib/funding/target-authorities";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, READER_FUNDING_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
-import { resolveReaderArtifactStore } from "@/lib/meetings/edge-store";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { settleFundingHoldingAnswer, startDirectFundingReads, fundingHoldingReaders, timedRead } from "@/lib/funding/holding-answer";
+import { settleFundingHoldingAnswer, startDirectFundingReads, fundingHoldingReaders } from "@/lib/funding/holding-answer";
+import { readCampaignMoneyForTarget } from "@/lib/funding/state-reader";
 
 export const runtime = "nodejs";
 
@@ -23,25 +21,14 @@ export const GET = readerRoute("/api/funding/[target]", async function GET(
   const startedAt = Date.now();
   const divisions = await ballotPlaceFromRequest(request);
   const direct = directFundingTargetPlan(target);
-  const readers = fundingHoldingReaders(divisions, timings);
-  const onEdge = resolveReaderArtifactStore() !== null;
-  const fromDatabase = startDirectFundingReads({
-    ...direct,
-    federal: direct.federal && !onEdge,
-    state: onEdge ? null : direct.state,
-    ballotIdentity: direct.ballotIdentity && !onEdge,
-  }, readers);
-  {
-    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(null, undefined, READER_FUNDING_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime")).catch(error => holdReaderAuthorityEdge(error, READER_FUNDING_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime"))));
-    if (edge) enterReaderAuthorityEdge(edge);
+  if(!direct.federal){
+    const money=await readCampaignMoneyForTarget(target,divisions);
+    return money?Response.json({kind:"state-cycle",data:money,dataState:"PROMOTED",dataMetadata:null,holdingStatus:money.status==="UNAVAILABLE"?"PARTIAL":"HELD"},
+      {headers:{"cache-control":"private, no-store","server-timing":`total;dur=${Date.now()-startedAt}`}}):Response.json({kind:"none",dataState:"PROMOTED",dataMetadata:null,holdingStatus:"HELD"},{headers:{"cache-control":"private, no-store"}});
   }
-  const fromEdge = startDirectFundingReads({
-    ...direct,
-    federal: direct.federal && fromDatabase.federal === undefined,
-    state: fromDatabase.state === undefined ? direct.state : null,
-    ballotIdentity: direct.ballotIdentity && fromDatabase.ballotIdentity === undefined,
-  }, readers);
-  const settled = await settleFundingHoldingAnswer(target, readers, { ...fromDatabase, ...fromEdge });
+  const readers = fundingHoldingReaders(divisions, timings);
+  const pending = startDirectFundingReads(direct, readers);
+  const settled = await settleFundingHoldingAnswer(target, readers, pending);
   timings.total = Date.now() - startedAt;
   const serverTiming = Object.entries(timings).map(([name, ms]) => `${name};dur=${ms}`).join(", ");
   if (settled.kind === "HOLDING_UNAVAILABLE") {

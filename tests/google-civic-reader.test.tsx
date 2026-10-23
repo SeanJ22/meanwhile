@@ -9,36 +9,24 @@ const fixture = (name: string) => readFileSync(new URL(`./fixtures/google-civic/
 const place: VotingReaderPlace = { precision: "ADDRESS", point: null, states: ["MI"], divisionIds: ["ocd-division/country:us/state:mi"], countyFips: [], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
 const now = () => "2026-10-12T23:13:00.000Z";
 
-test("VS-01 explicit Google fallback uses the shared real-response parser and renders locations on our page", async () => {
-  const requests: URL[] = [];
-  const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: [] }, place,
-    { readerRequested: true, googleRequested: true, address: "100 North Capitol Avenue, Lansing, MI 48933" }, {
-      readGoogle: (address, resolved) => readGoogleVotingAnswer(address, resolved, { apiKey: "private-test-key", now,
-        fetchImpl: (async (url: URL) => { requests.push(url); return new Response(fixture(url.pathname.endsWith("elections") ? "elections" : "mi-voterinfo")); }) as unknown as typeof fetch }),
-    });
-  assert.equal(requests.length, 2);
-  assert.equal(requests[1].searchParams.get("electionId"), "12000");
-  assert.equal(answer.googleFallback?.label, "from Google's election data (Voting Information Project)");
-  const html = await renderCardWithSources({ modulePath: "./components/map/voting-sites-panel.tsx", exportName: "VotingJurisdictionRecords",
-    props: { answer, selectedSiteId: null }, sourceUrls: [answer.jurisdictions[0].sourceUrl] });
-  assert.match(html, /FIRST PRESBYTERIAN CHURCH/);
-  assert.match(html, /510 W OTTAWA ST/);
-  assert.match(html, /7 am - 8 pm/);
-  assert.match(html, /Sources/);
-  assert.ok(!html.includes("100 North Capitol Avenue"));
-  assert.ok(!JSON.stringify(answer).includes("private-test-key"));
-});
-
-test("VS-01 official locations suppress Google even if a caller requests the fallback", async () => {
-  let sent = 0;
-  const google = await readGoogleVotingAnswer("public source sample", place, { apiKey: "test-key", now,
+test("VS-01 voting reader renders held records without invoking the Google adapter", async () => {
+  const { jurisdictions: held } = await readGoogleVotingAnswer("public source sample", place, { apiKey: "test-key", now,
     fetchImpl: (async (url: URL) => new Response(fixture(url.pathname.endsWith("elections") ? "elections" : "mi-voterinfo"))) as unknown as typeof fetch });
-  const official = { ...google[0], ocdId: place.divisionIds[0], sourceOrg: "Michigan election office", sourceUrl: "https://www.michigan.gov/sos",
-    countyFips: undefined, sites: google[0].sites.map(site => ({ ...site, countyName: "Ingham" })) };
-  const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: [official] }, { ...place, countyNames: ["Ingham County"] },
-    { readerRequested: true, googleRequested: true, address: "private address" }, { readGoogle: async () => { sent++; return google; } });
-  assert.equal(sent, 0);
-  assert.equal(answer.googleFallback?.requested, false);
+  held.forEach(jurisdiction => { jurisdiction.ocdId = place.divisionIds[0]; jurisdiction.sites.forEach(site => { site.countyName = "Ingham"; }); });
+  const previous = globalThis.fetch;
+  let requests = 0;
+  globalThis.fetch = async () => { requests++; throw new Error("Reader requested external election data"); };
+  try {
+    const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: held }, { ...place, countyNames: ["Ingham County"] });
+    assert.equal(requests, 0);
+    assert.equal(answer.googleFallback, undefined);
+    const html = await renderCardWithSources({ modulePath: "./components/map/voting-sites-panel.tsx", exportName: "VotingJurisdictionRecords",
+      props: { answer, selectedSiteId: null }, sourceUrls: [answer.jurisdictions[0].sourceUrl] });
+    assert.match(html, /FIRST PRESBYTERIAN CHURCH/);
+    assert.match(html, /510 W OTTAWA ST/);
+    assert.match(html, /7 am - 8 pm/);
+    assert.ok(!JSON.stringify(answer).includes("private address"));
+  } finally { globalThis.fetch = previous; }
 });
 
 test("VS-01 Ask, ballot and retired endpoint cannot bypass explicit official-source fallback checks", () => {

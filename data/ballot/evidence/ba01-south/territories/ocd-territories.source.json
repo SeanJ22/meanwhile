@@ -1,0 +1,10 @@
+{
+  "url": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us.csv",
+  "finalUrl": "https://raw.githubusercontent.com/opencivicdata/ocd-division-ids/master/identifiers/country-us.csv",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-20T23:33:07.663618+00:00",
+  "rawHash": "f1297a1d2dbe1f1b691a9ebeb0cff3808228a466d95b3d13336a4e55a9f53388",
+  "bytes": 21964847,
+  "sourceTextSha256": "7e8427430bedbabee435eba7814c13989eb738b4b3e15f0dc7179e4fe59aa07c",
+  "sourceText": "Exact AS/GU/MP/PR/VI canonical divisions and state aliases from captured full registry; rawHash describes full registry and sourceTextSha256 describes excerpt."
+}

@@ -27,8 +27,6 @@ function receipt(over: Partial<UiReceipt> = {}): UiReceipt {
   return { ...startReceipt({ key: "k1", def: actionDef("global-runner-pause"), target: "runner", targetName: "the workers", label: "Pause all workers", scopeKey: "us", scopeName: "United States", level: "global", at: "2026-09-28T19:00:00.000Z", simulated: false }), ...over };
 }
 
-/* -------------------------------------------------------------- the rule */
-
 test("eligibility checks connection, then role, then duplicates, then support, then item state", () => {
   const def = actionDef("send-agents");
   const base = { def, target: "r1", receipts: [] as UiReceipt[], mode: "live" as const, supported: true };
@@ -54,7 +52,7 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
 test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
   assert.deepEqual([...connectedKinds()].sort(), [
     "ballot-publish",
-    "cancel-send", "data-switch-off", "data-switch-on", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "leads-send", "order-schedule", "order-unschedule", "owed-add", "owed-decline", "owed-undo", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
+    "cancel-send", "data-switch-off", "data-switch-on", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "hunt-stop-all", "hunt-stop-state", "leads-send", "officials-check", "order-schedule", "order-unschedule", "owed-add", "owed-decline", "owed-undo", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
   ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
@@ -68,6 +66,7 @@ test("only the kinds a real registry action carries out are wired, each to its o
   assert.equal(actionDef("hunt-start").gateway?.type, "expansion.scope.setMany");
   assert.equal(actionDef("hunt-start-many").gateway?.type, "expansion.scope.setMany");
   assert.equal(actionDef("leads-send").gateway?.type, "leads.upload");
+  assert.equal(actionDef("officials-check").gateway?.type, "officials.checkNow");
   for (const k of ["hunt-limit", "hunt-pause", "hunt-resume"] as const) assert.equal(actionDef(k).gateway?.type, "expansion.scope.budget");
   assert.equal(actionDef("hunt-stop").gateway?.type, "expansion.scope.remove");
   assert.equal(actionDef("setting-set").gateway?.type, "config.setSetting");
@@ -81,8 +80,6 @@ test("previews never promise more than the action does", () => {
   const limit = actionDef("hunt-limit").preview({ ...ctx, hunt: { id: "h", placeKey: "p", name: "H", startedAt: "", limitUsd: 50, limitSource: "", spentUsd: 15, heldUsd: 6, unpricedEntries: 0, status: "running", researchWorkers: 1 } });
   assert.equal(limit.invalid?.({ option: null, words: "", amount: "20", selected: 0 }), "That’s below what’s already spent or set aside.");
 });
-
-/* -------------------------------------------------------------- receipts */
 
 test("a gateway DONE is worded by the action and fills only “Instruction saved”", () => {
   const def = actionDef("global-runner-pause");
@@ -107,8 +104,6 @@ test("a refusal with HTTP 200 is Refused; auth failure is Failed; a lost answer 
   const replay = applyGatewayReply(receipt(), def, 200, { ok: true, replayed: true, receipt: { receiptId: "x", outcome: "DONE", says: "", startedAt: "a", completedAt: "b", readBackAt: null } }, "t");
   assert.match(replay.says, /nothing was done twice/);
 });
-
-/* -------------------------------------------------------------- executor */
 
 test("the live executor posts one gateway request with the page’s idempotency key, and never retries", async () => {
   const calls: { url: string; body: Record<string, unknown> }[] = [];
@@ -170,8 +165,6 @@ test("“Check what happened” asks the receipt lookup and never resends", asyn
   assert.equal(liveExecutor({ capabilities: () => null }).check(receipt(), actionDef("global-runner-pause"), () => {}), null, "no lookup, no check");
 });
 
-/* ------------------------------------------------------------ connection */
-
 test("the connection indicator separates connecting, live, reconnecting, stale and offline", () => {
   const now = Date.parse("2026-09-28T19:00:00.000Z");
   assert.equal(connectionOf({ online: true, receivedAt: null, now }), "connecting");
@@ -192,8 +185,6 @@ test("the live pulse gives a check-in, never a progress claim", () => {
   assert.equal(st.lastCheckIn, "b");
   assert.equal(st.lastUsefulProgress, null);
 });
-
-/* ------------------------------------------------------------------ scope */
 
 test("counting follows coverage relations, not breadcrumbs; a ZIP in two counties is local to both", () => {
   const places: Place[] = [
@@ -222,9 +213,6 @@ test("percentages round down", () => {
   assert.equal(pctDown(9999, 10000), "99.9%");
   assert.equal(pctDown(0, 0), "—");
 });
-
-
-/* ------------------------------------------------------- production path */
 
 const ref: LiveReference = liveReference({ scope: { kind: "all" }, observedAt: "2026-09-28T19:00:00.000Z" });
 const waiting = Object.fromEntries(SECTION_IDS.map((id) => [id, { phase: "waiting", data: null, asOf: null, revision: null, missingParts: [], attempts: 0 }])) as unknown as Record<(typeof SECTION_IDS)[number], SectionState>;
@@ -307,7 +295,7 @@ test("BR-39: every Admin view keeps planted code names and raw errors behind Tec
   const { VIEWS }=await import("../../app/(admin)/_mw/admin-v6/context.tsx");
   const view=stuckViews([{id:"wi-aabbccdd",state:"BLOCKED",lane:"data",owner:"RUNNER",blocker:"DIRECTORY_NO_READABLE_SAVED_PAGE",label:"Directory",subjectName:null,stateCode:"az",overdue:false,band:null,waitingSince:null,eligibleAt:null,lastActivityAt:null,nextAction:"SCOUT_POLICY_DENIED",assignmentKeys:[]}],"us","2026-10-05T00:00:00Z");
   const source=(data:unknown):SectionState=>({phase:"live",data,asOf:"2026-10-05T00:00:00Z",revision:"v1",missingParts:[],attempts:0});
-  // The Workers section carries a raw migration log and a stack trace; both stay behind "Technical details".
+
   const { adminNowFixture }=await import("../fixtures/admin-now/fixture.ts");
   const snapshot={...waiting,stuck:source(view.items),sameCause:source(view.sameCause),history:source([receipt({status:"failed",says:"SCOUT_POLICY_DENIED: TypeError: unavailable"})]),workers:adminNowFixture("after").snapshot.workers};
   const visible=(html:string)=>html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, block=>/<summary[^>]*>Technical details<\/summary>/.test(block) ? "" : block).replace(/<[^>]*>/g," ");

@@ -7,7 +7,82 @@ import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { PromotionPipelineRecord } from "../promotion/types.ts";
 import { assertFleetResult, type WorkerResultRecord } from "./types.ts";
 import { assertResearchWalk, type EvidenceWalkStep, type ResearchWalkState } from "./research-types.ts";
-import { canonicalJson } from "../repository/types.ts";
+import { canonicalJson, projectRecord, readByKeys, type AppendOnlyRepository } from "../repository/types.ts";
+import type { Sql } from "../repository/pg-store.ts";
+
+type ActivityCapture = Pick<ArtifactRecord, "artifactId" | "workItemId" | "partial" | "canonicalUrl">;
+/** One page: the state's next jobs in id order (its own state index on both job tables), then each job's saved pages
+ * through the work-item and log-key indexes. A page is a batch of jobs, so no page sorts the state's whole history. */
+export const LEGACY_ACTIVITY_CAPTURES_SQL = `WITH w AS (SELECT id FROM (
+    SELECT id FROM cp_work_items WHERE cp_control_state(value)=$1 AND id>$2
+    UNION SELECT id FROM cp_work_items_archive WHERE cp_control_state(value)=$1 AND id>$2) jobs ORDER BY id LIMIT $3)
+  SELECT (SELECT max(id) FROM w) AS last_job, (SELECT count(*) FROM w) AS jobs, coalesce((SELECT jsonb_agg(jsonb_build_object(
+      'artifactId',r.record->'artifactId','workItemId',r.record->'workItemId','partial',r.record->'partial','canonicalUrl',r.record->'canonicalUrl')
+      ORDER BY r.log_key, r.position)
+    FROM w CROSS JOIN LATERAL (
+      SELECT log_key, position, record FROM cp_log_artifacts WHERE record #>> '{workItemId}'=w.id
+      UNION ALL SELECT log_key, position, record FROM cp_log_artifacts WHERE log_key=w.id AND record #>> '{workItemId}' IS NULL) r
+    WHERE cardinality($4::text[])=0 OR (r.record->>'partial' IS DISTINCT FROM 'true' AND r.record->>'canonicalUrl' ILIKE ANY($4::text[]))), '[]'::jsonb) AS captures`;
+/** Production's 221,000 system jobs read in 12 pages of about 0.6 s each; a state's own jobs fit in one. */
+const LEGACY_ACTIVITY_JOBS_PER_PAGE = 20_000;
+
+/** This projection happens in Postgres. readAllNarrowed on a held log narrows
+ * only after downloading its full records, which is too late for this probe. */
+/** `fullPagesStartingWith` narrows in Postgres to complete saved pages at those addresses; empty reads every saved page. */
+export async function readLegacyActivityCaptures(state: string, sql?: Sql, fullPagesStartingWith: readonly string[] = [],
+  jobsPerPage: number = LEGACY_ACTIVITY_JOBS_PER_PAGE): Promise<ActivityCapture[]> {
+  if (!/^(?:[a-z]{2}|system)$/.test(state)) throw new Error("LEGACY_ACTIVITY_STATE_INVALID");
+  if (!sql) {
+    const [{ neon }, { controlPlaneUrlFromEnv }] = await Promise.all([import("@neondatabase/serverless"), import("../repository/pg-store.ts")]);
+    const url = controlPlaneUrlFromEnv();
+    if (!url) throw new Error("LEGACY_ACTIVITY_STORE_UNCONFIGURED");
+    sql = neon(url) as unknown as Sql;
+  }
+  const { boundedQuery } = await import("../repository/request-bounds.ts");
+  const captures: ActivityCapture[] = [];
+  let after = "";
+  for (;;) {
+    const [page] = await boundedQuery(sql, { operation: "cp_log_artifacts.legacyActivityCaptures", callClass: "PAGE" },
+      LEGACY_ACTIVITY_CAPTURES_SQL, [state, after, jobsPerPage, fullPagesStartingWith.map(prefix => `${prefix.replace(/[\\%_]/g, "\\$&")}%`)]) as { last_job: string | null; jobs: string | number; captures: ActivityCapture[] }[];
+    captures.push(...page?.captures ?? []);
+    if (!page?.last_job || Number(page.jobs) < jobsPerPage) return captures;
+    after = page.last_job;
+  }
+}
+
+/** Legacy catch-up starts from saved pages. Read only the work and histories
+ * those pages belong to; modern and unrelated archived plans stay in Postgres.
+ * All mutation and point-read methods retain their original repository. */
+export async function legacyArtifactActivityRepositories(repos: ControlPlaneRepositories,
+  eligible: (artifact: Pick<ArtifactRecord, "partial" | "canonicalUrl">) => boolean,
+  readCaptures: () => Promise<readonly ActivityCapture[]> = () => repos.artifacts.readAllNarrowed({ artifactId: true, workItemId: true, partial: true, canonicalUrl: true }) as Promise<ActivityCapture[]>,
+): Promise<ControlPlaneRepositories | null> {
+  const captures = (await readCaptures()).filter(eligible);
+  const owners = [...new Set(captures.map(row => row.workItemId))].sort();
+  if (!owners.length) return null;
+  if (!repos.workItems.readManyNarrowed || !repos.workItems.readMany) throw new Error("LEGACY_ACTIVITY_INDEXED_READ_UNAVAILABLE");
+  const metadata = await repos.workItems.readManyNarrowed(owners, { autonomousPlan: ["contract"] });
+  const legacyIds = metadata.filter(row => (row.value as Pick<WorkItem, "autonomousPlan">).autonomousPlan?.contract.schemaVersion !== 2).map(row => row.id);
+  if (!legacyIds.length) return null;
+  const selected = new Set(legacyIds);
+  const captureIds = new Set(captures.filter(row => selected.has(row.workItemId)).map(row => row.artifactId));
+  const items = await repos.workItems.readMany(legacyIds);
+  const log = async <T,>(repository: AppendOnlyRepository<T>): Promise<T[]> =>
+    [...(await readByKeys(repository, legacyIds)).values()].flat();
+  return { ...repos,
+    workItems: { ...repos.workItems, list: async () => items },
+    artifacts: { ...repos.artifacts,
+      readAll: async () => (await log(repos.artifacts)).filter(row => captureIds.has(row.artifactId)),
+      readAllNarrowed: async projection => captures.filter(row => captureIds.has(row.artifactId)).map(row => projectRecord(row, projection)),
+    },
+    attempts: { ...repos.attempts, list: async () => {
+      if (!repos.attempts.listWhereIn || !repos.attempts.readMany) throw new Error("LEGACY_ACTIVITY_INDEXED_READ_UNAVAILABLE");
+      const ids = await repos.attempts.listWhereIn(["workItemId"], legacyIds, { id: true });
+      return repos.attempts.readMany(ids.map(row => row.id));
+    } },
+    workerResults: { ...repos.workerResults, readAll: () => log(repos.workerResults) },
+  };
+}
 
 export interface AutonomousActivitySnapshot {
   readonly workItems: readonly WorkItem[];
@@ -102,14 +177,7 @@ export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, 
     };
     const itemPipelineIds = new Set(facts.promotion.map(p => p.itemId));
     const fullFacts = { ...facts, promotion: orderedFor(promotionByItem, itemPipelineIds) };
-    const references=new Set(facts.workers.flatMap(record=>record.inputArtifactIds));
-    for(const task of facts.routeTasks) {
-      const spec=task.workerTask;
-      if(!spec)continue;
-      references.add(spec.artifactId);
-      if(spec.acquisition) {references.add(spec.acquisition.route.observation.artifactId); for(const span of spec.acquisition.route.publisherSubjectEvidence)references.add(span.artifactId);}
-      if(spec.contract.schemaVersion===2) for(const id of [...spec.contract.sourceScope.observationArtifactIds,...spec.contract.verification.authorities.flatMap(authority=>[...authority.artifactIds,...authority.authorityEvidenceArtifactIds])]) references.add(id);
-    }
+    const references = referencedArtifactIds(facts.routeTasks, facts.workers);
     const referencedArtifacts=orderedFor(artifactsById,references).filter(artifact=>artifact.workItemId!==workItemId);
     const referencedAttempts=orderedFor(attemptsById,new Set(referencedArtifacts.map(artifact=>artifact.attemptId)))
       .filter(attempt=>attempt.workItemId!==workItemId);
@@ -190,20 +258,59 @@ export function projectAutonomousActivity(snapshot: AutonomousActivitySnapshot, 
   }).sort((a,b) => a.workItem.id.localeCompare(b.workItem.id));
 }
 
-export async function readAutonomousActivity(repos: ControlPlaneRepositories, workItemIds?: readonly string[], options: {
+function referencedArtifactIds(tasks: readonly RouteTask[], workers: readonly WorkerResultRecord[]): Set<string> {
+  const references = new Set(workers.flatMap(record => record.inputArtifactIds));
+  for (const task of tasks) {
+    const spec = task.workerTask;
+    if (!spec) continue;
+    references.add(spec.artifactId);
+    if (spec.acquisition) {
+      references.add(spec.acquisition.route.observation.artifactId);
+      for (const span of spec.acquisition.route.publisherSubjectEvidence) references.add(span.artifactId);
+    }
+    if (spec.contract.schemaVersion === 2) for (const id of [...spec.contract.sourceScope.observationArtifactIds,
+      ...spec.contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])]) references.add(id);
+  }
+  return references;
+}
+
+async function matchingKeys<T>(log: AppendOnlyRepository<T>, path: readonly string[], values: readonly string[]): Promise<string[]> {
+  if (!log.keysWhere) throw new Error("ACTIVITY_INDEXED_LOOKUP_UNAVAILABLE");
+  const keys = new Set<string>();
+  for (const value of new Set(values)) for (const key of await log.keysWhere(path, value)) keys.add(key);
+  return [...keys].sort();
+}
+
+export async function readAutonomousActivity(repos: ControlPlaneRepositories, workItemIds: readonly string[], options: {
   readonly observedAt?: string;
-  /** Fresh caller snapshots can serve multiple finalization views without another export. */
   readonly workItems?: readonly WorkItem[];
   readonly scouts?: readonly ScoutResult[];
 } = {}) {
-  const [items,tasks,attempts,leases,transitions,dispositions,artifacts,costs,scouts,workers,promotion] = await Promise.all([
-    options.workItems ?? repos.workItems.list().then(rows => rows.map(row => row.value)),
-    repos.routeTasks.list(),repos.attempts.list(),repos.leases.list(),repos.transitions.readAll(),repos.dispositions.readAll(),
-    repos.artifacts.readAll(),repos.costs.readAll(),options.scouts ?? repos.scoutResults.readAll(),repos.workerResults.readAll(),repos.promotionPipeline.readAll(),
+  const ids = [...new Set(workItemIds)].sort();
+  const selected = new Set(ids);
+  const records = async <T,>(log: AppendOnlyRepository<T>, keys: readonly string[]) => [...(await readByKeys(log, keys)).values()].flat();
+  const [items, tasks, ownAttempts, transitions, costs, workers, scoutKeys] = await Promise.all([
+    options.workItems ? Promise.resolve(options.workItems.filter(item => selected.has(item.id))) : Promise.all(ids.map(id => repos.workItems.mustRead(id))).then(rows => rows.map(row => row.value)),
+    Promise.all(ids.map(id => repos.routeTasks.listWhere(["workItemId"], id))).then(groups => groups.flat().map(row => row.value)),
+    Promise.all(ids.map(id => repos.attempts.listWhere(["workItemId"], id))).then(groups => groups.flat().map(row => row.value)),
+    records(repos.transitions, ids), records(repos.costs, ids), records(repos.workerResults, ids),
+    options.scouts ? Promise.resolve([]) : matchingKeys(repos.scoutResults, ["workItemId"], ids),
   ]);
-  // A completed control-plane read supplies the expiry-evaluation clock; source dates stay in the facts.
-  const snapshotReadAt = options.observedAt ?? new Date().toISOString();
-  const selected = workItemIds === undefined ? null : new Set(workItemIds);
-  return projectAutonomousActivity({workItems:items.filter(item => selected === null || selected.has(item.id)),
-    routeTasks:tasks.map(x => x.value), attempts:attempts.map(x => x.value), leases:leases.map(x => x.value), transitions,dispositions,artifacts,costs,scouts,workers,promotion},{observedAt:snapshotReadAt});
+  const [leases, dispositions, referenceKeys, scouts, promotionKeys] = await Promise.all([
+    Promise.all(tasks.map(task => repos.leases.read(task.id))).then(rows => rows.filter(row => row !== null).map(row => row.value)),
+    records(repos.dispositions, tasks.map(task => task.id)),
+    matchingKeys(repos.artifacts, ["artifactId"], [...referencedArtifactIds(tasks, workers)]),
+    options.scouts ?? records(repos.scoutResults, scoutKeys),
+    matchingKeys(repos.promotionPipeline, ["source", "attemptId"], ownAttempts.map(attempt => attempt.id)),
+  ]);
+  const [artifacts, promotion] = await Promise.all([
+    records(repos.artifacts, [...new Set([...ids, ...referenceKeys])].sort()), records(repos.promotionPipeline, promotionKeys),
+  ]);
+  const attempts = new Map(ownAttempts.map(attempt => [attempt.id, attempt]));
+  for (const id of new Set(artifacts.filter(artifact => !selected.has(artifact.workItemId)).map(artifact => artifact.attemptId))) {
+    if (!attempts.has(id)) { const row = await repos.attempts.read(id); if (row) attempts.set(id, row.value); }
+  }
+  return projectAutonomousActivity({ workItems: items, routeTasks: tasks,
+    attempts: [...attempts.values()].sort((a, b) => a.id.localeCompare(b.id)), leases, transitions, dispositions,
+    artifacts, costs, scouts, workers, promotion }, { observedAt: options.observedAt ?? new Date().toISOString() });
 }

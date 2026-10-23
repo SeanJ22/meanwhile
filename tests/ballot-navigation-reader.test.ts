@@ -52,10 +52,12 @@ async function publishNavigationFixture(): Promise<void> {
   });
 }
 
-function navigationCard(tree: React.ReactNode, state: string): React.ReactElement<React.ComponentProps<typeof Card>> | null {
+/** The page streams its contents as a promise inside Suspense; the card is found once that promise settles. */
+async function navigationCard(node: unknown, state: string): Promise<React.ReactElement<React.ComponentProps<typeof Card>> | null> {
+  const tree = await node;
   if (Array.isArray(tree)) {
     for (const child of tree) {
-      const card = navigationCard(child, state);
+      const card = await navigationCard(child, state);
       if (card) return card;
     }
     return null;
@@ -90,7 +92,7 @@ test("a ZIP in every state and DC renders acquired official navigation and deadl
     mkdirSync(".scratch/ci", { recursive: true });
     for (const [state, zip] of Object.entries(zips)) {
       const start = performance.now();
-      const card = navigationCard(await BallotPage({ searchParams: Promise.resolve({ zip }) }), state);
+      const card = await navigationCard(BallotPage({ searchParams: Promise.resolve({ zip }) }), state);
       assert.ok(card, `${state}: ZIP ${zip} has no navigation`);
       assert.deepEqual(card.props.gaps, [], `${state}: false missing-information gap`);
       await page.setContent(renderToStaticMarkup(card));

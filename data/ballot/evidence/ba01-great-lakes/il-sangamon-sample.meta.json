@@ -1,0 +1,9 @@
+{
+  "url": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+  "finalUrl": "https://vr.platinumvrms.com/county/RSLGetPDFSampleBallot/4e1f55d1-0d08-4657-9056-b5cc26416392-2026GE-0018-1-NP-1",
+  "status": 200,
+  "retrievedAt": "2026-10-21T00:10:34.573767+00:00",
+  "sha256": "bf22b031f08eeeab06a7e52a82f903797aef8ff414768cae825fe0afc67258b2",
+  "contentType": "application/pdf",
+  "sameAsPrior": true
+}

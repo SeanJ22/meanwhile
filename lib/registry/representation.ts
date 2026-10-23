@@ -4,6 +4,7 @@ import { allOfficialRows } from "../officials/tier-grouping.ts";
 
 import { projectedGoverningHoldersForDivision } from "./body-roster-client.ts";
 import type { CoverageSummary } from "./coverage.ts";
+import type { SeatVacancy } from "../officials/types.ts";
 
 /**
  * The coverage notice's render-gating logic, kept where a test can reach it. A panel must never render
@@ -23,7 +24,9 @@ export function representationForDivision(
 export function representationNoteFor(
   tier: string,
   state: "gap" | "looking" | "unavailable" = "gap",
+  vacancy?: SeatVacancy,
 ): string {
+  if (vacancy) return "This seat is vacant.";
   if (state === "looking") return "Looking up who holds this seat…";
   if (state === "unavailable") {
     return "We couldn't check who holds this seat just now.";

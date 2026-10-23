@@ -1,5 +1,4 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { readStateGeometryText } from "../geo/state-geometry.ts";
 import { nearestZcta } from "../geo/zcta.ts";
 import { postalArea } from "../geo/postal.ts";
 import { readZipPlace } from "./national.ts";
@@ -14,7 +13,7 @@ import { haversineKm } from "../geo/distance.ts";
 let territory: Promise<BodyTerritoryFile> | undefined;
 export function readerTerritory(state: string): Promise<BodyTerritoryFile | null> {
   if (state !== "AZ") return Promise.resolve(null);
-  return territory ??= readFile(join(process.cwd(), "data", "states", "az", "geo", "body-territories.geojson"), "utf8")
+  return territory ??= readStateGeometryText("az", "body-territories.geojson")
     .then(text => JSON.parse(text) as BodyTerritoryFile).catch(error => { territory = undefined; throw error; });
 }
 

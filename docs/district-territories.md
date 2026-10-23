@@ -24,9 +24,10 @@ sewer, park, hospital, tribal and the rest.
 - **Tribal areas.** Every Census AIANNH area with residents in a state is a division `ocd-division/country:us/aiannh:<code>`
   and a listed government (`AIANNH_CODE`, class `TRIBAL AREA`), named as the Census names the area.
 - **Point geometry.** Simplified polygons, one file per state holding its special districts and tribal areas:
-  `data/states/<st>/geo/territory-NN.geojson`. Together they are too large to pack into a server function (Netlify's
-  250 MB limit), so `netlify.toml` and `next.config.ts` leave them out of every function and `pnpm resolver:manifest`
-  lists them as excluded; until they are served from the edge store, an address or map point does not add them.
+  `data/states/<st>/geo/territory-NN.geojson`, listed in `data/derived/resolver-geometry.json` by `pnpm resolver:manifest`.
+  No server function packs state geometry. `pnpm resolver:manifest` also writes `data/derived/state-geometry.json`, the
+  sha256 of every state geometry file; the runner publishes each file to the reader edge store under that sha, and a
+  reader loads only the files of the state it is asked about (`lib/geo/state-geometry.ts`).
 
 A special district no layer draws is not placed anywhere: the fact store keeps it on the state, never on its office's
 county, so its boards never show to the whole county.
@@ -41,8 +42,7 @@ county, so its boards never show to the whole county.
   another ZCTA's area is reduced to its town and county (`postalAreaNeedsAddress`).
 - The registration candidate turns the reference rows into government listings with associations, so the ZIP page's
   government listings and board list read them through `lib/reader/place.ts`.
-- An address or map point adds the special districts and tribal areas whose polygons hold it (`territoryDivisionsAt`) once
-  the territory files are served to the resolver; ZIP pages already list them from the shards.
+- An address or map point adds the special districts and tribal areas whose polygons hold it (`territoryDivisionsAt`).
 
 ## Running it
 

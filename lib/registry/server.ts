@@ -20,6 +20,7 @@ import {
 } from "../officials/lookup.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
+import { readStateGeometryText } from "../geo/state-geometry.ts";
 import { currentStatewideExecutives, statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterHoldersForBody } from "./body-rosters.ts";
 import { scopedHolders } from "../officials/scoped-holders.ts";
@@ -63,7 +64,6 @@ import {
 } from "../state-rollcalls/legislators.ts";
 
 interface Loaded {
-  features: GeoFeature[];
   /** Body territories for governments with no Census division. */
   territory: BodyTerritoryFile | null;
   divisionsById: Map<string, Division>;
@@ -75,7 +75,6 @@ interface Loaded {
 }
 
 interface RegistryLoaded {
-  features: GeoFeature[];
   divisionsById: Map<string, Division>;
   registry: Registry;
 }
@@ -121,13 +120,12 @@ export function prefetchReaderGeography(): void {
   if (selectedRegistryStates().includes("AZ")) void bodyTerritories().catch(() => undefined);
 }
 
+// Geometry is read only by the point lookups that need it, for the point's state.
 async function loadRegistry(): Promise<RegistryLoaded> {
   const runtimeRegistry = getRegistryRuntimeReadModel();
-  const features = await resolverGeometry();
   const registry: Registry = runtimeRegistry.registry;
 
   return {
-    features,
     divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
     registry,
   };
@@ -157,7 +155,12 @@ async function readResolverGeometry(states: readonly string[]): Promise<GeoFeatu
         if (fips && FIPS_TO_STATE[fips]?.postal.toLowerCase() !== state) {
           throw new Error(`State/FIPS mismatch in resolver manifest: ${name}`);
         }
-        raw = await readFile(join(root, "data", "states", state, "geo", file), "utf8");
+        // Not packed into any function: the reader edge store serves it (lib/geo/state-geometry.ts).
+        try { raw = await readStateGeometryText(state, file); }
+        catch (error) {
+          console.warn(`resolver geometry ${name} is unavailable; points in it resolve without it: ${error instanceof Error ? error.message : String(error)}`);
+          return [];
+        }
       } else if (nationalFile) {
         raw = await readFile(join(root, "public", "geo", nationalFile[1]), "utf8");
       } else {
@@ -173,16 +176,12 @@ async function readResolverGeometry(states: readonly string[]): Promise<GeoFeatu
 }
 
 async function readBodyTerritories(): Promise<BodyTerritoryFile> {
-  const root = process.cwd();
-  // Literal path segments let Next include this file in the deployment trace.
-  return JSON.parse(
-    await readFile(join(root, "data", "states", "az", "geo", "body-territories.geojson"), "utf8"),
-  ) as BodyTerritoryFile;
+  return JSON.parse(await readStateGeometryText("az", "body-territories.geojson")) as BodyTerritoryFile;
 }
 
 async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Loaded> {
   const runtimeRegistry = getRegistryRuntimeReadModel();
-  const { features, divisionsById, registry } = base;
+  const { divisionsById, registry } = base;
 
   // State legislators come from their official-publisher promotion; the federal directory is the one roster loaded here.
   const sets: OfficeholderSet[] = federalAvailable ? [getFederalOfficeholderSet()] : [];
@@ -217,7 +216,6 @@ async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Lo
     if (!officialsById.has(holder.id)) officialsById.set(holder.id, holder);
   }
   return {
-    features,
     territory,
     divisionsById,
     registry,
@@ -463,12 +461,12 @@ export async function bodyById(bodyId: string): Promise<Body | null> {
 
 /** The divisions containing a point, from the committed geometry. */
 export async function divisionsAt(lat: number, lng: number): Promise<Division[]> {
-  const { features, divisionsById } = await registryLoaded();
+  const { divisionsById } = await registryLoaded();
   const selected = currentReaderSelection();
   if (selected?.point?.[0] === lng && selected.point[1] === lat && selected.divisions) {
     return selected.divisions.flatMap(id => divisionsById.has(id) ? [divisionsById.get(id)!] : []);
   }
-  return resolveDivisionsAt([lng, lat], features, divisionsById);
+  return resolveDivisionsAt([lng, lat], await resolverGeometry(), divisionsById);
 }
 
 export async function readerDivisionIdsAt(lat: number, lng: number): Promise<string[]> {
@@ -479,8 +477,14 @@ export async function readerDivisionIdsAt(lat: number, lng: number): Promise<str
 
 /** Special districts and tribal areas at a point: territories the Census geocoder does not report. */
 export async function territoryDivisionsAt(lat: number, lng: number): Promise<Division[]> {
-  const ids = (await readerDivisionIdsAt(lat, lng)).filter(id => /\/(?:special_district|aiannh):/.test(id));
-  return ids.length ? divisionsByOcdIds(ids) : [];
+  // An addition to the Census answer: when it cannot be read, the address still resolves without it.
+  try {
+    const ids = (await readerDivisionIdsAt(lat, lng)).filter(id => /\/(?:special_district|aiannh):/.test(id));
+    return ids.length ? await divisionsByOcdIds(ids) : [];
+  } catch (error) {
+    console.warn(`special districts at ${lat},${lng} could not be read; the address resolves without them: ${error instanceof Error ? error.message : String(error)}`);
+    return [];
+  }
 }
 
 export async function divisionsForCensusGeographies(geographies: CensusGeographies, selection: GeographySelection, vintage: string,

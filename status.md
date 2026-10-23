@@ -18,9 +18,10 @@ Sean's orders for this session (Oct 23, ~4:15 to 5:00 AM EDT):
 
 Queue (6:20 AM EDT):
 - In gates now (started 6:18 AM EDT): pb-01 (PB-01 61b7e39d6), sp-01 (SP-01 489e1849b, its newer READY: unknown scopes no longer purge every state; the older READY's geocode import is gone, so no River fold fix is needed), ex-03 (EX-03 fd4c018c5), and River's dead-code gate, on river-next e0a4a092e. Preflight and the dead-code scan pass; no unused declarations in the 66 lane files.
-- Next fold, in order: pk-01 (77b70e1cd), src-01 (7b05903de), nx-02 (80a752f0f), nb-02 (0b42253dc). All carry both proofs.
+- Next fold, in order: pb-03 (5da6588d8, Washoe Rural reconciled, host ownership checked once per host), pk-01 (77b70e1cd), src-01 (7b05903de), nx-02 (80a752f0f), nb-02 (0b42253dc). All carry both proofs.
+- PB-03 live check (when shipped): 99559 REAA, 36602 Mobile Housing, 85641 Vail, 35801 Huntsville, Washoe Rural once in its five NV ZIPs plus 89506; reader boards by state in 10+ states. To investigate there: its own table shows OR with 79 boards held tomorrow but 0 reader boards and 0 live facts.
 - Returned: pb-02 (85bf54e3d has the national sample in docs/pb-02.md but a one-line READY message without the proofs; a new READY that states them folds next), lv-01 and vs-07 (empty READY messages; vs-07 also adds 39 MB of county PDFs to tests/fixtures), nx-02 (early: its replay finds 0 of 23 executives complete, so the VP would not show on /national; it still folds). eo-01 waits behind lv-01.
-- Not posted yet: rn-01, rn-02, bl-01, pb-03, dg-02, cs-01, eo-01.
+- Not posted yet: rn-01, rn-02, bl-01, dg-02, cs-01, eo-01.
 
 Baseline before this release (live, release 88, 4:56 AM EDT; first visit, 16 places fetched in parallel), /api/meetings by ZIP: boards shown / with members / empty / ms
 - WI 53703 Madison 0/0/0 618 ms; WI 53202 Milwaukee 342/117/225 (184 all-caps names, 3.07 MB) 659 ms; AZ 85701 136/9/127 5.3 s; TX 77002 2/1/1; MO 64106 2/2/0; FL 33130 1/0/1.

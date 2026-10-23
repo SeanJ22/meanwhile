@@ -169,7 +169,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
 
   const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { flagged: 0 }, labels: { flagged: 0, moved: 0, cut: 0, renamed: 0 },
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, deferred: 0, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { flagged: 0 }, labels: { flagged: 0, moved: 0, cut: 0, renamed: 0 }, errorExamples: [],
     publishedByRoute: { "office contacts": 1, rosters: 3, bodies: 1 },
     waitingByClass: { rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
   assert.deepEqual(report.byPlace[TCCC], { published: 4, refused: 0, waiting: 1 });
@@ -186,7 +186,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
 
   const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
   assert.deepEqual(waiting, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "DETECTIVE_SPAN_NAMES_NO_FIELD", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
-  assert.equal((await publishBoxFindings(input)).looked, 0, "a held finding is looked at again only when the slot map moves");
+  assert.equal((await publishBoxFindings(input)).looked, 0, "the same pass does not repeat settled findings before their inputs or retry clock change");
 });
 
 test("a packet hunter's findings publish for the subject each names, not the job's government, and count toward that government", async () => {
@@ -546,6 +546,144 @@ test("a subject is looked up once in a pass, however many findings are about it"
   assert.equal(boardLookups, 1, "one lookup for the subject, then the board is remembered");
 });
 
+test("an unreadable source group records its own failed attempt and retry while another group's verified fact publishes", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const subject = `${TUCSON}#governing`, goodUrl = "https://www.tucsonaz.gov/contact", badUrl = "https://www.tucsonaz.gov/broken";
+  const page = await hold(goodUrl, "<h1>City of Tucson, Arizona</h1><p>City offices: (520) 791-4213.</p>", NOW);
+  const drop = (url: string, workItemId: string, index: number) => indexReportedFinding(repos.boxFindings, { workItemId, attemptId: `attempt-${index}`, missionPart: null,
+    finding: { subjectId: subject, field: "office.phone", value: index ? "(520) 791-4213" : "(520) 791-9999", exactQuote: index ? "City offices: (520) 791-4213." : "City offices: (520) 791-9999.",
+      sourceUrl: url, artifactIds: [page], subjectHint: null, index } }, NOW);
+  const bad = await drop(badUrl, "unreadable-group", 0), good = await drop(goodUrl, "wi-hunt", 1);
+  const report = await publishBoxFindings({ repos: { ...repos, artifacts: { ...repos.artifacts, read: async key => {
+    if (key === "unreadable-group") throw new Error("saved source lookup unavailable");
+    return repos.artifacts.read(key);
+  } } }, facts, vault, fetch: async () => { throw new Error("saved source only"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10, audit: false });
+  assert.equal(report.published, 1, JSON.stringify(report));
+  assert.equal(report.failuresByReason.BOX_PUBLICATION_EXCEPTION, 1);
+  assert.equal((await repos.boxFindings.mustRead(good.id)).value.state, "built");
+  const failed = (await repos.boxFindings.mustRead(bad.id)).value;
+  assert.equal(failed.state, "waiting");
+  assert.equal(failed.attempts.at(-1)?.outcome, "failed");
+  assert.match(failed.attempts.at(-1)!.detail, /SOURCE_GROUP.*saved source lookup unavailable/);
+  assert.deepEqual(await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: 10 }), []);
+  assert.deepEqual((await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: "2026-09-08T12:05:00.000Z", limit: 10 })).map(row => row.id), [bad.id]);
+});
+
+test("a broken audit never prevents the publisher from processing waiting findings", async () => {
+  const { facts, repos, vault } = await setup();
+  await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-audit", missionPart: null,
+    finding: { subjectId: TUCSON, field: "population", value: 5, exactQuote: "Population 5", sourceUrl: "https://www.tucsonaz.gov/", artifactIds: [], subjectHint: null, index: 0 } }, NOW);
+  const faulty = { ...facts, query: async (text: string, params?: readonly unknown[]) => {
+    if (text.includes("FROM pass_cursor")) throw new Error("audit unavailable");
+    return facts.query(text, params);
+  } };
+  const report = await publishBoxFindings({ repos, facts: faulty, vault, fetch: async () => { throw new Error("not needed"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
+  assert.equal(report.looked, 1);
+  assert.equal(report.waitingByClass.other, 1);
+  assert.equal(report.failuresByReason.BOX_AUDIT_FAILED, 1);
+  assert.match(report.errorExamples[0]!.detail, /audit unavailable/);
+});
+
+test("the pass deadline leaves every unstarted finding due and reports their count", async () => {
+  const { facts, repos, vault } = await setup();
+  const finding = await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-deadline", missionPart: null,
+    finding: { subjectId: TUCSON, field: "office.phone", value: "(520) 791-4213", exactQuote: "Office (520) 791-4213", sourceUrl: "https://www.tucsonaz.gov/", artifactIds: [], subjectHint: null, index: 0 } }, NOW);
+  const report = await publishBoxFindings({ repos, facts, vault, fetch: async () => { throw new Error("deadline must stop the read"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10, deadlineMs: 0, audit: false });
+  assert.deepEqual([report.looked, report.deferred, report.published], [0, 1, 0]);
+  assert.deepEqual((await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: 10 })).map(row => row.id), [finding.id]);
+});
+
+test("slow metadata cannot spend every publication pass before true findings reach their source checks", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const page = await hold(TCCC_URL, B15, NOW);
+  const count = 60;
+  await facts.query(`INSERT INTO entity (id, kind, name, state, parent_id)
+    SELECT $1 || ':preparation:' || n, 'body', name, state, parent_id FROM entity, generate_series(0, $2::int - 1) n WHERE id = $1`, [TCCC, count]);
+  for (let index = 0; index < count; index++) await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: `at-preparation-${index}`, missionPart: null,
+    finding: { subjectId: `${TCCC}:preparation:${index}`, field: "office.phone", value: "(520)791-4213", exactQuote: "(520)791-4213", sourceUrl: TCCC_URL, artifactIds: [page], subjectHint: null, index } }, NOW);
+  let clockMs = Date.parse(NOW), metadataQueries = 0, sources = 0;
+  const actualNow = Date.now;
+  const slowFacts = { ...facts, query: async (text: string, params?: readonly unknown[]) => {
+    if (text === "SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND id = $1") {
+      metadataQueries++;
+      clockMs += 10_000;
+    }
+    return facts.query(text, params);
+  } };
+  const counted = { ...repos, artifacts: { ...repos.artifacts, read: async (key: string) => { sources++; return repos.artifacts.read(key); } } };
+  const input = { repos: counted, facts: slowFacts, vault, fetch: async () => { throw new Error("the saved source proves the finding"); },
+    store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: count, audit: false, purge: async () => ({ purged: true }) };
+  Date.now = () => clockMs;
+  try {
+    let remaining = count;
+    for (let pass = 0; pass < 2; pass++) {
+      metadataQueries = 0; sources = 0;
+      const result = await publishBoxFindings({ ...input, deadlineMs: clockMs + 200_000 });
+      assert.ok(metadataQueries > 0 && sources > 0, "both preparation and source checking get a turn");
+      assert.ok(result.published > 0, JSON.stringify(result));
+      remaining -= result.published;
+      const due = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: count });
+      assert.equal(due.length, remaining, "the waiting count falls each pass");
+      assert.equal(result.deferred, remaining);
+      assert.ok(due.every(row => row.waitingFor === undefined && row.attempts.length === 0), "unstarted findings remain due with their evidence intact");
+    }
+    const rest = await publishBoxFindings(input);
+    assert.equal(rest.published, remaining, "without a deadline the entire remaining page still publishes");
+    assert.equal(rest.deferred, 0);
+    assert.deepEqual(await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: count }), []);
+  } finally { Date.now = actualNow; }
+});
+
+test("a slow saved page for one body does not hold another body's verified publication", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  await ensureEntity(facts.query, { id: AGENDA, kind: "body", name: "Agenda Committee", state: "AZ", parentId: TUCSON });
+  const a = await hold(TCCC_URL, B15, NOW);
+  const b = await hold(AGENDA_URL, "<h1>Agenda Committee, City of Tucson Arizona</h1><p>Office: (520) 555-0102.</p>", NOW);
+  const drop = (subjectId: string, workItemId: string, url: string, value: string, quote: string, artifact: string, index: number) => indexReportedFinding(repos.boxFindings, { workItemId, attemptId: `at-${index}`, missionPart: null,
+    finding: { subjectId, field: "office.phone", value, exactQuote: quote, sourceUrl: url, artifactIds: [artifact], subjectHint: null, index } }, NOW);
+  const slow = await drop(TCCC, "slow-body", TCCC_URL, "(520)791-4213", "please contact the City Clerk's Office at (520)791-4213", a, 0);
+  const fast = await drop(AGENDA, "fast-body", AGENDA_URL, "(520) 555-0102", "Office: (520) 555-0102.", b, 1);
+  let release!: () => void, started!: () => void, built!: () => void;
+  const blocked = new Promise<void>(resolve => { release = resolve; });
+  const reading = new Promise<void>(resolve => { started = resolve; });
+  const published = new Promise<void>(resolve => { built = resolve; });
+  const wrapped = { ...repos, artifacts: { ...repos.artifacts, read: async (key: string) => {
+    if (key === "slow-body") { started(); await blocked; }
+    return repos.artifacts.read("wi-hunt");
+  } }, boxFindings: { ...repos.boxFindings, compareAndSet: async (...args: Parameters<typeof repos.boxFindings.compareAndSet>) => {
+    const result = await repos.boxFindings.compareAndSet(...args);
+    if (result.value.id === fast.id && result.value.state === "built") built();
+    return result;
+  } } };
+  const run = publishBoxFindings({ repos: wrapped, facts, vault, fetch: async () => { throw new Error("the source is held"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10, audit: false });
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    await reading;
+    await Promise.race([published, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("unrelated body waited for the slow page")), 5_000); })]);
+    assert.equal((await repos.boxFindings.mustRead(slow.id)).value.state, "waiting");
+  } finally { if (timer) clearTimeout(timer); release(); await run; }
+  assert.equal((await repos.boxFindings.mustRead(fast.id)).value.state, "built");
+});
+
+test("the first verified source publishes a finding before another cited page finishes", async () => {
+  const { facts, repos, vault, hold } = await setup();
+  const page = await hold(TCCC_URL, B15, NOW), otherUrl = "https://www.tucsonaz.gov/tccc";
+  const other = await hold(otherUrl, "<h1>Tucson Convention Center Commission, City of Tucson Arizona</h1><p>Office: (520)791-4213</p>", NOW);
+  const drop = (workItemId: string, url: string, artifact: string, index: number) => indexReportedFinding(repos.boxFindings, { workItemId, attemptId: `at-source-${index}`, missionPart: null,
+    finding: { subjectId: TCCC, field: "office.phone", value: "(520)791-4213", exactQuote: "(520)791-4213", sourceUrl: url, artifactIds: [artifact], subjectHint: null, index } }, NOW);
+  const finding = await drop("wi-hunt", TCCC_URL, page, 0);
+  assert.equal((await drop("other-source", otherUrl, other, 1)).id, finding.id);
+  let release!: () => void, reached!: () => void;
+  const blocked = new Promise<void>(resolve => { release = resolve; });
+  const reading = new Promise<void>(resolve => { reached = resolve; });
+  const run = publishBoxFindings({ repos: { ...repos, artifacts: { ...repos.artifacts, read: async key => {
+    if (key === "other-source") { reached(); await blocked; }
+    return repos.artifacts.read("wi-hunt");
+  } } }, facts, vault, fetch: async () => { throw new Error("the saved page proves it"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10, audit: false });
+  try { await reading; assert.equal((await repos.boxFindings.mustRead(finding.id)).value.state, "built"); }
+  finally { release(); await run; }
+});
+
 test("a committee's name on a #body: subject makes the committee under its own government, in any kind of government, before the findings about it are read", async () => {
   assert.deepEqual(slotFor("GOV-02", "Planning Commission", null, "Planning Commission", "", "al:city:city-of-huntsville#body:planning-commission"), { class: "bodies", slot: "body_name" });
   assert.deepEqual(slotFor("GOV-02", "City Council", null, "City Council", "", "al:city:city-of-huntsville#governing"), { class: "body links", slot: "name" });
@@ -843,4 +981,47 @@ test("governing boards holding facts but no name are named from the page that su
   requested.length = 0;
   await publishBoxFindings(input);
   assert.deepEqual(requested, [], "a named board and a board waiting out its five days are not read again");
+});
+
+test("board-name backfill obeys the publication deadline and resumes unstarted names next pass", async () => {
+  const { facts, repos, vault } = await setup();
+  const url = "https://www.tucsonaz.gov/council";
+  const [copy] = await facts.query("INSERT INTO source_copy(url, final_url, fetched_at, sha256, blob_key) VALUES($1, $1, $2, $3, 'fixture') RETURNING id", [url, NOW, "d".repeat(64)]);
+  for (let index = 0; index < 3; index++) {
+    const id = `${TUCSON}:naming-${index}#governing`;
+    await ensureEntity(facts.query, { id, kind: "body", name: "City Council", state: "AZ", parentId: TUCSON });
+    await facts.query(`INSERT INTO fact(entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, checked_at, live_at, produced_by)
+      VALUES($1, 'office_phone', '"(520) 791-4213"'::jsonb, '(520) 791-4213', 'live', 'OFFICIAL', $2, '(520) 791-4213', $3, $3, 'box')`, [id, copy!.id, NOW]);
+  }
+  let clockMs = Date.parse(NOW), reads = 0;
+  const actualNow = Date.now;
+  const input = { repos, facts, vault, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 0, audit: false,
+    purge: async () => ({ purged: true }), fetch: async () => {
+      reads++; clockMs += 30_000;
+      return { status: 200, headers: new Headers({ "content-type": "text/html" }), bytes: async () => new TextEncoder().encode("<h1>City of Tucson, Arizona</h1><p>The City Council meets monthly.</p>") };
+    } };
+  const named = async () => Number((await facts.query("SELECT count(*) AS n FROM fact WHERE field = 'name' AND status = 'live'"))[0]!.n);
+  Date.now = () => clockMs;
+  try {
+    await publishBoxFindings({ ...input, deadlineMs: clockMs });
+    assert.deepEqual([reads, await named()], [0, 0], "an expired pass does not start the naming scan");
+    for (let pass = 1; pass <= 2; pass++) {
+      await publishBoxFindings({ ...input, deadlineMs: clockMs + 1 });
+      assert.deepEqual([reads, await named()], [pass, pass], "the in-flight page publishes its name and the next board stays due");
+      assert.deepEqual(await facts.query("SELECT entity_id FROM blank WHERE field = 'name'"), [], "a deferred read does not become a missing name");
+    }
+    await publishBoxFindings(input);
+    assert.deepEqual([reads, await named()], [3, 3], "the no-deadline path still names all remaining boards");
+  } finally { Date.now = actualNow; }
+});
+
+test("a board-name backfill exception is included in the saved publication failure summary", async () => {
+  const { facts, repos, vault } = await setup();
+  const broken = { ...facts, query: async (text: string, params?: readonly unknown[]) => {
+    if (text.includes("AS url") && text.includes("FROM entity e")) throw new Error("body naming query unavailable");
+    return facts.query(text, params);
+  } };
+  const report = await publishBoxFindings({ repos, facts: broken, vault, fetch: async () => { throw new Error("no read is started"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 0, audit: false });
+  assert.equal(report.failuresByReason.BOX_PUBLICATION_EXCEPTION, 1);
+  assert.deepEqual(report.errorExamples, [{ findingId: "board-names", stage: "BODY_NAMING", detail: "body naming query unavailable" }]);
 });

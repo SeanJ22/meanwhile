@@ -6,9 +6,23 @@ import type { BoundedChildResult } from "./bounded-child-pass.ts";
 import { meetingPartitionContract, type MeetingPartitionContract } from "./meeting-partitions.ts";
 import { RuntimeAuthorityRefused, assertRegisteredRuntimeContract, assertRuntimeAuthority, runtimeAuthorityEnvelope } from "./runtime-authority.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";
+import { SOURCE_CHECK_AFTER_ENV } from "../sources/source-check-request.ts";
 
 export const STATE_CALENDARS_PREFIX = "meetings-state:";
 export const stateCalendarsId = (state: string): string => `${STATE_CALENDARS_PREFIX}${state}`;
+
+/** A state program honors every member's read-now request; no sibling can reuse a copy older than the latest one. */
+export function stateCalendarEnvironment(members: readonly { readonly env?: Readonly<Record<string, string>> }[]): Readonly<Record<string, string>> {
+  let latest: { at: number; value: string } | null = null;
+  for (const member of members) {
+    const value = member.env?.[SOURCE_CHECK_AFTER_ENV];
+    if (value === undefined) continue;
+    const at = Date.parse(value);
+    if (!Number.isFinite(at)) throw new Error("STATE_CALENDAR_SOURCE_CHECK_INVALID");
+    if (latest === null || at > latest.at) latest = { at, value };
+  }
+  return latest === null ? {} : { [SOURCE_CHECK_AFTER_ENV]: latest.value };
+}
 
 /** The one state a board belongs to; null when its identity names none or several. */
 export function meetingPartitionState(partition: Pick<MeetingPartitionContract, "derivedFamily" | "ocdId" | "bodyId">): string | null {
@@ -52,12 +66,15 @@ export interface StateCalendarGroup<T> {
 }
 
 /**
- * Due board reads become one program per state, placed where the state's first read stood in the launch order.
- * Derived families keep their place in the discovery chain, and a board whose state cannot be told runs alone.
+ * Due board reads become one program per state. State programs rotate through their places in the launch order,
+ * while unrelated tasks keep their positions. Derived families retain their discovery chain, and a board whose
+ * state cannot be told runs alone.
  */
 export function groupCalendarReadsByState<T extends { readonly id: string; readonly kind: string; readonly task: { readonly acquisitionFailureDomain: string } }>(
   runs: readonly T[],
+  rotationSeed = 0,
 ): (T | StateCalendarGroup<T>)[] {
+  if (!Number.isSafeInteger(rotationSeed) || rotationSeed < 0) throw new Error("STATE_CALENDAR_ROTATION_INVALID");
   const byState = new Map<string, T[]>();
   const units: (T | string)[] = [];
   for (const run of runs) {
@@ -67,10 +84,15 @@ export function groupCalendarReadsByState<T extends { readonly id: string; reado
     if (!byState.has(state)) { byState.set(state, []); units.push(state); }
     byState.get(state)!.push(run);
   }
+  const states = [...byState.keys()];
+  const start = states.length === 0 ? 0 : rotationSeed % states.length;
+  const rotated = [...states.slice(start), ...states.slice(0, start)];
+  let nextState = 0;
   return units.map((unit) => {
     if (typeof unit !== "string") return unit;
-    const members = calendarReadOrder(byState.get(unit)!.map((run) => ({ run, acquisitionFailureDomain: run.task.acquisitionFailureDomain }))).map(({ run }) => run);
-    return { kind: "STATE_CALENDARS" as const, id: stateCalendarsId(unit), state: unit, members,
+    const state = rotated[nextState++]!;
+    const members = calendarReadOrder(byState.get(state)!.map((run) => ({ run, acquisitionFailureDomain: run.task.acquisitionFailureDomain }))).map(({ run }) => run);
+    return { kind: "STATE_CALENDARS" as const, id: stateCalendarsId(state), state, members,
       command: ["scripts/ingest.ts", "composite", "--promote", ...members.map((member) => `--only-partition=${member.id}`)] };
   });
 }

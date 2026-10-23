@@ -4,13 +4,15 @@
  * pointer, or changes LKG. It only reads canonical promotions and appends
  * typed Reader observations to the already-promoted candidate event stream.
  */
-import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts, type MeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import {
+  installMeetingReaderRepairSelection,
   routineReaderRepairRecord,
   serializeRoutineReaderRepairRecord,
 } from "../lib/civic-data/reader-repair-protocol.ts";
+import { readContractHandoff } from "../lib/civic-data/contract-handoff.ts";
 import {
   repairMeetingReaderProjectionReadbacks,
   repairRoutineReaderProjectionReadback,
@@ -41,6 +43,12 @@ installFatalLine("routine-civic-data-reader-repair", () => step);
 const argv = process.argv.slice(2);
 const meetingAggregate = present(argv, "meeting-aggregate");
 const contractId = assignment(argv, "contract")?.trim() ?? null;
+if (assignment(argv, "contracts") !== null) throw new Error("READER_REPAIR_INLINE_SELECTION_RETIRED");
+const selectedMeetingContracts = meetingAggregate ? readContractHandoff<MeetingPartitionContract>(argv) : [];
+if (selectedMeetingContracts.some(contract => typeof contract !== "object" || contract.recordClass !== "MEETING" ||
+    !contract.id.startsWith("meetings:") || !contract.scope || !contract.sourceId || !contract.readerProjection?.id)) {
+  throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
+}
 const observedAt = requiredAssignment(argv, "observed-at", "READER_REPAIR_ARGUMENT_MISSING");
 const observedMs = Date.parse(observedAt);
 if (!Number.isFinite(observedMs) || new Date(observedMs).toISOString() !== observedAt) {
@@ -79,19 +87,14 @@ let failed = false;
 // A receipt from an earlier commit carries to this one when no typed Reader code changed between them.
 const attestor = readerVerifierClosureAttestor();
 if (meetingAggregate) {
-  const selectedIds = assignment(argv, "contracts")?.split(",") ?? null;
-  const selectedContracts = selectedIds === null ? MEETING_PARTITION_CONTRACTS : MEETING_PARTITION_CONTRACTS.filter(contract => selectedIds.includes(contract.id));
-  if (selectedIds && (selectedIds.length !== selectedContracts.length || selectedContracts.length === 0)) throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
-  const results = await repairMeetingReaderProjectionReadbacks(
-    store,
-    selectedContracts,
-    observedAt,
-    undefined,
-    { attestor },
-  );
-  for (const result of results) {
-    const contract = MEETING_PARTITION_CONTRACTS.find(({ id }) => id === result.contractId);
-    if (!contract) throw new Error(`READER_REPAIR_MEETING_RESULT_UNKNOWN:${result.contractId}`);
+  installMeetingReaderRepairSelection(selectedMeetingContracts);
+  const results = await repairMeetingReaderProjectionReadbacks(store, selectedMeetingContracts, observedAt, undefined, { attestor });
+  const byId = new Map(results.map(result => [result.contractId, result]));
+  if (byId.size !== results.length || results.some(result => !selectedMeetingContracts.some(contract => contract.id === result.contractId))) {
+    throw new Error("READER_REPAIR_MEETING_RESULT_SELECTION_MISMATCH");
+  }
+  for (const contract of selectedMeetingContracts) {
+    const result = byId.get(contract.id) ?? { ok: false as const, error: `READER_REPAIR_MEETING_RESULT_MISSING:${contract.id}` };
     failed ||= !result.ok;
     console.log(serializeRoutineReaderRepairRecord(routineReaderRepairRecord(
       contract,
@@ -99,6 +102,7 @@ if (meetingAggregate) {
         ? { ok: true, value: result.value }
         : { ok: false, error: safeFailure(result.error) },
     )));
+    console.log("RCD_PROGRESS=" + JSON.stringify({ key: contract.id, records: 1 }));
   }
 
 

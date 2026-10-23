@@ -59,6 +59,9 @@ import {
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly } from "../lib/control-plane/owner-surface.ts";
 import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
+import { HOT_READ_CATCH_UP_READ_BUDGET_MS } from "../lib/civic-data/hot-read-catch-up.ts";
+import { stateCalendarMemberResults } from "../lib/civic-data/state-calendars.ts";
+import { withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { ROUTINE_SUPERVISOR_HISTORY_FIELDS } from "../lib/civic-data/supervisor-history.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
 import { parseRoutineReaderRepairRecords, routineReaderRepairRecord,
@@ -125,6 +128,31 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
   }
 });
 
+test("a single calendar child explicitly deferred before acquisition stays owed without a missing-receipt failure", async () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const id = "meeting-partition:deferred-calendar";
+  const failures: unknown[] = [], lines: string[] = [];
+  const context = {
+    laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([id]), startedSourceChildren: new Set([id]),
+    notStarted: [] as string[],
+    routineDeferral, stateCalendarMemberResults, attempted: 1, supervisorFailures: failures,
+    safeFailure: String, console: { log: (line: string) => lines.push(line) },
+    parseMeetingPartitionRunnerReceipts: () => { throw Error("deferred work must not need a receipt"); },
+  };
+  const settle = runInNewContext(transpileModule(functionSource(source, "settlePendingRunResult"), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\nsettlePendingRunResult", context);
+  await settle({ id, kind: "MEETING_PARTITION", task: { id, acquisitionFailureDomain: id } }, {
+    id, termination: "EXITED", status: 0, signal: null, errorMessage: null, stderr: "",
+    stdout: "RCD_MEETING_PARTITION_DEFERRED=" + JSON.stringify({ partitionId: id }),
+  });
+  assert.equal(context.attempted, 0);
+  assert.equal(context.unsettledSourceRuns.size, 0);
+  assert.deepEqual(context.notStarted, [id]);
+  assert.equal(failures.length, 0);
+  assert.match(lines[0], /RCD_DEFER .*not started before the pass deadline.*source work remains owed/);
+});
+
 test("a missing ballot file with no canonical state records an owed publication, without fabricating a source receipt", async () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const repos = createMemoryRepositories(), failures: unknown[] = [], lines: string[] = [];
@@ -179,7 +207,7 @@ test("candidate findings missing a place stay visible without failing unrelated 
   assert.equal(failures[0].code, "CANDIDATE_FINDING_ADMISSION_UNREAD");
 });
 
-test("Reader repairs can acquire memory after the source launch deadline", async () => {
+test("Reader repairs and bounded catch-up reads can acquire memory after the source launch deadline", async () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const deadlines: number[] = [];
   const acquire = runInNewContext(transpileModule(functionSource(source, "acquireChildMemory"), {
@@ -195,7 +223,41 @@ test("Reader repairs can acquire memory after the source launch deadline", async
   });
   await assert.rejects(acquire({ id: "source", args: ["scripts/assemble-ballot-package.mts"] }), /WORKER_MEMORY_DEADLINE/);
   await acquire({ id: "reader", args: ["scripts/routine-civic-data-reader-repair.mts"] });
-  assert.deepEqual(deadlines, [100, 200]);
+  await acquire({ id: "catch-up", args: ["scripts/ingest.ts"] }, ["catch-up"], 180);
+  assert.deepEqual(deadlines, [100, 200, 180]);
+});
+
+test("the server catch-up child, inherited acquisition and memory lease share the enforced read deadline", async () => {
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const task = ROUTINE_SOURCE_TASKS.find(task => task.contract.schedule?.kind === "SITTING_WINDOW")!;
+  const repairDeadlineMs = 1_000 + 2 * HOT_READ_CATCH_UP_READ_BUDGET_MS;
+  const memoryDeadlines: number[] = [], childDeadlines: number[] = [], acquisitionDeadlines: number[] = [];
+  const run = runInNewContext(transpileModule(functionSource(source, "runHotRead"), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\nrunHotRead", {
+    MEETING_PARTITION_TASK_IDS: new Set([task.id]), launchedTaskIds: new Set(), attempted: 0,
+    console: { log: () => {} }, HOT_READ_CATCH_UP_CONCURRENCY: 2, HOT_READ_CATCH_UP_READ_BUDGET_MS,
+    hotReadLimitsMs: { REPAIR: repairDeadlineMs }, ROOT: process.cwd(), process,
+    ROUTINE_CHILD_TIMEOUT_MS: 30 * 60_000, ROUTINE_CHILD_MAX_BUFFER_BYTES: 1_024,
+    withPassDeadline, sourceChildCommand: () => ({ id: task.id, args: [], executable: process.execPath, env: { SOURCE: "fixture" } }),
+    recordSourceSettlementFailures: () => {}, settlePendingRun: () => {},
+    acquireChildMemory: async (_command: unknown, _ids: readonly string[], deadline: number) => { memoryDeadlines.push(deadline); },
+    runBoundedChildPass: async (commands: readonly { env: NodeJS.ProcessEnv }[], options: {
+      deadlineMs: number; onStarting: (command: unknown) => Promise<void>;
+    }) => {
+      childDeadlines.push(options.deadlineMs);
+      acquisitionDeadlines.push(Date.parse(commands[0]!.env.WTP_PASS_DEADLINE_AT!));
+      assert.equal(commands[0]!.env.SOURCE, "fixture");
+      await options.onStarting(commands[0]);
+      return [];
+    },
+  });
+  await run(task, 1_000);
+  await run(task, repairDeadlineMs - HOT_READ_CATCH_UP_READ_BUDGET_MS / 2);
+  const expected = [1_000 + HOT_READ_CATCH_UP_READ_BUDGET_MS, repairDeadlineMs];
+  assert.deepEqual(childDeadlines, expected);
+  assert.deepEqual(acquisitionDeadlines, expected);
+  assert.deepEqual(memoryDeadlines, expected);
 });
 
 test("deferred Reader repairs retain completed records and account for every unfinished contract without a receipt", () => {
@@ -1174,8 +1236,8 @@ test("national and publication source commands retain the progress-renewed timeo
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", `
-    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane);
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", `
+    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"]);
   const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id.startsWith("people-portraits-"))!;
   assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
     "standing portrait work overrides the parent's quiet interval so every due person finishes");
@@ -1518,7 +1580,8 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(runner, /concurrency: ROUTINE_READER_CHILD_CONCURRENCY/);
   assert.match(runner, /reconcileRoutineReaderRepairDomain/);
   assert.doesNotMatch(runner, /READER_REPAIR_DENOMINATOR_MISMATCH/);
-  assert.match(runner, /domain\.contracts\.length < MEETING_PARTITION_CONTRACTS\.length/);
+  assert.match(runner, /writeContractHandoff\(domain\.contracts\)/);
+  assert.doesNotMatch(runner, /`--contracts=\$\{/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
   // Repair reads each body's own partition; serving-copy publication runs independently.
@@ -2359,16 +2422,16 @@ test("every routine task's real child command runs a scripts/ script right after
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", `
-    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane);
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", `
+    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"]);
   const tasks = [...ROUTINE_SOURCE_TASKS, ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract), ...AUTOMATIC_REFRESH_TASKS,
     ...STATE_BINDING_REFRESH_TASKS, ...legistarMemberTasks(["pima", "seattle", "fortworth"])];
   assert.ok(tasks.length > 100);
   const offenders = tasks.filter(task => {
     const child = commandFor({ id: task.id, kind: "SOURCE", task, command: task.command });
-    return child.args[0] !== "--experimental-strip-types" || !/^scripts\/[A-Za-z0-9._-]+\.m?ts$/.test(String(child.args[1]));
+    return child.args[0] !== "--experimental-strip-types" || child.args[1] !== "--import" || child.args[2] !== "./scripts/register-test-loader.mjs" || !/^scripts\/[A-Za-z0-9._-]+\.m?ts$/.test(String(child.args[3]));
   }).map(task => `${task.id}: ${task.command.slice(0, 2).join(" ")}`);
   assert.deepEqual(offenders, [], "the runner already supplies node and --experimental-strip-types");
   const legistar = commandFor({ id: "legistar-members:pima", kind: "SOURCE", task: legistarMemberTasks(["pima"])[0], command: legistarMemberTasks(["pima"])[0].command });
-  assert.deepEqual(legistar.args, ["--experimental-strip-types", "scripts/legistar-members-refresh.mts", "--legistar-client=pima"]);
+  assert.deepEqual(legistar.args, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "scripts/legistar-members-refresh.mts", "--legistar-client=pima"]);
 });

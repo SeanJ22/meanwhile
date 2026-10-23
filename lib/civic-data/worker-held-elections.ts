@@ -29,15 +29,25 @@ export async function readHeldPointerTimes(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
   promotedAt: (recordClass: RoutineRecordClass, scope: string) => Promise<string | null>,
   states: readonly string[],
+  promotedAtMany?: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly { readonly promotedAt: string }[]>,
 ): Promise<Pick<HeldInputs, "nationalAt" | "registryAt" | "routesAt">> {
-  const [national] = await query("SELECT max(recorded_at) AS at FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1)", [NATIONAL_ELECTION_OFFICES_URL]);
   const routes = requiredManualProductionContract("ballot-navigation");
-  let registryAt: string | null = null;
-  for (const state of new Set(states)) {
-    const at = await promotedAt("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state));
-    if (at && (!registryAt || at > registryAt)) registryAt = at;
-  }
-  const routesAt = await promotedAt(routes.recordClass, routes.scope);
+  const scopes = [...new Set(states)].map(stateRegistryRuntimeScope);
+  const registryTimes = async () => {
+    if (promotedAtMany) return (await promotedAtMany("REGISTRY_RUNTIME_BINDING", scopes)).map(row => row.promotedAt);
+    const times: string[] = [];
+    await runPool(scopes, 8, async scope => {
+      const at = await promotedAt("REGISTRY_RUNTIME_BINDING", scope);
+      if (at) times.push(at);
+    });
+    return times;
+  };
+  const [[national], registry, routesAt] = await Promise.all([
+    query("SELECT max(recorded_at) AS at FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1)", [NATIONAL_ELECTION_OFFICES_URL]),
+    registryTimes(),
+    promotedAt(routes.recordClass, routes.scope),
+  ]);
+  const registryAt = registry.sort().at(-1) ?? null;
   return { nationalAt: iso(national?.at), registryAt, routesAt };
 }
 

@@ -45,6 +45,7 @@ import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "..
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { parseRoutineSupervisorFailureSummary } from "../lib/control-plane/routine-outcome-summary.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
 import { keepRunnerTransfer } from "../lib/db/transfer.ts";
@@ -760,6 +761,7 @@ async function persistOuterRoutineChildFailure(
   });
 
   const fatal = childFatalLine(output);
+  const childSummary = parseRoutineSupervisorFailureSummary(output, cycleId);
   const evidence = { ...outer, detail: `${outer.detail}${run.errorMessage ? ` ${run.errorMessage}` : ""}${fatal ? ` The child's own last line: ${fatal}.` : ""}` };
   try {
     const repos = await ownerRepositories();
@@ -786,13 +788,20 @@ async function persistOuterRoutineChildFailure(
       attemptedTasks: evidence.attemptedTasks,
       verifiedSourceSuccesses: evidence.verifiedSourceSuccesses,
       verifiedSourceFailures: evidence.verifiedSourceFailures,
-      failures: [{ taskId: `${lane}-runner`, code: evidence.code, detail: evidence.detail }],
+      failures: [...(childSummary?.examples ?? []), { taskId: `${lane}-runner`, code: evidence.code, detail: evidence.detail }],
     });
+    const recorded = childSummary ? { ...outcome, summary: {
+      failureCount: childSummary.total + 1,
+      failuresByCode: { ...childSummary.counts, [evidence.code]: (childSummary.counts[evidence.code] ?? 0) + 1 },
+      failuresOmitted: childSummary.total + 1 - outcome.failures.length,
+      readerReadbacksOmitted: 0, taskReceiptsOmitted: 0, crashedTasksOmitted: 0, linesOmitted: 0,
+    } } : outcome;
     await appendRoutineCivicDataSupervisorDigest(repos, {
-      outcome,
+      outcome: recorded,
       lines: [
         `${name.toUpperCase()} OUTER SUPERVISOR FAILED — ${evidence.code}`,
         evidence.detail,
+        ...(childSummary ? [`The child's failure counts: ${Object.entries(childSummary.counts).map(([code, count]) => `${code}=${count}`).join(", ")}.`] : []),
         "The standing parent recorded this because the bounded child ended nonzero; exact source receipts remain the only source-disposition authority.",
       ],
     });

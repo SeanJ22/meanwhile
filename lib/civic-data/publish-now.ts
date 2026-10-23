@@ -6,6 +6,77 @@ import { doorPartitionIds } from "../doors/mission-refresh.ts";
 import { owedFactItems, owedWorkerPublications, workerPublicationTasks, workerPublicationTasksFor, type HeldInputs, type OwedWorkerPublication, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../control-plane/repository/pg-store.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
+import { stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
+import type { FactDb, Query } from "../facts/publish.ts";
+
+export const PUBLISH_NOW_CURSOR = "publish-now";
+const RETRY_CURSOR_PREFIX = `${PUBLISH_NOW_CURSOR}:retry:`;
+export const PUBLISH_NOW_RETRY_MS = 15 * 60_000;
+
+/** Unknown held inputs use the existing hourly fallback; its backoff must survive advancing the scan too. */
+export function publishNowRetryItemIds(items: readonly WorkerPublicationItem[], owedItemIds: readonly string[], heldInputs: HeldInputs | null): string[] {
+  const fallback = heldInputs === null ? items.filter(item => {
+    const target = item.autonomousPlan?.publication?.contractId;
+    const recordClass = item.autonomousPlan?.contract.recordClass;
+    return stateFromRegistryRuntimeContractId(target ?? "") ? recordClass === "OFFICIAL_ROSTER" || recordClass === "OFFICIAL_BOARD_DIRECTORY"
+      : target === "ballot-navigation" && recordClass === "VOTER_ACCESS_ROUTE";
+  }).map(item => item.id) : [];
+  return [...new Set([...owedItemIds, ...fallback])];
+}
+
+/** A failed or unstarted item has its own persisted retry clock, independent of the changed-since window. */
+export async function readPublishNowRetryIds(query: Query, now: string): Promise<string[]> {
+  const ids: string[] = [];
+  let after = RETRY_CURSOR_PREFIX;
+  for (;;) {
+    const rows = await query(`SELECT name FROM pass_cursor WHERE name > $1 AND name < $2 AND position <= $3
+      ORDER BY name LIMIT ${AGGREGATE_LIST_READ_PAGE}`, [after, `${PUBLISH_NOW_CURSOR}:retry;`, now]);
+    for (const row of rows) {
+      if (typeof row.name !== "string" || !row.name.startsWith(RETRY_CURSOR_PREFIX) || row.name <= after) {
+        throw new Error("PUBLISH_NOW_RETRY_PAGE_INVALID");
+      }
+      ids.push(row.name.slice(RETRY_CURSOR_PREFIX.length));
+    }
+    if (rows.length < AGGREGATE_LIST_READ_PAGE) return ids;
+    const next = String(rows.at(-1)!.name);
+    if (next <= after) throw new Error("PUBLISH_NOW_RETRY_PAGE_NOT_ADVANCING");
+    after = next;
+  }
+}
+
+/**
+ * Save every owed item before executing it, then advance the scan in the same transaction. A crash after this
+ * point leaves the item owed on its own clock; a failed save leaves the previous scan position intact.
+ * The next read clears a retry only after publication admission says that item is no longer owed.
+ */
+export async function savePublishNowProgress(db: FactDb, input: {
+  readonly startedAt: string;
+  readonly selectedItemIds: readonly string[];
+  readonly owedItemIds: readonly string[];
+}): Promise<void> {
+  const at = Date.parse(input.startedAt);
+  if (!Number.isFinite(at) || new Date(at).toISOString() !== input.startedAt) throw new Error("PUBLISH_NOW_PROGRESS_TIME_INVALID");
+  const selected = new Set(input.selectedItemIds);
+  const owed = new Set(input.owedItemIds);
+  if ([...selected, ...owed].some(id => !id.trim()) || [...owed].some(id => !selected.has(id))) {
+    throw new Error("PUBLISH_NOW_PROGRESS_ITEM_INVALID");
+  }
+  const pending = [...owed].map(id => RETRY_CURSOR_PREFIX + id);
+  const settled = [...selected].filter(id => !owed.has(id)).map(id => RETRY_CURSOR_PREFIX + id);
+  const next = new Date(at + PUBLISH_NOW_RETRY_MS).toISOString();
+  await db.transaction(async query => {
+    for (let offset = 0; offset < pending.length; offset += AGGREGATE_LIST_READ_PAGE) {
+      await query(`INSERT INTO pass_cursor (name, position) SELECT unnest($1::text[]), $2
+        ON CONFLICT (name) DO UPDATE SET position = EXCLUDED.position WHERE pass_cursor.position <= $3`,
+      [pending.slice(offset, offset + AGGREGATE_LIST_READ_PAGE), next, input.startedAt]);
+    }
+    for (let offset = 0; offset < settled.length; offset += AGGREGATE_LIST_READ_PAGE) {
+      await query("DELETE FROM pass_cursor WHERE name = ANY($1::text[])", [settled.slice(offset, offset + AGGREGATE_LIST_READ_PAGE)]);
+    }
+    await query(`INSERT INTO pass_cursor (name, position) VALUES ($1, $2)
+      ON CONFLICT (name) DO UPDATE SET position = greatest(pass_cursor.position, EXCLUDED.position)`, [PUBLISH_NOW_CURSOR, input.startedAt]);
+  });
+}
 
 export const PUBLISH_NOW_INTERVAL_MS = 60_000;
 /** A publish-now pass ends within this; what it did not finish stays owed to the next minute. */
@@ -41,15 +112,17 @@ export async function readWorkerPublicationItems(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
   contractIds: readonly string[] = WORKER_PUBLICATION_TASK_IDS,
   since: { readonly at: string; readonly sharedInputsMoved: boolean } | null = null,
+  retryIds: readonly string[] = [],
 ): Promise<WorkerPublicationItem[]> {
   const registered = new Set(WORKER_PUBLICATION_TASK_IDS);
   if (contractIds.some(id => !registered.has(id))) throw new Error("PUBLICATION_CONTRACT_SELECTION_INVALID");
   if (contractIds.length === 0) return [];
   const items: WorkerPublicationItem[] = [];
   let afterId: string | null = null;
-  const window = since === null ? [] : [since.at, since.sharedInputsMoved];
+  const window = since === null ? [] : [since.at, since.sharedInputsMoved, ...(retryIds.length ? [[...new Set(retryIds)]] : [])];
   for (;;) {
-    const rows = await query(`${since === null ? "" : CHANGED_SINCE} SELECT id, value #>> '{subject}' AS subject,
+    const changed = retryIds.length ? CHANGED_SINCE.slice(0, -1) + " UNION SELECT unnest($4::text[]))" : CHANGED_SINCE;
+    const rows = await query(`${since === null ? "" : changed} SELECT id, value #>> '{subject}' AS subject,
       value #>> '{autonomousPlan,publication,contractId}' AS contract_id,
       value #>> '{autonomousPlan,publication,bodyId}' AS body_id,
       value #>> '{autonomousPlan,contract,recordClass}' AS record_class,

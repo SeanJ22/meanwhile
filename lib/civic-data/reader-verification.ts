@@ -4,6 +4,7 @@ import { federalDirectoryStateOf } from "../officials/federal-directory-data-pla
 import { federalMemberOfScope } from "../votes/data-plane.ts";
 import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
+import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
@@ -813,32 +814,32 @@ export async function repairMeetingReaderProjectionReadbacks(
   }
 
   const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
-  const eventReads = await runBoundedWorkPool(
-    eventInputs,
-    MEETING_READER_EVENT_READ_CONCURRENCY,
-    ({ promotion }) => readLatestReaderReadbacks(store, [promotion.versionId]),
-  );
+  // The store already supports an indexed multi-candidate read. One query per bounded domain replaces
+  // thousands of round trips just to establish that most readbacks are still current.
+  let events: Awaited<ReturnType<typeof readLatestReaderReadbacks>>;
+  try { events = eventInputs.length ? await readLatestReaderReadbacks(store, eventInputs.map(({ promotion }) => promotion.versionId)) : []; }
+  catch (error) {
+    for (const { contract } of eventInputs) results.set(contract.id, {
+      contractId: contract.id, ok: false, value: null, error: sanitizedErrorDiagnostic(error),
+    });
+    return contracts.map(contract => results.get(contract.id)!);
+  }
+  const eventsByCandidate = new Map<string, typeof events[number][]>();
+  for (const event of events) {
+    const held = eventsByCandidate.get(event.candidateId) ?? [];
+    held.push(event); eventsByCandidate.set(event.candidateId, held);
+  }
   let pendingRecords: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
   const attestable: {
     readonly contract: RoutineSourceContract;
     readonly promotion: PromotedPointerIdentity;
     readonly prior: NonNullable<ReaderReadbackInspection["attestFrom"]>;
   }[] = [];
-  for (const read of eventReads) {
-    const input = eventInputs[read.index]!;
-    if (!read.ok) {
-      results.set(input.contract.id, {
-        contractId: input.contract.id,
-        ok: false,
-        value: null,
-        error: read.error,
-      });
-      continue;
-    }
+  for (const input of eventInputs) {
     const inspection = inspectReaderReadbackEvents(
       input.contract,
       input.promotion,
-      read.value,
+      eventsByCandidate.get(input.promotion.versionId) ?? [],
       now,
       normalizedVerifierCodeSha,
     );
@@ -895,7 +896,11 @@ export async function repairMeetingReaderProjectionReadbacks(
       pendingRecords,
       MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
       async ({ contract, promotion }) => {
-        const partition = meetingPartitionContract(contract.id);
+        // The supervisor hands its exact meeting contracts to the child. Its door registry may be newer (or
+        // still at the previous good version); that cannot replace the partition this pass was asked to check.
+        const handed = contract as Partial<MeetingPartitionContract>;
+        const partition = typeof handed.meetingSource === "string" && typeof handed.bodyId === "string"
+          ? contract as MeetingPartitionContract : meetingPartitionContract(contract.id);
         const read = partition === null ? null : await readMeetingPartitionProjection(partition, { store, now, bypassCache: true });
         const verification = read?.kind === "PROMOTED" && read.metadata.versionId === promotion.versionId
           ? pass(verifierIdFor(contract), `The typed meetings Reader read partition ${contract.id} at canonical version ${promotion.versionId}.`)

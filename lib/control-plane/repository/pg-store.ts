@@ -945,15 +945,16 @@ export function pgAppendOnlyRepository<T>(
   });
 }
 
-// Parked findings (looked at under another slot map, refused by the publisher under another one, or taken past their lease) come before never-looked-at ones;
-// each branch is cut to `limit` first, so the outer sort reads at most three pages.
-const BOX_DUE_SQL = `SELECT id, value FROM (
-    (SELECT 0 AS rank, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NOT NULL AND (value #>> '{waitingFor,slots}') <> $1 LIMIT $3)
+// Alternate retries and new findings. Each branch is bounded before ranking, and a poison finding's own retry clock cannot pin a page.
+export const BOX_DUE_SQL = `WITH due AS (
+    (SELECT 0 AS rank, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NOT NULL
+      AND ((value #>> '{waitingFor,slots}') <> $1 OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
     UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'refused' AND (value #>> '{attempts,-1,builder}') = '${PUBLISHER}'
-      AND coalesce(value #>> '{waitingFor,slots}', '') <> $1 LIMIT $3)
-    UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 LIMIT $3)
-    UNION ALL (SELECT 1, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL LIMIT $3)
-  ) due ORDER BY rank, id LIMIT $3`;
+      AND (coalesce(value #>> '{waitingFor,slots}', '') <> $1 OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
+    UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 ORDER BY id LIMIT $3)
+    UNION ALL (SELECT 1, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL ORDER BY id LIMIT $3)
+  ) SELECT id, value FROM (SELECT *, row_number() OVER (PARTITION BY rank ORDER BY id) AS turn FROM due) fair
+  ORDER BY turn, rank, id LIMIT $3`;
 const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 AND ($3::text[] IS NULL OR value->>'subjectId'=ANY($3::text[])) ORDER BY id LIMIT $2`;
 
 // A government's boards are every subject from `<government>` up to `<government>#...`; the store collates in C, so `#` then `$` bounds them in the subject index.

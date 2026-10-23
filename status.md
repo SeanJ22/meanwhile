@@ -1,11 +1,17 @@
 # River status
 
-build_state: RELEASES 72 TO 88 LIVE (/api/build 825ff1c); VICE PRESIDENT WAS LIVE ON PLACE PAGES IN RELEASES 85-87 AND IS OFF THEM IN RELEASE 88 BY PM-01'S DESIGN (NATIONAL SECTION 'COMING SOON'); NEEDS SEAN'S DECISION
+build_state: HANDED OFF AT SEAN'S REQUEST (Oct 23, 07:02 UTC); RELEASES 72 TO 88 LIVE (/api/build 825ff1c); LOCK RELEASED; NOTHING IN GATES OR CI
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: none
-heartbeat: 2026-10-23T07:58:35Z
+heartbeat: 2026-10-23T07:02:00Z
+
+## Hand-off to the next River session (Oct 23, 12:02 AM Phoenix / 3:02 AM EDT)
+
+- State: main 825ff1c4b (release 88) is what production serves. river = 78f82a232 (release 88's tested tip). No PR open, no gates running, lock released, the 15-minute scan loop is gone. Lane tips at hand-off: ds-01 096ec0db9 (DS-01-S2, shipped in 87), cal-01 e41945169 (CAL-02, shipped in 86), pm-01 1777c5767 (NX-PLACE-3, shipped in 88), dg-01 286a2d791 (returned, not shipped).
+- Open, in order: (1) Vice President: off every place page since release 88, by pm-01's NX-PLACE-1/2 design (President, Vice President and Cabinet moved to a National section that says "coming soon"); needs Sean's call: keep, ask pm-01 to keep them on the place list, or River reverts NX-PLACE-1. (2) cal-01: returns/cal-01.md (runner-r86): the routine pass times out at its 30-minute budget (ROUTINE_CHILD_TIMED_OUT, also at 06:38 UTC on release 87), no calendar door has a new lastSuccessAt since 05:13 UTC (AZ, NH, NJ and elsewhere), publish-now ends on HUNT_SCOPE_UNREAD (30-second cp_work_items_history read). (3) Legistar board names (release 84): 80903 still shows no City Council; check again after a routine pass finishes inside its budget. (4) The planning round never covers the states (ak, al, ar, as repeat; "2 states completed, 55 failed" at 06:51 UTC); design question for Sean. (5) DG-01 stays returned until it posts a new READY on current main.
+- River notes: merge main into river-next before running gates, and promote only after that, or `promote` refuses (its fold base moves) and there is no restart command; a lane alone in a fold that conflicts cannot be shipped hand-resolved, so return it with the resolution. Call a release live only when https://meanwhileusa.com/api/build reports its merge commit (releases 83 and 84 merged but failed to deploy because grounded-ask went over Netlify's 250 MB; the post-deploy observer does not check this). Branch deletes are still refused by the proxy; nothing qualified.
 
 ## Release 88 took the Vice President off the place pages (Oct 22, 11:55 PM Phoenix / 2:55 AM EDT Oct 23)
 

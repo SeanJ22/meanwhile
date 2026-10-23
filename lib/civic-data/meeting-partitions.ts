@@ -15,7 +15,7 @@ import {
 
 import { MEETING_HISTORY_SCOPE_SUFFIX } from "./meeting-history-scope.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
-import { meetingPartitionId } from "../meetings/body-scope.ts";
+import { meetingPartitionId, meetingPartitionIdentity } from "../meetings/body-scope.ts";
 export { meetingPartitionId } from "../meetings/body-scope.ts";
 
 export const LEGACY_MEETINGS_AGGREGATE_SCOPE = "supported-bodies";
@@ -49,21 +49,14 @@ export function meetingPartitionScope(sourceName: string, bodyId: string, route?
 }
 
 export function meetingPartitionOfId(id: string): { readonly source: string; readonly bodyId: string; readonly scope: string } | null {
-  const named = /^meetings:([^:]+):(.+)$/.exec(id);
-  if (named === null) return null;
-  const [, source, rest] = named as unknown as [string, string, string];
+  const identity = meetingPartitionIdentity(id);
+  if (identity === null) return null;
+  const { source, bodyId, route } = identity;
   if (source === DERIVED_FAMILY_SOURCE) {
-    const state = rest as DerivedMeetingFamilyState;
+    const state = bodyId as DerivedMeetingFamilyState;
     return { source, bodyId: `derived-family:${state}`, scope: derivedMeetingFamilyScope(state) };
   }
-  const routed = /^(.*):route:([a-f0-9]{16})$/.exec(rest);
-  let bodyId: string;
-  try {
-    bodyId = decodeURIComponent(routed?.[1] ?? rest);
-  } catch {
-    return null;
-  }
-  return { source, bodyId, scope: meetingPartitionScope(source, bodyId, routed?.[2]) };
+  return { source, bodyId, scope: meetingPartitionScope(source, bodyId, route) };
 }
 
 /** Every supported adapter is explicit, so a new route cannot silently fall back to a shared failure domain. */

@@ -4029,5 +4029,29 @@
     "tested_sha": "171c09b52f070bb95b87297aa621cb6da6029757",
     "gates": "pass",
     "at": "2026-10-23T16:09:15Z"
+  },
+  {
+    "lane": "vs-07-fx",
+    "steps": [
+      "VS-07"
+    ],
+    "ready_sha": "f48331d9dc9195b580c0eb447ca74675a7a72c09",
+    "merge_sha": "84494ccdf306e896541dcaca1460c01bb0f46ddd",
+    "river_sha": "cd82fdc4a96ea9f417b1c990658850c3687373b5",
+    "tested_sha": "cd82fdc4a96ea9f417b1c990658850c3687373b5",
+    "gates": "pass",
+    "at": "2026-10-23T17:19:27Z"
+  },
+  {
+    "lane": "pb-03-fx",
+    "steps": [
+      "PB-03"
+    ],
+    "ready_sha": "e6514658370f88c86646bb2e264c55671a6f8c08",
+    "merge_sha": "cd82fdc4a96ea9f417b1c990658850c3687373b5",
+    "river_sha": "cd82fdc4a96ea9f417b1c990658850c3687373b5",
+    "tested_sha": "cd82fdc4a96ea9f417b1c990658850c3687373b5",
+    "gates": "pass",
+    "at": "2026-10-23T17:19:27Z"
   }
 ]

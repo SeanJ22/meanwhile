@@ -748,8 +748,10 @@ test("the contract is exactly the measured set, and nothing crept in", () => {
     "state",
   ]);
   assert.deepEqual(byRelationship.POTENTIALLY_OVERLAPPING.sort(), [
+    "aiannh",
     "place",
     "school_district",
+    "special_district",
   ]);
   // UNKNOWN is unreachable BY LISTING — it exists only as a lookup miss.
   assert.equal(byRelationship.UNKNOWN_SEMANTICS, undefined);

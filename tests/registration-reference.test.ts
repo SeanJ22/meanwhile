@@ -42,7 +42,10 @@ for (const file of readdirSync(DIR).filter((f) => f.endsWith(".json") && f !== "
 }
 /** The one id the committed geometry already gives two governments (the ZIP index names it too). */
 const inherited = new Set(Object.keys((JSON.parse(readFileSync(join(ROOT, "data", "derived", "zip-divisions", "index.json"), "utf8")) as { inheritedSharedIds: Record<string, unknown> }).inheritedSharedIds));
-const PAIRED = new Set(["STATE", "COUNTY_FIPS", "PLACE_FIPS", "COUSUB_FIPS", "SCHOOL_NAME", "SCHOOL_NAME_LOOSE", "CONSOLIDATED_COUNTY_FIPS", "TIGER_FUNCSTAT"]);
+const PAIRED = new Set(["STATE", "COUNTY_FIPS", "PLACE_FIPS", "COUSUB_FIPS", "SCHOOL_NAME", "SCHOOL_NAME_LOOSE", "CONSOLIDATED_COUNTY_FIPS", "TIGER_FUNCSTAT",
+  "BOUNDARY_SOURCE", "BOUNDARY_SOURCE_ONLY", "COUNTY_NAMED", "AIANNH_CODE"]);
+/** Rows read from a district's own boundary layer or the Census AIANNH list, not from the Census of Governments. */
+const ADDED = new Set(["BOUNDARY_SOURCE_ONLY", "AIANNH_CODE"]);
 const UNPAIRED = new Set(["NO_CENSUS_GEOGRAPHY", "NO_CENSUS_SCHOOL_GEOGRAPHY", "NO_DIVISION_FOR_FIPS", "NO_OCD_ID_FOR_DIVISION", "SCHOOL_NAME_AMBIGUOUS", "SCHOOL_NAME_NOT_FOUND", "STATE_CODES_DISAGREE"]);
 
 function censusRows(path: string): number {
@@ -62,7 +65,8 @@ test("every Census government sits in exactly one state's file, every file is wh
   assert.equal(states.size, 56, "every state, DC and the territories the Census files carry");
   const governments = [...states.values()].reduce((n, s) => n + s.governments.length, 0);
   const territoryGovernments = [...states.values()].reduce((n, s) => n + s.governments.filter((g) => g[5] === "TIGER_FUNCSTAT").length, 0);
-  assert.equal(governments, census + states.size + territoryGovernments, "each Census row once, plus each state itself, plus each territory government TIGER/Line records");
+  const added = [...states.values()].reduce((n, s) => n + s.governments.filter((g) => ADDED.has(g[5])).length, 0);
+  assert.equal(governments - added, census + states.size + territoryGovernments, "each Census row once, plus each state itself, plus each territory government TIGER/Line records");
   assert.equal(index.counts.governments, governments);
   assert.equal(index.counts.placedByStateFipsForABlankPostalCode, 13, "13 Texas special districts carry FIPS 48 and no postal code, and are placed by name of it");
 
@@ -80,7 +84,8 @@ test("every Census government sits in exactly one state's file, every file is wh
       assert.equal(g[4] >= 0, PAIRED.has(g[5]), `${code}: ${g[2]} has a division exactly when it paired`);
       assert.ok(g[4] < s.divisions.length && g[6] < s.divisions.length, `${code}: ${g[2]}'s division references are in range`);
       if (g[4] >= 0) assert.doesNotMatch(s.divisions[g[4]][3], /not defined/i, `${code}: ${g[2]} never pairs to TIGER's "not defined" placeholder`);
-      if (g[0] !== "state") {
+      // A tribal area reaching several states is listed in each.
+      if (g[0] !== "state" && g[5] !== "AIANNH_CODE") {
         assert.ok(!pids.has(g[0]), `Census id ${g[0]} appears once nationally`);
         pids.add(g[0]);
       }
@@ -149,7 +154,7 @@ test("a territory's governments are exactly its divisions TIGER/Line gives a gov
     assert.deepEqual(s.governments.filter((g) => g[5] !== "TIGER_FUNCSTAT").map((g) => g[3]), ["STATE"], `${code}: no other government row`);
   }
   // A state's divisions carry no status: nothing is read for them, so nothing is claimed.
-  for (const [code, s] of states) if (!TERRITORIES.includes(code)) assert.ok(s.functionalStatus === undefined && s.divisions.every((d) => d.length === 4), `${code}: no functional status`);
+  for (const [code, s] of states) if (!TERRITORIES.includes(code)) assert.ok(s.functionalStatus === undefined && s.divisions.every((d) => d.length === (d[1] === "district" ? 5 : 4)), `${code}: no functional status`);
   assert.equal(government("pr", "Adjuntas Municipio").division, "ocd-division/country:us/territory:pr/county:adjuntas");
   assert.equal(government("as", "Aasu village").division, "ocd-division/country:us/territory:as/place:aasu");
 });

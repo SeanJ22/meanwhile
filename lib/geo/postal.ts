@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { postalAreaIn, type PostalRow, type PostalTable } from "./postal-core.ts";
+import { postalAreaIn, postalAreaNeedsAddress, type PostalRow, type PostalTable } from "./postal-core.ts";
 import { serverReaderValue } from "../reader/memory.ts";
 
 const source = serverReaderValue("postal-source", () => ({ text: undefined as string | undefined,
@@ -36,6 +36,5 @@ export function postalArea(zip: string) {
 }
 
 export function zipNeedsAddress(zip: string): boolean {
-  const area = postalArea(zip);
-  return area !== null && area.type !== "standard";
+  return postalAreaNeedsAddress(zip, postalArea(zip));
 }

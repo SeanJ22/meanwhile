@@ -9,8 +9,12 @@ import { existsSync } from "node:fs";
 import { readStateReference } from "../control-plane/expansion/state-references.ts";
 import type { RegistrationGovernmentListing } from "./listings.ts";
 
-export type ReferenceLayer = "state" | "county" | "place" | "cousub" | "unsd" | "elsd" | "scsd";
-/** A territory's county, county-subdivision and place divisions also carry their TIGER/Line LSAD, FUNCSTAT and CLASSFP. */
+export type ReferenceLayer = "state" | "county" | "place" | "cousub" | "unsd" | "elsd" | "scsd" | "district" | "aiannh";
+/**
+ * A territory's county, county-subdivision and place divisions also carry their TIGER/Line LSAD, FUNCSTAT and CLASSFP.
+ * A special district's ("district") geoid is its boundary feature (`<source id>#<feature id>`) and its fifth field its
+ * kind; a tribal area's ("aiannh") geoid is its Census AIANNH code.
+ */
 export type ReferenceDivision = readonly [ocdId: string, layer: ReferenceLayer, geoid: string, censusName: string, lsad?: string, funcstat?: string, classfp?: string];
 /** `pid6` is the Census of Governments id, or `<layer>:<GEOID>` for a territory government read from TIGER/Line's functional status. */
 export type ReferenceGovernment = readonly [pid6: string, jurisdictionId: string, name: string, govType: string, division: number, how: string, alternate: number];
@@ -26,6 +30,8 @@ export interface RegistrationReference {
   readonly functionalStatus?: { readonly dataset: string; readonly sha256: string; readonly sources: Readonly<Record<string, string>> };
   readonly divisions: readonly ReferenceDivision[];
   readonly governments: readonly ReferenceGovernment[];
+  /** The boundary layers this state's special-district divisions were read from, by source id. */
+  readonly boundarySources?: Readonly<Record<string, { readonly url: string; readonly title: string; readonly publisher: string; readonly officialPage: string | null; readonly readAt: string }>>;
 }
 export interface LoadedReference {
   readonly listings?: readonly RegistrationGovernmentListing[];

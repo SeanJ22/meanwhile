@@ -445,7 +445,7 @@ test("candidate event time is a bounded local clock and never moves backward by 
   assert.equal((await futureStore.readCandidate(future.id))?.state, "TEMPORAL_INVALID");
   assert.deepEqual((await futureStore.events(future.id)).map(({ at }) => at), [observedAt, observedAt, observedAt]);
   assert.deepEqual(await futureStore.clock(future.sourceId, future.recordClass, future.scope), {
-    lastAttemptedAt: observedAt,
+    lastAttemptedAt: observedAt, failureStreak: 1,
   }, "a refused future claim must not postpone the scheduler until the claimed year");
 
   const futureEventStore = new MemoryRoutineDataStore();
@@ -1156,9 +1156,9 @@ test("the Postgres retry clock keeps failed attempts local and uses an observed 
   const clock = postgres.slice(postgres.indexOf("  async clock("));
   assert.match(clock, /CASE WHEN \$\{civicDataCandidates\.state\} = 'PROMOTED'[\s\S]*\$\{civicDataCandidates\.acquisitionSucceeded\} = true/);
   assert.match(clock, /THEN LEAST\([\s\S]*retrieval,sourceCheck,checkedAt[\s\S]*civicDataCandidateEvents\.at[\s\S]*ELSE \$\{civicDataCandidateEvents\.at\} END/);
-  assert.match(clock, /select\(\{ attemptedAt: attemptAt \}\)/);
+  assert.match(clock, /select\(\{ attemptedAt: attemptAt[,} ]/);
   assert.match(clock, /eq\(civicDataCandidateEvents\.sequence, 1\)/);
-  assert.match(clock, /orderBy\(desc\(attemptAt\)\)/);
+  assert.match(clock, /orderBy\(desc\(attemptAt\)[,)]/);
   assert.doesNotMatch(
     clock,
     /orderBy\(desc\(civicDataCandidates\.retrievedAt\)\)/,

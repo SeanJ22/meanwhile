@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { createRequire } from "node:module";
 import { Client, neonConfig } from "@neondatabase/serverless";
 import { RETIRED_STATE_POINTERS } from "../lib/civic-data/state-pointer-retirement.ts";
 import { prepareRetirementStateInputs, withRetirementSourceCursor } from "../lib/civic-data/state-retirement-inputs.ts";
@@ -23,9 +22,10 @@ assert.ok(connectionFile && output && Number.isInteger(index) && RETIRED_STATE_P
 process.env.DATABASE_URL = readFileSync(connectionFile, "utf8").trim();
 process.env.WTP_STATE_RETIREMENT_KEY = randomBytes(32).toString("hex");
 if (process.env.HTTPS_PROXY) {
-  const require = createRequire(import.meta.url);
-  const WebSocket = require("next/dist/compiled/ws");
-  const { HttpsProxyAgent } = require("next/dist/compiled/https-proxy-agent");
+  // Next's bundled CommonJS copies, loaded through their default export.
+  const load = async <T,>(name: string): Promise<T> => ((await import(name)) as { default: T }).default;
+  const WebSocket = await load<new (address: string, protocols: string[], options: { agent: unknown }) => object>("next/dist/compiled/ws/index.js");
+  const { HttpsProxyAgent } = await load<{ HttpsProxyAgent: new (proxy: string) => unknown }>("next/dist/compiled/https-proxy-agent/index.js");
   const agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
   neonConfig.webSocketConstructor = class extends WebSocket {
     constructor(address: string, protocols: string[]) { super(address, protocols, { agent }); }

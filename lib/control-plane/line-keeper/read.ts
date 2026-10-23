@@ -120,7 +120,7 @@ export function sourceReading(state: LineState, at: string) {
   }
   return { byKind:[...byKind.values()],scheduled: [...byState.values()].reduce((n,s) => n+s.scheduled,0), overdue: late.length, complete: state.seededAt !== null, byState: [...byState.values()] };
 }
-const READBACK_FIELDS = ['durable','attemptedTasks','verifiedSourceSuccesses','finishedAt','readerReadbackEvidence','readerReadbackDenominator','readerReadbacksRecordedPass','readerReadbacksRecordedFail','readerReadbacksCurrentFail','readerReadbackNoops','readerReadbackRepairFailures','readerReadbacks','failures'];
+const READBACK_FIELDS = ['durable','attemptedTasks','verifiedSourceSuccesses','finishedAt','readerReadbackEvidence','readerReadbackDenominator','readerReadbacksRecordedPass','readerReadbacksRecordedFail','readerReadbacksCurrentFail','readerReadbackNoops','readerReadbackRepairFailures','readerReadbacks','failures','summary'];
 export const READBACK_SQL = `SELECT jsonb_build_object(${READBACK_FIELDS.map(k=>`'${k}',record->'runtimeOutcome'->'${k}'`).join(',')}) AS outcome
  FROM cp_log_owner_digests WHERE log_key='owner-digest' AND record->'runtimeOutcome'->>'kind'='ROUTINE_CIVIC_DATA_SUPERVISOR'
  AND recorded_at >= $1::timestamptz AND recorded_at < $2::timestamptz ORDER BY recorded_at DESC LIMIT 1`;

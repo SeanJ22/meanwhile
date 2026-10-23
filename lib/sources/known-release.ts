@@ -10,6 +10,8 @@ import { researchVaultResolver } from "../control-plane/workers/vault-object.ts"
 import { SourceAcquisitionFailure, isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { readCompleteResponse } from "./source-bytes.ts";
 import { sourceUserAgent } from "./http.ts";
+import { SOURCE_CHECK_AFTER_ENV } from "./source-check-request.ts";
+export { SOURCE_CHECK_AFTER_ENV } from "./source-check-request.ts";
 
 export interface KnownRelease {
   readonly sourceId: string;
@@ -76,8 +78,6 @@ export interface KnownReleaseOptions {
   /** Full source shape/archive validation must finish before advancing the index. */
   readonly validate?: (bytes: Uint8Array, release: KnownRelease) => void | Promise<void>;
 }
-/** The runner sets this when Admin asked for a source to be read now; held bytes older than it are checked again. */
-export const SOURCE_CHECK_AFTER_ENV = "WTP_SOURCE_CHECK_AFTER";
 function requestedSourceCheckAfter(): string | undefined {
   const value = process.env[SOURCE_CHECK_AFTER_ENV];
   return value && Number.isFinite(Date.parse(value)) ? value : undefined;

@@ -2,9 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import { calendarReadOrder, groupCalendarReadsByState, meetingPartitionState, stateCalendarMemberResults, stateCalendarsCovers, stateCalendarsId,
+import { calendarReadOrder, groupCalendarReadsByState, meetingPartitionState, stateCalendarEnvironment, stateCalendarMemberResults, stateCalendarsCovers, stateCalendarsId,
   type StateCalendarGroup } from "../lib/civic-data/state-calendars.ts";
 import type { BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
+import { SOURCE_CHECK_AFTER_ENV } from "../lib/sources/source-check-request.ts";
 
 const boards = (state: string) => MEETING_PARTITION_CONTRACTS.filter((partition) => partition.derivedFamily === null && meetingPartitionState(partition) === state);
 const run = (partition: (typeof MEETING_PARTITION_CONTRACTS)[number]) =>
@@ -24,6 +25,32 @@ test("due board reads become one program per state, where the state's first read
 test("boards of one upstream are spread through the state's list", () => {
   const reads = [["a", "x"], ["b", "x"], ["c", "y"], ["d", "x"], ["e", "z"]].map(([id, acquisitionFailureDomain]) => ({ id, acquisitionFailureDomain }));
   assert.deepEqual(calendarReadOrder(reads).map((read) => read.id), ["a", "c", "e", "b", "d"]);
+});
+
+test("a grouped state's read-now requests retain the newest source check and no unrelated environment values", () => {
+  const early = "2026-10-22T20:00:00.000Z", latest = "2026-10-22T21:00:00.000Z";
+  assert.deepEqual(stateCalendarEnvironment([{}, { env: { UNRELATED: "not-forwarded" } }]), {});
+  assert.deepEqual(stateCalendarEnvironment([
+    { env: { [SOURCE_CHECK_AFTER_ENV]: latest, UNRELATED: "not-forwarded" } }, {},
+    { env: { [SOURCE_CHECK_AFTER_ENV]: early } },
+  ]), { [SOURCE_CHECK_AFTER_ENV]: latest });
+  assert.throws(() => stateCalendarEnvironment([{ env: { [SOURCE_CHECK_AFTER_ENV]: "not-a-time" } }]), /STATE_CALENDAR_SOURCE_CHECK_INVALID/);
+});
+
+test("calendar states take turns at the front without moving unrelated work or losing a state's boards", () => {
+  const [az1, az2] = boards("AZ"), [nh] = boards("NH"), [nj] = boards("NJ");
+  assert.ok(az1 && az2 && nh && nj);
+  const other = { kind: "SINGLE", id: "unrelated", task: { acquisitionFailureDomain: "unrelated" } };
+  const input = [run(az1), other, run(nh), run(nj), run(az2)];
+  const heads = [];
+  for (let seed = 0; seed < 3; seed++) {
+    const units = groupCalendarReadsByState(input, seed);
+    heads.push(units[0]!.id);
+    assert.equal(units[1], other);
+    assert.deepEqual(units.filter(unit => unit.kind === "STATE_CALENDARS")
+      .flatMap(unit => (unit as StateCalendarGroup<ReturnType<typeof run>>).members.map(member => member.id)).sort(), [az1.id, az2.id, nh.id, nj.id].sort());
+  }
+  assert.deepEqual(heads, [stateCalendarsId("AZ"), stateCalendarsId("NH"), stateCalendarsId("NJ")]);
 });
 
 test("a state program's authority covers its own state's boards and nothing else", () => {
@@ -61,7 +88,7 @@ test("a program never started, or cut at the pass deadline, leaves its unread bo
 
 test("the runner launches one program per state and the program reads its boards in turn, loading the state once", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /const units = groupCalendarReadsByState\(runs\)/);
+  assert.match(runner, /const units = groupCalendarReadsByState\(runs, routineFailureDomainRotationSeed\(RUN_STARTED_AT\)\)/);
   assert.match(runner, /capability: "STATE_CALENDARS", contract: unit\.id/);
   const ingest = readFileSync("scripts/ingest.ts", "utf8");
   assert.match(ingest, /async function readStateCalendars/);

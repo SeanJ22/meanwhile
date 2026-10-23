@@ -14,6 +14,7 @@ import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
+import { installMeetingReaderRepairSelection } from "../lib/civic-data/reader-repair-protocol.ts";
 import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
 import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -22,6 +23,7 @@ import { wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.
 import { promoteMeetingPartition, promoteMeetingPartitions, reconcileSuccessfulMeetingPartition, selectedMeetingPartitions } from "../scripts/ingest.ts";
 
 import { readEveryBody } from "./helpers/meeting-body-national.ts";
+import { FIXTURE_DOOR_ROWS, installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 
 const FIRST = "2026-09-08T12:00:00.000Z";
 const SECOND = "2026-09-08T13:00:00.000Z";
@@ -119,11 +121,18 @@ class CountingMeetingStore extends MemoryRoutineDataStore {
   readPromotionCalls = 0;
   readPromotionsCalls = 0;
   readPromotionIdentitiesCalls = 0;
+  latestReaderReadbacksCalls = 0;
 
   reset(): void {
     this.readPromotionCalls = 0;
     this.readPromotionsCalls = 0;
     this.readPromotionIdentitiesCalls = 0;
+    this.latestReaderReadbacksCalls = 0;
+  }
+
+  override async latestReaderReadbacks(candidateIds: readonly string[]) {
+    this.latestReaderReadbacksCalls++;
+    return super.latestReaderReadbacks(candidateIds);
   }
 
   override async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string) {
@@ -389,6 +398,7 @@ test("meeting Reader repair reads each partition once and correlates exact parti
     "f".repeat(40),
   );
   assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
+  assert.equal(store.latestReaderReadbacksCalls, 1, "the bounded domain reads every latest receipt in one indexed request");
   assert.equal(store.readPromotionCalls, 2, "each partition's payload crosses once, as its own Reader reads it");
   assert.equal(store.readPromotionsCalls, 0, "no national batch of payloads is read");
   assert.deepEqual(repairs.map(({ contractId, ok }) => ({ contractId, ok })), [
@@ -430,7 +440,30 @@ test("meeting Reader repair reads each partition once and correlates exact parti
   );
   assert.deepEqual(current.map((repair) => repair.ok ? repair.value.kind : repair.error), ["CURRENT", "CURRENT"]);
   assert.equal(store.readPromotionIdentitiesCalls, 1);
+  assert.equal(store.latestReaderReadbacksCalls, 1);
   assert.equal(store.readPromotionCalls + store.readPromotionsCalls, 0, "a current pass reads no partition payload");
+});
+
+test("a parent-selected meeting partition is checked from its handed snapshot after the registry changes", async () => {
+  const store = new CountingMeetingStore();
+  const snapshot = structuredClone(legistar);
+  const promoted = await promoteMeetingPartitions({
+    store, partitions: [snapshot], meetings: [meeting(snapshot, FIRST, "handed-snapshot")], agendaDocuments: [],
+    reports: [report(snapshot.meetingSource, FIRST)], generatedAt: FIRST,
+  });
+  assert.ok(promoted[0]!.outcome.promoted);
+  try {
+    installFixtureDoors(FIXTURE_DOOR_ROWS.filter(row => row.bodyId !== snapshot.bodyId));
+    assert.equal(MEETING_PARTITION_CONTRACTS.some(partition => partition.id === snapshot.id), false);
+    installMeetingReaderRepairSelection([snapshot]);
+    assert.deepEqual(MEETING_PARTITION_CONTRACTS.map(partition => partition.id), [snapshot.id]);
+    store.reset();
+    const [repair] = await repairMeetingReaderProjectionReadbacks(store, [snapshot], SECOND, "f".repeat(40));
+    assert.ok(repair?.ok, JSON.stringify(repair));
+    assert.equal(repair.value.kind, "RECORDED");
+    assert.equal(repair.value.receipt?.status, "PASS", "the child's newer door registry cannot replace the parent's exact partition");
+    assert.equal(store.readPromotionCalls, 1, "the handed partition's typed reader actually reads its saved version");
+  } finally { installFixtureDoors(); }
 });
 
 test("R31: meeting receipts carry across a commit that changed no Reader code without reading the partitions", async () => {

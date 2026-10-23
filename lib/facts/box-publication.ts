@@ -21,6 +21,8 @@ import { nameKey, publishBodyNameFromPage, publishRosterFacts, type RosterMember
 import { meetingEntityId } from "./meeting-read.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 
 interface Finding {
   readonly row: BoxFinding; /** The subject under the one board name: its government's registered id, then its tail. */ readonly subject: string; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
@@ -29,6 +31,7 @@ interface Finding {
 
 interface BoxPublicationReport {
   readonly looked: number;
+  readonly deferred: number;
   readonly published: number;
   /** Published by where each went: the fact store's classes and ballot navigation. */
   readonly publishedByRoute: Readonly<Record<string, number>>;
@@ -37,11 +40,17 @@ interface BoxPublicationReport {
   readonly refused: number;
   readonly waitingByClass: Readonly<Record<string, number>>;
   readonly failuresByReason: Readonly<Record<string, number>>;
+  readonly errorExamples: readonly { readonly findingId: string; readonly stage: string; readonly detail: string }[];
   readonly byPlace: Readonly<Record<string, { published: number; refused: number; waiting: number }>>;
   /** Published seats needing Sean's decision. */
   readonly seats: { readonly flagged: number };
   /** Box facts that read as a label, a heading, a notice or a bare link (flagged for Sean), cut to the part that states the thing, re-filed, or renamed to the name alone. */
   readonly labels: { readonly flagged: number; readonly moved: number; readonly cut: number; readonly renamed: number };
+}
+
+/** Audits read what already reached readers; the publication lane calls them separately so they cannot stop waiting facts. */
+export async function reviewPublishedBoxFacts(query: Query, purge?: ReaderCachePurger) {
+  return { seats: await reviewBoxSeats(query), labels: await reviewBoxFacts(query, purge) };
 }
 
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
@@ -104,6 +113,9 @@ export async function boardFor(query: Query, subject: string): Promise<Target | 
 
 const PACKET = "hunt:packet:";
 const placeOf = (row: BoxFinding) => row.origins.find(origin => origin.resultKey?.startsWith(PACKET))?.resultKey!.slice(PACKET.length) ?? row.subjectId;
+
+/** These blanks can change without a software release. Source recovery and missing entities keep their own retry. */
+const recoverableBlank = (reason: string) => /^(?:SOURCE_BLOCKED:|ELECTION_FIELD_PUBLICATION_HELD$|SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE$|SUBJECT_HAS_NO_DIVISION$|NAME_IS_NOT_ON_A_GOVERNMENT$|STATE_NOT_IN_THE_FACT_STORE$|COPY_OUTSIDE_FRESHNESS_WINDOW$)/.test(reason);
 
 // A supervisor of a kind of work is staff ("Maintenance Supervisor", "Road Supervisor"); a bare "Supervisor", "Town Supervisor" or "Supervisor Rex Scott, District 1" is a seat.
 const JOB_SUPERVISOR = "(?:maintenance|road|roads|highway|street|streets|bridge|public works|works|water|sewer|wastewater|sanitation|solid waste|landfill|utilit(?:y|ies)|park|parks|recreation|facilit(?:y|ies)|building|grounds|cemetery|fleet|equipment|shop|garage|transportation|bus|custodial|food service|nutrition|cafeteria|library|operations|field|crew|shift|plant|program|department|dept|office|it|technology|payroll|billing|collections|records|dispatch|animal control|code enforcement|inspection|election|elections|youth|school|district office)\\s+supervisors?";
@@ -276,23 +288,53 @@ export async function publishBoxFindings(input: {
   readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly fetch: ProbeFetch;
   readonly store: RoutineDataStore; readonly clocks: Clocks; readonly now: string; readonly limit: number;
   readonly purge?: ReaderCachePurger;
+  /** The standing publisher runs audits separately from publication. */
+  readonly audit?: boolean;
+  /** Stop admitting work while the parent still has time to save this pass's outcome. In-flight source reads keep their transport deadlines. */
+  readonly deadlineMs?: number;
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
   const now = new Date(input.now);
-  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query), labels: await reviewBoxFacts(facts.query, input.purge),
+  const report = { looked: 0, deferred: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0,
+    seats: { flagged: 0 }, labels: { flagged: 0, moved: 0, cut: 0, renamed: 0 },
+    errorExamples: [] as { findingId: string; stage: string; detail: string }[],
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
+  if (input.audit !== false) {
+    try { Object.assign(report, await reviewPublishedBoxFacts(facts.query, input.purge)); }
+    catch (error) {
+      report.failuresByReason.BOX_AUDIT_FAILED = 1;
+      report.errorExamples.push({ findingId: "published-facts", stage: "AUDIT", detail: sanitizedErrorDiagnostic(error).slice(0, 600) });
+    }
+  }
   // A packet's findings count toward its government; any other finding toward its own subject.
   const place = (row: BoxFinding) => report.byPlace[placeOf(row)] ??= { published: 0, refused: 0, waiting: 0 };
   const rows = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: input.now, limit: input.limit });
+  const deferred = new Set<string>(), settled = new Set<string>();
+  const outOfTime = () => Date.now() >= (input.deadlineMs ?? Infinity);
+  // Preparing a whole page must leave time to check its sources and publish. Otherwise the same untouched rows can consume every pass in metadata lookups.
+  const preparationStartedMs = Date.now();
+  const preparationDeadlineMs = input.deadlineMs === undefined ? Infinity
+    : preparationStartedMs + Math.max(0, input.deadlineMs - preparationStartedMs) / 3;
+  const retryAt = (reason: string) => recoverableBlank(reason) ? { retryAt: new Date(now.getTime() + 60 * 60_000).toISOString() } : {};
   const wait = (row: BoxFinding, slotClass: string, reason: string) =>
-    holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: FINDING_SLOTS_VERSION }, input.now);
+    holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: FINDING_SLOTS_VERSION, ...retryAt(reason) }, input.now);
   const hold = async (row: BoxFinding, slotClass: string, reason: string) => {
     await wait(row, slotClass, reason);
     report.waitingByClass[slotClass] = (report.waitingByClass[slotClass] ?? 0) + 1;
     place(row).waiting++;
   };
-  // A fact several pages said is one row; it settles once every page's copy has been checked, built if any of them published.
+  const failed = async (row: BoxFinding, stage: string, error: unknown) => {
+    const detail = sanitizedErrorDiagnostic(error).slice(0, 600);
+    const claim = await takeBoxFinding(repos.boxFindings, row.id, PUBLISHER, input.now, new Date(now.getTime() + 120_000).toISOString());
+    if (!claim) return;
+    report.failuresByReason.BOX_PUBLICATION_EXCEPTION = (report.failuresByReason.BOX_PUBLICATION_EXCEPTION ?? 0) + 1;
+    if (report.errorExamples.length < 5) report.errorExamples.push({ findingId: row.id, stage, detail });
+    // A programming, source or database failure is its own retry, never a refusal of the finding's truth.
+    await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "failed", reason: `${stage}: ${detail}`,
+      slots: FINDING_SLOTS_VERSION, retryAt: new Date(now.getTime() + 5 * 60_000).toISOString() }, input.now);
+  };
+  // A verified page publishes at once. Only a refusal waits for the other saved pages, any of which may prove the fact.
   const sources = new Map<string, { left: number; best: PublishOutcome | null }>();
   const settle = async (row: BoxFinding, said: PublishOutcome, route: string) => {
     const pending = sources.get(row.id);
@@ -300,17 +342,19 @@ export async function publishBoxFindings(input: {
     if (pending) {
       pending.left--;
       if (!pending.best || "blank" in pending.best) pending.best = said;
-      if (pending.left > 0) return;
+      if (pending.left > 0 && "blank" in pending.best) return;
       outcome = pending.best;
     }
     const claim = await takeBoxFinding(repos.boxFindings, row.id, PUBLISHER, input.now, new Date(now.getTime() + 120_000).toISOString());
     if (!claim) return;
     if ("blank" in outcome) {
-      await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "refused", reason: outcome.blank, slots: FINDING_SLOTS_VERSION }, input.now);
+      if (!await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "refused", reason: outcome.blank, slots: FINDING_SLOTS_VERSION, ...retryAt(outcome.blank) }, input.now)) return;
+      settled.add(row.id);
       report.refused++; place(row).refused++;
       report.failuresByReason[outcome.blank] = (report.failuresByReason[outcome.blank] ?? 0) + 1;
     } else {
-      await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "built", publicationId: `${outcome.decision}:${outcome.factId ?? "current"}` }, input.now);
+      if (!await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "built", publicationId: `${outcome.decision}:${outcome.factId ?? "current"}` }, input.now)) return;
+      settled.add(row.id);
       report.published++; place(row).published++;
       report.publishedByRoute[route] = (report.publishedByRoute[route] ?? 0) + 1;
     }
@@ -330,8 +374,11 @@ export async function publishBoxFindings(input: {
 
   const ready: { finding: Finding; slot: Routed; body: Target["body"]; holder: string | null; entityId: string; asNamed?: string }[] = [];
   const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
-  for (const row of [...rows.filter(row => naming.has(row.id)), ...rows.filter(row => !naming.has(row.id))]) {
+  const orderedRows = [...rows.filter(row => naming.has(row.id)), ...rows.filter(row => !naming.has(row.id))];
+  for (const [index, row] of orderedRows.entries()) {
+    if (Date.now() >= preparationDeadlineMs) { for (const pending of orderedRows.slice(index)) deferred.add(pending.id); break; }
     report.looked++;
+    try {
     if (row.state === "refused") await reopenBoxFinding(repos.boxFindings, row.id, FINDING_SLOTS_VERSION, input.now);
     if (!row.origins.some(o => o.kind === "SCOUT")) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
     const raw = findingFact(row);
@@ -374,6 +421,7 @@ export async function publishBoxFindings(input: {
     if (!target) { await hold(row, slot.class, "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"); continue; }
     if ((slot.class === "sittings") !== target.entityId.startsWith("meeting:")) { await hold(row, slot.class, slot.class === "sittings" ? "SUBJECT_IS_NOT_A_SITTING" : "SUBJECT_IS_A_SITTING"); continue; }
     queue(ready, each => ({ finding: each, slot, body: target.body, holder: target.holder, entityId: target.entityId }));
+    } catch (error) { await failed(row, "SORT", error); }
   }
 
   const captures = new Map<string, Promise<{ capture: WorkerPublicationCapture } | { error: string }>>();
@@ -398,12 +446,21 @@ export async function publishBoxFindings(input: {
 
   const groups = new Map<string, typeof ready>();
   for (const entry of ready) {
-    const key = `${entry.entityId}|${entry.finding.origin.artifactIds[0] ?? entry.finding.sourceUrl}|${kindOf(entry.slot)}`;
+    const key = `${entry.entityId}|${entry.finding.origin.artifactIds[0] ?? ""}|${entry.finding.sourceUrl}|${kindOf(entry.slot)}`;
     groups.set(key, [...groups.get(key) ?? [], entry]);
   }
   // People come first: a member's phone or email names a member the same pass has to have made, or it would land on the board's own office.
   const peopleFirst = (group: typeof ready) => kindOf(group[0]!.slot) === "officeholder" ? 0 : 1;
+  const byBody = new Map<string, (typeof ready)[]>();
   for (const group of [...groups.values()].sort((a, b) => peopleFirst(a) - peopleFirst(b))) {
+    const id = group[0]!.body.id;
+    byBody.set(id, [...byBody.get(id) ?? [], group]);
+  }
+  // A slow page for one government cannot hold other places. Each body keeps its own dependent records in order.
+  const publications = await runBoundedWorkPool([...byBody.values()], 4, async bodyGroups => {
+  for (const group of bodyGroups) {
+    if (outOfTime()) { for (const entry of group) deferred.add(entry.finding.row.id); continue; }
+    try {
     const { body, entityId } = group[0]!, kind = kindOf(group[0]!.slot);
     const read = await captureFor(group[0]!.finding, kind);
     if ("error" in read) {
@@ -466,6 +523,7 @@ export async function publishBoxFindings(input: {
     const entityOf = async (id: string) => entities.get(id) ?? entities.set(id, (await readCheckEntity(facts.query, id))!).get(id)!;
     const pageText = normalizeText(copy.text);
     for (const { finding, slot, entityId: held, body: governing, asNamed } of own) {
+      try {
       let at = held, name: { readonly name: string; readonly quote: string } | undefined;
       if (slot.class === "other offices") {
         name = officeNameOn(pageText, finding.exactQuote, String(finding.value));
@@ -496,11 +554,18 @@ export async function publishBoxFindings(input: {
       // A page's own words on how to comment show the body takes it.
       if (slot.class === "comment rules" && slot.slot !== "comment:period" && !("blank" in outcome)) await claim("comment:period", "YES", finding.exactQuote, finding.exactQuote);
       await settle(finding.row, outcome, slot.class);
+      } catch (error) { await failed(finding.row, "PUBLISH", error); }
     }
+    } catch (error) { for (const { finding } of group) await failed(finding.row, "SOURCE_GROUP", error); }
   }
+  });
+  const unwritten = publications.filter(result => !result.ok);
+  if (unwritten.length) throw new Error(`BOX_FAILURE_RECORD_UNWRITTEN: ${unwritten.map(result => result.error).slice(0, 3).join("; ")}`);
 
   const fields: { finding: Finding; field: ElectionFieldInput }[] = [];
   for (const { finding, kind, divisionId } of elections) {
+    if (outOfTime()) { deferred.add(finding.row.id); continue; }
+    try {
     const read = await captureFor(finding, "ballot");
     if ("error" in read) { await blocked(divisionId, kind, finding, "ballot", read.error, "ballot navigation"); continue; }
     // Election authorities write about the state's elections, so the page is checked as being about the state.
@@ -515,11 +580,16 @@ export async function publishBoxFindings(input: {
       dates: DATED.includes(kind) ? [...datesInQuote(finding.exactQuote)].sort() : [],
       ...(kind === "election_office" ? { phone: PHONE_IN_QUOTE.exec(finding.exactQuote)?.[0].trim() ?? null } : {}),
       document: { url, text: read.capture.evidence.text, collectedAt: read.capture.observedAt, capture: read.capture } } });
+    } catch (error) { await failed(finding.row, "ELECTION", error); }
   }
   if (fields.length) {
     let outcome: Awaited<ReturnType<typeof publishElectionFields>> | { readonly held: string };
     try { outcome = await publishElectionFields({ store: input.store, now: input.now, fields: fields.map(row => row.field), verify: section3Record }); }
-    catch (error) { outcome = { held: error instanceof Error ? error.message : String(error) }; }
+    catch (error) {
+      const detail = sanitizedErrorDiagnostic(error).slice(0, 600);
+      if (report.errorExamples.length < 5) report.errorExamples.push({ findingId: fields[0]!.finding.row.id, stage: "ELECTION_PUBLICATION", detail });
+      outcome = { held: detail };
+    }
     for (const { finding, field } of fields) {
       if ("held" in outcome) { await settle(finding.row, { blank: outcome.held.split(":")[0]! }, "ballot navigation"); continue; }
       const gap = outcome.gaps.find(row => row.divisionId === field.divisionId && row.kind === field.kind);
@@ -527,8 +597,12 @@ export async function publishBoxFindings(input: {
         : { blank: `ELECTION_FIELD_GAP:${gap?.detail ?? "not published"}` }, "ballot navigation");
     }
   }
+  report.deferred = [...deferred].filter(id => !settled.has(id)).length;
   try { await nameBoardsFromTheirPages(input); }
-  catch (error) { console.error("Governing boards could not be named from their pages", error instanceof Error ? error.message : String(error)); }
+  catch (error) {
+    report.failuresByReason.BOX_PUBLICATION_EXCEPTION = (report.failuresByReason.BOX_PUBLICATION_EXCEPTION ?? 0) + 1;
+    if (report.errorExamples.length < 5) report.errorExamples.push({ findingId: "board-names", stage: "BODY_NAMING", detail: sanitizedErrorDiagnostic(error).slice(0, 600) });
+  }
   return report;
 }
 
@@ -537,8 +611,10 @@ const NAME_NOT_ON_PAGE_RETRY_MINUTES = 5 * 24 * 60;
 
 /** Bodies holding verified facts but no verified name: the page that supplied a fact is read again and names the board when it writes the name. */
 async function nameBoardsFromTheirPages(input: { readonly repos: Pick<ControlPlaneRepositories, "artifacts">; readonly facts: FactDb & { readonly query: Query };
-  readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly clocks: Clocks; readonly now: string; readonly purge?: ReaderCachePurger }): Promise<number> {
+  readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly clocks: Clocks; readonly now: string; readonly purge?: ReaderCachePurger; readonly deadlineMs?: number }): Promise<number> {
   const { facts } = input;
+  const outOfTime = () => Date.now() >= (input.deadlineMs ?? Infinity);
+  if (outOfTime()) return 0;
   const nameless = await facts.query(`SELECT e.id, (SELECT s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id WHERE f.entity_id = e.id AND f.status = 'live'
         AND s.url ~ '^https?://' ORDER BY f.checked_at DESC, f.id DESC LIMIT 1) AS url
     FROM entity e WHERE e.kind = 'body'
@@ -548,6 +624,7 @@ async function nameBoardsFromTheirPages(input: { readonly repos: Pick<ControlPla
     ORDER BY e.id LIMIT $1`, [NAMING_PER_PASS]);
   let named = 0;
   for (const row of nameless) {
+    if (outOfTime()) break;
     const id = String(row.id);
     if (!row.url) continue;
     const read = await fetchCapture({ url: String(row.url), repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now });

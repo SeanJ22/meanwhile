@@ -4,6 +4,7 @@ import test from "node:test";
 
 import {
   HOT_READ_CATCH_UP_CONCURRENCY,
+  HOT_READ_CATCH_UP_READ_BUDGET_MS,
   HOT_READ_CATCH_UP_RECHECK_MS,
   hotReadCatchUpAdmission,
   hotReadCatchUpReadWorstCaseMs,
@@ -17,6 +18,7 @@ import {
 import {
   ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
   ROUTINE_CLOCK_READ_CONCURRENCY,
+  ROUTINE_PASS_BUDGET_MS,
   ROUTINE_SOURCE_TASKS,
   routineFrontierPassBound,
   routineTaskDeadlineMs,
@@ -26,7 +28,6 @@ import {
 } from "../lib/civic-data/runner.ts";
 import {
   ROUTINE_CHILD_CONCURRENCY,
-  ROUTINE_CHILD_TIMEOUT_MS,
   ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS,
   ROUTINE_RUNNER_OUTER_GRACE_MS,
   ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
@@ -391,6 +392,28 @@ test("C6: catch-up starts only due sitting-window reads, one a lane, the lane's 
   assert.deepEqual(limited.pastLimit.map(({ id }) => id), [candidates[3]!.task.id]);
 });
 
+test("C6: known-due catch-up reads fit the server's 20-minute source and 25-minute repair caps", () => {
+  const [, tasks] = busiestLane();
+  const task = tasks[0]!;
+  const candidates = [candidateFor(task, hotClock(T0 - 44 * MIN))];
+  const sourceDeadlineMs = T0 + ROUTINE_PASS_BUDGET_MS * 2 / 3;
+  const repairDeadlineMs = T0 + ROUTINE_PASS_BUDGET_MS * 5 / 6;
+  const base = {
+    nowMs: T0 + MIN,
+    candidates,
+    clockReads: candidates.map(({ task, clock }) => ({ task, ok: true as const, clock })),
+    statedEnds: new Map(),
+    laneLastEndedMs: new Map<string, number>(),
+    busyLanes: new Set<string>(),
+    slots: HOT_READ_CATCH_UP_CONCURRENCY,
+    limitMs: sourceDeadlineMs,
+  };
+  assert.deepEqual(hotReadCatchUpAdmission(base).start.map(({ id }) => id), [task.id]);
+  const latestStartMs = repairDeadlineMs - hotReadCatchUpReadWorstCaseMs();
+  assert.deepEqual(hotReadCatchUpAdmission({ ...base, nowMs: latestStartMs, limitMs: repairDeadlineMs }).start.map(({ id }) => id), [task.id]);
+  assert.deepEqual(hotReadCatchUpAdmission({ ...base, nowMs: latestStartMs + 1, limitMs: repairDeadlineMs }).pastLimit.map(({ id }) => id), [task.id]);
+});
+
 test("C6: catch-up reads reserve repair time without restoring the retired pilot timeout", () => {
   const domains = routineReaderRepairDomains();
   const bound = routineFrontierPassBound();
@@ -418,9 +441,10 @@ test("C6: catch-up reads reserve repair time without restoring the retired pilot
   assert.match(pilot, /await runRuntimeChildren\(/);
   const launcher = readFileSync("scripts/pilot-runtime-child.mts", "utf8");
   assert.doesNotMatch(launcher, /\btimeout\s*:/);
-  // One read settles within its child's ceiling and its durable settlement.
+  // A read has its own enforced wall limit; the generic idle timeout cannot block admission.
   const settlementMs = ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS * STANDING_NEON_REQUEST_DEADLINE_MS;
-  assert.equal(hotReadCatchUpReadWorstCaseMs(), ROUTINE_CHILD_TIMEOUT_MS + settlementMs);
+  assert.equal(HOT_READ_CATCH_UP_READ_BUDGET_MS, 5 * MIN);
+  assert.equal(hotReadCatchUpReadWorstCaseMs(), HOT_READ_CATCH_UP_READ_BUDGET_MS + settlementMs);
   assert.equal(HOT_READ_CATCH_UP_CONCURRENCY, ROUTINE_CHILD_CONCURRENCY / 2, "four pass children plus two reads at the peak");
 });
 
@@ -428,7 +452,7 @@ test("C6: the repairs a catch-up read could race run first", () => {
   const domains = routineReaderRepairDomains();
   const hot = new Set(ROUTINE_SOURCE_TASKS.filter((task) => task.contract.schedule?.kind === "SITTING_WINDOW").map(({ id }) => id));
   const racing = domains.filter((domain) => repairDomainRacesHotReads(domain, hot)).map(({ id }) => id);
-  assert.ok(racing.includes("reader-readback:meetings-aggregate"));
+  assert.ok(racing.some(id => /^reader-readback:meetings-aggregate:[A-Z]{2}:/.test(id)));
   assert.ok(racing.includes("reader-readback:pima-legistar-outcomes"), "the outcome routine follows the Board's sittings");
   assert.ok(!racing.includes("reader-readback:fec-funding"));
   assert.ok(racing.length < domains.length / 4, "most repairs never delay catch-up");
@@ -436,7 +460,10 @@ test("C6: the repairs a catch-up read could race run first", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /const readerLaunch = \[\s*\.\.\.readerDomains\.filter\(\(domain\) => repairDomainRacesHotReads\(domain, hotReadTaskIds\)\),\s*\.\.\.readerDomains\.filter\(\(domain\) => !repairDomainRacesHotReads/);
   assert.match(runner, /const readerPass = runBoundedChildPass\(\s*readerLaunch\.map/);
-  assert.match(runner, /return \{ repair: readerPass, unblocked: hotReadCatchUpOpen \};/);
+  assert.match(runner, /return \{ repair: readerPass, unblocked: Promise\.resolve\(\) \};/);
+  assert.match(runner, /repairingContractIds\.add\(contract.id\)/);
+  assert.match(runner, /!launchedTaskIds\.has\(id\) && !repairingContractIds\.has\(id\)/);
+  assert.match(runner, /for \(const contract of domain.contracts\) repairingContractIds\.delete\(contract.id\)/);
   assert.match(runner, /await runRoutinePassWithHotReadCatchUp\(\{\s*source: sourcePass,\s*startRepair: startReaderRepair,/);
   assert.match(runner, /onSettled: async \(result\) => settlePendingRun\(run, result\)/, "catch-up reads settle exactly as the pass's own");
   assert.match(runner, /\.\.\.\[\.\.\.unsettledSourceRuns\]\.map\(\(id\) => pendingByTaskId\.get\(id\)!\.task\.acquisitionFailureDomain\)/, "never beside a read of the same lane");

@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 90 LIVE (/api/build a462d38); RELEASE 91 CANDIDATE (SP-01-FX ballot cache fix + RN-01-FX + River National label fix) IN GATES from 11:55 AM EDT on river-next 171c09b52 (main merged before gates); RN-02 returned (merge river)
+build_state: RELEASE 90 LIVE (/api/build a462d38); RELEASE 91 CANDIDATE (SP-01-FX ballot cache fix + RN-01-FX + River National label fix) IN GATES from 11:55 AM EDT on river-next 171c09b52 (main merged before gates); RN-02 returned (merge river); NEXT (release 92): VS-07-FX f48331d9d
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS

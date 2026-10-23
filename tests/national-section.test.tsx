@@ -12,15 +12,10 @@ serverReaderValue("national-president", () => async () => resident.roster);
 const { NationalLink } = await import("../components/shell/national-link.tsx");
 const { NationalSection } = await import("../components/national/national-section.tsx");
 const { default: NationalPage } = await import("../app/national/page.tsx");
-const { completeNationalCards, readNationalCards } = await import("../lib/national/section.ts");
+const { readNationalCards } = await import("../lib/national/section.ts");
 
-const card = (id: string, complete: boolean): NationalCard => ({ id, office: "Cabinet", title: `Secretary ${id}`, holder: `Holder ${id}`, complete,
+const card = (id: string): NationalCard => ({ id, office: "Cabinet", title: `Secretary ${id}`, holder: `Holder ${id}`,
   sources: [{ what: "the department head", provenance: { sourceUrl: "https://www.whitehouse.gov/administration/cabinet/", sourceOrg: "whitehouse.gov", collectedAt: "2026-10-22", verifiedAt: null } }] });
-
-test("the National section shows a card only when its data marks it complete", () => {
-  assert.deepEqual(completeNationalCards([card("a", true), card("b", false), card("c", true)]).map(row => row.id), ["a", "c"]);
-  assert.deepEqual(completeNationalCards([card("a", false)]), []);
-});
 
 test("the link reads 'National government, coming soon' and goes to the National section", () => {
   const html = renderToStaticMarkup(<NationalLink />);
@@ -29,7 +24,7 @@ test("the link reads 'National government, coming soon' and goes to the National
   assert.equal(NATIONAL_LINK_LABEL, "National government, coming soon");
 });
 
-test("until a card is complete the National section says it is coming soon, with the sooner link, and lists no card", async () => {
+test("with no verified national executive the National section says it is coming soon, with the sooner link, and lists no card", async () => {
   const html = renderToStaticMarkup(await NationalPage());
   assert.match(html, /National government/);
   assert.match(html, /data-national-gap/);
@@ -37,10 +32,10 @@ test("until a card is complete the National section says it is coming soon, with
   assert.doesNotMatch(html, /data-national-cards/);
 });
 
-test("only complete cards are rendered, each with its sources section", () => {
-  const html = renderToStaticMarkup(<NationalSection cards={[card("a", true), card("b", false)]} />);
+test("every card is rendered, each with its sources section", () => {
+  const html = renderToStaticMarkup(<NationalSection cards={[card("a"), card("b")]} />);
   assert.match(html, /Secretary a/);
-  assert.doesNotMatch(html, /Secretary b/);
+  assert.match(html, /Secretary b/);
   assert.match(html, /data-national-cards/);
   assert.doesNotMatch(html, /data-national-gap/);
 });
@@ -50,7 +45,7 @@ test("both doors to the National section are on the shell: under the Local, Stat
   assert.match(readFileSync(new URL("../components/map/coverage-notice.tsx", import.meta.url), "utf8"), /<NationalLink className="national-link mt-3 block" \/>/);
 });
 
-test("the resident national roster reaches the page only after its sourced completeness floor passes", async () => {
+test("a current executive with seat, name and source page reaches the page; the rest of the profile is never a gate", async () => {
   const at = "2026-10-23T00:00:00.000Z", sourceUrl = "https://www.whitehouse.gov/administration/jd-vance/";
   const imageUrl = "https://www.whitehouse.gov/vance.jpg", imageHash = `sha256-${"a".repeat(64)}`;
   const provenance = { sourceUrl, sourceOrg: "The White House", collectedAt: at, verifiedAt: at };
@@ -80,8 +75,13 @@ test("the resident national roster reaches the page only after its sourced compl
     assert.match(html, /JD Vance/);
     assert.match(html, /Vice President of the United States/);
     assert.match(html, /data-national-cards/);
-    resident.roster = { ...roster, officeholders: [{ ...person, photo: null, executive: { ...person.executive, complete: true } }] };
-    assert.deepEqual(await readNationalCards(), [], "a stored complete flag cannot bypass a missing sourced field");
+    // The production shape on Oct 23: seat, name and the White House page, with no portrait, biography, term or votes yet.
+    const minimum: Officeholder = { ...person, photo: null, partyLabel: null, termStart: "", termEnd: "", contactFormUrl: null, social: [], fieldSources: {}, executive: undefined };
+    resident.roster = { ...roster, officeholders: [minimum] };
+    assert.deepEqual((await readNationalCards()).map(row => [row.holder, row.title]), [["JD Vance", "Vice President of the United States"]]);
+    assert.match(renderToStaticMarkup(await NationalPage()), /JD Vance/);
+    resident.roster = { ...roster, officeholders: [{ ...minimum, provenance: { ...provenance, sourceUrl: "" } }] };
+    assert.deepEqual(await readNationalCards(), [], "without the page it came from, the holder is not published");
     assert.match(renderToStaticMarkup(await NationalPage()), /data-national-gap/);
     resident.roster = { ...roster, officeholders: [{ ...person, memberships: [{ id: "former-vp", personId: person.id,
       officeId: "vice-president", jurisdiction: "US", sourceUrl, officeTitle: person.officeTitle,

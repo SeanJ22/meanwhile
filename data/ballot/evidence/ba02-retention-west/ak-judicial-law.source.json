@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://www.ajc.state.ak.us/retention/retlaw.html",
+  "finalUrl": "https://www.ajc.state.ak.us/retention/retlaw.html",
+  "retrievedAt": "2026-10-23T09:35:32.129057+00:00",
+  "httpStatus": 200,
+  "rawHash": "c2f39aeb13e40947d4325e0dbd7b6297b95f09518b2e698007a1a22d9c83f86e",
+  "bytes": 37802,
+  "file": "ak-judicial-law.html",
+  "textSnapshot": "ak-judicial-law.txt",
+  "textHash": "d16ddb35de65b987362f6d0470c73d7548154536b8a87244a6c37586a247153a",
+  "extraction": "HTML text with scripts/styles excluded"
+}

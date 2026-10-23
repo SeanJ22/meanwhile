@@ -1,0 +1,8 @@
+{
+  "requestedUrl": "https://chestercountysc.gov/government/chester-county-council/county-council-members/",
+  "finalUrl": "https://chestercountysc.gov/government/chester-county-council/county-council-members/",
+  "retrievedAt": "2026-10-23T09:55:03.262465+00:00",
+  "httpStatus": 200,
+  "rawHash": "80b4c67e9565d009ed75b26af7746c77741f4faa6a767fa816fd4e667d8e5498",
+  "captureMethod": "Successful web.open source transcript; direct HTTP route returned403/406. Captured text is the tool-returned document, not raw HTML."
+}

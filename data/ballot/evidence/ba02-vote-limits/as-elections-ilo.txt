@@ -1,0 +1,4022 @@
+Elections [Title 6]
+                                             Title 6
+
+
+
+ELECTIONS
+
+
+
+Chapters:
+
+01 General Provisions
+
+02 Registration
+
+03 Issues-Candidates
+
+04 District Officials
+
+05 Conduct of Elections
+
+06 Ballots
+
+07 Voting Procedures
+
+08 Vote Count
+
+09 Election Contests
+
+10 Expenses
+
+11 Absentee Voting
+
+12 Election Offenses
+
+17 Election Contributions and Expenses
+
+
+
+                                           Chapter 01
+
+
+
+                                      GENERAL PROVISIONS
+
+
+
+Sections:
+
+6.0101 Short title and application.
+
+6.0102 Definitions.
+
+6.0103 Repealed.
+6.0103.1 Election office-Chief Election Officer-Appointment-Removal-Budget.
+
+6.0104 Chief Election Officer-Duties.
+
+6.0105 Applicability.
+
+6.0106 Rules.
+
+6.0107 Employees.
+
+6.0108 Special elections.
+
+6.0110 Time of elections.
+
+
+
+6.0101 Short title and application.
+
+
+
+Chapters 01 through 12 of this title shall be known and may be cited as the "American Samoa
+Election Reform Act of 1977" and is applicable to all special, general and runoff elections where
+issues are presented or Territory-wide candidates, including but not limited to the Governor and
+Lieutenant Governor and the Delegate-at-Large, and members of the House of Representatives, are
+elected by secret popular ballot.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+Case Notes:
+Territorial election statutes provide no right of appeal to board of registration from Chief Election
+Officer's determination that a person is ineligible to run for elective office. A.S.C.A. §§ 4.0101 et seq.,
+6.0101 et seq. Siofele v. Shimasaki, 9 A.S.R.2d 3.
+
+
+
+6.0102 Definitions.
+
+
+
+Whenever used in chapters 01 through 12 of this title, the following words and phrases shall, unless it
+is inconsistent with the context, be construed as follows:
+
+
+
+(a) "Absent uniformed services voter" means:
+
+
+
+(1) a member of a uniformed service on active duty who, by reason of such active duty, is absent from
+the place of residence where the member is otherwise qualified to vote;
+(2) a member of the merchant marine who, by reason of service in the merchant marine, is absent
+from the place of residence where the member is otherwise qualified to vote; and
+
+
+
+(3) a spouse or dependent of a member referred to in subparagraph (1) or (2) who, by reason of the
+active duty or service of the member, is absent from the place of residence where the spouse or
+dependent is otherwise qualified to vote.
+
+
+
+(b) "Ballot", including an absentee ballot, means a written or printed, or partly written and partly
+printed paper or papers containing the names of persons to be voted for, the office to be filled, and the
+questions or issues to be voted on. A ballot may consist of one or more cards or pieces of paper
+depending on the number of offices, candidates to be elected thereto, questions or issues to be voted
+on, and the voting system in use.
+
+
+
+(c) "Candidate" means an individual who seeks nomination for election, or election to any elective
+public office.
+
+
+
+(d) "Chief Election Officer" means the head of the election office or his designee.
+
+
+
+(e) "County" means the counties of Sua, Vaifanua, Saole, Ma'oputasi, Ta'u, Fitiuta, Faleasao, Olosega,
+Fofo, Itu'au, Ofu, Tualatai, Leasina, Ma'upu and Lealataua.
+
+
+
+(f) "District officials" means persons appointed by the Chief Election Officer to serve the pur-poses of
+this title.
+
+
+
+(g) "Districts" means the representative districts established by law.
+
+
+
+(h) "Election" means all elections, general, special, or runoff unless otherwise specifically stated.
+
+
+
+(i) "Election officials" or "officers" means persons designated as officials by the Chief Election
+Officer to perform functions under chapters 01 through 12 of this title.
+
+
+
+(j) "Member of the merchant marine" means an individual (other than a member of a uniformed
+service or an individual employed, enrolled, or maintained on the Great Lakes or the inland
+waterways):
+(1) employed as an officer or crew member of a vessel documented under the laws of the United
+States, or a vessel owned by the United States, or a vessel of foreign-flag registry under charter to or
+control of the United States; or
+
+
+
+(2) enrolled with the United States for employment or training for employment, or maintained by the
+United States for emergency relief service, as an officer or crew member of any such vessel.
+
+
+
+(k) "Office" means an elective public office.
+
+
+
+(l) "Overseas voter" means:
+
+
+
+(1) an absent uniformed services voter who, by reason of active duty or service is absent from the
+United States on the date of the election involved;
+
+
+
+(2) a person who resides outside the United States and is qualified to vote in the last place in which
+the person was domiciled before leaving the United States; or
+
+
+
+(3) a person who resides outside the United States and (but for such residence) would be qualified to
+vote in the last place in which the person was domiciled before leaving the United States.
+
+
+
+(m) "Qualified electors" means persons duly registered to vote.
+
+
+
+(n) "Special election" means any single election required by constitutional provision or by law to be
+held to fill a vacancy or to determine a special issue and includes the special election of the Governor
+and Lieutenant Governor on 8 November 1977.
+
+
+
+(o) "Voting system" means the use of paper ballots or any system by which votes are cast and
+counted.
+
+
+
+History: 1977, PL 15-42 § 1; 1980, PL 16-72 § 2; amd 2002, PL 27-31; amd 2010, PL 31-17.
+
+
+
+Amendments: 1980 Subsection (b) added.
+1985 Subsection (c): deleted Attorney General is set forth in section 6.0103" and added "head of the
+election office".
+6.0103 Chief Election Officer-Responsibilities.
+
+
+
+Repealed by PL 19-31 § 8.
+
+
+
+6.0103.1 Election office-Chief Election Officer-Appointment-Removal-Budget.
+
+
+
+(a) There is established in the executive branch of the American Samoa Government a permanent,
+independent election office. The election office is headed by the Chief Election Officer, who shall be
+appointed by the Governor and confirmed by the Legislature.
+
+
+
+(b) The term of the first appointed Chief Election Officer shall be four years, commencing on the date
+of confirmation by the Legislature. All subsequent terms shall be three years, commencing on the date
+of confirmation. If the Chief Election Officer vacates or for any reason is incapable of performing the
+duties of the office, the Deputy Chief Election Officer shall be the Acting Chief Election Officer. In
+no case may the Deputy Chief Election Officer serve as Acting Chief Election Officer for more than
+180 days, whether consecutive or not, within one year from the first day served as Acting Chief
+Election Officer.
+
+
+
+(c) The Chief Election Officer must be a person experienced and competent in running an election and
+records management, and be knowledgeable about election law.
+
+
+
+(d) The Chief Election Officer may be removed from office by the Governor, only upon showing of
+one or more of the following causes: conviction of a felony or misdemeanor; mental or physical
+incapacity; gross mismanage-ment; or grossly unethical conduct. The Chief Election Officer is
+entitled to the same notice and hearing procedures provided for other government employees
+
+
+
+(e) The election office shall have its own budget account and be included in the budget procedures of
+Title 10 A.S.C.A., provided for other executive agencies.
+
+
+
+History: 1985, PL 19-3 1 § 7.
+
+
+
+6.0104 Chief Election Officer-Duties.
+
+
+
+(a) The Chief Election Officer shall administer this title. He shall supervise all elections. He may
+delegate responsibilities in elections to election officials or to other specified persons.
+
+
+
+(b) The Chief Election Officer shall be responsible for the maximization of registration of eligible
+electors throughout the Territory. In maximizing registration, he shall make an effort to equalize
+registration between districts, with particular effort in those districts in which he determines
+registration is lower than desirable. In carrying out this function, he may make surveys, carry on
+house-to-house canvassing, and assist or direct the clerk in any other area of registration.
+
+
+
+(c) The Chief Election Officer shall maintain and keep all records and data concerning registered
+voters, elections, apportionment and districting. He shall use the data to assist in any reapportionment.
+
+
+
+(d) No records of any kind may be removed from the election office without the prior approval of the
+Chief Election Officer or the Chief Election Officer's designee.
+
+
+
+History: 1977, PL 15-42 § 1; amd 1985, PL 19-31 § 2.
+
+
+
+Amendments: 1985 Subsection (c): added and keep all records and". Subsection (d) Added.
+
+
+
+6.0105 Applicability.
+
+
+
+Chapters 01 through 12 of this title shall apply to all elections, general, special or run-off, held in the
+Territory, under all voting systems used within the Territory, so far as applicable and not inconsistent
+herewith.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0106 Rules.
+
+
+
+(a) The Chief Election Officer may adopt, amend, and repeal rules under the Administrative
+Procedure Act, section 4.1001 et seq., governing elections held under this title, election procedures,
+and the selection, establishment, use, and operation of all voting systems now in use or to be adopted
+in the Territory, and all other similar matters relating thereto as in his judgment shall be necessary to
+carry out the purposes of this title.
+(b) In adopting, amending, and repealing rules for qualified electors who cannot vote at the polls in
+person and all other qualified electors, the Chief Election Officer shall provide for voting by those
+persons in a manner as to insure secrecy of the ballot and to preclude tampering with the ballots of
+these qualified electors and other election frauds. The rules, when adopted in conformity with section
+4.1001 et seq., have the force and effect of law.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0107 Employees.
+
+
+
+(a) The election office shall be staffed by no less than one Deputy Chief Election Officer and one
+experienced secretary, both selected by the Chief Election Officer, who shall be career service
+employees.
+
+
+
+(b) The Chief Election Officer may employ district officials and other temporary election employees
+as he may find necessary, none of whom shall be subject to the career service or classification laws of
+the Territory or be required to become members of the employees' retirement system.
+
+
+
+History: 1977, PL 15-42 § 1; amd 1985, PL 19-31 § 3.
+
+
+
+Amendments: 1985 Subsection (a). added. Subsection (b): Original material designated as subsection
+(b).
+
+
+
+6.0108 Special elections.
+
+
+
+(a) In case of permanent vacancy in the House of Representatives, the Governor shall call for a special
+election to fill that vacancy, the special election to occur within 60 days of the date the election call is
+issued. However, if any vacancy occurs within 3 months of the next regular election, no special
+election may be held and the Governor shall appoint a qualified person to fill that vacancy. Prior to
+appointing the person, the Governor shall consult with the county chief or county chiefs in the
+representative district concerned. A person elected to fill a vacancy or appointed by the Governor to
+fill a vacancy holds office during the remainder of the term of his predecessor.
+
+
+
+(b) In the case of permanent vacancy in the seat of Delegate to the United States House of
+Representatives, the Governor shall call for a special election to fill that vacancy, the special election
+to be held within 90 days of the date the election call is issued. However, if any vacancy occurs within
+6 months of the next general election, no special election may be held. Prior to appointing the person,
+the Governor shall consult with the District Governors of the Eastern District, Western District and
+Manu'a. A person elected to fill a vacancy or appointed by the Governor to fill a vacancy holds office
+during the remainder of the term of his predecessor.
+
+
+
+History: 1980, PL 16-72 § 3.
+
+
+
+6.0110 Time of elections.
+
+
+
+Elections of members of the House of Representatives shall be held in each even-numbered year
+beginning on the first Tuesday following the first Monday of November and ending not later than 3
+weeks thereafter.
+
+
+
+History: 1962, PL 7-28.
+
+
+
+Chapter 02
+
+
+
+REGISTRATION
+
+
+
+Sections:
+
+I. BOARD
+
+
+
+6.0201 Created—Appointment—Tenure.
+6.0202 Compensation.
+6.0203 Powers.
+
+
+
+II. REGISTRATION
+
+
+
+6.0210 Entitlement to vote.
+6.0211 Age requirement-Place of registering.
+6.0212 Rules for determining residency.
+6.0213 General Register.
+6.0214 Application to register.
+6.0215 Removal from register upon failure to vote-Reregistration.
+6.0216 Registration from one district to another.
+6.0217 Registration from one county to another.
+6.0218 Keeping register current-Transfer of registration.
+6.0219 Change of name-Transfer on election day.
+6.0220 Changing register-Correction of errors.
+6.0221 Changing register-Striking names of disqualified electors.
+6.0222 Closing register-List of qualified electors.
+6.0223 Challenge by qualified electors-Grounds-Procedure.
+6.0224 Appeal to challenge ruling-Failure of election officer to act.
+6.0225 Records of proceedings.
+
+
+
+III. APPEALS
+
+
+
+6.0230 Appeal from board to High Court.
+6.0231 Hearing—Decision final.
+6.0232 Notice of decision—Correcting register.
+6.0233 Status pending appeal.
+
+
+
+I. BOARD
+
+
+
+6.0201 Created—Appointment—Tenure.
+
+
+
+(a) There is created a Board of Registration. The Board, which shall consist of 5 members, shall be
+appointed by the Governor by and with the advice and consent of the Senate; and the term of office is
+4 years.
+
+
+
+(b) On election day, 1 member shall be designated to sit in the Manu'a Islands to hear and rule on all
+appeals.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0202 Compensation.
+
+
+
+The members of the Board of Registration shall serve without compensation.
+
+
+
+History: 1977, PL 15-42 § 1.
+6.0203 Powers.
+
+
+
+(a) The Board of Registration is given all of the powers and authority for the summoning and
+examining of witnesses and the maintenance of order, including the power to punish for contempt and
+award witness fees.
+
+
+
+(b) Every member of the Board of Registration may administer oaths in all cases in which oaths are by
+law authorized.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+II. REGISTRATION
+
+
+
+6.0210 Entitlement to vote.
+
+
+
+A person who registers as required by law shall be entitled to vote at any election and to be listed
+upon the appropriate general register and district list. The designated election officer shall be
+responsible for qualified elector registration in the respective districts and the keeping of the general
+register and district lists.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+6.0211 Age requirement—Place of registering.
+
+
+
+Every person who has reached the age of 18 years, or who will have reached that age prior to the date
+of the next election, and is other-wise qualified to register, may do so in the district in which he
+resides. No person may register or vote in any other district than that in which he resides except as
+provided in section 6.0220.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0212 Rules for determining residency.
+
+
+
+In determining residency in the Territory, spouses may treat themselves separately from one another.
+The following rules shall deter-mine residency for Territory and district purposes:
+
+
+
+(a) The residency of a person is that place in which his habitation is fixed, and to which, whenever he
+is absent, he has the intention to return.
+
+
+
+(b) A person does not gain residency in any district into which he comes without the present intention
+of establishing his permanent dwelling place within that district.
+
+
+
+(c) If a person resides with his family in one place, and does business in another, the former is his
+place of residence; but any per-son having a family, who establishes his dwelling place other than
+with his family, with the intention of remaining there shall be considered a resident where he has
+established his dwelling place.
+
+
+
+(d) The mere intention to acquire a new residence without physical presence at that place does not
+establish residency, neither does mere physical presence without the con-current present intention to
+establish that place as his residence.
+
+
+
+(e) A person does not gain or lose a residency solely by reason of his presence or absence while
+employed in the service of the United States or of this Territory, or while a student of an institution of
+learning, or while kept in an institution or asylum, or while confined in prison.
+
+
+
+(f) The status of a person's primary matai obligations is a factor in determining district residency.
+However, matai obligations alone may not sustain a finding of district residency absent other evidence
+which, in connection with evidence of matai obligations, is sufficient to sustain the intent of this
+section.
+
+
+
+(g) A person loses his residence in this Territory if he votes in an election held elsewhere by absentee
+ballot or in person.
+
+
+
+(h) The term of residence is computed by including the day on which the person's residence
+commences and by excluding the day of election.
+
+
+
+(i) In case of question, final determination of residence shall be made by the election officer subject to
+appeal to the board of registration under sections 6.0201 through 6.0203, 6.0225, and 6.0230 through
+6.0233.
+History: 1977, PL 15-42 § 1;amd 1980, PL 16-72 § 4; amd 2002, PL 27-29.
+
+
+
+Amendments: 1980 Amended (list sentence to delete references to "wife" and husband". added
+subsection (f).
+
+
+
+Case Notes:
+Requires more than intention to establish residency: must be physical presence at new place. Dole v.
+Attorney General, ASR (1978).
+
+
+
+Under statute providing that a person "does not gain residency in a district without the present
+intention of establishing his permanent dwelling place within that district, "voter who had moved from
+one district to another eight years earlier upon inheriting a house, but (1) whose family, church, and
+business were in the district of his former residence; (2) who had continued to serve matai title and
+participate actively in aumaga within district of former residence; 93) who had always voted in the
+former district and never in the district wherein his house was located; and (4) who in the two most
+recent elections had been a successful candidate for the Legislature from the district of his former
+residence, had not established residency in the new district by mere physical presence. A.S.C.A. §
+6.0212. Scanlan v. Reed, 9 A.S.R.2d 54 (1988).
+
+
+
+A voter who is physically present in a new place of residence, but fails to gain legal residence in that
+district because he lacks the intention of establishing his permanent dwelling place there, retains his
+previous legal residence and may vote there. ASCA § 6.0212. Scanlan v. Reed, 9 A.S.R.2d 54 (1988).
+
+
+
+One who votes in a foreign election thereby loses his legal residence in American Samoa. A.S.C.A. §
+6.0212 (g). Tuika v. Chief Election Officer, 9 A.S.R.2d 57 (1988).
+One who loses his legal residence in American Samoa by voting in a foreign election, but who returns
+to American Samoa with the intention to remain permanently, thereby reacquires his legal residence
+in American Samoa. A.S.C.A. § 6.0212 (a). Tuika v. Chief Election Officer, 9 A.S.R.2d 57 (1988).
+
+
+
+6.0213 General register.
+
+
+
+All qualified electors shall be registered by district on the general district register. The register shall
+contain the information required by section 6.0214. The qualified elector's name shall be maintained
+alphabetically or numerically in the register and be capable of segregation by representative district.
+The election officer shall keep the origi-nal or photographic copy of the affidavit of registration
+required by section 6.0214. The general register shall, at all times during business hours, be open to
+public inspection, and is a public record.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31.
+6.0214 Application to register.
+
+
+
+(a) Except as provided in subsections (d) and (e), any person qualified to and desiring to register as a
+qualified elector in any district may present himself at any time during business hours to the election
+officer then and there to be examined under oath as to his qualifications as a qualified elector. All
+applicants desiring to register shall furnish the election officer with identification duly issued by a
+governmental agency, containing a photographic likeness of the applicant and shall make and
+subscribe to an application in the form of an affidavit. The affidavit must contain the following
+information:
+
+
+
+(1) name;
+
+
+
+(2) Social Security number, if any;
+
+
+
+(3) date of birth;
+
+
+
+(4) age;
+
+
+
+(5) residence;
+
+
+
+(6) place of current employment, if any;
+
+
+
+(7) that the residence stated in the affidavit is not simply because of the person's presence in the
+Territory but that the residence was acquired with the intent to make American Samoa the person's
+legal residence with all the accompanying obligations therein; and
+
+
+
+(8) that the person is a U.S. citizen or a U.S. national.
+
+
+
+(b) The applicant shall swear to the truth of the allegations in his application before the election
+officer who is authorized to administer oaths. Unless contested by a qualified elector, the election
+officer may accept as prima facie evidence the allegation of the applicant in information required in
+the affidavit in para-graph (a)(7). In any other case where the election officer shall so desire or believe
+it to be expedient, he may demand that the applicant furnish substantiating evidence to the allegations
+of his application.
+(c) If the election officer is satisfied that the applicant is entitled to be registered as a voter, the
+applicant shall then affix his signature to the affidavit and the election officer shall affix his signature;
+or he shall enter "unable to sign" and the reason in the space for the applicant's signature. A qualified
+elector having once been registered shall not be required to register again for any succeeding election,
+except as hereafter provided. The affidavits so approved or accepted by the election officer shall
+there-upon be numbered appropriately; filed by the election officer and kept in some convenient place
+so as to be open to public inspection and examination.
+
+
+
+(d) Pursuant to the Uniformed and Overseas Citizens Absentee Voting Act of1986 (42 U.S.C.
+1973ff et seq.), the foregoing subsections (a) through (c) do not apply to a uniformed services voter
+and overseas voter desiring to register as a qualified elector in elections for the office of Delegate to
+the U.S. House of Representatives. The Chief Election Officer shall establish absentee registration and
+voting procedures to afford maximum access to the polls by qualified absent uniformed services
+voters and overseas voters. Such procedures shall comply with the Military and Overseas Voter
+Empowerment Act and shall include at a minimum procedures by which absent uniformed services
+voters and overseas voters may request by mail, electronically, and by facsimile, voter registration
+applications and absentee ballot applications with respect to the election for office of Delegate and
+procedures which allow such voter to designate the preferred means of transmission whether by mail,
+electronically, or by facsimile.
+
+
+
+(e) The foregoing subsections (a) through (c) do not apply to an absent uniformed services voter
+desiring to register as a qualified elector in elections for the offices of Governor and Lieutenant
+Governor, and Representative to the American Samoa House of Representatives, provided the
+applicant's home of record and legal domicile is American Samoa. The Chief Election Officer shall
+establish absentee registration and voting procedures to afford maximum access to the polls by
+qualified absent uniformed service voters and shall adopt such forms as necessary to implement the
+provisions of this act. Such forms shall, at a minimum, require the applicant to furnish the information
+called for on the Federal Post Card Application (FPCA), supplemented with the applicant's home of
+record/legal domicile, date of departure from American Samoa, and verification of applicant's active
+duty military status. In addition to the foregoing, a spouse or dependent of a uniformed services
+member shall provide verification of their dependent status. The Chief Election Officer shall also
+establish procedures applicable to elections subsequent to the applicant's initial registration.
+
+
+
+History: 1977, PL 15-42§ 1; amd l980, PL 16-72 § 5; amd 2002, PL 27-31; amd 2008, PL 30-19;
+amd 2010, PL 31-17.
+
+
+
+Amendments: 1980 Subsection (a): added requirement to furnish identification.
+
+
+
+6.0215 Removal from register upon failure to vote-Reregistration.
+
+
+
+(a) The election officer shall, not later than 4:30 p.m. on the 60th day after every general election,
+remove the name of any qualified elector failing to vote at the election if the voter also failed to vote
+at the preceding election. For this purpose, "to vote" means the depositing of the ballot in the ballot
+box whether the ballot is blank or later rejected for any reason. In the case of absentee voting by mail
+by qualified electors, "to vote" means timely mailing the absentee ballot to the Chief Election Officer
+whether or not the ballot was counted.
+
+
+
+(b) Any qualified elector whose name has been removed from the register may, at any time prior to
+the closing of the register, as provided in section 6.0222, have his name restored in the register by
+presenting him-self to the election officer and reregistering under section 6.0214, or by making
+application by mail or otherwise under procedures established by the Chief Election Officer. The
+election officer shall compare the signature with the signature of the qualified elector as previously
+registered, and if found by him not to be similar, he may require further proof. The names of all these
+qualified electors shall be reentered in the register.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+6.0216 Registration from one district to another.
+
+
+
+A registered qualified elector who changes his residence from one district to another shall notify the
+election officer and change his registration to the proper district; provided, that no change of
+registration may be allowed or required after the close of registration for an election.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0217 Registration from one county to another.
+
+
+
+Whenever any person who has registered as a qualified elector in any county moves to and desires to
+register in some other county, he shall apply to the election officer. There-upon, the election officer, if
+the person applying is legally qualified to register, shall accept the registration.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0218 Keeping register current-Transfer of registration.
+
+
+
+(a) The election officer shall use all reliable and pertinent information to keep the general register up
+to date. The election officer may request information from, but is not limited to, the following
+sources:
+
+
+
+(1) the office of the Attorney General for any change of name;
+
+
+
+(2) courts for any changes of name, divorces, separations, or other changes affecting qualified elector
+status;
+
+
+
+(3) the record sources for marriages, deaths, or other changes affecting qualified elector status;
+
+
+
+(4) utility agencies concerning commencement or changes of services; and
+
+
+
+(5) apartments and condominiums as to change of occupancy. In requesting the information the
+election officer shall give reasonable notice and time for furnishing the information.
+
+
+
+(b) If the election officer has evidence indicating that a qualified elector's registration should be
+transferred, then not later than 4:30 p.m. on the 60th day prior to the election the election officer shall
+notify the person by first-class mail and not later than 4:30 p.m. on the 3rd day thereafter publish in a
+newspaper or bulletin of general circulation notice of intent to transfer registration. Notice by mail
+shall be sent to the address shown on the current qualified elector list and any alleged new address.
+The notifications shall include:
+
+
+
+(1) any evidence that the election officer may have indicating why a transfer or change should be
+made;
+
+
+
+(2) the residence and district of the qualified elector according to current registration lists;
+
+
+
+(3) the alleged new address and district;
+
+
+
+(4) a reply form which shall contain a space for the qualified elector's agreement or objection to the
+transfer and the reasons for the objection;
+
+
+
+(5) notice that unless the completed form is returned not later than 4:30 p.m. on the 15th day after
+mailing, the qualified elector shall be subject to challenge at the polls under section 6.0223 on the
+basis of not being registered in the district where he resides.
+(c) If no response is received by the clerk by 4:30 p.m. on the 15th day after mailing, a second
+notification shall be made not later than 4:30 p.m. on the 30th day prior to the election, by telephone
+or personal contact if feasible. A record shall be maintained of all the phone calls or attempted
+personal contacts noting the date, time, person calling, person called, and reply received.
+
+
+
+(d) If, on the basis of the evidence available, the clerk has good reason to believe that the qualified
+elector does actually reside at some address other than the one carried on the registration list, the
+election officer shall transfer the voter to the new address. A list of those transferred, and the district
+to which they were moved, will be available at the old district on election day.
+
+
+
+(e) A list of all qualified electors with questionable addresses who fail to respond to notification
+attempts of the election officer, but who have not been transferred, shall be posted at the district
+wherein he is registered on election day and shall be made available to the public not later than 4:30
+p.m. on the 45th day prior to the election.
+
+
+
+History: 1977, PL 15-42 § 1; amd 1985, PL 19-31 § 4.
+
+
+
+Amendments: 1985 Subsection (d): deleted provisions relating to voter contesting transfer of voting
+district.
+
+
+
+6.0219 Change of name-Transfer of registration.
+
+
+
+(a) The Chief Election Officer shall take applications for change of name from qualified electors who
+have been married or who have had their names changed since the last election.
+
+
+
+(b) A person whose residence has changed since the last election, and who the election officer has not
+transferred under section 6.0218 may apply for transfer of his registration to the district of his new
+residence. Requests to transfer registration to the new district shall be made to the Chief Election
+Officer no later than 4;30 p.m. on the 30th day prior to the election. Where a person was incorrectly
+placed on a list of qualified electors of a district in which he does not actually reside, he may correct
+his registration. No person may be prevented from voting at the election in the district in which his
+name appears on the qualified elector's list due to a change of name, change of registration, or other
+correction made under this section. However any qualified elector registered in the wrong district who
+refuses to correct his registration may be challenged. Any person changing his name or transferring
+shall receive a copy of the change or transfer form.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+6.0220 Changing register-Correction of errors.
+
+
+
+(a) The election officer shall correct the register if at any time it is manifest to him that the name of a
+person registered has been accidentally misspelled, or that he has been misnamed therein, or that he
+has been accidentally registered under the wrong district.
+
+
+
+(b) In any case where the election officer refuses to correct the register, the person may appeal to the
+Board of Registration and the registration shall be changed upon a written order of the Board of
+Registration setting forth the reasons for the change. The order shall be directed to the election officer
+or to the district officials of the election district where the qualified elector is entitled to vote if the
+register has been closed. The district officials shall thereupon correct the list of qualified electors
+furnished them according to the terms of the order, noting on the list the reasons for the correction,
+and shall send the original order to the election officer as soon as may be possible after the close of
+the polls. The election officer upon receipt of any order from the Board of registration or from the
+district officials, as the case may be, shall correct the register according to the terms of the order,
+making on the register a reference to the order.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0221 Changing register-Striking names of disqualified electors.
+
+
+
+(a) Whenever the election officer receives from any recording or informing agency information of the
+death, loss of voting right of a person sentenced for felony, adjudication of insanity or
+feeblemindedness, loss of citizen-ship or national status, or any other disqualification to vote, of any
+person registered to vote, or who he has reason to believe may be registered to vote therein, he shall
+thereupon make an investigation as he considers necessary to prove or disprove the information,
+giving the person concerned, if available, notice and an opportunity to be heard. If after the
+investigation he finds that the person is dead, or non compos mentis, or has lost his voting rights, or
+has lost his citizen-ship or national status, or is disqualified for any other reason to vote, he shall
+remove the name of the person from the register.
+
+
+
+(b) The election officer shall make and keep an index of all information furnished to him under any
+requirements of law concerning any of the matters in this section. Whenever any person applies to
+register as a qualified elector, the election officer shall, before registering the person, consult the index
+for the purpose of ascertaining whether or not the per-son is in any manner disqualified to vote. Per-
+sons whose names are removed from the register of qualified electors under this section may appeal to
+the High Court and proceedings shall be had upon the appeal as in other appeals.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+6.0222 Closing register-List of qualified electors.
+
+
+
+At 4:30 p.m. on the 30th day prior to each election (but if that day is a Saturday, Sunday, or holiday,
+then at 4:30 p.m. on the first working day immediately following), the general register shall be closed
+to registration until after the election, subject to change only as provided under 6.0219, 6.0223, and
+6.0224, and this section.
+
+
+
+History: 1977, PL 15-42 § 1; amd 1980, PL 16-72 § 6.
+
+
+
+Amendments: 1980 Substituted "30th" for "20th" and "fol-lowing" for "preceding".
+
+
+
+6.0223 Challenge by qualified electors-Grounds-Procedure.
+
+
+
+(a) Challenging Prior to Election Day. Any registered qualified elector may, for any cause not
+previously decided by the Board of Registration or the High Court in respect to the same person,
+challenge the right of that person to be or to remain registered as a qualified elector in any district.
+The challenge shall be in writing, setting forth the grounds upon which it is based, and be signed by
+the person making the challenge. The challenge shall be delivered to the election officer who shall
+immediately serve notice of it on the person challenged. The election officer shall, as soon as possible,
+investigate and rule on the challenge.
+
+
+
+(b) Challenging on Election Day. Any qualified elector rightfully in the polling place may challenge
+the right of any person, presenting himself to the district officials to vote. The challenge shall be on
+the grounds that the qualified elector is not the person he alleges himself to be or that the qualified
+elector is not entitled to vote in that district. No other or further challenge shall be allowed. The
+challenge shall be considered and decided immediately by the district officials and the ruling
+announced.
+
+
+
+(c) If neither the challenger nor the challenged appeals the ruling of the election officer or the district
+officials, then the qualified elector shall either be allowed t o vote or be prevented from voting in
+accordance with the ruling. If an appeal is taken to the Board of Registration, the challenged shall be
+allowed to vote; provided, that his ballot is placed in a sealed envelope to be later counted or rejected
+in accordance with the ruling on appeal. The Chief Election Officer shall adopt rules in accordance
+with 4.1001 et seq., to safeguard the secrecy of the challenge's ballot.
+
+
+
+(d) Notwithstanding 6.0902 and 6.0903, the exclusive means of challenging an elector's qualifications
+subsequent to the elector cast-ing his ballot are as follows:
+(1) The challenge must be brought by filing a complaint in the Appellate Division of the High Court,
+without the necessity of prior review by the Board of Registration.
+
+
+
+(2) The complaint must be filed in accordance with the procedural requirements of 6.0902 and 6.0903,
+and may be filed only by those persons authorized under 6.0902.
+
+
+
+(3) It is a condition of any relief granted under this subsection that the complaining party plead and
+prove, by a preponderance of the evidence, that the facts alleged in support of the complaint were not
+known to him, and could not with due diligence have been discovered, prior to the challenged elector
+casting his ballot.
+
+
+
+History: 1977, PL 15-42 § 1; amd 1980, PL 16-72 § 7.
+
+
+
+Amendments: 1980 Subsection (d): added.
+
+
+
+Case Notes:
+Sections 6.0223, 6.0224, 6.0230, 6.0902, and 6.0903 provide separate and unrelated remedies to
+complaints concerning the election process. Dole v. Attorney General, ASR (1978).
+
+
+
+6.0224 Appeal to challenge ruling-Failure of election officer to act.
+
+
+
+(a) In cases where the election officer or the district officials ruled on a challenge or the election
+officer refuses to register an appli-cant, or, refuses to change the register under section 6.0220, the
+person ruled against may appeal from the ruling to the Board of Registration.
+
+
+
+(b) The Board of Registration shall sit on election day. The Board shall also sit at other times as the
+election officer determines to hear appeals, provided there are any, from the qualified electors
+registered. The board shall continue its sitting until all appeals have been heard.
+
+
+
+(c) Reasonable notices of the sitting of the Board shall be given by publication in any newspaper or
+bulletin of general circulation or other news media. If the appeal is sustained, the Board shall
+immediately certify that finding to the election officer who shall thereupon alter the register to
+correspond to the findings of the Board, and when necessary, the election officer shall notify the
+district officials of the change in the register.
+History: 1977, PL 15-42 § 1.
+
+
+
+Case Notes:
+Where statute provided for appeal to Board of Registration from a denial of voter registration by
+election officer, and for judicial review of an adverse decision of the Board of Registration, court
+would not issue writ of mandamus to election officer ordering him to register prospective voter who
+had not yet appealed to Board of Registration, A.S.C.A. §§ 6.0224, 6.0230. Siofele v. Shimasaki, 8
+A.S.R.2d 81 (1988).
+
+
+
+6.0225 Records of proceedings.
+
+
+
+The Board of Registration shall keep books of record in which full and detailed minutes shall be
+preserved of all its proceedings. The minutes shall be kept from day to day, and shall contain:
+
+
+
+(1) the date and place of the meeting;
+
+
+
+(2) the names of the members of the Board present;
+
+
+
+(3) the name of each person to whom an oath is administered, and, if an examination is held, the
+names of the witnesses and the substance of the answers of the applicant and of the witnesses;
+
+
+
+(4) the name of any person challenging the right of any applicant to register, the grounds of challenge,
+the name of the person challenged, and the decision rendered thereon; and
+
+
+
+(5) all other matters of detail which are likely to have a bearing upon any question concerning the
+action of the Board or of any person appearing before it.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+III. APPEALS
+
+
+
+6.0230 Appeal from Board to High Court.
+Any affected person or any of the election officials may, not later than 4:30 p.m. on the 10th day after
+the decision of the Board of Registration, appeal directly to the Appel-late Division of the High Court
+in the manner provided by law for civil appeals to the High Court.
+
+
+
+History: 1977, PL 15-42 §1.
+
+
+
+Case Notes:
+Sections 6.0223, 6.0224, 6.0230, 6.0902 and 6.0903 provide separate and unrelated remedies to
+complaints concerning the election process. Dole v. Attorney General, ASR (1978).
+
+
+
+Where statute provided for appeal to board of registration from a denial of voter registration by
+election officer, and for judicial review of an adverse decision of the Board of Registration, court
+would not issue writ of mandamus to election officer ordering him to register prospective voter who
+had not yet appealed to Board of Registration. A.S.C.A. §§ 6.0224, 6.0230. Siofele v. Shimasaki, 8
+A.S.R.2d 81(1988).
+
+
+
+One who challenges the right of another person to be registered or to vote as a qualified elector must
+exhaust administrative remedies before submitting the matter to court. A.S.C.A. §§ 6.0230 et seq.
+Election Office v. Tuika, 9 A.S.R.2d 1 (1988).
+
+
+
+6.0231 Hearing-Decision final.
+
+
+
+When the appeal is perfected, the High Court shall hear the matter as soon thereafter as may be
+reasonable. The determination by the court is final.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0232 Notice of decision-Correcting register.
+
+
+
+Immediately upon rendering a decision upon any appeal, the High Court shall notify the Board of
+Registration, and, if the decision re-verses the decision of the Board, the Board shall immediately
+order the register to be corrected to conform with the decision.
+
+
+
+History: 1977, PL 15-42 § 1.
+6.0233 Status pending appeal.
+
+
+
+In case of an appeal from a decision of the Board of Registration, the name of the person shall be
+placed or remain upon the register pending the decision of the High Court concerning it. If the person
+so registered votes at any election before a decision of the court has been made and acted upon, the
+ballot of that voter shall be handled in accordance with subsection (c) of 6.0223.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+                                               Chapter 03
+
+
+
+                                       ISSUES-CANDIDATES
+
+
+
+Sections:
+6.0301 Nomination of candidates-Right to registered voter list.
+6.0302 Challenging of candidates.
+6.0303 Appeal to the High Court.
+
+
+
+6.0301 Nomination of candidates-Right to registered voter list.
+
+
+
+(a) Candidates for membership in the House of Representatives shall be nominated by a petition, in
+the form established by the Chief Election Officer, signed by at least 25 registered voters of the
+election district from which he seeks election. Candidates for Delegate to the United States House of
+Representatives shall also be nominated by petitions, in forms established by the Chief Election
+Officer, signed by at least 300 registered voters of the Territory.
+
+
+
+(b) Blank petitions shall be made available by the Chief Election Officer.
+
+
+
+(c) Executed petitions shall be filed with the Chief Election Officer no later than 4:30 p.m. on the 1st
+of September of each election year; or, in the case of a special election, no later than 4:30 p.m. on the
+60th day prior to the special election.
+
+
+
+(d) The Chief Election Officer shall deter-mine whether the nominated candidates are eligible for
+election, and shall cause ballots to be printed for each office bearing the names of all qualified
+nominees.
+(e) All candidates for representative approved by the Chief Election Officer shall be entitled to one
+copy each of the list of qualified electors in his election district and the copy shall be made available
+no later than 24 hours after the close of voter registration in that election district.
+
+
+
+(f) All candidates for Governor and Lieu-tenant Governor, and Delegate to the United States House of
+Representatives are entitled to a list of all the qualified electors in the Territory within 10 days after
+the close of registration for the Territory.
+
+
+
+History: 1962, PL 7-28; 1972, PL 12-58; amd 1977, PL 15-42 § 3; amd 1980, PL 16-72 § 1; 1996, PL
+24-16; amd 2002, PL 27-31; amd 2010, PL 31-17.
+
+
+
+Amendments: 1977 Substituted "Chief Election Officer" for "Election Commissioner" throughout
+section.
+
+
+
+Subsection (e) added "for representative" at beginning and substituted "qualified electors" for
+"registered voters".
+Subsection (f): added. 1980 Subsection (c): changed "15 October" to "1 September".
+
+
+
+Case Notes:
+Affirmative duty of chief election officer to determine candidates eligibility. King v. Watson, ASR
+(1978).
+Under Statute providing that blank forms for petitions required of candidates for elective office should
+be distributed by election officer, and also providing that eligibility of candidates should be
+determined after they had filed the required petitions, election officer had no authority to withhold
+blank forms from a prospective candidate whom he did not believe to be eligible for election.
+A.S.C.A. §§ 6.0301(b), (d). Siofele v. Shimasaki, 8 A.S.R.2d 81 (1988).
+
+
+
+6.0302 Challenging the candidates.
+
+
+
+      (a) Any registered qualified elector may, for any cause not previously decided by the
+      Board of Registration or the High Court in respect to the same person, challenge the right
+      of that person to be a candidate for office in a general or special election. The challenge
+      shall be made no later than 4:30 p.m. on the 3rd business day after the Chief Election
+      Officer issues his determination of nominated candidates eligible for election. The
+      challenge shall be in writing, setting forth the grounds upon which it is based, and be
+      signed by the person making the challenge. The challenge shall be delivered to the Chief
+      Election Officer, who shall immediately serve notice of it on the candidate. The Chief
+      Election Officer shall, as soon as possible, investigate and rule on the challenge.
+
+(b) If neither the challenger nor the challenged appeals the ruling of the Chief Election Officer, then
+the Chief Election Officer shall cause ballots to be printed, bearing the names of all eligible
+candidates for the office that was challenged. If an appeal is taken to the High Court, then the Chief
+Election Officer may delay the printing of ballots for the office challenged until a final determination
+is made.
+History: 2002, PL 27-31.
+
+
+
+6.0303 Appeal to the High Court.
+
+
+
+(a) The challenger or the challenged may, not later 4:30 p.m. on the 5th day after the decision of the
+Chief Election Officer, appeal directly to the Appellate Division of the High Court in the manner
+provided by law for civil appeals to the High Court.
+
+
+
+(b) When the appeal is perfected, the High Court shall hear the matter as soon thereafter as may be
+reasonable. The determination by the court is final.
+
+History: 2002, PL 27-31.
+
+
+Chapter 04
+
+
+
+DISTRICT OFFICIALS
+
+
+
+Sections:
+6.0401 Number.
+6.0402 Submission of names and assignments-Vacancies.
+6.0403 Instruction.
+6.0404 Oaths.
+6.0405 Duties.
+6.0406 Compensation.
+
+
+
+6.0401 Number.
+
+
+
+There shall be 3 or more district officials for each district, 1 of whom shall be the supervisor.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+6.0402 Selection of district officials and assignments-Vacancies.
+(a) Application forms shall be made available by the Chief Election Officer for those persons who
+wish to serve as district officials on election day. The Secretary of Samoan Affairs or his designee
+shall submit a list of all local government officials i.e. fa'alupega, pulenu'u and leoleo nu'u to the
+Chief Election Officer not later than 4:30 p.m. on the 10th day prior to the deadline for filing of
+candidate nomination petitions. The Chief Election Officer shall appoint, from the list of local
+government officials and the application forms, the district officials by representative district not later
+than 4:30 p.m. on the 10th day prior to any election.
+
+
+
+(b) In assigning the district officials, the following criteria shall be as followed:
+
+
+
+(1) The district officials shall be registered qualified electors of the district in which they serve; but if
+qualified persons in the district are not readily available to serve, they may by chosen from without
+the district.
+
+
+
+(2) The Chief Election Officer may designate more district officials than are needed in order to create
+a pool of qualified district officials who may be assigned to fill vacancies or to perform those duties as
+needed in any district. If more qualified persons than are needed for a district desire to serve in that
+district, service shall be determined by experience in conducting prior elections.
+
+
+
+(3) No parent, spouse, child, or sibling of a candidate is eligible to serve as a district official in any
+district in which votes may be cast for that candidate; nor is any candidate for any elective office
+eligible to serve as a district official in the same election in which he is a candidate. No candidate who
+failed of nomination in any election is eligible to serve as a district official in the election next
+following.
+
+
+
+(4) Any individual who has actively campaigned for any candidate in any election shall not be eligible
+to serve as a district official within the district, or in the Territory-wide elections, in which he had
+actively campaigned.
+
+
+
+(c) In case of inability, failure, or refusal of any person so assigned to serve as a district official, the
+Chief Election Officer shall appoint a person from the pool of qualified district officials to fill the
+vacancy.
+
+
+
+(d) The Chief Election Officer shall investigate any report of involvement by district officials in
+campaign activities, and, upon confirming such involvement, shall immediately remove the district
+official from his official duties.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31.
+6.0403 Instruction.
+
+
+
+(a) Not later than 4:30 p.m. on the 5th day prior to any election, the Chief Election Officer shall
+conduct a school of instruction, if considered necessary, for persons designated as prospective district
+officials. He shall notify the district officials of the time and place of the school of instruction.
+
+
+
+(b) All prospective district officials shall attend a school of instruction. The supervisor of the district
+officials shall be required to also attend a refresher course before each election. It shall be at the
+discretion of the Chief Election Officer to require those district officials with previous training to
+attend a school of instruction prior to each election.
+
+
+
+(c) No district official may serve unless he has received instruction and has been certified by the
+authorized instructor to that effect. This section shall not prevent the assignment of a person who has
+not received any instruction or certificate but who is otherwise qualified, to fill a vacancy among
+district officials when a qualified certified person is not avail-able. Periodic recertification shall be
+required.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31.
+
+
+
+6.0404 Oaths.
+
+
+
+Each district official may administer any oath in this chapter provided it be administered by the
+district officials.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0405 Duties.
+
+
+
+The duties of the district officials may vary with the voting system in use in the district. The duties for
+the particular system shall be assigned by the Chief Election Officer by rules adopted for that purpose.
+
+
+
+History: 1977, PL 15-42 § 1.
+6.0406 Compensation.
+
+
+
+District officials shall be paid according to fixed rates established for each election by the Chief
+Election Officer.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+                                               Chapter 05
+
+
+
+CONDUCT OF ELECTIONS
+
+
+
+Sections:
+6.0501 Proclamations.
+6.0502 Polling places.
+6.0503 Exemptions of qualified electors on election day.
+6.0504 Employees entitled to leave on election day for voting.
+6.0505 Records prima facie evidence.
+6.0506 Records open to inspection.
+6.0507 Forms and materials used in elections.
+
+
+
+6.0501 Proclamations.
+
+
+
+(a) Not later than 4:30 p.m. on the 10th day prior to the close of filing in elections involving
+Territorial offices, the Chief Election Officer shall issue an election proclamation.
+
+
+
+(b) The proclamation shall contain a statement of the time and places where and the purposes for
+which the election is to be held, and a designation of the offices and the terms thereof for which
+candidates are to be elected. It may also contain any other relevant matter including an offer of
+rewards for the detection and conviction of offenders against the election laws. The Chief Election
+Officer shall cause the election proclamation to be published at least once in a newspaper or bulletin
+of general circulation not later than the 10th day prior to the close of filing.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0502 Polling places.
+(a) The Chief Election Officer shall specify one or more polling places in each representative district.
+Schools, police stations, fire stations, and other publicly owned or controlled buildings shall,
+whenever possible and convenient, be used as polling places. The Chief Election Officer shall make
+arrangements for the rental or erection of suitable shelters for this purpose whenever public buildings
+are not available and shall cause those polling places to be equipped with the necessary facilities for
+lighting, ventilation, and equipment needed for elections on any island. It is lawful for the Chief
+Election Officer to establish a central polling area for contiguous districts notwithstanding district
+boundaries, when it is convenient and readily accessible for the qualified electors of the district
+involved.
+
+
+
+(b) Before the establishment of any central polling area, the Chief Election Officer shall publish a
+notice once in a newspaper or bulletin of general circulation. The notice shall state the time and place
+of a hearing under 4.1001 et seq. After the hearing, a rule shall be issued establishing the central
+polling place.
+
+
+
+(c) No change shall be made in the boundaries of any district nor shall a central polling area be
+established later than 4:30 p.m. on the 90th day prior to an election.
+
+
+
+(d) Notwithstanding subsection (c), if the Chief Election Officer determines that the number of
+candidates or issues on the ballot in a special, general, or runoff election do not require the full
+number of established districts, the districts may be consolidated for the purposes of the special or
+general election. A consolidated district shall be considered the same as an established district for all
+purposes, including district official requirements. Not later than 4:30 p.m. on the 10th day prior to the
+election, the Chief Election Officer shall give public notice in a newspaper or bulletin of general
+circulation or by TV or radio in the area in which the election is to be held of the location of the
+election districts and their polling places. Notices of any consolidation shall also be posted on election
+day at the established district polling place giving the location of the consolidated election district
+polling place.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0503 Exemptions of qualified electors on election day.
+
+
+
+Every qualified elector shall be privileged from arrest on election day while at his polling place and in
+going to and returning therefrom, except in case of breach of the peace then committed, or in case of
+treason or felony.
+
+
+
+History: 1977, PL 15-42 § 1.
+6.0504 Employees entitled to leave on election day for voting.
+
+
+
+Any qualified elector shall on the day of the election be entitled to absent himself from any service or
+employment in which he is then engaged or employed, for a period of 2 consecutive hours (excluding
+any lunch or rest periods) between the time of opening and closing the polls. The qualified elector
+shall not because of so absenting himself be liable to any penalty, nor shall any deduction be made on
+account of the absence from his usual salary or wages; provided, that the fore-going shall not be
+applicable to any employee whose hours of employment are such that he has a period of 2 consecutive
+hours (excluding any lunch or rest periods) between the time of opening and closing the polls when he
+is not working for his employer. If, how-ever, any employee fails to vote after taking time off for that
+purpose the employer, upon verification of that fact, may make appropriate deductions from the salary
+or wages of the employee for the period during which the employee is entitled to be absent from his
+employment. Presentation of a qualified elector's receipt by an employee to his employer shall
+constitute proof of voting by the employee. Any person violating this section is guilty of an offense
+under 6.1207.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0505 Records prima facie evidence.
+Every record made under law by the board of registration, or the district officials, shall be a prima
+facie evidence of the facts therein set forth, and shall be received as such in any court or tribunal in
+which it is offered in evidence.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0506 Records open to inspection.
+
+
+
+The register of qualified electors and all appertaining to the registry of qualified electors, or to any
+election, in the possession of the board of registration, the district officials, or the Chief Election
+Officer shall, at all reasonable times, be open to the inspection of any qualified elector.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0507 Forms and materials used in elections.
+
+
+
+Books, blanks, records, certificates, and other forms and materials required by chapters 01 through 12
+of this title shall be of uniform character suitable for the voting system in use and shall be prescribed
+by the Chief Election Officer.
+History: 1977, PL 15-42 § 1.
+
+
+
+                                               Chapter 06
+
+
+
+                                               BALLOTS
+
+
+
+Sections:
+6.0601 Official and specimen ballots.
+6.0602 Contents of ballot.
+6.0603 Form of ballot.
+6.0604 Checking ballot form by candidates and parties.
+6.0605 Withdrawal of candidates-Disqualification-Death-Notice.
+6.0606 Vacancies-New candidates-Insertion of names on ballots and notice at polling places.
+6.0607 Printing-Quantity.
+6.0608 Distribution of ballots-Record.
+6.0609 Distribution of sample ballots.
+
+
+
+6.0601 Official and specimen ballots.
+
+
+
+Ballots issued by the Chief Election Officer as to Territorial elections are official ballots. The Chief
+Election Officer, where paper or other type of ballots are used, shall have printed sufficient copies of
+each of the official ballots to be used in the various districts so that at least 1 copy can be posted for
+each voting district. These copies will have printed across their face in large bold letters, and with ink
+of a color contrasting to the color of the paper used, the word "Specimen". The copies of the specimen
+ballots shall be forwarded to the district officials with the official ballots. The district officials shall
+post the specimen ballots near the entrance to the voting place where they may be easily seen by the
+qualified electors prior to voting.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0602 Contents of ballot.
+
+
+
+(a) A ballot shall contain the names of the candidates, the offices for which they are running, and the
+district in which the election is being held. The name of the candidate may be printed with the
+Samoan or English equivalent or nickname, if the candidate so requests in writing at the time his
+nomination papers are filed. Candidates' names, including the Samoan or English equivalent or
+nickname, shall be set on one line in as large type as the length of the majority of the names will
+permit. All candidates' names must be in the same height of type face and style.
+(b) In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the
+number of seats available or the number of candidates listed where such number is less than the seats
+available.
+
+
+
+(c) A ballot shall bear no word, motto, device, sign, or symbol other than allowed in this title.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0603 Form of ballot.
+
+
+
+The form of the ballot shall be determined by the Chief Election Officer. The names of the candidates
+shall be placed upon the bal-lot for their respective offices in alphabetical order. In the case of paper
+ballots or cards where the names of the candidates are printed and the qualified elector records his
+vote on the face of the ballot, the following format shall be used: A horizontal line shall be ruled
+between each candidate's name and the next name. Immediately after all the names, on the right-hand
+side of the ballot, 2 vertical lines shall be ruled, so that in conjunction with the horizontal lines, a box
+shall be formed opposite each name and its equivalent, if any. The boxes shall be of sufficient size to
+give ample room in which to designate the choice of the qualified elector in the manner prescribed for
+the voting system in use. All of the names upon a ballot shall be placed at a uniform distance from the
+left-hand edge and close thereto, and shall be of uniform size and print subject to section 6.0602.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0604 Checking ballot form by candidates and parties.
+
+
+
+Facsimiles of all ballot layouts prior to printing shall be available for viewing by the candidates at the
+office of the Chief Election Officer as soon after the close of filing as they are available. The layout
+facsimiles shall show the type faces used, the spelling and placement of names, and other information
+on the ballot.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0605 Withdrawal of candidates-Disqualification-Death-Notice.
+      (a) Any candidate may withdraw not later than 4:30 p.m. on the 3rd day after the close of
+      filing for any reason and may withdraw after the close of filing up to 4:30 p.m. on the
+      10th day prior to an election for reasons of ill health when the notice is accompanied by a
+      statement from a licensed physician indicating that the ill health may endanger the
+      candidate's life, by giving notice in writing to the Chief Election Officer. Once the notice
+      is received by the Chief Election Officer, the candidate shall not rescind or attempt to
+      rescind the notice of withdrawal.
+
+(b) When a candidate dies, withdraws, or is disqualified after the close of filing and the ballots have
+been printed, the Chief Election Officer shall either order the candidate's name stricken from the ballot
+or that a notice of the disqualification, withdrawal, or death be prominently posted at the polling place
+on election day.
+(c) In no case shall the filing fee be refunded after filing.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31.
+
+
+
+6.0606 Vacancies-New candidates-Insertion of names on ballots and notice at polling places.
+
+
+
+In case of death, withdrawal, or disqualification of any candidate after filing, the vacancy so caused
+may be filled by the Chief Election Officer in the same manner as regular filing not later than the 5th
+day prior to a general or special election. The name of the replacement shall be printed in an available
+and appropriate place on the ballot, not necessarily in alphabetical order. A vacancy occurs only when
+there is less than 1 candidate on the ballot to fill the office. If the substitute candidate is submitted
+later than the time limits set forth above, it will be in the discretion of the Chief Election Officer
+whether the name of any substitute candidate is placed on the ballot by reprinting, over printing, the
+use of rubber stamps, or other means as the Chief Election Officer may consider satisfactory. The
+district officials shall post a notice at the polling place of the name of the substitute candidate and the
+office sought. Substitution shall be made not later than 4:30 p.m. on the 2nd day prior to any election
+unless the Chief Election Officer determines that the name can be placed on the ballot in some
+practical and effective manner. If no substitution is made, the candidacy involved shall be declared
+vacant.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0607 Printing-Quantity.
+
+
+
+(a) The ballots shall be printed by order of the Chief Election Officer.
+
+
+
+(b) Each district shall receive a sufficient number of ballots based on the number of registered
+qualified electors and the expected spoilage in the election concerned.
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31.
+
+
+
+6.0608 Distribution of ballots-Record.
+
+
+
+(a) The Chief Election Officer shall forward the official ballots, specimen ballots, and other materials
+to the election officials of the various districts. They shall be delivered and kept in a secure fashion in
+accordance with rules adopted by the Chief Election Officer. In no case shall they arrive later than the
+opening of the polls on election day.
+
+
+
+(b) A record of the number of ballots sent to each district shall be kept by the Chief Election Officer.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31.
+
+
+
+6.0609 Distribution of sample ballots.
+
+
+
+At least 10 days before the election, the Chief Election Officer may cause sample ballots to be
+distributed among the qualified electors, so that the electorate will be informed of the names of the
+candidates, or the issues, or both.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31.
+
+
+Chapter 07
+
+
+
+                                       VOTING PROCEDURES
+
+
+
+Sections:
+6.0701 Hours polls are open.
+6.0702 Admission within polling place.
+6.0703 Voting booths-Placement of ballot boxes.
+6.0704 Ballot boxes.
+6.0705 Procedure upon opening polls.
+6.0706 Signature required-Identification.
+6.0707 Prohibited acts—Removal or exhibition of ballot.
+6.0708 Time allowed.
+6.0709 Assistance of illiterate or disabled.
+6.0710 Replacement of spoiled ballot.
+6.0701 Hours polls are open.
+
+
+
+The polls shall be opened by the district officials at 6 a.m. of the election day and shall be kept open
+continuously until 6 p.m. of that day. If, at the closing hour of voting, any qualified elector desiring to
+vote is standing in line outside the entrance of the polls with the desire of entering and voting, but due
+to the polling place being overcrowded has been unable to do so, he shall be allowed to vote
+irrespective of the closing hour of voting. No qualified elector shall be permitted to enter or join the
+line after the prescribed hour for closing the polls. If all of the registered qualified electors of the
+district have cast their votes prior to the closing time, the polls may be closed earlier but the votes
+shall not be counted until after closing time unless allowed by the Chief Election Officer.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0702 Admission within polling place.
+
+
+
+(a) No person, other than the district officials, the candidates or 1 representative appointed in writing
+by each candidate, and such qualified electors as are for the time being actually engaged in voting or
+going to and returning therefrom, may be permitted within the polling place and that area surrounding
+the polling place reasonably calculated to preserve a neutral, peaceful, and quiet atmosphere for the
+balloting process. No campaign activities, as defined in Section 6.1205 (7) A.S.C.A., shall be allowed
+within the area described above. Any person, except those persons described above, who remains or
+loiters within the area immediately surrounding a polling place during the time appointed for voting,
+or who fails to vacate the polling place and area immediately surrounding it in response to the lawful
+order of an election official, is guilty of a class B misdemeanor. If a qualified elector is manifestly
+physically disabled, the qualified elector may be assisted by anyone through the area specified.
+
+
+
+(b) Upon application to the Chief Election Officer, the Chief Election Officer may allow nonvoter
+groups to observe the election for educational purposes. The Chief Election Officer shall use his
+discretion in granting permission and ensure that persons whose applications are granted may observe
+the election at designated precincts in a manner that they will not interfere with the election pro-cess.
+
+
+
+History: 1977, PL 15-42 § 1; amd 1980, PL 16-72 § 3; amd 2014, PL 33-15 § 1.
+
+
+
+Amendments: 1980 Subsection (a): amended generally.
+
+
+
+6.0703 Voting booths—Placement of ballot boxes.
+(a) The district officials shall provide sufficient booths within the polling place at or in which the
+qualified electors may conveniently cast their ballots. The booths shall be so arranged that in casting
+the ballots the qualified electors are screened from the observation of others.
+
+
+
+(b) The district officials shall place ballot boxes, where used, at a point convenient for qualified
+electors to cast their ballots after voting and where the boxes may be observed by the district officials.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0704 Ballot boxes.
+
+
+
+The Chief Election Officer shall provide suit-able ballot boxes for each polling place. The boxes shall
+be of material selected by the Chief Election Officer. They shall be smooth inside and out and shall
+have a hinged lid fastened securely by a good lock or locks. In the center of the lid there shall be an
+aperture of the appropriate size for the voting system used.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0705 Procedure upon opening polls.
+
+
+
+(a) At the opening of the polls for election, the district officials shall, in the presence of bystanders,
+publicly open the ballot boxes and expose them to all persons present, that it may be seen that they are
+empty. They shall then be closed and locked and on no account opened till the polls are closed.
+
+
+
+(b) The seals of the ballot containers or packages shall be broken and opened on election day only in
+the presence of at least 2 district officials.
+
+
+
+(c) A card of instruction in both Samoan and English, detailing the method of marking ballots and of
+voting shall be immediately posted at or in each voting booth. Not less than 3 cards shall be
+immediately posted in conspicuous places outside the polling place.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0706 Signature required—Identification.
+(a) Every person upon applying to vote shall sign his name in the poll book prepared for that purpose.
+This requirement may be waived by any district official if for reasons of illiteracy or blindness or
+other physical disability the qualified elector is unable to write. Every person shall provide
+identification if so requested by a district official.
+
+
+
+(b) After signing the poll book and receiving his ballot, the qualified elector shall proceed to the
+voting booth to vote according to the voting system in use in his district. The district official may, and
+upon request shall, explain to the qualified elector the mode of voting.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0707 Prohibited acts-Removal or exhibition of ballot.
+
+
+
+(a) No person shall look at or ask to see the contents of the ballot of any qualified elector, except as
+provided in section 6.0709, nor shall any person within the polling place attempt to influence a
+qualified elector in regard to whom or what he shall vote for. When a qualified elector is in the voting
+booth for the purpose of marking or casting his ballot, no other person shall, except as provided in
+section 6.0709, be allowed to enter the booth or to be in a position from which he can observe how the
+qualified elector marks or casts his ballot.
+
+
+
+(b) All elections of members of the House of Representatives shall be by secret ballot. At each polling
+place there shall be a voting shelf or compartment at which each voter can mark his ballot in complete
+privacy, and such other election supplies as are necessary.
+
+
+
+(c) In those districts using paper ballots or cards, no person shall take a ballot out of the polling place.
+After voting, the qualified elec-tor shall leave the voting booth and deliver his ballot to the district
+official in charge of the ballot boxes. The district official shall make certain that he has received the
+correct ballot and no other and then shall drop the ballot into the ballot box. If any person having
+received a ballot leaves the polling place without first delivering the ballot to the district official as
+provided above, or willfully exhibits his ballot, except as provided in section 6.0709 after the ballot
+has been marked, shall forfeit his right to vote, and the district officials shall cause a record to be
+made of the proceeding.
+
+
+
+History: 1962, PL 7-28; amd 1977, PL 15-42 § 1.
+
+
+
+6.0708 Time allowed.
+
+
+
+A qualified elector shall be allowed to remain in the voting booth for 5minutes, and having voted the
+qualified elector shall at once emerge and leave the voting booth. If he refuses to leave when so
+requested by a majority of district officials after the lapse of 5 minutes, he shall be removed by the
+district officials. Once a qualified elector has completed his voting and emerged from the booth, he
+shall not be permitted to reenter.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0709 Assistance of illiterate or disabled.
+
+
+
+(a) Any qualified elector who, by reason of illiteracy or blindness or other physical disability, is
+unable to mark his ballot, shall, if he so requests, receive the assistance of 2 district officials or of any
+qualified elector whom he may designate, in the marking thereof. Before rendering assistance or
+permitting assistance to be rendered, the district officials shall be satisfied that the physical disability
+exists. If a qualified elector with a physical disability finds it unduly burdensome for him to enter the
+polling place, he may be handed a ballot outside the polling place but within 100 feet thereof by the
+district officials and in their presence, but in a secret manner, mark and return it to the district
+officials.
+
+
+
+(b) The district officials shall enter in writing in the record book the following:
+
+
+
+(1) the qualified elector's name;
+
+
+
+(2) the fact that the qualified elector can-not read the names on the ballot, if that is the reason for
+requiring assistance, and otherwise, the specific physical disability which requires him to receive
+assistance; and
+
+
+
+(3) the name or names of the person or persons furnishing the assistance.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0710 Replacement of spoiled ballot.
+
+
+
+In districts using paper ballots or cards, if a qualified elector spoils a ballot or ballot card, he may
+obtain another upon returning the spoiled one. The ballot returned shall be canceled immediately, and
+the reasons for the cancellation endorsed thereon and signed by the district officials.
+History: 1977, PL 15-42 § 1.
+
+
+
+Chapter 08
+
+
+
+                                            VOTE COUNT
+
+
+
+Sections:
+6.0801 Vote count.
+6.0802 Method of counting.
+6.0803 More or less ballots than recorded.
+6.0804 Records disposition.
+6.0805 Certification of results of election.
+6.0806 Certificate of election—Form.
+
+
+
+6.0801 Vote count.
+
+
+
+Ballots shall be counted in accordance with this chapter. In districts using paper ballots or cards, a
+ballot shall be counted even though that ballot has less names voted for than can be elected. If a ballot
+has more names voted for than can be elected, that ballot shall not be counted.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31.
+
+
+
+6.0802 Method of counting.
+
+
+
+Immediately after the close of the polls, the district officials shall proceed to count the ballots in the
+manner as designated by the Chief Election Officer. For each election, the Chief Election Officer shall
+designate either that the ballot boxes be sealed and forwarded to a central polling place for counting,
+or that the ballots be counted at the individual polling places. In either case, the ballots shall be
+counted as follows:
+
+
+
+(a) The whole number of ballots shall first be counted to see if their number corresponds with the
+number of ballots cast as recorded by the district officials.
+
+
+
+(b) If the number of ballots corresponds with the number of persons recorded by the district officials
+as having voted, the election officials shall then proceed to count the vote cast for each candidate.
+
+
+
+(c) If there are more ballots or less ballots than the record calls for, the election officials shall proceed
+under section 6.0803.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31.
+
+
+
+6.0803 More or less ballots than recorded.
+
+
+
+(a) If there are more ballots than the poll book calls for, this shall be an overage; if less, it shall be an
+underage. The election officials shall make a note of this fact on a form to be provided by the Chief
+Election Officer. After making this notation, the election officials shall proceed to count the ballots in
+the manner provided by law. The form recording the overage or underage shall be sent directly to the
+Chief Election Officer separate and apart from the other election records.
+
+
+
+(b) As soon after the election as possible the Chief Election Officer shall make a list of all districts in
+which an overage or underage occurred and the amount of the overage or underage. This list shall be
+posted in the office of the Chief Election Officer. The list is a public record.
+
+
+
+(c) An election contest may be brought under sections 6.0902 and 6.0903 if the overage or underage
+in any district could affect the outcome of an election.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0804 Records disposition.
+
+
+
+(a) The final duty of the district officials in the operation of the district shall be to gather all records
+and supplies delivered to them and return them to the sending official.
+
+
+
+(b) The used ballots shall be kept secure and handled only in the presence of authorized persons in
+accordance with rules adopted for the various voting systems. After all the ballots have been
+tabulated, they shall be sealed in containers. Thereafter these containers shall be unsealed and resealed
+only as prescribed by rules governing the elections.
+(c) The Chief Election Officer may destroy the ballots and other election records when the Chief
+Election Officer has certified all elected candidates.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0805 Certification of results of election.
+
+
+
+On receipt of certified tabulations from the election officials concerned, the Chief Election Officer
+shall compile, certify, and release the election results. The number of persons to be elected receiving
+the highest number of votes in any representative district shall be declared to be elected or in the case
+of territory-wide election of the Governor and Lieutenant Governor, and the Delegate-at-Large, the
+person or team receiving the highest number of votes in the territory shall be declared to be elected.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.0806 Certificate of election—Form.
+The Chief Election Officer shall deliver certificates of election to the persons elected as determined
+under section 6.0805. These certificates shall be delivered only after the expiration of the time for
+bringing an election contest. If there is an election contest, the certificate shall. be delivered only after
+a final determination in the contest has been made and the time for an appeal has expired. The
+certificate shall be substantially in the following form:
+
+
+
+"CERTIFICATE OF ELECTION"
+
+
+
+"I , Chief Election Officer of American Samoa, do hereby certify that was on the day of 19 , duly
+elected a (name of office) for the district (or territory) for a term expiring on the day of A.D. 19 .
+
+
+
+Witness my hand this day of A.D. 19 .
+
+
+
+Chief Election Officer
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+Chapter 09
+ELECTION CONTESTS
+
+
+
+Sections:
+6.0901 Tie vote-Decision by lot.
+6.0902 Contests for cause-Generally.
+6.0903 Contests for cause-Filing complaint.
+
+
+
+6.0901 Tie vote—Run-off—Decision by lot.
+
+
+
+In case of the failure of an election by reason of the equality of vote between 2 or more candidates
+participating in an election with at least one other candidate, the tie shall be decided by a run-off
+election held no later than 30 days thereafter, unless an election contest is filed in accordance with
+6.0902 and 6.0903. In case of the failure of such run-off election again by reason of the equality of
+votes between such candidates, the tie shall be decided by lot, under the supervision of the Chief
+Election Officer. In case of the failure of an election by reason of the equality of vote between 2 or
+more candidates participating in an election without any other candidate, no run-off election shall be
+held and the tie shall be directly decided by lot, under the supervision of the Chief Election Officer.
+When an election is decided by lot, the candidates may agree in a signed statement to be bound by the
+lot and neither may bring an election contest under sections 6.0902 and 6.0903 after the drawing of
+the lot. Each candidate shall be present at the drawing of the lot together with 2 witnesses to be
+selected by him.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2014, PL 33-15 § 2 .
+
+
+
+6.0902 Contests for cause-Generally.
+
+
+
+With respect to any election, any candidate or any 30 qualified electors of the representative district,
+in case of elections for representatives, and in territory-wide elections any 300 qualified electors may
+file a complaint in the High Court.
+
+
+
+The complaint shall set forth any cause or causes, including but not limited to: provable fraud,
+overages, or underages, that could cause a difference in the election result. The complaint shall also
+set forth any reasons for reversing, correcting, or changing the decisions of the district or election
+officials.
+
+
+
+History: 1977, PL 15-42 § 1.
+Case Notes:
+Sections 6.0223, 6.0224, 6.0230, 6.0902, and 6.0903 pro-vide separate and unrelated remedies to
+complaints concerning the election process. Dole v. Attorney General. ASR (1978).
+
+
+
+6.0903 Contests for cause-Filing complaint.
+
+
+
+(a) In general or special elections, the com-plaint shall be filed in the office of the Clerk of the High
+Court not later than 4:30 p.m. on the 7th calendar day following the general, special, or runoff election
+and shall be accompanied by a deposit of $25 for costs of court. The Clerk shall issue to the
+defendants named in the complaint a summons to appear and answer before the Appellate Division of
+the High Court not later than 4:30 p.m. on the 5th day after service thereof.
+
+
+
+(b) In cases involving general, special, or runoff elections, the complaint shall be heard by the High
+Court as soon as it reasonably may be heard. On the return day, the court, upon its motion or
+otherwise, may direct summons to be issued to any person who may be interested in the result of the
+proceedings.
+
+
+
+(c) At the hearing, the court shall cause the evidence to be reduced to writing and shall give judgment,
+stating all findings of fact and conclusions of law. The judgment may invalidate the general, special,
+or runoff election on the grounds that a correct result cannot be ascertained because of a mistake or
+fraud on the part of the district or election officials; or because it cannot be determined that a certain
+candidate, or certain candidates, received a majority or plurality of votes cast and were elected. If the
+judgment should be that the general or special election was in-valid, a certified copy thereof shall be
+filed with the Governor, and he shall duly call a new election to be held not later than 30 days after the
+election in dispute. In the interests of justice, the High Court may extend the date for a runoff election,
+but not later than 16 days following the date fixed by law. If the High Court does not render its
+judgment in that time, the election shall proceed as certified by the Chief Election Officer. If the court
+decides which candidate or candidates have been elected, a copy of that judgment shall be served on
+the Chief Election Officer, who shall sign and deliver to the candidate or candidates certificates of
+election, and they shall be conclusive of the right of the candidate or candidates to the offices.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+Case Notes:
+Subsection (c) is interpreted to mean that the election is to be invalidated only if the number of
+ineligible ballots cast is equal to or greater than the number of votes by which the leading candidate
+defeated his closest adversary. Dole v. Attorney General, ASR (1978).
+Under statute requiring election appeals to be filed by 4:30 p.m., on the seventh calendar day
+following the election, court had no jurisdiction over an appeal filed at 8:00 p.m. on the seventh day.
+A.S.C.A. § 6.0903(a). Tuika v. Chief Election Officer, 9 A.S.R. 2d 57 (1988).
+An election is to be invalidated only if it cannot be determined that a candidate polled a majority or
+plurality of the valid votes cast on election day. A.S.C.A., § 6.0903. Faga v. Malepeai, 23 A.S.R.2d 48
+(1992).
+                                               Chapter 10
+
+
+
+                                               EXPENSES
+
+
+
+Sections:
+6.1001 Payment for capital equipment.
+6.1002 Election expenses.
+
+
+
+6.1001 Payment for capital equipment.
+
+
+
+The government shall pay for all voting system capital equipment. This shall include, but not be
+limited to, voting machines, if any, ballots, stationery, equipment, and supplies.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.1002 Election expenses.
+(a) All expenses, including expenses attributable to registration of qualified electors by the election
+officials for Territorial elections conducted in any district, shall be borne by the government and paid
+out of those appropriations as may be made by the Legislature for election purposes, under the budget
+of the election office.
+
+
+
+(b) Expenses in elections shall be borne by the government as follows:
+
+
+
+(1) election officials;
+
+
+
+(2) instruction of election officials;
+
+
+
+(3) Board of Registration;
+
+
+
+(4) polling place costs including supplies, installation, rentals, ballot boxes, voting booths, custodians,
+telephones, and maintenance;
+(5) other equipment such as ballot transport containers;
+
+
+
+(6) temporary election clerks;
+
+
+
+(7) extraordinary qualified elector registration costs;
+
+
+
+(8) normal qualified elector registration, qualified electors' list maintenance;
+
+
+
+(9) maintenance of existing voting machines, if any, including parts, freight, storage, programming,
+and personnel;
+
+
+
+(10) all printing, including ballots; and
+
+
+
+(11) all other costs relating to the operation of voting machines, electronic voting systems, and other
+voting systems, to include but not be limited to real property rentals, equipment rentals, personnel,
+mileage, telephones, supplies, publicity, computer programming, and freight.
+
+
+
+(c) The responsibility for supervising the above functions shall be determined by the Chief Election
+Officer.
+
+
+
+History: 1977, PL 15-42 § 1; 1985, PL 19-31 § 5.
+
+
+
+Amendments: 1985 Subsection (a) deleted Attorney Gcnera1's and added "the" and "of the election
+office".
+
+
+
+Chapter 11
+
+
+
+ABSENTEE VOTING
+
+
+
+Sections:
+6.1101 Who may vote by absentee ballot.
+6.1102 Request for absentee ballot.
+6.1103 Delivery of ballots.
+6.1104 Ballot to be enclosed in unsealed reply envelope-Printed instructions to be included.
+6.1105 Return of ballot.
+6.1106 Absentee ballot container.
+6.1107 Absentee qualified elector-polling place.
+6.1108 Receipt and disposition of absentee ballots.
+6.1109 Receipt and disposition of late absentee ballots.
+6.1110 Death of qualified elector prior to opening of polls.
+
+
+
+6.1101 Who may vote by absentee ballot.
+
+
+
+(a) Any qualified elector who will be unable to appear at his polling place during the hours of voting
+at any election because of absence from the Territory, or district in which he is registered may cause
+his vote to be cast by absentee ballot subject to this chapter.
+
+
+
+(b) Any qualified elector covered by this section shall be entitled and enabled to vote in a manner as
+may be pre-scribed by rules adopted by the Chief Election Officer; provided, that any qualified elector
+who by reason of physical disability is un-able to mark his ballot shall be authorized to receive
+assistance in marking it.
+
+
+
+(c) Any qualified elector competent to vote at any election shall be allowed to vote under this section
+if he falls in the following categories:
+
+
+
+      (1) absent from the Territory on election day because he is:
+
+            (i) employed in the service of the U.S. Government;
+            (ii) employed in the service of the American Samoa Government;
+            (iii) a student at an institution of learning;
+            (iv) an absent uniformed services voter; or
+            (v) an overseas voter voting in the election for Delegate for the U.S. House of
+            Representatives.
+
+
+      (2) temporarily absent from the Territory on election day because of:
+
+            (i) travel for medical treatment;
+            (ii) travel for military-related assignments;
+            (iii) travel for employment-related training, conference or assignments; or
+            (iv) vacation.
+
+(3) present in the Territory but absent from the district on election day because of:
+
+
+
+      (i) confinement in any hospital;
+
+      (ii) confinement in any public institution;
+      (iii) confinement at home because of illness or physical disability which will prevent him
+      from attending the polls;
+
+      (iv) any religious belief, ruling, doctrine, or standard which will prevent him from
+      attending the polls; or
+
+      (v) employment as an election official on election day.
+
+History: 1977, PL 15-42 § 1; 1996, PL 24-14; 2002, PL 27-31; amd 2010, PL 31-17.
+
+
+
+6.1102 Request for absentee ballot.
+
+
+
+      (a) Any person entitled to vote under 6.1101(c) (1) may request an absentee ballot in
+      writing from the Chief Election Officer. In addition, such person may transmit such
+      request by mail, electronically, or by facsimile, and designate the preferred means of
+      return transmission whether by mail, electronically, or by facsimile. Any such person
+      may request an absentee ballot not earlier than January 1st of the year of the election
+      for which the absentee ballot is requested, and not later than 4:30 p.m. the 15th day prior
+      to the election. The request shall include any information that will facilitate the location
+      of his voting district, the establishment of his right to a ballot, and the address where he
+      wants his ballot forwarded.
+
+      (b) Any person entitled to vote under 6.1101 (c) (2) may request an absentee ballot in
+      person or in writing from the Chief Election Officer not earlier than the day that ballots
+      are printed and available and not later than 4:30 p.m. on the day prior to the election.
+      Ballots shall not be mailed, and such qualified electors must vote in person before they
+      travel outside the Territory.
+
+(c) Any person entitled to vote under 6.1101(c)(3) may request an absentee ballot in person or in
+writing from the Chief Election Officer not earlier than on the 30th day prior to the election and not
+later than 4:30 p.m. on the day prior to the election.
+(d) Certification of absentee ballots shall be closed not later than 1:30 p.m. on election day.
+
+
+
+History: 1977, PL 15-42 § 1; 1989, PL 21-14; 1996, PL 24-14; amd 2002, PL 27-31; amd 2010, PL
+31-17.
+
+
+
+6.1103 Delivery of ballots.
+
+
+
+Immediately upon receipt of a request within the time limits specified in 6.1102, the Chief Election
+Officer shall examine the records to ascertain whether or not the qualified elector is lawfully entitled
+to vote as requested. As soon as official ballots are printed and available, the Chief Election Officer
+shall:
+(a) for those persons entitled to vote under 6.1101(c)(1), mail in a for-warding envelope, via airmail,
+an official ballot and other materials prescribed in 6.1104. All requests postmarked by the 15th day
+prior to the election shall be processed, and ballots mailed to the qualified electors requesting them as
+soon as reasonably practicable, but in no event later than 24 hours after receipt of the request;
+
+
+
+(b) for those persons entitled to vote under 6.1101(c)(1)(iv) and (v), and who are voting in an election
+for the Delegate to the U.S. House of Representatives, establish procedures by which such absent
+voters may designate the preferred method of absentee ballot transmission and the Chief Election
+Officer shall, in accordance with adopted procedures, transmit blank absentee ballots by mail,
+electronically, and by facsimile as designated by the absent voter, no later than 45 days prior to a
+general election; and
+
+
+
+(c) for those persons entitled to vote under 6.1101 (c) (2) and (3), deliver an official ballot to enable
+such persons to vote at the designated absentee polling place or in a manner prescribed by rules
+adopted by the Chief Election Officer.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2002, PL 27-31; amd 2010, PL 31-17; amd 2014, PL 33-15 § 3.
+
+
+
+6.1104 Ballot to be enclosed in unsealed reply envelope-Printed instructions to be included.
+
+
+
+(a) The Chief Election Officer shall enclose the ballot for those persons entitled to vote under
+6.1101(c)(1) in an unsealed reply envelope to be furnished by him and which shall be in the form
+prescribed by him. In addition, the Chief Election Officer shall prepare printed instructions regarding
+the manner of marking and returning the absentee ballot. The Chief Election Officer shall furnish a
+copy of the printed instructions and information setting forth the district in which the qualified elector
+is en-titled to vote. The reply envelope shall bear upon the face thereof the name, official title, and
+post office address of the Chief Election Officer and the words "Absentee Ballot Enclosed". The back
+of the reply envelope shall contain a statement to be subscribed to by the qualified elector
+which affirms the fact that he is the person voting.
+
+
+
+(b) The absentee qualified elector shall be instructed that his ballot shall not be valid if the affirmation
+statement is not signed.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+6.1105 Return of ballot.
+
+
+
+The reply envelope shall be:
+(1) mailed and must be received by the Chief Election Officer not later than 1:30 p.m. on election day;
+or
+
+
+
+(2) delivered other than by mail to the Chief Election Officer not later than 1:30 p.m. on election day.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+6.1106 Absentee ballot container.
+
+
+
+(a) Each absentee ballot shall be placed in an absentee ballot container or containers. The container
+shall be securely sealed except for an opening sufficient to permit deposit of the reply envelopes and
+shall be sufficiently identify the elective office or issue that corresponds to the absentee ballots being
+deposited. The opening of the container shall be securely sealed at the close of each business day by
+the Chief Election Officer. The container itself shall be secured in the office of the Chief Election
+Officer, or in an area, space or facility designated by the Chief Election Officer.
+
+
+
+(b) Persons may not open the absentee ballot container before the day and time provided for in 6.1108
+or 6.1109. Persons tampering with or opening the absentee ballot container before the prescribed time
+shall be guilty of an election offense under 6.1206.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+6.1107 Absentee qualified elector polling place.
+
+
+
+(a) The Chief Election Officer shall establish an absentee polling place. The absentee polling place
+shall be open before election day to handle the absentee voters who are voting in person. The Chief
+Election Officer shall deter-mine the number of officials needed. All absentee polling places
+established to handle absentee qualified electors who are voting in person shall be closed at 4:30 p.m.
+the day before the election.
+
+
+
+(b) The Chief Election Officer may appoint election officials to handle absentee voting in person, for
+those persons entitled to vote under 6.1101(c)(2) and (3), at the absentee polling place. Election
+officials may also be appointed to handle absentee voting in person other than at the absentee polling
+place for those qualified electors who demonstrate that it would be a hardship to re-quire them to
+appear at the absentee polling place.
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+6.1108 Receipt and disposition of absentee ballots.
+
+
+
+(a) Upon receipt of the envelope marked "Absentee Ballot Enclosed" from persons voting under
+chapters 01 through 12 of this title, the Chief Election Officer or the election officials of the absentee
+polling place shall document its receipt and deposit it in the corresponding absentee ballot container.
+Prior to depositing the envelopes the envelopes shall be checked for the following:
+
+
+
+(1) sufficiency of statement;
+
+
+
+(2) if the signature corresponds with the absentee request or register;
+
+
+
+(3) if the qualified elector is a registered qualified elector and has complied with the requirements of
+6.0214 or 6.0215; and
+
+
+
+(4) if the envelope appears to be tampered with.
+
+
+
+(b) Envelopes that meet the above requirements shall be deposited in the corresponding absentee
+ballot container.
+
+
+
+(c) If any of the above requirements is not met, the officials shall mark across the face of the envelope
+"Questionable" giving the reasons therefor, and the envelope shall be placed unopened in a separate
+container and disposed of as prescribed for ballots in 6.0804.
+
+
+
+(d) Counting of absentee ballots for an issue, and for the offices of Governor & Lieutenant Governor,
+and Delegate to the United States House of Representative may begin after 1:30 p.m. on election day.
+The absentee ballot containers for such issue(s) or offices may be opened no sooner than 1:30 p.m. on
+election day. Upon opening the containers, the envelopes shall be opened and the ballots counted at
+the absentee polling place. In no case, however, shall the results of the absentee count become
+publicly known before the polls have officially closed.
+
+
+
+(e) Counting of absentee ballots for each office of Representative to the House of Representatives
+may begin only after the polls are closed on election day. The absentee ballot container(s) for such
+offices may be opened no sooner than 4:30 p.m. on the day before the election. Upon opening the
+container(s), the reply envelopes may be sorted for distribution to polling places designated by the
+Chief Election Officer. The sorted absentee ballot envelopes must be secured in the ballot boxes for
+the designated polling places, and may be removed only by the district official upon arrival at and
+opening of the polls on election day. Reply envelopes containing ballots that are received after the
+absentee ballot container(s) are opened but no later that the deadline specified in 6.1105, shall be
+checked for the above requirements of (a)(1) through (4). If the above requirements are met, the
+envelopes may be sorted and then distributed for counting at polling places designated by the Chief
+Election Officer.
+
+
+
+(f) Persons violating this section shall be guilty of an election offense under chapter 12.
+
+
+
+History: 1977, PL 15-42 § 1, amd 1985, PL 19-31 § 6; 2002, PL 27-31.
+
+
+
+Amendments: 1985 Subsection (e). Deleted "section 6.1105" and added "chapter 12".
+
+
+
+6.1109 Receipt and disposition of late absentee ballots.
+
+
+
+All reply envelopes containing absentee ballots received by the Chief Election Officer after the
+deadline for receipt stated in 6.1105 shall be kept unopened and disposed of under 6.0804.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+6.1110 Death of qualified elector prior to opening of polls.
+
+
+
+Whenever, prior to the counting of absentee ballots, it is apparent to the Chief Election Officer or
+polling place officials that any qualified elector who has marked and forwarded an absentee ballot has
+died prior to the opening of the polls on election day, the ballot of the qualified elector shall be
+disposed of in the manner provided in 6.1108 for question-able ballots. The casting of these ballots
+shall not invalidate the election.
+
+
+
+History: 1977, PL 15-42 § 1; 2002, PL 27-31.
+
+
+
+Chapter 12
+ELECTION OFFENSES
+
+
+
+Sections:
+6.1201 Classes of offenses.
+6.1202 Perjury.
+6.1203 Election frauds.
+6.1204 Penalties-Disqualification or removal from office-Notice of conviction.
+6.1205 Misdemeanors.
+6.1206 Violation-Penalty.
+6.1207 Penalty for other offenses.
+
+
+
+6.1201 Classes of offenses.
+
+
+
+Except as otherwise provided, offenses against the election laws contained in this title are divided into
+two classes: "election frauds" and "misdemeanors".
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.1202 Perjury.
+
+
+
+Any person who, knowing that he is not entitled to register or to vote, registers or votes is guilty of
+perjury; and any person taking any oath in chapters 01 through 12 of this title prescribed or authorized
+to be administered and willfully making oath to any false statement of fact, or willfully making a false
+answer to any question put to him thereunder, is guilty of perjury.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.1203 Election frauds.
+
+
+
+The following persons are considered guilty of an election fraud:
+
+
+
+(1) every person who, directly or indirectly, personally or through another, gives, procures, or lends,
+or agrees or offers to give, procure, or lend, or who endeavors to procure, any money or office or
+place of employment or valuable consideration to or for any qualified elector, or to or for any person
+for a qualified elector, or to or for any person, even if the same is presented in accordance with
+Samoan custom, in order to induce any qualified elector to vote or refrain from voting, or to vote or
+refrain from voting for any particular person or issue, or who does any such act on account of any
+person having voted or refrained from voting for any particular person at any election;
+
+
+
+(2) every person who advances or pays, or causes to be paid, any money to, or to the use of, any other
+person, even if the same is presented in accordance with Samoan custom, with the intent that the
+money, or any part thereof, shall be expended in bribery at any election, or for any purpose connected
+with or incidental to any election;
+
+
+
+(3) every qualified elector who, before, during, or after any election, directly or indirectly, personally
+or through another, receives, agrees, or contracts for any money, gift, loan, or valuable consideration,
+office, place, or employment for himself or any other person, even if the same is accepted in
+accordance with Samoan custom, for voting or agreeing to vote, or for refraining to vote or agreeing
+to refrain from voting, or for voting or refraining to vote for any particular person or issue;
+
+
+
+(4) every person who, directly or indirectly, personally or through another, makes use of, or threatens
+to make use of, any force, violence, or restraint; or inflicts or threatens to inflict any injury, damage,
+or loss in, any manner, or in any way practices intimidation upon or against any person in order to
+induce or compel the person to vote or refrain from voting, or to vote or refrain from voting for any
+particular person or party; or who by abduction, distress, or any device or contrivance impedes,
+prevents, or otherwise interferes with the free exercise of the elective franchise;
+
+
+
+(5) every person who, at any election, votes or attempts to vote in the name of any other person, living
+or dead, or in some fictitious name, or who, having once voted, votes or attempts to vote again, or
+knowingly gives or attempts to give more than one ballot for the same office at one time of voting;
+
+
+
+(6) every person who, before or during an election, knowingly publishes a false statement of the
+withdrawal of any candidate at the election;
+
+
+
+(7) every person who induces or procures any person to withdraw from being a candidate at an
+election in consideration of any payment or gift or valuable consideration, even if the same is
+presented in accordance with Samoan custom; or of any threat; and every candidate who with-draws
+from being a candidate in pursuance of such inducement of procurement;
+
+
+
+(8) every public officer by law required to do or perform any act or thing with reference to any of the
+provisions in any law concerning elections contained who willfully fails, neglects, or refuses to do or
+perform the same, or who willfully performs it in such a way as to hinder the objects thereof, or who
+is guilty of any willful violation of any of the provisions thereof;
+
+
+
+(9) any person willfully tampering or at-tempting to tamper with, disarrange, deface, or impair in any
+manner whatsoever, or destroy any voting equipment while the same is in use at any election, or who,
+after the equipment is locked in order to preserve the registration or record of any election made by
+the same, tampers or attempts to tamper with any voting equipment.
+
+
+
+History: 1977, PL 15-42 § 1; amd 2014, PL 33-15 § 4.
+
+
+
+6.1204 Penalties-Disqualification or removal from office-Notice of conviction.
+
+
+
+A person found guilty of an election fraud shall be sentenced upon conviction as for a class A
+misdemeanor. In addition to the punishment, the person shall be disqualified from voting and from
+being elected to, holding or occupying any office, elective or appointive. If the person convicted holds
+any office, either elective or appointive, at the time of the conviction, the office shall at once and
+without mention in the sentence or other proceeding be vacated by the conviction. The judge before
+whom the conviction is had shall immediately transmit to the Chief Election Officer the name of the
+person, the offense of which he has been convicted and the sentence of the court.
+
+
+
+History: 1977, PL 15-42 § l; amd 1980, PL 16-90 § 42.
+
+
+
+Amendments: 1980 Amended to conform to penalties provided for in Title 46, Criminal Justice.
+
+
+
+6.1205 Misdemeanors.
+
+
+
+The following persons are guilty of a class B misdemeanor, and upon conviction, sentenced
+accordingly:
+
+
+
+(1) any person who offers any bribe or makes any promise of gain, or with know-ledge of the same
+permits any person to offer any bribe or make any promise of gain for his benefit, to any qualified
+elector to induce him to sign a nomination paper, and any per-son who accepts any bribe or promise
+of gain of any kind as consideration for signing it, whether the bribe or promise of gain is offered or
+accepted before or after the signing;
+
+
+
+(2) any person who willfully tears down or destroys or defaces any election proclamation or any
+poster or notice or list of qualified electors or card of instructions or specimen ballot, issued or posted
+by authority of law;
+
+
+
+(3) any person printing or duplicating or causing to be printed or duplicated any ballot, conforming as
+to the size, weight, shape, thickness, or color, to the official ballot so that it could be cast or counted
+as an official ballot in an election;
+
+
+
+(4) every person who is disorderly or creates a disturbance whereby any meeting of the district
+officials or the Board of Registration of qualified electors during an election is disturbed or interfered
+with; or whereby any person who intends to be lawfully present at any meeting or election is
+prevented from attending; or who causes any disturbance at any election; and every person assisting
+or aiding or abetting any disturbance;
+
+
+
+(5) every person who, either in person or through another, in any manner breaks up or prevents, or
+endeavors to break up or pre-vent, the holding of any meeting of the board of registration of qualified
+electors, or in any manner breaks up or prevents, or endeavors to break up or prevent, the holding of
+any election;
+
+
+
+(6) any person, other than those designated by 6.0702, who remains or loiters within the area specified
+for voting as set forth in 6.0702 during the time appointed for voting;
+
+
+
+(7) any person, including candidates carrying on any campaign activities within the area described in
+6.0702 on the day on which an election is being held for the purpose of influencing votes; campaign
+activities include but are not limited to:
+
+
+
+(A) the distribution, circulation, posting, or stacking of campaign cards, pamphlets, and other
+literature, the erection or placement of bill boards or other signage;
+
+
+
+(B) the use of public address systems and other public communication media;
+
+
+
+(C) the use of motor caravans or parades or the erection of tents; and
+
+
+
+(D) the use of entertainment troupes or the free distribution of goods and services; the "day of
+election" as used in this paragraph shall commence at midnight on the day the polls are opened and
+end with the closing of the polls;
+
+
+
+(8) any person who opens a reply envelope containing an absentee ballot voted under 6.1101 et seq.
+other than those authorized to do so;
+
+
+
+(9) any qualified elector who makes any false statement in any affidavit required for absentee voting
+under 6.1101 et seq.;
+(10) every person who willfully violates or fails to obey any of the provisions of law, punishment for
+which is not otherwise specially provided for in chapters 01 through 12 of this title;
+
+
+
+(11) any person, including candidates, distributing free food or beverages for the purpose of
+influencing votes on the day of election; the "day of election" as used in this paragraph shall
+commence at midnight on the day the polls are opened and end with the closing of the polls.
+
+
+
+History: 1977, PL 15-42 § 1; amd 1980, PL 16-90 § 43; amd 2014, PL 33-15 § 5.
+
+
+
+Amendments: 1980 Amended to conform with penalties provided for in Title 46, Criminal Justice.
+
+
+
+6.1206 Violation-Penalty.
+
+
+
+Any person convicted of a misdemeanor under chapters 01 through 12 of this title shall be fined not
+more than $500, or imprisoned not more than 6 months, or both.
+
+
+
+History: 1977, PL 15-42 § 1.
+
+
+
+6.1207 Penalty for other offenses.
+
+
+
+A violation of this section is an infraction:
+
+
+
+(1) any person, business, or corporation who publishes, shows, broadcasts, or circulates political
+advertisements or literature without stating the name and address of the person or committee that paid
+for the advertisement or literature;
+
+
+
+(2) any person, business, or corporation who refuses an employee the privileges conferred by 6.0504,
+or subjects an employee to a penalty or deduction of wages because of the exercise of the privileges,
+or who directly or indirectly violates 6.0504.
+
+
+
+History: 1977, PL 15-42 § 1; amd 1980, PL 16-90 § 44.
+Amendments: 1980 Amended to conform with penalties pro-vided for in Title 46, Criminal Justice.
+
+
+
+Chapter 17
+
+
+
+ELECTION CONTRIBUTIONS AND EXPENSES
+
+
+
+Sections:
+6.1701 Definitions.
+6.1702 Campaign Spending Commission.
+6.1703 Duties of the Chief Election Officer and Commission.
+6.1704 Filing of reports.
+6.1705 Registration.
+6.1706 Organizational report.
+6.1707 Designated central committee.
+6.1708 Campaign treasurer.
+6.1709 Contributions-Deposit-Itemized record required-Limitations.
+6.1710 Contributions-Restrictions against transfer.
+6.1711 Anonymous contributions unlawful.
+6.1712 Use of another person's name prohibited.
+6.1713 Testimonial affairs and coffee hours.
+6.1715 Campaign expenditures-Written authorization required.
+6.1717 House Bulletins.
+6.1718 Preliminary reports.
+6.1719 Final and supplemental reports.
+6.1720 Disposition of funds.
+6.1721 Advertising.
+6.1722 Complaints, investigation, and notice.
+6.1723 Violation-Penalty.
+6.1724 Prosecution.
+
+
+
+6.1701 Definitions.
+
+
+
+As used in this chapter, the following definitions apply:
+
+
+
+(a) "Advertisement" means:
+
+
+
+(1) any communication exclusive of bumper stickers or other sundry items paid for by or on behalf of
+a candidate which identifies a candidate directly or by implication or which advocates or supports the
+nomination for election, or election of the candidate or advocate or supports his defeat; and
+(2) any communication exclusive of bumper stickers or other sundry items paid for by or on behalf of
+a committee which identifies an issue or question which appears or is reasonably certain to appear on
+the ballot at the next applicable election or which advocates or supports the passage or defeat of the
+question or issue.
+
+
+
+(b) "Campaign treasurer" means a person appointed under 6.1708, and, unless expressly indicated
+otherwise, includes deputy campaign treasurers.
+
+
+
+(c) "Candidate" means an individual who seeks nomination to election, or election, to the Office of the
+Governor or Lieutenant Governor, or member of the House of Representatives. An individual is a
+candidate if he does any of the following:
+
+
+
+(1) files nomination papers for an office for himself with the Chief Election Officer's office; or
+
+
+
+(2) receives contributions in an aggregate amount of more than $100, or makes or incurs any
+expenditures to bring about his nomination for election, or election to office; provided, that in no
+event shall a person be considered a candidate by reason of the provisions set forth in paragraphs (2)
+and (3) prior to 1 July of the year that person runs for election; or
+
+
+
+(3) gives his consent for any other person to receive contributions or make expenditures to aid his
+nomination for election, or elections, to office.
+
+
+
+(d) "Commission" means the Campaign Spending Commission.
+
+
+
+(e) "Committee" means:
+
+
+
+(1) any person who accepts a contribution or makes an expenditure for or against any candidate,
+person seeking nomination for election, or election, to office, or party, or who accepts a contribution
+or makes an expenditure for or against any question or issue which appears or is reasonably certain to
+appear on the ballot at the next applicable election;
+
+
+
+(2) any person who raises or holds money or anything of value and who subsequently contributes the
+money or thing of value to, or makes expenditures in behalf of a candidate, person, or party; provided,
+that the term "committee" shall not include any person making a contribution or expenditure of his
+own funds or thing of value, which he originally acquired for his own use and not for the purpose of
+evading any provision of this chapter.
+(f) "Contribution" means:
+
+
+
+(1) a gift, subscription, loan, advance, de-posit of money or anything of value, or cancellation of a
+debt or legal obligation and includes the purchase of tickets to testimonial or fund-raising affairs, for
+the purpose of:
+
+
+
+(A) influencing the nomination for election, or election, of any person to office; or
+
+
+
+(B) influencing the outcome of any question or issue which appears or is reasonably certain to appear
+on the ballot at the next applicable election; or
+
+
+
+(C) use by any party for the purposes set out in subparagraph (A) or (B);
+
+
+
+(2) the payment, by any person other than a candidate or committee, of compensation for the personal
+services of another person which are rendered to the candidate or commit-tee without charge or at an
+unreasonably low charge; or
+
+
+
+(3) a contract, promise, or agreement to make a contribution; provided, that notwithstanding
+paragraphs (1), (2) and (3), the term shall not include services or portions thereof voluntarily provided
+without reasonable compensation by individuals or in behalf of a candidate or committee.
+
+
+
+(g) "Election" means any election for office or for determining a question or issue provided by law or
+ordinance.
+
+(h) "Expenditure" means:
+
+
+
+(1) any purchase or transfer of money or anything of value, or promise or agreement to purchase or
+transfer money or anything of value, or payment incurred or made, or the use or consumption of a
+nonmonetary contribution for the purpose of:
+
+
+
+(A) influencing the nomination for election, or election, to office whether or not the person has filed
+his nomination papers; or
+
+
+
+(B) influencing the outcome of any question or issue which appears or is reasonably certain to appear
+on the ballot at the next applicable election; or
+(C) use by any party for the purposes set out in subparagraph (A) or (B) above;
+
+
+
+(2) the payment, by any person other than a candidate or committee, of compensation for the personal
+services of another person which are rendered to the candidate or committee for any of the purposes
+mentioned in subparagraph (A), (B) or (C) above; or
+
+
+
+(3) the expenditure by a candidate of his own funds for the purposes set out in subparagraph (A), (B)
+and (C) above.
+
+
+
+(i) "House bulletin" means a communication sponsored by any person in the regular course of
+publication for limited distribution primarily to its employees or members.
+
+
+
+(j) "Newspaper" means a publication of general distribution in the territory issued once or more per
+month which is written and published in the Territory.
+
+
+
+(k) "Office" means any elective public or constitutional office.
+
+
+
+(l) "Person" means an individual, partner-ship, committee, association, corporation, or labor union and
+its auxiliary committees.
+
+
+
+History: 1977, PL 15-32 § 1; amd 1980, PL 16-72 § 9.
+
+
+
+Amendments: 1980 Subsection (C): amended to add "of the Governor or Lieutenant Governor or
+Member of the House of Representatives.
+
+
+
+6.1702 Campaign Spending Commission.
+
+
+
+There is established a Campaign Spending Commission consisting of 5 members, appointed by the
+Governor subject to confirmation by the Senate. The term of the members is 4 years and members
+may be reappointed. Members serve without compensation. Vacancies from unexpired terms are filled
+in like manner as the original appointments.
+
+
+
+History: 1977, PL 15-32 § 1;amd 1977, PL 1548 § 1; amd 1980, PL 16-72 § 10.
+Amendments: 1977 Deleted provision that Chief Justice was a member and chairman of the
+commission, and added provision that members elect 9th member, who shall be chairman, from the
+community at large. 1980 deleted 2nd paragraph and amend 1st paragraph generally.
+
+
+
+6.1703 Duties of the Chief Election Officer and Commission.
+
+
+
+(a) The Chief Election Officer's principal duty is to regulate the election process, and under this
+chapter his duties are to:
+
+
+
+(1) develop and adopt reporting forms required by this chapter;
+
+
+
+(2) adopt and publish a manual for all candidates and committees, describing the requirements of this
+chapter, including uniform and simple methods of recordkeeping;
+
+
+
+(3) preserve all reports required by this chapter for at least 5 years from the date of receipt;
+
+
+
+(4) permit the inspection, copying, or duplicating of any report required by this chapter under rules
+adopted by the Commission; provided, that no information or copies from the report shall be sold or
+used by any person for the purpose of soliciting contributions or for any commercial purpose.
+
+
+
+(b) The Commission's principal duty is to supervise campaign contributions and expenditures, and
+under this chapter its duties are to:
+
+
+
+(1) ascertain whether any candidate, committee, or party has failed to file a report required by this
+chapter or has filed a substantially defective or deficient report, and to notify the persons that their
+failure to file or filing of a substantially defective or deficient report must be corrected and explained,
+the correction or explanation to be submitted in writing to the Commission within a reasonable time
+after the notification of the failure to file or deficiency; the Commission shall make available a list of
+candidates, committees, and parties who have failed to correct their deficiency within the time
+allowed by the Com-mission, failure to respond to the notification shall constitute a violation of this
+chapter;
+
+
+
+(2) hold public hearings;
+(3) investigate and hold hearings for receiving evidence of any violations;
+
+
+
+(4) adopt a code of fair campaign practices;
+
+
+
+(5) establish rules under 4.1001 et seq.;
+
+
+
+(6) request the initiation of prosecution for the violation of this chapter under 6.1724; and
+
+
+
+(7) suggest accounting methods for candidates, parties, and committees, as the Commission may
+consider advisable, in connection with reports and records required by this chap-ter.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1704 Filing of reports.
+
+
+
+(a) Reports required to be filed under this chapter by a candidate or committee supporting a candidate
+with his consent shall be certified by the candidate. Reports required to be filed under this chapter by
+a party or commit-tee which supports more than 1 candidate shall be certified by the party or
+committee treasurer, or the deputy treasurer, or the chairman thereof, in that order. Reports required to
+be filed shall be open for public inspection.
+
+
+
+(b) Reports required by this chapter shall be filed as follows: The original and 1 copy shall be filed at
+the Commission office.
+
+
+
+(c) The Commission shall give each person filing a report a receipt showing the type of report and
+date and time of filing.
+
+
+
+(d) The reports filed shall be preserved for 5 years.
+
+
+
+(e) Reports required to be filed shall at all times be available to the Chief Election Officer.
+
+
+
+History: 1977, PL 15-32 § 1.
+6.1705 Registration.
+
+
+
+Each candidate, committee, and party shall file an organizational report not later than 4:30 p.m. on the
+earliest of the following applicable days:
+
+
+
+(1) on or before the day of filing for nomination or election;
+
+
+
+(2) at least 45 days before the general, or special election; or
+
+
+
+(3) by the 10th day after:
+
+
+
+(A) receiving any contributions in an aggregate amount of more than $100; or
+
+
+
+(B) making or incurring any expenditure which is reportable under 6.1718 and 6.1719.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1706 Organizational report.
+
+
+
+(a) The organizational report includes:
+
+
+
+(1) the name, address, office sought when known, and party affiliation of each candidate or individual
+whom the committee or party is supporting and the name and address of the committee or party;
+
+
+
+(2) the names and addresses of the campaign treasurer and deputies;
+
+
+
+(3) the names and addresses of the campaign chairman and deputy campaign chairman;
+
+
+
+(4) a list of all banks, safety deposit boxes, or other depositories used and the applicable account
+numbers;
+
+
+
+(5) the amount and date of deposit of the contribution and the name and address of each individual
+donor who has contributed an aggregate amount of more than $100 to the office being sought;
+provided, that this paragraph shall not apply to contributions made prior to 1 July 1977; and
+
+
+
+(6) in the case of a report by a committee or party supporting or opposing a ballot question or issue,
+all of the information described in paragraphs (a) (2) to (a) (5) and a description of the question or
+issue.
+
+
+
+(b) Any change in information submitted in the organizational report, other than paragraph (a) (5),
+shall be reported not later than 4:30 p.m. on the 10th calendar day after the change or when the
+candidate, committee, party, or campaign treasurer becomes aware of the change.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1707 Designated central committee.
+
+
+
+Each candidate for a Territory-wide or representative office who is supported by more than 1
+committee shall designate a central committee which shall be responsible for aggregating the total
+contributions and expenditures of all committees directly associated with the candidate and for filing
+composite reports indicating this information on the dates set by 6.17l8 and 6.1719.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1708 Campaign treasurer.
+
+
+
+(a) Every committee, party, and candidate shall appoint a campaign treasurer on or before the day for
+filing an organizational report. Up to 2 deputy campaign treasurers may be appointed. A candidate
+may appoint himself as campaign treasurer.
+
+
+
+(b) A campaign treasurer may be removed at any time. In case of death, resignation, or removal of the
+campaign treasurer, the committee, party, or candidate shall promptly appoint a successor. During the
+period the office of campaign treasurer is vacant, the candidate, committee chairman, or party chair-
+man, whichever is applicable, shall serve as campaign treasurer.
+(c) Each campaign treasurer shall be authorized to receive contributions or make expenditures on
+behalf of the candidate, committee, or party appointing him.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1709 Contributions-Deposit-Itemized record required—Limitations.
+
+
+
+(a) Monetary contributions shall be promptly deposited in a financial depository duly authorized to do
+business in the territory, such as a bank, savings and loan institution, industrial loan company, or
+similar financial institution, in the name of the candidate, committee, or party, whichever is
+applicable.
+
+
+
+(b) Each candidate, committee, or party shall establish and maintain an itemized record showing the
+amount of all monetary contributions, the description and value of each nonmonetary contribution,
+and the name and address of each donor making a contribution.
+
+
+
+(c) Each candidate and campaign treasurer shall report the amount and date of deposit of each
+contribution and the name and address of each donor who makes a contribution or contributions
+whose aggregate value is $100 or more.
+
+
+
+(d) No candidate, committee, or party may accept a contribution of $100 in cash from a single person
+without issuing a receipt to the donor and keeping a record of the transaction.
+
+
+
+(e) Each committee and party shall disclose the original source of all earmarked funds, the ultimate
+recipient of the earmarked funds, and the fact that the funds are earmarked.
+
+
+
+(f) For the purposes of this section, "ear-marked funds" means contributions received by a committee
+or party on the condition that the funds be contributed to or expended only on certain candidates,
+issues, or questions.
+
+
+
+(g) The following contributions are the maximum permissible:
+
+
+
+(1) corporations, partnerships, joint ventures or any business or organization, $2,000; and
+(2) individuals, $500.
+
+
+
+History: 1977, PL 15-32 § 1; amd 1980, PL 16-72 § 11; 2002, PL 27-31.
+
+
+
+Amendments: 1980 Subsection (g): deleted paragraph (1) and renumbered (2) and (3) as (1) and (2).
+
+
+
+6.1710 Contributions-Restrictions against transfer.
+
+
+
+(a) A candidate, campaign treasurer, or committee shall not receive any contributions, make any
+expenditures, or receive or make any transfer of money or anything of value:
+
+
+
+(1) for any purpose other than those directly related:
+
+
+
+(A) in the case of the candidate, to his own campaign; or
+
+
+
+(B) in the case of a campaign treasurer or committee, to the campaign of the candidate, question, or
+issue with which they are directly associated; or
+
+
+
+(2) to support the campaigns of candidates other than the candidate, for whom the funds were
+collected or with whom the campaign treasurer or committee is directly associated; or
+
+
+
+(3) to campaign against any other candidate not directly opposing the candidate for whom the funds
+were collected or with whom the campaign treasurer or committee is directly associated; provided,
+that a candidate, campaign treasurer or committee may purchase from its campaign fund not more
+than 2 tickets for each testimonial or fundraising affair as defined in 6.1713 and 6.1714, respectively,
+held by another candidate, committee, or party.
+
+
+
+(b) This section may not be construed to prohibit a party from supporting more than 1 candidate, or to
+prohibit joint expenditure by 2 or more candidates seeking election to multiple offices from the same
+district whether the expenditures are equally or unequally incurred among those candidates; provided,
+that the allocation of expenditures between the candidates is based upon reasonable objective
+standards. The party or candidates, whichever is applicable, shall make the initial allocation between
+candidates. If the allocation is disallowed by the Commission, and the allocation of expenditures is
+not corrected as prescribed by the Commission within the time allowed by the Commission, then the
+amount of the allocation found to be unreason-able by the Commission shall be presumed to be a
+transfer of funds in violation of this section.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1711 Anonymous contributions unlawful.
+
+
+
+(a) No person may make a contribution of his own money or property or money of another person to
+any candidate, party, or committee in connection with a nomination for election, or election,
+anonymously; nor may any candidate, party, or committee knowingly receive, accept, or retain the
+contribution or enter or cause the same to be entered in its accounts as an anonymous contribution or
+in another name than that of the person by whom it was actually furnished.
+
+
+
+(b) Anonymous contributions received by a candidate, party, or committee shall not be used or
+expended, but shall be returned to the donor. If the donor cannot be identified, the contribution shall
+escheat to the Territory.
+
+
+
+(c) This section does not apply to amounts that aggregate less than $250when obtained through
+multiple contributions made by 10 or more persons at the same event. Each aggregate contribution
+shall be reported accompanied by a description of the means, method, place, and date of receipt.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1712 Use of another person's name prohibited.
+
+
+
+(a) Persons may not make contributions of their own money or property or money or property of
+another person to any candidate, party, or committee in connection with a nomination for election, or
+election, in any other name than the name of the person owning the money or who supplied the money
+or property.
+
+
+
+(b) Contributions made in the name of a person other than the true or established name of the actual
+owner of the money or property shall escheat to the Territory.
+
+
+
+History: 1977, PL 15-32 § 1.
+6.1713 Testimonial affairs and coffee hours.
+
+
+
+(a) As used in this section, "testimonial affair" means any function held for the benefit of a person and
+designed to raise funds for political purposes for which the total cost for attending the affair is more
+than $15 a person.
+
+
+
+(b) No person or a committee directly associated with the person shall hold more than one testimonial
+affair until after an election in which that person was either elected or defeated unless that person
+seeks election to Territorial office, in which case he or his directly associated committees may hold no
+more than 3 testimonial affairs in each county. An additional testimonial affair may be held within 6
+months after a general, or special election, in the case of a candidate or committee directly associated
+with that person having a deficit. No testimonial affair may be held unless a notice of intent to hold
+the affair is filed by the person in charge of the affair with the commission prior to the date of the
+affair setting forth the name and address of the person in charge, the charge per person, the date, hour,
+and place of the affair and whether contributions will be solicited at the affair and method thereof.
+Testimonial affairs sponsored by a party for a political purpose for the general benefit of the party are
+exempt from the limits of this subsection.
+
+
+
+(c) The number of functions held for the benefit of a person designed to raise funds for political
+purposes for which the total cost for attending the affair is $15 or less per person shall not be limited
+except:
+
+
+
+(1) For territorial offices, no person may hold more than 2 functions in each district.
+
+
+
+(2) For all other offices, a person may hold either 2 functions of 1 testimonial affair in each district.
+
+
+
+History: 1977, PL 15-32 § 1; amd 1980, PL 16-72 § 12.
+
+
+
+Amendments: 1980 Subsection (a): deleted paragraph (2). Subsection (c):deleted and relettered
+existing subsection (d) as(c).
+
+
+
+6.1715 Campaign expenditures—Written authorization required.
+
+
+
+(a) A candidate may draw on the campaign treasurer for his political expenditures for post-age,
+telegrams, telephone calls, stationery, expressage, travel, meals, and lodging. The candidate shall
+make a detailed accounting of his political expenditures and the accounting shall be made a part of the
+reports required in 6.1718 and 6.1719. The account shall state the amount and the purpose of the
+expenditures and other information required by the Commission and shall be signed and certified by
+the campaign treasurer.
+
+
+
+(b) No funds shall be withdrawn or paid from a campaign depository except upon the written
+authorization of the campaign treasurer.
+
+
+
+(c) No expenditure by or on behalf of a candidate shall be made or incurred by any committee without
+specific written authorization of the candidate or his authorized representative. Every expenditure so
+authorized and made or incurred shall be attributed to the candidate for whom the expenditure is made
+for the purpose of imposing the expenditure limitations imposed by § 1616.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+Reviser's Comment: § 1616 (19 ASC 1616) was repealed by PL 16-7 2.
+
+
+
+6.1717 House bulletins.
+The cost of preparing, printing, and circulating house bulletins and the writings, drawings, and
+photographs contained therein, except for paid political advertisements, shall be exempt from the
+provisions of this chapter.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1718 Preliminary reports.
+
+
+
+(a) Each candidate, authorized person in the case of a party, or campaign treasurer in the case of a
+committee shall file a preliminary report with the Commission on forms provided by the Commission
+not later than 4:30 p.m. of the 10th calendar day prior to each election. The report shall be certified
+under 6.1704 and shall contain the following information which is current through the 15th calendar
+day prior to the election:
+
+
+
+(1) The aggregate sum of all contributions received;
+
+
+
+(2) the amount and date of deposit of the contribution and the name and address of each donor who
+contributes an aggregate of $100 or more;
+(3) all expenditures made, incurred, or authorized by or for a candidate including the name and
+address of each payee and the amount, date, and purpose of each expenditure; and
+
+
+
+(4) a current statement of the balance on hand or deficit.
+
+
+
+(b) Notwithstanding this section, a candidate or committee which makes expenditures of $500 or less
+may file a short form report with the Commission in lieu of the reports required by this section and
+6.1719.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1719 Final and supplemental reports.
+
+
+
+(a) Each candidate whether or not successful in a general, special, or runoff election, authorized
+person in the case of a party, or campaign treasurer in the case of a committee directly associated with
+a candidate, shall file a final report not later than 4:30 p.m. on the 20th day after the general, special,
+or runoff election is certified. The report shall include:
+
+
+
+(1) a statement of the total contributions received;
+
+
+
+(2) the amount and date of deposit of the contribution and the name and address of each donor who
+contributes an aggregate of $100 or more;
+
+
+
+(3) a statement of all expenditures made or incurred by or for a candidate including the name of each
+payee and the amount, date, and purpose of each expenditure; and
+
+
+
+(4) a statement of the balance on hand or deficit.
+
+
+
+(b) Deficit. In the event of a deficit, the candidate, authorized person in the case of a party, or
+campaign treasurer in the case of a committee shall, every 3 months until the deficit is eliminated, file
+supplemental reports reporting all items prescribed in subsection (a). The first report is due not later
+than 4:30 p.m. on the 5th day after the last day of the election year.
+
+
+
+(c) Surplus. In the event of a surplus the candidate, authorized person in the case of a party, or
+campaign treasurer in the case of a committee shall:
+
+
+
+(1) maintain the cash surplus in a financial depository; and
+
+
+
+(2) Every 6 months, until he becomes a candidate again, file supplemental reports reporting all items
+prescribed in subsection (a).
+
+
+
+The first report shall be due not later than 4:30 p.m. on the 5th day after the last day of the election
+year.
+
+
+
+(d) A candidate, party, or committee who receives no contributions or makes no expenditures shall
+nevertheless file preliminary, final, and supplemental reports as required by law.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1720 Disposition of funds.
+
+
+
+(a) Candidates who withdraw or cease to be candidates or committees direct1y associated with these
+candidates, individuals who receive contributions but fail to file for nomination, or committees or
+parties which discontinue their activities covered in this chapter, shall return any residual
+contributions proportionately to the donors if their identities are known. This subsection does not
+apply to elected officials or candidates who failed to be elected.
+
+
+
+(b) If no donors are found, the residual contributions shall be contributed to the campaign fund of any
+candidate, or to any party, charity, or nonprofit organization or escheated to the Territory.
+
+
+
+(c) Upon disposition, the candidate or campaign treasurer shall file a report with the com-mission
+reporting the amounts distributed under this section and the manner of disposition.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1721 Advertising.
+(a) No person may cause or submit any advertisement in support for a candidate or against a
+candidate's opponent, to be broad-cast, televised, or otherwise circulated and distributed except under
+the following conditions:
+
+
+
+(1) The advertisement shall contain a notice in a prominent location that the literature or
+advertisement is published, broadcast, televised, or circulated with the approval and authority of the
+candidate, provided that in the event that the literature or advertisement is paid for by a candidate or
+committee directly associated with a candidate, the notice of approval and authority need not be
+included; or
+
+
+
+(2) The advertisement shall contain a notice in a prominent location that the literature or
+advertisement is published, broadcast, televised, or circulated without the approval and authority of
+the candidate.
+
+
+
+(b) All advertisements mentioned in sub-section (a) shall contain the name and address of the
+candidate, committee, or party paying for it.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1722 Complaints, investigation, and notice.
+
+
+
+(a) Complaints of violations of this chapter against any person shall be filed with the Com-mission.
+The complaint shall be in writing and shall be signed under oath by the complain-ant. Complaints
+initiated by the Commission shall be in writing and signed by the chairman.
+
+
+
+(b) The Commission shall give notice of receipt of the complaint together with a copy of the
+complaint to the person cited and shall afford him an opportunity to explain or other-wise respond to
+the complaint. The Commission may also cause an investigation to be made of the complaint.
+
+
+
+(c) Upon hearing the response of the person cited, if he elects to respond to the complaint, and upon
+completion of any investigation, the Commission shall make a prompt determination as to whether
+probable cause exists that a violation has been committed.
+
+
+
+(1) Persons who appear before the Com-mission shall have all of the rights, privileges, and
+responsibilities of a witness appearing before the courts of the Territory. Witnesses summoned before
+the Commission shall receive reimbursement as paid in like circumstances in the courts of this
+Territory. Persons whose names are mentioned during a proceeding of the Commission, and who may
+be adversely affected thereby, may appear personally before the Commission on their own behalf or
+file a written statement for incorporation into the record of the proceeding.
+
+
+
+(2) The Commission shall cause a record to be made of all proceedings under this subsection. At the
+conclusion of proceedings concerning an alleged violation the Commission shall immediately begin
+deliberations on the evidence and then proceed to determine by majority vote of the members whether
+probable cause exists that a violation has been committed.
+
+
+
+(d) Until the determination of probable cause by the Commission, all proceedings, including the filing
+of the complaint, investigation, and hearing shall be confidential unless the person complained of
+requests an open session. In the event the Commission determines that probable cause does not exist,
+then the complaint shall be dismissed and the entire record of the proceedings shall be kept
+confidential at the option of the person complained of.
+
+
+
+(e) The Commission shall give written notice to the person complained of and to the complainant as to
+whether probable cause of a violation exists or whether the complaint has been dismissed.
+
+
+
+(f) In the event a determination is made that probable cause of willful violation exists, the
+Commission shall promptly advise the Chief Election Officer of its findings. In the event a
+determination is made that probable cause of an unintentional violation exists, the Com-mission shall
+issue a confidential order that may require the violator to:
+
+
+
+(1) temporarily cease and desist violation of this chapter; or
+
+
+
+(2) file any report, statement, or other information as required by this chapter.
+
+
+
+(g) The Commission may only initiate prosecution as provided in 6.1724 when it finds that probable
+cause of a willful violation exists.
+
+
+
+History: 1977, PL 15-32 § 1.
+
+
+
+6.1723 Violation—Penalty.
+
+
+
+(a) Persons knowingly violating any provision of this chapter shall, unless otherwise expressly stated,
+be punishable in the manner prescribed as follows:
+(1) if a natural person, he shall be guilty of a class B misdemeanor and shall be upon conviction
+sentenced accordingly; or
+
+
+
+(2) if a corporation, organization, or association, it shall be upon conviction sentenced accordingly;
+and
+
+
+
+(3) Whenever a corporation, organization, or association violates this chapter, the violation shall be
+considered to be also that of the individual directors, officers, or agents of the corporation,
+organization, or association, who have knowingly authorized, ordered, or done any of the acts
+constituting the violation.
+
+
+
+(b) Persons may sue for injunctive relief to compel compliance with this chapter.
+
+
+
+History: 1977, PL 15.32 § l; amd 1980, PL 16-90 § 45.
+
+
+
+Amendments: 1980 Amended to conform with penalties provided for in Title 46, Criminal Justice.
+
+
+
+6.1724 Prosecution.
+
+
+
+(a) For purposes of prosecution for violations of this chapter, the Office of the Attorney General has
+jurisdiction to be exercised as follows:
+
+
+
+(1) Prosecution shall commence with a writ-ten request from the Commission or upon the issuance of
+an order of the court; and
+
+
+
+(2) In the case of all offices, parties, or issues, the Attorney General shall prosecute any violation.
+
+
+
+(b) The court shall give priority to the expeditious processing of suits under this section.
+
+
+
+      (c) Prosecuting for violation of any provision of this chapter shall not be commenced
+      after 1 year has elapsed from the date of the violation or date of filing of the report
+      covering the period in which the violation occurred, whichever is later.
+
+History: 1977, PL 15-32 § 1.
+

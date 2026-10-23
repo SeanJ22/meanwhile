@@ -586,8 +586,12 @@ def county_offices(captures, state, write):
         })
         package["sourceReceipt"]["reviewedAt"] = meta["retrievedAt"]
         package["sourceReceipt"]["reviewedBy"] = "BA-01 official county office list replay"
-        if write:
-            path.write_text(json.dumps(package, ensure_ascii=False, indent=2) + "\n")
+    if state == "sc":
+        # Candidate certification does not print voting limits. Reapply the
+        # verified ballot instructions and scoped office rules on every replay.
+        runpy.run_path(str(ROOT / "scripts/ba02-vote-limits.py"))["apply_sc_limits"](package)
+    if write and (len(ballot["contests"]) > old_contests or state == "sc"):
+        path.write_text(json.dumps(package, ensure_ascii=False, indent=2) + "\n")
     return {"state": state.upper(), "addedContests": len(ballot["contests"]) - old_contests,
             "addedCandidacies": len(ballot["candidacies"]) - old_candidates}
 

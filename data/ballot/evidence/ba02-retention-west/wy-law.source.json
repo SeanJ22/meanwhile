@@ -1,0 +1,13 @@
+{
+  "sourceUrl": "https://wyoleg.gov/statutes/compress/title22.pdf",
+  "finalUrl": "https://wyoleg.gov/statutes/compress/title22.pdf",
+  "retrievedAt": "2026-10-23T09:35:31.385821+00:00",
+  "httpStatus": 200,
+  "rawHash": "a7d73bc40f51c3f285d0de2477a441730c08662fc842c3fde720d4baa7eb48a9",
+  "bytes": 806795,
+  "file": "wy-law.pdf.gz",
+  "compression": "gzip",
+  "textSnapshot": "wy-law.txt",
+  "textHash": "399ce1db75079a3011c75a03a2ab61c3a84f570fe161d74a624ad192a9a5ac46",
+  "extraction": "pdftotext -layout; relevant retention section excerpt"
+}

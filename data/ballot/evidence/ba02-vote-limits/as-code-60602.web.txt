@@ -1,0 +1,98 @@
+6.0602 Contents of ballot. - American Samoa Bar Association (https://asbar.org/code-annotated/6-0602-contents-of-ballot/)
+【turn553674view0】 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://asbar.org/code-annotated/6-0602-contents-of-ballot/","lineno":null}); Total lines: 95
+L0:   * 【0†Home】
+L1:   * 【1†About The Bar】
+L2: 
+L3:     * 【2†Scholarship】
+L4:     * 【3†President’s Message】
+L5: 
+L6:       * 【4†Past Messages from the President】
+L7:     * 【5†Court Information】
+L8:     * 【6†Links】
+L9:     * 【7†Bar Documents】
+L10: 
+L11:       * 【8†Minutes and Agendas】
+L12:       * 【9†Bylaws】
+L13:       * 【10†Bar Constitution】
+L14:   * 【11†Members】
+L15: 
+L16:     * 【12†Member List】
+L17:     * 【13†CLEs】
+L18:     * 【14†Admissions】
+L19:     * 【15†Committees】
+L20:       * 【13†CLE】
+L21:       * 【14†Admissions】
+L22:       * 【16†Law Reform】
+L23:       * 【17†Ethics】
+L24:     * 【18†Resolutions of the Bar】
+L25:     * 【19†Bar Records】
+L26: 
+L27:       * 【20†Annual Reports】
+L28:       * 【8†Minutes & Agendas】
+L29:   * 【21†News and Events】
+L30: 
+L31:     * 【22†News Blog】
+L32:     * 【23†Events Calendar】
+L33:     * 【24†News】
+L34:     * 【25†Press Releases】
+L35:     * 【26†Past Events】
+L36:   * 【27†Fastcase】
+L37:   * 【28†Contact Us】
+L38:   * 【29†Legal Resources】
+L39: 
+L40:     * 【30†American Samoa Digest】
+L41:     * 【31†Scanned ASR – 2d Series】
+L42:     * 【32†Search Cases】
+L43:       * 【33†Case Law By Series】
+L44:       * 【34†Unpublished Cases】
+L45:     * 【35†Code Annotated】
+L46: 
+L47:       * 【36†Code Annotated by Title and Chapter】
+L48:       * 【37†Updated Annotated Code by Title (as of August 2021)】
+L49:     * 【38†Regulations】
+L50:     * 【39†Public Laws】
+L51:     * 【40†Legal Resources Archive】
+L52:       * 【41†Case Law】
+L53:       * 【42†Code Annotated】
+L54:       * 【43†Regulations】
+L55:       * 【44†American Samoa Constitution】
+L56:       * 【45†Organic Documents】
+L57:       * 【46†Court Rules】
+L58:       * 【47†Forms and Pamphlets】
+L59:       * 【48†Other Legal Resources】
+L60: ## 6.0602 Contents of ballot.
+L61: 
+L62: Print This
+L63: 
+L64: 【49†Chapter 06 - Ballots】
+L65: (a) A ballot shall contain the names of the candidates, the offices for which they are running, and the district in which the election is being held. The name of the candidate may be printed with the Samoan or English equivalent or nickname, if the candidate so requests in writing at the time his nomination papers are filed. Candidates’ names, including the Samoan or English equivalent or nickname, shall be set on one line in as large type as the length of the majority of the names will permit.
+L66: All candidates’ names must be in the same height of type face and style.
+L67: (b) In multirace districts, the ballot shall state that the qualified elector shall not vote for more than the number of seats available or the number of candidates listed where such number is less than the seats available.
+L68: 
+L69: (c) A ballot shall bear no word, motto, device, sign, or symbol other than allowed in this title.
+L70: 
+L71: History: 1977, PL 15-42 § 1.
+L72: 
+L73: Legal Resources
+L74: 
+L75:   * 【32†Search All Cases】
+L76: 
+L77:     * 【33†Case Law By Series】
+L78:     * 【34†Unpublished Cases】
+L79:   * 【35†Code Annotated】
+L80:     * 【36†Code Annotated by Title and Chapter】
+L81:     * 【37†Updated Annotated Code by Title (as of August 2021)】
+L82:   * 【38†Regulations】
+L83: 
+L84:     * 【50†Regulations by Title and Chapter】
+L85:   * 【51†American Samoa Constitution】
+L86:   * 【52†Organic Documents】
+L87:   * 【46†Court Rules】
+L88: ### Get In Touch!
+L89: 
+L90: 【53†American Samoa Bar AssociationPost Office Box 23Pago Pago , American Samoa 96799】
+L91: ### About Us
+L92: Welcome to the American Samoa Bar Association. We are the licensing body and the official bar association for all of those who practice law in American Samoa. The American Samoa Bar Association serves to promote justice, the rule of law, and the interests of the legal system. We do this through public education, legislative review, promoting the judiciary, and advocating the rule of law.
+L93: We also offer a legal scholarship to a student that shows exemplary academics and a desire to promote the rule of law in American Samoa.
+L94: © 2020 American Samoa Bar Association. All Rights Reserved.
+

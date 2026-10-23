@@ -1,0 +1,964 @@
+﻿
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="robots" content="noimageindex">
+	    <meta charset="iso-8859-1">
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+	    	    <title>Code of Laws - Title 4 - Chapter 9- - COUNTIES</title>
+	    <link rel="SHORTCUT ICON" href="/images/stateflagsmall.ico" />
+		<link rel="icon" href="/images/stateflagsmall.ico" type="image/ico" />
+		<link rel="SHORTCUT ICON" href="/images/South-Carolina-Flag2.ico" />
+
+		<link type="text/css" rel="stylesheet" href="/css/main.css" media="all" />
+				
+		<!--[if lte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/ie7main.css" media="all" />
+		<![endif]-->
+		<!--[if gte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/iemain.css" media="all" />
+		<![endif]-->
+		<link type="text/css" rel="stylesheet" href="/css/print.css" media="print" />
+		<link type="text/css" rel="stylesheet" href="/css/supplement.css" media="screen" />
+		<!--<link type="text/css" rel="stylesheet" href="/css/zipsearch.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/vote.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/contact.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/navwrap.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/linkbar.css" media="screen" />-->
+	
+		<!--<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>-->
+		<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+				<script type="text/javascript" src="/js/main_linux.js"></script>
+		
+
+		
+
+
+
+		<!--<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/utils.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/lightbox.js"></script>
+		<script type="text/javascript" src="/js/legislation.js"></script>
+		<script type="text/javascript" src="/js/logon_lits.js"></script>
+		<script type="text/javascript" src="/js/message.js"></script>
+		<script type="text/javascript" src="/js/comm_meeting.js"></script>-->
+		<script type="text/vbscript" src="/vbs/comm_meeting.vbs"></script>
+		<!--<script type="text/javascript" src="/js/regs.js"></script>-->
+				
+	   	<script type="text/javascript">
+	    //document.onclick = function () { document.getElementById('transbox').style.display= 'none' };
+	    	var xmlhttp=false;
+			xmlhttp = create_xml_object();
+	
+			function getElement(ele)
+			{
+				var theobj = false;
+				if(typeof ele == 'string')
+					theobj = (document.getElementById)?document.getElementById(ele):document.all[ele];
+				else
+					theobj = ele;
+			
+				return theobj;
+			}
+		
+			function checkreader(friendlyalert)
+			{
+			 	/*friendlyalert=friendlyalert||false;
+			 	
+			 	var browser_info = perform_acrobat_detection();
+				if (!browser_info.acrobat)
+				{
+				 	loadadobebox('adobebox', '/adobe.php');
+					return false;
+				}
+				else if (friendlyalert)
+				{
+			 		alert(friendlyalert);
+				}*/
+				return true;
+			}
+				
+			function loadadobebox(boxname, url)
+			{
+				var response = false;
+	
+				doRequest(xmlhttp, "GET", url, false, null, null);
+				if (xmlhttp.status == 200)
+				{
+		         	response = xmlhttp.responseText;
+				}
+	
+				if(response)
+				{
+			 		var ele = document.getElementById(boxname);
+				 	if (ele)
+				 	{
+				 		ele.style.visibility = 'hidden';
+		 				ele.style.display = 'block';
+	
+		 				positionElement(ele, 'center', 'center', true);
+	
+						ele.innerHTML = response;
+					    ele.style.visibility = 'visible';
+					    ele.style.display = 'block';
+	//				    ele.scrollIntoView(true);
+					}
+				}
+				return response;
+			}
+	
+	
+			function init()
+			{
+		 		var ld=document.getElementById("loading");
+				if(ld)
+				{
+					ld.style.display = 'none';
+				}
+			}
+			
+			function openmore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				 	var pos = findPos(id);
+				 	id.style.zIndex = 10;
+		//		 	id.style.left = pos[0]+'px';
+		//		  	id.style.top = pos[1]+'px';
+				  	id.style.height = '295px';
+				  	id.style.position = 'absolute';
+				  	id.style.backgroundColor = '#f7f4ec';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'none';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = 'none';
+				  	}
+				}
+			}
+		
+			function closemore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				  	id.style.height = '135px';
+				  	id.style.position = '';
+				  	id.style.backgroundColor = 'transparent';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'block';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = '';
+				  	}
+				}		 	
+			}
+		
+		<!-- This script and many more are available free online at -->
+		<!-- The JavaScript Source!! http://javascript.internet.com -->
+		
+		<!-- Begin
+		function right(e) {
+		var msg = "Use of this image is strictly prohibited unless express written permission is given to the user by South Carolina Legislative Services Agency.";
+		if (navigator.appName == 'Netscape' && e.which == 3) {
+		alert(msg);
+		return false;
+		stopEvent(e);
+		}
+		if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) {
+		alert(msg);
+		return false;
+			stopEvent(event);
+		}
+		else return true;
+		}
+		
+	function trap() 
+	{
+		if(document.images)
+		{
+			for(i=0;i<document.images.length;i++)
+			{
+				if(document.images[i].className == 'allowcontextmenu')
+				{
+					// this should have no scripting
+				}
+				else
+				{
+				 	document.images[i].onmousedown = right;
+					document.images[i].oncontextmenu = function(){ return false; };
+					//document.images[i].onmouseup = right;
+				}
+			}
+		}
+	}
+
+	function findfwtext(texttofind) 
+	{
+	 	var fwtextele = document.getElementById('fwtext');
+		if(fwtextele)
+		{
+			fwtextele.value = texttofind;
+		}
+	}	
+		// End -->
+		</script>
+
+		<!-- ADDED FOR V4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY6FMNQKH"></script>
+
+
+<script type="text/javascript">
+
+//ADDED FOR V4
+//Google tag (gtag.js) 
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LJY6FMNQKH');
+
+ 
+ /* COMMENTING OUT UPGRADING TO V4 -A
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36207109-1']);
+  _gaq.push(['_setDomainName', 'scstatehouse.gov']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+*/
+  
+      $(document).ready(function(){
+        // COMMENTING THIS OUT NO LONGER BEING ACTIVELY USED TO MONITOR FOR TRAFFIC TO SPECIFIC LINKS - A
+        /*
+          var anchors = $('div#contentsection a');
+
+          //console.log('anchors...'+anchors.length);
+          if(anchors.length > 0){
+            //console.log('setting up event handler...');
+            anchors.click(function(){
+              var a = $(this).attr('href');
+              if(_gaq && (a.substr(-3) == 'htm' || a.substr(-4) == 'html' || a.substr(-3) == 'doc' || a.substr(-4) == 'docx' || a.substr(-3) == 'pdf' || a.substr(-3) == 'xls' || a.substr(-4) == 'xlsx')) {
+                //console.log(a);
+                _gaq.push(['_trackPageview', $(this).attr('href')]);
+              }
+              
+              var aText = $(this).text().toLowerCase();
+              if (a.indexOf('getfile.php') > -1 && aText === 'word'){
+                    _gaq.push(['_trackEvent', 'Word Doc', 'Download', ('from page: ' + document.location + ' - href: ' + a)]);
+              }
+
+            });
+          }
+          */
+      });
+
+</script>
+	</head>
+	
+		
+	<body class="home"  onload="init(); trap();">
+	<noscript>Your browser does not support JavaScript!  This page will not render correctly.</noscript> 
+
+
+	
+	<div id="adobebox" style="position:absolute; width:400px; height:150px; border:2px solid #555555; background-color:#cccccc; display:none;"></div>
+	<div id="container" >	
+				<div id="header" class="nodisplay" style="text-align:center; height:100px;" >
+									<img id="headerimg" class="nodisplay" alt="South Carolina Legislature" title="South Carolina Legislature" src="/images/header8.png" />
+								
+							<!--	<div class="award"><span style="color:#831224; font-weight:bold; font-size:1.5em;">*</span> Recipient of<br>the Notable State Documents Award<br>by the<br>South Carolina<br>State Library.</div>-->
+				
+				
+			</div>
+			<div class="printdisplay"><img border="0" src="/images/titleprint.jpg" alt="South Carolina Legislature" title="South Carolina Legislature" alt="South Carolina Legislature" title="South Carolina State Legislature" /><br /><hr /><br /></div>
+	
+			<div id="pagebody" >
+	
+	
+<!--<div id="topmessage">
+<br style="display:block; margin-top:10px;">
+Searches and data queries will be unavailable beginning Friday, August 19, 2016, from 8:00 PM until Saturday, August 20th at 8:00 AM<br>due to scheduled maintenance.</div>-->
+				<!-- Prompt IE 8/7/6 users to upgrade to a newer browser. -->
+				<!--[if lte IE 8]>
+				<div class="oldframe">In order to improve your experience using this website, please <a href="http://browsehappy.com/">upgrade your browser</a>.</div>
+				<![endif]-->
+			
+			
+			
+			<div id="menu" class="nodisplay">
+				<ul class="nodisplay">
+				<li><a href="/index.php">Home</a></li>
+<li><a href="/senate.php">Senate</a></li>
+<li><a href="/house.php">House</a></li>
+<li><a href="/committeeinfo.php">Committee&nbsp;Postings&nbsp;and&nbsp;Reports</a></li>
+<li><a href="/council.php">Legislative Council</a></li>
+<li><a href="/citizens.php">Citizens&#39; Interest</a></li>
+<li><a href="/publications.php">Publications</a></li>
+		    	</ul>
+			</div>
+			<div id="search" class="nodisplay" style="height: 28px;"><div class="nodisplay" style="float:right; margin:6px 20px 0px 0;">
+							<!--<a style="color:#f7f4ec; height:15px;" href="#" onClick="rsswindow();"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+<!--				<a style="color:#f7f4ec; height:15px;" href="/splashpage/splashpage.html"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a> -->
+				<a style="color:#f7f4ec; height:15px;" href="/onlineservices/index.php"><img border="0" src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>
+			<!--	<a style="color:#f7f4ec; height:15px;" href="/maintenance_portal.php"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+						</div></div>
+			
+	
+					<div id="sidebar" class="nodisplay">
+	<div id="vidlinks" style="height: 50px;">
+						<!--<img src="/images/videobutton12d.png">-->
+											<ul id="vidsidemenu">
+	<li id="vidinnermenu" style="font-size:16px; margin: 0 0 5px 0;">Chamber Video</li>
+<li id="sbroadcast" style="float: left; width:50%;">
+<a id="liveS" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('S', false, false, '0')">Senate</a><br><a id="liveaudioS" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('S', false, false, '1');">(Audio Only)</a>
+</li>
+<li id="hbroadcast" style="float: left; width:50%;">
+<a id="liveH" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('H', false, false, '0')">House</a><br><a id="liveaudioH" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('H', false, false, '1');">(Audio Only)</a>
+</li>
+						</ul>
+					</div>
+					<div id="commvidlinks"><a href="/video/schedule.php">Video&nbsp;Schedule</a><a style="border-top:1px solid #fff; padding-top:12px;" href="/video/archives.php">Video Archives</a></div>
+										<div id="sidemenu">
+						<ul id="innermenu">
+		
+							<li><a href="/howdoi.php">How do I...</a></li>
+										
+							
+								<li class="nolink" onMouseOver="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='block'; document.sidesearchform.searchtext.focus();}" onMouseOut="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Quick Search</div>
+								<div id="sidesearch" class="sidesubmenu">
+									<form id="sidesearchform" name="sidesearchform" method="POST" action="/search.php">
+									<input type="hidden" name="search" value="side" />
+									<div class="topelement"><label for="searchtext"><span class="label">Search for:</span></label><input id="searchtext" name="searchtext" type="text"/><a id="searchlink2" href="javascript:void(0);" onClick="document.sidesearchform.submit();"><img id="searchicon" src="/images/searchbutton.png" alt="Search" title="Search"/></a></div>
+			<!--						<div><input type="checkbox" id="searchchoice_all" name="searchchoice_all" value="all" /><label for="searchchoice_all">All</label></div>-->
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_fullsite" name="category" value="FULLSITE" /><label for="searchchoice_fullsite">&nbsp;Full Site Search</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_billnumber" name="category" value="BILL" /><label for="searchchoice_billnumber">&nbsp;Bill Number</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_legislation" name="category" value="LEGISLATION" CHECKED /><label for="searchchoice_legislation">&nbsp;Legislation</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_budget" name="category" value="BUDGET" /><label for="searchchoice_budget">&nbsp;Budget</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeoflaws" name="category" value="CODEOFLAWS" /><label for="searchchoice_codeoflaws">&nbsp;Code of Laws</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeofregs" name="category" value="CODEOFREGS" /><label for="searchchoice_codeofregs">&nbsp;Code of Regulations</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_constitution" name="category" value="CONSTITUTION" /><label for="searchchoice_constitution">&nbsp;Constitution</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_housejournals" name="category" value="HOUSEJOURNALS" /><label for="searchchoice_housejournals">&nbsp;House Journals</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_senatejournals" name="category" value="SENATEJOURNALS" /><label for="searchchoice_senatejournals">&nbsp;Senate Journals</label></div>
+									<div class="bottomelement" style="padding-left:20px;"><input type="radio" id="searchchoice_billsummary" name="category" value="SUMMARY" /><label for="searchchoice_billsummary">&nbsp;LSA Bill Summary</label></div>
+								</form>
+									
+								</div>
+							</li>
+							<li><a href="/legislatorssearch.php">Find Your Legislators</a></li>
+							<li id="contactLegislatorLink"><a href="/email.php?chamber=B">Contact Your Legislator</a></li>
+									
+							<li><a href="/legislation.php">Legislation</a></li>
+							<li><a href="/listtracking/main.php" target="LTS">Track Legislation</a></li>
+							<li><a href="/multicriteria2/search.php" target="MCS">Multi-Criteria Search</a></li>
+									<!--<li><a href="#" onclick="multisearchwindow('INTROBOTH');">Multi-Criteria Search</a></li>-->
+									<!--<li><a href="#" onclick="multisearchwindow('INTROMANUAL');">Multi-Criteria Search</a></li>-->
+									<li><a href="/research.php">Research</a></li>
+	
+								<li class="nolink" onMouseOver="var ele=document.getElementById('law'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('law'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">South Carolina Law</div> 
+								<div id="law" class="sidesubmenu">
+									<div class="sidediv topelement"><a href="/newlaws.php">Ratifications &amp; Acts</a></div>
+									<div class="sidediv"><a href="/code/statmast.php">Code of Laws</a></div>
+									<div class="sidediv"><a href="/coderegs/statmast.php">Code of Regulations</a></div>
+									<div class="sidediv"><a href="/scconstitution/scconst.php">Constitution</a></div>
+									<div class="sidediv bottomelement"><a href="/state_register.php">State Register</a></div>
+								</div>
+							</li>
+										<li class="nolink" onMouseOver="var ele=document.getElementById('manual'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('manual'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Legislative Manual</div>
+								<div id="manual" class="sidesubmenu">
+								
+<!--									<div class="sidediv topelement"><a href="https://web.sc.gov/LSAShoppingcart/Default.aspx" target="_blank">Purchase Manual</a></div>-->
+								
+<!--									<div class="sidediv topelement"><a href="https://secure.scstatehouse.gov/cgi-bin/webstore.exe" target="_blank">Purchase Manual</a></div>-->
+									<div class="sidediv topelement"><a href="javascript:#" onClick="alert('We are sorry, but we are unable to process online transactions at this time.\n\nIf you would still like to make a purchase, please contact us directly at (803) 212-4490 during normal business hours (8:30am - 5:00pm EST).');">Purchase Manual</a></div>
+									<div class="sidediv bottomelement"><a href="/man26/manual26.php">View Manual Online</a></div>
+								</div>
+							</li>
+							<li><a href="http://www.studentconnection.scstatehouse.gov">Student Connection</a></li>
+							<li><a href="/visit.php">Visiting the State House</a></li>
+							<li><a href="/archives.php">Archives</a></li>
+							<li><a href="http://www.sc.gov/Agency-Listing" target="_blank">State Agency Websites</a></li>
+							<!--<li><a href="/stateagencysites.php">State Agency Websites</a></li>-->
+							<li><a href="/citizensinterestpage/media.php">Media Links</a></li>
+				 		</ul>
+			    	</div>
+	
+					<div id="side_ad">
+						<A href="http://www.sc.gov/" target="_blank"><img border=0 src="/images/scgov3.jpg" alt="SC.gov" title="SC.gov" /></a>
+													<A href="http://www.statelibrary.sc.gov" target="_blank"><img border=0 src="/images/scsl_logo_rgb_web.png" alt="StateLibrary.SC.gov" title="StateLibrary.SC.gov" /></a>
+											</div>	    	
+			</div>
+
+	
+	<script type="text/javascript"> 
+		if ( '' === '1'){
+		 	
+			var link = document.getElementById('contactLegislatorLink');
+			if (link != 'undefined' && link != null){
+				link.style.display = 'none'; 
+				link.style.visibility = 'hidden';
+			}
+		}
+		if ( '' === '1'){
+		 	setTimeout(function(){
+				var link2 = document.getElementById('sendMsgLink');
+				if (link2 != 'undefined' && link2 != null){
+					link2.style.display = 'none'; 
+					link2.style.visibility = 'hidden';
+				};
+			}, 20);
+			
+		}  
+	</script>
+<div class="mainwidepanel">
+
+				<div id="breadcrumbs">
+						South Carolina Law &gt; <a href="/code/statmast.php">Code of Laws</a> &gt; <a href="/code/title4.php">Title 4</a>
+				</div>
+
+					<h2 class="barheader">South Carolina Code of Laws<br />
+									Unannotated<br />
+					</h2>
+
+				<div id="contentsection">
+<div style="font-weight: bold; text-align: center;">Title 4 - COUNTIES</div>
+<br />
+
+<div style="text-align: center;">CHAPTER 9</div>
+<div style="text-align: center;">County Government</div><br />
+<div style="text-align: center;">ARTICLE 1</div>
+<div style="text-align: center;">General Provisions</div><br />
+<span style="font-weight: bold;"> SECTION 4-9-10.</span> Referendum to determine form of county government; adoption of form of government selected; form of government when not otherwise determined by referendum; change in initial form; continuation of officials in office.<br /><br />
+	(a) Each county, after at least two public hearings which shall have been advertised in a newspaper of general circulation in the county and wherein the alternate forms of government provided for in this chapter are explained by the legislative delegation of the county, may prior to July 1, 1976, conduct a referendum to determine the wishes of the qualified electors as to the form of government to be selected or become subject to the provisions of subsection (b) of this section. The referendum may be called by an act of the General Assembly, resolution of the governing body, or upon petition of not less than ten percent of the registered electors of the county. The referendum shall be conducted by the county election commission. The question submitted shall be framed by the authority calling for the referendum and when called by petition such petition shall state the question to be proposed. All alternate forms of government provided for in this chapter shall appear on the ballot and unless one form receives a majority favorable vote in the initial referendum, a second or runoff referendum shall be held two weeks after the first referendum at which time the two forms which received the highest number of votes shall again be submitted to the qualified electors for final selection of the form to be adopted. A referendum may also be called to determine the wishes of the registered electors as to the question of whether the members of the governing body of the county shall be elected from defined single member election districts or at large from the county. Such referendum may be called by an act of the General Assembly, resolution of the governing body of the county or by petition of not less than ten percent of the registered electors. The governing body shall by resolution provide for adoption of the form of government selected in the referendum, which shall be filed in the office of the Secretary of State and be effective immediately upon such filing. All resolutions which adopt a form of county government shall be printed in the Code of Laws of South Carolina and remain a part thereof until amended or repealed. The General Assembly shall provide for the number of councilmen or commissioners. In the event that the members of the governing body are required to be elected from defined single member election districts, the General Assembly shall provide for the composition of such districts.<br /><br />
+	(b) Notwithstanding any other provisions of this chapter, unless otherwise determined by referendum prior to July 1, 1976, the county concerned shall, beginning on that date, have the form of government including the method of election, number, composition and terms of the governing body most nearly corresponding to the form in effect in the county immediately prior to that date, which the General Assembly hereby determines to be as follows:<br /><br />
+	For the counties of Abbeville, Allendale, Barnwell, Calhoun, Dillon, Georgetown, Greenwood, Horry, Laurens, Oconee and Saluda, the council form of government as prescribed in Article 3 of this chapter.<br /><br />
+	For the counties of Anderson, Bamberg, McCormick, Union and York, the council-supervisor form of government as prescribed in Article 5 of this chapter.<br /><br />
+	For the counties of Aiken, Beaufort, Charleston, Cherokee, Chester, Chesterfield, Clarendon, Darlington, Dorchester, Edgefield, Fairfield, Florence, Greenville, Hampton, Jasper, Kershaw, Lee, Lancaster, Lexington, Newberry, Pickens, Richland, Spartanburg and Sumter the council-administrator form of government as prescribed in Article 7 of this chapter.<br /><br />
+	For the counties of Berkeley, Colleton, Marion, Orangeburg, Marlboro and Williamsburg, the county board of commissioners form of government as prescribed in Article 11 of this chapter.<br /><br />
+	For those counties in which the county governing body, immediately prior to June 25, 1975, was appointed rather than elected, the members of the governing body shall be required to be elected from defined single member election districts, unless otherwise determined by a valid referendum prior to July 1, 1976. For the purpose of this section, such referendum shall be deemed valid unless declared to be in violation of state or federal law by a court of competent jurisdiction.<br /><br />
+	(c) After the initial form of government and the number and method of election of county council including the chairman has been adopted and selected, the adopted form, number, and method of election shall not be changed for a period of two years from the date such form becomes effective and then only as a result of a referendum as hereinafter provided for. Referendums may be called by the governing body or upon petition of not less than ten percent of the registered electors of the county. Petitions shall be certified as valid or rejected by the county board of registration within sixty days after they have been delivered to the board and, if certified, shall be filed with the governing body which shall provide for a referendum not more than ninety days thereafter. If more than one petition is filed within the time allowed for such filing, the petition bearing the largest number of signatures of registered electors shall be the proposal presented, in the manner set forth hereinafter. Referendums shall be conducted by the county election commissioner and may be held in a general election or in a special election as determined by the governing body. No change to an alternate form of government, different number of council members, or method of election of council including the chairman as a result of a referendum shall become effective unless such proposed form receives a favorable vote of a majority of those persons voting in a referendum. In any referendum, the question voted upon, whether it be to change the form of government, number of council members, or methods of election, shall give the qualified electors an alternative to retain the existing form of government, number of council members, or method of election or change to one other designated form, number, or method of election. After a referendum has been held and whether or not a change in the form results therefrom, no additional referendums shall be held for a period of four years.<br /><br />
+	If the governing body of the county as initially or subsequently established pursuant to a referendum or otherwise shall be declared to be illegal and not in compliance with state and federal law by a court of competent jurisdiction, the General Assembly shall have the right to prescribe the form of government, the method of election, and the number and terms of council members but may submit to the qualified electors by referendum a question as to their wishes with respect to any element thereof which question shall include as an option the method of election in effect at the time of the referendum.<br /><br />
+	(d) Notwithstanding any other provision of this section, the council-manager form of government as provided for in Article 9 of this chapter shall be adopted only after receiving a favorable referendum vote.<br /><br />
+	(e) All members of the governing bodies of the respective counties serving terms of office on the date on which a particular form of county government becomes effective shall continue to serve the terms for which they were elected or appointed and until their successors are elected or appointed and have qualified.<br /><br />
+HISTORY: 1962 Code SECTION 14-3701; 1975 (59) 692; 1980 Act No. 300, SECTIONS 1, 1A, 2; 1982 Act No. 313, SECTION 3.<br /><br />
+Editor&#39;s Note<br /><br />
+	For information regarding the form of government for each county, please visit the South Carolina Association of County&#39;s website at https://www.sccounties.org/county-information or refer to page 47 of the Association&#39;s publication County Profiles at https://www.sccounties.org/sites/default/files/uploads/resources/countyprofiles2022.pdf<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-20.</span> Designation of permissible alternative forms of government.<br /><br />
+	The alternate forms of government which may be adopted pursuant to Section 4-9-10 shall be one of the following:<br /><br />
+	(a) Council form as set forth in Article 3;<br /><br />
+	(b) Council-supervisor form as set forth in Article 5;<br /><br />
+	(c) Council-administrator form as set forth in Article 7;<br /><br />
+	(d) Council-manager form as set forth in Article 9;<br /><br />
+	(e) Board of commissioners form as set forth in Article 11.<br /><br />
+HISTORY: 1962 Code SECTION 14-3702; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-25.</span> Powers of counties.<br /><br />
+	All counties of the State, in addition to the powers conferred to their specific form of government, have authority to enact regulations, resolutions, and ordinances, not inconsistent with the Constitution and general law of this State, including the exercise of these powers in relation to health and order in counties or respecting any subject as appears to them necessary and proper for the security, general welfare, and convenience of counties or for preserving health, peace, order, and good government in them. The powers of a county must be liberally construed in favor of the county and the specific mention of particular powers may not be construed as limiting in any manner the general powers of counties.<br /><br />
+HISTORY: 1989 Act No. 139, SECTION 3, eff June 6, 1989.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-30.</span> Designation of powers under each alternative form of government except board of commissioners form.<br /><br />
+	Under each of the alternate forms of government listed in Section 4-9-20, except the board of commissioners form provided for in Article 11, each county government within the authority granted by the Constitution and subject to the general law of this State shall have the following enumerated powers which shall be exercised by the respective governing bodies thereof:<br /><br />
+	(1) to adopt, use and revise a corporate seal;<br /><br />
+	(2) to acquire real property by purchase or gift; to lease, sell or otherwise dispose of real and personal property; and to acquire tangible personal property and supplies;<br /><br />
+	(3) to make and execute contracts;<br /><br />
+	(4) to exercise powers of eminent domain for county purposes except where the land concerned is devoted to a public use; provided, however, the property of corporations not for profit organized under the provisions of Chapter 36 of Title 33 shall not be subject to condemnation unless the county in which their service area is located intends to make comparable water service available in such service area and such condemnation is for that purpose. After any such condemnation, the county shall assume all obligations of the corporation related to the property and the facilities thereon which were condemned;<br /><br />
+	(5)(a) to assess property and levy ad valorem property taxes and uniform service charges, including the power to tax different areas at different rates related to the nature and level of governmental services provided and make appropriations for functions and operations of the county, including, but not limited to, appropriations for general public works, including roads, drainage, street lighting, and other public works; water treatment and distribution; sewage collection and treatment; courts and criminal justice administration; correctional institutions; public health; social services; transportation; planning; economic development; recreation; public safety, including police and fire protection, disaster preparedness, regulatory code enforcement; hospital and medical care; sanitation, including solid waste collection and disposal; elections; libraries; and to provide for the regulation and enforcement of the above. However, prior to the creation of a special tax district for the purposes enumerated in this item, one of the following procedures is required:<br /><br />
+	(i) When fifteen percent of the electors in a proposed special tax district sign and present to the county council a petition requesting the creation of a special tax district, an election must be held in which a majority of the electors in that area voting in the election shall approve the creation of the special tax district, the nature of the services to be rendered and the maximum level of taxes or user service charges, or both, authorized to be levied and collected. The petition must contain a description of the proposed special tax district, the elector&#39;s signature and address. If the county council finds that the petition has been signed by fifteen percent or more of the electors resident within the area of the proposed special tax district, it may certify that fact to the county election commission. Upon receipt of a written resolution certifying that the petition meets the requirements of this section, the county election commission shall order an election to be held within the area of the proposed special tax district. The election ordered pursuant to this section is a special election and must be held, regulated, and conducted with the provisions prescribed by Chapters 13 and 17 of Title 7, except as otherwise provided in this section. The county election commission shall give at least thirty days&#39; notice in a newspaper of general circulation within the proposed special tax district. The county election commission shall certify the result of the election to the county council and county council by written resolution shall publish the result of the election.<br /><br />
+	(ii) When a petition is submitted to the county council signed by seventy-five percent or more of the resident freeholders who own at least seventy-five percent of the assessed valuation of real property in the proposed special tax district, the county council upon certification of the petition may pass an ordinance establishing the special tax district. For the purposes of this item, &quot;freeholder&quot; has the same meaning as defined in Section 5-3-240. The petition must contain a designation of the boundaries of the proposed special tax district, the nature of the services to be rendered, and the maximum level of the taxes or user service charges, or both, authorized to be levied and collected.<br /><br />
+	(iii) When the area of the proposed special tax district consists of the entire unincorporated area of the county, county council may pass an ordinance establishing a special tax district. For the purposes of this item &quot;unincorporated area&quot; means the area not included within the corporate boundaries of a municipal corporation created pursuant to Chapter 1 of Title 5 or within a special purpose district created before March 7, 1973, to which has been committed the governmental service which the county council intends to provide through the proposed special taxing district unless the special purpose district has been dormant for five years or more. If, however, the same service intended to be rendered by the special taxing district is being rendered or is intended to be rendered within any portion of the territory of the special purpose district, then no such service may be rendered by the special taxing district without consent of the governing body of the special purpose district.<br /><br />
+	(b) In the ordinance establishing the special tax district, county council shall provide for the operation of the special tax district. The special tax district may be operated as an administrative division of the county, or county council may appoint a commission consisting of three to five members and provide for their terms of office.<br /><br />
+	(c) Notwithstanding any provision to the contrary, the county council shall not finance any service not being rendered by the county on March 7, 1973, by a countywide tax where the service is being provided by any municipality within that municipality or where the service has been budgeted or funds have been applied for as certified by the municipal governing body, except upon concurrence of the municipal governing body. For purposes of this subitem, &quot;municipality&quot; means a municipal corporation created pursuant to Chapter 1 of Title 5.<br /><br />
+	(d) Before the issuance of any general obligation bonds to provide a service in a special tax district and the levy of a tax to retire the bonds at rates different from those levied in the remainder of the county related to the nature and level of government services to be provided in the special tax district, the county council shall first approve the issuance of the general obligation bonds and the levy of the tax to retire the bonds by ordinance.<br /><br />
+	(e) County council may by ordinance diminish boundaries of or abolish a special tax district. It must first conduct a public hearing. Notice of the hearing must be given two weeks before it in a newspaper of general circulation in the tax district.<br /><br />
+	(f) After a special tax district is created, pursuant to the provisions of this item, the governing body of the county may, by ordinance, provide that the uniform service charge be collected on an annual, semiannual, quarterly, or monthly basis. The governing body by ordinance also may provide for monthly delinquency penalty charges by special tax notices.<br /><br />
+	(g) Any special taxing district created prior to the effective date of this act pursuant to this subsection, the creation of which would have been valid but for any inconsistency in or constitutional infirmity of this subsection as codified at the time of such creation, is hereby created and declared to be valid, and its existence is confirmed as of the date of its prior creation; provided, however, that any such special taxing district shall be subject to all provisions of this subsection as provided for in this act, including without limitation item (e).<br /><br />
+	(h) The creation of a street lighting system within a county may not disrupt the assignment of electric service rights by the Public Service Commission. The special tax district may not treat the street lighting system as one premises for the purchase of electric energy. Those lighting structures located in an area assigned by the South Carolina Public Service Commission to an electric supplier pursuant to Section 58-27-640, et seq., must be served by the designated electric supplier unless it consents to service by another supplier. Those light structures located in an unassigned area must be considered a single premises and may be served by an electric supplier pursuant to the customer choice provisions of Section 58-27-620 or by an electrical utility pursuant to the certificate of public convenience and necessity provisions of Section 58-27-1230 to serve the lighting structures planned for the unassigned areas.<br /><br />
+	After a special tax district is created pursuant to this item, the governing body of the county by ordinance may provide that the uniform service charge be collected on an annual, semiannual, quarterly, or monthly basis.<br /><br />
+	(6) to establish such agencies, departments, boards, commissions and positions in the county as may be necessary and proper to provide services of local concern for public purposes, to prescribe the functions thereof and to regulate, modify, merge or abolish any such agencies, departments, boards, commissions and positions, except as otherwise provided for in this title. Any county governing body may by ordinance abolish a rural or other county police system established pursuant to Chapter 6 of Title 53 [of the Code of Laws, 1962] and devolve the powers and duties of the system upon the county sheriff; provided, however, that such an ordinance shall not become effective until the registered electors of the county shall first approve the ordinance by referendum called by the governing body;<br /><br />
+	(7) to develop personnel system policies and procedures for county employees by which all county employees are regulated except those elected directly by the people, and to be responsible for the employment and discharge of county personnel in those county departments in which the employment authority is vested in the county government. This employment and discharge authority does not extend to any personnel employed in departments or agencies under the direction of an elected official or an official appointed by an authority outside county government. Any employee discharged shall follow the grievance procedures as established by county council in those counties where the grievance procedures are operative, retaining all appellate rights provided for in the procedures. In those counties where a grievance procedure is not established, a county employee discharged by the chief administrative officer or designated department head must be granted a public hearing before the entire county council if he submits a request in writing to the clerk of the county council within five days of receipt of notice of discharge. The hearing must be held within fifteen days of receipt of the request. The employee must be relieved of his duties pending the hearing and if a majority of the county council sustains the discharge, it is final subject to judicial review, but if a majority of the county council reverses the dismissal, the employee must be reinstated and paid a salary for the time he was suspended from his employment.<br /><br />
+	The salary of those officials elected by the people may be increased but may not be reduced during the terms for which they are elected, except that salaries for members of council and supervisors under the council-supervisor form of government must be set as provided in this chapter;<br /><br />
+	(8) to provide for an accounting and reporting system whereby funds are received, safely kept, allocated and disbursed;<br /><br />
+	(9) to provide for land use and promulgate regulations pursuant thereto subject to the provisions of Chapter 7 of Title 6;<br /><br />
+	(10) to establish and implement policies and procedures for the issuance of revenue and general obligation bonds subject to the bonded debt limitation;<br /><br />
+	(11) to grant franchises and make charges in areas outside the corporate limits of municipalities within the county in the manner provided by law for municipalities and subject to the same limitations, to provide for the orderly control of services and utilities affected with the public interest; provided, however, that the provisions of this subsection shall not apply to persons or businesses acting in the capacity of telephone, telegraph, gas and electric utilities, or suppliers, nor shall it apply to utilities owned and operated by a municipality; provided, further, that the provisions of this subsection shall apply to the authority to grant franchises and contracts for the use of public beaches;<br /><br />
+	(12) to levy uniform license taxes upon persons and businesses engaged in or intending to engage in a business, occupation, or profession, in whole or in part, within the county but outside the corporate limits of a municipality except those persons who are engaged in the profession of teaching or who are ministers of the gospel and rabbis, except persons and businesses acting in the capacity of telephone, telegraph, gas and electric utilities, suppliers, or other utility regulated by the Public Service Commission and except an entity which is exempt from license tax under another law or a subsidiary or affiliate of any such exempt entity. No county license fee or tax may be levied on insurance companies. No county license fee or tax may be levied on a professional sports team as defined in Section 12-6-3360(M)(17). The license tax must be graduated according to the gross income of the person or business taxed. A business engaged in making loans secured by real estate is subject to the license tax only if it has premises located in the county but outside the corporate limits of a municipality. If the person or business taxed pays a license tax to another county or to a municipality, the gross income for the purpose of computing the tax must be reduced by the amount of gross income taxed in the other county or municipality.<br /><br />
+	(13) to participate in multi-county projects and programs authorized by the general law and appropriate funds therefor;<br /><br />
+	(14) to enact ordinances for the implementation and enforcement of the powers granted in this section and provide penalties for violations thereof not to exceed the penalty jurisdiction of magistrates&#39; courts. Alleged violations of such ordinances shall be heard and disposed of in courts created by the general law including the magistrates&#39; courts of the county. County officials are further empowered to seek and obtain compliance with ordinances and regulations issued pursuant thereto through injunctive relief in courts of competent jurisdiction. No ordinance including penalty provisions shall be enacted with regard to matters provided for by the general law, except as specifically authorized by such general law; and<br /><br />
+	(15) to undertake and carry out slum clearance and redevelopment work in areas which are predominantly slum or blighted, the preparation of such areas for reuse, and the sale or other disposition of such areas to private enterprise for private uses or to public bodies for public uses and to that end the General Assembly delegates to any county the right to exercise the power of eminent domain as to any property essential to the plan of slum clearance and redevelopment. Any county may acquire air rights or subsurface rights, both as hereinafter defined, by any means permitted by law for acquisition or real estate, including eminent domain, and may dispose of air rights and subsurface rights regardless of how or for what purpose acquired for public use by lease, mortgage, sale, or otherwise. Air rights shall mean estates, rights, and interests in the space above the surface of the ground or the surface of streets, roads, or rights-of-way including access, support, and other appurtenant rights required for the utilization thereof;<br /><br />
+	(16) to conduct advisory referenda;<br /><br />
+	(16.1) to enact ordinances to regulate solicitation within the county by requiring permits therefor, establish criteria for issuing such permits and provide for a fine of one hundred dollars or thirty days&#39; imprisonment for violations; and<br /><br />
+	(16.2) To obtain injunctive relief in the Court of Common Pleas to abate nuisances created by the operation of business establishments in an excessively noisy or disorderly manner which disturbs the peace in the community in which such establishments are located. Such injunctive relief shall be initiated by petition of the County Attorney in the name of the County Council not sooner than ten days following noncompliance with a written notice to the owner of the offending establishment or his agent to cease and desist in the conduct or practice which disturbs the peace and good order of the area. The provisions of this item are supplemental to Chapter 43 of Title 15.<br /><br />
+	(17) to exercise such other powers as may be authorized for counties by the general law. The governing body of any county shall not create a special tax district, other than watershed district, any portion of which falls within the corporate boundaries of a municipality, except upon the concurrence of the governing body of the municipality.<br /><br />
+HISTORY: 1962 Code SECTION 14-3703; 1975 (59) 692; 1976 Act No. 601; 1976 Act No. 693; 1977 Act No. 74; 1982 Act No. 420; 1988 Act No. 312, SECTION 1, eff February 24, 1988; 1988 Act No. 495, SECTION 1, eff May 9, 1988; 1989 Act No. 176, SECTION 2, eff June 6, 1989; 1991 Act No. 114, SECTIONS 1, 2, eff June 5, 1991; 1994 Act No. 405, SECTION 1, eff May 24, 1994; 1999 Act No. 113, SECTION 21, eff June 30, 1999; 2019 Act No. 83 (H.4243), SECTION 2, eff May 22, 2019.<br /><br />
+Editor&#39;s Note<br /><br />
+	1995 Act No. 52, SECTION 1, provides as follows:<br /><br />
+	&quot;SECTION 1. In furtherance of the powers granted to the counties of this State pursuant to the provisions of Section 4-9-30, and Section 6-21-10 et seq., of the 1976 Code, each of the counties of this State is authorized to establish transportation authorities and to finance, following the public hearing and referendum required in this act, the cost of acquiring, designing, constructing, equipping and operating highways, roads, streets, and bridges, and other transportation-related projects, either alone or in partnership with other governmental entities including, but not limited to, the South Carolina Department of Transportation.&quot;<br /><br />
+	2019 Act No. 83, SECTION 9.B, provides as follows:<br /><br />
+	&quot;B. The provisions of Sections 4-9-30 and 5-7-30 relating to a professional sports team, and the provisions of Section 5-3-20 only apply so long as the job and payroll provisions of Section 12-6-3360(M)(17) and (P) continue to be met by the professional sports team.&quot;<br /><br />
+Effect of Amendment<br /><br />
+	The first 1988 amendment (1988 Act No. 312, SECTION 1) rewrote paragraph (7), relating to employee discharge and grievance procedures.<br /><br />
+	The second 1988 amendment (1988 Act No. 495, SECTION 1) rewrote paragraph (12) adding a provision exempting from the license tax any entity exempt under any other law, and adding a provision limiting the right to levy a business license tax on businesses making loans secured by real estate.<br /><br />
+	The 1989 amendment, in paragraph (5), added the third paragraph.<br /><br />
+	The 1991 amendment, in paragraph (5), in what later became subparagraph (f), added &quot;After a special tax district is created, pursuant to the provisions of this item, the governing body of the county may, by ordinance, provide that the uniform service charge be collected on an annual, semiannual, quarterly, or monthly basis.&quot;<br /><br />
+	The 1994 amendment, in paragraph (12), added a sentence providing &quot;No county license fee or tax may be levied on insurance companies.&quot;<br /><br />
+	The 1999 amendment inserted &quot;and make charges&quot; and the last provision regarding applicability to franchises and contracts for use of public beaches in subsection (11).<br /><br />
+	2019 Act No. 83, SECTION 2, in (12), inserted the third sentence, providing that no county license fee or tax may be levied on a professional sports team.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-33.</span> Referendum required to approve creation of county police department.<br /><br />
+	A referendum must be held to approve the creation of a county police department prior to the implementation of an ordinance adopted by a county council which would duplicate or replace the law enforcement functions of a sheriff. As used in this section, the term law enforcement means those activities and duties which require the exercise of custodial arrest authority by a sheriff or his duly appointed and sworn deputy or the performance of duties conferred by state law upon a sheriff and those activities incidental to the performance of law enforcement duties.<br /><br />
+	Nothing in this section shall be construed as a limitation on the authority of a county council to provide litter control and animal control, to appoint and commission code enforcement officers as provided for in Section 4-9-145, to provide other services not directly related to law enforcement, to exercise the powers conferred by general law upon counties to protect the public health, safety, and general welfare of the community, or to adopt capital and operating budgets for the operation of the county as provided for in Section 4-9-140.<br /><br />
+	A county council may provide for E-911 services as provided for in Chapter 47 of Title 23; provided, however, that access to criminal records databases and other similar restricted databases relating to law enforcement functions must remain under the supervision of the sheriff or his designee unless law enforcement functions are transferred to a county police department pursuant to a referendum provided for in this section.<br /><br />
+HISTORY: 1993 Act No. 12, SECTION 1, eff March 23, 1993.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-35.</span> County public library systems; boards of trustees.<br /><br />
+	(A) Each county council shall prior to July 1, 1979, by ordinance establish within the county a county public library system, which ordinance shall be consistent with the provisions of this section; provided, however, notwithstanding any other provision of this chapter, the governing body of any county may by ordinance provide for the composition, function, duties, responsibilities, and operation of the county library system. County library systems created by such ordinances shall be deemed a continuing function of county government and shall not be subject to the provisions of Section 4-9-50 except as state funds are specifically appropriated under other provisions of law.<br /><br />
+	(B) Each county public library system shall be controlled and managed by a board of trustees consisting of not fewer than seven nor more than eleven members appointed by the county council (council) for terms of four years and until successors are appointed and qualify except that of those members initially appointed one-half of such appointees less one shall be appointed for terms of two years only. Previous service on a county library board prior to the enactment of the county ordinance establishing the board shall not limit service on the board. Vacancies shall be filled in the manner of the original appointment for the unexpired term. To the extent feasible, members shall be appointed from all geographical areas of the county.<br /><br />
+	(C) The board shall annually elect a chairman, vice-chairman, secretary, treasurer and such other officers as it deems necessary. The board shall meet not less than four times each year and at other times as called by the chairman or upon the written request by a majority of the members.<br /><br />
+HISTORY: 1978 Act No. 564 SECTION 2.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-36.</span> Duties of boards of trustees.<br /><br />
+	The board as provided for in Section 4-9-35 shall be authorized to exercise powers as to the policies of the county library which shall not be inconsistent with the general policies established by the governing body of the county, and pursuant to that authority shall be empowered to:<br /><br />
+	(1) Employ a chief librarian whose qualifications and credentials shall meet the certification requirements of the State Library Board, and who shall be responsible to the county library board for the administration of the program and the selection of library staff members required to carry out the functions of the library system.<br /><br />
+	(2) Purchase, lease, hold and dispose of real and personal property in the name of the county for the exclusive use of the county public library system. Provided, however, any such conveyance, lease or purchase of real property shall be by the county governing body in accordance with the provisions of Sections 4-9-10 et seq. and Sections 5-1-10 et seq., as amended.<br /><br />
+	(3) Acquire books and other library materials and provide for use thereof throughout the county.<br /><br />
+	(4) Accept donations of real property, services, books and other items suitable for use in the library system.<br /><br />
+	(5) Designate or mark equipment, rooms and buildings, and other library facilities to commemorate and identify gifts and donations made to the library system.<br /><br />
+	(6) Cooperate or enter into contracts or agreements with any public or private agency which results in improved services or the receipt of financial aid in carrying out the functions of the library system. Provided, however, such contracts and agreements shall be subject to approval by the governing body of the county.<br /><br />
+	(7) Enter into contracts or agreements with other counties to operate regional or joint libraries and related facilities. Provided, however, such contracts and agreements shall be subject to approval by the governing body of the county.<br /><br />
+	(8) Receive and expend grants, appropriations, gifts and donations from any private or public source for the operation, expansion or improvement of the library system.<br /><br />
+	(9) Take any actions deemed necessary and proper by the board to establish, equip, operate and maintain an effective library system within limits of approved appropriations of county council.<br /><br />
+HISTORY: 1978 Act No. 564 SECTION 2.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-37.</span> Additional duties of boards of trustees.<br /><br />
+	In addition to the powers and duties prescribed in Section 4-9-36 the board shall:<br /><br />
+	(a) Provide and make available to the residents of the county books and library materials and in the fulfillment of this function shall establish a headquarters library and may establish branches and subdivisions thereof in appropriate geographical areas of the county within the limits of available funds. The board may operate one or more bookmobiles over routes determined by the board.<br /><br />
+	(b) Adopt regulations necessary to insure effective operation, maintenance and security of the property of the library system. Provided, however, such regulations shall not be in conflict with policy or regulations established by the county governing body.<br /><br />
+	(c) Annually at a time designated by the county council submit to the council a budget for the ensuing fiscal year adequate to fund the operation and programs of the library system. Such budget shall list all funds which the board anticipates will be available for the operation of the library system. All funds appropriated, earned, granted or donated to the library system, including funds appropriated by the county council, shall be deposited and expended as provided for by the ordinance in each county establishing the library system. All funds appropriated, earned, granted or donated to the library system or any of its parts shall be used exclusively for library purposes. All financial procedures relating to the library system including audits shall conform to the procedures established by the county council.<br /><br />
+	(d) Annually file a detailed report of its operations and expenditures for the previous fiscal year with the county council.<br /><br />
+HISTORY: 1978 Act No. 564 SECTION 2.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-38.</span> Status of donations for tax purposes; applicability of state laws.<br /><br />
+	All county public library systems established pursuant to Section 4-9-35 are deemed to be educational agencies and gifts and donations of funds or property to such systems shall be deductible by the donors for tax purposes as provided by law for gifts and donations for tax purposes.<br /><br />
+	All state laws and regulations relating to county public library systems shall apply to library systems created pursuant to Section 4-9-35.<br /><br />
+	All employees of a county public library system shall be subject to the provisions of item (7) of Section 4-9-30.<br /><br />
+HISTORY: 1978 Act No. 564 SECTION 2.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-39.</span> Funding of systems; transfer of assets of former libraries.<br /><br />
+	County public library systems shall be funded by annual appropriations by the county council including millage, if any, levied specifically for the county public library system plus aid provided by the state and federal governments and other sources. If any county council levies a tax specifically for the support of a county public library system, such tax shall apply to all persons and corporations subject to school taxes.<br /><br />
+	All assets and property, both real and personal, owned by any county library prior to the creation of a library system under Section 4-9-35 shall be transferred to the county by the persons or entities owning title thereto provided, however, any decision to sell or otherwise transfer the property for use other than for library purposes must be made by two-thirds majority of the county governing body.<br /><br />
+HISTORY: 1978 Act No. 564 SECTION 2; 1994 Act No. 480, SECTION 1, eff July 14, 1994.<br /><br />
+Effect of Amendment<br /><br />
+	The 1994 amendment, at the end of the second paragraph, deleted &quot;; provided, however, that all such assets and property shall be used exclusively for library purposes.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-40.</span> Power of county to contract for services within municipalities.<br /><br />
+	Any county may perform any of its functions, furnish any of its services within the corporate limits of any municipality, situated within the county, by contract with any individual, corporation or municipal governing body, subject always to the general law and the Constitution of this State regarding such matters. Provided, however, that where such service is being provided by the municipality or has been budgeted or funds have been applied for that such service may not be rendered without the permission of the municipal governing body.<br /><br />
+HISTORY: 1962 Code SECTION 14-3703.1; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-41.</span> Joint administration of functions by county, incorporated municipality, special purpose district, or other political subdivision.<br /><br />
+	(A) Any county, incorporated municipality, special purpose district, or other political subdivision may provide for the joint administration of any function and exercise of powers as authorized by Section 13 of Article VIII of the South Carolina Constitution.<br /><br />
+	(B) The provisions of this section may not be construed in any manner to result in diminution or alteration of the political integrity of any of the participant subdivisions which agree to and become a part of the functional consolidation, nor may any constitutional office be abolished by it.<br /><br />
+HISTORY: 1992 Act No. 319, SECTION 2, eff April 8, 1992.<br /><br />
+Editor&#39;s Note<br /><br />
+	1992 Act No. 319, SECTION 1 effective April 8, 1992, reads as follows:<br /><br />
+	&quot;SECTION 1. It is the legislative intent and purpose of this chapter to provide a means for the consolidation of the governmental and corporate functions now vested in municipal corporations and other political subdivisions and with the governmental and corporate functions now vested in the counties in which these municipal corporations and other political subdivisions are located, and to provide a method for the creation of consolidated governments which may be used to fulfill the unique needs and demands in various county areas. This chapter is provided as enabling legislation to be liberally construed as a utilization of the constitutional power granted by Section 12 of Article VIII of the Constitution of South Carolina, 1895.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-45.</span> Police jurisdiction of coastal counties.<br /><br />
+	For the purpose of maintaining proper policing, to provide proper sanitation and to abate nuisances, the police jurisdiction and authority of any county bordering on the high tide line of the Atlantic Ocean is extended to include all that area lying between the high tide line and the low tide line not within the corporate limits of any municipality. Such area shall be subject to all the ordinances and regulations that may be applicable to the area lying within the boundary limits of the county, and the magistrates&#39; courts shall have jurisdiction to punish individuals violating the provisions of the county ordinances where such misdemeanor occurred in the area defined in this section.<br /><br />
+HISTORY: 1980 Act No. 300, SECTION 3.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-50.</span> Source of funds for use of county personnel, facilities, or equipment to implement general law.<br /><br />
+	Whenever the General Assembly shall provide by general law for the use of county personnel, facilities or equipment to implement such general law or rules and regulations promulgated pursuant thereto, the State agency or department responsible for administering such general law shall provide sufficient funds for county implementation from appropriations to that agency of department; provided, that this section shall not apply to construction of or improvement to county capital improvements or other permanent facilities required by the provisions of the general law or regulations promulgated pursuant thereto.<br /><br />
+HISTORY: 1962 Code SECTION 14-3703.2; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-55.</span> Enactment of general laws affecting counties&#39; expenditures and revenue raising; conditions; exceptions.<br /><br />
+	(A) A county may not be bound by any general law requiring it to spend funds or to take an action requiring the expenditure of funds unless the General Assembly has determined that the law fulfills a state interest and the law requiring the expenditure is approved by two-thirds of the members voting in each house of the General Assembly provided a simple majority of the members voting in each house is required if one of the following applies:<br /><br />
+	(1) funds have been appropriated that have been estimated by the Revenue and Fiscal Affairs Office at the time of enactment to be sufficient to fund the expenditures;<br /><br />
+	(2) the General Assembly authorizes or has authorized a county to enact a funding source not available for the county on July 1, 1993, that can be used to generate the amount of funds estimated to be sufficient to fund the expenditure by a simple majority vote of the governing body of the county;<br /><br />
+	(3) the expenditure is required to comply with a law that applies to all persons similarly situated, including the state and local governments;<br /><br />
+	(4) the law is either required to comply with a federal requirement or required for eligibility for a federal entitlement.<br /><br />
+	(B) Except upon approval of each house of the General Assembly by two-thirds of the members voting in each house, the General Assembly may not enact, amend, or repeal any general law if the anticipated effect of doing so would be to reduce the authority that counties have to raise revenues in the aggregate, as the authority exists on July 1, 1993.<br /><br />
+	(C) The provisions of this section do not apply to:<br /><br />
+	(1) laws enacted to require funding of pension benefits existing on the effective date of this section;<br /><br />
+	(2) laws relating to the judicial department;<br /><br />
+	(3) criminal laws;<br /><br />
+	(4) election laws;<br /><br />
+	(5) the Department of Education;<br /><br />
+	(6) laws reauthorizing but not expanding then-existing statutory authority;<br /><br />
+	(7) laws having a fiscal impact of less than ten cents per capita on a statewide basis; laws creating, modifying, or repealing noncriminal infractions.<br /><br />
+	(D) The duties, requirements, and obligations imposed by general laws in effect on July 1, 1993, are not suspended by the provisions of this section.<br /><br />
+	(E) A provision of, or amendment to, an appropriation bill that contains a permanent or temporary provision of law must be adopted by a separate vote of the General Assembly in the manner provided in subsections (A) through (D) of this section. Provided, however, that once a provision or amendment to an appropriation bill is adopted, the vote to adopt or reject an appropriation bill on second reading, third reading, or adoption of the conference committee or free conference committee report is not subject to the provisions of subsections (A) through (D) of this section.<br /><br />
+HISTORY: 1993 Act No. 157, SECTION 1, eff June 15, 1993; 1997 Act No. 138, SECTION 1, eff July 1, 1997.<br /><br />
+	Validity<br /><br />
+	For the validity of (A) and (B) of this section, see Pinckney v. Peeler, 862 S.E.2d 906 (S.C. 2021).<br /><br />
+Effect of Amendment<br /><br />
+	The 1997 amendment, in the introductory paragraph of subsection (A), substituted &quot;A county may not&quot; for &quot;No county may&quot;; in subsection (C), deleted former item (5), renumbered former item (6) as item (5), deleted former item (7), and renumbered former items (8) and (9) as items (6) and (7); and added subsection (E).<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-60.</span> Election or appointment, and terms, of county treasurer and auditor under certain forms of government; continuation of officials in office.<br /><br />
+	Under the council, council-supervisor and council-administrator forms of government provided for in this chapter the county treasurer and the county auditor shall be elected. Officials serving unexpired terms when a form of government provided for in this chapter is adopted by a particular county shall continue to serve until successors are elected and qualify. Under the council-manager form the county treasurer and county auditor shall serve out their unexpired terms but shall thereafter be elected or appointed as council shall by ordinance prescribe.<br /><br />
+HISTORY: 1962 Code SECTION 14-3703.3; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-70.</span> Powers of county councils with regard to public school education; establishing school tax millage.<br /><br />
+	The provisions of this chapter shall not be construed to devolve any additional powers upon county councils with regard to public school education, and all school districts, boards of trustees and county boards of education shall continue to perform their statutory functions in matters related thereto as prescribed in the general law of the State; provided, however, that except as otherwise provided for in this section the county council shall determine by ordinance the method of establishing the school tax millage except in those cases where boards of trustees of the districts or the county board of education established such millage at the time one of the alternate forms of government provided for in this chapter becomes effective. In counties containing more than one school district, where all such districts are located wholly within the boundaries of the county, council may by ordinance establish county-wide school tax millage. Provided, further, that in any county where the General Assembly retained the authority to establish or limit the millage levied by school districts or levy a tax for educational purposes, on January 1, 1974, such authority shall continue in the General Assembly until such time as such authority may be transferred to the school district or the county governing body by act of the General Assembly. Provided, further, in any county where on January 1, 1975 the school district tax millage and budget was established in meetings or referendums of the qualified electors of the district at which meetings or referendums such electors changed, altered, rejected, or amended by voice vote or ballot the school budget and necessary tax millage to implement such budget as proposed by the district board of trustees, such procedures to establish the school tax millage shall continue unaffected or modified by the provisions of this section or any other provision of law in conflict with this proviso.<br /><br />
+HISTORY: 1962 Code SECTION 14-3704; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-80.</span> Powers of county councils with regard to public service and special purpose districts, water and sewer authorities, and other political subdivisions; procedures upon dissolution of such districts.<br /><br />
+	The provisions of this chapter shall not be construed to devolve any additional powers upon county councils with regard to public service districts, special purpose districts, water and sewer authorities, or other political subdivisions by whatever name designated, (which are in existence on the date one of the forms of government provided for in this chapter becomes effective in a particular county) and such political subdivisions shall continue to perform their statutory functions prescribed in laws creating such districts or authorities except as they may be modified by act of the General Assembly, and any such act which dissolves a district or absorbs its function entirely within the county government shall provide that such act shall be effective only upon approval of such abolition or absorption by favorable referendum vote of a majority of the qualified electors of the district voting in such referendum. Upon the dissolution of any district within a county and the assumption of its function by the county government, the county shall take title to the property of the district and assume all of its debts and obligations which shall be retired by charges or assessment of taxes in those areas of the county receiving benefits from the facilities of the district; provided, however, notwithstanding any other provision of law, when any county council under existing law is authorized to appoint members to the governing body of a public or special service district or a water resources commission within the county and such governing body by resolution directed to the council requests a change in the size or manner in which members of such governing body are selected, the council may by ordinance effect such changes and the council action shall have the full force and effect of law from the effective date of the ordinance.<br /><br />
+HISTORY: 1962 Code SECTION 14-3705; 1975 (59) 692; 1979 Act No. 135 SECTION 2.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-81.</span> Authority for increasing size of governing body of district; procedure.<br /><br />
+	(A) The governing body of any special purpose or public service district, or water and sewer authority, which is elected may provide by resolution for an increase in the size of its governing body. The governing body may not reduce the number of members on its governing body which is serving on January 1, 1987.<br /><br />
+	(B) The resolution is effective only after approval by a majority of the qualified electors in the district voting in a referendum.<br /><br />
+	(C) The referendum may be called by resolution of the governing body of the district. The county election commission must call a referendum not later than ninety nor earlier than thirty days after district action.<br /><br />
+	(D) Notice of the referendum must be published in a newspaper of general circulation in the district at least thirty days prior to the referendum.<br /><br />
+	(E) If the results of the referendum are favorable, the governing body of the district shall call for a special election or an election to be conducted at the time of the general election to elect additional members of the governing body as provided in the resolution as authorized in subsection (A).<br /><br />
+	(F) The terms of office of any additional members must be established by the governing body of the district so that they are staggered, if the terms of the existing members of the district are staggered. The terms of any members elected under the provisions of this section must be the same length as those members serving on the governing body at the time the election is held, except as provided in this section, in order to stagger the terms.<br /><br />
+	(G) All costs associated with conducting the referendum or election, or both, provided for in this section must be borne by the affected district.<br /><br />
+HISTORY: 1987 Act No. 28 SECTION 1, eff April 14, 1987.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-82.</span> Transfer by hospital public service district of assets, properties, and responsibilities for delivery of medical services.<br /><br />
+	(A) The governing body of any hospital public service district is authorized to transfer its assets and properties for the delivery of medical services upon assumption by the transferee of the responsibilities of the district for the delivery of medical services as set forth in the legislation creating the hospital public service district.<br /><br />
+	(B) The transfer is not completed until the question of the transfer has been submitted to and approved by a favorable referendum vote of a majority of the qualified electors of the district voting in the referendum. The referendum vote may be conducted either as a special referendum within the district for this specific purpose or at the same time as a general election.<br /><br />
+	(C) Provided, however, that the requirements of subsection (B) do not apply to a transfer by a hospital public service district that owns or controls less than one hundred forty-five licensed or otherwise authorized acute care hospital beds and is located entirely within a county with a population of less than forty thousand persons, and the:<br /><br />
+	(1) transfer is to a not-for-profit entity whose governing board is appointed by the Governor, upon the recommendation of the legislative delegation from the county where the hospital public service district is located, and which otherwise is in compliance with subsection (A); or<br /><br />
+	(2) transfer is to an entity created pursuant to the provisions of Chapter 31, Title 33, or the provisions of Chapter 35, Title 33, or the provisions of Articles 15 and 16, Chapter 7, Title 44, and whose governing board is appointed by the Governor, upon recommendation of the legislative delegation from the county where the hospital public service district is located; or<br /><br />
+	(3) transfer is to another governmental entity.<br /><br />
+	(D) Any hospital public service district which transfers its assets and properties as provided in this section may dissolve the hospital public service district upon the completion of the transfer and upon the assumption or other appropriate disposition by the transferee of all of the responsibilities and obligations of the hospital public service district.<br /><br />
+	(E) If the hospital public service district transfers its assets to an entity outside of its geographic boundaries, then any proceeds from the transfer must be used solely for the provision of health care services in a manner consistent with the obligations and responsibilities of the transferring hospital public service district.<br /><br />
+	(F) Notwithstanding any other provision of law, the provisions of this section do not apply to any transaction that includes the hospital public service district&#39;s entry into a lease of any or all of its real property associated with the delivery of hospital services regardless of:<br /><br />
+	(1) the length of the term of the real property lease; or<br /><br />
+	(2) whether or not the transaction also includes the sale or lease of other assets of the district.<br /><br />
+HISTORY: 1987 Act No. 93 SECTION 2, eff May 13, 1987; 1999 Act No. 94, SECTION 1, eff June 11, 1999; 2015 Act No. 14 (S.673), SECTIONS 1, 2, eff May 7, 2015.<br /><br />
+Editor&#39;s Note<br /><br />
+	1987 Act No. 93, SECTION 1, provides as follows:<br /><br />
+	&quot;The General Assembly finds that under certain circumstances public service districts created prior to March 7, 1973, which were created to provide clinical medical services could better accomplish their initial intended purpose and provide for a more complete utilization of services, assets, and properties of the district if they were authorized to transfer their assets and properties to another political subdivision or an appropriate health care provider located within the district. It is the purpose of this act to authorize the transfer of these assets and properties upon favorable referendum vote of a majority of the qualified electors of the district voting in the referendum. It is also the purpose of this act to authorize the public service district to dissolve upon completion of the transfer of its assets and properties.&quot;<br /><br />
+Effect of Amendment<br /><br />
+	The 1999 amendment added subsection identifiers, inserted &quot;hospital&quot; preceding &quot;public service district&quot; throughout the section, deleted &quot;clinical&quot; preceding &quot;medical services&quot; in two locations in the subsection (A), deleted a provision in subsection (A) regarding eligible transferees, moved a referendum provision to subsection (B), and added subsections (C) and (E).<br /><br />
+	2015 Act No. 14, SECTION 1, added (F).<br /><br />
+	2015 Act No. 14, SECTION 2, in (C), substituted &quot;less than one hundred forty-five&quot; for &quot;less than one hundred thirty&quot;, and made nonsubstantive changes in (C)(2).<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-85.</span> Examination of financial impact on revenues of county where district is abolished; procedure for refunding taxes.<br /><br />
+	Within sixty days after the abolishment of a special purpose district (district), the governing body of the county in which the district is located must commence an examination of the financial impact of the abolishment of the district on the revenues of the county. The governing body shall conduct at least two public meetings within the geographical boundaries of the territory formerly comprising the district. The governing body shall advertise in a newspaper of general circulation in the county ten days prior to each meeting. At the meetings the governing body may receive such information as it considers necessary. At the conclusion of the sixty-day period, the county governing body of the county shall make a determination and formulation of the financial impact of the abolishment of the district including, but not limited to, a procedure for any refund of taxes that may have been legally levied and collected by the county for the district. The determination and formulation must be published by the governing body in a newspaper of general circulation in the county in which the special purpose district formerly was located. The county governing body shall take action by ordinance on the determination and formulation within thirty days after it has been published in the newspaper. Any resident of the area formerly comprising the district has standing to bring an action in a court of competent jurisdiction to enforce the provisions of this section.<br /><br />
+HISTORY: 1983 Act No. 81.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-90.</span> Election of council members; reapportionment; terms of office and vacancies; election at large of chairman; procedure for changing term of office; continuation in office after reapportionment.<br /><br />
+	Council members must be elected from defined single-member election districts unless otherwise determined under the provisions of subsection (a), (b), or (c) of Section 4-9-10 or under the provisions of any plan ordered by a court of competent jurisdiction prior to May 1, 1986. In the event the members of the governing body are required to be elected from defined single-member election districts, they must be elected by the qualified electors of the district in which they reside. All districts must be reapportioned as to population by the county council within a reasonable time prior to the next scheduled general election which follows the adoption by the State of each federal decennial census. The population variance between defined election districts shall not exceed ten percent.<br /><br />
+	Members of the governing body of the county shall be elected in the general election for terms of two years or four years as the General Assembly may determine for each county commencing on the second of January next following their election. Vacancies on the governing body shall be filled in the manner of original election for the unexpired terms in the next general election after the vacancy occurs or by special election if the vacancy occurs one hundred eighty days or more prior to the next general election.<br /><br />
+	In those counties where the members are elected for four year terms, such terms shall be staggered. If necessary, in the initial election for members one-half plus one of the members elected who receive the highest number of votes shall serve terms of four years and the remaining members elected shall initially serve terms of two years only. In those counties in which the chairman of the governing body was elected at large as a separate office prior to the adoption of one of the alternate forms of government provided for in this chapter, the chairman shall continue to be so elected.<br /><br />
+	In any county in which terms of county council members are for two years only, the council may by ordinance change such terms to four-year staggered terms but such ordinance shall not become effective until approved by a favorable vote of the qualified electors of the county voting in a referendum conducted for that purpose. In the event the referendum is conducted at the time of the general election in which council members are elected, and the vote is favorable on the ordinance, the terms of council members shall automatically be changed to four-year terms except that of those elected in that general election one half plus one of such members who receive the highest vote shall serve four-year terms and the remaining members elected shall serve terms of two years only.<br /><br />
+	Any council member who is serving a four-year term in a district that has been reapportioned and whose term does not expire until two years after reapportionment becomes effective shall be allowed to continue to serve the balance of his unexpired term representing the people in the new reapportioned district if he is an elector in such reapportioned district. In the event that two or more council members, because of reapportionment, become electors in the same district, an election shall then be required. Provided, however, that if any seat should become vacant after election districts have been reapportioned but prior to the expiration of the incumbent&#39;s term of office due to death, resignation, removal, or any other cause, the resulting vacancy shall be filled under the new reapportionment plan in the manner provided by law for the district that has the same district number as the district from which the council member whose office is vacant was elected. For the purpose of this section, a council member will be deemed a resident of the district he represents as long as he resides in any part of the district as constituted at the time of his election.<br /><br />
+HISTORY: 1962 Code SECTION 14-3706; 1975 (59) 692; 1980 Act No. 300, SECTION 4; 1980 Act No. 487; 1982 Act No. 313, SECTIONS 1, 2; 1986 Act No. 501, eff June 10, 1986.<br /><br />
+Effect of Amendment<br /><br />
+	The 1986 amendment revised the first paragraph by making grammatical changes and by adding &quot;or under the provisions of any plan ordered by a court of competent jurisdiction prior to May 1, 1986.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-100.</span> Council members shall not hold other offices; salaries and expenses of members.<br /><br />
+	No member of council, including supervisors, shall hold any other office of honor or profit in government, except military commissions and commissions as notaries public, during his elected term. After adoption of a form of government as provided for in this chapter, council shall by ordinance prescribe the salary and compensation for its members. After the initial determination of salary, council may by ordinance adjust the salary but the ordinance changing the salary is not effective until the date of commencement of terms of at least two members of council elected at the next general election following the enactment of the ordinance affecting the salary changes at which time it will become effective for all members. A chairman of a county council who is assigned additional administrative duties may receive additional compensation as the council may provide. The additional compensation becomes effective with the passage of the ordinance increasing the compensation of the chairman. Members may also be reimbursed for actual expenses incurred in the conduct of their official duties. The restriction on salary changes does not apply to supervisors under the council-supervisor form of government whose salaries may be increased during their terms of office but supervisors shall not vote on the question when it is considered by council.<br /><br />
+HISTORY: 1962 Code SECTION 14-3707; 1975 (59) 692; 1980 Act No. 300, SECTION 5; 1985 Act No. 114, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-110.</span> Council shall select chairman and other officers; terms of office; appointment of clerk; frequency and conduct of meetings; minutes of proceedings.<br /><br />
+	The council shall select one of its members as chairman, except where the chairman is elected as a separate office, one as vice-chairman and such other officers as are deemed necessary for such terms as the council shall determine, unless otherwise provided for in the form of government adopted. The council shall appoint a clerk to record its proceedings and perform such additional duties as the council may prescribe. The council after public notice shall meet at least once each month but may meet more frequently in accordance with a schedule prescribed by the council and made public. All meetings shall be conducted in accordance with the general law of the State of South Carolina affecting meetings of public bodies. Special meetings may be called by the chairman or a majority of the members after twenty-four hours&#39; notice.<br /><br />
+	The council shall determine its own rules and order of business. It shall keep a journal in which shall be recorded the minutes of its proceedings which shall be open to public inspection.<br /><br />
+HISTORY: 1962 Code SECTION 14-3708; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-120.</span> Procedures for adoption of ordinances; proceedings and all ordinances shall be recorded.<br /><br />
+	The council shall take legislative action by ordinance which may be introduced by any member. With the exception of emergency ordinances, all ordinances shall be read at three public meetings of council on three separate days with an interval of not less than seven days between the second and third readings. All proceedings of council shall be recorded and all ordinances adopted by council shall be compiled, indexed, codified, published by title and made available to public inspection at the office of the clerk of council. The clerk of council shall maintain a permanent record of all ordinances adopted and shall furnish a copy of such record to the clerk of court for filing in that office.<br /><br />
+HISTORY: 1962 Code SECTION 14-3709; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-130.</span> Public hearings on notice must be held in certain instances; adoption of standard codes or technical regulations and furnishing copies; emergency ordinances.<br /><br />
+	Public hearings, after reasonable public notice, must be held before final council action is taken to:<br /><br />
+	(1) adopt annual operational and capital budgets;<br /><br />
+	(2) make appropriations, including supplemental appropriations;<br /><br />
+	(3) adopt building, housing, electrical, plumbing, gas and all other regulatory codes involving penalties;<br /><br />
+	(4) adopt zoning and subdivision regulations;<br /><br />
+	(5) levy taxes;<br /><br />
+	(6) sell, lease or contract to sell or lease real property owned by the county.<br /><br />
+	The council may adopt any standard code or technical regulations authorized under Section 6-9-60 by reference thereto in the adopting ordinance. The procedure and requirements governing the ordinances shall be as prescribed for ordinances listed in (1) through (6) above.<br /><br />
+	Copies of any adopted code of technical regulations shall be made available by the clerk of council for distribution or for purchase at a reasonable price.<br /><br />
+	Not less than fifteen days&#39; notice of the time and place of such hearings shall be published in at least one newspaper of general circulation in the county.<br /><br />
+	To meet public emergencies affecting life, health, safety or the property of the people, council may adopt emergency ordinances; but such ordinances shall not levy taxes, grant, renew or extend a franchise or impose or change a service rate. Every emergency ordinance shall be designated as such and shall contain a declaration that an emergency exists and describe the emergency. Every emergency ordinance shall be enacted by the affirmative vote of at least two-thirds of the members of council present. An emergency ordinance is effective immediately upon its enactment without regard to any reading, public hearing, publication requirements, or public notice requirements. Emergency ordinances shall expire automatically as of the sixty-first day following the date of enactment.<br /><br />
+HISTORY: 1962 Code SECTION 14-3710; 1975 (59) 692; 1982 Act No. 351, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-140.</span> Designation of fiscal and budget years; annual reports; adoption of budgets; levying and collection of taxes; supplemental appropriations; obtaining reports, estimates, and statistics.<br /><br />
+	The fiscal year of the county government shall begin on the first day of July of each year and shall end on the thirtieth day of June next following, and the fiscal year shall constitute the budget year of the county government. All county offices, departments, boards, commissions or institutions receiving county funds shall make a full, detailed annual fiscal report to the county council at the end of the fiscal year.<br /><br />
+	County council shall adopt annually and prior to the beginning of the fiscal year operating and capital budgets for the operation of county government and shall in such budgets identify the sources of anticipated revenue including taxes necessary to meet the financial requirements of the budgets adopted. Council shall further provide for the levy and collection of taxes necessary to meet all budget requirements except as provided for by other revenue sources.<br /><br />
+	Council may make supplemental appropriations which shall specify the source of funds for such appropriations. The procedure for approval of supplemental appropriations shall be the same as that prescribed for enactment of ordinances.<br /><br />
+	For the purposes of this section a supplemental appropriation shall be defined as an appropriation of additional funds which have come available during the fiscal year and which have not been previously obligated by the current operating or capital budget. The provisions of this section shall not be construed to prohibit the transfer of funds appropriated in the annual budget for purposes other than as specified in such annual budget when such transfers are approved by the council.<br /><br />
+	In the preparation of annual budgets or supplemental appropriations, council may require such reports, estimates and statistics from any county agency or department as may be necessary to perform its duties as the responsible fiscal body of the county.<br /><br />
+HISTORY: 1962 Code SECTION 14-3711; 1975 (59) 692; 1977 Act No. 56.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-145.</span> Litter control officers; custodial arrest authority; number of officers; powers and duties.<br /><br />
+	(A) Except as provided in subsection (B), the governing body of a county may appoint and commission as many code enforcement officers as may be necessary for the proper security, general welfare, and convenience of the county. These officers are vested with all the powers and duties conferred by law upon constables in addition to duties imposed upon them by the governing body of the county. However, no code enforcement officer commissioned under this section may perform a custodial arrest, except as provided in subsection (B). These code enforcement officers must exercise their powers on all private and public property within the county. The governing body of the county may limit the scope of a code enforcement officer&#39;s authority or the geographic area for which he is authorized to exercise the authority granted.<br /><br />
+	(B)(1) The number of litter control officers vested with custodial arrest authority who are appointed and commissioned pursuant to subsection (A) must not exceed the greater of:<br /><br />
+	(a) the number of officers appointed and commissioned by the county on July 1, 2001; or<br /><br />
+	(b) one officer for every twenty-five thousand persons in the county, based upon the most recent census. Each county may appoint and commission at least one officer, without regard to the population of the county.<br /><br />
+	(2)(a) A litter control officer appointed and commissioned pursuant to subsection (A) may exercise the power of arrest with respect to his primary duties of enforcement of litter control laws and ordinances and other state and local laws and ordinances as may arise incidental to the enforcement of his primary duties only if the officer has been certified as a law enforcement officer pursuant to Chapter 23, Title 23.<br /><br />
+	(b) In the absence of an arrest for a violation of the litter control laws and ordinances, a litter control officer authorized to exercise the power of arrest pursuant to subitem (a) may not stop a person or make an incidental arrest of a person for a violation of other state and local laws and ordinances.<br /><br />
+	(3) For purposes of this section, the phrase &quot;litter control officer&quot; means a code enforcement officer authorized to enforce litter control laws and ordinances.<br /><br />
+HISTORY: 1990 Act No. 598, SECTION 3, eff June 25, 1990; 1992 Act No. 411, SECTION 1, eff June 1, 1992; 1996 Act No. 373, SECTION 1, eff May 29, 1996; 2001 Act No. 109, SECTION 1, eff October 4, 2001; 2025 Act No. 67 (H.4247), SECTION 14, eff May 22, 2025.<br /><br />
+Editor&#39;s Note<br /><br />
+	Article 9, Chapter 6, Title 23, referenced in the text, was repealed by 2006 Act No. 316. For law enforcement training requirements, see, now, Chapter 23 of Title 23.<br /><br />
+Effect of Amendment<br /><br />
+	The 1992 amendment deleted language at the end of the second sentence relative to noninterference with the sheriff&#39;s department, added the third sentence, and inserted &quot;code&quot; preceding &quot;enforcement officers&quot; in two places.<br /><br />
+	The 1996 amendment added the last sentence beginning &quot;The governing body of the county.&quot;<br /><br />
+	The 2001 amendment designated the former section as subsection (A), inserted references to subsection (B), and made language changes; and added subsection (B).<br /><br />
+	2025 Act No. 67, SECTION 14, in (B)(1)(b), substituted &quot;most recent census&quot; for &quot;2000 census&quot;; and in (B)(2)(a), substituted &quot;Chapter 23&quot; for &quot;Article 9, Chapter 6&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-150.</span> Audits of county records; designation of auditors; public inspection of report.<br /><br />
+	The council shall provide for an independent annual audit of all financial records and transactions of the county and any agency funded in whole by county funds and may provide for more frequent audits as it considers necessary. Special audits may be provided for any agency receiving county funds as the county governing body considers necessary. The audits must be made by a certified public accountant or public accountant or firm of these accountants who have no personal interest, direct or indirect, in the fiscal affairs of the county government or any of its officers. The council may, without requiring competitive bids, designate the accountant or firm annually or for a period not exceeding three years. The designation for any particular fiscal year must be made no later than thirty days after the beginning of the fiscal year. The report of the audit must be made available for public inspection. A copy of the report of the audit must be submitted to the State Treasurer no later than January first each year following the close of the books of the previous fiscal year. Upon a showing of proper cause, as determined by the State Treasurer, the State Treasurer shall grant a county an extension of ninety days. To be considered, a request for extension must be signed by the chair of the council before the deadline for filing.<br /><br />
+	If the report is not filed with the State Treasurer by January first, or within the time extended for filing the report, funds distributed by the State Treasurer to the county in the current fiscal year must be withheld pending receipt of a copy of the report.<br /><br />
+HISTORY: 1962 Code SECTION 14-3712; 1975 (59) 692; 1977 Act No. 96; 1988 Act No. 365, Part II, SECTION 3, eff July 1, 1988; 2002 Act No. 356, SECTION 1, Pt XI.P, eff July 1, 2002; 2005 Act No. 164, SECTION 36, eff June 10, 2005; 2023 Act No. 71 (S.31), SECTION 3, eff June 7, 2023.<br /><br />
+Effect of Amendment<br /><br />
+	The 1988 amendment made grammatical changes, and added the last sentence, relating to a copy of the report of audit being submitted to the Comptroller General.<br /><br />
+	The 2002 amendment added the second undesignated paragraph relating to failure to file the report on time.<br /><br />
+	The 2005 amendment, in the first undesignated paragraph, at the end of the fourth sentence substituted &quot;three years&quot; for &quot;one year&quot;.<br /><br />
+	2023 Act No. 71, SECTION 3, In the first undesignated paragraph, in the seventh sentence, substituted &quot;State Treasurer&quot; for &quot;Comptroller General&quot;, and added the eighth and ninth sentences, and in the second undesignated paragraph, substituted &quot;filed with the State Treasurer by January first&quot; for &quot;timely filed&quot; and &quot;State Treasurer&quot; for &quot;Comptroller General&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-155.</span> Repealed by 1994 Act No. 516, SECTION 36, eff August 31, 1994.<br /><br />
+Editor&#39;s Note<br /><br />
+	Former SECTION 4-9-155 was entitled &quot;Audit standards; penalties&quot; and was derived from 1990 Act No. 603, SECTION 2; 1992 Act No. 361, SECTION 1; 1993 Act No. 181, SECTION 53; 1993 Act No. 115, SECTION 1.<br /><br />
+	1990 Act No. 603, SECTION 1, eff July 1, 1991, provides as follows:<br /><br />
+	&quot;SECTION 1. The General Assembly finds that there is a lack of uniformity in the annual audits of the offices of the county assessor, auditor, treasurer, and tax collector and that on occasion important facts are overlooked or not considered. The purpose of this act is to establish the minimum standard of accounting to be followed so as to increase the accuracy of the audits of these offices.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-160.</span> Council shall provide for centralized purchasing system.<br /><br />
+	The council shall provide for a centralized purchasing system for procurement of goods and services required by the county government.<br /><br />
+HISTORY: 1962 Code SECTION 14-3713; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-170.</span> Council shall provide for appointment of certain boards, committees, and commissions; appointive powers of council.<br /><br />
+	The council shall provide by ordinance for the appointment of all county boards, committees and commissions whose appointment is not provided for by the general law or the Constitution. Each council shall have such appointive powers with regard to existing boards and commissions as may be authorized by the General Assembly except as otherwise provided for by the general law and the Constitution, but this authority shall not extend to school districts, special purpose districts or other political subdivisions created by the General Assembly; provided, however, that beginning January 1, 1980, the council shall provide by ordinance for the appointment of all county boards, committees and commissions whose appointment is not provided for by the general law or the Constitution, but this authority shall not extend to school districts, special purpose districts or other political subdivisions created by the General Assembly.<br /><br />
+HISTORY: 1962 Code SECTION 14-3714; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-175.</span> Per diem, travel, and other expenses authorized for travel by board or commission members outside county.<br /><br />
+	The governing body of a county may pay per diem, travel, or any other expenses, in an amount it considers necessary, to any member of a county board or commission when the member travels outside of the county and incurs expenses relating to his duties while serving on the board.<br /><br />
+HISTORY: 1993 Act No. 147, SECTION 1, eff June 14, 1993.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-180.</span> Officers and employees shall disclose personal interests in county business and refrain from voting on or participating in such matters.<br /><br />
+	Any county officer or employee who has a substantial financial interest in any business which contracts with the county for sale or lease of land, materials, supplies, equipment or services or who personally engages in such matters shall make known that interest and refrain from voting upon or otherwise participating in his capacity as a county officer or employee in matters related thereto.<br /><br />
+	Any county officer or employee who wilfully violates the requirements of this section shall be deemed guilty of malfeasance in office and upon conviction shall forfeit his office or position. Violation of this section with the knowledge express or implied of the person or corporation contracting with or making a sale to the county shall render the contract or sale voidable by the county governing body.<br /><br />
+HISTORY: 1962 Code SECTION 14-3715; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-190.</span> Certain provisions inapplicable to board of commissioners form of government.<br /><br />
+	The sections of this article, except Sections 4-9-10 and 4-9-20 shall not apply to the board of commissioners form of government provided for in Article 11.<br /><br />
+HISTORY: 1962 Code SECTION 14-3716; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-195.</span> Grant of special property tax assessments to &quot;rehabilitated historic property&quot; or &quot;low and moderate income rental property&quot;.<br /><br />
+	(A) The governing body of any county by ordinance may grant the special property tax assessments authorized by this section to real property which qualifies as either &quot;rehabilitated historic property&quot; or as &quot;low and moderate income rental property&quot; in the manner provided in this section. A county governing body may designate, in its discretion, an agency or a department to perform its functions and duties pursuant to the provisions of this section in its discretion.<br /><br />
+	(1) All qualifying property may receive preliminary certification from the county governing body and upon this preliminary certification, the property must be assessed for two years on the fair market value of the property at the time the preliminary certification was made. If the project is not complete after two years, but the minimum expenditures for rehabilitation have been incurred, the property continues to receive the special assessment until the project is completed.<br /><br />
+	(2) Upon completion of a project, the project must receive final certification from the county governing body in order to be eligible for the special assessment. Upon final certification, the property must be assessed for the remainder of the special assessment period on the fair market value of the property at the time the preliminary certification was made or the final certification was made, whichever occurred earlier. If a completed project does not comply with all requirements for final certification, final certification must not be granted and any monies not collected by the county due to the special assessment must be returned to the county.<br /><br />
+	(3) The special assessment only begins in the current or future tax years as provided for in this section. In no instance may the special assessment be applied retroactively.<br /><br />
+	(B) As used in this section:<br /><br />
+	(1) &quot;Historic designation&quot; means the owner of the property applies for and is granted historic designation by the county governing body for the purpose of the special property tax assessment based on one or more of the following reasons:<br /><br />
+	(a) the property is listed in the National Register of Historic Places;<br /><br />
+	(b) the property is designated as a historic property by the county governing body based upon criteria established by the county governing body and is at least fifty years old; or<br /><br />
+	(c) the property is at least fifty years old and is located in a historic district designated by the county governing body at any location within the geographical area of the county.<br /><br />
+	(2) &quot;Approval of rehabilitation work&quot; means the proposed and completed rehabilitation work is approved by the reviewing authority as appropriate for the historic building and the historic district in which it is located.<br /><br />
+	(3) &quot;Minimum expenditures for rehabilitation&quot; means the owner or his estate rehabilitates the building, with expenditures for rehabilitation exceeding the minimum percentage of the fair market value of the building established by the county in its ordinance. The county governing body may set different minimum percentages for owner-occupied property and income producing real property, between twenty percent and one hundred percent.<br /><br />
+	(4) &quot;Special assessment period&quot; means the county governing body shall set the length of the special assessment in its ordinance of not more than twenty years.<br /><br />
+	(5) &quot;Preliminary certification&quot; means a property has met the following conditions:<br /><br />
+	(a) the owner of the property applies for and is granted historic designation by the county governing body; and<br /><br />
+	(b) the proposed rehabilitation receives approval of rehabilitation work from the reviewing authority.<br /><br />
+	A county governing body may require that an owner applies for preliminary certification before any project work begins.<br /><br />
+	(6) &quot;Final certification&quot; means a property has met the following conditions:<br /><br />
+	(a) the owner of the property applies for and is granted historic designation by the county governing body;<br /><br />
+	(b) the completed rehabilitation receives approval of rehabilitation work from the reviewing authority; and<br /><br />
+	(c) the minimum expenditures for rehabilitation were incurred and paid.<br /><br />
+	(7) &quot;Reviewing authority&quot; for approval of rehabilitation work pursuant to this section is defined as:<br /><br />
+	(a) the board of architectural review in counties with a board of architectural review with jurisdiction over historic properties operating pursuant to Section 6-29-870;<br /><br />
+	(b) in counties without a board of architectural review with jurisdiction over historic properties, the county governing body may designate another qualified entity with historic preservation expertise to review the rehabilitation work; or<br /><br />
+	(c) if the county governing body does not designate another qualified entity, the Department of Archives and History shall review the rehabilitation work. No separate application to the department is required for properties receiving preliminary and final approval for the federal income tax credit allowed pursuant to Section 47 of the Internal Revenue Code or the state income tax credit allowed pursuant to Section 12-6-3535.<br /><br />
+	(8) &quot;Rehabilitated historic property&quot; means the property has met all the criteria for final certification.<br /><br />
+	(C) &quot;Low and moderate income rental property&quot; is eligible for certification if:<br /><br />
+	(1) the property provides accommodations under the Section 8 Program as defined in the United States Housing Act of 1937 and amended by the Housing and Community Act of 1974 for low and moderate income families and persons as defined by Section 31-13-170(p); or<br /><br />
+	(2) in the case of income-producing real property, the expenditures for rehabilitation exceed the appraised value of the property; and<br /><br />
+	(3) if the low and moderate income housing rehabilitation is located in an area designated by the local government as a Low and Moderate Housing Rehabilitation District; and<br /><br />
+	(4) the owner or estate of any property certified as &quot;low and moderate income rental property&quot; takes no actions which cause the property to be unsuitable for such a designation. The county governing body granting the initial certification has the authority to decertify property in these cases, and the property becomes immediately ineligible for the special tax assessments provided for this type of property; and<br /><br />
+	(5) if the property qualifies as &quot;historic&quot; as defined in subsection (B)(1), then the rehabilitation work must be approved by the appropriate reviewing authority as provided in subsections (B) and (D).<br /><br />
+	(D) The Department of Archives and History may provide training and technical assistance to counties and procedures for application, consideration, and appeal through appropriate regulations for &quot;rehabilitated historic property&quot; provisions of the law. The governing body may establish fees for applications for preliminary or final certification, or both, through the ordinance or regulations.<br /><br />
+	(E) When property has received final certification and is assessed as rehabilitated historic property, or low or moderate income rental property, it remains so certified and must be granted the special assessment until the property becomes disqualified by any one of the following:<br /><br />
+	(1) written notice by the owner to the county to remove the preferential assessment;<br /><br />
+	(2) removal of the historic designation by the county governing body;<br /><br />
+	(3) decertification of the property by the local governing body as low or moderate income rental property for persons and families of moderate to low income as defined by Section 31-13-170(p);<br /><br />
+	(4) rescission of the approval of rehabilitation work by the reviewing authority because of alterations or renovations by the owner or his estate which cause the property to no longer possess the qualities and features which made it eligible for final certification.<br /><br />
+	Under no circumstances shall the sale or transfer of ownership of real property certified and assessed in accordance with this section and any ordinance in effect at the time disqualify the property from receiving the special property tax assessment under this section. This provision shall be applicable and given full force and effect to any special property tax assessment granted prior to the effective date of this paragraph notwithstanding any ordinance in effect from time to time to the contrary.<br /><br />
+	Notification of any change affecting eligibility must be given immediately to the appropriate county taxing and assessing authorities.<br /><br />
+	(F) If an application for preliminary or final certification is filed by May first or the preliminary or final certification is approved by August first, the special assessment authorized by this section is effective for that year. Otherwise it is effective beginning with the following year.<br /><br />
+	(G) Once the governing body has granted the special property tax assessments authorized by this section, the owner of the property shall make application to the auditor for the special assessment provided for by this section.<br /><br />
+	(H) A property certified to receive the special property tax assessment under the existing law continues to receive the special assessment in effect at the time certification was made.<br /><br />
+HISTORY: 1990 Act No. 474, SECTION 1, eff May 14, 1990; 1992 Act No. 375, SECTIONS 1-4, eff May 19, 1992; 2004 Act No. 292, SECTION 1, eff August 16, 2004; 2010 Act No. 182, SECTION 5, eff May 28, 2010.<br /><br />
+Effect of Amendment<br /><br />
+	The 1992 amendment revised (A)(1) and (2), (B)(4) and (5), and (C), and added subsection (H).<br /><br />
+	The 2004 amendment rewrote this section.<br /><br />
+	The 2010 amendment rewrote subsection (E).<br /><br />
+<div style="text-align: center;">ARTICLE 3</div>
+<div style="text-align: center;">Council Form of County Government</div><br />
+	(Form No. 1)<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-310.</span> Responsibility for policy making and administration; membership of council; applicability of Article 1.<br /><br />
+	In those counties adopting the council form of government provided for in this article, the responsibility for policy making and administration of county government shall be vested in the county council which shall consist of not less than three nor more than twelve members who are qualified electors of the county. The structure, organization, powers, duties, functions and responsibilities of county government under the council form shall be as prescribed in Article 1 of this chapter.<br /><br />
+HISTORY: 1962 Code SECTION 14-3720; 1975 (59) 692.<br /><br />
+<div style="text-align: center;">ARTICLE 5</div>
+<div style="text-align: center;">Council-Supervisor Form of County Government</div><br />
+	(Form No. 2)<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-410.</span> Membership of council; election, term, and compensation of supervisor.<br /><br />
+	The council in those counties adopting the council-supervisor form of government provided for in this article shall consist of not less than two nor more than twelve members who are qualified electors of the county. The supervisor shall serve as chairman and vote only to break tie votes. The supervisor shall be a qualified elector of the county, elected at large from the county in the general election for a term of two or four years.<br /><br />
+	The compensation for the supervisor shall be prescribed by the council by ordinance. The council shall not reduce or increase the compensation of the supervisor during the term of office for which he was elected.<br /><br />
+HISTORY: 1962 Code SECTION 14-3730; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-420.</span> Powers and duties of supervisor.<br /><br />
+	The powers and duties of the supervisor shall include, but not be limited to, the following:<br /><br />
+	(1) to serve as the chief administrative officer of the county government;<br /><br />
+	(2) to execute the policies and legislative actions of the council;<br /><br />
+	(3) to direct and coordinate operational agencies and administrative activities of the county government;<br /><br />
+	(4) to prepare annual operating and capital improvement budgets for submission to the council;<br /><br />
+	(5) to supervise the expenditure of funds appropriated by council;<br /><br />
+	(6) to prepare annual, monthly and other reports for council on finances and administrative activities of the county;<br /><br />
+	(7) to recommend measures for adoption;<br /><br />
+	(8) to serve as presiding officer of the council, voting in case of council ties;<br /><br />
+	(9) to serve as official spokesman for the council with respect to council&#39;s policies and programs;<br /><br />
+	(10) to inspect books, accounts, records, or documents pertaining to the property, money or assets of the county;<br /><br />
+	(11) to be responsible for the administration of county personnel policies approved by the council including salary and classification plans;<br /><br />
+	(12) to be responsible for employment and discharge of personnel subject to the provisions of subsection (7) of Section 4-9-30 and subject to the appropriation of funds by the council for that purpose.<br /><br />
+HISTORY: 1962 Code SECTION 14-3731; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-430.</span> Powers of council and its members; authority of supervisor over certain elected officials.<br /><br />
+	The council shall not remove any county administrative officers or employees whom the county supervisor or any of his subordinates are empowered to appoint, unless by two-thirds vote of the members present and voting.<br /><br />
+	Except for the purposes of inquiries and official investigations, neither the council nor its members shall give direct orders to any county officer or employee, either publicly or privately.<br /><br />
+	With the exception of organizational policies established by the governing body, the county supervisor shall exercise no authority over any elected officials of the county whose offices were created either by the Constitution or by general law of the State.<br /><br />
+HISTORY: 1962 Code SECTION 14-3732; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-440.</span> Applicability of Article 1.<br /><br />
+	Except as specifically provided for in this article, the structure, organization, powers, duties, functions, and responsibilities of county government under the council-supervisor form shall be as prescribed in Article 1 of this chapter.<br /><br />
+HISTORY: 1962 Code SECTION 14-3733; 1975 (59) 692.<br /><br />
+<div style="text-align: center;">ARTICLE 7</div>
+<div style="text-align: center;">Council-Administrator Form of County Government</div><br />
+	(Form No. 3)<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-610.</span> Membership of council; election and term of members.<br /><br />
+	The council in those counties adopting the council-administrator form of government provided for in this article shall consist of not less than three nor more than twelve members who are qualified electors of the county. Council members shall be elected in the general election for terms of two or four years commencing on the first of January next following their election.<br /><br />
+HISTORY: 1962 Code SECTION 14-3740; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-620.</span> Employment and qualifications of administrator; compensation; term of employment; procedure for removal.<br /><br />
+	The council shall employ an administrator who shall be the administrative head of the county government and shall be responsible for the administration of all the departments of the county government which the council has the authority to control. He shall be employed with regard to his executive and administrative qualifications only, and need not be a resident of the county at the time of his employment. The term of employment of the administrator shall be at the pleasure of the council and he shall be entitled to such compensation for his services as the council may determine. The council may, in its discretion, employ the administrator for a definite term. If the council determines to remove the county administrator, he shall be given a written statement of the reasons alleged for the proposed removal and the right to a hearing thereon at a public meeting of the council. Within five days after the notice of removal is delivered to the administrator he may file with the council a written request for a public hearing. This hearing shall be held at a council meeting not earlier than twenty days nor later than thirty days after the request is filed. The administrator may file with the council a written reply not later than five days before the hearing. The removal shall be stayed pending the decision at the public hearing.<br /><br />
+HISTORY: 1962 Code SECTION 14-3741; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-630.</span> Powers and duties of administrator.<br /><br />
+	The powers and duties of the administrator shall include, but not be limited to, the following:<br /><br />
+	(1) to serve as the chief administrative officer of the county government;<br /><br />
+	(2) to execute the policies, directives and legislative actions of the council;<br /><br />
+	(3) to direct and coordinate operational agencies and administrative activities of the county government;<br /><br />
+	(4) to prepare annual operating and capital improvement budgets for submission to the council and in the exercise of these responsibilities he shall be empowered to require such reports, estimates and statistics on an annual or periodic basis as he deems necessary from all county departments and agencies;<br /><br />
+	(5) to supervise the expenditure of appropriated funds;<br /><br />
+	(6) to prepare annual, monthly and other reports for council on finances and administrative activities of the county;<br /><br />
+	(7) to be responsible for the administration of county personnel policies including salary and classification plans approved by council;<br /><br />
+	(8) to be responsible for employment and discharge of personnel subject to the provisions of subsection (7) of Section 4-9-30 and subject to the appropriation of funds by the council for that purpose; and<br /><br />
+	(9) to perform such other duties as may be required by the council.<br /><br />
+HISTORY: 1962 Code SECTION 14-3742; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-640.</span> Preparation and submission of budget and descriptive statement.<br /><br />
+	The county administrator shall prepare the proposed operating and capital budgets and submit them to the council at such time as the council determines. At the time of submitting the proposed budget, the county administrator shall submit to the council a statement describing the important features of the proposed budgets including all sources of anticipated revenue of the county government and the amount of tax revenue required to meet the financial requirements of the county.<br /><br />
+HISTORY: 1962 Code SECTION 14-3743; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-650.</span> Authority of administrator over certain elected officials.<br /><br />
+	With the exception of organizational policies established by the governing body, the county administrator shall exercise no authority over any elected officials of the county whose offices were created either by the Constitution or by the general law of the State.<br /><br />
+HISTORY: 1962 Code SECTION 14-3744; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-660.</span> Authority of council and its members over county officers and employees.<br /><br />
+	Except for the purposes of inquiries and investigations, the council shall deal with county officers and employees who are subject to the direction and supervision of the county administrator solely through the administrator, and neither the council nor its members shall give orders or instructions to any such officers or employees.<br /><br />
+HISTORY: 1962 Code SECTION 14-3745; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-670.</span> Applicability of Article 1.<br /><br />
+	Except as specifically provided for in this article, the structure, organization, powers, duties, functions and responsibilities of county government under the council-administrator form shall be as prescribed in Article 1 of this chapter.<br /><br />
+HISTORY: 1962 Code SECTION 14-3746; 1975 (59) 692.<br /><br />
+<div style="text-align: center;">ARTICLE 9</div>
+<div style="text-align: center;">Council-Manager Form of County Government</div><br />
+	(Form No. 4)<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-810.</span> Membership of council; election and terms of members.<br /><br />
+	The council in those counties adopting the council-manager form of government provided for in this article shall consist of not less than five nor more than twelve members who are qualified electors of the county. Council members shall be elected in the general election for terms of two or four years commencing on the first of January next following their election.<br /><br />
+HISTORY: 1962 Code SECTION 14-3770; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-820.</span> Employment and qualifications of manager; term of office; compensation; procedure for removal.<br /><br />
+	The council shall employ a manager who shall be the administrative head of the county government and shall be responsible for the administration of all the departments of the county government which the council has the authority to control. He shall be employed with regard to his executive and administrative qualifications only, and need not be a resident of the county at the time of his employment. The term of employment of the manager shall be at the pleasure of the council and he shall be entitled to such compensation for his services as the council may determine. The council may, in its discretion, employ the manager for a definite term. If the council determines to remove the county manager, he shall be given a written statement of the reasons alleged for the proposed removal and the right to a hearing thereon at a public meeting of the council.<br /><br />
+	Within five days after the notice of removal is delivered to the manager, he may file with the council a written request for a public hearing. This hearing shall be held at a council meeting not earlier than twenty days nor later than thirty days after the request is filed. The manager may file with the council a written reply not later than five days before the hearing. The removal shall be stayed pending the decision at the public hearing.<br /><br />
+HISTORY: 1962 Code SECTION 14-3771; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-830.</span> Powers and duties of manager.<br /><br />
+	The powers and duties of the manager shall include, but not be limited to, the following:<br /><br />
+	(1) to serve as the chief administrative officer of the county government;<br /><br />
+	(2) to execute the policies, directives and legislative actions of the council;<br /><br />
+	(3) to direct and coordinate operational agencies and administrative activities of the county government;<br /><br />
+	(4) to prepare annual operating and capital improvement budgets for submission to the council and, in the exercise of that authority, he shall be empowered to require such reports, estimates and statistics on an annual or periodic basis as he deems necessary from all county departments and agencies for the performance of his duties in budget preparation;<br /><br />
+	(5) to supervise the expenditure of appropriated funds;<br /><br />
+	(6) to prepare annual, monthly and other reports for council on finances and administrative activities of the county;<br /><br />
+	(7) to be responsible for the administration of county personnel policies including salary and classification plans approved by council;<br /><br />
+	(8) to be responsible for employment and discharge of personnel subject to the provisions of subsection (7) of Section 4-9-30 and subject to the appropriation of funds by the council for that purpose; and<br /><br />
+	(9) to perform such other duties as may be required by the council.<br /><br />
+HISTORY: 1962 Code SECTION 14-3772; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-840.</span> Preparation and submission of budget and descriptive statement.<br /><br />
+	The county manager shall prepare the proposed operating and capital budgets and submit them to the council at such time as the council determines. At the time of submitting the proposed budget, the county manager shall submit to the council a statement describing the important features of the proposed budgets including all sources of anticipated revenue of the county government and the amount of tax revenue required to meet the financial requirements of the county.<br /><br />
+HISTORY: 1962 Code SECTION 14-3773; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-850.</span> Authority of county manager over elected officials; authority of council and its members over county officers and employees.<br /><br />
+	With the exception of organizational policies established by the governing body, the county manager shall exercise no authority over any elected officials of the county.<br /><br />
+	Except for the purposes of inquiries and investigations, neither the council nor its members shall give orders or instructions to county officers or employees.<br /><br />
+HISTORY: 1962 Code SECTION 14-3774; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-860.</span> Election or appointment of county treasurer and auditor.<br /><br />
+	The county treasurer and county auditor, or their counterparts, by whatever terms those officials are designated may be elected or appointed by council as the council may determine by ordinance. If such officials are appointed, they shall be subject to control by council and the manager in the same manner as other appointed county department heads.<br /><br />
+HISTORY: 1962 Code SECTION 14-3775; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-870.</span> Applicability of Article 1.<br /><br />
+	Except as specifically provided for in this article, the structure, organization, powers, duties, functions and responsibilities of county government under the council-manager form shall be as prescribed in Article 1 of this chapter.<br /><br />
+HISTORY: 1962 Code SECTION 14-3776; 1975 (59) 692.<br /><br />
+<div style="text-align: center;">ARTICLE 11</div>
+<div style="text-align: center;">County Board of Commissioners Form of County Government</div><br />
+	(Form No. 5)<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1010.</span> Membership of county board of commissioners.<br /><br />
+	The governing body in those counties adopting the county board of commissioners form of government provided for in this article shall consist of not less than four nor more than twelve commissioners, as may be determined by the General Assembly for each county electing to adopt the form of government provided for in this article, all of whom shall be qualified electors of the county.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1020.</span> Supervisor as administrator; method of election and terms of office of supervisor and commission members; vacancies.<br /><br />
+	Those counties presently electing the supervisor shall continue to do so and he shall serve as chairman of the board of commissioners. Those counties presently hiring or appointing the supervisor or administrator shall continue to do so. Method of election and terms of office of either two years or four years for the supervisor and board of commissioners shall be as the General Assembly shall provide when a form of government is selected for the county concerned. In the event terms for commission members are established for four years, terms of office shall be staggered so that not more than one-half of the board of commissioners shall be elected at any single general election except the initial election at which time one-half of the membership shall be elected for two years only.<br /><br />
+	Terms shall commence on the Monday following their election. Vacancies shall be filled in the same manner for the unexpired portion of the term only. Provided, that any vacancy having less than one year of the term remaining shall be filled in the manner provided for boards, committees and commissions in Section 4-9-1100.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785.1; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1030.</span> Board shall be county governing body; duties of board.<br /><br />
+	The county board of commissioners shall be the governing body of the county. The board shall be charged with the administration of county affairs, including but not limited to:<br /><br />
+	(a) The hearing of all budget requests and the submission of a proposed annual budget for the operation of the affairs of the county which shall be submitted to the General Assembly not later than March fifteenth for appropriate action.<br /><br />
+	(b) The formulation and implementation of personnel policies for county employees including supervision of insurance programs, except that the rights of the constitutional officers of the county, the county tax collector, the auditor and the treasurer to select their own personnel shall not be infringed.<br /><br />
+	(c) The purchasing of all supplies and equipment by the county and the maintenance of inventory records thereon.<br /><br />
+	(d) Approval of expenditures from the contingent fund as it may be established from time to time by law.<br /><br />
+	(e) The supervision of all buildings and grounds owned by the county, including the allocation of office space in all county buildings and the providing of office space for all countywide officers.<br /><br />
+	(f) The acquisition of property by purchase or gift.<br /><br />
+	(g) The adoption, use and alteration of a corporate seal.<br /><br />
+	(h) The leasing or sale of property owned by the county.<br /><br />
+	(i) The making of contracts for the county.<br /><br />
+	(j) The exercise of the power of eminent domain within the county.<br /><br />
+	(k) The performance of such other acts necessary to carry out its responsibilities.<br /><br />
+	(l) The determination of its own rules and order of business.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785.2; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1040.</span> Time and place of meetings; special meetings; notice.<br /><br />
+	The board shall meet at least once each month at such times, dates and places as set by it at its first meeting following each general election. Special meetings may be called at any time by the chairman or by a majority of the commissioners; provided, that all members shall be notified as to the subject matter and the date, time and place of such meeting.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785.3; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1050.</span> Board may elect clerk; duties, salary, and term of office.<br /><br />
+	The board in each of the counties may elect a clerk who shall perform the duties of secretary and be paid an annual salary as provided by law and whose term of office shall be coterminous with that of the members of the board electing him.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785.4; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1060.</span> Commissioners shall account for claims audited and allowed and conform to prescribed system of bookkeeping.<br /><br />
+	The county commissioners shall keep an account of claims audited and allowed by them against the several funds appropriated for county purposes in accordance with a form to be prescribed by the Comptroller General, and they shall conform to any system of bookkeeping that may be prescribed for use in their office by the Comptroller General.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785.5; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1070.</span> Commissioners may administer oaths and punish for contempt of their proceedings.<br /><br />
+	The members of the county board of commissioners may administer oaths to all persons appearing before them and punish by fine not exceeding ten dollars or imprisonment in the county jail not exceeding twenty hours any and all persons guilty of disorderly conduct amounting to an open or direct contempt or wilful interruption of their proceedings.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785.6; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1080.</span> Commissioners shall not be interested in certain contracts.<br /><br />
+	No member of a board of county commissioners shall be directly or indirectly interested in any contract pertaining to his duty as commissioner.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785.7; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1090.</span> Commissioners must give bond.<br /><br />
+	The county commissioners shall each give bond in the sum of five thousand dollars.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785.8; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1100.</span> Governor shall make certain appointments.<br /><br />
+	All appointments to boards, committees and commissions in those counties adopting the county board of commissioners form of government shall be made by the Governor upon approval of a majority of the members of the legislative delegation, including the Senator or Senators of the particular county.<br /><br />
+HISTORY: 1962 Code SECTION 14-3585.10; 1975 (59) 692.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1110.</span> Inapplicability of certain provisions to county board of commissioners form of government.<br /><br />
+	The provisions of Sections 6-11-410 to 6-11-650 shall not apply to counties operating under the county board of commissioners form of government.<br /><br />
+HISTORY: 1962 Code SECTION 14-3785.9; 1975 (59) 692.<br /><br />
+<div style="text-align: center;">ARTICLE 13</div>
+<div style="text-align: center;">Initiative and Referendum</div><br />
+<span style="font-weight: bold;"> SECTION 4-9-1210.</span> Electors may propose and adopt or reject certain ordinances; submission by petition to council.<br /><br />
+	The qualified electors of any county may propose any ordinance, except an ordinance appropriating money or authorizing the levy of taxes, and adopt or reject such ordinance at the polls. Any initiated ordinance may be submitted to the council by a petition signed by qualified electors of the county equal in number to at least fifteen percent of the qualified electors of the county.<br /><br />
+HISTORY: 1962 Code SECTION 14-3790; 1975 (59) 692; 1977 Act No. 33 SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1220.</span> Electors may petition for repeal of certain ordinances.<br /><br />
+	Within sixty days after the enactment by the council of any ordinance authorizing the issuance of bonds, notes or other evidence of debt the repayment of which requires a pledge of the full faith and credit of the county, or requires the approval of the issuance of bonds by a public service district within the county a petition signed by qualified electors of the county equal in number to at least fifteen percent of the qualified electors of the county, or if such ordinance relates to a bond issue for a public service district, fifteen percent of the qualified electors of the district may be filed with the clerk of the county council requesting that any such ordinance be repealed; provided, however, that this section shall not apply to bond issues approved by referendum or to notes issued in anticipation of taxes.<br /><br />
+HISTORY: 1962 Code SECTION 14-3791; 1975 (59) 692; 1977 Act No. 33 SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 4-9-1230.</span> Election shall be held where council fails to adopt or repeal ordinance.<br /><br />
+	If the council shall fail to pass an ordinance proposed by initiative petition or shall pass it in a form substantially different from that set forth in the petition therefor or if the council shall fail to repeal an ordinance for which a petition for repeal has been presented, the adoption or repeal of the ordinance concerned shall be submitted to the electors not less than thirty days nor more than one year from the date the council takes its final vote thereon. The council may, in its discretion, and if no regular election is to be held within such period, provide for a special election. All county councils shall be bound by the results of any such referendum.<br /><br />
+HISTORY: 1962 Code SECTION 14-3792; 1975 (59) 692; 1977 Act No. 33 SECTION 1.<br /><br />
+
+</div>
+
+
+					</div>		 <!-- mainwidepanel -->
+					
+				</div>		 <!-- pagebody -->
+				
+				<div id="footer" class="nodisplay" style="height: 30px;" onContextMenu="return false;">
+			<div id="footerdiv" style="margin:0;">
+				South Carolina Legislative Services Agency * 223 Blatt Building * 1105 Pendleton Street * Columbia, SC 29201<!-- * 803-212-4420--><br>
+				
+								<a href="/disclaimer.php">Disclaimer</a> * <a href="/policies.php">Policies</a> * <a href="/credits.php">Photo Credits</a> * <a href="/contact.php">Contact Us</a>
+							</div>
+		</div>
+		<div id="printfooter" class="printdisplay serifNormal" align=center style="font-size: 8pt;">
+			<br>
+			<br>
+			<hr>
+			Legislative Services Agency
+			<br>
+			h t t p : / / w w w . s c s t a t e h o u s e . g o v
+		</div>
+	
+		</div>	<!-- container or main in mobile page-->
+</body>
+</html>
+

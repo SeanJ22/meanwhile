@@ -1,0 +1,17 @@
+[
+  {
+    "contestId": "wy-sos-2026-general-sc-02-justice-of-the-supreme-court",
+    "questionText": "Shall Justice Bridget Hill be retained in office?",
+    "sourceUrl": "https://wyoleg.gov/statutes/compress/title22.pdf"
+  },
+  {
+    "contestId": "wy-sos-2026-general-sc-01-justice-of-the-supreme-court",
+    "questionText": "Shall Justice Robert C. Jarosh be retained in office?",
+    "sourceUrl": "https://wyoleg.gov/statutes/compress/title22.pdf"
+  },
+  {
+    "contestId": "wy-sos-2026-general-chc-01-judge-of-the-chancery-court",
+    "questionText": "Shall Judge Ben Burningham be retained in office?",
+    "sourceUrl": "https://wyoleg.gov/statutes/compress/title22.pdf"
+  }
+]

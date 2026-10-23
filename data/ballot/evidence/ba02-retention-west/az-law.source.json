@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://www.azleg.gov/const/6/38.htm",
+  "finalUrl": "https://www.azleg.gov/const/6/38.htm",
+  "retrievedAt": "2026-10-23T09:35:31.231654+00:00",
+  "httpStatus": 200,
+  "rawHash": "f7ed68f6634cad139d8546612e1ba946833fa66d2df01beb8f5c3ce491c1463d",
+  "bytes": 3218,
+  "file": "az-law.html",
+  "textSnapshot": "az-law.txt",
+  "textHash": "064da6e165ccf6550409e142e7c2464825dd82f67556407d4f30b6c544d7e432",
+  "extraction": "HTML text with scripts/styles excluded"
+}

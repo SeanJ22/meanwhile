@@ -1,0 +1,48 @@
+22-6-126.    Form of nonpartisan ballots.
+
+     (a) The official nonpartisan ballot for a general election
+shall be printed in substantially the following form:
+     OFFICIAL NONPARTISAN ELECTION BALLOT
+     GENERAL ELECTION     County of ...., Election District ....,
+Precinct ....      Date ....              (here print
+instructions)             CANDIDATES FOR PUBLIC OFFICE For
+Justice(s) of the Supreme Court      (Here designate the
+particular       term, such as "regular eight (8)      year term",
+or the "unexpired       term of .... years").      Shall Justice
+John Roe be retained in office?    Yes__ No__      Shall Justice
+Richard Roe be retained in office? Yes__ No__
+___________________________________________________________ For
+Judge(s) of the District Court of the .... Judicial District
+(Here designate the particular term,       such as "regular six
+(6) year term",      or the "unexpired term of .... years").
+Shall Judge Jane Roe be retained in office? Yes__ No__
+Shall Judge Richard Roe be retained in office? Yes__ No__
+___________________________________________________________ For
+Circuit Court Judge      (Here designate the particular       term,
+such as "regular four year term",      or the "unexpired term of
+.... years").      Shall Judge John Roe be retained in office?
+Yes__ No__      Shall Judge Richard Roe be retained in office?
+Yes__ No__
+___________________________________________________________ For
+Magistrate      (Here designate the particular term,      such as
+"regular four (4) year term",      or the "unexpired term of ....
+years").      Shall Magistrate John Doe be retained in office?
+Yes__ No__      Shall Magistrate Richard Roe be retained in
+office? Yes__ No__ Align all designations of office to
+correspond on the ballot with the listing of names of candidates
+for the proper office and term.
+___________________________________________________________
+           BALLOT PROPOSITIONS     Proposed Constitutional
+Amendment Letter A: For Against        (Ballot Statement)
+__      __     Proposed Initiative Proposition Number One: For
+Against      (Ballot Statement)                            __
+__      Proposed Referendum Proposition Number One: For Against
+(Ballot Statement)                             __     __      Other
+Ballot Propositions:                     For Against      (Ballot
+Statement For Each Proposition)       __      __
+
+     (b) The official nonpartisan ballot for a primary election
+shall be so identified in the title and shall omit all
+references to justices of the supreme court, judges of the
+district court and circuit court judges but otherwise shall be
+in the same form as the general election nonpartisan ballot.

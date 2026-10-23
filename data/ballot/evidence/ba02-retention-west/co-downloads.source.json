@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://leg.colorado.gov/agencies/office-legislative-legal-services/2026-crs-titles-download",
+  "finalUrl": "https://content.leg.colorado.gov/agencies/office-legislative-legal-services/2026-crs-titles-download",
+  "retrievedAt": "2026-10-23T09:36:55.144621+00:00",
+  "httpStatus": 200,
+  "rawHash": "a56cd37814d8a871e27a6e97108f0bd4bcd3452c74b336b8d803c21d4faa3f16",
+  "bytes": 56989,
+  "file": "co-downloads.html",
+  "textSnapshot": "co-downloads.txt",
+  "textHash": "5700e410c38a9c050f0d221301252494d35684b2018245d68a3406f93d93b878",
+  "extraction": "HTML text with scripts/styles excluded"
+}

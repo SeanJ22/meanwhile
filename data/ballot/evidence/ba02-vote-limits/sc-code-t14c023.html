@@ -1,0 +1,655 @@
+﻿
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="robots" content="noimageindex">
+	    <meta charset="iso-8859-1">
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+	    	    <title>Code of Laws - Title 14 - Chapter 23- - COURTS</title>
+	    <link rel="SHORTCUT ICON" href="/images/stateflagsmall.ico" />
+		<link rel="icon" href="/images/stateflagsmall.ico" type="image/ico" />
+		<link rel="SHORTCUT ICON" href="/images/South-Carolina-Flag2.ico" />
+
+		<link type="text/css" rel="stylesheet" href="/css/main.css" media="all" />
+				
+		<!--[if lte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/ie7main.css" media="all" />
+		<![endif]-->
+		<!--[if gte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/iemain.css" media="all" />
+		<![endif]-->
+		<link type="text/css" rel="stylesheet" href="/css/print.css" media="print" />
+		<link type="text/css" rel="stylesheet" href="/css/supplement.css" media="screen" />
+		<!--<link type="text/css" rel="stylesheet" href="/css/zipsearch.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/vote.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/contact.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/navwrap.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/linkbar.css" media="screen" />-->
+	
+		<!--<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>-->
+		<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+				<script type="text/javascript" src="/js/main_linux.js"></script>
+		
+
+		
+
+
+
+		<!--<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/utils.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/lightbox.js"></script>
+		<script type="text/javascript" src="/js/legislation.js"></script>
+		<script type="text/javascript" src="/js/logon_lits.js"></script>
+		<script type="text/javascript" src="/js/message.js"></script>
+		<script type="text/javascript" src="/js/comm_meeting.js"></script>-->
+		<script type="text/vbscript" src="/vbs/comm_meeting.vbs"></script>
+		<!--<script type="text/javascript" src="/js/regs.js"></script>-->
+				
+	   	<script type="text/javascript">
+	    //document.onclick = function () { document.getElementById('transbox').style.display= 'none' };
+	    	var xmlhttp=false;
+			xmlhttp = create_xml_object();
+	
+			function getElement(ele)
+			{
+				var theobj = false;
+				if(typeof ele == 'string')
+					theobj = (document.getElementById)?document.getElementById(ele):document.all[ele];
+				else
+					theobj = ele;
+			
+				return theobj;
+			}
+		
+			function checkreader(friendlyalert)
+			{
+			 	/*friendlyalert=friendlyalert||false;
+			 	
+			 	var browser_info = perform_acrobat_detection();
+				if (!browser_info.acrobat)
+				{
+				 	loadadobebox('adobebox', '/adobe.php');
+					return false;
+				}
+				else if (friendlyalert)
+				{
+			 		alert(friendlyalert);
+				}*/
+				return true;
+			}
+				
+			function loadadobebox(boxname, url)
+			{
+				var response = false;
+	
+				doRequest(xmlhttp, "GET", url, false, null, null);
+				if (xmlhttp.status == 200)
+				{
+		         	response = xmlhttp.responseText;
+				}
+	
+				if(response)
+				{
+			 		var ele = document.getElementById(boxname);
+				 	if (ele)
+				 	{
+				 		ele.style.visibility = 'hidden';
+		 				ele.style.display = 'block';
+	
+		 				positionElement(ele, 'center', 'center', true);
+	
+						ele.innerHTML = response;
+					    ele.style.visibility = 'visible';
+					    ele.style.display = 'block';
+	//				    ele.scrollIntoView(true);
+					}
+				}
+				return response;
+			}
+	
+	
+			function init()
+			{
+		 		var ld=document.getElementById("loading");
+				if(ld)
+				{
+					ld.style.display = 'none';
+				}
+			}
+			
+			function openmore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				 	var pos = findPos(id);
+				 	id.style.zIndex = 10;
+		//		 	id.style.left = pos[0]+'px';
+		//		  	id.style.top = pos[1]+'px';
+				  	id.style.height = '295px';
+				  	id.style.position = 'absolute';
+				  	id.style.backgroundColor = '#f7f4ec';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'none';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = 'none';
+				  	}
+				}
+			}
+		
+			function closemore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				  	id.style.height = '135px';
+				  	id.style.position = '';
+				  	id.style.backgroundColor = 'transparent';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'block';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = '';
+				  	}
+				}		 	
+			}
+		
+		<!-- This script and many more are available free online at -->
+		<!-- The JavaScript Source!! http://javascript.internet.com -->
+		
+		<!-- Begin
+		function right(e) {
+		var msg = "Use of this image is strictly prohibited unless express written permission is given to the user by South Carolina Legislative Services Agency.";
+		if (navigator.appName == 'Netscape' && e.which == 3) {
+		alert(msg);
+		return false;
+		stopEvent(e);
+		}
+		if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) {
+		alert(msg);
+		return false;
+			stopEvent(event);
+		}
+		else return true;
+		}
+		
+	function trap() 
+	{
+		if(document.images)
+		{
+			for(i=0;i<document.images.length;i++)
+			{
+				if(document.images[i].className == 'allowcontextmenu')
+				{
+					// this should have no scripting
+				}
+				else
+				{
+				 	document.images[i].onmousedown = right;
+					document.images[i].oncontextmenu = function(){ return false; };
+					//document.images[i].onmouseup = right;
+				}
+			}
+		}
+	}
+
+	function findfwtext(texttofind) 
+	{
+	 	var fwtextele = document.getElementById('fwtext');
+		if(fwtextele)
+		{
+			fwtextele.value = texttofind;
+		}
+	}	
+		// End -->
+		</script>
+
+		<!-- ADDED FOR V4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY6FMNQKH"></script>
+
+
+<script type="text/javascript">
+
+//ADDED FOR V4
+//Google tag (gtag.js) 
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LJY6FMNQKH');
+
+ 
+ /* COMMENTING OUT UPGRADING TO V4 -A
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36207109-1']);
+  _gaq.push(['_setDomainName', 'scstatehouse.gov']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+*/
+  
+      $(document).ready(function(){
+        // COMMENTING THIS OUT NO LONGER BEING ACTIVELY USED TO MONITOR FOR TRAFFIC TO SPECIFIC LINKS - A
+        /*
+          var anchors = $('div#contentsection a');
+
+          //console.log('anchors...'+anchors.length);
+          if(anchors.length > 0){
+            //console.log('setting up event handler...');
+            anchors.click(function(){
+              var a = $(this).attr('href');
+              if(_gaq && (a.substr(-3) == 'htm' || a.substr(-4) == 'html' || a.substr(-3) == 'doc' || a.substr(-4) == 'docx' || a.substr(-3) == 'pdf' || a.substr(-3) == 'xls' || a.substr(-4) == 'xlsx')) {
+                //console.log(a);
+                _gaq.push(['_trackPageview', $(this).attr('href')]);
+              }
+              
+              var aText = $(this).text().toLowerCase();
+              if (a.indexOf('getfile.php') > -1 && aText === 'word'){
+                    _gaq.push(['_trackEvent', 'Word Doc', 'Download', ('from page: ' + document.location + ' - href: ' + a)]);
+              }
+
+            });
+          }
+          */
+      });
+
+</script>
+	</head>
+	
+		
+	<body class="home"  onload="init(); trap();">
+	<noscript>Your browser does not support JavaScript!  This page will not render correctly.</noscript> 
+
+
+	
+	<div id="adobebox" style="position:absolute; width:400px; height:150px; border:2px solid #555555; background-color:#cccccc; display:none;"></div>
+	<div id="container" >	
+				<div id="header" class="nodisplay" style="text-align:center; height:100px;" >
+									<img id="headerimg" class="nodisplay" alt="South Carolina Legislature" title="South Carolina Legislature" src="/images/header8.png" />
+								
+							<!--	<div class="award"><span style="color:#831224; font-weight:bold; font-size:1.5em;">*</span> Recipient of<br>the Notable State Documents Award<br>by the<br>South Carolina<br>State Library.</div>-->
+				
+				
+			</div>
+			<div class="printdisplay"><img border="0" src="/images/titleprint.jpg" alt="South Carolina Legislature" title="South Carolina Legislature" alt="South Carolina Legislature" title="South Carolina State Legislature" /><br /><hr /><br /></div>
+	
+			<div id="pagebody" >
+	
+	
+<!--<div id="topmessage">
+<br style="display:block; margin-top:10px;">
+Searches and data queries will be unavailable beginning Friday, August 19, 2016, from 8:00 PM until Saturday, August 20th at 8:00 AM<br>due to scheduled maintenance.</div>-->
+				<!-- Prompt IE 8/7/6 users to upgrade to a newer browser. -->
+				<!--[if lte IE 8]>
+				<div class="oldframe">In order to improve your experience using this website, please <a href="http://browsehappy.com/">upgrade your browser</a>.</div>
+				<![endif]-->
+			
+			
+			
+			<div id="menu" class="nodisplay">
+				<ul class="nodisplay">
+				<li><a href="/index.php">Home</a></li>
+<li><a href="/senate.php">Senate</a></li>
+<li><a href="/house.php">House</a></li>
+<li><a href="/committeeinfo.php">Committee&nbsp;Postings&nbsp;and&nbsp;Reports</a></li>
+<li><a href="/council.php">Legislative Council</a></li>
+<li><a href="/citizens.php">Citizens&#39; Interest</a></li>
+<li><a href="/publications.php">Publications</a></li>
+		    	</ul>
+			</div>
+			<div id="search" class="nodisplay" style="height: 28px;"><div class="nodisplay" style="float:right; margin:6px 20px 0px 0;">
+							<!--<a style="color:#f7f4ec; height:15px;" href="#" onClick="rsswindow();"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+<!--				<a style="color:#f7f4ec; height:15px;" href="/splashpage/splashpage.html"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a> -->
+				<a style="color:#f7f4ec; height:15px;" href="/onlineservices/index.php"><img border="0" src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>
+			<!--	<a style="color:#f7f4ec; height:15px;" href="/maintenance_portal.php"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+						</div></div>
+			
+	
+					<div id="sidebar" class="nodisplay">
+	<div id="vidlinks" style="height: 50px;">
+						<!--<img src="/images/videobutton12d.png">-->
+											<ul id="vidsidemenu">
+	<li id="vidinnermenu" style="font-size:16px; margin: 0 0 5px 0;">Chamber Video</li>
+<li id="sbroadcast" style="float: left; width:50%;">
+<a id="liveS" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('S', false, false, '0')">Senate</a><br><a id="liveaudioS" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('S', false, false, '1');">(Audio Only)</a>
+</li>
+<li id="hbroadcast" style="float: left; width:50%;">
+<a id="liveH" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('H', false, false, '0')">House</a><br><a id="liveaudioH" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('H', false, false, '1');">(Audio Only)</a>
+</li>
+						</ul>
+					</div>
+					<div id="commvidlinks"><a href="/video/schedule.php">Video&nbsp;Schedule</a><a style="border-top:1px solid #fff; padding-top:12px;" href="/video/archives.php">Video Archives</a></div>
+										<div id="sidemenu">
+						<ul id="innermenu">
+		
+							<li><a href="/howdoi.php">How do I...</a></li>
+										
+							
+								<li class="nolink" onMouseOver="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='block'; document.sidesearchform.searchtext.focus();}" onMouseOut="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Quick Search</div>
+								<div id="sidesearch" class="sidesubmenu">
+									<form id="sidesearchform" name="sidesearchform" method="POST" action="/search.php">
+									<input type="hidden" name="search" value="side" />
+									<div class="topelement"><label for="searchtext"><span class="label">Search for:</span></label><input id="searchtext" name="searchtext" type="text"/><a id="searchlink2" href="javascript:void(0);" onClick="document.sidesearchform.submit();"><img id="searchicon" src="/images/searchbutton.png" alt="Search" title="Search"/></a></div>
+			<!--						<div><input type="checkbox" id="searchchoice_all" name="searchchoice_all" value="all" /><label for="searchchoice_all">All</label></div>-->
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_fullsite" name="category" value="FULLSITE" /><label for="searchchoice_fullsite">&nbsp;Full Site Search</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_billnumber" name="category" value="BILL" /><label for="searchchoice_billnumber">&nbsp;Bill Number</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_legislation" name="category" value="LEGISLATION" CHECKED /><label for="searchchoice_legislation">&nbsp;Legislation</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_budget" name="category" value="BUDGET" /><label for="searchchoice_budget">&nbsp;Budget</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeoflaws" name="category" value="CODEOFLAWS" /><label for="searchchoice_codeoflaws">&nbsp;Code of Laws</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeofregs" name="category" value="CODEOFREGS" /><label for="searchchoice_codeofregs">&nbsp;Code of Regulations</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_constitution" name="category" value="CONSTITUTION" /><label for="searchchoice_constitution">&nbsp;Constitution</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_housejournals" name="category" value="HOUSEJOURNALS" /><label for="searchchoice_housejournals">&nbsp;House Journals</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_senatejournals" name="category" value="SENATEJOURNALS" /><label for="searchchoice_senatejournals">&nbsp;Senate Journals</label></div>
+									<div class="bottomelement" style="padding-left:20px;"><input type="radio" id="searchchoice_billsummary" name="category" value="SUMMARY" /><label for="searchchoice_billsummary">&nbsp;LSA Bill Summary</label></div>
+								</form>
+									
+								</div>
+							</li>
+							<li><a href="/legislatorssearch.php">Find Your Legislators</a></li>
+							<li id="contactLegislatorLink"><a href="/email.php?chamber=B">Contact Your Legislator</a></li>
+									
+							<li><a href="/legislation.php">Legislation</a></li>
+							<li><a href="/listtracking/main.php" target="LTS">Track Legislation</a></li>
+							<li><a href="/multicriteria2/search.php" target="MCS">Multi-Criteria Search</a></li>
+									<!--<li><a href="#" onclick="multisearchwindow('INTROBOTH');">Multi-Criteria Search</a></li>-->
+									<!--<li><a href="#" onclick="multisearchwindow('INTROMANUAL');">Multi-Criteria Search</a></li>-->
+									<li><a href="/research.php">Research</a></li>
+	
+								<li class="nolink" onMouseOver="var ele=document.getElementById('law'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('law'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">South Carolina Law</div> 
+								<div id="law" class="sidesubmenu">
+									<div class="sidediv topelement"><a href="/newlaws.php">Ratifications &amp; Acts</a></div>
+									<div class="sidediv"><a href="/code/statmast.php">Code of Laws</a></div>
+									<div class="sidediv"><a href="/coderegs/statmast.php">Code of Regulations</a></div>
+									<div class="sidediv"><a href="/scconstitution/scconst.php">Constitution</a></div>
+									<div class="sidediv bottomelement"><a href="/state_register.php">State Register</a></div>
+								</div>
+							</li>
+										<li class="nolink" onMouseOver="var ele=document.getElementById('manual'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('manual'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Legislative Manual</div>
+								<div id="manual" class="sidesubmenu">
+								
+<!--									<div class="sidediv topelement"><a href="https://web.sc.gov/LSAShoppingcart/Default.aspx" target="_blank">Purchase Manual</a></div>-->
+								
+<!--									<div class="sidediv topelement"><a href="https://secure.scstatehouse.gov/cgi-bin/webstore.exe" target="_blank">Purchase Manual</a></div>-->
+									<div class="sidediv topelement"><a href="javascript:#" onClick="alert('We are sorry, but we are unable to process online transactions at this time.\n\nIf you would still like to make a purchase, please contact us directly at (803) 212-4490 during normal business hours (8:30am - 5:00pm EST).');">Purchase Manual</a></div>
+									<div class="sidediv bottomelement"><a href="/man26/manual26.php">View Manual Online</a></div>
+								</div>
+							</li>
+							<li><a href="http://www.studentconnection.scstatehouse.gov">Student Connection</a></li>
+							<li><a href="/visit.php">Visiting the State House</a></li>
+							<li><a href="/archives.php">Archives</a></li>
+							<li><a href="http://www.sc.gov/Agency-Listing" target="_blank">State Agency Websites</a></li>
+							<!--<li><a href="/stateagencysites.php">State Agency Websites</a></li>-->
+							<li><a href="/citizensinterestpage/media.php">Media Links</a></li>
+				 		</ul>
+			    	</div>
+	
+					<div id="side_ad">
+						<A href="http://www.sc.gov/" target="_blank"><img border=0 src="/images/scgov3.jpg" alt="SC.gov" title="SC.gov" /></a>
+													<A href="http://www.statelibrary.sc.gov" target="_blank"><img border=0 src="/images/scsl_logo_rgb_web.png" alt="StateLibrary.SC.gov" title="StateLibrary.SC.gov" /></a>
+											</div>	    	
+			</div>
+
+	
+	<script type="text/javascript"> 
+		if ( '' === '1'){
+		 	
+			var link = document.getElementById('contactLegislatorLink');
+			if (link != 'undefined' && link != null){
+				link.style.display = 'none'; 
+				link.style.visibility = 'hidden';
+			}
+		}
+		if ( '' === '1'){
+		 	setTimeout(function(){
+				var link2 = document.getElementById('sendMsgLink');
+				if (link2 != 'undefined' && link2 != null){
+					link2.style.display = 'none'; 
+					link2.style.visibility = 'hidden';
+				};
+			}, 20);
+			
+		}  
+	</script>
+<div class="mainwidepanel">
+
+				<div id="breadcrumbs">
+						South Carolina Law &gt; <a href="/code/statmast.php">Code of Laws</a> &gt; <a href="/code/title14.php">Title 14</a>
+				</div>
+
+					<h2 class="barheader">South Carolina Code of Laws<br />
+									Unannotated<br />
+					</h2>
+
+				<div id="contentsection">
+<div style="font-weight: bold; text-align: center;">Title 14 - COURTS</div>
+<br />
+
+<div style="text-align: center;">CHAPTER 23</div>
+<div style="text-align: center;">Probate Courts</div><br />
+<div style="text-align: center;">ARTICLE 1</div>
+<div style="text-align: center;">General Provisions</div><br />
+<span style="font-weight: bold;"> SECTION 14-23-30.</span> Election and term of judges.<br /><br />
+	The judges of the probate court shall be elected by the qualified electors of the respective counties for the term of four years. The election for such offices shall be held at each alternate general election, reckoning from the year 1890.<br /><br />
+HISTORY: 1962 Code SECTION 15-403; 1952 Code SECTION 15-403; 1942 Code SECTION 3640; 1932 Code SECTION 3640; Civ. C. &#39;22 SECTION 2184; Civ. C. &#39;12 SECTION 1360; Civ. C. &#39;02 SECTION 953; G. S. 771; R. S. 823; Const. Art. V SECTION 19; 1899 (20) 281; 1871 (14) 338.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-40.</span> Bond and oaths.<br /><br />
+	Judges of probate before receiving their commission shall take the constitutional oath of office and the additional oaths required of such officers by Section 8-3-20 and shall enter into bond in the sum of five thousand dollars, conditioned for the faithful discharge of the duties of the office, which shall be duly executed, approved, certified, recorded and filed as prescribed in Chapter 3 of Title 8. They shall qualify within thirty days after the election is declared.<br /><br />
+HISTORY: 1962 Code SECTION 15-405; 1952 Code SECTION 15-405; 1942 Code SECTION 3645; 1932 Code SECTION 3645; Civ. C. &#39;22 SECTION 2188; Civ. C. &#39;12 SECTION 1364; Civ. C. &#39;02 SECTION 957; 1868 (4) 19 SECTION 1; 1880 (17) 502; 1875 (16) 16; 1886 (19) 711; 1887 (19) 1127; 1890 (20) 720; 1896 (22) 15; 1898 (22) 695; 1905 (24) 902; 1919 (31) 75; 1927 (35) 358; 1929 (36) 33; 1930 (36) 1377.<br /><br />
+Editor&#39;s Note<br /><br />
+	Attention is directed to the fact that the bond requirements of this section have been superseded by SECTION 14-23-1050.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-50.</span> Filling of vacancies.<br /><br />
+	Vacancies for unexpired terms in the offices of judge of probate may be filled by the Governor with the advice and consent of the Senate, even though the unexpired term exceeds one year. Such appointments shall be for the unexpired term, however if the unexpired term from the date the vacancy occurs exceeds three years the appointment shall be until the next general election, at which time a successor shall be elected to fill the unexpired term.<br /><br />
+HISTORY: 1962 Code SECTION 15-407; 1952 Code SECTION 15-407; 1942 Code SECTION 3641; 1933 (38) 274; 1969 (56) 685.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-60.</span> Clerk of court shall act until vacancy filled.<br /><br />
+	In case of any such vacancy the clerk of the circuit court of the county shall take charge of the office and all papers therein, discharge the same duties, receive the same fees and be subject to the same liabilities as by law provided for a judge of probate, until such vacancy shall be filled by appointment of the Governor or by an election, as the case may be.<br /><br />
+HISTORY: 1962 Code SECTION 15-408; 1952 Code SECTION 15-408; 1942 Code SECTION 3642; 1932 Code SECTION 3642; Civ. C. &#39;22 SECTION 2186; Civ. C. &#39;12 SECTION 1362; Civ. C. &#39;02 SECTION 955; G. S. 746; R. S. 825; 1884 (18) 744.<br /><br />
+<div style="text-align: center;">ARTICLE 3</div>
+<div style="text-align: center;">Terms, Jurisdiction, Procedure</div><br />
+Editor&#39;s Note<br /><br />
+	Attention is directed to the fact that certain sections of this article may be superseded or otherwise affected by the provisions of 1976 Act No. 690 which provides for, in part, a system of probate courts of uniform jurisdiction; the reader&#39;s attention is directed to SECTIONS 14-23-1010 et seq., and in particular to SECTION 14-23-1140 granting the Supreme Court power to regulate practice, procedure and conduct of business in probate courts.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-210.</span> Appointment of times and places for holding courts; notice to interested parties.<br /><br />
+	Except as provided in Section 14-23-10 the probate court in each county shall appoint such times and places for holding court or for hearing any special matter as shall be judged most convenient for all persons interested and shall give notice of such times and places to the parties interested.<br /><br />
+HISTORY: 1962 Code SECTION 15-441; 1952 Code SECTION 15-441; 1942 Code SECTION 224; 1932 Code SECTION 224; Civ. P. &#39;22 SECTION 182; Civ. P. &#39;12 SECTION 58; Civ. P. &#39;02 SECTION 52; 1870 (14) SECTION 52; 1873 (15) 496.<br /><br />
+Editor&#39;s Note<br /><br />
+	This section should be read in conjunction with SECTION 14-23-1010.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-220.</span> Court open at all times for certain business.<br /><br />
+	The probate court shall be deemed open at all times for the transaction of ordinary business which may be necessary, when previous notice is not required to be given to the persons interested.<br /><br />
+HISTORY: 1962 Code SECTION 15-442; 1952 Code SECTION 15-442; 1942 Code SECTION 225; 1932 Code SECTION 225; Civ. P. &#39;22 SECTION 183; Civ. P. &#39;12 SECTION 59; Civ. P. &#39;02 SECTION 53; 1870 (14) SECTION 53.<br /><br />
+Editor&#39;s Note<br /><br />
+	This section should be read in conjunction with SECTION 14-23-1010.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-230.</span> Adjournment of court.<br /><br />
+	A probate court may be adjourned as occasion may require. When the judge is absent at the time for holding a court the clerk may adjourn it.<br /><br />
+HISTORY: 1962 Code SECTION 15-443; 1952 Code SECTION 15-443; 1942 Code SECTION 226; 1932 Code SECTION 226; Civ. P. &#39;22 SECTION 184; Civ. P. &#39;12 SECTION 60; Civ. P. &#39;02 SECTION 54; 1870 (14) SECTION 54.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-250.</span> Jurisdiction once acquired is exclusive.<br /><br />
+	When any probate court shall have first taken cognizance of the settlement of the estate of a deceased person, such court shall have jurisdiction of the disposition and settlement of all the personal estate of such deceased person to the exclusion of all other probate courts.<br /><br />
+HISTORY: 1962 Code SECTION 15-445; 1952 Code SECTION 15-445; 1942 Code SECTION 220; 1932 Code SECTION 220; Civ. P. &#39;22 SECTION 178; Civ. P. &#39;12 SECTION 54; Civ. P. &#39;02 SECTION 48; 1870 (14) SECTION 48.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-260.</span> Jurisdiction shall not be collaterally impeached.<br /><br />
+	The jurisdiction assumed by any probate court in any case, so far as it depends on the place of residence or the location of the estate, shall not be contested in any suit or proceeding whatever, except in an appeal from the probate court in the original case or when the want of jurisdiction appears on the record.<br /><br />
+HISTORY: 1962 Code SECTION 15-446; 1952 Code SECTION 15-446; 1942 Code SECTION 221; 1932 Code SECTION 221; Civ. P. &#39;22 SECTION 179; Civ. P. &#39;12 SECTION 55; Civ. P. &#39;02 SECTION 49; 1870 (14) SECTION 49.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-280.</span> Commencement of proceedings; procedure.<br /><br />
+	Proceedings in the court of probate may be commenced by petition or complaint to the judge of probate for the county to which the jurisdiction of the subject matter belongs, briefly setting forth the facts or grounds of the application. A summons shall be issued to the defendants in such proceedings. The manner of service, time for answering and other proceedings relating to the trial, except trial by jury, shall conform as nearly as may be to the practice in the courts of common pleas as provided in this Code.<br /><br />
+HISTORY: 1962 Code SECTION 15-448; 1952 Code SECTION 15-448; 1942 Code SECTION 237; 1932 Code SECTION 237; Civ. P. &#39;22 SECTION 194; Civ. P. &#39;12 SECTION 70; Civ. P. &#39;02 SECTION 64; 1870 (14) SECTION 67.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-290.</span> Court may issue warrants and processes.<br /><br />
+	Probate courts may issue all warrants and processes, in conformity to the rules of law, which may be necessary to compel the attendance of witnesses or to carry into effect any order, sentence or decree of such courts or the powers granted them by law.<br /><br />
+HISTORY: 1962 Code SECTION 15-449; 1952 Code SECTION 15-449; 1942 Code SECTION 217; 1932 Code SECTION 217; Civ. P. &#39;22 SECTION 175; Civ. P. &#39;12 SECTION 51; Civ. P. &#39;02 SECTION 45; 1870 (14) SECTION 45.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-300.</span> Judge may administer oaths, and take depositions, affidavits, and other instruments; fees.<br /><br />
+	The judge of probate, while in office, may administer oaths and take depositions, affidavits and probate of deeds and other instruments as fully and effectually as is done by clerks of court and notaries public, and his fees therefor shall be the same as those allowed by law to other officers for similar services.<br /><br />
+HISTORY: 1962 Code SECTION 15-450; 1952 Code SECTION 15-450; 1942 Code SECTION 3655; 1932 Code SECTION 3655; Civ. C. &#39;22 SECTION 2197; Civ. C. &#39;12 SECTION 1370; Civ. C. &#39;02 SECTION 963; R. S. 833; 1884 (18) 730.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-310.</span> Judge may punish for contempt.<br /><br />
+	The judge may keep order in court and punish any contempt of his authority in like manner as such contempt might be punished in the circuit or Supreme Court.<br /><br />
+HISTORY: 1962 Code SECTION 15-451; 1952 Code SECTION 15-451; 1942 Code SECTION 239; 1932 Code SECTION 239; Civ. P. &#39;22 SECTION 196; Civ. P. &#39;12 SECTION 72; Civ. P. &#39;02 SECTION 66; 1870 (14) SECTION 69.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-320.</span> Power to commit to jail for refusal or neglect to perform order, sentence, or decree of court.<br /><br />
+	If any person shall refuse or neglect to perform any lawful order, sentence or decree of a probate court, such court may issue a warrant, directed to any sheriff or constable in the State, requiring him to apprehend and imprison such person in the common jail of the county or, if there be no jail in the county, then in the jail of the adjoining county, until he shall perform such order, sentence or decree or be delivered by due course of law.<br /><br />
+HISTORY: 1962 Code SECTION 15-452; 1952 Code SECTION 15-452; 1942 Code SECTION 218; 1932 Code SECTION 218; Civ. P. &#39;22 SECTION 176; Civ. P. &#39;12 SECTION 52; Civ. P. &#39;02 SECTION 46; 1870 (14) SECTION 46.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-330.</span> Taking and use of deposition.<br /><br />
+	When a witness whose testimony is necessary to be used before any probate court shall reside out of this State or out of the county where the court is held or more than thirty miles from the county seat, or when by reason of age or bodily infirmity any such witness shall be unable to attend in person, the court may issue a commission to one or more competent persons to take the testimony of such witness. Depositions taken according to the provisions of the law for taking depositions to be used on the trial of civil causes may be used on the trial of any question before the probate court when such testimony may be proper.<br /><br />
+HISTORY: 1962 Code SECTION 15-453; 1952 Code SECTION 15-453; 1942 Code SECTION 219; 1932 Code SECTION 219; Civ. P. &#39;22 SECTION 177; Civ. P. &#39;12 SECTION 53; Civ. P. &#39;02 SECTION 47; 1870 (14) SECTION 47.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-340.</span> Guardianship proceedings to be held in court of county where guardian was appointed.<br /><br />
+	All proceedings in relation to the property or estate of any person under guardianship shall be had in the court of probate of the county in which the guardian was appointed.<br /><br />
+HISTORY: 1962 Code SECTION 15-455; 1952 Code SECTION 15-455; 1942 Code SECTION 214; 1932 Code SECTION 214; Civ. P. &#39;22 SECTION 172; Civ. P. &#39;12 SECTION 48; Civ. P. &#39;02 SECTION 42; 1870 (14) SECTION 42.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-360.</span> Enrollment of order or decree for payment of money.<br /><br />
+	Any party in whose favor an order or decree for the payment of money may be made by a court of probate may cause such order or decree to be enrolled at any time within one year after the making of the same and for that purpose shall prepare and deliver to the judge of probate a brief or abstract, setting forth the title of the proceedings wherein such order or decree was made, the parties thereto, the date when the same was made and the names of the parties bound thereby, together with such other particulars as may be necessary to identify the order with the proceedings and to exhibit the grounds for making the same and the operation and effect thereof. The judge of probate shall annex thereto the order or decree or an exact copy thereof, certified by him, together with the time when the same was made and entered, shall endorse on the record the day of the month and year when the brief or abstract was lodged in his office and shall deposit the same in a case in his office with the records pertaining to the cause.<br /><br />
+HISTORY: 1962 Code SECTION 15-462; 1952 Code SECTION 15-462; 1942 Code SECTION 240; 1932 Code SECTION 240; Civ. P. &#39;22 SECTION 197; Civ. P. &#39;12 SECTION 73; Civ. P. &#39;02 SECTION 67; 1878 (16) 710.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-370.</span> Order or decree as a lien or a judgment.<br /><br />
+	No order or decree of any court of probate for the payment of money shall, as to third persons, without express notice, have any effect as a lien on the real estate of the person intended to be bound thereby but from the day when such a brief or abstract shall have been delivered to or lodged with the judge of probate as aforesaid and a transcript of the docket thereof in the index of money decrees as herein prescribed has been filed in the office of the clerk of the court of common pleas for the same county and duly entered by the clerk on the calendar of judgments kept in his office. Nor shall such order or decree rank as a judgment against the estate of any person deceased unless such abstract was duly filed and indexed and a transcript of the entry in the index filed with the clerk of the circuit court for the same county and duly docketed by the clerk on the calendar of judgments of the court of common pleas before the death of such deceased person. After the transcript of the docket in the index of money decrees has been duly entered upon the calendar of judgments kept in the office of the clerk of the court of common pleas such order or decree shall have like force and effect as judgments of the courts of common pleas.<br /><br />
+HISTORY: 1962 Code SECTION 15-463; 1952 Code SECTION 15-463; 1942 Code SECTION 240; 1932 Code SECTION 240; Civ. P. &#39;22 SECTION 197; Civ. P. &#39;12 SECTION 73; Civ. P. &#39;02 SECTION 67; 1878 (16) 710.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-380.</span> Effect of enrollment on appeal; execution of order or decree after notice of appeal; when enrollment must be amended or vacated.<br /><br />
+	Such enrollment of any order or decree for the payment of money shall not deprive any party thereto of the right to appeal therefrom, and when notice of such appeal shall be duly given, execution upon the order or decree, issued as herein provided, shall be lodged to bind only and shall not be enforced until such appeal shall have been dismissed. If such order or decree shall be reversed, set aside or modified on appeal, the enrollment thereof shall be amended or wholly vacated accordingly.<br /><br />
+HISTORY: 1962 Code SECTION 15-464; 1952 Code SECTION 15-464; 1942 Code SECTION 240; 1932 Code SECTION 240; Civ. P. &#39;22 SECTION 197; Civ. P. &#39;12 SECTION 73; Civ. P. &#39;02 SECTION 67; 1878 (16) 710.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-390.</span> Index of enrolled money decrees.<br /><br />
+	Every judge of probate shall provide and keep in his office an index of money decrees, in which every enrolled order or decree for the payment of money shall be entered, with the names of every party or estate bound thereby, alphabetically arranged, together with the names of the parties plaintiff, and which, beside the title of the package in which the order or decree is contained and the number in the package, shall exhibit the amount ordered to be paid, the costs (if any), date of enrollment, date of execution and date of satisfaction when satisfaction has been entered. Such book shall be of convenient size, of durable paper and well bound, and the expense of providing the same shall be defrayed by the governing bodies of the respective counties.<br /><br />
+HISTORY: 1962 Code SECTION 15-465; 1952 Code SECTION 15-465; 1942 Code SECTION 241; 1932 Code SECTION 241; Civ. P. &#39;22 SECTION 198; Civ. P. &#39;12 SECTION 74; Civ. P. &#39;02 SECTION 68; 1878 (16) 711.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-400.</span> Judges may issue executions.<br /><br />
+	Judges of the probate court may issue executions against property, when such process is necessary to carry into effect any order, sentence or decree of such court or for costs accruing therein. And they may issue executions against property in their respective counties to enforce decrees from the probate courts of other counties upon a transcript of such decree and certificate of enrollment of the same being filed in the office of the probate court from which such execution is to issue and also in the office of the clerk of the court of common pleas for the county in which it is to issue.<br /><br />
+HISTORY: 1962 Code SECTION 15-466; 1952 Code SECTION 15-466; 1942 Code SECTION 242; 1932 Code SECTION 242; Civ. P. &#39;22 SECTION 199; Civ. P. &#39;12 SECTION 75; Civ. P. &#39;02 SECTION 69; 1870 (14) SECTION 71; 1872 (15) 23; 1878 (16) 458.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-410.</span> Prerequisites to issuance of executions.<br /><br />
+	No execution shall be issued by any judge of probate to enforce the collection of money under any order or decree of a court of probate until an abstract or brief has been prepared and filed according to the direction of Sections 14-23-360 and 14-23-370, the proper minute thereof has been entered in the index of money decrees and the proper transcript of such minute has been filed in the office of the clerk of the circuit court for such county and entered upon the calendar of judgments of the court of common pleas kept in his office.<br /><br />
+HISTORY: 1962 Code SECTION 15-467; 1952 Code SECTION 15-467; 1942 Code SECTION 242; 1932 Code SECTION 242; Civ. P. &#39;22 SECTION 199; Civ. P. &#39;12 SECTION 75; Civ. P. &#39;02 SECTION 69; 1870 (14) SECTION 71; 1872 (15) 23; 1878 (16) 458.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-420.</span> Recording satisfaction of execution.<br /><br />
+	When any such execution has been duly returned satisfied to the office of the judge of probate from whence it issued, the judge of such court of probate shall have such satisfaction recorded upon the proper transcript in the office of the clerk of the circuit court and entered upon the docket thereof on the calendar of judgments of the court of common pleas kept in said clerk&#39;s office.<br /><br />
+HISTORY: 1962 Code SECTION 15-468; 1952 Code SECTION 15-468; 1942 Code SECTION 242; 1932 Code SECTION 242; Civ. P. &#39;22 SECTION 199; Civ. P. &#39;12 SECTION 75; Civ. P. &#39;02 SECTION 69; 1870 (14) SECTION 71; 1872 (15) 23; 1878 (16) 458.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-430.</span> Form of warrant or process.<br /><br />
+	When no form of warrant or process is prescribed by statute or rules of court the probate judge shall frame one in conformity to the rules of law and the usual course of proceedings in this State.<br /><br />
+HISTORY: 1962 Code SECTION 15-469; 1952 Code SECTION 15-469; 1942 Code SECTION 242; 1932 Code SECTION 242; Civ. P. &#39;22 SECTION 199; Civ. P. &#39;12 SECTION 75; Civ. P. &#39;02 SECTION 69; 1870 (14) SECTION 71; 1872 (15) 23; 1878 (16) 458.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-440.</span> Sheriff or constable shall execute orders or process.<br /><br />
+	Any sheriff or constable in this State shall execute the orders or process of such court in the same manner as the orders or process of the circuit or Supreme Courts.<br /><br />
+HISTORY: 1962 Code SECTION 15-470; 1952 Code SECTION 15-470; 1942 Code SECTION 242; 1932 Code SECTION 242; Civ. P. &#39;22 SECTION 199; Civ. P. &#39;12 SECTION 75; Civ. P. &#39;02 SECTION 69; 1870 (14) SECTION 71; 1872 (15) 23; 1878 (16) 458.<br /><br />
+<div style="text-align: center;">ARTICLE 5</div>
+<div style="text-align: center;">Other Duties</div><br />
+Editor&#39;s Note<br /><br />
+	Attention is directed to the fact that certain sections of this article may be superseded or otherwise affected by the provisions of 1976 Act No. 690 which provides for, in part, a system of probate courts of uniform jurisdiction; the reader&#39;s attention is directed to SECTIONS 14-23-1010 et seq.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-620.</span> Judge shall make search and furnish copies of records; certification; fees.<br /><br />
+	The judge of probate, when applied to, shall search for and examine any book, record or paper belonging to his office, shall furnish any person wanting the same with a copy or copies of any part thereof or of the whole or any part of any proceedings touching any estate in his care or custody as judge of probate aforesaid and shall certify the same. For such services he shall be allowed a fee at the rate of nine cents for each copy sheet of ninety words the copy furnished may contain and fifty cents for every certificate he shall so give.<br /><br />
+HISTORY: 1962 Code SECTION 15-482; 1952 Code SECTION 15-482; 1942 Code SECTION 3646; 1932 Code SECTION 3646; Civ. C. &#39;22 SECTION 2189; Civ. C. &#39;12 SECTION 1365; Civ. C. &#39;02 SECTION 958; G. S. 774; R. S. 828; 1839 (11) 63 SECTION 23; 1931 (37) 14.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-660.</span> Manner of filing papers; index.<br /><br />
+	In filing papers in the judge of probate&#39;s office the case shall be divided into convenient apartments, which shall be numbered from one forward. The papers relating to the same estate shall be wrapped in an envelope as a package, shall bear a number and shall be endorsed in the name of the estate. A convenient number of packages shall be embraced in a strong envelope and constitute a bundle, bearing the number of the apartment of the case containing it. A complete alphabetical index shall be constructed with reference to the surname of the deceased person to whose estate the papers relate and of the executors and administrators. Opposite each name in such index shall be two columns, the one expressing the number of the apartment where the bundle is to be found and the other expressing the number of the package in such bundle which contains the papers relating to the estate named in the index.<br /><br />
+HISTORY: 1962 Code SECTION 15-488; 1952 Code SECTION 15-488; 1942 Code SECTION 3650; 1932 Code SECTION 3650; Civ. C. &#39;22 SECTION 2192; Civ. C. &#39;12 SECTION 1368; Civ. C. &#39;02 SECTION 961; G. S. 777; R. S. 831; 1839 (11) 69 SECTION 36.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-670.</span> Clerk shall file account of money remaining in court.<br /><br />
+	At each stated session of the probate court the clerk thereof shall present an account to the court of all moneys remaining therein or subject to the order thereof, stating particularly on account of what cause or causes such moneys are deposited. Such account and the vouchers thereof shall be filed in court.<br /><br />
+HISTORY: 1962 Code SECTION 15-489; 1952 Code SECTION 15-489; 1942 Code SECTION 3654; 1932 Code SECTION 3654; Civ. C. &#39;22 SECTION 2196; Civ. C. &#39;12 SECTION 1369; Civ. C. &#39;02 SECTION 962; G. S. 778; R. S. 832; 1868 (14) 17 SECTION 13.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-680.</span> Judge responsible for books, papers, and property of office; transfer to successor; violations.<br /><br />
+	Every judge of probate shall be responsible for the books and papers and also for the furniture in his office. Upon his retiring from office or upon his death, he or his representatives shall be bound to transfer the same to his successor immediately after such successor shall have entered upon the duties of the office, under a penalty of one thousand dollars, to be recovered by indictment, and of imprisonment not exceeding one year.<br /><br />
+HISTORY: 1962 Code SECTION 15-490; 1952 Code SECTION 15-490; 1942 Code SECTIONS 1524, 3656; 1932 Code SECTIONS 1524, 3656; Civ. C. &#39;22 SECTION 2198; Cr. C. &#39;22 SECTION 471; Civ. C. &#39;12 SECTION 1371; Cr. C. &#39;12 SECTION 544; Civ. C. &#39;02 SECTION 964; Cr. C. &#39;02 SECTION 387; G. S. 457, 779; R. S. 304, 834; 1839 (11) 70 SECTION 37; 1874 (15) 674; 1885 (19) 158.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-690.</span> Successor to issue receipt for books, papers, and property of retiring judge.<br /><br />
+	Before surrendering such books, papers and furniture the retiring judge of probate, or his representatives, shall be entitled to require a receipt therefor from such successor. Such receipt shall specify the number and title of every book and the number and description of every article of furniture, together with the order and condition of the books, papers and furniture. A duplicate of such receipt shall also be given, and shall by the retiring judge of probate or his representatives, be filed in the office of the clerk of the court of the county.<br /><br />
+HISTORY: 1962 Code SECTION 15-491; 1952 Code SECTION 15-491; 1942 Code SECTION 3656; 1932 Code SECTION 3656; Civ. C. &#39;22 SECTION 2198; Civ. C. &#39;12 SECTION 1371; Civ. C. &#39;02 SECTION 964; G. S. 779; R. S. 834; 1839 (11) 70 SECTION 37.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-700.</span> Liability of retiring judge or representative for failure to account; appropriation of damages.<br /><br />
+	Every judge of probate retiring from office, or his representatives, shall be liable to an action, in the name of his successor, for damages for any books, papers or furniture proved to have been in his possession but not appearing by such receipt to have been transferred to his successor. Such damages, when recovered, shall be appropriated to the replacing of such books, papers or furniture or to the benefit of the parties who may have been injured by the loss thereof and an order for appropriating such damages shall be made by the court before which such action may be tried.<br /><br />
+HISTORY: 1962 Code SECTION 15-492; 1952 Code SECTION 15-492; 1942 Code SECTION 3656; 1932 Code SECTION 3656; Civ. C. &#39;22 SECTION 2198; Civ. C. &#39;12 SECTION 1371; Civ. C. &#39;02 SECTION 964; G. S. 779; R. S. 834; 1839 (11) 70 SECTION 37.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-710.</span> Authority to make investments and loans; interest notes.<br /><br />
+	Any judge of probate may invest in, or lend money on the security of: Federal farm loan bonds issued by Federal land banks pursuant to the Federal Farm Loan Act as amended; bonds issued by the Federal Farm Mortgage Corporation pursuant to the provisions of an act of Congress known as the &quot;Federal Farm Mortgage Corporation Act&quot;; Federal Intermediate Credit Bank debentures issued pursuant to the Federal Farm Loan Act as amended; and debentures issued by Central Bank for Cooperatives and regional banks for cooperatives, organized under the Farm Credit Act of 1933, and any notes, bonds, debentures, or other similar obligations, consolidated or otherwise, issued by farm credit institutions pursuant to authorities contained in the Farm Credit Act of 1971 (Public Law 92-181) or by any of such banks. A judge of probate making an investment or loan authorized by this section shall not be chargeable in his account for a greater rate of interest than the amount actually received on the investment or loan.<br /><br />
+HISTORY: 1962 Code SECTION 15-493; 1952 Code SECTIONS 8-237, 37-149.1; 1942 Code SECTION 9049; 1932 Code SECTION 9049; Civ. C. &#39;22 SECTION 5461; 1918 (30) 763; 1919 (31) 133; 1934 (38) 1493; 1952 (47) 1893; 1955 (49) 152; 1973 (58) 335.<br /><br />
+<div style="text-align: center;">ARTICLE 9</div>
+<div style="text-align: center;">Establishment, Jurisdiction, and Operation of Probate Courts</div><br />
+<span style="font-weight: bold;"> SECTION 14-23-1010.</span> Establishment.<br /><br />
+	There is established in each of the counties of this State a probate court, which must be located at the county seat and must be open for the transaction of its business at all reasonable hours. The probate court of each county is part of the unified judicial system of this State.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 1; 1986 Act No. 539, SECTION 3(1)(H), eff July 1, 1987.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1020.</span> Election and term of judges; filling of vacancies.<br /><br />
+	There shall be a judge of probate for each probate court. The probate judge of each county holding office on June 30, 1976, shall continue to be such judge of probate until the expiration of his term of office at which time his successor shall be selected as provided by law for a term of four years and until his successor is elected and qualifies. Except as otherwise provided by this section, any vacancy in the office of probate judge shall be filled as provided by law.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 2.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1030.</span> Associate judges.<br /><br />
+	In addition to the judge of probate, there shall be one or more associate judges of probate in any county whose governing body appropriates the funds therefor. Associate judges of probate shall be appointed by the judge of probate to serve at his pleasure for a term coterminous with his term. The associate judges have jurisdiction to hear and decide all matters assigned to them by the judge which are within the jurisdiction of the court. The judge is accountable and responsible for all acts of his associates within the scope of their duties.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 3; 1983 Act No. 98, eff June 9, 1983.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1040.</span> Only qualified county electors eligible to office of judge or associate judge.<br /><br />
+	No person is eligible to hold the office of judge of probate who is not at the time of his election a citizen of the United States and of this State, has not attained the age of twenty-one years upon his election, has not become a qualified elector of the county in which he is to be a judge, and has not received a four-year bachelor&#39;s degree from an accredited post-secondary institution or if he has received no degree he must have four years&#39; experience as an employee in a probate judge&#39;s office in this State.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 4; 1988 Act No. 678, Part IV, SECTION 3, eff January 1, 1989.<br /><br />
+Editor&#39;s Note<br /><br />
+	NOTE: The provision of Section 14-23-1040 requiring a four-year college degree or four years&#39; experience as an employee in a probate judge&#39;s office in the State in order to serve as a probate judge has not been precleared by the U.S. Department of Justice and cannot be put into effect. See Section 5 of the Voting Rights Act of 1965, as amended.<br /><br />
+	1988 Act No. 678, Part II, SECTION 4, provides as follows:<br /><br />
+	Section 14-23-1040 of the 1976 Code does not apply to probate judges presently holding office upon January 1, 1989.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1050.</span> Bond.<br /><br />
+	Each judge of probate and associate probate judge shall, before assuming the duties of that office, enter into bond in the sum of one hundred thousand dollars conditioned for the faithful performance of the duties of such office, which bond shall be executed and filed as prescribed in Chapter 3 of Title 8 of the 1976 Code.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 5; 1995 Act No. 15, SECTION 2, eff April 4, 1995.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1070.</span> Appointment of deputies; powers.<br /><br />
+	Each judge of probate may from time to time appoint a deputy to act in his stead during his temporary absence, and in evidence of such appointment shall issue an order which shall be filed and recorded as herein provided. Each deputy so appointed shall have power, during the temporary absence of the judge of probate, to perform all the duties of his office; and all such acts, judgments, decrees, orders and licenses shall be done and issued in the name of the judge of probate by his deputy and when so done and issued shall have the same force and effect in law as if done and issued by the judge of probate. The judge of probate shall be accountable and responsible for all acts of his deputy within the scope of his duties, and may, at his pleasure, by order, remove any such deputy. All orders appointing or removing such deputy shall be recorded and indexed in the office of the judge of probate in a book to be kept for that purpose, available for public inspection.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 7.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1080.</span> Judges shall not sit in certain cases.<br /><br />
+	No judge or associate judge shall sit in any case in which he has a vested interest, or in which he is biased or prejudiced in favor of or against any interested party, or in which he has been counsel or a material witness, or in the determination of any cause or proceeding in the administration or settlement of any estate under a will that he has prepared, or of any estate of any person in which he is interested as heir, legatee, executor, administrator, guardian or trustee. In every such case the Chief Justice of the Supreme Court shall appoint a special judge to sit in the matter.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 8.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1090.</span> Appointment and removal of clerk.<br /><br />
+	The judge of probate may appoint a clerk and may remove him at his pleasure.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 9.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1100.</span> Duties of clerk.<br /><br />
+	The clerk shall keep a true and fair record of each order, sentence, decree and license issued by the court, and of all other things proper to be recorded. He shall also give true and attested copies of instruments, documents and records of the court. He may execute and issue in the name of the judge of probate the following: certificates of the appointment and qualification of administrators, executors, guardians, committees and testamentary trustees; certifications pertaining to, and certified copies of wills, all probate court records, and statements or stipulations pertaining thereto; warrants of appraisements in decedents&#39; estates including appointment of appraisers; and marriage licenses. He shall provide for the publication of the citation required by law prior to the appointment of an administrator, and for the issuance and filing in the office of the clerk of the court of common pleas or of the register of mesne conveyance and the office of the county auditor the index forms required by law pertaining to the devise or descent of real property. He shall prepare and execute all forms necessary to obtain payment of insurance benefits in connection with intestate estate being administered by the probate court as provided by law. He may examine, vouch, and approve uncontested accountings, and may execute and submit requisitions and claim warrants for supplies and material needed for the operation of the court. He may take acknowledgments and administer oaths, and, subject to the control of the judge, may issue notices and make all necessary orders for the hearing of any matter to be heard in the court. If a matter is not contested, he may hear and determine it and make all orders, judgments and decrees in connection therewith which the judge could make, subject to the same being set aside or modified by the judge at any time within thirty days thereafter; and if not so set aside or modified such orders, judgments and decrees made by the clerk shall have the same effect as if made by the judge. No person shall practice as an attorney or counselor at law in the court of which he is clerk.<br /><br />
+	Nothing in this section may be construed to preclude use of a computer system or related equipment by a clerk of court in performance of the duties prescribed in this section.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 10; 1994 Act No. 412, SECTION 2, eff May 25, 1994.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1110.</span> Practice of law by judges or associate judges.<br /><br />
+	No judge or associate judge of probate shall act as attorney or counsel or receive fees as such in any matter pending or originating in his court.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 11.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1120.</span> Court of record; seal.<br /><br />
+	The court of probate shall be a court of record and shall have a seal bearing the name of such court, which seal shall be impressed upon all orders, decrees and licenses issued by such court. Except as otherwise provided by law, the records of the court of probate shall at all times be subject to inspection by any person interested therein.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 12.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1130.</span> Books, office equipment, office space, support personnel; index books.<br /><br />
+	The governing body of each county shall provide and the judge of probate shall keep the seal of the probate court, the necessary office equipment of the probate court, and those books as are necessary for keeping the records of the probate court and for reference to these records, including index books, appropriately labeled, referring to the records of the probate court pertaining to:<br /><br />
+	1. wills;<br /><br />
+	2. intestate estates;<br /><br />
+	3. estates of minors and incompetents;<br /><br />
+	4. bonds;<br /><br />
+	5. inventories and appraisements;<br /><br />
+	6. returns or accountings;<br /><br />
+	7. liens;<br /><br />
+	8. admissions and commitments to facilities for the care and treatment of mentally ill, persons with intellectual disability, alcoholics, and drug addicts;<br /><br />
+	9. marriage licenses and marriages;<br /><br />
+	10. decrees;<br /><br />
+	11. general or miscellaneous matters.<br /><br />
+	In addition, the governing body of each county shall provide office space and additional support personnel necessary for the orderly conduct of the business of the probate court.<br /><br />
+	If the probate court maintains the original of a document in the master file of a matter and a copy of that document on microfilm, a computer system, or on another similar system, it is not necessary for the probate court to maintain a second separate record with copies of those types of documents, provided a general index or an index for those types of documents is maintained.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 13; 1987 Act No. 157 SECTION 1, eff June 8, 1987; 1994 Act No. 412, SECTION 3, eff May 25, 1994.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1140.</span> Rules and regulations governing practice, procedure, and conduct of business.<br /><br />
+	The Supreme Court shall have the power by rule to regulate the practice, procedure, and conduct of business in the courts of probate. Provided, however, that the Department of Behavioral Health and Developmental Disabilities may by rule and regulation prescribe the form of admission documents to facilities of the Office of Mental Health and the Office of Intellectual and Developmental Disabilities.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 14; 1993 Act No.181, SECTION 257, eff July 1, 1993.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	At the direction of the Code Commissioner, certain references in the S.C. Code to the State Department of Mental Health, South Carolina Mental Health Commission, Department of Disabilities and Special Needs, Department of Disabilities and Special Needs Commission, Department of Alcohol and Other Drug Abuse Services, and other related terms were changed to reflect the restructuring of these agencies into component offices under the Department of Behavioral Health and Developmental Disabilities, pursuant to 2025 Act No. 3, SECTION 18.<br /><br />
+<span style="font-weight: bold;"> SECTION 14-23-1150.</span> Jurisdiction of judges.<br /><br />
+	Every judge of probate, in his county, shall have jurisdiction:<br /><br />
+	(a) as provided in Sections 62-1-301 and 62-1-302, and other applicable sections of the South Carolina Probate Code;<br /><br />
+	(b) to issue marriage licenses, in form as provided by the bureau of vital statistics of the Department of Public Health; to record, index, and dispose of copies of marriage certificates; and to issue certified copies of such licenses and certificates;<br /><br />
+	(c) to perform the duties of the clerk of the court of common pleas in proceedings in eminent domain for the acquisition of rights-of-way by railway or canal companies when such clerk is disqualified by reason of ownership of or interest in any lands over which it is sought to obtain such right-of-way;<br /><br />
+	(d) to inquire into and adjudge, in such proceedings as may be authorized by law, the involuntary commitment of persons suffering from mental illness, intellectual disability, alcoholism, drug addiction, and active pulmonary tuberculosis.<br /><br />
+HISTORY: 1976 Act No. 690 Art. V SECTION 15; 1986 Act No. 539, SECTION 3(1)(B), eff July 1, 1987; 2026 Act No. 146 (H.4189), SECTION 41, eff May 15, 2026.<br /><br />
+Effect of Amendment<br /><br />
+	2026 Act No. 146, SECTION 41, in (b), substituted &quot;Department of Public Health&quot; for &quot;Department of Health and Environmental Control&quot;.<br /><br />
+
+</div>
+
+
+					</div>		 <!-- mainwidepanel -->
+					
+				</div>		 <!-- pagebody -->
+				
+				<div id="footer" class="nodisplay" style="height: 30px;" onContextMenu="return false;">
+			<div id="footerdiv" style="margin:0;">
+				South Carolina Legislative Services Agency * 223 Blatt Building * 1105 Pendleton Street * Columbia, SC 29201<!-- * 803-212-4420--><br>
+				
+								<a href="/disclaimer.php">Disclaimer</a> * <a href="/policies.php">Policies</a> * <a href="/credits.php">Photo Credits</a> * <a href="/contact.php">Contact Us</a>
+							</div>
+		</div>
+		<div id="printfooter" class="printdisplay serifNormal" align=center style="font-size: 8pt;">
+			<br>
+			<br>
+			<hr>
+			Legislative Services Agency
+			<br>
+			h t t p : / / w w w . s c s t a t e h o u s e . g o v
+		</div>
+	
+		</div>	<!-- container or main in mobile page-->
+</body>
+</html>
+

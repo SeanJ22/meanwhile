@@ -1,0 +1,725 @@
+﻿
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="robots" content="noimageindex">
+	    <meta charset="iso-8859-1">
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+	    	    <title>Code of Laws - Title 30 - Chapter 5- - PUBLIC RECORDS</title>
+	    <link rel="SHORTCUT ICON" href="/images/stateflagsmall.ico" />
+		<link rel="icon" href="/images/stateflagsmall.ico" type="image/ico" />
+		<link rel="SHORTCUT ICON" href="/images/South-Carolina-Flag2.ico" />
+
+		<link type="text/css" rel="stylesheet" href="/css/main.css" media="all" />
+				
+		<!--[if lte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/ie7main.css" media="all" />
+		<![endif]-->
+		<!--[if gte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/iemain.css" media="all" />
+		<![endif]-->
+		<link type="text/css" rel="stylesheet" href="/css/print.css" media="print" />
+		<link type="text/css" rel="stylesheet" href="/css/supplement.css" media="screen" />
+		<!--<link type="text/css" rel="stylesheet" href="/css/zipsearch.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/vote.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/contact.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/navwrap.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/linkbar.css" media="screen" />-->
+	
+		<!--<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>-->
+		<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+				<script type="text/javascript" src="/js/main_linux.js"></script>
+		
+
+		
+
+
+
+		<!--<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/utils.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/lightbox.js"></script>
+		<script type="text/javascript" src="/js/legislation.js"></script>
+		<script type="text/javascript" src="/js/logon_lits.js"></script>
+		<script type="text/javascript" src="/js/message.js"></script>
+		<script type="text/javascript" src="/js/comm_meeting.js"></script>-->
+		<script type="text/vbscript" src="/vbs/comm_meeting.vbs"></script>
+		<!--<script type="text/javascript" src="/js/regs.js"></script>-->
+				
+	   	<script type="text/javascript">
+	    //document.onclick = function () { document.getElementById('transbox').style.display= 'none' };
+	    	var xmlhttp=false;
+			xmlhttp = create_xml_object();
+	
+			function getElement(ele)
+			{
+				var theobj = false;
+				if(typeof ele == 'string')
+					theobj = (document.getElementById)?document.getElementById(ele):document.all[ele];
+				else
+					theobj = ele;
+			
+				return theobj;
+			}
+		
+			function checkreader(friendlyalert)
+			{
+			 	/*friendlyalert=friendlyalert||false;
+			 	
+			 	var browser_info = perform_acrobat_detection();
+				if (!browser_info.acrobat)
+				{
+				 	loadadobebox('adobebox', '/adobe.php');
+					return false;
+				}
+				else if (friendlyalert)
+				{
+			 		alert(friendlyalert);
+				}*/
+				return true;
+			}
+				
+			function loadadobebox(boxname, url)
+			{
+				var response = false;
+	
+				doRequest(xmlhttp, "GET", url, false, null, null);
+				if (xmlhttp.status == 200)
+				{
+		         	response = xmlhttp.responseText;
+				}
+	
+				if(response)
+				{
+			 		var ele = document.getElementById(boxname);
+				 	if (ele)
+				 	{
+				 		ele.style.visibility = 'hidden';
+		 				ele.style.display = 'block';
+	
+		 				positionElement(ele, 'center', 'center', true);
+	
+						ele.innerHTML = response;
+					    ele.style.visibility = 'visible';
+					    ele.style.display = 'block';
+	//				    ele.scrollIntoView(true);
+					}
+				}
+				return response;
+			}
+	
+	
+			function init()
+			{
+		 		var ld=document.getElementById("loading");
+				if(ld)
+				{
+					ld.style.display = 'none';
+				}
+			}
+			
+			function openmore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				 	var pos = findPos(id);
+				 	id.style.zIndex = 10;
+		//		 	id.style.left = pos[0]+'px';
+		//		  	id.style.top = pos[1]+'px';
+				  	id.style.height = '295px';
+				  	id.style.position = 'absolute';
+				  	id.style.backgroundColor = '#f7f4ec';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'none';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = 'none';
+				  	}
+				}
+			}
+		
+			function closemore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				  	id.style.height = '135px';
+				  	id.style.position = '';
+				  	id.style.backgroundColor = 'transparent';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'block';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = '';
+				  	}
+				}		 	
+			}
+		
+		<!-- This script and many more are available free online at -->
+		<!-- The JavaScript Source!! http://javascript.internet.com -->
+		
+		<!-- Begin
+		function right(e) {
+		var msg = "Use of this image is strictly prohibited unless express written permission is given to the user by South Carolina Legislative Services Agency.";
+		if (navigator.appName == 'Netscape' && e.which == 3) {
+		alert(msg);
+		return false;
+		stopEvent(e);
+		}
+		if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) {
+		alert(msg);
+		return false;
+			stopEvent(event);
+		}
+		else return true;
+		}
+		
+	function trap() 
+	{
+		if(document.images)
+		{
+			for(i=0;i<document.images.length;i++)
+			{
+				if(document.images[i].className == 'allowcontextmenu')
+				{
+					// this should have no scripting
+				}
+				else
+				{
+				 	document.images[i].onmousedown = right;
+					document.images[i].oncontextmenu = function(){ return false; };
+					//document.images[i].onmouseup = right;
+				}
+			}
+		}
+	}
+
+	function findfwtext(texttofind) 
+	{
+	 	var fwtextele = document.getElementById('fwtext');
+		if(fwtextele)
+		{
+			fwtextele.value = texttofind;
+		}
+	}	
+		// End -->
+		</script>
+
+		<!-- ADDED FOR V4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY6FMNQKH"></script>
+
+
+<script type="text/javascript">
+
+//ADDED FOR V4
+//Google tag (gtag.js) 
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LJY6FMNQKH');
+
+ 
+ /* COMMENTING OUT UPGRADING TO V4 -A
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36207109-1']);
+  _gaq.push(['_setDomainName', 'scstatehouse.gov']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+*/
+  
+      $(document).ready(function(){
+        // COMMENTING THIS OUT NO LONGER BEING ACTIVELY USED TO MONITOR FOR TRAFFIC TO SPECIFIC LINKS - A
+        /*
+          var anchors = $('div#contentsection a');
+
+          //console.log('anchors...'+anchors.length);
+          if(anchors.length > 0){
+            //console.log('setting up event handler...');
+            anchors.click(function(){
+              var a = $(this).attr('href');
+              if(_gaq && (a.substr(-3) == 'htm' || a.substr(-4) == 'html' || a.substr(-3) == 'doc' || a.substr(-4) == 'docx' || a.substr(-3) == 'pdf' || a.substr(-3) == 'xls' || a.substr(-4) == 'xlsx')) {
+                //console.log(a);
+                _gaq.push(['_trackPageview', $(this).attr('href')]);
+              }
+              
+              var aText = $(this).text().toLowerCase();
+              if (a.indexOf('getfile.php') > -1 && aText === 'word'){
+                    _gaq.push(['_trackEvent', 'Word Doc', 'Download', ('from page: ' + document.location + ' - href: ' + a)]);
+              }
+
+            });
+          }
+          */
+      });
+
+</script>
+	</head>
+	
+		
+	<body class="home"  onload="init(); trap();">
+	<noscript>Your browser does not support JavaScript!  This page will not render correctly.</noscript> 
+
+
+	
+	<div id="adobebox" style="position:absolute; width:400px; height:150px; border:2px solid #555555; background-color:#cccccc; display:none;"></div>
+	<div id="container" >	
+				<div id="header" class="nodisplay" style="text-align:center; height:100px;" >
+									<img id="headerimg" class="nodisplay" alt="South Carolina Legislature" title="South Carolina Legislature" src="/images/header8.png" />
+								
+							<!--	<div class="award"><span style="color:#831224; font-weight:bold; font-size:1.5em;">*</span> Recipient of<br>the Notable State Documents Award<br>by the<br>South Carolina<br>State Library.</div>-->
+				
+				
+			</div>
+			<div class="printdisplay"><img border="0" src="/images/titleprint.jpg" alt="South Carolina Legislature" title="South Carolina Legislature" alt="South Carolina Legislature" title="South Carolina State Legislature" /><br /><hr /><br /></div>
+	
+			<div id="pagebody" >
+	
+	
+<!--<div id="topmessage">
+<br style="display:block; margin-top:10px;">
+Searches and data queries will be unavailable beginning Friday, August 19, 2016, from 8:00 PM until Saturday, August 20th at 8:00 AM<br>due to scheduled maintenance.</div>-->
+				<!-- Prompt IE 8/7/6 users to upgrade to a newer browser. -->
+				<!--[if lte IE 8]>
+				<div class="oldframe">In order to improve your experience using this website, please <a href="http://browsehappy.com/">upgrade your browser</a>.</div>
+				<![endif]-->
+			
+			
+			
+			<div id="menu" class="nodisplay">
+				<ul class="nodisplay">
+				<li><a href="/index.php">Home</a></li>
+<li><a href="/senate.php">Senate</a></li>
+<li><a href="/house.php">House</a></li>
+<li><a href="/committeeinfo.php">Committee&nbsp;Postings&nbsp;and&nbsp;Reports</a></li>
+<li><a href="/council.php">Legislative Council</a></li>
+<li><a href="/citizens.php">Citizens&#39; Interest</a></li>
+<li><a href="/publications.php">Publications</a></li>
+		    	</ul>
+			</div>
+			<div id="search" class="nodisplay" style="height: 28px;"><div class="nodisplay" style="float:right; margin:6px 20px 0px 0;">
+							<!--<a style="color:#f7f4ec; height:15px;" href="#" onClick="rsswindow();"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+<!--				<a style="color:#f7f4ec; height:15px;" href="/splashpage/splashpage.html"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a> -->
+				<a style="color:#f7f4ec; height:15px;" href="/onlineservices/index.php"><img border="0" src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>
+			<!--	<a style="color:#f7f4ec; height:15px;" href="/maintenance_portal.php"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+						</div></div>
+			
+	
+					<div id="sidebar" class="nodisplay">
+	<div id="vidlinks" style="height: 50px;">
+						<!--<img src="/images/videobutton12d.png">-->
+											<ul id="vidsidemenu">
+	<li id="vidinnermenu" style="font-size:16px; margin: 0 0 5px 0;">Chamber Video</li>
+<li id="sbroadcast" style="float: left; width:50%;">
+<a id="liveS" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('S', false, false, '0')">Senate</a><br><a id="liveaudioS" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('S', false, false, '1');">(Audio Only)</a>
+</li>
+<li id="hbroadcast" style="float: left; width:50%;">
+<a id="liveH" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('H', false, false, '0')">House</a><br><a id="liveaudioH" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('H', false, false, '1');">(Audio Only)</a>
+</li>
+						</ul>
+					</div>
+					<div id="commvidlinks"><a href="/video/schedule.php">Video&nbsp;Schedule</a><a style="border-top:1px solid #fff; padding-top:12px;" href="/video/archives.php">Video Archives</a></div>
+										<div id="sidemenu">
+						<ul id="innermenu">
+		
+							<li><a href="/howdoi.php">How do I...</a></li>
+										
+							
+								<li class="nolink" onMouseOver="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='block'; document.sidesearchform.searchtext.focus();}" onMouseOut="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Quick Search</div>
+								<div id="sidesearch" class="sidesubmenu">
+									<form id="sidesearchform" name="sidesearchform" method="POST" action="/search.php">
+									<input type="hidden" name="search" value="side" />
+									<div class="topelement"><label for="searchtext"><span class="label">Search for:</span></label><input id="searchtext" name="searchtext" type="text"/><a id="searchlink2" href="javascript:void(0);" onClick="document.sidesearchform.submit();"><img id="searchicon" src="/images/searchbutton.png" alt="Search" title="Search"/></a></div>
+			<!--						<div><input type="checkbox" id="searchchoice_all" name="searchchoice_all" value="all" /><label for="searchchoice_all">All</label></div>-->
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_fullsite" name="category" value="FULLSITE" /><label for="searchchoice_fullsite">&nbsp;Full Site Search</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_billnumber" name="category" value="BILL" /><label for="searchchoice_billnumber">&nbsp;Bill Number</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_legislation" name="category" value="LEGISLATION" CHECKED /><label for="searchchoice_legislation">&nbsp;Legislation</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_budget" name="category" value="BUDGET" /><label for="searchchoice_budget">&nbsp;Budget</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeoflaws" name="category" value="CODEOFLAWS" /><label for="searchchoice_codeoflaws">&nbsp;Code of Laws</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeofregs" name="category" value="CODEOFREGS" /><label for="searchchoice_codeofregs">&nbsp;Code of Regulations</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_constitution" name="category" value="CONSTITUTION" /><label for="searchchoice_constitution">&nbsp;Constitution</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_housejournals" name="category" value="HOUSEJOURNALS" /><label for="searchchoice_housejournals">&nbsp;House Journals</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_senatejournals" name="category" value="SENATEJOURNALS" /><label for="searchchoice_senatejournals">&nbsp;Senate Journals</label></div>
+									<div class="bottomelement" style="padding-left:20px;"><input type="radio" id="searchchoice_billsummary" name="category" value="SUMMARY" /><label for="searchchoice_billsummary">&nbsp;LSA Bill Summary</label></div>
+								</form>
+									
+								</div>
+							</li>
+							<li><a href="/legislatorssearch.php">Find Your Legislators</a></li>
+							<li id="contactLegislatorLink"><a href="/email.php?chamber=B">Contact Your Legislator</a></li>
+									
+							<li><a href="/legislation.php">Legislation</a></li>
+							<li><a href="/listtracking/main.php" target="LTS">Track Legislation</a></li>
+							<li><a href="/multicriteria2/search.php" target="MCS">Multi-Criteria Search</a></li>
+									<!--<li><a href="#" onclick="multisearchwindow('INTROBOTH');">Multi-Criteria Search</a></li>-->
+									<!--<li><a href="#" onclick="multisearchwindow('INTROMANUAL');">Multi-Criteria Search</a></li>-->
+									<li><a href="/research.php">Research</a></li>
+	
+								<li class="nolink" onMouseOver="var ele=document.getElementById('law'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('law'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">South Carolina Law</div> 
+								<div id="law" class="sidesubmenu">
+									<div class="sidediv topelement"><a href="/newlaws.php">Ratifications &amp; Acts</a></div>
+									<div class="sidediv"><a href="/code/statmast.php">Code of Laws</a></div>
+									<div class="sidediv"><a href="/coderegs/statmast.php">Code of Regulations</a></div>
+									<div class="sidediv"><a href="/scconstitution/scconst.php">Constitution</a></div>
+									<div class="sidediv bottomelement"><a href="/state_register.php">State Register</a></div>
+								</div>
+							</li>
+										<li class="nolink" onMouseOver="var ele=document.getElementById('manual'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('manual'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Legislative Manual</div>
+								<div id="manual" class="sidesubmenu">
+								
+<!--									<div class="sidediv topelement"><a href="https://web.sc.gov/LSAShoppingcart/Default.aspx" target="_blank">Purchase Manual</a></div>-->
+								
+<!--									<div class="sidediv topelement"><a href="https://secure.scstatehouse.gov/cgi-bin/webstore.exe" target="_blank">Purchase Manual</a></div>-->
+									<div class="sidediv topelement"><a href="javascript:#" onClick="alert('We are sorry, but we are unable to process online transactions at this time.\n\nIf you would still like to make a purchase, please contact us directly at (803) 212-4490 during normal business hours (8:30am - 5:00pm EST).');">Purchase Manual</a></div>
+									<div class="sidediv bottomelement"><a href="/man26/manual26.php">View Manual Online</a></div>
+								</div>
+							</li>
+							<li><a href="http://www.studentconnection.scstatehouse.gov">Student Connection</a></li>
+							<li><a href="/visit.php">Visiting the State House</a></li>
+							<li><a href="/archives.php">Archives</a></li>
+							<li><a href="http://www.sc.gov/Agency-Listing" target="_blank">State Agency Websites</a></li>
+							<!--<li><a href="/stateagencysites.php">State Agency Websites</a></li>-->
+							<li><a href="/citizensinterestpage/media.php">Media Links</a></li>
+				 		</ul>
+			    	</div>
+	
+					<div id="side_ad">
+						<A href="http://www.sc.gov/" target="_blank"><img border=0 src="/images/scgov3.jpg" alt="SC.gov" title="SC.gov" /></a>
+													<A href="http://www.statelibrary.sc.gov" target="_blank"><img border=0 src="/images/scsl_logo_rgb_web.png" alt="StateLibrary.SC.gov" title="StateLibrary.SC.gov" /></a>
+											</div>	    	
+			</div>
+
+	
+	<script type="text/javascript"> 
+		if ( '' === '1'){
+		 	
+			var link = document.getElementById('contactLegislatorLink');
+			if (link != 'undefined' && link != null){
+				link.style.display = 'none'; 
+				link.style.visibility = 'hidden';
+			}
+		}
+		if ( '' === '1'){
+		 	setTimeout(function(){
+				var link2 = document.getElementById('sendMsgLink');
+				if (link2 != 'undefined' && link2 != null){
+					link2.style.display = 'none'; 
+					link2.style.visibility = 'hidden';
+				};
+			}, 20);
+			
+		}  
+	</script>
+<div class="mainwidepanel">
+
+				<div id="breadcrumbs">
+						South Carolina Law &gt; <a href="/code/statmast.php">Code of Laws</a> &gt; <a href="/code/title30.php">Title 30</a>
+				</div>
+
+					<h2 class="barheader">South Carolina Code of Laws<br />
+									Unannotated<br />
+					</h2>
+
+				<div id="contentsection">
+<div style="font-weight: bold; text-align: center;">Title 30 - PUBLIC RECORDS</div>
+<br />
+
+<div style="text-align: center;">CHAPTER 5</div>
+<div style="text-align: center;">Recording Generally</div><br />
+<span style="font-weight: bold;"> SECTION 30-5-5.</span> Qualifications for eligibility to serve as register of deeds; quo warranto actions to determine eligibility.<br /><br />
+	(A) In order to be eligible to serve or continue to serve as the register of deeds, a person must:<br /><br />
+	(1) be a citizen of the United States and of this State;<br /><br />
+	(2) be a qualified elector of the applicable county;<br /><br />
+	(3) have:<br /><br />
+	(a) a four-year bachelor&#39;s degree from an accredited post-secondary institution; or<br /><br />
+	(b) at least four years&#39; experience:<br /><br />
+	(i) in the fields of law, real estate, or accounting; or<br /><br />
+	(ii) as an employee in a register of deeds office in this State; or<br /><br />
+	(iii) as a register of deeds in this State; and<br /><br />
+	(c) for an appointed register of deeds, a person must comply with any county requirements not conflicting with the qualifications in this section and the Constitution of South Carolina; and<br /><br />
+	(4) not have a pattern of failing to properly record in the time and manner prescribed in Section 30-5-90.<br /><br />
+	(B) A quo warranto action may be brought in accordance with Section 15-63-60 to determine a person&#39;s eligibility to seek the position of register of deeds or continue to serve as register of deeds.<br /><br />
+HISTORY: 2022 Act No. 213 (S.1031), SECTION 1, eff June 22, 2022.<br /><br />
+Editor&#39;s Note<br /><br />
+	2022 Act No. 213, SECTIONS 3, 4, provide as follows:<br /><br />
+	&quot;SECTION 3. Section 30-5-5(A)(3)(a) and (b), as added by this act, do not apply to a person who holds the office of register of deeds on the effective date of this act and during his tenure in office.<br /><br />
+	&quot;SECTION 4. If a quo warranto action is brought in accordance with Section 15-63-60 alleging (a) a register of deeds has a pattern of failing to record in the time and manner prescribed in Section 30-5-90, and (b) the pattern of failing to record occurred only prior to the effective date of this act, then the register of deeds may assert as an affirmative defense to the action that, on the date the action is filed and for thirty consecutive days thereafter, no properly delivered and executed document remains unrecorded in the office for more than thirty days after its receipt.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-10.</span> . Performance of register of deeds&#39; duties by clerk of court in certain counties.<br /><br />
+	(A) In every county in the State other than Abbeville, Aiken, Anderson, Beaufort, Berkeley, Charleston, Cherokee, Chesterfield, Clarendon, Colleton, Dorchester, Florence, Georgetown, Greenville, Horry, Jasper, Kershaw, Lancaster, Lexington, Oconee, Orangeburg, Pickens, Richland, Spartanburg, and Sumter the duties prescribed by law for the register of deeds must be performed by the clerk of court who has all the powers and emoluments given the register of deeds in Abbeville, Aiken, Anderson, Beaufort, Berkeley, Charleston, Cherokee, Chesterfield, Clarendon, Colleton, Dorchester, Florence, Georgetown, Greenville, Horry, Jasper, Kershaw, Lancaster, Lexington, Oconee, Orangeburg, Pickens, Richland, Spartanburg, and Sumter counties.<br /><br />
+	(B) The registers of deeds in Berkeley and Dorchester counties are elected for terms of four years and until a successor is elected in the general election and qualifies.<br /><br />
+HISTORY: 1962 Code SECTION 60-7; 1952 Code SECTION 60-7; 1942 Code SECTION 3629; 1932 Code SECTION 3629; Civ. C. &#39;22 SECTION 2173; Civ. C. &#39;12 SECTION 1349; Civ. C. &#39;02 SECTION 945; 1779 (7) 296; 1839 (11) 115; 1882 (18) 682; 1896 (22) 122; 1908 (25) 1020; 1973 (58) 803, 833; 1975 (59) 147; 1978 Act No. 458, SECTION 1; 1980 Act No. 329, SECTION 1; 1985 Act No. 123, SECTION 1; 1986 Act No. 541, SECTION 1; 1987 Act No. 153, SECTION 1; 1987 Act No. 186, SECTION 1; 1993 Act No. 5, SECTION 1; 1994 Act No. 294, SECTION 1; 1996 Act No. 417, SECTION 1; 1999 Act No. 8, SECTION 1; 2000 Act No. 272, SECTION 1; 2001 Act No. 75, SECTION 1; 2005 Act No. 140, SECTION 1; 2006 Act No. 299, SECTION 1, eff May 31, 2006; 2008 Act No. 221, SECTION 1, eff upon approval (became law without the Governor&#39;s signature on May 15, 2008); 2010 Act No. 127, SECTION 1, eff February 24, 2010; 2013 Act No. 12, SECTION 1, eff April 23, 2013; 2024 Act No. 197 (H.3313), SECTION 1, eff January 1, 2025; 2026 Act No. 218 (H.5284), SECTION 1, eff May 19, 2026.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+Effect of Amendment<br /><br />
+	The 2006 amendment added Colleton County.<br /><br />
+	The 2008 amendment added Clarendon county.<br /><br />
+	The 2010 amendment made subsection (A) and (B) designations and in subsection (A) added Lancaster county.<br /><br />
+	The 2013 amendment, in subsection (A), added two references to Cherokee county.<br /><br />
+	2024 Act No. 197, SECTION 1, in (A), inserted &quot;Florence,&quot; in two places.<br /><br />
+	2026 Act No. 218, SECTION 1, in (A), twice inserted &quot;Abbeville,&quot; preceding &quot;Aiken&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-12.</span> . Appointment of register of deeds for certain counties.<br /><br />
+	(A) The governing bodies of Abbeville, Anderson, Beaufort, Cherokee, Chesterfield, Clarendon, Colleton, Florence, Georgetown, Horry, Jasper, Kershaw, Lancaster, Oconee, Orangeburg, and Pickens counties shall appoint the register of deeds for its county under terms and conditions as it may agree upon.<br /><br />
+	(B) The governing body of Georgetown County may appoint a register of deeds only after advertising the information concerning the appointment for two weeks before action is taken in a newspaper of general circulation in the county.<br /><br />
+HISTORY: 1987 Act No. 153, SECTION 2; 1993 Act No. 5, SECTION 2; 1994 Act No. 294, SECTION 2; 1996 Act No. 417, SECTION 2; 1999 Act No. 8, SECTION 2; 2000 Act No. 272, SECTION 2; 2001 Act No. 75, SECTION 2; 2005 Act No. 140, SECTION 2; 2006 Act No. 299, SECTION 2, eff May 31, 2006; 2008 Act No. 221, SECTION 1, eff upon approval (became law without the Governor&#39;s signature on May 15, 2008); 2010 Act No. 127, SECTION 2, eff February 24, 2010; 2013 Act No. 12, SECTION 2, eff April 23, 2013; 2024 Act No. 197 (H.3313), SECTION 2, eff January 1, 2025; 2026 Act No. 218 (H.5284), SECTION 2, eff May 19, 2026.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+Effect of Amendment<br /><br />
+	The 2006 amendment added Colleton County.<br /><br />
+	The 2008 amendment added Clarendon county.<br /><br />
+	The 2010 amendment made subsection (A) and (B) designations and in subsection (A) added Lancaster county.<br /><br />
+	The 2013 amendment, in subsection (A), added the reference to Cherokee county.<br /><br />
+	2024 Act No. 197, SECTION 2, in (A), inserted &quot;Florence,&quot;.<br /><br />
+	2026 Act No. 218, SECTION 2, in (A), inserted &quot;Abbeville,&quot; preceding &quot;Anderson&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-15.</span> Duties of clerk of court for state tax liens to be performed by register of deeds.<br /><br />
+	Notwithstanding any other provision of law, in those counties which have a register of deeds, the duties of the clerk of court for the county pertaining to the indexing and filing of state tax liens are hereby devolved upon the register of deeds for the county and the register of deeds shall index and file such liens in his office in the same manner as required of the clerk of court by law.<br /><br />
+HISTORY: 1978 Act No. 594, SECTION 1.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-16.</span> Records of state tax liens before and after August 1, 1978.<br /><br />
+	On the effective date of SECTIONS 30-5-15 and 30-5-16, in those counties which have a register of deeds, all current records pertaining to state tax liens shall be maintained in the office of the register of deeds unless otherwise directed by the governing body of the county concerned. The register of deeds may begin a new record book of state tax liens beginning with liens filed after August 1, 1978, but such book shall note on the cover that the records of the clerk of court relating to state tax liens are on file in the office of the clerk of court and contain a record of state tax liens which are still effective.<br /><br />
+HISTORY: 1978 Act No. 594, SECTION 2.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-20.</span> Certified copies of recorded instruments; effect of furnishing incorrect copy.<br /><br />
+	The register of deeds, or his deputy, shall be required, on application, to give a certified copy of any writing recorded in his office, the fees for such copy being first paid in advance, if required or tendered, as the case may be. If the register or his deputy shall furnish an incorrect transcript of any deed recorded, he shall forfeit and pay to the party the damages that may accrue in consequence thereof.<br /><br />
+HISTORY: 1962 Code SECTION 60-8; 1952 Code SECTION 60-8; 1942 Code SECTION 3636; 1932 Code SECTION 3638; Civ. C. &#39;22 SECTION 2182; Civ. C. &#39;12 SECTION 1358; Civ. C. &#39;02 SECTION 951; G. S. 720; R. S. 821; 1698 (2) 138; 1839 (11) 116; 1843 (11) 255; 1947 (45) 150.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-30.</span> Prerequisites to recording.<br /><br />
+	Except as otherwise provided by statute, before any deed or other instrument in writing can be recorded in this State, it must be acknowledged or proved by the method described in subsection (A)(1), (A)(2), or (B).<br /><br />
+	(A)(1) The execution of the deed or other instrument must be first proved by the affidavit of a subscribing witness to the instrument, taken before some officer within this State competent to administer an oath. If the affidavit is taken without the limits of this State, it may be taken before:<br /><br />
+	(a) a commissioner appointed by dedimus issued by the clerk of the court of common pleas of the county in which the instrument is to be recorded;<br /><br />
+	(b) a commissioner of deeds of this State;<br /><br />
+	(c) a clerk of a court of record who shall make certificate of the deed or other instrument under his official seal;<br /><br />
+	(d) a justice of the peace who shall append to the certificate his official seal;<br /><br />
+	(e) a notary public who shall affix to the deed or other instrument his official seal within the state of his appointment, which is a sufficient authentication of his signature, residence, and official character;<br /><br />
+	(f) before a minister, ambassador, consul general, consul, or vice consul, or consular agent of the United States of America; or<br /><br />
+	(g) in the case of any officer or enlisted man of the United States Army, Air Force, Navy, Marine Corps, or Coast Guard on active duty outside the State or any civilian employee of any such organization on active duty outside the continental confines of the United States, any commissioned officer of the Army, Air Force, Navy, Marine Corps, or Coast Guard, if the probating officer states his rank, branch, and organization.<br /><br />
+	(2) The Uniform Recognition of Acknowledgments Act must be complied with or the person executing it shall submit an affidavit subscribed to before a person authorized to perform notarial acts herein or by the Uniform Recognition of Acknowledgments Act that the signature on the deed or other instrument is his signature and that the instrument was executed for the uses and purposes stated in the instrument.<br /><br />
+	(B) A deed or other instrument must be signed by the grantor, mortgagor, vendor, or lessor and the signing must be acknowledged by the grantor, mortgagor, vendor, or lessor in the presence of two witnesses, taken before some officer within this State competent to administer an oath. If the acknowledgment is taken without the limits of this State, it may be taken before:<br /><br />
+	(1) a commissioner appointed by dedimus issued by the clerk of the court of common pleas of the county in which the instrument is to be recorded;<br /><br />
+	(2) a commissioner of deeds of this State;<br /><br />
+	(3) a clerk of a court of record who shall make certificate of the deed or other instrument under his official seal;<br /><br />
+	(4) a justice of the peace who shall append to the certificate his official seal;<br /><br />
+	(5) a notary public who shall affix to the deed or other instrument his official seal within the state of his appointment, which is a sufficient authentication of his signature, residence, and official character;<br /><br />
+	(6) before a minister, ambassador, consul general, consul, or vice consul, or consular agent of the United States of America; or<br /><br />
+	(7) in the case of any officer or enlisted man of the United States Army, Air Force, Navy, Marine Corps, or Coast Guard on active duty outside the State or any civilian employee of any such organization on active duty outside the continental confines of the United States, any commissioned officer of the Army, Air Force, Navy, Marine Corps, or Coast Guard, if the probating officer states his rank, branch, and organization.<br /><br />
+	(C) Where the instrument is acknowledged by the grantor or maker, the form of acknowledgement must be in substance as follows:<br /><br />
+	&quot;South Carolina,<br /><br />
+	_________________ County.<br /><br />
+	I (here give the name of the official and his official title), do hereby certify that (here give the name of the grantor or maker), personally appeared before me this day and acknowledged the due execution of the foregoing instrument.<br /><br />
+	Witness my hand and (where an official seal is required by law) official seal this the ___ day of ___ (year).<br /><br />
+	_________________<br /><br />
+	Signature of Officer&quot;<br /><br />
+	(D) The submission of a land development plan or land use plan is not a prerequisite and must not be required before the execution of a deed transferring undeveloped real property. A local governmental entity may still require the grantee to file a plat at the time the deed is recorded.<br /><br />
+HISTORY: 1962 Code SECTION 60-51; 1952 Code SECTION 60-51; 1942 Code SECTION 3632; 1932 Code SECTION 3632; Civ. C. &#39;22 SECTION 2176; Civ. C. &#39;12 SECTION 1352; Civ. C. &#39;02 SECTION 948; G. S. 768; R. S. 818; 1880 (17) 319; 1889 (20) 367; 1908 (25) 104; 1909 (26) 84; 1910 (26) 621; 1951 (47) 447; 1972 (57) 2393; 1988 Act No. 494, SECTION 8(10); 1994 Act No. 382, SECTION 1; 2016 Act No. 144 (H.3972), SECTION 2, eff March 14, 2016; 2018 Act No. 250 (H.4673), SECTION 2, eff May 18, 2018.<br /><br />
+Effect of Amendment<br /><br />
+	2016 Act No. 144, SECTION 2, in (A)(2), inserted the text from former (A)(3); added (D); and made other nonsubstantive changes.<br /><br />
+	2018 Act No. 250, SECTION 2, in the first undesignated paragraph, substituted &quot;subsection (A)(1), (A)(2), or (B)&quot; for &quot;subsection (A) or (B)&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-35.</span> Derivation clause and address of grantee or mortgagee on deeds and mortgages.<br /><br />
+	(a) All deeds conveying an interest in land and all mortgages of real estate executed after July 1, 1976, must include a derivation clause in the property description and there must be inscribed on the deed or mortgage the mailing address of the grantee or mortgagee. When the grantor&#39;s or mortgagor&#39;s title was acquired by deed, the derivation clause must include the name of the grantor and the recording date of that deed. However, when the deed of derivation has been simultaneously executed and delivered and has not then been recorded it is sufficient to set forth in the deed or mortgage the name of the grantor of the deed of derivation and its date and that it is to be recorded. When the grantor&#39;s or mortgagor&#39;s title was obtained by inheritance or devise, the derivation clause must include the name of the person from whom the title was acquired, the approximate date of acquisition, and, in the case of property acquired under a probated will or administered estate, the probate court in which such estate was filed. However, a derivation clause is not required on a deed or mortgage of property devoted to a utility or railroad purpose of any private or public utility or railroad. Further, a derivation clause is not required on a quitclaim or non-warranty deed of real property.<br /><br />
+	(b) A clerk of court or register of deeds shall not record any deed or mortgage after July 1, 1976, unless it contains a derivation clause as prescribed in subsection (a); provided, however, that he may record a deed or mortgage without such clause upon a showing satisfactory to him that the necessary information for such clause was not available.<br /><br />
+	(c) The provisions of this section are intended to be regulatory in nature and will not affect the legality, force, effect or record notice of any instrument recorded in violation hereof.<br /><br />
+HISTORY: 1976 Act No. 463, SECTIONS 1-3; 1976 Act No. 691, SECTION 1; 1977 Act No. 181, SECTION 1; 1983 Act No. 105, SECTION 1.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1 directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the Code.<br /><br />
+Editor&#39;s Note<br /><br />
+	1976 Act No. 463, SECTION 4, provides as follows:<br /><br />
+	&quot;All acts requiring derivation clauses for particular counties are repealed.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-36.</span> Conveyance of property used for hazardous waste storage or disposal to contain notice of previous use.<br /><br />
+	When any real property used as a hazardous waste storage or disposal facility permitted under SECTIONS 44-56-10 through 44-56-140 is sold, leased, conveyed or transferred in any manner, the deed or other instrument of transfer shall contain in the legal description in no smaller type than that used in the body of such deed or instrument, the following statement:<br /><br />
+	&quot;The real property conveyed or transferred by this instrument has previously been used as a storage or disposal facility for hazardous wastes.&quot;<br /><br />
+HISTORY: 1980 Act No. 517, Part II, SECTION 13.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-40.</span> Validation of certain instruments executed between May 11, 1972 and June 22, 1973.<br /><br />
+	(1) Any deed or other instrument purporting to convey an interest in or lien upon real estate executed after May 11, 1972 and prior to June 22, 1973, which in all other respects meets the requirements of law, whether executed within or without this State, and whether or not such instrument was executed in the presence of and subscribed by two or more witnesses, as provided in SECTION 27-7-10, is hereby validated as to execution from the time of such execution and entitled to recordation if:<br /><br />
+	(a) The execution thereof was acknowledged in a form substantially identical to the forms set forth in SECTION 26-3-70, Uniform Recognition of Acknowledgments Act; or<br /><br />
+	(b) The execution thereof was acknowledged in a form conforming substantially to the provisions of SECTION 30-5-30, subsection (3), as amended in 1972.<br /><br />
+	(2) The recordation of any such instrument is hereby validated and declared to have constituted legal notice from the time of such recordation, if such instrument complies with the recording of statutes of this State.<br /><br />
+HISTORY: 1962 Code SECTION 60-51.1; 1973 (58) 639.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-50.</span> Effect of failure of officer to state service serial number.<br /><br />
+	No instrument otherwise entitled to admission to record shall be denied record on account of the failure of the officer taking the probate to state his service serial number.<br /><br />
+HISTORY: 1962 Code SECTION 60-53; 1952 Code SECTION 60-53; 1944 (43) 1323.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-60.</span> Validity of instruments recorded without impressed seals of officers administering oaths.<br /><br />
+	Any instrument heretofore or hereafter recorded in this State, which does not have affixed the impressed seal of the authorized officer who administered the oath or affirmation contained therein, shall be valid and constitute notice as though such impressed seal were affixed.<br /><br />
+HISTORY: 1962 Code SECTION 60-54; 1963 (53) 89.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-70.</span> Recording of instrument when affidavit of subscribing witness cannot be procured.<br /><br />
+	When the affidavit of a subscribing witness cannot be had by reason of the death, insanity or absence from the State of such witness, any such instrument may be recorded upon proof of such fact and of the handwriting of the parties who signed the instrument and of the subscribing witnesses by proper affidavit, the proof in every case to be recorded with the instrument.<br /><br />
+HISTORY: 1962 Code SECTION 60-55; 1952 Code SECTION 60-55; 1942 Code SECTION 3632; 1932 Code SECTION 3632; Civ. C. &#39;22 SECTION 2176; Civ. C. &#39;12 SECTION 1352; Civ. C. &#39;02 SECTION 948; G. S. 768; R. S. 818; 1880 (17) 319; 1889 (20) 367; 1908 (25) 104; 1909 (26) 84; 1910 (26) 621.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-80.</span> Repealed.<br /><br />
+HISTORY: Former Section, titled Auditor&#39;s endorsement required before recordation of deeds, had the following history: 1962 Code SECTION 60-56; 1952 Code SECTION 60-56; 1942 Code SECTION 3634; 1932 Code SECTION 3634; Civ. C. &#39;22 SECTION 2178; Civ. C. &#39;12 SECTION 1354; Civ. C. &#39;02 SECTION 949; R. S. 918; 1881 (17) 1015; 1937 (40) 105. Repealed by 2024 Act No. 133, SECTION 3, eff May 13, 2024.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-90.</span> Recordation of marriage settlements, conveyances, mortgages, and other writings.<br /><br />
+	The register of deeds is required to record in the order of the times at which they may be brought to his office, all marriage settlements and all conveyances and mortgages, renunciations of dower and other writings concerning the titles to lands situate in his county which may be lodged with him to be recorded if the execution of any such writing shall be proved by affidavit of a subscribing witness, or otherwise, as herein provided. Every such writing shall be recorded within thirty days after its lodgment and the recording shall bear even date with the lodgment. On every such writing shall be endorsed a certificate, to be signed by the register or his deputy, specifying the time when and book and page where it was recorded.<br /><br />
+HISTORY: 1962 Code SECTION 60-57; 1952 Code SECTION 60-57; 1942 Code SECTION 3635; 1932 Code SECTION 3635; Civ. C. &#39;22 SECTION 2179; Civ. C. &#39;12 SECTION 1355; Civ. C. &#39;02 SECTION 950; G. S. 769; R. S. 820; 1839 (11) 115; 1928 (35) 1185; 1972 (57) 2632; 2022 Act No. 213 (S.1031), SECTION 2, eff June 22, 2022.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+Editor&#39;s Note<br /><br />
+	2022 Act No. 213, SECTION 4, provides as follows:<br /><br />
+	&quot;SECTION 4. If a quo warranto action is brought in accordance with Section 15-63-60 alleging (a) a register of deeds has a pattern of failing to record in the time and manner prescribed in Section 30-5-90, and (b) the pattern of failing to record occurred only prior to the effective date of this act, then the register of deeds may assert as an affirmative defense to the action that, on the date the action is filed and for thirty consecutive days thereafter, no properly delivered and executed document remains unrecorded in the office for more than thirty days after its receipt.&quot;<br /><br />
+Effect of Amendment<br /><br />
+	2022 Act No. 213, SECTION 2, in the second sentence, substituted &quot;thirty days&quot; for &quot;one month&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-100.</span> Procedure for transfer of recording when instrument was recorded in wrong county.<br /><br />
+	(1) When any instrument conveying an interest in real property is recorded in one county and it is subsequently determined that property described therein is in fact located in another county, a copy of the instrument certified by the clerk of court of the county of original recordation may be recorded in the county of correct property location and such recording shall thereafter constitute full legal notice according to the tenor of the instrument being recorded.<br /><br />
+	(2) When the recordation of any instrument is transferred from one county to another in the manner authorized in subsection (1), there shall be inscribed on the certified copy of the instrument a certificate of the county auditor or his counterpart that the property described in the rerecorded instrument is in fact located in the county of rerecordation.<br /><br />
+	(3) The procedures provided for in this section for the transfer of recordation of instruments shall in no way affect the existing law which permits the recording of an original instrument in more than one county.<br /><br />
+HISTORY: 1962 Code SECTION 60-57.2; 1973 (58) 189.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-110.</span> Memorandum of livery of seizin shall be recorded.<br /><br />
+	When any deeds or conveyances shall be acknowledged or proved as provided in this chapter in order to their being recorded, the memorandum of delivery and seizin thereupon made in deeds of feoffment shall in like manner be acknowledged or proved and shall be recorded with the deeds. Any such memorandum proved and acknowledged as aforesaid shall be taken and deemed a sufficient livery and seizin of the land or other real estate conveyed.<br /><br />
+HISTORY: 1962 Code SECTION 60-58; 1952 Code SECTION 60-58; 1942 Code SECTION 8885; 1932 Code SECTION 8885; Civ. C. &#39;22 SECTION 5316; Civ. C. &#39;12 SECTION 3546; Civ. C. &#39;02 SECTION 2460; G. S. 1780; R. S. 1972; 1785 (7) 233.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-120.</span> Validation of certain conveyances not endorsed by auditor.<br /><br />
+	(A) All conveyances of real estate which were recorded by a clerk of court or register of deeds of any of the several counties between December 14, 1876, and May 1, 1882, without the endorsement of the auditor of the county, have heretofore been declared to be as valid and binding, to all intents and purposes, as if such conveyances had been endorsed by the auditor of the county, as required by law.<br /><br />
+	(B) All conveyances of real estate that were recorded by a clerk of court or register of deeds of any county that meet the prerequisite recording requirements established by Section 30-5-20, but are without the endorsement of the county auditor, are valid and binding.<br /><br />
+HISTORY: 1962 Code SECTION 60-59; 1952 Code SECTION 60-59; 1942 Code SECTION 8883; 1932 Code SECTION 8883; Civ. C. &#39;22 SECTION 5314; Civ. C. &#39;12 SECTION 3544; Civ. C. &#39;02 SECTION 2458; R. S. 1970; 1877 (16) 321; 2024 Act No. 133 (H.3608), SECTION 2, eff May 13, 2024.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+Effect of Amendment<br /><br />
+	2024 Act No. 133, SECTION 2, inserted the (A) designator and added (B).<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-130.</span> Mortgages of leaseholds and other interests in real estate.<br /><br />
+	Mortgages of leaseholds or other interests in real estate within the State and mortgages of dwellings or structures thereon, whether in one instrument or in separate instruments, shall be deemed to be mortgages of real estate and shall be recorded in the same manner as mortgages of real estate. The notice of such record shall be the same as the notice of the record of real estate mortgages and to the same extent. And the notice of the record of all mortgages of leaseholds or other interests in real estate in the State and of dwellings and structures thereon which have heretofore been recorded in the same manner as real estate mortgages shall be the same notice as given by the record of real estate mortgages and to the same extent.<br /><br />
+HISTORY: 1962 Code SECTION 60-60; 1952 Code SECTION 60-60; 1943 (43) 148.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-140.</span> Validation of certain recordations bearing date prior to March 1, 1909.<br /><br />
+	The probate of any and all deeds or other instruments in writing bearing date prior to March 1, 1909, whether recorded or not on that day, which are in compliance with the requirements of SECTIONS 30-5-30 and 30-5-70 are validated and their probate confirmed.<br /><br />
+HISTORY: 1962 Code SECTION 60-61; 1952 Code SECTION 60-61; 1942 Code SECTION 3632; 1932 Code SECTION 3632; Civ. C. &#39;22 SECTION 2176; Civ. C. &#39;12 SECTION 1352; Civ. C. &#39;02 SECTION 948; G. S. 768; R. S. 818; 1880 (17) 319; 1889 (20) 367; 1908 (25) 104; 1909 (26) 84; 1910 (26) 621.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-150.</span> Validation of certain instruments.<br /><br />
+	All such instruments which have been executed and the execution thereof proved by acknowledgment, as provided in 1944 Act No. 473 (1944 (43) 1323) since January 1, 1940 are hereby confirmed and ratified and the recordation of such instruments declared to be legal notice of the existence thereof as fully as if they had been duly executed and probated in conformity with the law of this State as it then existed with reference to the probate and recording of written instruments.<br /><br />
+HISTORY: 1962 Code SECTION 60-62; 1952 Code SECTION 60-62; 1944 (43) 1323.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-180.</span> Recording United States tax commissioners&#39; titles in Beaufort County.<br /><br />
+	The holders of all certificates or titles issued by or under the authority of the United States direct tax commissioners for this State shall be allowed to record them in the office of the clerk of court for the county of Beaufort. When such certificates shall have been so recorded, such recording shall be deemed to be a legal notice of title to the land described in them.<br /><br />
+HISTORY: 1962 Code SECTION 60-65; 1952 Code SECTION 60-65; 1942 Code SECTION 8888; 1932 Code SECTION 8888; Civ. C. &#39;22 SECTION 5319; Civ. C. &#39;12 SECTION 3549; Civ. C. &#39;02 SECTION 2463; G. S. 1783; R. S. 1975; 1868 (14) 14.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-190.</span> Recordation of proceedings in bankruptcy.<br /><br />
+	A certified copy of a petition, with schedules omitted, commencing a proceeding under the Bankruptcy Act of the United States, of the decree of adjudication in such proceeding or of the order approving the bond of the trustees appointed in such proceeding may be filed, indexed and recorded in the office of the register of deeds or clerk of court in those counties in which the office of register of deeds has been abolished in the same manner as deeds. The register of deeds or the clerk of court in those counties in which the office of register of deeds has been abolished shall file, index under the name of the bankrupt and record such certified copies filed for record in the same manner as deeds, for which services he shall be entitled to the same fees as are provided by law for filing, indexing and recording deeds.<br /><br />
+HISTORY: 1962 Code SECTION 60-66; 1952 Code SECTION 60-66; 1942 Code SECTION 3622-2; 1939 (41) 185.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-200.</span> Certificate on recorded instruments.<br /><br />
+	Whenever any instrument in writing required by law to be filed and recorded has been so recorded, the clerk or register shall endorse on such instrument a certificate showing the date and the book and page where recorded and for this certificate no fee shall be charged or collected.<br /><br />
+HISTORY: 1962 Code SECTION 60-69; 1952 Code SECTION 60-69; 1942 Code SECTION 4939; 1932 Code SECTION 4939; Civ. C. &#39;22 SECTION 5735; Civ. C. &#39;12 SECTION 4216; Civ. C. &#39;02 SECTION 3106; 1898 (22) 691.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-210.</span> Use of photostatic or other photographic method of recording in county with city over 70,000.<br /><br />
+	In all counties in this State containing a city having a population of more than seventy thousand according to the official United States census in which the governing body of the county by resolution shall so provide and in which such governing body shall procure and furnish the necessary equipment therefor, the register of deeds shall record all instruments lodged for record, except deeds and mortgages of real estate, and may record all deeds and mortgages of real estate, by making two copies of them by photostatic or other photographic method of copying, one copy to be bound in an appropriate loose-leaf record book complying with the requirements of SECTION 30-1-170 and kept in a safe place in the office of the recording officer as a master copy and the other copy to be bound in a similar record book and made available for public use and inspection at all times. Such recording shall have all of the legal incidents and effect otherwise provided by the recording laws of this State.<br /><br />
+HISTORY: 1962 Code SECTION 60-201; 1952 Code SECTION 60-201; 1942 (42) 1627.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-220.</span> Use of photostatic or photo recording in any county.<br /><br />
+	Photostatic copies or photo-recording copies, duly authenticated by the signature of the clerk of court, or other proper official charged with the duty of recording legal papers, of any county in this State shall be sufficient compliance with the law with reference to the recording of all legal papers. Such recording shall have all of the legal incidents and effect otherwise provided by the recording laws of this State and copies of legal papers so recorded shall be admissible in evidence as such record.<br /><br />
+HISTORY: 1962 Code SECTION 60-202; 1952 Code SECTION 60-202; 1946 (44) 1525; 1953 (48) 225.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-230.</span> Recordation of plats or copies of plats of real property.<br /><br />
+	It shall be lawful for the owner of any real property or any interest therein or for any holder of a lien thereon to have a plat thereof, or a blueprint, tracing, photostatic or other copy of a plat thereof recorded in the office of the register of deeds or in the office of the clerk of court in those counties in which the office of register of deeds does not exist, of the county in which such property, or any part thereof, is situated. When any such plat or blueprint, tracing, photostatic or other copy of such plat is affixed or filed in the book provided by any such officer for that purpose and duly indexed, it shall be deemed a recording thereof.<br /><br />
+HISTORY: 1962 Code SECTION 60-204; 1952 Code SECTION 60-204; 1942 Code SECTION 8875-3; 1934 (38) 1503; 1936 (39) 1345, 1589.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	1997 Act No. 34, SECTION 1, directed the Code Commissioner to change all references to &quot;Register of Mesne Conveyances&quot; to &quot;Register of Deeds&quot; wherever appearing in the 1976 Code of Laws.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-240.</span> Recordation of plats or blueprints of subdivisions.<br /><br />
+	When real property is subdivided for the purpose of sale and is sold or offered for sale according to a plat of a survey thereof, the person first offering such property for sale shall file a plat or blueprint of such survey in the office of the clerk of court of the county in which such real estate is situate. In the event that the owner fails to comply with the above provision he shall become liable to the purchaser or to any subsequent grantee of the land, or of any portion thereof, in such sum as shall be found necessary to procure and record such plat. Such sum shall be recovered by any such grantee provided he be interested as owner of all or a portion of the subdivided property at the time of the institution of the action for the enforcement of the liability hereby created.<br /><br />
+HISTORY: 1962 Code SECTION 60-207; 1952 Code SECTION 60-207; 1942 Code SECTION 8875-4; 1936 (39) 1473.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-250.</span> Effect of reference in deed or other instrument to recorded plats.<br /><br />
+	When any recorded deed, mortgage or other instrument conveying an interest in, or creating a lien on, real property, refers to the boundaries, metes, courses or distances of such real estate delineated or shown on any such plat or blueprint, tracing, photostatic or other copy of such plat, recorded and indexed as herein authorized, and such deed, mortgage or other instrument states the office, book and page of recordation of any such plat or blueprint, tracing, photostatic or other copy thereof, such reference shall be equivalent to setting forth in extenso in such deed, mortgage or other instrument the boundaries, metes, courses or distances of such real estate as may be delineated or shown on any such plat or blueprint, tracing photostatic or other copy thereof.<br /><br />
+HISTORY: 1962 Code SECTION 60-208; 1952 Code SECTION 60-208; 1942 Code SECTION 8875-3; 1934 (38) 1503; 1936 (39) 1345, 1589.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-260.</span> Validation of previous recordings of plats.<br /><br />
+	Any and all such plats or blueprint, tracing, photostatic or other such copies of such plats heretofore affixed or filed in the manner provided in SECTION 30-5-230 and duly indexed are declared to have been duly filed and recorded. The reference in any deed, mortgage or other instrument heretofore recorded to the boundaries, metes, courses or distances of such real estate as may be delineated or shown on any such plat or blueprint, tracing, photostatic or other copy thereof, heretofore affixed and filed in the manner provided in SECTION 30-5-230 and duly indexed, shall have the same effect as if the boundaries, metes, courses or distances of such real estate were set forth in extenso in such deed, mortgage or other instrument.<br /><br />
+HISTORY: 1962 Code SECTION 60-209; 1952 Code SECTION 60-209; 1942 Code SECTION 8875-3; 1934 (38) 1503; 1936 (39) 1345, 1589.<br /><br />
+<span style="font-weight: bold;"> SECTION 30-5-270.</span> Real property recordings and filings; boundary clarification.<br /><br />
+	(A) For the following counties of this State bordering North Carolina, Oconee, Pickens, Greenville, Spartanburg, Cherokee, York, Lancaster, Chesterfield, Marlboro, Dillon, and Horry, hereinafter referred to as the &quot;affected counties&quot;, the following provisions apply to a deed, plat, mortgage, security instrument, right of way, utility right of way, or other instrument affecting real property in the affected jurisdiction previously believed to be located in whole or in part in North Carolina and which is determined to be located in whole or in part in South Carolina as a result of the boundary clarification legislation.<br /><br />
+	(B) Unless specifically provided otherwise or the context otherwise requires, and in this chapter:<br /><br />
+	(1) &quot;Abutter&quot; means an owner whose property abuts or adjoins the property of another person with no intervening land in between owned by a third party.<br /><br />
+	(2) &quot;Affected counties&quot; means any South Carolina county that abuts or adjoins the boundary with an affected jurisdiction.<br /><br />
+	(3) &quot;Affected jurisdiction&quot; means a sovereign state whose common boundary with South Carolina has been clarified resulting in a change in the perceived location of the boundary to be that of the actual boundary.<br /><br />
+	(4) &quot;Affected lands&quot; means real property of an owner whose perceived location has been clarified pursuant to the boundary clarification legislation.<br /><br />
+	(5) &quot;Boundary&quot;, as used in this chapter, has the meaning as established in Section 1-1-10 and in accordance with the constitution of this State.<br /><br />
+	(6) &quot;Boundary clarification legislation&quot; means the amendments to Section 1-1-10, effective January 1, 2017.<br /><br />
+	(7) &quot;Clarification&quot; means the official recognition of the original boundary as confirmed and agreed between an affected jurisdiction and the State of South Carolina pursuant to the boundary clarification legislation.<br /><br />
+	(8) &quot;Clarified line&quot; means the officially recognized boundary between an affected jurisdiction and the State of South Carolina pursuant to the boundary clarification legislation.<br /><br />
+	(9) &quot;Muniments of title&quot;, where the term is used in this chapter, constitutes documents of record setting forth a legal or equitable real property interest or incorporeal hereditament in affected lands of an owner in the respective affected counties or an affected jurisdiction, or both.<br /><br />
+	(10) &quot;Notice of State Boundary Clarification&quot;, where the term is used in this chapter, constitutes the statutory form of notice to be recorded in South Carolina in the particular affected counties where affected lands now or previously lie.<br /><br />
+	(11) &quot;Owner&quot; as used in this chapter means any person or entity owning of record a legal or equitable real property interest or incorporeal hereditament in affected lands as an abutter.<br /><br />
+	(12) &quot;Preclarification title&quot; means muniments of title of record in an affected jurisdiction or the affected counties, or both, of an owner prior to the effective date of the boundary clarification legislation.<br /><br />
+	(C) Notice of State Boundary Clarification:<br /><br />
+	(1) On the effective date of this section, with respect to preclarification title as defined in this chapter where the instruments disclosing the muniments of title for that land were recorded in the public land records of an affected jurisdiction or the affected counties, or both, prior to the effective date of the clarification, the registers of deeds in the affected counties or the clerks of court in those counties not having registers where the affected lands are now or previously were perceived to be located, shall file the Notice of State Boundary Clarification, as specified in this section, in the record for all affected lands. The purpose of this notice is to alert anyone checking the title to real property that the real property constitutes affected lands that may be affected by the boundary clarification legislation and muniments of title for this land also may be recorded in the public land records of an affected jurisdiction. The notice must be properly indexed, including the correct order of indexing, in the same manner as any instrument conveying or encumbering real property.<br /><br />
+	(2) On or before the effective date of this section, the registers of deeds or clerks referenced above must inform attorneys and others using their offices of the requirements of this section. The information may be provided by clerks and registers by those means that they would normally utilize to provide general notices to users of their services such as postings on their web pages. This information shall include a copy of or a link to the notice of state boundary clarification form.<br /><br />
+	(3) The notice form must be substantially in the following format:<br /><br />
+<table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
+  <tr>
+    <th></th>
+    <th style="padding: 4px 8px; text-align: left;">&quot;STATE OF SOUTH CAROLINA</th>
+    <th style="padding: 4px 8px; text-align: left;">)</th>
+    <th></th>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">)</td>
+    <td style="padding: 4px 8px; text-align: left;">Notice of South Carolina—North Carolina</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">COUNTY OF</td>
+    <td style="padding: 4px 8px; text-align: left;">)</td>
+    <td style="padding: 4px 8px; text-align: left;">State Boundary Clarification</td>
+  </tr>
+</table>
+<br />
+	The undersigned Register of Deeds/Clerk of Court of the County and State set forth above, does hereby certify, under the penalty of perjury, the following:<br /><br />
+	(1) The following described tracts or parcels constitute affected lands as defined in Section 30-5-270(B)(4), which may be affected by the boundary clarification legislation effective January 1, 2017.<br /><br />
+	[Legal description, derivation (if available) and TMS#]<br /><br />
+	(2) The parties set forth below are an Owner, as defined in Section 30-5-270(B)(11).<br /><br />
+	[List the name and address of all owners of record]<br /><br />
+	(3) The muniments of title, as defined in Section 30-5-270(B)(9), providing the basis for this claim of ownership, recorded in the public records of the aforesaid County and State, are as follows:<br /><br />
+	[List the specific instrument name and recording information]<br /><br />
+	(4) Muniments of title of those claiming an interest in this land also may be recorded in the public land records of an affected jurisdiction, as defined in Section 30-5-270(B)(3).<br /><br />
+	Date:<br /><br />
+<table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
+  <tr>
+    <th></th>
+    <th style="padding: 4px 8px; text-align: left;">Signature of Register of Deeds / Clerk of Court</th>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">Printed Name: ____________________________&quot;</td>
+  </tr>
+</table>
+<br />
+	(D) Policies of Title and Casualty Insurance issued prior to the effective date of the boundary clarification legislation are enforceable according to their terms and shall remain in effect regardless of whether the insured property has been determined to be in another state.<br /><br />
+	(E) Clarification of the boundary does not alter, change, or affect in any manner the sovereignty rights of federally recognized Native American tribes over tribal lands on either side of a confirmed boundary line. Tribal sovereignty rights continue to be established and defined by controlling state and federal law.<br /><br />
+HISTORY: 2016 Act No. 270 (S.667), SECTION 17, eff January 1, 2017.<br /><br />
+
+</div>
+
+
+					</div>		 <!-- mainwidepanel -->
+					
+				</div>		 <!-- pagebody -->
+				
+				<div id="footer" class="nodisplay" style="height: 30px;" onContextMenu="return false;">
+			<div id="footerdiv" style="margin:0;">
+				South Carolina Legislative Services Agency * 223 Blatt Building * 1105 Pendleton Street * Columbia, SC 29201<!-- * 803-212-4420--><br>
+				
+								<a href="/disclaimer.php">Disclaimer</a> * <a href="/policies.php">Policies</a> * <a href="/credits.php">Photo Credits</a> * <a href="/contact.php">Contact Us</a>
+							</div>
+		</div>
+		<div id="printfooter" class="printdisplay serifNormal" align=center style="font-size: 8pt;">
+			<br>
+			<br>
+			<hr>
+			Legislative Services Agency
+			<br>
+			h t t p : / / w w w . s c s t a t e h o u s e . g o v
+		</div>
+	
+		</div>	<!-- container or main in mobile page-->
+</body>
+</html>
+

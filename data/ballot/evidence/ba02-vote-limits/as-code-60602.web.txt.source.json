@@ -1,0 +1,8 @@
+{
+  "url": "https://asbar.org/code-annotated/6-0602-contents-of-ballot/",
+  "retrievedAt": "2026-10-23T10:08:22.505802+00:00",
+  "captureMethod": "WEB_READER_EXTRACT",
+  "httpStatus": null,
+  "sha256": "7311c3158a7f98d5cf05186ef2f192eb535fc669d708f51538ef6b486c7de7bc",
+  "note": "Connected web reader successful page extract. Raw HTTP requests separately returned403/503; this file is the reader output, not an HTTP body."
+}

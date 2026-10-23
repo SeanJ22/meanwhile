@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH22/SECT1-2220/",
+  "finalUrl": "https://legislature.idaho.gov/statutesrules/idstat/Title1/T1CH22/SECT1-2220/",
+  "retrievedAt": "2026-10-23T09:40:31.045374+00:00",
+  "httpStatus": 200,
+  "rawHash": "06a2150524ad22603dd4fe1f93dfa3b29b73043ad9ff9bcad3900a392a39733b",
+  "bytes": 94554,
+  "file": "id-law.html",
+  "textSnapshot": "id-law.txt",
+  "textHash": "e8a75c24898f96bca1cbd3dadeb9d672477aa2ceee027e2506e1e4a0778169ee",
+  "extraction": "HTML text with scripts/styles excluded"
+}

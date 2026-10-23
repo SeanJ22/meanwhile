@@ -1,0 +1,13 @@
+{
+  "sourceUrl": "https://legislature.idaho.gov/wp-content/uploads/statutesrules/idstat/Title1/T1CH8.pdf",
+  "finalUrl": "https://legislature.idaho.gov/wp-content/uploads/statutesrules/idstat/Title1/T1CH8.pdf",
+  "retrievedAt": "2026-10-23T09:36:14.671685+00:00",
+  "httpStatus": 200,
+  "rawHash": "496c820f40fb2a9b615e862e3125c9ea57402626021bbc955fc4c9d399a9cb56",
+  "bytes": 38864,
+  "file": "id-districts.pdf.gz",
+  "compression": "gzip",
+  "textSnapshot": "id-districts.txt",
+  "textHash": "32de4cd6f2f4e4fe6ddfdf76346652868c6dde20f06f8a10f1b9d946d33a8e17",
+  "extraction": "pdftotext -layout; relevant retention section excerpt"
+}

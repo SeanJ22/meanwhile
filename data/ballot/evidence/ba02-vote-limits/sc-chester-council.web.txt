@@ -1,0 +1,556 @@
+County Council Members – Chester County, SC (https://chestercountysc.gov/government/chester-county-council/county-council-members/)
+【turn857020view0】 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://chestercountysc.gov/government/chester-county-council/county-council-members/","lineno":147}); Total lines: 553
+L0:   * 【0†Pay Your Bill†www.chestercountysctax.com】
+L1:   * 【1†Council Meetings】
+L2:   * 【2†County Alerts】
+L3:   * 【3†Directory】
+L4:   * 【4†Calendar】
+L5:   * 【5†Forms】
+L6:   * 【6†Videos】
+L7:   * 【7†Careers†recruitingbypaycor.com】
+L8:   * 【8†Contact Us】
+L9: 
+L10:   * 【9†Government】
+L11:   * 【10†Departments】
+L12:   * 【11†Courts】
+L13:   * 【12†Boards】
+L14:   * 【13†Community】
+L15:   * 【14†News】
+L16:   * 【15†Events】
+L17: 
+L18: Menu
+L19:   * 【9†Government】
+L20:     * 【16†Business + Resources】
+L21:       * 【17†Active Bids†www.beaconbid.com】
+L22:       * 【18†GIS Mapping†beacon.schneidercorp.com】
+L23:       * 【7†Careers†recruitingbypaycor.com】
+L24:       * 【5†Forms Directory】
+L25:       * 【3†Department Directory】
+L26:       * 【19†Freedom of Information Act】
+L27:       * 【20†Chester County Capital Project Sales Tax (CPST)】
+L28:     * 【21†Chester County Council】
+L29:       * 【22†County Council Members】
+L30:       * 【23†Chester County Live Stream】
+L31:       * 【24†Meetings: Video Archives†youtube.com】
+L32:       * 【25†Ordinances†library.municode.com】
+L33:       * 【26†County Council Agendas + Minutes】
+L34:     * 【27†Legislative Delegation】
+L35:   * 【10†Departments】
+L36:     * 【28†Administrative Departments】
+L37:       * 【29†County Administrator】
+L38:       * 【30†Human Resources】
+L39:       * 【31†Information Technology】
+L40:       * 【32†Veterans Affairs】
+L41:       * 【33†Voter Registration】
+L42:     * 【34†Business Departments】
+L43:       * 【35†Building + Zoning】
+L44:       * 【36†Code Enforcement】
+L45:       * 【37†Planning + Development】
+L46:       * 【38†Economic Development】
+L47:     * 【39†Public Safety Departments】
+L48:       * 【40†Animal Control】
+L49:       * 【41†Coroner】
+L50:       * 【42†Emergency Management】
+L51:       * 【43†EMS】
+L52:       * 【44†Rural Fire Service】
+L53:     * 【45†Public Works】
+L54:       * 【46†Public Works Director】
+L55:       * 【47†Auto Maintenance】
+L56:       * 【48†Facilities Maintenance】
+L57:       * 【49†Recycling Centers + Landfill】
+L58:       * 【50†Roads Department】
+L59:     * 【51†Tax + Finance Departments】
+L60:       * 【52†Assessor】
+L61:       * 【53†Auditor】
+L62:       * 【54†Finance】
+L63:       * 【55†Purchasing】
+L64:       * 【56†Tax Collector】
+L65:       * 【57†Treasurer】
+L66:   * 【11†Courts】
+L67:     * 【58†Clerk of Court】
+L68:     * 【59†Circuit Judges + Solicitor】
+L69:     * 【60†Family Court】
+L70:     * 【61†Magistrate Court】
+L71:     * 【62†Probate Court】
+L72:     * 【63†Public Defender】
+L73:   * 【12†Boards】
+L74:     * 【64†Boards + Commissions Information】
+L75:     * 【65†Building + Zoning】
+L76:       * 【66†Construction Board of Appeals】
+L77:       * 【67†Planning Commission】
+L78:       * 【68†Zoning Board of Appeals】
+L79:     * 【69†Catawba Region】
+L80:       * 【70†Catawba Mental Health Board】
+L81:       * 【71†Catawba Regional Council of Governments】
+L82:       * 【72†Catawba Regional Workforce Investment Board】
+L83:     * 【73†Fire Protection】
+L84:       * 【74†Chester County Fire Service Board】
+L85:       * 【75†Fort Lawn Fire Protection District Commission】
+L86:       * 【76†Lando Fire Protection District Board】
+L87:       * 【77†Lewis Fire Protection Tax District Commission】
+L88:       * 【78†Richburg Fire Protection District Commission】
+L89:     * 【79†Parks, Recreation + Tourism】
+L90:       * 【80†Historical Cemeteries Advisory Committee】
+L91:       * 【81†John Keziah Park Advisory Board】
+L92:       * 【82†Olde English District】
+L93:       * 【83†Parks and Recreation Advisory Commission】
+L94:       * 【84†The Gateway Steering Committee】
+L95:     * 【85†Public Services】
+L96:       * 【86†Airport Commission】
+L97:       * 【87†Chester County Library Board】
+L98:       * 【88†Hazel Pittman Center Board of Directors】
+L99:       * 【89†Radio Users Advisory Committee】
+L100:       * 【90†Solid Waste Advisory Committee】
+L101:     * 【91†Tax + Assessment】
+L102:       * 【92†Accommodation Tax Advisory Committee】
+L103:       * 【93†Board of Assessment Appeals】
+L104:       * 【94†Forfeited Land Commission】
+L105:   * 【13†Community】
+L106:     * 【95†Our Community】
+L107:       * 【15†Events】
+L108:       * 【96†Outdoors】
+L109:       * 【97†Things to Do】
+L110:       * 【98†Our History】
+L111:       * 【99†Lodging】
+L112:     * 【100†Living Here】
+L113:       * 【101†Education + Workforce Development】
+L114:       * 【102†Healthcare】
+L115:       * 【103†Utilities】
+L116:     * 【104†Citizens Academy】
+L117:     * 【105†Resources: Quick Links】
+L118:       * 【106†Adopt A Highway†www.palmettopride.org】
+L119:       * 【107†Catawba Council†catawbacog.org】
+L120:       * 【108†Chester County Airport†www.aopa.org】
+L121:       * 【109†Chester County Chamber†www.chesterchamber.com】
+L122:       * 【110†Chester County Library†chesterlibsc.org】
+L123:       * 【111†Chester County Economic Development†choosechester.com】
+L124:       * 【112†Forfeited Land Auction†terryhowe.com】
+L125:       * 【113†Gateway Conference Center†www.choosegateway.com】
+L126:       * 【114†Olde English District†www.oldeenglishdistrict.com】
+L127:       * 【115†Parks, Recreation + Tourism†inchestercountysc.com】
+L128:       * 【116†Sheriff's Office†www.chesterscsheriff.com】
+L129:       * 【117†SC Election Commission†scvotes.gov】
+L130:       * 【118†SC Government†sc.gov】
+L131:   * 【14†News】
+L132:   * 【15†Events】
+L133:   * Quick Links
+L134:   * 【0†Pay Your Bill†www.chestercountysctax.com】
+L135:   * 【1†Council Meetings】
+L136:   * 【2†County Alerts】
+L137:   * 【3†Directory】
+L138:   * 【4†Calendar】
+L139:   * 【5†Forms】
+L140:   * 【6†Videos】
+L141:   * 【7†Careers†recruitingbypaycor.com】
+L142:   * 【8†Contact Us】
+L143: 
+L144:   1. 【119†Home】
+L145:   2. 【9†Government】
+L146:   3. 【21†Chester County Council】
+L147: # Chester County Council Members
+L148: 
+L149: ### Council & CCTCMeeting Dates
+L150: 
+L151: 【120†Council & CCTC Meeting Dates】
+L152: 
+L153: On This Page
+L154: 
+L155:   * 【121†Staff Directory】
+L156:   * 【121†District 1】
+L157:   * 【121†District 2】
+L158:   * 【121†District 3】
+L159:   * 【121†District 4】
+L160:   * 【121†District 5】
+L161:   * 【121†District 6】
+L162:   * 【121†At Large】
+L163:   * 【121†District Map】
+L164: 
+L165:   * 【122†Image】
+L166: 
+L167: #### Mailing Address
+L168: 
+L169: PO Box 580
+L170: Chester,SC 29706
+L171: 
+L172:   * #### County Administrator
+L173: ##### Brian Hester
+L174: 
+L175:     * 【123†[email protected]】
+L176:     * 【124†Image】 (803) 377-1021
+L177: 
+L178:   * #### Clerk to Council
+L179: 
+L180: ##### Khandi L Harper
+L181: 
+L182:     * 【125†[email protected]】
+L183:     * 【124†Image】 (803) 377-7852
+L184: 
+L185: 【126†Image】
+L186: 
+L187: 
+L188: 
+L189: 【127†Image】
+L190: 
+L191: ## District 1 John Agee
+L192: 
+L193:   * 【128†Image】
+L194: 
+L195: #### Email
+L196: 
+L197: 【129†[email protected]】
+L198: 
+L199:   * 【130†Image】
+L200: 
+L201: #### Phone
+L202: 
+L203: (803) 235-1332
+L204: 
+L205:   * 【131†Image】
+L206: 
+L207: #### Address
+L208: 
+L209: P O Box 9
+L210: Richburg , SC 29729
+L211: 
+L212:   * 【132†Image】
+L213: 
+L214: #### Term Expires
+L215: 
+L216: December 2026
+L217: 
+L218: 【133†Image】
+L219: 
+L220: 【127†Image】
+L221: ## District 2 Roy Brunson
+L222: 
+L223:   * 【128†Image】
+L224: 
+L225: #### Email
+L226: 
+L227: 【134†[email protected]】
+L228: 
+L229:   * 【130†Image】
+L230: 
+L231: #### Phone
+L232: 
+L233: (803) 899-1790
+L234: 
+L235:   * 【131†Image】
+L236: 
+L237: #### Address
+L238: 
+L239: 5122 Great Falls Hwy
+L240: Great Falls, SC 29055
+L241: 
+L242:   * 【132†Image】
+L243: 
+L244: #### Term Expires
+L245: 
+L246: December 2026
+L247: 
+L248: 
+L249: 
+L250: 【135†Image】
+L251: 
+L252: 
+L253: 
+L254: 【127†Image】
+L255: 
+L256: ## District 3 Bobby Raines
+L257: 
+L258:   * 【128†Image】
+L259: 
+L260: #### Email
+L261: 
+L262: 【136†[email protected]】
+L263: 
+L264:   * 【130†Image】
+L265: 
+L266: #### Phone
+L267: 
+L268: (803) 899-4713
+L269: 
+L270:   * 【131†Image】
+L271: 
+L272: #### Address
+L273: 
+L274: 1945 Boyd Road
+L275: Blackstock, SC 29014
+L276: 
+L277:   * 【132†Image】
+L278: #### Term Expires
+L279: 
+L280: December 2028
+L281: 
+L282: 【137†Image】
+L283: 
+L284: 【127†Image】
+L285: 
+L286: ## District 4 Pete Wilson Chair
+L287: 
+L288:   * 【128†Image】
+L289: 
+L290: #### Email
+L291: 
+L292: 【138†[email protected]】
+L293: 
+L294:   * 【130†Image】
+L295: 
+L296: #### Phone
+L297: 
+L298: (803) 385-7695
+L299: 
+L300:   * 【131†Image】
+L301: 
+L302: #### Address
+L303: 
+L304: 2547 Lowrys Hwy
+L305: Chester, SC 29706
+L306: 
+L307:   * 【132†Image】
+L308: 
+L309: #### Term Expires
+L310: 
+L311: December 2028
+L312: 
+L313: 
+L314: 
+L315: 【139†Image】
+L316: 
+L317: 
+L318: 
+L319: 【127†Image】
+L320: 
+L321: ## District 5 Corey Guy
+L322: 
+L323:   * 【128†Image】
+L324: 
+L325: #### Email
+L326: 
+L327: 【140†[email protected]】
+L328: 
+L329:   * 【130†Image】
+L330: 
+L331: #### Phone
+L332: 
+L333: (803) 899-1408
+L334: 
+L335:   * 【131†Image】
+L336: #### Address
+L337: 
+L338: 314 Center Street
+L339: Chester, SC 29706
+L340: 
+L341:   * 【132†Image】
+L342: 
+L343: #### Term Expires
+L344: 
+L345: December 2026
+L346: 
+L347: 【141†Image】
+L348: 
+L349: 【127†Image】
+L350: 
+L351: ## District 6 William Killian
+L352: 
+L353:   * 【128†Image】
+L354: 
+L355: #### Email
+L356: 
+L357: 【142†[email protected]】
+L358: 
+L359:   * 【130†Image】
+L360: 
+L361: #### Phone
+L362: 
+L363: (803) 209-5150
+L364: 
+L365:   * 【131†Image】
+L366: 
+L367: #### Address
+L368: 
+L369: 110 Walker Street
+L370: Chester, SC 29706
+L371: 
+L372:   * 【132†Image】
+L373: 
+L374: #### Term Expires
+L375: 
+L376: December 2028
+L377: 
+L378: 
+L379: 
+L380: 【143†Image】
+L381: 
+L382: 
+L383: 
+L384: 【127†Image】
+L385: 
+L386: ## At Large Erin Mosley Vice Chair
+L387: 
+L388:   * 【128†Image】
+L389: #### Email
+L390: 
+L391: 【144†[email protected]】
+L392: 
+L393:   * 【130†Image】
+L394: 
+L395: #### Phone
+L396: 
+L397: (803) 899-4119
+L398: 
+L399:   * 【131†Image】
+L400: 
+L401: #### Address
+L402: 
+L403: 2832 E. Pinewood Road
+L404: Chester, SC 29706
+L405: 
+L406:   * 【132†Image】
+L407: 
+L408: #### Term Expires
+L409: 
+L410: December 2026
+L411: 
+L412: 【145†Image】
+L413: 
+L414: ## Chester County District Map
+L415: 
+L416: 【146†Image】
+L417: ###### Chester County
+L418: 
+L419: 1476 J.A. Cochran Bypass
+L420: P.O. Box 580,
+L421: Chester, SC 29706
+L422: 
+L423: Phone: (803) 385-5133
+L424: 
+L425:   * 【9†Government】
+L426:   * 【10†Departments】
+L427:   * 【11†Courts】
+L428:   * 【12†Boards】
+L429:   * 【13†Community】
+L430:   * 【14†News】
+L431:   * 【15†Events】
+L432: 
+L433:   * 【0†Pay Your Bill†www.chestercountysctax.com】
+L434:   * 【1†Council Meetings】
+L435:   * 【2†County Alerts】
+L436:   * 【3†Directory】
+L437:   * 【5†Forms】
+L438:   * 【7†Careers†recruitingbypaycor.com】
+L439:   * 【8†Contact Us】
+L440: 
+L441: Questions, comments or concerns?
+L442: 
+L443: 【147†Contact Us】
+L444: ### County Council Members
+L445:   * 【16†Business + Resources】
+L446:     * 【17†Active Bids†www.beaconbid.com】
+L447:     * 【18†GIS Mapping†beacon.schneidercorp.com】
+L448:     * 【7†Careers†recruitingbypaycor.com】
+L449:     * 【5†Forms Directory】
+L450:     * 【3†Department Directory】
+L451:     * 【19†Freedom of Information Act】
+L452:     * 【20†Chester County Capital Project Sales Tax (CPST)】
+L453:   * 【21†Chester County Council】
+L454:     * 【148†County Council Members】
+L455:     * 【1†Meetings: Live Stream】
+L456:     * 【24†Meetings: Video Archives†youtube.com】
+L457:     * 【25†Ordinances†library.municode.com】
+L458:     * 【149†Agendas + Minutes】
+L459:   * 【27†Legislative Delegation】
+L460:   * 【28†Administrative Departments】
+L461:     * 【150†County Administrator】
+L462:     * 【151†Human Resources】
+L463:     * 【152†Information Technology】
+L464:     * 【153†Veterans Affairs】
+L465:     * 【154†Voter Registration】
+L466:   * 【34†Business Departments】
+L467:     * 【155†Building + Zoning】
+L468:     * 【156†Code Enforcement】
+L469:     * 【157†Planning + Development】
+L470:     * 【158†Economic Development】
+L471:   * 【39†Public Safety Departments】
+L472:     * 【159†Animal Control】
+L473:     * 【160†Coroner】
+L474:     * 【161†Emergency Management】
+L475:     * 【162†EMS】
+L476:     * 【163†Rural Fire Service】
+L477:   * 【45†Public Works】
+L478:     * 【164†Public Works Director】
+L479:     * 【165†Auto Maintenance】
+L480:     * 【166†Facilities Maintenance】
+L481:     * 【167†Recycling Centers + Landfill】
+L482:     * 【168†Roads Department】
+L483:   * 【51†Tax + Finance Departments】
+L484:     * 【169†Assessor】
+L485:     * 【170†Auditor】
+L486:     * 【171†Finance】
+L487:     * 【172†Purchasing】
+L488:     * 【173†Tax Collector】
+L489:     * 【174†Treasurer】
+L490:   * 【175†Clerk of Court】
+L491:   * 【176†Circuit Judges + Solicitor】
+L492:   * 【177†Family Court】
+L493:   * 【178†Magistrate Court】
+L494:   * 【179†Probate Court】
+L495:   * 【180†Public Defender】
+L496:   * 【181†Boards + Commissions Information】
+L497:   * 【182†Building + Zoning】
+L498:     * 【183†Construction Board of Appeals】
+L499:     * 【184†Planning Commission】
+L500:     * 【185†Zoning Board of Appeals】
+L501:   * 【186†Catawba Region】
+L502:     * 【187†Catawba Mental Health Board】
+L503:     * 【188†Catawba Regional Council of Governments】
+L504:     * 【189†Catawba Regional Workforce Investment Board】
+L505:   * 【73†Fire Protection】
+L506:     * 【190†Chester County Fire Service Board】
+L507:     * 【191†Fort Lawn Fire Protection District Commission】
+L508:     * 【192†Lando Fire Protection District Board】
+L509:     * 【193†Lewis Fire Protection Tax District Commission】
+L510:     * 【194†Richburg Fire Protection District Commission】
+L511:   * 【79†Parks, Recreation + Tourism】
+L512:     * 【195†Historical Cemeteries Advisory Committee】
+L513:     * 【196†John Keziah Park Advisory Board】
+L514:     * 【197†Olde English District】
+L515:     * 【198†Parks and Recreation Advisory Commission】
+L516:     * 【199†The Gateway Steering Committee】
+L517:   * 【85†Public Services】
+L518:     * 【200†Airport Commission】
+L519:     * 【201†Chester County Library Board】
+L520:     * 【202†Hazel Pittman Center Board of Directors】
+L521:     * 【203†Radio Users Advisory Committee】
+L522:     * 【204†Solid Waste Advisory Committee】
+L523:   * 【91†Tax + Assessment】
+L524:     * 【205†Accommodation Tax Advisory Committee】
+L525:     * 【206†Board of Assessment Appeals】
+L526:     * 【207†Forfeited Land Commission】
+L527:   * 【95†Our Community】
+L528:     * 【208†Events】
+L529:     * 【209†Outdoors】
+L530:     * 【210†Things to Do】
+L531:     * 【211†Our History】
+L532:     * 【212†Lodging】
+L533:   * 【100†Living Here】
+L534:     * 【213†Education + Workforce Development】
+L535:     * 【214†Healthcare】
+L536:     * 【215†Utilities】
+L537:   * 【216†Citizens Academy】
+L538:   * 【217†Resources: Quick Links】
+L539:     * 【106†Adopt A Highway†www.palmettopride.org】
+L540:     * 【107†Catawba Council†catawbacog.org】
+L541:     * 【108†Chester County Airport†www.aopa.org】
+L542:     * 【109†Chester County Chamber†www.chesterchamber.com】
+L543:     * 【110†Chester County Library†chesterlibsc.org】
+L544:     * 【111†Chester County Economic Development†choosechester.com】
+L545:     * 【112†Forfeited Land Auction†terryhowe.com】
+L546:     * 【113†Gateway Conference Center†www.choosegateway.com】
+L547:     * 【114†Olde English District†www.oldeenglishdistrict.com】
+L548:     * 【115†Parks, Recreation + Tourism†inchestercountysc.com】
+L549:     * 【116†Sheriff's Office†www.chesterscsheriff.com】
+L550:     * 【117†SC Election Commission†scvotes.gov】
+L551:     * 【118†SC Government†sc.gov】
+L552: 【218†Image】
+

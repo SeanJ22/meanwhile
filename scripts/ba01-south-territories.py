@@ -78,17 +78,22 @@ class Package:
             self.ballot['coverageNotes'].extend(n for n in old.get('coverageNotes',[]) if n not in self.ballot['coverageNotes'])
             for row in previous['sourceReceipt']['sources']:self.sources.setdefault((row['finalUrl'],row['rawHash'],row['retrievedAt']),row)
         data={'kind':'ballot-contests','ballots':{self.st+':'+self.eid:self.ballot},'sourceReceipt':{'contractVersion':1,'reviewedAt':max(row['retrievedAt'] for row in self.sources.values()),'reviewedBy':'Codex BA-01 official territorial lists and specimens','sources':list(self.sources.values())}}
+        if self.st == 'AS':
+            # The certified roster identifies the exact offices. Join it to the
+            # saved ballot rule and constitutional seat map on every rebuild.
+            runpy.run_path(str(ROOT/'scripts/ba02-vote-limits.py'))['apply_as_limits'](data)
+            runpy.run_path(str(ROOT/'scripts/ba02-as-geography.py'))['apply_as_geography'](data)
         dest.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
         return {'state':self.st,'contests':len(self.ballot['contests']),'candidateChoices':len(self.ballot['candidacies']),'runningMates':len(self.ballot['candidateTickets']),'people':len(self.ballot['candidacies'])+len(self.ballot['candidateTickets']),'memberships':len(self.ballot['districtMemberships'])}
 
 
 reports=[]
 as_package=Package('AS','American Samoa Election Office')
-as_meta=as_package.source('as-candidates.html',evidence='The Commissioner of Elections expressly certifies every listed candidate for the Midterm Election scheduled November 3, 2026. The saved HTML parser checks six congressional delegate names, all 17 numbered House districts and all 38 House names. No party labels or vote limits are printed; those fields remain null uniformly.')
+as_meta=as_package.source('as-candidates.html',evidence='The Commissioner of Elections expressly certifies every listed candidate for the Midterm Election scheduled November 3, 2026. The saved HTML parser checks six congressional delegate names, all 17 numbered House districts and all 38 House names. Party labels remain null because they are not printed. BA-02 joins these certified offices to the official ballot rule and constitutional seats for voting limits.')
 for n,r in enumerate(rosters['AS']):
     district=None if n==0 else re.search(r'/sldl:(\d+)$',r['ocdId'])[1]
     as_package.race('delegate' if district is None else 'house-'+district,r['office'],r['ocdId'],r['candidates'],as_meta)
-as_package.ballot['coverageNotes'].append('The Election Office certified list verifies the delegate and all 17 numbered House contests. We are working on official sample ballots, ballot questions and voting instructions.')
+as_package.ballot['coverageNotes'].append('The Election Office certified list verifies the delegate and all 17 numbered House contests. Voting limits follow the official ballot rule and constitutional seats for each certified district.')
 reports.append(as_package.save())
 
 mp_package=Package('MP','Commonwealth Election Commission of the Northern Mariana Islands')

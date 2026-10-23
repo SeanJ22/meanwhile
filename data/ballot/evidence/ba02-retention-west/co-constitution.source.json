@@ -1,0 +1,13 @@
+{
+  "sourceUrl": "https://olls.info/crs/crs2026-title-00.htm",
+  "finalUrl": "https://olls.info/crs/crs2026-title-00.htm",
+  "retrievedAt": "2026-10-23T09:41:47.028446+00:00",
+  "httpStatus": 200,
+  "rawHash": "090fd9ccd76734ad21b3781f01a5556cfacfce039c21b134af8a0f9d74ff4d98",
+  "bytes": 7088766,
+  "file": "co-constitution.html.gz",
+  "compression": "gzip",
+  "textSnapshot": "co-constitution.txt",
+  "textHash": "4551977152d56440c10dff18e4c6d3005cafc6a8f0a4ecf8e2d9afc1963cfff4",
+  "extraction": "Windows-1252 HTML text with scripts/styles excluded; relevant ArticleVI Section25 excerpt"
+}

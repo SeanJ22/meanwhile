@@ -1,0 +1,12 @@
+{
+  "sourceUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+  "finalUrl": "https://sosmt.gov/elections/montana-ballot-layout-guide/",
+  "retrievedAt": "2026-10-23T09:35:31.217909+00:00",
+  "httpStatus": 200,
+  "rawHash": "ddbd2164bb0e0838f28c1877d42eca023d7d2cbcfb4c86c3892da7881e004a5f",
+  "bytes": 302903,
+  "file": "mt-ballot-guide.html",
+  "textSnapshot": "mt-ballot-guide.txt",
+  "textHash": "e358fddbb06bf1ae33ec9e6d0c41f726ba4989e53154b9a55bc14d5bd5a2c15b",
+  "extraction": "HTML text with scripts/styles excluded"
+}

@@ -84,6 +84,8 @@ export interface Officeholder {
   portraitCandidate?: PortraitCandidate;
   /** The member's social accounts, each with its kind, source page and collection time. Only what is held renders. */
   social?: SocialAccounts;
+  /** Official national executive facts, shared by every place and card. */
+  executive?: import("./national-executive.ts").NationalExecutiveData;
   /** The state and chamber the member's own current term states (item 7). */
   state?: string;
   chamber?: string;

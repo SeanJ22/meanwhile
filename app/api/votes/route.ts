@@ -1,3 +1,4 @@
+import { readNationalExecutiveVotes } from "@/lib/officials/national-executive-records";
 import { readerRoute } from "@/lib/api/reader-route";
 import { getVotesSnapshot, readFederalMemberVotes, readFederalRollCallsProjection } from "@/lib/votes/snapshot";
 import type { FederalRollCallWindow } from "@/lib/votes/data-plane";
@@ -195,6 +196,7 @@ export const GET = readerRoute("/api/votes", async function GET(request: Request
   const query = new URL(request.url).searchParams;
   const member = query.get("member");
   const historical = query.get("history") === "1";
+  if (member?.startsWith("white-house:")) return readNationalExecutiveVotes(member, historical);
   if (member && stateVoteStateForMember(member, query.get("state") ?? undefined)) {
     try {
       const read = await readNativeMemberVotes(member, undefined, { state: query.get("state") ?? undefined });

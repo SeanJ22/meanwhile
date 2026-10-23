@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<base href="/"><meta name="fwd-appinsights-connection-string" content="InstrumentationKey=f61dedf6-2545-44c8-b70e-124c17424b61;IngestionEndpoint=https://eastus2-3.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus2.livediagnostics.monitor.azure.com/;ApplicationId=76928bea-21ab-4a14-bcd2-371ccaf0e79a" /><link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+	<link href="./css/bootstrap5.3.0.min.css" rel="stylesheet">
+	<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet">
+	<link href="TAAGStyle.css" rel="stylesheet">
+	<link href="Footer.css" rel="stylesheet">
+	<link href="FederalWorkforceData.qoqgv5qp9o.styles.css" rel="stylesheet" />
+	<link rel="icon" type="image/ico" href="favicon.ico">
+	
+	<style>
+		/* Low-profile reconnect indicator 
+		   Because the body contains an element with id "components-reconnect-modal",
+		   blazor.web.js toggles state classes on it instead of rendering its own
+		   overlay: -show/-retrying while reconnecting, -failed/-resume-failed when
+		   it gives up, -rejected just before the automatic page reload.
+
+		   While disconnected the container covers the whole viewport as an
+		   invisible input barrier. The UI can't respond to input without its
+		   circuit, and clicks that reach MudBlazor components during an outage
+		   desync their menu/popover state after the rejoin (stuck-open menus) —
+		   the framework's default overlay blocks input for the same reason. */
+		#components-reconnect-modal {
+			display: none;
+			position: fixed;
+			inset: 0;
+			z-index: 10000;
+			cursor: progress;
+			/* MudBlazor.min.css themes the framework's full-screen reconnect modal
+			   (opaque background, uppercase buttons) with !important rules; this
+			   block loads after it, so equal-specificity !important wins here. */
+			background-color: transparent !important;
+		}
+
+		#components-reconnect-modal.components-reconnect-show,
+		#components-reconnect-modal.components-reconnect-retrying,
+		#components-reconnect-modal.components-reconnect-paused,
+		#components-reconnect-modal.components-reconnect-failed,
+		#components-reconnect-modal.components-reconnect-resume-failed {
+			display: block;
+		}
+
+		@keyframes fwd-reconnect-appear {
+			from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+			to { opacity: 1; transform: translateX(-50%) translateY(0); }
+		}
+
+		.fwd-reconnect-pill {
+			position: fixed;
+			bottom: 1.25rem;
+			left: 50%;
+			transform: translateX(-50%);
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			background-color: #1B1B1B;
+			color: #FFFFFF;
+			font-family: 'Public Sans', sans-serif;
+			font-size: 0.875rem;
+			line-height: 1;
+			padding: 0.5rem 1rem;
+			border-radius: 999px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+			/* the barrier above blocks input immediately, but the pill itself fades
+			   in after 1s so sub-second connection blips never flash it */
+			animation: fwd-reconnect-appear 0.3s ease-out 1s both;
+		}
+
+		.fwd-reconnect-spinner {
+			width: 0.875rem;
+			height: 0.875rem;
+			flex: none;
+			border: 2px solid rgba(255, 255, 255, 0.35);
+			border-top-color: #FFFFFF;
+			border-radius: 50%;
+			animation: fwd-reconnect-spin 0.9s linear infinite;
+		}
+
+		@keyframes fwd-reconnect-spin {
+			to { transform: rotate(360deg); }
+		}
+
+		/* Which message shows depends on the state class on the container. */
+		#components-reconnect-modal .fwd-reconnect-failed {
+			display: none;
+		}
+
+		#components-reconnect-modal.components-reconnect-failed .fwd-reconnect-reconnecting,
+		#components-reconnect-modal.components-reconnect-resume-failed .fwd-reconnect-reconnecting,
+		#components-reconnect-modal.components-reconnect-failed .fwd-reconnect-spinner,
+		#components-reconnect-modal.components-reconnect-resume-failed .fwd-reconnect-spinner {
+			display: none;
+		}
+
+		#components-reconnect-modal.components-reconnect-failed .fwd-reconnect-failed,
+		#components-reconnect-modal.components-reconnect-resume-failed .fwd-reconnect-failed {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		/* Doubled-up selector so this outranks MudBlazor's
+		   "#components-reconnect-modal button" styling. */
+		#components-reconnect-modal #fwd-reconnect-reload {
+			background: none;
+			border: none;
+			padding: 0;
+			min-width: 0;
+			cursor: pointer;
+			color: #FFFFFF;
+			text-decoration: underline;
+			font: inherit;
+			text-transform: none;
+		}
+	</style>
+	<!--Blazor:{"type":"server","prerenderId":"2888340c243b4f04a570a5b3501cb6a8","key":{"locationHash":"77D12F14A8105320B1AAED6AE7E689DA0EC4483270A645E84079EAA0FFDF550D:14","formattedComponentKey":""},"sequence":0,"descriptor":"CfDJ8GlMlz98Yf5GhMVqMpW3uhxPtX0ZgTrAMEVuB9ih5SgZ7tHGInYHD19MrmyZ\u002BgVHovf4tYoJuY4JP7H\u002BOw1ox\u002BdcLLSX8BIp8nThfg/U/MeEvae1O0q0ndGaPO4GOhMhya8jvmlW\u002BByAsbL7iPPCfh8h10z2FVKpeKuSqhlOjVW1EGilHPol5BVYxDe6Nw34fPPdnCbMP7S2JKAtFvVGgZOv6LlmhU/nHjgYoF74IaDwphy5329Oe8s5cht0rWsRoBUD4QW4feejJ9j1jSL147VGGQAmDcw2GW\u002BxBWx/CnTZ0yEHdWzQTT\u002BHuuv3pPr2kbJSYD\u002BX6LAdN1rpEjab0gMJyCLo41ItqB09DpO8bjpgxhDVGtKZZbqWBxh478cOu5Z1\u002BJH4hay9omSJiN6wBqFQaSEUsOM9Qjvnd5Bz0m1KbTrYszwVnYGbjUsT\u002Bf5601CsSE30X55IPLKq7OQ3JqaKSEfR8PBc8/NQuYgL/C72wtGPidMCEW2LLDVPn1HO5qiGtXrMckTK9PZ5m6vU1SmJhkOPpDVwqdy9AnpXRQhTcBGUgEaMky2CbqTlsEchFj6DaVCzZBea6Fvm41INWHs="}--><title>Data Sources</title><!--Blazor:{"prerenderId":"2888340c243b4f04a570a5b3501cb6a8"}--></head>
+
+<body><!--Blazor:{"type":"server","prerenderId":"3942a2be7c384160ad53605f8b4eb9da","key":{"locationHash":"B665F6DCDF5B1D6977596952B615252226B14D0377001A17DE09F89CA7382945:17","formattedComponentKey":""},"sequence":1,"descriptor":"CfDJ8GlMlz98Yf5GhMVqMpW3uhzm0xWJC1oqvKsKu2f5u7BgTGRXUQanl8Sk7I85JgJtWsqVCgGBZU0khmiVPEAy7bk4AoPYBgPNEpWxSkGYJmMpyISt26Zx6tQUqizyBgtiXO1ZO93\u002BTFV/mwa\u002BLV\u002BgNcVziOW/e2OYwdgBYUydCGKM8RFOBDUrJZdu0V/qMJf3N/RzQukB0A\u002BpnfN5J5QDWnhIs3M6rbIPVf4M\u002BEfQ/L2sVzQJnGPUpl5of4O7kyK\u002B8QhoTwF7Pi\u002BcTppRlmYhkHZDltn/uouSgm5wpeiY4QuKYfrp81d/SoUJUSAxFOp9CzOZInkt5M7YIvi/S7DZl1JjFwcpbLYs5GO/3Fw3bwgqNaAMRR2e\u002ByH/L8J2MGDEdKY3CprDRu8s0OmlWgt6qveMQnvCHOs5wli7mx9GAouUklRUQ0cvoGFHaVkt\u002B895ugG8zVgVD6F45ni5E7nYuiaFYQTeIp1bLfjia6YQSw\u002BKXNhanI5mQwDTTGQooSaqRuBfXE3dvim6I/EX2x\u002BR\u002BL6i6IBdhb8v6EeXe\u002Bt6oMeBq4j9yINbWlbP0IdIyHy1RQ=="}--><style>
+::-webkit-scrollbar {width: 8px;height: 8px;z-index: 1;}
+::-webkit-scrollbar-track {background: transparent;}
+::-webkit-scrollbar-thumb {background: #c4c4c4;border-radius: 1px;}
+::-webkit-scrollbar-thumb:hover {background: #a6a6a6;}
+html, body * {scrollbar-color: #c4c4c4 transparent;scrollbar-width: thin;}
+</style>
+<style>
+    .mud-chart-serie:hover {
+        filter: url(#lighten);
+    }
+
+    .mud-chart-serie-hovered 
+    {
+        filter: url(#lighten);
+    }
+</style>
+
+<style class='mud-theme-provider'>
+:root{
+--mud-palette-black: rgba(39,44,52,1);
+--mud-palette-white: rgba(255,255,255,1);
+--mud-palette-primary: rgba(0,89,153,1);
+--mud-palette-primary-rgb: 0,89,153;
+--mud-palette-primary-text: rgba(255,255,255,1);
+--mud-palette-primary-darken: rgb(0,65,112);
+--mud-palette-primary-lighten: rgb(0,113,194);
+--mud-palette-primary-hover: rgba(0,89,153,0.058823529411764705);
+--mud-palette-secondary: rgba(255,64,129,1);
+--mud-palette-secondary-rgb: 255,64,129;
+--mud-palette-secondary-text: rgba(255,255,255,1);
+--mud-palette-secondary-darken: rgb(255,31,105);
+--mud-palette-secondary-lighten: rgb(255,102,153);
+--mud-palette-secondary-hover: rgba(255,64,129,0.058823529411764705);
+--mud-palette-tertiary: rgba(30,200,165,1);
+--mud-palette-tertiary-rgb: 30,200,165;
+--mud-palette-tertiary-text: rgba(255,255,255,1);
+--mud-palette-tertiary-darken: rgb(25,169,140);
+--mud-palette-tertiary-lighten: rgb(42,223,187);
+--mud-palette-tertiary-hover: rgba(30,200,165,0.058823529411764705);
+--mud-palette-info: rgba(33,150,243,1);
+--mud-palette-info-rgb: 33,150,243;
+--mud-palette-info-text: rgba(255,255,255,1);
+--mud-palette-info-darken: rgb(12,128,223);
+--mud-palette-info-lighten: rgb(71,167,245);
+--mud-palette-info-hover: rgba(33,150,243,0.058823529411764705);
+--mud-palette-success: rgba(0,200,83,1);
+--mud-palette-success-rgb: 0,200,83;
+--mud-palette-success-text: rgba(255,255,255,1);
+--mud-palette-success-darken: rgb(0,163,68);
+--mud-palette-success-lighten: rgb(0,235,98);
+--mud-palette-success-hover: rgba(0,200,83,0.058823529411764705);
+--mud-palette-warning: rgba(255,152,0,1);
+--mud-palette-warning-rgb: 255,152,0;
+--mud-palette-warning-text: rgba(255,255,255,1);
+--mud-palette-warning-darken: rgb(214,129,0);
+--mud-palette-warning-lighten: rgb(255,167,36);
+--mud-palette-warning-hover: rgba(255,152,0,0.058823529411764705);
+--mud-palette-error: rgba(244,67,54,1);
+--mud-palette-error-rgb: 244,67,54;
+--mud-palette-error-text: rgba(255,255,255,1);
+--mud-palette-error-darken: rgb(242,28,13);
+--mud-palette-error-lighten: rgb(246,96,85);
+--mud-palette-error-hover: rgba(244,67,54,0.058823529411764705);
+--mud-palette-dark: rgba(66,66,66,1);
+--mud-palette-dark-rgb: 66,66,66;
+--mud-palette-dark-text: rgba(255,255,255,1);
+--mud-palette-dark-darken: rgb(46,46,46);
+--mud-palette-dark-lighten: rgb(87,87,87);
+--mud-palette-dark-hover: rgba(66,66,66,0.058823529411764705);
+--mud-palette-text-primary: rgba(29,29,29,1);
+--mud-palette-text-primary-rgb: 29,29,29;
+--mud-palette-text-secondary: rgba(77,77,77,1);
+--mud-palette-text-secondary-rgb: 77,77,77;
+--mud-palette-text-disabled: rgba(77,77,77,1);
+--mud-palette-text-disabled-rgb: 77,77,77;
+--mud-palette-action-default: rgba(0,0,0,0.5372549019607843);
+--mud-palette-action-default-hover: rgba(0,0,0,0.058823529411764705);
+--mud-palette-action-disabled: rgba(0,0,0,0.25882352941176473);
+--mud-palette-action-disabled-background: rgba(0,0,0,0.11764705882352941);
+--mud-palette-surface: rgba(255,255,255,1);
+--mud-palette-surface-rgb: 255,255,255;
+--mud-palette-background: rgba(255,255,255,1);
+--mud-palette-background-gray: rgba(245,245,245,1);
+--mud-palette-drawer-background: rgba(241,241,241,1);
+--mud-palette-drawer-text: rgba(29,29,29,1);
+--mud-palette-drawer-icon: rgba(97,97,97,1);
+--mud-palette-appbar-background: rgba(241,241,241,1);
+--mud-palette-appbar-text: rgba(29,29,29,1);
+--mud-palette-lines-default: rgba(0,0,0,0.11764705882352941);
+--mud-palette-lines-inputs: rgba(189,189,189,1);
+--mud-palette-table-lines: rgba(224,224,224,1);
+--mud-palette-table-striped: rgba(0,0,0,0.0196078431372549);
+--mud-palette-table-hover: rgba(0,0,0,0.0392156862745098);
+--mud-palette-divider: rgba(224,224,224,1);
+--mud-palette-divider-rgb: 224,224,224;
+--mud-palette-divider-light: rgba(0,0,0,0.8);
+--mud-palette-skeleton: rgba(0,0,0,0.10980392156862745);
+--mud-palette-gray-default: #9E9E9E;
+--mud-palette-gray-light: #BDBDBD;
+--mud-palette-gray-lighter: #E0E0E0;
+--mud-palette-gray-dark: #757575;
+--mud-palette-gray-darker: #616161;
+--mud-palette-overlay-dark: rgba(33,33,33,0.4980392156862745);
+--mud-palette-overlay-light: rgba(255,255,255,0.4980392156862745);
+--mud-palette-border-opacity: 1;
+--mud-ripple-color: var(--mud-palette-text-primary);
+--mud-ripple-opacity: 0.1;
+--mud-ripple-opacity-secondary: 0.2;
+--mud-elevation-0: none;
+--mud-elevation-1: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+--mud-elevation-2: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+--mud-elevation-3: 0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12);
+--mud-elevation-4: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+--mud-elevation-5: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 5px 8px 0px rgba(0,0,0,0.14),0px 1px 14px 0px rgba(0,0,0,0.12);
+--mud-elevation-6: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+--mud-elevation-7: 0px 4px 5px -2px rgba(0,0,0,0.2),0px 7px 10px 1px rgba(0,0,0,0.14),0px 2px 16px 1px rgba(0,0,0,0.12);
+--mud-elevation-8: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+--mud-elevation-9: 0px 5px 6px -3px rgba(0,0,0,0.2),0px 9px 12px 1px rgba(0,0,0,0.14),0px 3px 16px 2px rgba(0,0,0,0.12);
+--mud-elevation-10: 0px 6px 6px -3px rgba(0,0,0,0.2),0px 10px 14px 1px rgba(0,0,0,0.14),0px 4px 18px 3px rgba(0,0,0,0.12);
+--mud-elevation-11: 0px 6px 7px -4px rgba(0,0,0,0.2),0px 11px 15px 1px rgba(0,0,0,0.14),0px 4px 20px 3px rgba(0,0,0,0.12);
+--mud-elevation-12: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
+--mud-elevation-13: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 13px 19px 2px rgba(0,0,0,0.14),0px 5px 24px 4px rgba(0,0,0,0.12);
+--mud-elevation-14: 0px 7px 9px -4px rgba(0,0,0,0.2),0px 14px 21px 2px rgba(0,0,0,0.14),0px 5px 26px 4px rgba(0,0,0,0.12);
+--mud-elevation-15: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);
+--mud-elevation-16: 0px 8px 10px -5px rgba(0,0,0,0.2),0px 16px 24px 2px rgba(0,0,0,0.14),0px 6px 30px 5px rgba(0,0,0,0.12);
+--mud-elevation-17: 0px 8px 11px -5px rgba(0,0,0,0.2),0px 17px 26px 2px rgba(0,0,0,0.14),0px 6px 32px 5px rgba(0,0,0,0.12);
+--mud-elevation-18: 0px 9px 11px -5px rgba(0,0,0,0.2),0px 18px 28px 2px rgba(0,0,0,0.14),0px 7px 34px 6px rgba(0,0,0,0.12);
+--mud-elevation-19: 0px 9px 12px -6px rgba(0,0,0,0.2),0px 19px 29px 2px rgba(0,0,0,0.14),0px 7px 36px 6px rgba(0,0,0,0.12);
+--mud-elevation-20: 0px 10px 13px -6px rgba(0,0,0,0.2),0px 20px 31px 3px rgba(0,0,0,0.14),0px 8px 38px 7px rgba(0,0,0,0.12);
+--mud-elevation-21: 0px 10px 13px -6px rgba(0,0,0,0.2),0px 21px 33px 3px rgba(0,0,0,0.14),0px 8px 40px 7px rgba(0,0,0,0.12);
+--mud-elevation-22: 0px 10px 14px -6px rgba(0,0,0,0.2),0px 22px 35px 3px rgba(0,0,0,0.14),0px 8px 42px 7px rgba(0,0,0,0.12);
+--mud-elevation-23: 0px 11px 14px -7px rgba(0,0,0,0.2),0px 23px 36px 3px rgba(0,0,0,0.14),0px 9px 44px 8px rgba(0,0,0,0.12);
+--mud-elevation-24: 0px 11px 15px -7px rgba(0,0,0,0.2),0px 24px 38px 3px rgba(0,0,0,0.14),0px 9px 46px 8px rgba(0,0,0,0.12);
+--mud-elevation-25: 0 5px 5px -3px rgba(0,0,0,.06), 0 8px 10px 1px rgba(0,0,0,.042), 0 3px 14px 2px rgba(0,0,0,.036);
+--mud-default-borderradius: 4px;
+--mud-drawer-width-left: 240px;
+--mud-drawer-width-right: 240px;
+--mud-drawer-width-mini-left: 56px;
+--mud-drawer-width-mini-right: 56px;
+--mud-appbar-height: 64px;
+--mud-typography-default-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-default-size: .875rem;
+--mud-typography-default-weight: 400;
+--mud-typography-default-lineheight: 1.43;
+--mud-typography-default-letterspacing: .01071em;
+--mud-typography-default-text-transform: none;
+--mud-typography-h1-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-h1-size: 6rem;
+--mud-typography-h1-weight: 300;
+--mud-typography-h1-lineheight: 1.167;
+--mud-typography-h1-letterspacing: -.01562em;
+--mud-typography-h1-text-transform: none;
+--mud-typography-h2-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-h2-size: 3.75rem;
+--mud-typography-h2-weight: 300;
+--mud-typography-h2-lineheight: 1.2;
+--mud-typography-h2-letterspacing: -.00833em;
+--mud-typography-h2-text-transform: none;
+--mud-typography-h3-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-h3-size: 3rem;
+--mud-typography-h3-weight: 400;
+--mud-typography-h3-lineheight: 1.167;
+--mud-typography-h3-letterspacing: 0;
+--mud-typography-h3-text-transform: none;
+--mud-typography-h4-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-h4-size: 2.125rem;
+--mud-typography-h4-weight: 400;
+--mud-typography-h4-lineheight: 1.235;
+--mud-typography-h4-letterspacing: .00735em;
+--mud-typography-h4-text-transform: none;
+--mud-typography-h5-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-h5-size: 1.5rem;
+--mud-typography-h5-weight: 400;
+--mud-typography-h5-lineheight: 1.334;
+--mud-typography-h5-letterspacing: 0;
+--mud-typography-h5-text-transform: none;
+--mud-typography-h6-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-h6-size: 1.25rem;
+--mud-typography-h6-weight: 500;
+--mud-typography-h6-lineheight: 1.6;
+--mud-typography-h6-letterspacing: .0075em;
+--mud-typography-h6-text-transform: none;
+--mud-typography-subtitle1-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-subtitle1-size: 1rem;
+--mud-typography-subtitle1-weight: 400;
+--mud-typography-subtitle1-lineheight: 1.75;
+--mud-typography-subtitle1-letterspacing: .00938em;
+--mud-typography-subtitle1-text-transform: none;
+--mud-typography-subtitle2-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-subtitle2-size: .875rem;
+--mud-typography-subtitle2-weight: 500;
+--mud-typography-subtitle2-lineheight: 1.57;
+--mud-typography-subtitle2-letterspacing: .00714em;
+--mud-typography-subtitle2-text-transform: none;
+--mud-typography-body1-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-body1-size: 1rem;
+--mud-typography-body1-weight: 400;
+--mud-typography-body1-lineheight: 1.5;
+--mud-typography-body1-letterspacing: .00938em;
+--mud-typography-body1-text-transform: none;
+--mud-typography-body2-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-body2-size: .875rem;
+--mud-typography-body2-weight: 400;
+--mud-typography-body2-lineheight: 1.43;
+--mud-typography-body2-letterspacing: .01071em;
+--mud-typography-body2-text-transform: none;
+--mud-typography-button-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-button-size: .875rem;
+--mud-typography-button-weight: 500;
+--mud-typography-button-lineheight: 1.75;
+--mud-typography-button-letterspacing: .02857em;
+--mud-typography-button-text-transform: uppercase;
+--mud-typography-caption-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-caption-size: .75rem;
+--mud-typography-caption-weight: 400;
+--mud-typography-caption-lineheight: 1.66;
+--mud-typography-caption-letterspacing: .03333em;
+--mud-typography-caption-text-transform: none;
+--mud-typography-overline-family: 'Public Sans', Roboto, Helvetica, Arial, sans-serif;
+--mud-typography-overline-size: .75rem;
+--mud-typography-overline-weight: 400;
+--mud-typography-overline-lineheight: 2.66;
+--mud-typography-overline-letterspacing: .08333em;
+--mud-typography-overline-text-transform: none;
+--mud-zindex-drawer: 1100;
+--mud-zindex-appbar: 1300;
+--mud-zindex-dialog: 1400;
+--mud-zindex-popover: 1200;
+--mud-zindex-snackbar: 1500;
+--mud-zindex-tooltip: 1600;
+--mud-native-html-color-scheme: light;
+}
+</style>
+
+<div class="mud-popover-provider"></div>
+
+<div id="mud-snackbar-container" class="mud-snackbar-location-top-right"></div>
+
+<div class="mud-layout" style=""><div class="mud-main-content no-top-padding"><div class="app-sticky-header" style="position: sticky; top: 0; left: 0; right: 0; z-index: 1100;"><style>
+    .expanse-Menu  .mud-expand-panel-header{
+         display: flex;
+         align-items: center;
+         gap: 8px;
+         padding-left: 30px;
+         padding-right: 8px;
+         padding-top: 2px;
+         padding-bottom: 2px;
+         white-space: nowrap;
+         background-color: #002C4B;
+         width: 100%;
+         height: 8px;
+         position: relative;
+         border-radius: 0px !important;
+    }
+
+    .expanse-Menu .mud-expand-panel-content {
+        height: auto;
+    }
+
+    .mud-expand-panel .mud-expand-panel-header {
+        min-height: 24px !important;
+    }
+
+    .mud-grid-spacing-xs-8 {
+        margin-top: -20px !important;
+    }
+
+    .mud-expand-panel .mud-expand-panel-header .mud-expand-panel-icon {
+      display:none;
+    }
+
+    .padding-grid {
+        padding-top: 45px !important;
+    }
+
+    .z-top {
+        position: relative;
+        z-index: 1000;
+    }
+    .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .chev-img {
+        width: 8px;
+        color: #73B3E7;
+        height: 4.94px;
+        cursor: pointer;
+        user-select: none;
+        margin-left: 8px;
+        vertical-align: middle;
+        margin: 0;
+        padding: 0;
+    }
+
+    .padding_left_column {
+    }
+
+    .title-stack {
+        display: flex;
+        align-items: center;
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
+
+    .chev-img.chev-rot {
+        transform: rotate(180deg);
+
+    }
+    .official-text{
+        color: #fff;
+        font-size: 0.9375rem;
+        font-weight: 700;
+    }
+
+    .official-text-info{
+        color: #fff;
+        font-size: 0.9375rem;
+        font-weight: 400;
+    }
+
+    .official-flag{
+        height: 11px;
+        width: 16px;
+    }
+    /* ----- Child Content --- */
+
+    .panel-wrap {
+        padding-left: 0;
+        padding: 0;
+        width: 100%;
+        max-width: 1090px;
+        margin: 0;
+    }
+
+    .media-card {
+        padding: 0;
+        background-color: #002C4B;
+    }
+
+    .media-row {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 12px;
+        align-items: start;
+        width: 100%;
+        min-width: 0;
+        background-color: #002C4B;
+    }
+
+    .media-text {
+        display: grid;
+        /* grid-auto-rows: min-content; */
+        row-gap: 4px;
+        min-width: 0;
+    }
+
+    .media-header {
+        margin: 0;
+        line-height: 1.15;
+    }
+
+    @media (max-width: 600px) {
+        .media-card { padding: 10px; }
+        .media-row { column-gap: 10px; }
+        .title-stack { flex-wrap: wrap; }
+        .title-stack > * { white-space: normal; }
+        .expanse-Menu .mud-expand-panel-header { white-space: normal; height: auto; min-height: 24px; }
+    }
+
+    .mud-collapse-wrapper-inner{
+            background-color: #002C4B;
+    }
+
+    .panel-info-text{
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 400;
+        line-height: 1.2;
+    }
+
+    .panel-info-link {
+        color: #73B3E7;
+        font-size: 0.75rem;
+        text-decoration: underline;
+        width: 100%;
+    }
+
+    .exp-shell .mud-expand-panel-header.mud-expand-panel-header-gutters:focus-visible .panel-info-link {
+        opacity: 1;
+        outline: 2px solid #005999;
+        outline-offset: 1px;
+    }
+
+    .official-text{
+        color: #fff;
+        font-size: 0.9375rem;
+        font-weight: 700;
+    }
+
+    .official-text-info{
+        color: #fff;
+        font-size: 0.9375rem;
+        font-weight: 400;
+    }
+
+    .official-flag{
+        height: 11px;
+        width: 16px;
+        margin-top: 1px;
+    }
+
+    .mud-expand-panel-icon {
+        color: #73B3E7;
+    }
+
+    .icon-middle {
+        vertical-align: middle;
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+        line-height: 1;
+    }
+
+    .exp-shell .mud-collapse-wrapper-inner {
+        background-color: #002C4B;
+    }
+
+    .official-site-indicator-grid {
+        margin: 6px;
+    }
+
+</style>
+
+<div><div class="mud-paper mud-paper-square mud-elevation-1 top-expander-inner" style=""><div class="mud-expansion-panels exp-shell"><div class="mud-expand-panel mud-elevation-0 mud-expand-panel-border expanse-Menu"><div class="mud-expand-panel-header mud-expand-panel-header-gutters" tabindex="0"><div class="mud-expand-panel-text"><div role="group" class="d-flex flex-row align-start flex-nowrap gap-1 title-stack"><img src="/Images/us_flag_small.svg" class="official-flag" alt="Flag of the United States of America">
+                            <div style="display:flex; align-items: center; flex-wrap: wrap;"><div class="panel-info-text"><span style="padding-right: 4px;">An official website of the United States government</span></div>
+                                <div class="panel-info-text"><span class="panel-info-link">Here’s how you know</span>
+                                    <img src="/Images/arrow.svg" alt="Expand details arrow" class="chev-img " /></div></div></div></div><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mud-expand-panel-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div>
+    <div class="mud-collapse-container invisible" style=""><div class="mud-collapse-wrapper"><div class="mud-collapse-wrapper-inner"><div class="mud-expand-panel-content mud-expand-panel-gutters mud-expand-panel-dense"><div class="mud-container mud-container-maxwidth-false mud-container--gutters panel-wrap"><div class="mud-grid mud-grid-spacing-xs-1 justify-start official-site-indicator-grid"><div class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-6"><div class="mud-paper mud-paper-square mud-elevation-0 media-card" style=""><div class="media-row"><img src="/images/icon-dot-gov.svg">
+                                            <div class="media-text"><p class="mud-typography mud-typography-body1 official-text">Official websites use .gov</p>
+                                                <p class="mud-typography mud-typography-body1 official-text-info">A <strong>.gov</strong> website belongs to an official government organization<br>
+                                                    in the United States.</p></div></div></div></div>
+                        
+                            <div class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-6"><div class="mud-paper mud-paper-square mud-elevation-0 media-card" style=""><div class="media-row"><img src="/images/icon-lock.svg">
+                                        <div class="media-text"><p class="mud-typography mud-typography-body1 official-text">
+                                                Secure .gov websites use HTTPS
+                                            </p>
+                                            <p class="mud-typography mud-typography-body1 official-text-info">
+                                                A <strong>lock</strong> ( <img src="/images/Https_small.png" alt="HTTPS lock"> ) or <strong>https://</strong> means you’ve safely connected to the .gov<br>
+                                                website. Share sensitive information only on official, secure websites.
+                                            </p></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+			<style>
+	.logo-scaled-responsive {
+		height: 3rem;
+		transform: scale(0.8);
+		transform-origin: center;
+	}
+
+	.logo-scaled-responsive:focus-visible {
+			opacity: 1;
+			outline: 2px solid #005999;
+			outline-offset: 1px;
+	}
+
+	.no-link-style,
+	.no-link-style:visited,
+	.no-link-style:hover,
+	.no-link-style:active {
+		font-size: 1rem;
+		color: #1D1D1D !important;
+		text-decoration: none !important;
+	}
+
+	.px-0 {
+		flex: 1;
+		margin-bottom: 2.8125rem;
+		margin-top: 0
+	}
+
+	.top-bar {
+		background-color: white;
+		color: gray;
+		overflow: hidden;
+		font-family: 'Public Sans', sans-serif !important;
+	}
+
+	.selector-sub-header-text {
+		font-weight: bolder;
+		font-size: 1rem;
+	}
+
+	.filter-selector {
+		min-width: 200px;
+		max-width: 245px;
+		width: 245px;
+	}
+
+	.main-layout {
+		font-size: 1.375rem !important;
+		color: #4b5a65 !important;
+	}
+
+	.extra-padding-left {
+		padding-left: 5rem !important;
+	}
+
+	.chart-filter-dropdown {
+		margin-right: 24px;
+		max-width: 300px;
+		max-height: 70px;
+	}
+
+	.selected-button-filter {
+		background-color: #CADCE9 !important;
+	}
+
+	/* Override MudBlazor elevation-1 to use 1px box-shadow instead of 2px */
+	.mud-elevation-1 {
+			box-shadow: 0px 1px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+		}
+
+	.mud-data-grid .mud-table-cell .column-header:focus-within .column-options .sort-direction-icon,
+	.mud-data-grid .mud-table-cell .column-header:focus-within .column-options .mud-menu .mud-icon-button-label {
+		visibility: visible;
+		opacity: .8;
+		color: var(--mud-palette-action-default);
+	}
+
+	.mud-table-pagination-select .mud-input-control-input-container:focus-within,
+	.mud-table-pagination-select .mud-input-control-input-container:hover {
+		visibility: visible;
+		opacity: .8;
+		background-color: var(--mud-palette-action-default-hover);
+	}
+
+	.appbar-desktop {
+		display: flex;
+		width: 100%;
+		align-items: center;
+	}
+
+	.appbar-tablet,
+	.appbar-mobile {
+		display: none;
+		position: relative;
+		margin-left: -20px;
+	}
+
+	.drawer-display-none {
+        display: flex;
+		z-index: 1400;
+		position: static;
+		background-color: #FFFFFF;
+	}
+
+	.drawer-display-view {
+        display: none;
+		position: static;
+	}
+
+	.nav-main-drawer {
+		background-color: #FFFFFF;
+		position: fixed !important;
+	}
+
+	.hero-stack aside {
+		overscroll-behavior: contain;
+		height: 100vh !important;
+	}
+
+	@media (min-width: 1200px) and (max-width: 1320px) {
+		.opm-logo-scaled {
+			transform: scale(.8) !important;
+		}
+
+		.mud-toolbar-gutters {
+			padding-left: 0px !important;
+			padding-right: 0px !important;
+		}
+
+		.main-layout {
+			font-size: 18px !important;
+			margin-left: 0px !important;
+		}
+	}
+		/*Tablet: 768-1200 */
+	@media (min-width: 768px) and (max-width: 1200px) {
+		.appbar-desktop {
+			display: none;
+		}
+
+		.appbar-tablet {
+			display: flex;
+			width: 100%;
+			align-items: center;
+			position: relative;
+			margin-left: 20px;
+		}
+
+		.appbar-mobile {
+			display: none;
+		}
+
+		.main-top-bar {
+			background-color: #002C4B;
+		}
+
+		.release-notes {
+			display: none;
+		}
+
+		.logo-link {
+			display: flex;
+			padding: 0;
+			margin: 0;
+			line-height: 0;
+		}
+	}
+
+	/* Mobile: less than 767 */
+	@media (max-width: 767px) {
+		.appbar-desktop {
+			display: none;
+		}
+
+		.appbar-tablet {
+			display: none;
+		}
+
+		.appbar-mobile {
+			display: flex;
+			width: 100%;
+			align-items: center;
+		}
+
+		.main-top-bar {
+			background-color: #002C4B;
+		}
+
+		.main-layout {
+			font-size: 2.5vw !important;
+		}
+
+		.release-notes {
+			display: none;
+		}
+	}
+
+	/* Mobile: less than 600 */
+	@media (max-width: 600px) {
+		.main-layout {
+			width: 100%;
+			font-size: 1rem !important;
+			min-width: 185px;
+			margin-left: -10px;
+		}
+	}
+	/* Mobile: less than 375px (extra small mobile devices) */
+	@media (max-width: 374px) {
+		.main-layout {
+			min-width: 140px;
+		}
+	}
+
+	:root {
+		/* OfficialGovernmentComponent (~36px) + MudAppBar (~64px). Prerender/no-JS fallback
+		   only — the real height varies (banner wraps at narrow widths, "Here's how you know"
+		   expands), so gppa-sticky-offsets.js overwrites this with the measured height of
+		   .app-sticky-header while a GPPA page is up (#566004). */
+		--app-header-height: 100px;
+	}
+
+	.opm-logo-scaled {
+		height: 3rem;
+		transform: scale(1.0);
+		transform-origin: center;
+	}
+
+	.focusable-link:focus-visible .opm-logo-scaled,
+	.focusable-link:focus-within .opm-logo-scaled,
+	.focusable-link:focus-visible .main-layout,
+	.focusable-link:focus-within .main-layout,
+	.focusable-link:focus-visible .logo-scaled-responsive,
+	.focusable-link:focus-within .logo-scaled-responsive{
+			opacity: 1;
+			outline: 2px solid #005999;
+			outline-offset: 1px;
+	}
+
+	@media (max-width: 1000px) {
+		.opm-logo-scaled {
+			transform: scale(0.8) !important;
+		}		
+	}
+
+	@media (max-width: 800px) {
+		.opm-logo-scaled {
+			transform: scale(0.6) !important;
+		}
+
+		.logo-scaled-responsive {
+			transform: scale(0.6) !important;
+		}
+	}
+</style>
+
+<section class="hero-stage"><div class="hero-stack"><header class="mud-appbar mud-elevation-1 top-bar pt-2 pb-2"><div role="toolbar" class="mud-toolbar mud-toolbar-gutters mud-toolbar-appbar"><div class="appbar-desktop"><a class="focusable-link" href="/"><img src="/images/OPMLogo.svg" alt="OPM" class="opm-logo-scaled"></a>
+				<a class="focusable-link" href="/"><p class="mud-typography mud-typography-body1 main-layout ml-3">Federal Workforce Data</p></a>
+				<div aria-hidden="true" class="flex-grow-1"></div>
+				<style>
+
+    .mud-navmenu.mud-navmenu-default .mud-nav-link.active:not(.mud-nav-link-disabled) {
+        color: #005999;
+        background-color: #FFFFFF;
+    }
+
+    .mud-nav-link:not(.mud-nav-link-disabled).active .mud-nav-link-icon.mud-nav-link-icon-default {
+        color: #005999;
+    }
+
+    /* Default */
+    .custom-menu .mud-button-root {
+        /* color: black;  */
+        background-color: transparent;
+    }
+
+    /* Selected */
+    .custom-menu.selected .mud-button-root {
+        color: #005999 !important;
+    }
+    /* Hover */
+    .custom-menu .mud-button-root:hover {
+        color: #005999 !important;
+    }
+
+    /* Open */
+    .custom-menu.mud-menu-open .mud-button-root {
+        color: #005999 !important;
+    }
+
+    .nav-menu-item-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 2rem;
+        padding: 1rem;
+        align-items: flex-start;
+    }
+
+    /* Offset popover to align with its trigger button, compensating for menu padding and icon width. */
+    .mud-popover.nav-popover.mud-popover-open {
+        transform: translateX(-25px) translateY(15px);
+    }
+   
+    .menu-header-text {
+        font-weight: bold;
+        color: #4D4D4D;
+        font-size: 1rem !important;
+    }
+
+    .custom-menu .mud-button-root:focus-within {
+        font-weight: bold;
+        color: #005999 !important;
+        font-size: 1rem !important;
+    }
+
+    .no-link-style,
+    .no-link-style:visited,
+    .no-link-style:hover,
+    .no-link-style:active {
+        font-size: 16px;
+        color: #1D1D1D !important;
+        text-decoration: none !important;
+        font-weight: 300;
+    }
+
+    .mud-popover.mud-popover-open {
+        display: block;
+        min-height: fit-content !important;
+    }
+
+    .nav-menu {
+        flex-grow: 1;
+        overflow: hidden;
+    }
+
+    .menu-item {
+        display: flex;
+        flex-direction: column;
+        line-height: 5.0;
+        align-items: flex-start;
+    }
+
+    .top-bar .mud-button-root .mud-button-label {
+        font-family: 'Public Sans', sans-serif !important;
+        text-transform: none !important;
+        font-size: 16px;
+        color: #1D1D1D !important;
+        /* margin-right: 32px; */
+        font-weight: 300;
+    }
+
+        .top-bar .mud-button-root .mud-button-label:hover,
+        .top-bar .mud-button-root .mud-button-label:active,
+        .top-bar .mud-button-root .mud-button-label:focus {
+            text-transform: none !important;
+            font-size: 1rem;
+            color: #005999 !important;
+            /* margin-right: 32px; */
+        }
+
+    .mud-nav-link-text {
+        font-weight:300;
+        font-size: 16px;
+    }
+
+    .mud-menu-item-text {
+        font-weight: 300;
+        font-size: 16px;
+    }
+
+    .custom-menu .mud-button-root:focus-within .mud-button-label {
+        text-transform: none !important;
+        font-size: 1rem;
+        color: #005999 !important;
+    }
+</style>
+
+</div>
+
+			
+			<div class="appbar-tablet"><div role="group" class="d-flex flex-row justify-space-between align-center gap-0" style="width:100%; transform: translateX(-30px);"><a class="focusable-link" href="/"><img src="/images/tabletOPMLogo_Blue.svg" alt="OPM" class="logo-scaled-responsive"></a>
+					<a class="focusable-link" href="/"><p class="mud-typography mud-typography-body1 main-layout">Federal Workforce Data</p></a>
+					<div aria-hidden="true" class="flex-grow-1"></div>
+				<button class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple ellipse-button" aria-label="Open navigation menu" type="button" __internal_stopPropagation_onclick><span class="mud-button-label"><img src="/images/menu.svg" alt="Open navigation menu" class="ellipse-button-image"></span></button></div></div>
+
+			
+			<div class="appbar-mobile"><div role="group" class="d-flex flex-row justify-space-between align-center gap-0" style="width:100%;"><a class="focusable-link" href="/"><img src="/images/tabletOPMLogo_Blue.svg" alt="OPM" class="logo-scaled-responsive"></a>
+					<a class="focusable-link" href="/"><p class="mud-typography mud-typography-body1 main-layout">Federal Workforce Data</p></a>
+					<div aria-hidden="true" class="flex-grow-1"></div>
+				<button class="mud-button-root mud-button mud-button-text mud-button-text-default mud-button-text-size-medium mud-ripple ellipse-button" aria-label="Open navigation menu" type="button" __internal_stopPropagation_onclick><span class="mud-button-label"><img src="/images/menu.svg" alt="Open navigation menu" class="ellipse-button-image"></span></button></div></div></div></header>
+
+		<div style="" class=""><aside DisableOverlay="false" class="mud-drawer mud-drawer-pos-right mud-drawer--closed mud-drawer--initial mud-drawer-none mud-drawer-clipped-never mud-elevation-1 mud-drawer-temporary nav-main-drawer" style="--mud-drawer-width:100vw;"><div class="mud-drawer-content"><style>
+    .nav-header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 0.75rem 0.5rem 1.50rem;
+    }
+
+    .section-header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-header-logo {
+        object-fit: contain;
+    }
+
+    .section-header-text {
+        font-weight: 400;
+        color: #6F818E;
+        font-family: 'Public Sans';
+        font-size: 20px;
+    }
+
+    .main-nav-menu-root .section-header-text {       
+        color: #fff;
+    }
+
+    .section-header-close {
+        border: none;
+        background: transparent;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .section-header-close:focus-visible {
+            opacity: 1;
+            outline: 2px solid #005999;
+            outline-offset: 1px;
+            border-radius: 20px;
+    }
+
+    .nav-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .nav-panel-title {
+        font-weight: 400;
+        color: #1D1D1D;
+        font-family: 'Public Sans';
+        font-size: 22px;
+    }
+
+    .main-nav-menu-root .nav-expansion-panel .mud-expand-panel-header:focus-visible .nav-panel-chevron {
+        opacity: 1;
+        outline: 2px solid #fff;
+        color: #fff !important;
+    }
+
+    .nav-expansion-panel .mud-expand-panel-header:focus-visible .nav-panel-chevron {
+        opacity: 1;
+        outline: 2px solid #005999;
+        outline-offset: 1px;
+        text-transform: none !important;
+        color: #005999 !important;
+    }
+
+    .main-nav-menu-root .nav-panel-title {       
+        color: #fff;
+    }
+
+    .nav-panel-chevron {
+        transition: transform 150ms ease-in-out;
+        font-size: 1.5rem;
+    }
+
+    .nav-panel-chevron.collapsed {
+        transform: rotate(0deg);
+     }
+
+     .nav-panel-chevron.expanded {
+        transform: rotate(90deg);
+     }
+
+    .explore-column {
+        display: flex;
+        flex-direction: column;
+        gap: 0.50rem;
+    }
+
+    .mud-collapse-wrapper-inner {
+        background-color: #fff;
+    }
+
+    .main-nav-menu-root .mud-collapse-wrapper-inner {
+        background-color: #002C4B;
+    }
+
+    .explore-grid {
+        align-items: stretch;
+        padding-left: 0;
+    }
+
+    .main-nav-menu-root .explore-list {
+        color: #fff;
+    }
+
+    .explore-list {
+        padding: 0;
+        font-weight: 400;
+        color: #4D4D4D;
+        font-family: 'Public Sans';
+        font-size: 14px;
+        margin-bottom: 0.75rem
+    }
+
+    .main-nav-menu-root .data-list {
+        color: #FFFFFF;
+    }
+
+    .data-list {
+        padding: 0;
+        font-weight: 400;
+        color: #4D4D4D;
+        font-family: 'Public Sans';
+        font-size: 14px;
+        margin-bottom: 0.75rem;
+    }
+
+    .explore-column-header {
+        font-weight: 700;
+        color: #4D4D4D;
+        font-family: 'Public Sans';
+        font-size: 16px;
+    }
+
+    .main-nav-menu-root .explore-column-header {
+        color: #ACC7DA;
+    }
+
+    .nav-link-text {
+        font-size: 14px;
+        font-weight: 400;
+        color: #4D4D4D;
+        font-family: 'Public Sans';
+    }
+
+    .main-nav-menu-root .nav-link-text {        
+        color: #fff;
+    }
+
+    .main-nav-menu-root .nav-link-style,
+    .main-nav-menu-root .nav-link-style p,
+    .main-nav-menu-root .nav-link-style:visited,
+    .main-nav-menu-root .nav-link-style:hover,
+    .main-nav-menu-root .nav-link-style:active {        
+        color: #fff !important;
+    }
+
+    .nav-link-style,
+    .nav-link-style p,
+    .nav-link-style:visited,
+    .nav-link-style:hover,
+    .nav-link-style:active {
+        font-size: 14px;
+        color: #4D4D4D !important;
+        text-decoration: none !important;
+        font-weight: 400;
+        padding-left: 0;
+    }
+
+    .main-nav-menu-root .nav-divider {
+        border-color: #ACC7DA;
+    }
+
+    .nav-divider {
+        border-bottom: 1px solid #E6E6E6;
+        margin: 1px 24px;
+    }
+
+    .main-nav-menu-root .mud-expand-panel {
+        background-color: #002C4B;
+    }
+
+    .main-nav-menu-root .nav-panel-chevron {
+        color: #fff;
+    }
+
+    .main-nav-menu-root .mud-nav-link .mud-nav-link-text,
+    .main-nav-menu-root .mud-nav-link,
+    .home-nav-menu-root .mud-nav-link .mud-nav-link-text,
+    .home-nav-menu-root .mud-nav-link {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    .focusable-link:focus-visible .home-logo-scaled,
+    .focusable-link:focus-visible .section-header-text {
+        opacity: 1;
+        outline: 2px solid #005999;
+        outline-offset: 1px;
+    }
+
+    @media (max-width: 767px) {
+        .home-nav-menu-root .mud-grid,
+        .main-nav-menu-root .mud-grid {
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .home-nav-menu-root,
+        .main-nav-menu-root {
+            display: block !important;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .section-header-text {
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+    }
+</style>
+
+<div class="home-nav-menu-root" aria-hidden="true" inert=""><div class="section-header-row"><div class="section-header-left"><a class="focusable-link" href="/"><img src="/images/tabletOPMLogo_Blue.svg" alt="OPM" class="home-logo-scaled" /></a>
+                <a class="focusable-link" href="/"><p class="mud-typography mud-typography-body1 section-header-text">Federal Workforce Data</p></a>
+                <div aria-hidden="true" class="flex-grow-1"></div></div>
+            <button type="button" class="section-header-close" aria-label="Close navigation"><img src="/images/NavCloseMain.svg" alt="Close" class="section-close-image"></button></div>
+    <div DisableBorders="true" DisableGutters="true" class="mud-expansion-panels mud-expansion-panels-square"><div class="mud-expand-panel mud-elevation-0 nav-expansion-panel"><div class="mud-expand-panel-header mud-expand-panel-header-gutters" tabindex="0"><div class="mud-expand-panel-text"><div class="nav-panel-header"><h6 class="mud-typography mud-typography-h6 nav-panel-title">Explore Data</h6>
+
+                <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium nav-panel-chevron collapsed" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div></div><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mud-expand-panel-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div>
+    <div class="mud-collapse-container invisible" style=""><div class="mud-collapse-wrapper"><div class="mud-collapse-wrapper-inner"><div class="mud-expand-panel-content mud-expand-panel-gutters"><div Gutters="0" class="mud-grid mud-grid-spacing-xs-6 justify-start explore-grid"><div class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-6"><div class="explore-column"><p class="mud-typography mud-typography-body1 explore-column-header">WORKFORCE INSIGHTS</p>
+                        <ul class="explore-list"><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/explore-data/analytics/workforce-size-and-composition" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Workforce Size &amp; Composition</p></a>
+                            <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/explore-data/analytics/workforce-changes" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Workforce Changes</p></a>
+                            <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/explore-data/analytics/compensation-performance-leave" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Compensation, Performance &amp; Leave</p></a>
+                            <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/explore-data/analytics/federal-recruitment" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Federal Recruitment</p></a>
+                            <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/explore-data/analytics/demographics" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Demographics</p></a>
+                            <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/explore-data/analytics/location" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Location</p></a><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/explore-data/analytics/labor-unions-and-bargaining-units" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Labor Unions & Bargaining Units</p></a></ul></div></div>
+                
+                <div class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-6"><div class="explore-column"><p class="mud-typography mud-typography-body1 explore-column-header">
+                            DATA TOOLS
+                        </p>
+                        <ul class="explore-list"><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/explore-data/data/table-builder" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Table Builder</p></a><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/chat" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">FWD Chat &nbsp; <img src="/images/new_banner_icon.svg" alt="New Feature"></p></a></ul></div></div></div></div></div></div></div></div>
+    <div class="nav-divider"></div>
+    <div class="mud-expand-panel mud-elevation-0 nav-expansion-panel"><div class="mud-expand-panel-header mud-expand-panel-header-gutters" tabindex="0"><div class="mud-expand-panel-text"><div class="nav-panel-header"><h6 class="mud-typography mud-typography-h6 nav-panel-title">Get Data</h6>
+
+                <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium nav-panel-chevron collapsed" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div></div><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mud-expand-panel-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div>
+    <div class="mud-collapse-container invisible" style=""><div class="mud-collapse-wrapper"><div class="mud-collapse-wrapper-inner"><div class="mud-expand-panel-content mud-expand-panel-gutters"><div class="explore-column"><p class="mud-typography mud-typography-body1 explore-column-header">
+                    GET DATA
+                </p>
+                <ul class="explore-list"><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/get-data/data-downloads" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Data Downloads</p></a><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/get-data/api-access" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">API Access </p></a></ul></div></div></div></div></div></div>
+    <div class="nav-divider"></div>
+    <div class="mud-expand-panel mud-elevation-0 nav-expansion-panel"><div class="mud-expand-panel-header mud-expand-panel-header-gutters" tabindex="0"><div class="mud-expand-panel-text"><div class="nav-panel-header"><h6 class="mud-typography mud-typography-h6 nav-panel-title"> Data Standards</h6>
+
+                <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium nav-panel-chevron collapsed" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div></div><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mud-expand-panel-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div>
+    <div class="mud-collapse-container invisible" style=""><div class="mud-collapse-wrapper"><div class="mud-collapse-wrapper-inner"><div class="mud-expand-panel-content mud-expand-panel-gutters"><div class="explore-column"><p class="mud-typography mud-typography-body1 explore-column-header">DATA STANDARDS</p>
+                <ul class="data-list"><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/data-standards/ehri-data-standards" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">EHRI Data Standards</p></a>
+                    <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/data-standards/ehri-data-validation-checks" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">EHRI Data Validation Checks</p></a>
+                    <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/data-standards/personnel-office-identifier" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Personnel Office Identifiers (POI)</p></a>
+                    <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/data-standards/duty-stations" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Duty Stations</p></a></ul></div></div></div></div></div></div>
+    <div class="nav-divider"></div>
+    <div class="mud-expand-panel mud-elevation-0 nav-expansion-panel"><div class="mud-expand-panel-header mud-expand-panel-header-gutters" tabindex="0"><div class="mud-expand-panel-text"><div class="nav-panel-header"><h6 class="mud-typography mud-typography-h6 nav-panel-title">Policy & Guidance</h6>
+
+                <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium nav-panel-chevron collapsed" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div></div><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mud-expand-panel-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div>
+    <div class="mud-collapse-container invisible" style=""><div class="mud-collapse-wrapper"><div class="mud-collapse-wrapper-inner"><div class="mud-expand-panel-content mud-expand-panel-gutters"><div Gutters="0" class="mud-grid mud-grid-spacing-xs-6 justify-start explore-grid"><div class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-6"><div class="explore-column"><p class="mud-typography mud-typography-body1 explore-column-header">REFERENCES</p>
+                                <ul class="explore-list"><div class="mud-nav-item nav-link-text s-n1"><div class="mud-nav-link mud-ripple" tabindex="0"><div class="mud-nav-link-text"><div class="nav-menu-item-with-icon"><span class="nav-link-text">Guide to Human Resources Reporting</span>
+                                            <svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></div></div></div>
+                                    <div class="mud-nav-item no-link-style"><div class="mud-nav-link mud-ripple" tabindex="0"><div class="mud-nav-link-text"><div class="nav-menu-item-with-icon"><span class="nav-link-text">Data Release Policy</span>
+                                            <svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></div></div></div>
+                                    <div class="mud-nav-item no-link-style"><div class="mud-nav-link mud-ripple" tabindex="0"><div class="mud-nav-link-text"><div class="nav-menu-item-with-icon"><span class="nav-link-text">Privacy Impact Assessment</span>
+                                            <svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></div></div></div>
+                                    <div class="mud-nav-item no-link-style"><div class="mud-nav-link mud-ripple" tabindex="0"><div class="mud-nav-link-text"><div class="nav-menu-item-with-icon"><span class="nav-link-text">System of Record Notice</span>
+                                            <svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></div></div></div></ul></div></div>
+                        
+                        <div class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-6"><div class="explore-column"><p class="mud-typography mud-typography-body1 explore-column-header">TOOLS</p>
+                                <ul class="explore-list"><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/gppa-navigator" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">GPPA Navigator</p></a></ul></div></div></div></div></div></div></div></div>
+    <div class="nav-divider"></div>
+    <div class="mud-expand-panel mud-elevation-0 nav-expansion-panel"><div class="mud-expand-panel-header mud-expand-panel-header-gutters" tabindex="0"><div class="mud-expand-panel-text"><div class="nav-panel-header"><h6 class="mud-typography mud-typography-h6 nav-panel-title">About FWD</h6>
+                <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium nav-panel-chevron collapsed" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></div></div><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mud-expand-panel-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/></svg></div>
+    <div class="mud-collapse-container invisible" style=""><div class="mud-collapse-wrapper"><div class="mud-collapse-wrapper-inner"><div class="mud-expand-panel-content mud-expand-panel-gutters"><div Gutters="0" class="mud-grid mud-grid-spacing-xs-6 justify-start explore-grid"><div class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-6"><div class="explore-column"><p class="mud-typography mud-typography-body1 explore-column-header">
+                            INFO & HELP
+                        </p>
+                        <ul class="explore-list"><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/info-and-help/getting-started" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Getting Started</p></a>
+                            <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/info-and-help/release-notes" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Release Notes</p></a>
+                            <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="https://support-ehri.opm.gov/hc/en-us/requests/new" target="_blank" role="menuitem" rel="noopener noreferrer" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text"><div class="nav-menu-item-with-icon"><span class="nav-link-text">Submit Request</span>
+                                    <svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></p></a>
+                            <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="https://touchpoints.app.cloud.gov/touchpoints/083574ad" target="_blank" role="menuitem" rel="noopener noreferrer" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text"><div class="nav-menu-item-with-icon"><span class="nav-link-text">Give Feedback</span>
+                                    <svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></p></a></ul></div></div>
+                
+                <div class="mud-grid-item mud-grid-item-xs-12 mud-grid-item-sm-6"><div class="explore-column"><p class="mud-typography mud-typography-body1 explore-column-header">
+                            RESOURCES
+                        </p>
+                        <ul class="explore-list"><a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/resources/data-sources" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Data Sources</p></a>
+                            <a class="mud-menu-item mud-ripple mud-list-item-clickable nav-link-style" href="/resources/data-quality" role="menuitem" tabindex="0" aria-disabled="false" __internal_stopPropagation_onclick><p class="mud-typography mud-typography-body1 mud-menu-item-text">Data Quality</p></a></ul></div></div></div></div></div></div></div></div></div></div></div></aside>
+</div></div></section>
+			
+			<style>
+    .new-version-banner {
+        background-color: #E7F6F8;
+        border-left: 12px solid #00BDE3;
+        min-height: 40px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0px;
+        padding-right: 4px;
+    }
+
+    .new-version-banner button span.mud-button-label {
+        color: white !important;
+        text-transform: none;
+    }
+</style></div>
+		<div class="mud-main-content"><style>
+    .spacer {
+        height: 2rem;
+    }
+
+    .flex-row{
+        display: flex;
+    }
+
+    .mud-collapse-wrapper-inner {
+        background-color: transparent;
+    }
+
+    .release-panel {
+        --release-border: #d8d8d8;
+        --release-header-bg: #ececec;
+        margin: 0;
+    }
+
+    .release-panel + .release-panel {
+        margin-top: 12px;
+    }
+
+        .release-panel .mud-expand-panel-content {
+            padding-bottom: 0px;
+        }
+
+    .mud-expand-panel-header {
+        background: var(--release-header-bg);
+    }
+
+    .mud-expand-panel.mud-panel-expanded {
+        margin-top: 16px;
+        border: 2px solid var(--release-header-bg);
+        border-radius: 0px;
+    }
+
+    .mt-43 {
+        margin-top: 44px !important;
+    }
+
+    .pad-status {
+        padding: 24px 9px 0px 24px;
+        min-height: 484px;
+        max-width: 350px;
+        border: 1px solid;
+        border-radius: 7px;
+        border-color: #E6E6E6;
+    }
+
+    .pad-dynamics {
+        padding: 24px 26px 0px 24px;
+        min-height: 484px;
+        max-width: 350px;
+        border: 1px solid;
+        border-radius: 7px;
+        border-color: #E6E6E6;
+    }
+
+    .pad-payroll {
+        padding: 24px 24px 0px 24px;
+        min-height: 484px;
+        max-width: 350px;
+        border: 1px solid;
+        border-radius: 7px;
+        border-color: #E6E6E6;
+    }
+</style>
+
+
+
+<div class="mud-container mud-container-maxwidth-lg mud-container--gutters default-container"><style>
+	.hero-wrk-banner {
+		min-height: 40vh;
+		margin-left: calc(-3 * var(--mud-spacing));
+		margin-right: calc(-1 * var(--mud-spacing));
+		margin: 0;
+		border: none;
+		border-radius: 0;
+		box-shadow: none;
+		padding-top: 0;
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.hero-wrks-banner {
+		width: 100%;
+		height: 100%;
+		justify-content: left;
+		box-sizing: border-box;
+		box-shadow: none;
+		border: none;
+		border-radius: 0;
+	}
+
+	.hero-grid {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 100%;
+	}
+
+	.hero-grid-top {
+		width: 100%;
+	}
+
+	.hero-grid-bottom {
+		width: 100%;
+	}
+
+	.header-container {
+		padding-top:40px;
+	}
+
+	.hero-top {
+		flex: 1 1 auto;
+		background-color: white;
+	}
+
+	.hero-bottom {
+		background-color: #F1F1F1;
+		box-shadow: none;
+		border: none;
+		border-radius: 0;
+	}
+
+
+	.hero-banner h2 {
+		font-size: clamp(2rem, 5w, 3.5rem);
+	}
+
+	.section {
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		margin: 0;
+		width: 100vw;
+	}
+
+	.px-0 {
+		margin-bottom: 0px;
+	}
+
+	.wrk-header-text {
+		font-weight: 700;
+		font-size: 3rem;
+		color: #000000;
+	}
+
+	.wrk-label {
+		font-weight: 400;
+		font-size: 1rem;
+		color: #4D4D4D;
+	}
+
+	.wrk-value {
+		font-weight: 400;
+		font-size: 1rem;
+		color: #4D4D4D;
+	}
+
+	@media (max-width: 768px) {
+		.header-container {
+			padding-top: 0px;
+		}
+	}
+
+</style>
+
+<div class="mud-paper mud-paper-square mud-elevation-0 header-container hero-top" style=""><div class="hero-grid-top"><h1 class="wrk-header-text pt-10" style="font-size: 40px;">Data Sources</h1><p class="mud-typography mud-typography-body1" style="font-size: 22px; color:#4D4D4D"></p><p class="mud-typography mud-typography-body1 pt-6"><p class="mud-typography mud-typography-body1">
+                The Federal Workforce Data site is primarily sourced from OPM’s Enterprise Human Resources Integration (EHRI) system. Other OPM data sources, including USAJOBS, are included as well.
+        </p>
+        <div class="spacer"></div></p><hr class="mud-divider mud-divider-fullwidth" style="border-width: 1px; border-color: #E6E6E6;" /></div></div>
+
+    <p class="mud-typography mud-typography-body1 mb-4 mt-8" style="font-size: 32px"><strong>EHRI</strong></p>
+    <p class="mud-typography mud-typography-body1 mb-8">
+        EHRI is the federal government’s central source for federal civilian workforce data. Through the EHRI system, OPM collects employee and payroll data from federal agencies on a regular basis, creating a comprehensive picture of the federal workforce. EHRI data is used by OPM, federal agencies, and the public to enable analysis of federal workforce trends and to inform policy and operations.
+    </p>
+
+    <p class="mud-typography mud-typography-body1 mb-4" style="font-size:22px"><strong>Data release process</strong></p>
+    <p class="mud-typography mud-typography-body1">Each month, OPM releases the EHRI data submitted by agencies in the previous month.</p>
+
+    <div class="mud-paper mud-elevation-1 mud-card d-flex justify-center mt-8" style="height: 88px; background-color: #E6E6E6;;"><div class="mud-card-content mud-card-content-padding"><div class="d-flex align-center pt-1"><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mr-4" style="color: #005999;" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>
+                <div><p class="mud-typography mud-typography-body1"><span style="color:#005999;">Most recent data release</span></p>
+                    <p class="mud-typography mud-typography-body1" style="color:#4D4D4D">Data released on: <span style="color: #1D1D1D">October 7, 2026</span> | For agency data from: <span style="color: #1D1D1D">August 2026</span></p></div></div></div></div>
+    <div class="spacer"></div>
+    <div class="mud-paper mud-elevation-1 mud-card d-flex justify-center mb-8" style="height: 88px; background-color: #E6E6E6;;"><div class="mud-card-content mud-card-content-padding"><div class="d-flex align-center pt-1"><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mr-4" style="color: #9C5F10;" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><g><rect fill="none" height="24" width="24"/></g><g><g><g><path d="M15,1H9v2h6V1z M11,14h2V8h-2V14z M19.03,7.39l1.42-1.42c-0.43-0.51-0.9-0.99-1.41-1.41l-1.42,1.42 C16.07,4.74,14.12,4,12,4c-4.97,0-9,4.03-9,9s4.02,9,9,9s9-4.03,9-9C21,10.88,20.26,8.93,19.03,7.39z M12,20c-3.87,0-7-3.13-7-7 s3.13-7,7-7s7,3.13,7,7S15.87,20,12,20z"/></g></g></g></svg>
+                <div><p class="mud-typography mud-typography-body1"><span style="color: #9C5F10;">Next expected data release</span></p>
+                    <p class="mud-typography mud-typography-body1" style="color:#4D4D4D">Data released on: <span style="color: #1D1D1D">November 4, 2026</span> | For agency data from: <span style="color: #1D1D1D">September 2026</span></p></div></div></div></div>
+
+    <p class="mud-typography mud-typography-body1 mb-8"><p class="mb-8">OPM works closely with shared service providers and federal agencies to collect and validate workforce data, which is submitted within five business days after the end of the month. This process allows time to review submissions, resolve any data issues, and prepare the information for public release. While some files may arrive late, OPM publishes available data on schedule and includes any delayed submissions in future updates.</p>
+
+        <p>Timely data is essential for supporting workforce planning, public accountability, and informed decision-making. However, timeliness must be balanced with other key dimensions of data quality—such as completeness, consistency, and accuracy. To support transparency, OPM provides a <a href="/resources/data-quality" class="mud-typography mud-link mud-primary-text mud-link-underline-hover" style="color: var(--mud-palette-primary); text-decoration: underline;">Data Quality</a> page where users can view the results of validation checks for each data release. This allows users to identify potential issues with specific data by agency. In addition, a Missing Files Report shows which providers have not yet submitted data for elements in a given time period, helping users understand where data may be incomplete. Moving forward, OPM will release data more frequently—typically every one to two months—on a publicized schedule, with any known data quality issues clearly disclosed to ensure users have access to the most current and actionable information available.</p></p>
+
+    <p class="mud-typography mud-typography-body1 mb-4" style="font-size:22px"><strong>Employee coverage</strong></p>
+    <div class="mb-16"><div class="mud-expansion-panels"><div class="mud-expand-panel mud-panel-expanded mud-elevation-1 mud-expand-panel-border release-panel"><div class="mud-expand-panel-header mud-expand-panel-header-gutters" tabindex="0"><div class="mud-expand-panel-text"><div class="d-flex align-center justify-space-between"><p class="mud-typography mud-typography-body1"><span style="font-size: 15px;"><strong>Executive branch</strong></span></p>
+                            <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mr-3" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg></div></div></div>
+    <div class="mud-collapse-container mud-collapse-entering" style=""><div class="mud-collapse-wrapper"><div class="mud-collapse-wrapper-inner"><div class="mud-expand-panel-content mud-expand-panel-gutters"><div class="pt-4"><p Markup="true" class="mud-typography mud-typography-body1 mb-4">EHRI covers all federal civilian employees of the Executive branch, <strong>except</strong> for the following:</p>
+                        <ul><li><p class="mud-typography mud-typography-body1">U.S. Postal Service</p></li><li><p class="mud-typography mud-typography-body1">Postal Rate Commission</p></li><li><p class="mud-typography mud-typography-body1">Central Intelligence Agency</p></li><li><p class="mud-typography mud-typography-body1">National Security Agency</p></li><li><p class="mud-typography mud-typography-body1">Defense Intelligence Agency</p></li><li><p class="mud-typography mud-typography-body1">National Geospatial-Intelligence Agency</p></li><li><p class="mud-typography mud-typography-body1">Office of the Director of National Intelligence</p></li><li><p class="mud-typography mud-typography-body1">White House Office</p></li><li><p class="mud-typography mud-typography-body1">Official Residence of the Vice President</p></li><li><p class="mud-typography mud-typography-body1">Office of the Vice President</p></li><li><p class="mud-typography mud-typography-body1">Census Bureau temporary workers</p></li><li><p class="mud-typography mud-typography-body1">Foreign service personnel at the Department of State</p></li><li><p class="mud-typography mud-typography-body1">Tennessee Valley Authority</p></li><li><p class="mud-typography mud-typography-body1">Federal Reserve - Board of Governors (the Consumer Financial Protection Bureau is included in EHRI as an agency subelement of the Federal Reserve)</p></li><li><p class="mud-typography mud-typography-body1">Public Health Service Commissioned Officer Corps</p></li><li><p class="mud-typography mud-typography-body1">Non-appropriated fund employees</p></li><li><p class="mud-typography mud-typography-body1">Foreign nationals overseas</p></li><li><p class="mud-typography mud-typography-body1">Executive Residence</p></li><li><p class="mud-typography mud-typography-body1">President&#x2019;s Intelligence Advisory Board</p></li></ul></div></div></div></div></div></div><div class="mud-expand-panel mud-elevation-1 mud-expand-panel-border release-panel"><div class="mud-expand-panel-header mud-expand-panel-header-gutters" tabindex="0"><div class="mud-expand-panel-text"><div class="d-flex align-center justify-space-between"><p class="mud-typography mud-typography-body1"><span style="font-size: 15px;"><strong>Legislative branch</strong></span></p>
+                            <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mr-3" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div></div></div>
+    <div class="mud-collapse-container invisible" style=""><div class="mud-collapse-wrapper"><div class="mud-collapse-wrapper-inner"><div class="mud-expand-panel-content mud-expand-panel-gutters"><div class="pt-4"><p Markup="true" class="mud-typography mud-typography-body1 mb-4">EHRI generally does not include employees of the Legislative branch. However, the following organizations are <strong>included</strong> in EHRI:</p>
+                        <ul><li><p class="mud-typography mud-typography-body1">Government Printing Office</p></li><li><p class="mud-typography mud-typography-body1">Dwight D. Eisenhower Memorial Commission</p></li><li><p class="mud-typography mud-typography-body1">Financial Crisis Inquiry Commission</p></li><li><p class="mud-typography mud-typography-body1">Ronald Reagan Centennial Commission</p></li><li><p class="mud-typography mud-typography-body1">Medicare Payment Advisory Commission</p></li><li><p class="mud-typography mud-typography-body1">U.S. &#x2013; China Economic and Security Review Commission</p></li><li><p class="mud-typography mud-typography-body1">U.S. Commission on International Religious Freedom</p></li></ul></div></div></div></div></div></div><div class="mud-expand-panel mud-elevation-1 mud-expand-panel-border release-panel"><div class="mud-expand-panel-header mud-expand-panel-header-gutters" tabindex="0"><div class="mud-expand-panel-text"><div class="d-flex align-center justify-space-between"><p class="mud-typography mud-typography-body1"><span style="font-size: 15px;"><strong>Judicial branch</strong></span></p>
+                            <svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mr-3" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div></div></div>
+    <div class="mud-collapse-container invisible" style=""><div class="mud-collapse-wrapper"><div class="mud-collapse-wrapper-inner"><div class="mud-expand-panel-content mud-expand-panel-gutters"><div class="pt-4"><p Markup="true" class="mud-typography mud-typography-body1 mb-4">EHRI generally does not include employees of the Judicial branch. However, the following organizations are <strong>included</strong> in EHRI:</p>
+                        <ul><li><p class="mud-typography mud-typography-body1">U.S. Tax Court</p></li></ul></div></div></div></div></div></div></div></div>
+
+    <p class="mud-typography mud-typography-body1 mb-4" style="font-size: 22px"><strong>EHRI datasets</strong></p>
+
+    <p class="mud-typography mud-typography-body1">Agencies send data to EHRI through the Status, Dynamics, Payroll, and Training data feeds. This data is structured into EHRI datasets that each serve a specific analytical purpose.</p>
+    <p class="mud-typography mud-typography-body1"><em>Note: Training data is not currently available through the Federal Workforce Data site</em></p>
+
+    <br>
+    <div role="group" class="d-flex flex-row flex-wrap gap-3 pt-4"><div class="mud-paper mud-elevation-1 mud-card pad-status" style=""><div class="mud-card-content mud-card-content-padding"><div class="d-flex align-center mb-4"><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mr-4" style="color: #005999; font-size: 22.5px;" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                        <p class="mud-typography mud-typography-body1" style="color: #005999; font-size: 22px;">Status</p></div>
+                    <div><p class="mud-typography mud-typography-body1">A snapshot of the federal workforce each month. Status data files include all active employees (in either a pay or non-pay status) for each agency&#x2019;s workforce as of the last day of each month.</p></div>
+                    <div><p class="mud-typography mud-typography-body1 mt-43"><strong>Frequency:</strong> Collected Monthly</p></div>
+                    <div><p class="mud-typography mud-typography-body1 mt-4"><strong>Common analysis questions:</strong></p>
+                        <ul style="padding-left: 1rem;"><li><p class="mud-typography mud-typography-body1">How many federal employees are there?</p></li><li><p class="mud-typography mud-typography-body1">What is the largest agency?</p></li><li><p class="mud-typography mud-typography-body1">What is the average salary of federal employees?</p></li><li><p class="mud-typography mud-typography-body1">How many IT specialists work in the federal government?</p></li></ul></div></div></div><div class="mud-paper mud-elevation-1 mud-card pad-dynamics" style=""><div class="mud-card-content mud-card-content-padding"><div class="d-flex align-center mb-4"><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mr-4" style="color: #005999; font-size: 22.5px;" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><g><rect fill="none" height="24" width="24"/></g><g><g><path d="M21,8c-1.45,0-2.26,1.44-1.93,2.51l-3.55,3.56c-0.3-0.09-0.74-0.09-1.04,0l-2.55-2.55C12.27,10.45,11.46,9,10,9 c-1.45,0-2.27,1.44-1.93,2.52l-4.56,4.55C2.44,15.74,1,16.55,1,18c0,1.1,0.9,2,2,2c1.45,0,2.26-1.44,1.93-2.51l4.55-4.56 c0.3,0.09,0.74,0.09,1.04,0l2.55,2.55C12.73,16.55,13.54,18,15,18c1.45,0,2.27-1.44,1.93-2.52l3.56-3.55 C21.56,12.26,23,11.45,23,10C23,8.9,22.1,8,21,8z"/><polygon points="15,9 15.94,6.93 18,6 15.94,5.07 15,3 14.08,5.07 12,6 14.08,6.93"/><polygon points="3.5,11 4,9 6,8.5 4,8 3.5,6 3,8 1,8.5 3,9"/></g></g></svg>
+                        <p class="mud-typography mud-typography-body1" style="color: #005999; font-size: 22px;">Dynamics</p></div>
+                    <div><p class="mud-typography mud-typography-body1">The personnel actions that have been processed for employees during the biweekly reporting period. Personnel actions include hiring, separations, promotions, awards, and others.</p></div>
+                    <div><p class="mud-typography mud-typography-body1 mt-43"><strong>Frequency:</strong> Collected biweekly</p></div>
+                    <div><p class="mud-typography mud-typography-body1 mt-4"><strong>Common analysis questions:</strong></p>
+                        <ul style="padding-left: 1rem;"><li><p class="mud-typography mud-typography-body1">How many people were hired to the federal government last year?</p></li><li><p class="mud-typography mud-typography-body1">How many federal employees retired?</p></li><li><p class="mud-typography mud-typography-body1">How many federal employees were affected by reductions in force?</p></li></ul></div></div></div><div class="mud-paper mud-elevation-1 mud-card pad-payroll" style=""><div class="mud-card-content mud-card-content-padding"><div class="d-flex align-center mb-4"><svg class="mud-icon-root mud-svg-icon mud-icon-size-medium mr-4" style="color: #005999; font-size: 22.5px;" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>
+                        <p class="mud-typography mud-typography-body1" style="color: #005999; font-size: 22px;">Payroll</p></div>
+                    <div><p class="mud-typography mud-typography-body1">Payroll records for the federal workforce, collected at the end of each pay period. Payroll records include information on the time reported by employees (e.g., leave, telework) as well as pay information.</p></div>
+                    <div><p class="mud-typography mud-typography-body1 mt-5"><strong>Frequency:</strong> Collected biweekly</p></div>
+                    <div><p class="mud-typography mud-typography-body1 mt-4"><strong>Common analysis questions:</strong></p>
+                        <ul style="padding-left: 1rem;"><li><p class="mud-typography mud-typography-body1">How has the use of administrative leave changed over time?</p></li><li><p class="mud-typography mud-typography-body1">How many federal employees are teleworking full-time?</p></li></ul></div></div></div></div>
+
+    <p class="mud-typography mud-typography-body1 mb-4 mt-20" style="font-size:22px"><strong>Data collection process</strong></p>
+    <p class="mud-typography mud-typography-body1 mb-4">
+        The ultimate source of EHRI data is the core human resources (HR) systems used by federal agencies to manage their workforce. Agencies use core HR systems to store and process essential employee information, including job titles, salaries, work schedules, and personnel actions like hiring and separations.
+    </p>
+
+    <div><p class="mud-typography mud-typography-body1">
+            The EHRI data collection process includes the following steps:
+        </p>
+        <ul><li><p Markup="true" class="mud-typography mud-typography-body1"><strong>Agency core HR system:</strong> HR specialists use a core HR system to manage the workforce.</p></li><li><p Markup="true" class="mud-typography mud-typography-body1"><strong>File preparation:</strong> Agencies collect data from their core HR system and structure it in the EHRI format.</p></li><li><p Markup="true" class="mud-typography mud-typography-body1"><strong>File submission:</strong> Agencies send the data files by the 5th business day after the reporting period.</p></li><li><p Markup="true" class="mud-typography mud-typography-body1"><strong>EHRI data ingestion:</strong> OPM receives data files and works through any data transmission or quality issues with agencies.</p></li><li><p Markup="true" class="mud-typography mud-typography-body1"><strong>EHRI data processing:</strong> OPM processes the data and structures it for reporting and analysis.</p></li><li><p Markup="true" class="mud-typography mud-typography-body1"><strong>Data access and use:</strong> EHRI data is made available through the Federal Workforce Data site, FOIA data requests, data sharing agreements with agencies, and internally to government.</p></li></ul></div></div>
+<div style="height: 100px;"></div></div>
+		<div class="footer-responsive"><style>
+
+	.taag-footer {
+		border-top: 1px solid #E6E6E6;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		color: #4D4D4D;
+		font-size: smaller;
+		/* position: fixed; */
+		bottom: 1.875rem;
+		width: 100%;
+		background: #FFFFFF;
+	}
+
+    .taag-secondary-footer {
+        border-top: 1px solid #E6E6E6;
+        display: flex;
+        bottom: 0;
+        width: 100%;
+        background: #FFFFFF;
+		color: #4D4D4D !important;
+    }
+
+    .taag-third-footer {
+        border-top: 1px solid #E6E6E6;
+        display: flex;
+        justify-content: space-between;
+        color: #4D4D4D;
+        font-size: 14px;
+        width: 100%;
+        background: #FFFFFF;
+		flex-wrap: wrap;
+    }
+
+	.logo-scaled {
+		height: 3rem;
+		transform: scale(1.0);
+		transform-origin: center;
+	}
+
+	.header-text{
+		color: #1D1D1D;
+		font-size: 1.375rem;
+		margin-top: 1rem;
+	}
+
+	.paragraph-footer-text{
+		font-size: 0.875rem !important;
+	}
+
+	.links-text{
+		color: #005999 !important;
+		font-size: 1rem;
+		text-decoration: underline;
+		text-transform: none;
+		cursor: pointer;
+	}
+
+	.footer-link-text {
+		color: #4D4D4D !important;
+	}
+
+	.taag-secondary-footer {
+		display: block;
+	}
+
+	.taag-responsive-footer-tablet {
+		display: none;
+		color: #4D4D4D !important;
+	}
+
+	.taag-responsive-footer-mobile {
+		display: none;
+		color: #4D4D4D !important;
+	}
+
+	.nav-text{
+		margin-right:6px;
+	}
+
+	.footer-link-item-with-icon {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		width: 100%;
+		font-size: 14px;
+	}
+
+		.footer-link-item-with-icon .nav-menu-item-icon {
+			width: 19px !important;
+			height: 19px !important;
+			margin-left: 4px;
+		}
+
+	.footer-heading {
+		font-size: 16px;
+		color: #4D4D4D;
+		font-weight: bolder;
+	}
+
+	/*Tablet: 768-1023 */
+	@media (min-width: 768px) and (max-width: 1200px) {
+		
+		.taag-secondary-footer {
+			display: none;
+		}
+
+		.taag-responsive-footer-tablet {
+			padding: 36px 36px 85px 36px;
+			align-items: baseline;
+			display: flex;
+		}
+
+		.taag-responsive-footer-mobile {
+			display: none;
+		}
+
+		.logo-scaled {
+			width: 277px !important;
+			height: 38.76px !important;
+			padding-left: 0 !important;
+			margin: 0 !important;
+			display: block;
+			text-indent: 0 !important;
+		}
+
+		.gap-3 {
+			row-gap: 30px !important;
+			column-gap: 50px !important;
+		}
+	}
+
+	/* Mobile: less than 767 */
+	@media (max-width: 767px) {
+		
+		.taag-responsive-footer-mobile {
+			padding: 36px 36px 85px 36px;
+			align-items: baseline;
+			display: flex;
+		}
+
+		.taag-responsive-footer-tablet {
+			display: none;
+		}
+
+		.taag-secondary-footer {
+			display: none;
+		}
+
+		.logo-scaled {
+			width: 277px !important;
+			height: 38.76px !important;
+			transform-origin: center;
+		}	
+	}
+</style>
+
+<div class="py-3 taag-secondary-footer"><div Role="region" AriaLabel="Footer" class="mud-paper mud-paper-square mud-elevation-0 footer-shell scroll-when-narrow pa-10" style="width:100%;;"><div AlignItems="AlignItems.Stretch" Direction="Column" class="mud-grid mud-grid-spacing-xs-0 justify-space-between no-wrap-grid"><div class="mud-grid-item mud-grid-item-xs-4 mud-grid-item-sm-4 mud-grid-item-md-4 mud-grid-item-lg-4 mud-grid-item-xl-4 d-flex justify-center align-center" style="margin-bottom:4.6875rem;"><div role="group" class="d-flex flex-column justify-center align-center flex-wrap gap-3" style="height:100%;"><a href="/"><img alt="OPM Logo" src="/images/OPMLogo_MainBlue.svg" class="mud-image object-fill object-center logo-scaled" /></a></div></div>
+			<div class="mud-grid-item mud-grid-item-xs-2 mud-grid-item-sm-2 mud-grid-item-md-2 mud-grid-item-lg-2 mud-grid-item-xl-2 footer-col"><div role="group" Direction="Column" class="d-flex flex-column gap-2"><h6 class="mud-typography mud-typography-h6 footer-heading">Workforce Insights</h6>
+					<a href="/explore-data/analytics/workforce-size-and-composition" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Workforce Size & Composition</a>
+					<a href="/explore-data/analytics/workforce-changes" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Workforce Changes</a>
+					<a href="/explore-data/analytics/compensation-performance-leave" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Compensation, Performance & Leave</a>
+					<a href="/explore-data/analytics/federal-recruitment" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Federal Recruitment</a>
+					<a href="/explore-data/analytics/demographics" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Demographics</a>
+					<a href="/explore-data/analytics/location" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Location</a><a href="/explore-data/analytics/labor-unions-and-bargaining-units" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Labor Unions & Bargaining Units</a></div></div>
+			<div class="mud-grid-item mud-grid-item-xs-2 mud-grid-item-sm-2 mud-grid-item-md-2 mud-grid-item-lg-2 mud-grid-item-xl-2 footer-col"><div role="group" Direction="Column" class="d-flex flex-column gap-2 mb-5"><h6 class="mud-typography mud-typography-h6 footer-heading">Data Tools</h6>
+					<a href="/explore-data/data/table-builder" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Table Builder</a><a href="/chat" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">FWD Chat &nbsp; <img src="/images/new_banner_icon.svg" alt="New Feature"></a></div>
+				<div role="group" Direction="Column" class="d-flex flex-column gap-2 mb-5"><h6 class="mud-typography mud-typography-h6 footer-heading">Get Data</h6>
+					<a href="/get-data/data-downloads" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Data Downloads</a><a href="/get-data/api-access" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">API Access </a></div>
+				<div role="group" Direction="Column" class="d-flex flex-column gap-2 mb-5"><h6 class="mud-typography mud-typography-h6 footer-heading">Data Standards</h6>
+					<a href="/data-standards/ehri-data-standards" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">EHRI Data Standards</a>
+					<a href="/data-standards/ehri-data-validation-checks" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">EHRI Data Validation Checks</a>
+					<a href="/data-standards/personnel-office-identifier" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Personnel Office Identifiers (POI)</a>
+					<a href="/data-standards/duty-stations" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Duty Stations</a></div></div>
+			<div class="mud-grid-item mud-grid-item-xs-2 mud-grid-item-sm-2 mud-grid-item-md-2 mud-grid-item-lg-2 mud-grid-item-xl-2 footer-col"><div role="group" class="d-flex flex-column align-baseline gap-2 mb-5"><h6 class="mud-typography mud-typography-h6 footer-heading">References</h6>
+						<a href="https://www.opm.gov/policy-data-oversight/data-analysis-documentation/data-policy-guidance/#url=HR-Reporting" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Guide to Human Resources Reporting</span>
+								<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+						<a href="https://www.opm.gov/policy-data-oversight/data-analysis-documentation/data-policy-guidance/data-standards/data-release-policy-december-2024.pdf" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Data Release Policy</span>
+								<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+						<a href="https://www.opm.gov/privacy/privacy-policy/ehri.pdf" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Privacy Impact Assessment</span>
+								<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+						<a href="https://www.opm.gov/privacy/#url=SORNs" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>System of Record Notice</span>
+								<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a></div>
+					<div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Tools</h6>
+						<a href="/gppa-navigator" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">GPPA Navigator</a></div></div>
+			<div class="mud-grid-item mud-grid-item-xs-2 mud-grid-item-sm-2 mud-grid-item-md-2 mud-grid-item-lg-2 mud-grid-item-xl-2 footer-col"><div role="group" Direction="Column" class="d-flex flex-column gap-2 mb-5"><h6 class="mud-typography mud-typography-h6 footer-heading">Info & Help</h6>
+					<a href="/info-and-help/getting-started" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Getting Started</a>
+					<a href="/info-and-help/release-notes" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Release Notes</a>
+					<a href="https://support-ehri.opm.gov/hc/en-us/requests/new" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Submit Request</span>
+							<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+					<a href="https://touchpoints.app.cloud.gov/touchpoints/083574ad" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Give Feedback</span>
+							<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a></div>
+				<div role="group" Direction="Column" class="d-flex flex-column gap-2 mb-5"><h6 class="mud-typography mud-typography-h6 footer-heading">Resources</h6>
+					<a href="/resources/data-sources" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Data Sources</a>
+					<a href="/resources/data-quality" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Data Quality</a></div></div></div></div></div>
+
+<div class="taag-responsive-footer-tablet"><div role="group" class="d-flex flex-column gap-4"><div role="group" class="d-flex flex-column gap-3 logo-flush" style="height:100%;"><a href="/" aria-label="Home" class="mud-typography mud-link mud-primary-text mud-link-underline-hover"><img alt="OPM Logo" src="/images/OPMLogo_MainBlue.svg" class="mud-image object-fill object-center logo-scaled" /></a></div>
+		<div role="group" class="d-flex flex-row align-start gap-3 row-one"><div role="group" class="d-flex flex-column gap-3 footer-col-row-one"><div role="group" Direction="Column" class="d-flex flex-column gap-2"><h6 class="mud-typography mud-typography-h6 footer-heading">Workforce Insights</h6>
+					<a href="/explore-data/analytics/workforce-size-and-composition" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Workforce Size & Composition</a>
+					<a href="/explore-data/analytics/workforce-changes" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Workforce Changes</a>
+					<a href="/explore-data/analytics/compensation-performance-leave" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Compensation, Performance & Leave</a>
+					<a href="/explore-data/analytics/federal-recruitment" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Federal Recruitment</a>
+					<a href="/explore-data/analytics/demographics" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Demographics</a>
+					<a href="/explore-data/analytics/location" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Location</a><a href="/explore-data/analytics/labor-unions-and-bargaining-units" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Labor Unions & Bargaining Units</a></div><div role="group" class="d-flex flex-column align-baseline gap-2"><h6 class="mud-typography mud-typography-h6 footer-heading">References</h6>
+						<a href="https://www.opm.gov/policy-data-oversight/data-analysis-documentation/data-policy-guidance/#url=HR-Reporting" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Guide to Human Resources Reporting</span>
+								<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+						<a href="https://www.opm.gov/policy-data-oversight/data-analysis-documentation/data-policy-guidance/data-standards/data-release-policy-december-2024.pdf" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Data Release Policy</span>
+								<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+						<a href="https://www.opm.gov/privacy/privacy-policy/ehri.pdf" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Privacy Impact Assessment</span>
+								<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+						<a href="https://www.opm.gov/privacy/#url=SORNs" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>System of Record Notice</span>
+								<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a></div>
+					<div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Tools</h6>
+						<a href="/gppa-navigator" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">GPPA Navigator</a></div></div>
+			<div role="group" class="d-flex flex-column gap-4 footer-col-row-two"><div role="group" Direction="Column" class="d-flex flex-column gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Data Tools</h6>
+					<a href="/explore-data/data/table-builder" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Table Builder</a><a href="/chat" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">FWD Chat &nbsp; <img src="/images/new_banner_icon.svg" alt="New Feature"></a></div>
+				<div role="group" Direction="Column" class="d-flex flex-column gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Get Data</h6>
+					<a href="/get-data/data-downloads" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Data Downloads</a><a href="/get-data/api-access" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">API Access </a></div>
+				<div role="group" Direction="Column" class="d-flex flex-column gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Data Standards</h6>
+					<a href="/data-standards/ehri-data-standards" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">EHRI Data Standards</a>
+					<a href="/data-standards/ehri-data-validation-checks" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">EHRI Data Validation Checks</a>
+					<a href="/data-standards/personnel-office-identifier" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Personnel Office Identifiers (POI)</a>
+					<a href="/data-standards/duty-stations" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Duty Stations</a></div>
+				<div role="group" Direction="Column" class="d-flex flex-column gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Info & Help</h6>
+					<a href="/info-and-help/getting-started" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Getting Started</a>
+					<a href="/info-and-help/release-notes" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Release Notes</a>
+					<a href="https://support-ehri.opm.gov/hc/en-us/requests/new" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Submit Request</span>
+							<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+					<a href="https://touchpoints.app.cloud.gov/touchpoints/083574ad" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Give Feedback</span>
+							<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a></div>
+				<div role="group" Direction="Column" class="d-flex flex-column gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Resources</h6>
+					<a href="/resources/data-sources" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Data Sources</a>
+					<a href="/resources/data-quality" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Data Quality</a></div></div></div></div></div>
+
+
+<div class="taag-responsive-footer-mobile"><div role="group" class="d-flex flex-column align-baseline gap-4"><a href="/"><img alt="OPM Logo" src="/images/OPMLogo_MainBlue.svg" class="mud-image object-fill object-center logo-scaled" /></a>
+		<div role="group" class="d-flex flex-column align-baseline gap-4"><div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Workforce Insights</h6>
+				<a href="/explore-data/analytics/workforce-size-and-composition" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Workforce Size & Composition</a>
+				<a href="/explore-data/analytics/workforce-changes" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Workforce Changes</a>
+				<a href="/explore-data/analytics/compensation-performance-leave" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Compensation, Performance & Leave</a>
+				<a href="/explore-data/analytics/federal-recruitment" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Federal Recruitment</a>
+				<a href="/explore-data/analytics/demographics" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Demographics</a>
+				<a href="/explore-data/analytics/location" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Location</a><a href="/explore-data/analytics/labor-unions-and-bargaining-units" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Labor Unions & Bargaining Units</a></div>
+			<div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Data Tools</h6>
+				<a href="/explore-data/data/table-builder" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Table Builder</a><a href="/chat" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">FWD Chat &nbsp; <img src="/images/new_banner_icon.svg" alt="New Feature"></a></div>
+			<div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Get Data</h6>
+				<a href="/get-data/data-downloads" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Data Downloads</a><a href="/get-data/api-access" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">API Access </a></div>
+			<div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Data Standards</h6>
+				<a href="/data-standards/ehri-data-standards" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">EHRI Data Standards</a>
+				<a href="/data-standards/ehri-data-validation-checks" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">EHRI Data Validation Checks</a>
+				<a href="/data-standards/personnel-office-identifier" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Personnel Office Identifiers (POI)</a>
+				<a href="/data-standards/duty-stations" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Duty Stations</a></div><div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">References</h6>
+					<a href="https://www.opm.gov/policy-data-oversight/data-analysis-documentation/data-policy-guidance/#url=HR-Reporting" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Guide to Human Resources Reporting</span>
+							<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+					<a href="https://www.opm.gov/policy-data-oversight/data-analysis-documentation/data-policy-guidance/data-standards/data-release-policy-december-2024.pdf" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Data Release Policy</span>
+							<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+					<a href="https://www.opm.gov/privacy/privacy-policy/ehri.pdf" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Privacy Impact Assessment</span>
+							<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+					<a href="https://www.opm.gov/privacy/#url=SORNs" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>System of Record Notice</span>
+							<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a></div>
+				<div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Tools</h6>
+					<a href="/gppa-navigator" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">GPPA Navigator</a></div><div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Info & Help</h6>
+				<a href="/info-and-help/getting-started" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Getting Started</a>
+				<a href="/info-and-help/release-notes" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Release Notes</a>
+				<a href="https://support-ehri.opm.gov/hc/en-us/requests/new" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Submit Request</span>
+						<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a>
+				<a href="https://touchpoints.app.cloud.gov/touchpoints/083574ad" target="_blank" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text"><div class="footer-link-item-with-icon"><span>Give Feedback</span>
+						<svg class="mud-icon-root mud-svg-icon mud-icon-size-small nav-menu-item-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></div></a></div>
+			<div role="group" class="d-flex flex-column align-baseline gap-1"><h6 class="mud-typography mud-typography-h6 footer-heading">Resources</h6>
+				<a href="/resources/data-sources" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Data Sources</a>
+				<a href="/resources/data-quality" class="mud-typography mud-link mud-primary-text mud-link-underline-hover mud-typography-body2 mt-1 footer-link-text">Data Quality</a></div></div></div></div>
+<div class="py-3 taag-third-footer"><span class="pl-4 pr-4 mb-2">Release 1.16.1 | Site last updated October 7, 2026</span>
+	<span class="pl-4 pr-4">© 2026 Office of Personnel Management</span></div></div>
+		<style>
+	.give-feedback-button {
+		background: #005999;
+		text-transform: none;
+		text-decoration: none !important;
+		color: #FFFFFF !important;
+		padding: 8px 14px;
+		border-radius: 4px;
+		font-size: 16px;
+		font-weight: bolder;
+		border: none;
+		position: fixed;
+		bottom: 12px;
+		right: 12px;
+		display: flex;
+		align-items: center;
+		z-index: 100;
+		width: 168px;
+	}
+
+	.give-feedback-gppa:focus-visible {
+		outline: 2px solid #005999;
+		outline-offset: 2px;
+	}
+
+	.give-feedback-gppa {
+		background: #6F818E;
+		width: 178px;
+	}
+
+	.give-feedback-chat:focus-visible {
+		outline: 2px solid #005999;
+		outline-offset: 2px;
+	}
+
+	.give-feedback-chat {
+		background: #6F818E;
+		width: 178px;
+	}
+
+	.give-feedback-icon {
+		margin-right: 8px;
+		width: 20px;
+		height: 20px;
+	}
+
+	@media (max-width: 1200px) {
+		.give-feedback-button {
+			font-size: 14px;
+			padding: 5px 7px;
+			width: 133px;
+		}
+
+		.give-feedback-gppa {
+			background: #6F818E;
+			width: 145px;
+		}
+
+		.give-feedback-chat {
+			background: #6F818E;
+			width: 145px;
+		}
+
+		.give-feedback-icon {
+			margin-right: 6px;
+			width: 16px;
+			height: 16px;
+		}
+	}
+</style><a href="https://touchpoints.app.cloud.gov/touchpoints/083574ad/submit" target="_blank" rel="noopener noreferrer" class="mud-typography mud-link mud-primary-text mud-link-underline-hover give-feedback-button"><svg class="mud-icon-root mud-svg-icon mud-icon-size-small give-feedback-icon" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="img"><path d="M0 0h24v24H0z" fill="none"/><path d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4-.01-18zM18 14H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+				<span>Give feedback</span></a></div></div>
+
+<div id="blazor-error-ui">
+	An unhandled error has occurred.
+	<a href class="reload">Reload</a>
+	<a class="dismiss">🗙</a></div><!--Blazor:{"prerenderId":"3942a2be7c384160ad53605f8b4eb9da"}-->
+
+	<div id="components-reconnect-modal" data-nosnippet role="status" aria-live="polite"><div class="fwd-reconnect-pill"><span class="fwd-reconnect-spinner" aria-hidden="true"></span>
+			<span class="fwd-reconnect-reconnecting">Reconnecting to the server&hellip;</span>
+			<span class="fwd-reconnect-failed">
+				Connection lost.
+				<button type="button" id="fwd-reconnect-reload">Reload</button></span></div></div>
+
+	<script src="./js/app-insights-init.js?v=1"></script>
+	<script src="./js/gppa-telemetry.js"></script>
+	<script src="_framework/blazor.web.js"></script>
+	<script src="_content/MudBlazor/MudBlazor.min.js"></script>
+	<script src="./js/chart.4_5_1.js"></script>
+	<script src="./js/chartjs-plugin-datalabels-2.js"></script>
+	<script src="./js/chartjs-chart-geo.4_3_6.min.js"></script>
+	<script src="./js/map.js?v=2"></script>
+	<script src="./js/chart-helpers.js?v=1"></script>
+	<script src="./js/download-helpers.js?v=1"></script>
+	<script src="./js/table-builder-helpers.js?v=1"></script>
+	<script src="/js/scroll.js"></script>
+	<script src="/js/jspdf.3_0_4.umd.min.js"></script>
+	<script src="/js/html2canvas.1.4.1.min.js"></script>
+	<script src="/js/exporter.js"></script>
+	<script src="./js/table-accessibility.js?v=6"></script>
+	<script src="./js/gppa-panel-overlay.js?v=2"></script>
+	<script src="./js/gppa-sticky-offsets.js?v=1"></script>
+	<script src="./js/datepicker-accessibility.js?v=4"></script>
+	<script src="./js/drawer-accessibility.js?v=1"></script>
+	<script src="./js/data-downloads.js"></script>
+	<script src="./js/reconnect-indicator.js?v=1"></script>
+	<script src="./js/fwd-chat.js?v=3"></script>
+	<script src="./js/fwd-chart.js?v=3"></script></body></html><!--Blazor-Web-Initializers:Ww0KICAiX2NvbnRlbnQvQmxhem9yQXBwbGljYXRpb25JbnNpZ2h0cy9CbGF6b3JBcHBsaWNhdGlvbkluc2lnaHRzLmxpYi5tb2R1bGUuanMiDQpd--><!--Blazor-Server-Component-State:CfDJ8GlMlz98Yf5GhMVqMpW3uhzM7jFbO2CUFJn82cO1jpjvxCARwZVUYCeBvVXxcn91czEtRomLOBhU26cWq9i5ihdcObyw1YpFd2ruGgAhx9+Os32DVa/B0XGbZtJL3wBLDOfkujDw3UgEPfoPXO8m8x0JOmYTRQTFq7+0Am1klExpYOJ0OdIRoh2GiQWEowapziDUSSZrxk5g/9V3FmNONWEh6AEf3HERlxpARb/eOknKAbsh3OS+G5s4jBAsJbdFGCv5ZoBFF/IL0H3sqo+pG2diP3CoNF4mm3obpPX1PqxsI32a+5Bwb1DELQKHXklhrNbtIWRoRbzse3HrwjuVPJ4Aon22FUX/1EwBi92+9dpDEzsY5PQA2niQqdK7Ulgf3VhSQjgzYXNAWOG8MefE6OI6LgBjNso42mNB8ugByieBDIlT8yVD9YLWK4MTljopDumV1UcO/UPD7wpS74Nn94PAVbrVHUA5jlU+5g27gk4MjtmvDOgmMJz2FLlayOySfYjnNDGW+EfHEjw9dkJ8WK9kF9iZPU6bKmCdXH6lpdnjpcd5e/YgzS1iFTaKXU+kDJfeRATUdpqauReidtz9wR2tDhHspUYZllvwSQLVvR9XGrZZB8EvNSrSefuNwwVawSh9RBI16ywfjlshm3n1CG2/GV5r/RLeiK5JpIFfpiqqj1zz2ESvf9QLiqZQsFzIvo5wBXDPixK+DZ/MjZLxVfkUMl8pngTqMoF2rAqBrG6tENNRKJb5ezwgLMu1RWtFz/PLvGaRpLn6hWeL310RiP8tnxKpgpv9wrMDSVKWBHIHRUxagwJX4PatVWDlka1Z4tq1MHr0bMpOGGLIFVADb6YPySCaQg+vo3bVFgQNgHAVcs1StY4xcBJ8IaHsbssM/z1u0SnBYMLbYtc9nyqvQ+DVfCFq9Z80FmyMMx1mCxeBOAT+zgSn+aQQ/mQKM2Pj4lNHPQ6tE5vBIwnrRzMEGueMSoNxg8Jkrv03ikBNBwhoFAS/7uH8SLOiCfnD0Kc5eklFE+Ovt0j4QVCLvD0MI7GKc65cp2JPahJ874oxgpUG0+EiQ83z00FyPa8+0QqTnwTtjPCh7g5SoliCE+jPXj0q+kyPHOzEiaQMp757GVYg4s5ahbjLuD3+9SPQmFT2fw==--><!--Blazor-WebAssembly-Component-State:eyJLOVRlM0xEYlx1MDAyQjZ4ZkpDLzBSVDBCR0xRT3ZwWGlQNEtJU2dBa096RG5za0E9IjoiSWk0dlgyWnlZVzFsZDI5eWF5OXlaWE52ZFhKalpTMWpiMnhzWldOMGFXOXVMazQ1Ym5NekxtcHpJZz09IiwiTWljcm9zb2Z0LkFzcE5ldENvcmUuQ29tcG9uZW50cy5JbmZyYXN0cnVjdHVyZS5QZXJzaXN0ZW50U2VydmljZXNSZWdpc3RyeSI6Ilczc2lZWE56WlcxaWJIa2lPaUpOYVdOeWIzTnZablF1UVhOd1RtVjBRMjl5WlM1RGIyMXdiMjVsYm5SekxrVnVaSEJ2YVc1MGN5SXNJbVoxYkd4VWVYQmxUbUZ0WlNJNklrMXBZM0p2YzI5bWRDNUJjM0JPWlhSRGIzSmxMa052YlhCdmJtVnVkSE11VW1WemIzVnlZMlZEYjJ4c1pXTjBhVzl1VUhKdmRtbGtaWElpZlN4N0ltRnpjMlZ0WW14NUlqb2lUV2xqY205emIyWjBMa0Z6Y0U1bGRFTnZjbVV1UTI5dGNHOXVaVzUwY3k1WFpXSWlMQ0ptZFd4c1ZIbHdaVTVoYldVaU9pSk5hV055YjNOdlpuUXVRWE53VG1WMFEyOXlaUzVEYjIxd2IyNWxiblJ6TGtadmNtMXpMa0Z1ZEdsbWIzSm5aWEo1VTNSaGRHVlFjbTkyYVdSbGNpSjlYUT09IiwiS1N6dFQ4NGdBaVYwSU8vVUJSUnBPbThLNGpxRWZcdTAwMkIxSnp2Vk9DTUJsc2lVPSI6ImV5SjJZV3gxWlNJNklrTm1SRW80UjJ4TmJIbzVPRmxtTlVkb1RWWnhUWEJYTTNWb2VuaGtWVUZKVkZsblprVmFabE5MVmtoRFUxSkVXbWxRZVRWd1gwZE1XSGR0UVY5ZmRHRnJXSE41TVdoSGVYbzJWV3d0YjNNelh6TlNNMlJNTjFCTWRGWk1VSGN3Y25Kek0ybzBOVFpIV1dKeE4ycElPR2xGVmsxMk5tZHNhazFDUVVsZlJqVm9RMVJJVDBZMVNIaFJPVzl2ZFRSaGFEVXpaVVpXT0VKVVNtbEpJaXdpWm05eWJVWnBaV3hrVG1GdFpTSTZJbDlmVW1WeGRXVnpkRlpsY21sbWFXTmhkR2x2YmxSdmEyVnVJbjA9In0=-->

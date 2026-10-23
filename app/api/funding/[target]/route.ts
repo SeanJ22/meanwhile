@@ -17,6 +17,19 @@ export const GET = readerRoute("/api/funding/[target]", async function GET(
     return Response.json({ error: "target must contain 1–512 characters" }, { status: 400 });
   }
 
+  if (target.startsWith("white-house:")) {
+    const startedAt = Date.now();
+    try {
+      const { readNationalExecutiveFunding } = await import("@/lib/funding/national-executive");
+      const answer = await readNationalExecutiveFunding(target);
+      return Response.json({ ...answer, dataState: "PARTIAL", dataMetadata: null, holdingStatus: "PARTIAL", unavailableAuthorities: [] }, {
+        headers: { "cache-control": "private, no-store", "server-timing": `total;dur=${Date.now() - startedAt}` },
+      });
+    } catch {
+      return Response.json({ error: "funding data unavailable", holdingStatus: "HOLDING_UNAVAILABLE", unavailableAuthorities: ["NATIONAL_PEOPLE"] }, { status: 503 });
+    }
+  }
+
   const timings: Record<string, number> = {};
   const startedAt = Date.now();
   const divisions = await ballotPlaceFromRequest(request);

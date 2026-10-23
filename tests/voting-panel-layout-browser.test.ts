@@ -28,10 +28,14 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
     const jurisdiction: VotingJurisdiction = { ...door.scope, model: "UNKNOWN", election: "November 3, 2026", electionDate: door.electionDate,
       sites: parsed.sites, rules: door.rules, sourceUrl: door.url, sourceOrg: door.publisher, collectedAt: source.checkedAt, refusal: null };
     const place: VotingReaderPlace = { precision: "ZIP", point: null, divisionIds: [door.scope.ocdId], states: [door.scope.state], countyFips: [], countyNames: [item.county], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
-    const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(jurisdiction, place)], outsideCoverage: false, pollingPlaceLinks: [] };
+    const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(jurisdiction, place)], outsideCoverage: false };
     assert.ok(answer.jurisdictions[0].sites.length > 0);
     answers.set(item.zip, answer);
   }
+  answers.set("Office contact", { match: true, point: null, jurisdictions: [], outsideCoverage: true,
+    electionOffices: [{ name: "Protocol county election office", address: "Protocol office address", phone: "(555) 010-0100",
+      hours: "Monday–Friday, 8 am–5 pm", url: "https://example.gov/polling-place",
+      source: { publisher: "Protocol source", url: "https://example.gov/elections", checkedAt: "2026-10-23" } }] });
   const output = await build({
     stdin: { contents: `
       import React from "react"; import {createRoot} from "react-dom/client";
@@ -61,7 +65,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       }
       if (["KEY_MISSING", "GOOGLE_UNAVAILABLE", "NO_DATA"].includes(data.address)) {
         response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({
-          match: true, point: null, jurisdictions: [], outsideCoverage: true, pollingPlaceLinks: [],
+          match: true, point: null, jurisdictions: [], outsideCoverage: true,
           googleFallback: { requested: true, available: false, reason: data.address },
         })); return;
       }
@@ -150,6 +154,17 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       assert.deepEqual(errors, []); assert.deepEqual(external, []);
       // Protocol failures assert no civic facts and use no database or invented SQL schema.
       await page.goto(`${origin}/adams`);
+      await page.getByLabel("Your street address or ZIP").fill("Office contact");
+      await page.getByRole("button", { name: "Show me", exact: true }).click();
+      const office = page.locator("[data-voting-office]");
+      await office.waitFor();
+      assert.match(await office.innerText(), /Protocol county election office/);
+      assert.match(await office.innerText(), /Protocol office address/);
+      assert.match(await office.innerText(), /Monday–Friday, 8 am–5 pm/);
+      assert.equal(await office.getByRole("link", { name: "(555) 010-0100", exact: true }).getAttribute("href"), "tel:5550100100");
+      assert.equal(await office.getByRole("link", { name: "Find your polling place", exact: true }).getAttribute("href"), "https://example.gov/polling-place");
+      assert.equal(await office.evaluate(element => element.getBoundingClientRect().top < document.querySelector("[data-voting-coverage-gap]")!.getBoundingClientRect().top), true);
+      await page.screenshot({ path: `.scratch/ci/lv01-office-${viewport.name}.png` });
       for (const input of ["Server failure", "KEY_MISSING", "GOOGLE_UNAVAILABLE", "NO_DATA", "Stalled request"]) {
         if (input === "Stalled request") await page.clock.install();
         await page.getByLabel("Your street address or ZIP").fill(input);
@@ -196,7 +211,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       assert.deepEqual(errors, []);
       await context.close();
     }
-    assert.equal(received.length, 14); assert.ok(received.every(row => row.googleFallback === undefined));
+    assert.equal(received.length, 16); assert.ok(received.every(row => row.googleFallback === undefined));
   } finally {
     await browser?.close();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

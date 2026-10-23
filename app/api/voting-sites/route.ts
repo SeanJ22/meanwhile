@@ -9,13 +9,23 @@ import { fillVotingSitesAnswer } from "@/lib/ballot/voting-sites-live";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import { recordVotingLookupCount } from "@/lib/ballot/voting-sites-counts";
 import { votingSitesResponse } from "@/lib/ballot/voting-sites-stream";
+import { GOOGLE_CIVIC_STATES } from "@/lib/sources/google-civic/targets";
 import type { VotingSitesAnswer, VotingSitesFile } from "@/lib/ballot/voting-sites";
 
 /** Addresses stay in the uncached request, Census geocode, and live Google fallback. */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" } as const;
-const empty = (status = 200, outsideCoverage = true) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage, pollingPlaceLinks: [] }, { status, headers: NO_STORE });
+const empty = (status = 200, outsideCoverage = true) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage }, { status, headers: NO_STORE });
+
+async function heldVotingFile(state: string, precision: VotingReaderPlace["precision"], deadline: number): Promise<VotingSitesFile> {
+  try {
+    const read = await readVotingSitesProjection(state, {}, Math.max(1, deadline - Date.now()));
+    if (read.kind === "PROMOTED") return read.value;
+    if (read.kind !== "NOT_RECORDED") recordVotingFailure({ stage: "held-voting-sites", state, precision }, new Error(`Voting-site holding could not be read: ${read.kind}`));
+  } catch (error) { recordVotingFailure({ stage: "held-voting-sites", state, precision }, error); }
+  return { generatedAt: "", jurisdictions: [] };
+}
 
 export async function POST(request: Request): Promise<Response> {
   return withReaderRoute("/api/voting-sites", async () => {
@@ -39,6 +49,11 @@ export async function POST(request: Request): Promise<Response> {
       const lookup = async (): Promise<VotingSitesAnswer> => {
         try {
           const isZip = /^\d{5}$/.test(address);
+          const suppliedState = /(?:^|[,\s])([A-Z]{2})(?:\s+\d{5}(?:-\d{4})?)?$/i.exec(address)?.[1]?.toUpperCase();
+          const state = suppliedState && GOOGLE_CIVIC_STATES.includes(suppliedState) ? suppliedState : null;
+          // The state holding is the same before and after Census resolves the
+          // precinct. Start that read now; project its sites only once located.
+          const prefetched = state ? withReaderSelection({ states: [state], keys: new Set() }, () => heldVotingFile(state, "ADDRESS", deadline)) : null;
           stage = "geocode";
           const located = isZip ? null : await censusVotingAddress(address);
           const zipInput = votingInputZip(address);
@@ -56,10 +71,7 @@ export async function POST(request: Request): Promise<Response> {
             place.precision = "ADDRESS";
           }
           // A supplied state remains useful if Census is down and the address has no ZIP.
-          if (!place.states.length) {
-            const state = /(?:^|[,\s])([A-Z]{2})(?:\s+\d{5}(?:-\d{4})?)?$/i.exec(address)?.[1]?.toUpperCase();
-            if (state && (await import("@/lib/sources/google-civic/targets")).GOOGLE_CIVIC_STATES.includes(state)) place.states = [state];
-          }
+          if (!place.states.length && state) place.states = [state];
           // Census and our ZIP membership supply count dimensions; Google never does.
           const match = (located?.payload as { result?: { addressMatches?: { addressComponents?: { zip?: string }; geographies?: Record<string, Record<string, string>[]> }[] } })?.result?.addressMatches?.[0];
           const zip = zipInput ?? (/^\d{5}$/.test(match?.addressComponents?.zip ?? "") ? match!.addressComponents!.zip! : "");
@@ -79,12 +91,8 @@ export async function POST(request: Request): Promise<Response> {
           });
           stage = "held-voting-sites";
           const result = withReaderSelection({ states: place.states, keys: new Set(place.divisionIds), ...(place.point ? { point: [place.point.lng, place.point.lat] as const } : {}) }, async () => {
-            const files = await Promise.all(place.states.map(async state => {
-              const read = await readVotingSitesProjection(state, {}, Math.max(1, deadline - Date.now()));
-              if (read.kind === "PROMOTED") return read.value;
-              if (read.kind !== "NOT_RECORDED") recordVotingFailure({ stage, state, precision: place.precision }, new Error(`Voting-site holding could not be read: ${read.kind}`));
-              return { generatedAt: "", jurisdictions: [] } satisfies VotingSitesFile;
-            }));
+            const files = await Promise.all(place.states.map(selected => selected === state && prefetched
+              ? prefetched : heldVotingFile(selected, place.precision, deadline)));
             const file: VotingSitesFile = { generatedAt: files.map(row => row.generatedAt).sort().at(-1) ?? "", jurisdictions: files.flatMap(row => row.jurisdictions) };
             stage = "precinct-match";
             const answer = await answerVotingSites(file, place);
@@ -95,7 +103,7 @@ export async function POST(request: Request): Promise<Response> {
           return answer;
         } catch (error) {
           recordVotingFailure({ stage }, error, address);
-          return { match: false, point: null, jurisdictions: [], outsideCoverage: true, pollingPlaceLinks: [] };
+          return { match: false, point: null, jurisdictions: [], outsideCoverage: true };
         }
       };
       return await votingSitesResponse(lookup(), request.headers.get("accept")?.includes("application/x-ndjson") ?? false);

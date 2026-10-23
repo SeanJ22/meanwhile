@@ -28,6 +28,7 @@ export interface VotingOfficeContact {
   phone?: string;
   email?: string;
   address?: string;
+  hours?: string;
   url?: string;
 }
 
@@ -253,7 +254,8 @@ export interface VotingSitesAnswer {
   /** Transient Google results must disappear from an open panel within 24 hours. */
   expiresAt?: string;
 
-  pollingPlaceLinks: readonly import("./polling-place-links.ts").PollingPlaceLink[];
+  /** Request-only office contacts for an answer without sites; never part of a saved voting projection. */
+  electionOffices?: (VotingOfficeContact & { source: VotingSource & { checkedAt: string } })[];
   ballotNavigationDataState?: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
 }
 

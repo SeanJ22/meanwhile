@@ -8,8 +8,9 @@ import { votingSitesResponse } from "../lib/ballot/voting-sites-stream.ts";
 import { answerVotingSites } from "../lib/ballot/voting-answer.ts";
 import { votingPlaceFromZip } from "../lib/ballot/voting-answer-geography.ts";
 import type { VotingFallbackReason, VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
+import { GOOGLE_CIVIC_DOCS } from "../lib/sources/google-civic/targets.ts";
 
-const empty: VotingSitesAnswer = { match: true, point: null, jurisdictions: [], outsideCoverage: true, pollingPlaceLinks: [] };
+const empty: VotingSitesAnswer = { match: true, point: null, jurisdictions: [], outsideCoverage: true };
 const place = { ...votingPlaceFromZip(["ocd-division/country:us/state:mi/county:ingham"]), precision: "ADDRESS" as const };
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/google-civic/${name}.json`, import.meta.url), "utf8");
 const options = { apiKey: "private-test-key", fetchImpl: (async (input: URL) =>
@@ -25,7 +26,8 @@ test("an empty held answer gets live Google locations, hours, assignment and req
   assert.match(JSON.stringify(answer), /FIRST PRESBYTERIAN CHURCH/);
   assert.match(JSON.stringify(answer), /7 am - 8 pm/);
   assert.ok(answer.jurisdictions[0].sources?.some(source => source.title === "Voting information powered by the Civic Information API"));
-  assert.ok(answer.jurisdictions[0].sources?.some(source => source.title === "Election office" && source.url.includes("lansingmi.gov")));
+  assert.ok(answer.jurisdictions[0].sources?.some(source => source.title === "Election office" && source.url === "https://mvic.sos.state.mi.us/Voter/Index"));
+  assert.equal(answer.electionOffices, undefined, "office fallback is shown only without sites");
   assert.doesNotMatch(JSON.stringify(answer), /private reader street|private-test-key/);
   const expiresAt = Date.parse(answer.expiresAt!);
   assert.ok(expiresAt >= before + 24 * 60 * 60 * 1000);
@@ -99,7 +101,7 @@ for (const scenario of [
     assert.doesNotMatch(JSON.stringify(answer), /private reader street|private-test-key/);
     if (scenario.reason === "KEY_MISSING") assert.equal(requests, 0);
     if (scenario.name === "no sites in a successful response") {
-      assert.ok(answer.jurisdictions[0].sources?.some(source => source.title === "Election office"), "office links survive a no-sites response");
+      assert.ok(answer.electionOffices?.some(office => office.url), "office links survive a no-sites response");
     }
   });
 }
@@ -108,6 +110,33 @@ test("a missing election catalog is an unavailable provider rather than no data 
   const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options,
     fetchImpl: async () => new Response("", { status: 404 }) });
   assert.equal(answer.googleFallback?.reason, "GOOGLE_UNAVAILABLE");
+});
+
+test("a no-sites response leads with Google's local office, preserving live contacts and preferring its polling-place finder", async () => {
+  const data = JSON.parse(fixture("mi-voterinfo"));
+  delete data.pollingLocations; delete data.earlyVoteSites; delete data.dropOffLocations;
+  data.state[0].local_jurisdiction.electionAdministrationBody.hours = "Monday–Friday, 8 am–5 pm";
+  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options, fetchImpl: googleFetch(JSON.stringify(data)) });
+  assert.deepEqual(answer.electionOffices?.[0], {
+    name: "LANSING CITY", address: "701 W JOLLY RD, LANSING, MI 48910", phone: "5174834133",
+    email: "ROBIN.STITES@LANSINGMI.GOV", hours: "Monday–Friday, 8 am–5 pm", url: "https://mvic.sos.state.mi.us/Voter/Index",
+    source: { publisher: "Google", title: "Voting information powered by the Civic Information API",
+      url: GOOGLE_CIVIC_DOCS, checkedAt: answer.electionOffices![0].source.checkedAt },
+  });
+});
+
+test("missing Google offices use only the requested state's FEC election office, without inventing address or hours", async () => {
+  const data = JSON.parse(fixture("mi-voterinfo"));
+  delete data.pollingLocations; delete data.earlyVoteSites; delete data.dropOffLocations; delete data.state;
+  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options, fetchImpl: googleFetch(JSON.stringify(data)) });
+  assert.equal(answer.electionOffices?.length, 1);
+  const office = answer.electionOffices![0];
+  assert.match(office.name, /Michigan|Lansing, MI/);
+  assert.ok(office.phone);
+  assert.match(office.url!, /michigan.gov/);
+  assert.match(office.source.url, /fec.gov/);
+  assert.equal(office.address, undefined);
+  assert.equal(office.hours, undefined);
 });
 
 test("anonymous counts atomically increment only day, ZIP and deduplicated divisions", async () => {

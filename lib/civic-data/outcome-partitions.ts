@@ -20,7 +20,7 @@ export const OUTCOME_DOOR_KINDS = ["legistar", "legistar-insite"] as const;
 export type OutcomeDoorKind = (typeof OUTCOME_DOOR_KINDS)[number];
 
 /** A door on one of these routes is served by that contract; building both would write each sitting twice. */
-const STILL_ON_PLACE_CONTRACT: ReadonlySet<string> = new Set(["legistar:pima", "legistar-insite:mesa"]);
+const STILL_ON_PLACE_CONTRACT: ReadonlySet<string> = new Set(["legistar:pima", "legistar-insite:pima", "legistar:mesa", "legistar-insite:mesa"]);
 
 export interface OutcomePartitionContract extends RoutineSourceContract {
   readonly doorId: string;
@@ -77,7 +77,7 @@ function outcomeDoorKind(door: DoorRecord): OutcomeDoorKind | null {
 export function outcomeDoors(doors: readonly DoorRecord[]): readonly DoorRecord[] {
   return doors.filter((door) =>
     door.status !== "SUSPENDED" && door.meeting != null && door.meeting.family === null && door.bodyIds.length === 1 &&
-    outcomeDoorKind(door) !== null && door.holds.includes(OUTCOMES_HOLD));
+    outcomeDoorKind(door) !== null && (door.holds.includes(OUTCOMES_HOLD) || door.holds.includes("meetings")));
 }
 
 export interface OutcomePartitionBuild {
@@ -115,7 +115,7 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
   if (kind === "legistar-insite" && (!row.config.insiteBodyNames?.trim() || !row.config.insiteBodyName?.trim())) {
     throw new Error(`OUTCOME_DOOR_INSITE_BODY_NAMES_MISSING:${row.bodyId}`);
   }
-  const doorId = meetingPartitionId(kind, door.bodyIds[0]);
+  const doorId = meetingPartitionId(kind, door.bodyIds[0], row.config.partitionRoute);
   const id = outcomePartitionId(doorId);
   const scope = outcomePartitionScope(doorId);
   const tenant = tenantFor(row, kind, id, scope);

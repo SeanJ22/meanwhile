@@ -16,8 +16,10 @@ import {
 } from "../lib/outcomes/data-plane.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { inSiteTenantsFromWiring } from "../lib/sources/legistar-insite/tenant-registry.ts";
-import { loadOutcomePartitionForDoor } from "../lib/doors/outcome-door-load.ts";
-import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
+import { outcomePartitionForDoor } from "../lib/civic-data/outcome-partitions.ts";
+import { meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
+import { readHeldMeetingChildInput } from "./lib/held-meeting-child-input.ts";
+import { replayedObservationAt, restoreRetainedResponse, withRetainedSourceResponse } from "./lib/retained-source-replay.ts";
 import {
   applyMinutesApprovals,
   concludedSittingRows,
@@ -51,11 +53,14 @@ import {
 } from "../lib/sources/legistar-insite/calendar.ts";
 import { INSITE_SPACING_MS, InSiteSession } from "../lib/sources/legistar-insite/http.ts";
 import { findTenant, type InSiteTenant } from "../lib/sources/legistar-insite/tenant-registry.ts";
+import { diggerMeasurement, type DiggerMeasurement } from "./lib/digger-measurement.ts";
+import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
+import { candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { retainMeetingFetchBytes, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
+import { minutesFactPublisher, type MinutesFactSink } from "./lib/minutes-fact-publication.ts";
 
 /** Minutes follow a sitting by weeks (Mesa's council: about four); the window reaches back this far. */
 export const MINUTES_ROUTINE_WINDOW_DAYS = 120;
-/** The InSite adapter's own page budget per range (lib/sources/legistar-insite/index.ts MAX_GRID_PAGES). */
-const MAX_GRID_PAGES = 6;
 
 export interface MinutesIngestArgs {
   readonly slug: string;
@@ -121,18 +126,19 @@ export function minutesRunnerReceiptLine(outcome: PromotionOutcome, source?: str
 
 const EMPTY: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNKNOWN", tenants: [], sittings: [] };
 
-async function currentProjection(store: RoutineDataStore, outcome: OutcomeTenant): Promise<{ readonly snapshot: OutcomeSnapshot; readonly sourceThrough: string | null }> {
+async function currentProjection(store: RoutineDataStore, outcome: OutcomeTenant): Promise<{ readonly snapshot: OutcomeSnapshot; readonly sourceThrough: string | null; readonly versionId: string | null }> {
   // Mesa's own pointer keeps its reader; a door's outcomes are read from the door's own scope.
   const read = outcome.contractId === MESA_OUTCOME_TENANT.contractId
     ? await readDoorOutcomeProjection(outcome.scope, { store, bypassCache: true })
     : await readPromotedCivicData<OutcomeSnapshot>(outcome.recordClass, outcome.scope, { store, bypassCache: true });
-  if (read.kind === "PROMOTED") return { snapshot: read.value, sourceThrough: read.metadata.sourceThrough };
-  if (read.kind === "NOT_RECORDED") return { snapshot: EMPTY, sourceThrough: null };
+  if (read.kind === "PROMOTED") return { snapshot: read.value, sourceThrough: read.metadata.sourceThrough, versionId: read.metadata.versionId };
+  if (read.kind === "NOT_RECORDED") return { snapshot: EMPTY, sourceThrough: null, versionId: null };
   if (read.kind === "BOOTSTRAP") throw new Error("MINUTES_OUTCOME_PRODUCTION_BOOTSTRAP_FORBIDDEN");
   throw new Error(`MINUTES_OUTCOME_STORE_UNREACHABLE:${read.code}:${read.detail}`);
 }
 
 export interface MinutesIngestInput {
+  readonly initialResponse?: RetainedSourceResponse;
   readonly store: RoutineDataStore;
   readonly tenant: InSiteTenant;
   readonly args: MinutesIngestArgs;
@@ -144,6 +150,8 @@ export interface MinutesIngestInput {
   readonly log?: (line: string) => void;
   /** Pacing between portal requests. The vendor's `Crawl-delay: 2` in production. */
   readonly spacingMs?: number;
+  /** The existing fact publisher, injected by a read-only run or test when it already owns the fact sink. */
+  readonly minutesFactSink?: MinutesFactSink;
 }
 
 export interface MinutesIngestResult {
@@ -156,36 +164,40 @@ export interface MinutesIngestResult {
   readonly skippedUnchanged: number;
   /** Held failed extractions whose document a cheap check found unchanged (or could not check): not downloaded. */
   readonly heldFailedExtractions: number;
+  readonly measurement: DiggerMeasurement;
 }
 
-/** The calendar grid, every range and page the window needs, as rows. */
-async function readCalendar(session: InSiteSession, calendarUrl: string, ranges: readonly InSiteRange[], log: (line: string) => void): Promise<{ readonly rows: InSiteCalendarRow[]; readonly gridRendered: boolean }> {
+/** One body's rows from every required grid page; unrelated portal bodies never accumulate in this worker. */
+export async function readCalendar(session: InSiteSession, calendarUrl: string, ranges: readonly InSiteRange[], bodyNames: readonly string[]): Promise<{ readonly rows: InSiteCalendarRow[]; readonly gridRendered: boolean }> {
   const rows: InSiteCalendarRow[] = [];
+  const names = new Set(bodyNames.map(name => name.trim().toLowerCase()));
+  let gridRendered = false;
+  const append = (page: string) => {
+    const found = parseCalendarRows(page);
+    gridRendered ||= found.length > 0 || parseGridNoRecords(page);
+    rows.push(...found.filter(row => names.has(row.bodyName.trim().toLowerCase())));
+  };
   let latest = (await session.get(calendarUrl, "text/html,application/xhtml+xml")).text;
-  let gridRendered = parseCalendarRows(latest).length > 0 || parseGridNoRecords(latest);
-  rows.push(...parseCalendarRows(latest));
+  append(latest);
   for (const range of ranges) {
     if (renderedRange(latest) !== range) {
       latest = (await session.postForm(calendarUrl, dateRangePostback(latest, range))).text;
       // A postback that did not take answers 200 with the page it already had.
       if (renderedRange(latest) !== range) {
-        log(`  ${range}: the portal rendered ${JSON.stringify(renderedRange(latest))}; that range was not read`);
-        continue;
+        throw new Error(`${range}: the portal rendered ${JSON.stringify(renderedRange(latest))}; that range was not read`);
       }
     }
-    const found = parseCalendarRows(latest);
-    gridRendered ||= found.length > 0 || parseGridNoRecords(latest);
-    rows.push(...found);
+    append(latest);
     const pager = parseGridPager(latest);
     if (pager && pager.pageCount > 1) {
       let page = latest;
-      for (let index = 2; index <= Math.min(pager.pageCount, MAX_GRID_PAGES); index++) {
+      for (let index = 2; index <= pager.pageCount; index++) {
         const target = parseGridPageTargets(page).get(index);
-        if (!target) break;
+        if (!target) throw new Error(`Calendar page ${index} of ${pager.pageCount} has no navigation target; the read is incomplete.`);
         page = (await session.postForm(calendarUrl, gridPagePostback(page, target))).text;
         const walked = parseGridPager(page);
-        if (!walked || walked.page !== index) break;
-        rows.push(...parseCalendarRows(page));
+        if (!walked || walked.page !== index) throw new Error(`Calendar page ${index} of ${pager.pageCount} did not render; the read is incomplete.`);
+        append(page);
       }
       latest = page;
     }
@@ -195,11 +207,17 @@ async function readCalendar(session: InSiteSession, calendarUrl: string, ranges:
 
 /** One bounded routine pass over one tenant's concluded sittings. */
 export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): Promise<MinutesIngestResult> {
+  return (await withRetainedSourceResponse(input.initialResponse, () => executeInSiteMinutesOutcomeIngest(input))).value;
+}
+
+async function executeInSiteMinutesOutcomeIngest(input: MinutesIngestInput): Promise<MinutesIngestResult> {
   const { store, tenant, args, window } = input;
   const outcomeTenant = input.outcomeTenant ?? MESA_OUTCOME_TENANT;
   const now = input.now ?? (() => new Date().toISOString());
   const log = input.log ?? ((line: string) => console.log(line));
   const writes = args.promote && !args.dryRun;
+  const measurement = diggerMeasurement(tenant.bodyId, !writes);
+  measurement.worked();
   const spacingMs = input.spacingMs ?? INSITE_SPACING_MS;
   // Late-bound, so every read goes through the acquisition trace installed for it.
   const session = new InSiteSession({ fetchImpl: (url, init) => globalThis.fetch(url, init), spacingMs });
@@ -212,6 +230,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   let heldFailedExtractions = 0;
 
   const current = await currentProjection(store, outcomeTenant);
+  const dryBase = !writes && current.versionId ? await store.readCandidate(current.versionId) : null;
   let snapshot = current.snapshot;
   let sourceThrough = current.sourceThrough;
   const held = new Map(snapshot.sittings.map((sitting) => [sitting.meetingId, sitting]));
@@ -237,24 +256,30 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     notYetPublished,
     skippedUnchanged,
     heldFailedExtractions,
+    measurement: measurement.result(),
   });
 
   const attemptedAt = now();
   let calendarEvidence: readonly SourceAcquisitionEvidence[] = [];
+  let calendarResponses: readonly RetainedSourceResponse[] = [];
   let calendar: { readonly rows: InSiteCalendarRow[]; readonly gridRendered: boolean };
   try {
-    const captured = await captureSourceAcquisitions((runForSource) =>
-      runForSource(outcomeTenant.sourceId, () => readCalendar(session, calendarUrl, rangesForWindow(window), log)),
-    );
+    const retained = await measurement.read(() => retainMeetingFetchBytes(() => captureSourceAcquisitions((runForSource) =>
+      runForSource(outcomeTenant.sourceId, () => readCalendar(session, calendarUrl, rangesForWindow(window), tenant.bodyNames)),
+    )));
+    const captured = retained.value;
     calendar = captured.value;
     calendarEvidence = captured.evidence;
+    calendarResponses = retained.responses.map(response => restoreRetainedResponse(input.initialResponse, response));
   } catch (error) {
-    if (!writes) throw error;
     const detail = error instanceof Error ? error.message : String(error);
+    measurement.fail(`calendar: ${detail}`);
+    if (!writes) return { receiptLine: null, exitCode: 2, promotedSittings, refusedSittings: [detail], documentsRead,
+      notYetPublished, skippedUnchanged, heldFailedExtractions, measurement: measurement.result() };
     log(`${tenant.slug}: calendar acquisition failed — ${detail}`);
     return settle(await persist({ snapshot, acquisitions: [], retrievedAt: attemptedAt, sourceThrough: minutesSourceThrough(sourceThrough, attemptedAt), failureDetail: `${tenant.host} calendar acquisition failed: ${detail}` }));
   }
-  const calendarAt = now();
+  const calendarAt = replayedObservationAt(input.initialResponse, calendarEvidence, now());
 
   const sittings = concludedSittingRows(calendar.rows, tenant, window, new Date(calendarAt));
   const population = floored(
@@ -270,7 +295,9 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     const detail = !calendar.gridRendered
       ? `The ${tenant.host} calendar grid did not render; a zero-row read is a failed extraction and no governmental absence is inferred.`
       : `The ${tenant.host} calendar grid named no concluded ${tenant.bodyName} sitting in ${window.from}..${window.to}; no governmental absence is inferred.`;
-    if (!writes) throw new Error(`MINUTES_OUTCOME_ZERO_SITTINGS: ${detail}`);
+    measurement.fail(detail);
+    if (!writes) return { receiptLine: null, exitCode: 2, promotedSittings, refusedSittings: [detail], documentsRead,
+      notYetPublished, skippedUnchanged, heldFailedExtractions, measurement: measurement.result() };
     log(`MINUTES_OUTCOME_ZERO_SITTINGS: ${detail}`);
     return settle(await persist({ snapshot, acquisitions: calendarEvidence, retrievedAt: calendarAt, sourceThrough: minutesSourceThrough(sourceThrough, calendarAt), failureDetail: detail }));
   }
@@ -279,11 +306,20 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   /** Rows recorded "not yet published" this pass, folded into the next candidate written. */
   let pending: PersistedSittingOutcomes[] = [];
   const base = { tenant, calendarUrl };
+  const publishMinutes = minutesFactPublisher({ tenant, responses: calendarResponses, writes, sink: input.minutesFactSink });
 
   for (const row of sittings) {
     const meetingId = insiteMeetingId(tenant.slug, row.insiteId!);
     const link = minutesLinkFor(row, tenant.host);
     const heldSitting = held.get(meetingId);
+    if (link) {
+      try {
+        const published = await publishMinutes(meetingId, link.url, calendarAt);
+        if ("blank" in published) measurement.fail(`${meetingId}: minutes link ${published.blank}`);
+        else measurement.fact("minutes", link.url, heldSitting?.minutesDocument?.url ?? heldSitting?.minutesPointer.url,
+          published.decision === "PUBLISH" || published.decision === "CONFIRM");
+      } catch (error) { measurement.fail(`${meetingId}: minutes link publication failed: ${error instanceof Error ? error.message : String(error)}`); }
+    }
     let decision: { readonly walk: boolean; readonly reason: string; readonly check?: MinutesDocumentIdentity } = args.force && link !== null
       ? ({ walk: true, reason: "FORCED" } as const)
       : minutesRefreshDecision(link, heldSitting, new Date(calendarAt));
@@ -305,12 +341,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
 
     if (!decision.walk && decision.check) {
       const failedExtraction = decision.reason === "FAILED_DOCUMENT_CHECK";
-      if (!writes) {
-        log(`  would check ${meetingId} ${link.url} before reading it again — held failed extraction`);
-        skippedUnchanged += 1;
-        continue;
-      }
-      const head = await session.head(link.url, link.format === "PDF" ? "application/pdf" : "text/html,application/xhtml+xml");
+      const head = await measurement.read(() => session.head(link.url, link.format === "PDF" ? "application/pdf" : "text/html,application/xhtml+xml"));
       const checked = minutesDocumentCheck(decision.check, head);
       log(`  ${meetingId} ${row.date} ${row.bodyName}: held failed extraction — ${checked.reason} (${checked.detail})`);
       if (!checked.walk && (failedExtraction || checked.reason === "DOCUMENT_UNCHANGED" &&
@@ -325,13 +356,8 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
       skippedUnchanged += 1;
       continue;
     }
-    if (!writes) {
-      log(`  would read ${meetingId} ${link.url} — ${decision.reason}`);
-      documentsRead += 1;
-      continue;
-    }
 
-    const read = await captureSourceAcquisitions((runForSource) =>
+    const read = await measurement.read(() => captureSourceAcquisitions((runForSource) =>
       runForSource(outcomeTenant.sourceId, async () => {
         try {
           const fetched = await session.getBytes(link.url, link.format === "PDF" ? "application/pdf" : "text/html,application/xhtml+xml");
@@ -344,7 +370,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
           return { bytes: null, response: null, error: error instanceof Error ? error.message : String(error) };
         }
       }),
-    );
+    ));
     documentsRead += 1;
     const observedAt = now();
     let persisted: PersistedSittingOutcomes;
@@ -365,13 +391,21 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     }));
     // A failed request is retried soon; a held failed extraction is a named result that promotes.
     const failed = persisted.extraction === "REQUEST_FAILED" || (persisted.extraction === "ZERO_ROWS_FAILED" && !isHeldFailedExtraction(persisted));
-    const outcome = await persist({
-      snapshot: proposed,
-      acquisitions: [...calendarEvidence, ...read.evidence],
-      retrievedAt: observedAt,
-      sourceThrough: minutesSourceThrough(sourceThrough, observedAt),
-      ...(failed ? { failureDetail: `Sitting ${meetingId} minutes read failed: ${persisted.extractionNote}` } : {}),
-    });
+    const checked = legistarMinutesOutcomesCandidate({ snapshot: proposed, acquisitions: [...calendarEvidence, ...read.evidence],
+      retrievedAt: observedAt, sourceThrough: minutesSourceThrough(sourceThrough, observedAt),
+      ...(failed ? { failureDetail: `Sitting ${meetingId} minutes read failed: ${persisted.extractionNote}` } : {}) }, outcomeTenant);
+    const validation = !writes ? validateRoutineCandidate({ ...checked, changeSet: candidateChangeSet(checked, current.snapshot) }, dryBase, observedAt) : null;
+    const attachable = validation ? validation.receipt.decision === "GOOD" : checked.retrieval.succeeded && checked.semantics.violations.length === 0;
+    const failedRead = persisted.failedMinutesRead?.readAt === observedAt || persisted.extraction !== "RETRIEVED";
+    if (!failedRead) measurement.sitting(persisted, heldSitting, attachable);
+    if (failedRead || !attachable) measurement.fail(`${meetingId}: ${read.value.error ?? persisted.failedMinutesRead?.reason ?? persisted.extractionNote ?? checked.semantics.violations.join("; ")}`);
+    if (!writes) {
+      if (attachable) { snapshot = proposed; held.set(meetingId, persisted); pending = []; sourceThrough = checked.temporal.sourceThrough; }
+      else refusedSittings.push(meetingId);
+      log(`  ${meetingId} (${decision.reason}): read ${persisted.outcomes.length} recorded action(s); ${attachable && !failedRead ? "would attach verified changes" : "held with failure"}`);
+      continue;
+    }
+    const outcome = await processRegisteredRoutineCandidate(store, outcomeTenant.contractId, checked, observedAt);
     last = outcome;
     if (outcome.promoted) {
       snapshot = proposed;
@@ -391,12 +425,13 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   }
 
   if (!writes) {
-    return { receiptLine: null, exitCode: 0, promotedSittings, refusedSittings, documentsRead, notYetPublished, skippedUnchanged, heldFailedExtractions };
+    return { receiptLine: null, exitCode: measurement.result().incomplete ? 2 : 0, promotedSittings, refusedSittings, documentsRead, notYetPublished, skippedUnchanged, heldFailedExtractions,
+      measurement: measurement.result() };
   }
 
   if (pending.length > 0) {
     // Sittings first seen without minutes: recorded as the publisher's state.
-    const observedAt = now();
+    const observedAt = last === null ? replayedObservationAt(input.initialResponse, calendarEvidence, now()) : now();
     const proposed = applyMinutesApprovals(mergeSnapshot(snapshot, pending, { generatedOn: observedAt.slice(0, 10), generatedAt: observedAt }));
     const outcome = await persist({ snapshot: proposed, acquisitions: calendarEvidence, retrievedAt: observedAt, sourceThrough: minutesSourceThrough(sourceThrough, calendarAt) });
     if (outcome.promoted) {
@@ -408,7 +443,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     log(`  ${proposed.sittings.filter((sitting) => sitting.extraction === "NOT_YET_PUBLISHED").length} sitting(s) recorded as minutes not yet published — ${outcome.promoted ? "PROMOTED" : `HELD ${outcome.candidate.failureCode ?? outcome.candidate.state}`}`);
   } else if (last === null) {
     // Every concluded sitting is held and unchanged: one validated no-change receipt.
-    const observedAt = now();
+    const observedAt = replayedObservationAt(input.initialResponse, calendarEvidence, now());
     last = await persist({ snapshot, acquisitions: calendarEvidence, retrievedAt: observedAt, sourceThrough: minutesSourceThrough(sourceThrough, calendarAt) });
     log(`  no-change receipt: ${last.promoted ? "PROMOTED" : `HELD ${last.candidate.failureCode ?? last.candidate.state}`}`);
   }
@@ -438,30 +473,32 @@ async function main(): Promise<void> {
   if (args.promote && args.dryRun) throw new Error("MINUTES_OUTCOME_MODE_AMBIGUOUS: --promote writes and --dry-run never does; pass exactly one.");
   installNeonRequestDeadline();
   if (args.promote) prepareProductionCivicDataWrite();
+  const held = await readHeldMeetingChildInput(process.argv.slice(2), args.door ?? meetingPartitionId("legistar-insite", "ocd-division/country:us/state:az/place:mesa#governing"));
   let outcomeTenant: OutcomeTenant = MESA_OUTCOME_TENANT;
   let tenant: InSiteTenant | undefined;
   if (args.door !== null) {
-    const partition = await loadOutcomePartitionForDoor(args.door);
-    if (partition.kind !== "legistar-insite" || partition.tenant.slug !== args.slug) {
+    const partition = outcomePartitionForDoor(args.door);
+    if (!partition || partition.kind !== "legistar-insite" || partition.tenant.slug !== args.slug) {
       throw new Error(`OUTCOME_DOOR_MISMATCH: ${args.door} is not the InSite door of ${args.slug}.`);
     }
     outcomeTenant = partition.tenant;
     tenant = inSiteTenantsFromWiring([partition.wiring])[0];
   } else {
     // Mesa's own contract: its tenant is read off the published meeting doors.
-    const doors = await ensureMeetingDoors();
-    if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
     tenant = findTenant(args.slug);
   }
   if (!tenant) throw new Error("MINUTES_OUTCOME_TENANT_NOT_WIRED");
   const run = await runInSiteMinutesOutcomeIngest({
     store: new PostgresRoutineDataStore(),
+    initialResponse: held.initialResponse,
     tenant,
     outcomeTenant,
     args,
     window: minutesOutcomeWindow(args, tenant.timeZone, new Date()),
   });
   if (run.receiptLine !== null) console.log(run.receiptLine);
+  console.log(`DIGGER_MEASUREMENT=${JSON.stringify(run.measurement)}`);
+  console.log(`DIGGER_RESULT=${JSON.stringify({ ...run, sourceSucceeded: run.exitCode === 0 })}`);
   process.exitCode = run.exitCode;
 }
 

@@ -1362,8 +1362,8 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
 });
 
 
-test("state promotion reuses its validated payload and reads only persisted envelope metadata", async () => {
-  const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(row => row.id === "ballot-contests:AZ")!;
+for (const family of ["state", "meeting"] as const) test(`${family} promotion reuses its validated payload and reads only persisted envelope metadata`, async () => {
+  const contract = family === "meeting" ? MEETING_PARTITION_CONTRACTS[0]! : MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(row => row.id === "ballot-contests:AZ")!;
   const payload = { ballots: { "US-AZ:2026-general": { contests: [] } } };
   const value = immutableStateCandidate({ ...candidate("state-held-promotion", "2026-09-08T12:00:00.000Z", contract.sourceId),
     recordClass: contract.recordClass, scope: contract.scope, readModel: payload, normalizedPayload: payload,
@@ -1391,7 +1391,7 @@ test("state promotion reuses its validated payload and reads only persisted enve
     return { columns: [], rows: [] };
   }, async (store, sent) => {
     Object.assign(store as unknown as Record<string, unknown>, { writeAuthority: { repo: ROOT, sha: "1".repeat(40),
-      capability: "MANUAL_CONTRACT", contract: contract.id, parentPid: 123, nonce: "2".repeat(64) } });
+      capability: family === "meeting" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT", contract: contract.id, parentPid: 123, nonce: "2".repeat(64) } });
     const published = await store.promote(value.id, receipt, at, { candidate: value });
     assert.equal(published.payload, value.readModel);
     assert.equal(sent.filter(row => row.query.includes('from "civic_data_candidates"') && row.query.startsWith("select")).length, 1);

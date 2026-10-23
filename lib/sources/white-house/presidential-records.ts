@@ -20,6 +20,7 @@ export interface SourcedExecutiveRecord {
   evidenceSourceUrl: string;
   quote: string;
   collectedAt: string;
+  checkedAt?: string;
   details: { designation?: string; publicationDate?: string; documentUrl?: string; vote?: "Yea" | "Nay"; result?: string; yeas?: number; nays?: number; billId?: string };
 }
 export interface PresidentialMoney {
@@ -31,6 +32,7 @@ export interface PresidentialMoney {
   evidenceSourceUrl?: string;
   quote: string;
   collectedAt: string;
+  checkedAt?: string;
 }
 type Page = { url: string; body: string; retrievedAt: string };
 const day = (value: unknown): string => {

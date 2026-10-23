@@ -18,6 +18,8 @@ import { holdRawCapture, readRawCaptureText, type RawCaptureRef } from "./raw-ca
 export interface StatePeopleAcquisition {
   readonly requestedUrl:string; readonly finalUrl:string; readonly httpStatus:number; readonly body:string; readonly retrievedAt:string;
   readonly rawHash?:string;
+  /** Public request filters that identify a POST-only government source response. Never credentials. */
+  readonly request?: { readonly method: "POST"; readonly body: Readonly<Record<string, unknown>> };
   readonly sourceCheck?: NonNullable<import("./types.ts").RetrievalEvidence["sourceCheck"]>;
   readonly extractedFrom?: {readonly requestedUrl:string;readonly finalUrl:string;readonly sha256:string;readonly member:string};
 }

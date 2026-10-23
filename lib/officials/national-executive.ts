@@ -7,6 +7,7 @@ export interface ExecutiveText {
   readonly text: string;
   readonly sourceUrl: string;
   readonly collectedAt: string;
+  readonly checkedAt?: string;
 }
 
 /** These facts travel in the same national people projection as Congress's people. */
@@ -32,6 +33,8 @@ export function mergeExecutiveFacts(left: NationalExecutiveData | undefined, rig
     department: right.cabinet.department ? { ...left.cabinet?.department, ...right.cabinet.department,
       budget: right.cabinet.department.budget ?? left.cabinet?.department?.budget,
       headcount: right.cabinet.department.headcount ?? left.cabinet?.department?.headcount,
+      headcountNote: right.cabinet.department.headcountNote ?? left.cabinet?.department?.headcountNote,
+      budgets: [...new Map([...(left.cabinet?.department?.budgets ?? []), ...(right.cabinet.department.budgets ?? [])].map(row => [row.accountNumber ?? `${row.scope}:${row.fiscalYear}`, row])).values()],
       actions: [...new Map([...(left.cabinet?.department?.actions ?? []), ...right.cabinet.department.actions].map(row => [row.id, row])).values()],
     } : left.cabinet?.department,
   } : left.cabinet;
@@ -67,7 +70,9 @@ export function executiveCardCompleteness(person: Officeholder): { complete: boo
   for (const key of ["partyLabel", "termStart"] as const) require(key, Boolean(person[key] && sourced(person.fieldSources?.[key])));
   require("termEnd", Boolean(person.termEnd && sourced(person.fieldSources?.termEnd) || data?.termEndDescription?.text && sourced(data.termEndDescription)));
   require("contact", ["phone", "email", "contactFormUrl"].some(key => Boolean(person[key as keyof Officeholder] && sourced(person.fieldSources?.[key]))));
-  require("officialSocial", Array.isArray(person.social) && person.social.some(account => account.accountKind === "OFFICIAL" && sourced(account)) || data?.officeSocial?.some(account => account.accountKind === "OFFICIAL" && sourced(account)));
+  const directSocial = Array.isArray(person.social) && person.social.some(account => account.accountKind === "OFFICIAL" && sourced(account));
+  const sharedSocial = office !== "vice-president" && data?.officeSocial?.some(account => account.accountKind === "OFFICIAL" && sourced(account));
+  require("officialSocial", directSocial || sharedSocial);
   if (office === "president") for (const key of ["campaignMoney", "executiveOrders", "proclamations", "memoranda", "signedBills", "vetoedBills"]) require(key, data?.coverage?.[key]);
   else if (office === "vice-president") require("tieBreakingVotes", data?.coverage?.tieBreakingVotes);
   else if (office?.startsWith("cabinet:")) for (const key of ["department", "budget", "headcount", "confirmation", "priorOffices", "departmentActions"]) require(key, data?.coverage?.[key]);

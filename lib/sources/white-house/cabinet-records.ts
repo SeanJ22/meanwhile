@@ -5,10 +5,12 @@ import type { Officeholder } from "../../officials/types.ts";
 import type { ExecutiveText } from "../../officials/national-executive.ts";
 import { parseExecutiveProfile } from "./profile.ts";
 import { publicFederalUrl } from "../congress/acquire.ts";
+import { statewidePageText } from "../statewide/parse.ts";
 
-export interface CabinetPage { readonly url: string; readonly body: string; readonly retrievedAt: string }
-export type CabinetReader = (url: string) => Promise<CabinetPage>;
-interface Citation { readonly sourceUrl: string; readonly collectedAt: string }
+export interface CabinetPage { readonly url: string; readonly body: string; readonly retrievedAt: string; readonly request?: CabinetReadRequest }
+export interface CabinetReadRequest { readonly method: "POST"; readonly body: Readonly<Record<string, unknown>> }
+export type CabinetReader = (url: string, request?: CabinetReadRequest) => Promise<CabinetPage>;
+interface Citation { readonly sourceUrl: string; readonly collectedAt: string; readonly checkedAt?: string }
 export interface CabinetDepartment {
   readonly name: string;
   readonly spendingNames: readonly string[];
@@ -16,8 +18,14 @@ export interface CabinetDepartment {
   readonly opmNames: readonly string[];
   readonly senateConfirmed: boolean;
 }
-export interface DepartmentBudget extends Citation { readonly amount: number; readonly fiscalYear: number; readonly label: "Budgetary resources" }
-export interface DepartmentHeadcount extends Citation { readonly count: number; readonly asOf: string; readonly label: "Federal civilian employees"; readonly rawSourceRefs?: readonly OpmRangeReference[] }
+export interface DepartmentBudget extends Citation {
+  readonly amount: number; readonly fiscalYear: number; readonly label: "Budgetary resources"; readonly scope: "DEPARTMENT" | "ACCOUNT";
+  readonly accountNumber?: string; readonly accountName?: string;
+}
+export interface DepartmentHeadcount extends Citation {
+  readonly count: number; readonly asOf: string; readonly label: "OPM-covered civilian employees";
+  readonly rawSourceRefs?: readonly OpmRangeReference[]; readonly coverageSource?: OpmCoverage;
+}
 export interface DepartmentAction extends Citation {
   readonly id: string; readonly title: string; readonly date: string; readonly kind: string; readonly documentUrl: string | null;
   readonly evidenceSourceUrl: string;
@@ -27,7 +35,8 @@ export interface CabinetConfirmation extends Citation {
   readonly evidenceSourceUrl: string;
 }
 export interface CabinetRecords {
-  readonly department?: Citation & { readonly name: string; readonly budget?: DepartmentBudget; readonly headcount?: DepartmentHeadcount; readonly actions: readonly DepartmentAction[] };
+  readonly department?: Citation & { readonly name: string; readonly budget?: DepartmentBudget; readonly budgets?: readonly DepartmentBudget[];
+    readonly headcount?: DepartmentHeadcount; readonly headcountNote?: ExecutiveText; readonly actions: readonly DepartmentAction[] };
   readonly confirmation?: CabinetConfirmation;
   readonly priorOffices: readonly ExecutiveText[];
   readonly sources: readonly Citation[];
@@ -90,7 +99,7 @@ export function spendingAgency(page: CabinetPage, own: CabinetDepartment): { cod
   if (matches.length > 1) throw new Error("CABINET_SPENDING_AGENCY_AMBIGUOUS");
   if (!matches.length) return null;
   const code = text(matches[0].toptier_code);
-  if (!/^\d{3}$/.test(code)) throw new Error("CABINET_SPENDING_AGENCY_CODE_INVALID");
+  if (!/^\d{3,4}$/.test(code)) throw new Error("CABINET_SPENDING_AGENCY_CODE_INVALID");
   return { code, name: text(matches[0].agency_name) };
 }
 /** Agency resources are not whole-government resources, obligations, outlays, or a proposed appropriation. */
@@ -101,7 +110,24 @@ export function departmentBudget(page: CabinetPage, toptierCode: string): Depart
   const rows = list(root.agency_data_by_year).filter(row => Number.isInteger(row.fiscal_year) && typeof row.agency_budgetary_resources === "number" && Number.isFinite(row.agency_budgetary_resources) && row.agency_budgetary_resources >= 0)
     .sort((a, b) => Number(b.fiscal_year) - Number(a.fiscal_year));
   const row = rows[0];
-  return row ? { amount: row.agency_budgetary_resources as number, fiscalYear: row.fiscal_year as number, label: "Budgetary resources", ...cite(page) } : null;
+  return row ? { amount: row.agency_budgetary_resources as number, fiscalYear: row.fiscal_year as number, label: "Budgetary resources", scope: "DEPARTMENT", ...cite(page) } : null;
+}
+
+export const USA_FEDERAL_ACCOUNTS_URL = "https://api.usaspending.gov/api/v2/federal_accounts/";
+/** These are separately filed account resources. Transfers and trust funds never become an invented office-wide total. */
+export function executiveOfficeAccountBudgets(page: CabinetPage, own: CabinetDepartment, fiscalYear: number): DepartmentBudget[] {
+  source(page, "api.usaspending.gov", /^\/api\/v2\/federal_accounts\/$/);
+  const root = parsed(page);
+  if (String(root.fy) !== String(fiscalYear) || !Array.isArray(root.results)) throw new Error("EXECUTIVE_OFFICE_ACCOUNTS_YEAR_INVALID");
+  if (page.request && (page.request.method !== "POST" || String(object(page.request.body.filters).fy) !== String(fiscalYear) ||
+    String(object(page.request.body.filters).agency_identifier) !== "1100")) throw new Error("EXECUTIVE_OFFICE_ACCOUNTS_REQUEST_MISMATCH");
+  const names = own.spendingNames.map(key);
+  return list(root.results).filter(row => key(text(row.managing_agency)) === "executive office of the president" &&
+    names.some(name => key(text(row.account_name)).includes(name)) && row.budgetary_resources !== null).map(row => {
+    if (!/^011-\d{4}$/.test(text(row.account_number)) || typeof row.budgetary_resources !== "number" || !Number.isFinite(row.budgetary_resources) || row.budgetary_resources < 0) throw new Error("EXECUTIVE_OFFICE_ACCOUNT_RESOURCES_INVALID");
+    return { amount: row.budgetary_resources as number, fiscalYear, label: "Budgetary resources", scope: "ACCOUNT",
+      accountNumber: text(row.account_number), accountName: text(row.account_name), ...cite(page) };
+  });
 }
 
 /** The result keeps department actions separate from actions personally signed by the Secretary. */
@@ -146,6 +172,20 @@ export function cabinetConfirmation(page: CabinetPage, person: Pick<Officeholder
 }
 
 export const OPM_EMPLOYMENT_URL = "https://data.opm.gov/api/v1/files/employment?current=true";
+export const OPM_COVERAGE_URL = "https://data.opm.gov/resources/data-sources";
+export interface OpmCoverage extends Citation { readonly quote: string; readonly exclusions: readonly string[] }
+/** The publisher states these exclusions; a missing agency row alone never establishes non-publication. */
+export function opmEmploymentCoverage(page: CabinetPage): OpmCoverage {
+  source(page, "data.opm.gov", /^\/resources\/data-sources\/?$/);
+  const body = statewidePageText(page.body), first = body.indexOf("EHRI covers all federal civilian employees of the Executive branch, except for the following:");
+  const end = first < 0 ? -1 : body.indexOf("Legislative branch", first);
+  if (first < 0 || end < 0) throw new Error("OPM_EMPLOYMENT_COVERAGE_UNREAD");
+  const quote = body.slice(first, end).trim();
+  const exclusions = ["Central Intelligence Agency", "Office of the Director of National Intelligence", "Foreign service personnel at the Department of State"]
+    .filter(name => quote.includes(name));
+  if (exclusions.length !== 3) throw new Error("OPM_EMPLOYMENT_EXCLUSIONS_UNREAD");
+  return { ...cite(page), quote, exclusions };
+}
 export interface OpmRelease extends Citation { readonly snapshot: string; readonly version: number; readonly url: string }
 export function currentOpmRelease(page: CabinetPage): OpmRelease {
   source(page, "data.opm.gov", /^\/api\/v1\/files\/employment\/?$/);
@@ -163,6 +203,8 @@ export interface OpmHeadcountSnapshot extends Citation {
   readonly snapshot: string;
   readonly counts: Readonly<Record<string, number>>;
   readonly rawSourceRefs?: readonly OpmRangeReference[];
+  readonly coverage?: OpmCoverage;
+  readonly coverageGap?: string;
 }
 /** Read only OPM's agency, department and count columns; never transpose the country's employee records into objects. */
 export async function opmHeadcountsFromParquet(file: AsyncBuffer, release: OpmRelease): Promise<OpmHeadcountSnapshot> {
@@ -204,6 +246,9 @@ export async function opmHeadcountsFromParquet(file: AsyncBuffer, release: OpmRe
 export async function acquireOpmHeadcounts(input: { readonly read: CabinetReader; readonly fetchImpl?: typeof fetch; readonly signal?: AbortSignal;
   readonly now?: () => string; readonly saveRange?: (url: string, range: OpmRange, byteLength: number, retrievedAt: string) => Promise<void> }): Promise<OpmHeadcountSnapshot> {
   const release = currentOpmRelease(await input.read(OPM_EMPLOYMENT_URL));
+  const coverageRead = input.read(OPM_COVERAGE_URL).then(opmEmploymentCoverage)
+    .then(coverage => ({ coverage, coverageGap: undefined as string | undefined }))
+    .catch((error: unknown) => ({ coverage: undefined, coverageGap: error instanceof Error ? error.message : "OPM employment coverage has not yet been acquired." }));
   const fetcher = input.fetchImpl ?? fetch, retrievedAt = (input.now ?? (() => new Date().toISOString()))();
   const rawSourceRefs: OpmRangeReference[] = [];
   const head = await fetcher(release.url, { method: "HEAD", signal: input.signal });
@@ -220,16 +265,17 @@ export async function acquireOpmHeadcounts(input: { readonly read: CabinetReader
     return bytes.buffer;
   } };
   const snapshot = await opmHeadcountsFromParquet(file, { ...release, collectedAt: retrievedAt });
-  return { ...snapshot, rawSourceRefs };
+  return { ...snapshot, rawSourceRefs, ...await coverageRead };
 }
 
 const sharedReads = new WeakMap<CabinetReader, Map<string, Promise<CabinetPage>>>();
-function shared(read: CabinetReader, url: string): Promise<CabinetPage> {
+function shared(read: CabinetReader, url: string, request?: CabinetReadRequest): Promise<CabinetPage> {
   url = publicFederalUrl(url);
+  const requestKey = `${url}|${request ? JSON.stringify(request) : "GET"}`;
   let cache = sharedReads.get(read);
   if (!cache) { cache = new Map(); sharedReads.set(read, cache); }
-  let held = cache.get(url);
-  if (!held) { held = read(url); cache.set(url, held); }
+  let held = cache.get(requestKey);
+  if (!held) { held = read(url, request); cache.set(requestKey, held); }
   return held;
 }
 async function nominationFor(person: Officeholder, read: CabinetReader, signal?: AbortSignal): Promise<CabinetConfirmation | undefined> {
@@ -278,10 +324,40 @@ export async function acquireCabinetRecords(input: { readonly person: Officehold
   }
   if (!own) return { priorOffices, gaps: ["Department mapping is not yet held for this Cabinet office."], sources, coverage: {} };
   let budget: DepartmentBudget | undefined, confirmation: CabinetConfirmation | undefined, actions: DepartmentAction[] = [];
+  const budgets: DepartmentBudget[] = [];
   let departmentSource: Citation | undefined, actionsRead = false;
   const budgetWork = (async () => {
     try {
       const index = await shared(read, USA_AGENCIES_URL), agency = spendingAgency(index, own);
+      if (!agency && ["Office of Management and Budget", "Office of the United States Trade Representative"].includes(own.name)) {
+        const parent = list(parsed(index).results).find(row => row.agency_name === "Executive Office of the President");
+        const fiscalYear = Number(parent?.active_fy), toptierCode = text(parent?.toptier_code);
+        if (!Number.isInteger(fiscalYear) || fiscalYear < 2000 || !/^\d{3,4}$/.test(toptierCode)) throw new Error("EXECUTIVE_OFFICE_PARENT_AGENCY_UNRESOLVED");
+        // The current year can be present but not yet reported. Read the previous year when all current account resources are null.
+        for (const year of [fiscalYear, fiscalYear - 1]) {
+          const request = { method: "POST" as const, body: { filters: { agency_identifier: toptierCode, fy: String(year) }, limit: 100, page: 1, sort: { direction: "asc", field: "account_name" } } };
+          const pages: CabinetPage[] = [], seen = new Set<number>();
+          for (let pageNumber = 1; ; pageNumber++) {
+            if (seen.has(pageNumber)) throw new Error("EXECUTIVE_OFFICE_ACCOUNT_PAGINATION_LOOP");
+            seen.add(pageNumber);
+            const page = await shared(read, USA_FEDERAL_ACCOUNTS_URL, { ...request, body: { ...request.body, page: pageNumber } });
+            pages.push(page); sources.push(cite(page));
+            const root = parsed(page);
+            if (Number(root.page) !== pageNumber || typeof root.hasNext !== "boolean") throw new Error("EXECUTIVE_OFFICE_ACCOUNT_PAGINATION_INVALID");
+            if (root.hasNext !== true) break;
+          }
+          const heldAccounts = pages.flatMap(page => executiveOfficeAccountBudgets(page, own, year));
+          if (heldAccounts.length) {
+            budgets.push(...heldAccounts);
+            budget = heldAccounts.find(row => row.accountName?.startsWith("Salaries and Expenses,")) ?? heldAccounts[0];
+            departmentSource = cite(pages[0]);
+            break;
+          }
+        }
+        if (!budget) throw new Error("Office account budgetary resources have not yet been reported.");
+        gaps.push("Office account resources are held separately; an all-office budget total has not been established.");
+        return;
+      }
       if (!agency) throw new Error("USAspending has no separately reported top-tier budget for this office.");
       departmentSource = cite(index); sources.push(cite(index));
       const page = await shared(read, `https://api.usaspending.gov/api/v2/agency/${agency.code}/budgetary_resources/`);
@@ -304,14 +380,26 @@ export async function acquireCabinetRecords(input: { readonly person: Officehold
   await Promise.all([budgetWork, registerWork, confirmationWork]);
   input.signal?.throwIfAborted();
   let headcount: DepartmentHeadcount | undefined;
+  let headcountNote: ExecutiveText | undefined;
   if (input.opm) {
+    if (input.opm.coverageGap) gaps.push(`OPM coverage: ${input.opm.coverageGap}`);
     const matched = Object.keys(input.opm.counts).filter(name => own.opmNames.some(alias => key(alias) === key(name)));
-    if (matched.length === 1) headcount = { count: input.opm.counts[matched[0]], asOf: input.opm.snapshot, label: "Federal civilian employees", sourceUrl: input.opm.sourceUrl, collectedAt: input.opm.collectedAt, ...(input.opm.rawSourceRefs ? { rawSourceRefs: input.opm.rawSourceRefs } : {}) };
-    else gaps.push("OPM has no unique published employment count matched to this department.");
+    if (matched.length === 1) headcount = { count: input.opm.counts[matched[0]], asOf: input.opm.snapshot, label: "OPM-covered civilian employees", sourceUrl: input.opm.sourceUrl, collectedAt: input.opm.collectedAt,
+      ...(input.opm.rawSourceRefs ? { rawSourceRefs: input.opm.rawSourceRefs } : {}), ...(input.opm.coverage ? { coverageSource: input.opm.coverage } : {}) };
+    else {
+      const excluded = input.opm.coverage?.exclusions.find(name => own.opmNames.some(alias => key(alias) === key(name)));
+      if (excluded && input.opm.coverage) {
+        headcountNote = { text: `OPM excludes the ${excluded} from its EHRI workforce data.`, sourceUrl: input.opm.coverage.sourceUrl, collectedAt: input.opm.coverage.collectedAt };
+        sources.push(input.opm.coverage); gaps.push(headcountNote.text);
+      } else gaps.push("OPM has no unique published employment count matched to this department.");
+    }
   } else gaps.push("OPM employment is not yet acquired.");
   if (headcount) sources.push(headcount);
-  const currentDepartment = departmentSource ? { name: own.name, ...departmentSource, budget, headcount, actions } : undefined;
+  if (headcount?.coverageSource) sources.push(headcount.coverageSource);
+  // An officially excluded intelligence office still carries the source's explicit coverage note.
+  departmentSource ??= headcountNote ? { sourceUrl: headcountNote.sourceUrl, collectedAt: headcountNote.collectedAt } : undefined;
+  const currentDepartment = departmentSource ? { name: own.name, ...departmentSource, budget, ...(budgets.length ? { budgets } : {}), headcount, headcountNote, actions } : undefined;
   return { department: currentDepartment, confirmation, priorOffices: [...new Map(priorOffices.map(row => [row.text, row])).values()], sources,
-    gaps, coverage: { department: Boolean(currentDepartment), budget: Boolean(budget), headcount: Boolean(headcount),
+    gaps, coverage: { department: Boolean(currentDepartment), budget: Boolean(budget?.scope === "DEPARTMENT"), headcount: Boolean(headcount),
       confirmation: Boolean(confirmation && (confirmation.yeas !== null && confirmation.nays !== null || ["Voice vote", "Unanimous consent"].includes(confirmation.method))), priorOffices: priorOffices.length > 0, departmentActions: actionsRead } };
 }

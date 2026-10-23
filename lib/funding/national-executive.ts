@@ -30,7 +30,7 @@ export function nationalExecutiveFundingAnswer(target: string, roster: Officehol
     fecCandidateId: money.candidateId, name: person.name, cycleLabel: `${money.cycle - 1}–${String(money.cycle).slice(2)}`,
     sentences: [], totals, contributors: [], contributorGroups: { organizations: [], individuals: [] }, contributorsShown: false,
     secondHop: {}, reportedThrough: totals.coverageEndDate, concentration: null, concentrationSentences: [], typeConcentrationSentences: [],
-    sourceUrl, sourceOrg: "Federal Election Commission", collectedAt: money.collectedAt,
+    sourceUrl, sourceOrg: "Federal Election Commission", collectedAt: money.checkedAt ?? money.collectedAt,
   };
   const figures = [totals.receipts === null ? null : `raised ${plainMoney(totals.receipts)}`, totals.disbursements === null ? null : `spent ${plainMoney(totals.disbursements)}`].filter(Boolean);
   if (figures.length) data.sentences.push(`This campaign has ${figures.join(" and ")} in the ${data.cycleLabel} election cycle.`);

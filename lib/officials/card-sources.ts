@@ -189,7 +189,7 @@ export function executiveCardSources(data: NonNullable<SeatHolder["executive"]>)
     if (typeof row.sourceUrl === "string" && typeof row.collectedAt === "string") entries.push({
       what: fieldSourceLabel(label), provenance: { sourceUrl: row.sourceUrl,
         sourceOrg: typeof row.sourceOrg === "string" ? row.sourceOrg : new URL(row.sourceUrl).hostname,
-        collectedAt: row.collectedAt, verifiedAt: row.collectedAt },
+        collectedAt: row.collectedAt, verifiedAt: typeof row.checkedAt === "string" ? row.checkedAt : row.collectedAt },
     });
     for (const [key, child] of Object.entries(row)) if (child && typeof child === "object") walk(child, key === "records" ? "officialActions" : key);
   };

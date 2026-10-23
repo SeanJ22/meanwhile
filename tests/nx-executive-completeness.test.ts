@@ -43,8 +43,8 @@ test("partial rereads preserve held executive facts and the card receives their 
 });
 
 test("a department source outage retains the held budget, headcount and confirmation", () => {
-  const budget = { amount: 100, fiscalYear: 2026, label: "Budgetary resources" as const, sourceUrl: "https://api.usaspending.gov/api/v2/agency/020/budgetary_resources/", collectedAt: at };
-  const headcount = { count: 42, asOf: "2026-08", label: "Federal civilian employees" as const, sourceUrl: "https://data.opm.gov/api/v1/files/employment", collectedAt: at };
+  const budget = { amount: 100, fiscalYear: 2026, scope: "DEPARTMENT" as const, label: "Budgetary resources" as const, sourceUrl: "https://api.usaspending.gov/api/v2/agency/020/budgetary_resources/", collectedAt: at };
+  const headcount = { count: 42, asOf: "2026-08", label: "OPM-covered civilian employees" as const, sourceUrl: "https://data.opm.gov/api/v1/files/employment", collectedAt: at };
   const confirmation = { date: "2025-01-27", yeas: 68, nays: 29, method: "Recorded vote", sourceUrl: "https://api.congress.gov/v3/nomination/119/11-1", evidenceSourceUrl: "https://api.congress.gov/v3/nomination/119/11-1/actions", collectedAt: at, quote: "Confirmed 68–29" };
   const prior = { cabinet: { department: { name: "Department of the Treasury", sourceUrl: url, collectedAt: at, budget, headcount, actions: [] },
     confirmation, priorOffices: [], sources: [], gaps: [], coverage: { budget: true } } };
@@ -65,4 +65,10 @@ test("place card records omit histories already served by the lazy card endpoint
   assert.equal(holder.executive?.biography?.text, row.executive.biography?.text);
   assert.ok(JSON.stringify(holder).length < JSON.stringify(row).length / 10);
   assert.equal(row.executive.records?.length, 500, "the national resident holding retains its history");
+});
+
+test("a shared White House account cannot fill the Vice President's own official social accounts", () => {
+  const row = { ...person(), officeTitle: "Vice President of the United States", social: [] };
+  row.executive = { ...row.executive, officeSocial: [{ platform: "twitter", url: "https://x.com/whitehouse", accountKind: "OFFICIAL", label: "The White House on X", scope: "WHITE_HOUSE", sourceUrl: url, collectedAt: at }] };
+  assert.ok(executiveCardCompleteness(row).missing.includes("officialSocial"));
 });

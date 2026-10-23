@@ -14,6 +14,7 @@ import { acquirePresidentialRecords } from "./presidential-records.ts";
 import { acquireCabinetRecords, acquireOpmHeadcounts, cabinetDepartment, currentOpmRelease, OPM_EMPLOYMENT_URL } from "./cabinet-records.ts";
 
 type Acquired = { roster: OfficeholderSet; acquisitions: readonly StatePeopleAcquisition[]; gaps: readonly { sourceUrl: string; detail: string }[]; releaseId: string };
+type PublisherRequest = { readonly method: "POST"; readonly body: Readonly<Record<string, unknown>> };
 export interface ExecutiveEnrichmentOptions extends Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now"> {
   readonly signal: AbortSignal;
   readonly heldPeople?: OfficeholderSet;
@@ -32,6 +33,27 @@ export function applyExecutivePatch(person: Officeholder, patch: Partial<Officeh
   return next;
 }
 
+/** A 304 checks the fact again without changing the vintage of its saved bytes. */
+export function checkedExecutivePerson(person: Officeholder, captures: readonly StatePeopleAcquisition[]): Officeholder {
+  const checks = new Map(captures.map(page => [`${page.finalUrl}|${page.retrievedAt}`, page.sourceCheck?.checkedAt ?? page.retrievedAt]));
+  const checked = (value: unknown): unknown => {
+    if (Array.isArray(value)) return value.map(checked);
+    if (!value || typeof value !== "object") return value;
+    const row = value as Record<string, unknown>;
+    const copy = Object.fromEntries(Object.entries(row).map(([key, child]) => [key, checked(child)]));
+    if (typeof row.sourceUrl === "string" && typeof row.collectedAt === "string") {
+      const source = typeof row.evidenceSourceUrl === "string" ? row.evidenceSourceUrl : row.sourceUrl;
+      copy.checkedAt = checks.get(`${source}|${row.collectedAt}`) ?? row.checkedAt ?? row.collectedAt;
+    }
+    return copy;
+  };
+  return { ...person, executive: checked(person.executive) as Officeholder["executive"],
+    fieldSources: Object.fromEntries(Object.entries(person.fieldSources ?? {}).map(([field, source]) => [field, {
+      ...source, verifiedAt: checks.get(`${source.sourceUrl}|${source.collectedAt}`) ?? source.verifiedAt,
+    }])),
+  };
+}
+
 /** Replay held White House bytes first, then fill only the remaining fields from official publishers. */
 export async function enrichNationalExecutives<T extends Acquired>(base: T, options: ExecutiveEnrichmentOptions): Promise<T> {
   const acquire = options.acquire ?? pacedPortraitAcquire;
@@ -42,30 +64,34 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
     options.signal.throwIfAborted();
     gaps.push({ sourceUrl: url, detail: `NATIONAL_EXECUTIVE_GAP:${error instanceof Error ? error.message : String(error)}` });
   };
-  const readRelease = (url: string): Promise<KnownRelease> => {
+  const readRelease = (url: string, request?: PublisherRequest): Promise<KnownRelease> => {
     if (!isOfficialSource(url) || new URL(url).protocol !== "https:") throw new Error("EXECUTIVE_OFFICIAL_SOURCE_REQUIRED");
-    let pending = releases.get(url);
+    const requestKey = request ? createHash("sha256").update(JSON.stringify(request)).digest("hex") : "";
+    const cacheKey = `${url}|${requestKey}`;
+    let pending = releases.get(cacheKey);
     if (!pending) {
-      pending = acquire({ ...options, sourceId: "statewide-executive-sources", releaseId: `official:${url}`, url,
+      pending = acquire({ ...options, sourceId: "statewide-executive-sources", releaseId: `official:${url}${requestKey ? `:${requestKey}` : ""}`, url,
+        ...(request ? { fetchImpl: ((resource, init) => (options.fetchImpl ?? fetch)(resource, { ...init, method: request.method, body: JSON.stringify(request.body) })) as typeof fetch } : {}),
         parserVersion: "national-executive/1", maxBytes: 16 * 1024 * 1024, checkAfterMs: 86_400_000,
         allowedHosts: [new URL(url).hostname], headers: { accept: "text/html,application/json,application/xml",
+          ...(request ? { "content-type": "application/json" } : {}),
           "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
           ...(new URL(url).hostname === "api.congress.gov" && process.env.CONGRESS_API_KEY ? { "X-Api-Key": process.env.CONGRESS_API_KEY } : {}),
         } });
-      releases.set(url, pending);
+      releases.set(cacheKey, pending);
     }
     return pending;
   };
-  const read = async (url: string) => {
+  const read = async (url: string, request?: PublisherRequest) => {
     // The roster has just read these pages; never fetch them again under another source key.
-    const held = [...captures.values()].find(page => page.finalUrl === url);
-    if (held) return { url: held.finalUrl, body: held.body, retrievedAt: held.retrievedAt };
-    const release = await readRelease(url);
+    const held = [...captures.values()].find(page => page.finalUrl === url && JSON.stringify(page.request) === JSON.stringify(request));
+    if (held) return { url: held.finalUrl, body: held.body, retrievedAt: held.retrievedAt, ...(held.request ? { request: held.request } : {}) };
+    const release = await readRelease(url, request);
     const page: StatePeopleAcquisition = { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus,
       body: new TextDecoder("utf-8", { fatal: true }).decode(release.bytes), retrievedAt: release.retrievedAt,
-      rawHash: release.sha256, sourceCheck: knownReleaseSourceCheck(release) };
-    captures.set(`${page.finalUrl}|${page.retrievedAt}`, page);
-    return { url: page.finalUrl, body: page.body, retrievedAt: page.retrievedAt };
+      rawHash: release.sha256, sourceCheck: knownReleaseSourceCheck(release), ...(request ? { request } : {}) };
+    captures.set(`${page.finalUrl}|${page.retrievedAt}|${JSON.stringify(request) ?? ""}`, page);
+    return { url: page.finalUrl, body: page.body, retrievedAt: page.retrievedAt, ...(page.request ? { request: page.request } : {}) };
   };
   const profilePage = (page: { url: string; body: string; retrievedAt: string }) => ({ ...page, html: page.body });
   const prior = new Map(options.heldPeople?.officeholders.map(person => [person.id, person]));
@@ -93,14 +119,14 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
   });
   const elected = people.filter(person => ["president", "vice-president"].includes(whiteHouseOffice(person.officeTitle) ?? ""));
   if (elected.length) {
-    const termPages = await Promise.allSettled([EXECUTIVE_TERM_SOURCES.inauguration, EXECUTIVE_TERM_SOURCES.schedule, EXECUTIVE_TERM_SOURCES.amendment, EXECUTIVE_TERM_SOURCES.election].map(read));
+    const termPages = await Promise.allSettled([EXECUTIVE_TERM_SOURCES.inauguration, EXECUTIVE_TERM_SOURCES.schedule, EXECUTIVE_TERM_SOURCES.amendment, EXECUTIVE_TERM_SOURCES.election].map(url => read(url)));
     let inaugurationAlternatives: Awaited<ReturnType<typeof read>>[] = [];
     if (termPages.slice(0, 3).every(row => row.status === "fulfilled")) {
       const pages = termPages.map(row => row.status === "fulfilled" ? profilePage(row.value) : null);
       if (elected.some(person => { try { parseExecutiveTerm({ person, inauguration: pages[0]!, schedule: pages[1]!, amendment: pages[2]! }); return false; } catch { return true; } })) {
         try {
           const links = inaugurationLinks(profilePage(await read(INAUGURATION_INDEX_URL)));
-          const alternatives = await Promise.allSettled(links.map(read));
+          const alternatives = await Promise.allSettled(links.map(url => read(url)));
           inaugurationAlternatives = alternatives.flatMap(row => row.status === "fulfilled" ? [row.value] : []);
         } catch (error) { failed(INAUGURATION_INDEX_URL, error); }
       }
@@ -173,7 +199,7 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
   for (const gap of portraits.excludedFacts) gaps.push({ sourceUrl: "https://www.whitehouse.gov/administration/", detail: `${gap.code}:${gap.detail}` });
   if (options.onProfiles) {
     const acquisitions = [...captures.values()];
-    await options.onProfiles({ roster: { ...base.roster, officeholders: people.map(withExecutiveCompleteness) }, acquisitions, gaps: [...gaps],
+    await options.onProfiles({ roster: { ...base.roster, officeholders: people.map(person => withExecutiveCompleteness(checkedExecutivePerson(person, acquisitions))) }, acquisitions, gaps: [...gaps],
       releaseId: createHash("sha256").update(acquisitions.map(row => row.rawHash ?? row.body).join("|")).digest("hex") });
   }
   const president = people.find(person => whiteHouseOffice(person.officeTitle) === "president");
@@ -233,6 +259,6 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
   }));
   const roster = { ...base.roster, officeholders: people };
   const acquisitions = [...captures.values()];
-  return { ...base, roster: { ...roster, officeholders: people.map(withExecutiveCompleteness) }, acquisitions, gaps,
+  return { ...base, roster: { ...roster, officeholders: people.map(person => withExecutiveCompleteness(checkedExecutivePerson(person, acquisitions))) }, acquisitions, gaps,
     releaseId: createHash("sha256").update(acquisitions.map(row => row.rawHash ?? row.body).join("|")).digest("hex") };
 }

@@ -31,7 +31,7 @@ function actionRecord(person: Officeholder, row: SourcedExecutiveRecord): Reader
   const designation = row.details.designation ? ` ${row.details.designation}` : "";
   return { id: row.id, officialId: person.id, kind: row.kind,
     text: label ? `${label}${designation}: ${row.title} (${row.date}).` : `${row.title} (${row.date}).`,
-    sourceUrl: row.sourceUrl, documentUrl: row.details.documentUrl ?? null, sourceOrg: sourceOrg(row.sourceUrl), collectedAt: row.collectedAt };
+    sourceUrl: row.sourceUrl, documentUrl: row.details.documentUrl ?? null, sourceOrg: sourceOrg(row.sourceUrl), collectedAt: row.checkedAt ?? row.collectedAt };
 }
 
 /** Existing official cards consume this same action shape. A Cabinet department's
@@ -53,7 +53,7 @@ export function nationalExecutiveActions(subjectId: string, roster: Officeholder
     if (!heldSource(row)) { answer.withheldRecords.push({ id: row.id, reason: "This department action has no checked source and date" }); continue; }
     records.set(row.id, { id: row.id, officialId: person.id, kind: "DEPARTMENT_ACTION",
       text: `${department.name}: ${row.title} (${row.kind}; ${row.date}).`,
-      sourceUrl: row.sourceUrl, documentUrl: row.documentUrl, sourceOrg: "Federal Register", collectedAt: row.collectedAt });
+      sourceUrl: row.sourceUrl, documentUrl: row.documentUrl, sourceOrg: "Federal Register", collectedAt: row.checkedAt ?? row.collectedAt });
     dates.set(row.id, row.date);
   }
   answer.records = [...records.values()].sort((a, b) => dates.get(b.id)!.localeCompare(dates.get(a.id)!) || a.id.localeCompare(b.id));
@@ -88,7 +88,7 @@ export function nationalExecutiveVotes(member: string, roster: OfficeholderSet |
     const tally = Number.isSafeInteger(row.details.yeas) && Number.isSafeInteger(row.details.nays) ? ` (${row.details.yeas}–${row.details.nays})` : "";
     votes.set(row.id, { id: row.id, date: row.date, title: row.title, titleSource: "CHAMBER_QUESTION", question: "Vice President's tie-breaking vote",
       legisNum: null, result: `${row.details.result ?? row.quote}${tally}`, billUrl: null, rollCallUrl: row.sourceUrl,
-      retrievedAt: row.collectedAt, position: row.details.vote === "Yea" ? "YES" : "NO", sourceOrg: "United States Senate", partyBreakdown: null, billSummary: null, billSummaryPending: false });
+      retrievedAt: row.checkedAt ?? row.collectedAt, position: row.details.vote === "Yea" ? "YES" : "NO", sourceOrg: "United States Senate", partyBreakdown: null, billSummary: null, billSummaryPending: false });
   }
   const ordered = [...votes.values()].sort((a, b) => b.date.localeCompare(a.date) || a.id.localeCompare(b.id));
   return { member, holdingStatus: !roster ? "NOT_HELD" : person ? "HELD" : "IDENTITY_UNRESOLVED", count: ordered.length,
